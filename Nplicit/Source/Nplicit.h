@@ -147,7 +147,7 @@ namespace Xplicit::Physics
 
 				rigid->Position.add(rigid->Velocity.X * m_delta, rigid->Velocity.Y * m_delta, rigid->Velocity.Z * m_delta);
 
-				rigid->Force = Vector<TypeFloat>(0, 0, 0);
+				rigid->Force = Vector<TypeFloat>(1, 1, 1);
 
 				++m_delta;
 			}

@@ -51,13 +51,10 @@ T* Xplicit::InstanceManager::get(const char* name)
 template <typename T>
 std::vector<T*> Xplicit::InstanceManager::get_all(const char* name)
 {
-	if (!name)
-		return {};
-
-	if (*name == 0)
-		return {};
-
 	std::vector<T*> list;
+
+	if (!name || *name == 0)
+		return list;
 
 	for (size_t i = 0; i < m_instances.size(); ++i)
 	{

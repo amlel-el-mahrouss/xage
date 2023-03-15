@@ -262,6 +262,17 @@ namespace Xplicit
 		return mono_class_from_name(img, namespase, klass);
 	}
 
+	void MonoEngineInstance::add_internal_call(const char* name, const void* method) noexcept 
+	{
+		if (!method)
+			return;
+
+		if (!name || *name == 0)
+			return;
+
+		mono_add_internal_call(name, method);
+	}
+
 	MonoDomain* MonoEngineInstance::domain() noexcept { return m_app_domain; }
 
 	// Script Instance constructor

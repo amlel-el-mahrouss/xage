@@ -49,6 +49,8 @@ namespace Xplicit::Client
 		}
 	}
 
+	void LocalActor::attach(CameraInstance* cam) noexcept { m_camera = cam; }
+
 	LocalMoveEvent::LocalMoveEvent(const int64_t& id) 
 		: m_packet(), m_network(nullptr), m_id(id)
 	{

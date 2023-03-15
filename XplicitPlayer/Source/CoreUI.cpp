@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: CoreUI.cpp
- *			Purpose: Core Client UI.
+ *			Purpose: Core Client UI
  *
  * =====================================================================
  */
@@ -36,10 +36,8 @@ namespace Xplicit::CoreUI
 			break;
 		}
 
-		XPLICIT_INFO(path);
-
 		m_texture = IRR->getVideoDriver()->getTexture(path.c_str());
-		assert(m_texture);
+		XPLICIT_ASSERT(m_texture);
 
 		if (!m_texture)
 			throw EngineError();
@@ -90,6 +88,12 @@ namespace Xplicit::CoreUI
 
 	void HUD::update()
 	{
+		if (!m_network)
+			return;
+
+		if (!m_texture)
+			return;
+
 		auto packet = m_network->get();
 		
 		for (size_t i = XPLICIT_LAST_RESERVED_CMD; i < XPLICIT_NETWORK_CMD_MAX; ++i)

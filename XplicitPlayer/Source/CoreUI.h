@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: CoreUI.h
- *			Purpose: Core Client UI.
+ *			Purpose: Core Client UI
  *
  * =====================================================================
  */

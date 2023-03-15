@@ -118,7 +118,8 @@ namespace Xplicit
 	public:
 		ModuleManagerWin32() = delete;
 
-		explicit ModuleManagerWin32(const std::string& module_name) 
+		explicit ModuleManagerWin32(const std::string& module_name)
+			: hMod(nullptr)
 		{ 
 			assert(!module_name.empty());
 			hMod = LoadLibraryExA(module_name.c_str(), nullptr, 0);
@@ -148,7 +149,7 @@ namespace Xplicit
 		}
 
 	private:
-		HMODULE hMod{};
+		HMODULE hMod;
 
 	};
 
@@ -297,12 +298,14 @@ namespace Xplicit
 			m_thread.detach();
 		}
 
+		std::thread& operator->() const { return m_thread; }
+
 	public:
 		AsyncAction& operator=(const AsyncAction&) = default;
 		AsyncAction(const AsyncAction&) = default;
 
 	private:
-		std::thread m_thread;
+		std::jthread m_thread;
 
 	};
 

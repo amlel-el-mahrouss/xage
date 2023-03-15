@@ -1,0 +1,9 @@
+<!-- Scene Manifest -->
+<!-- Generated from XplicitStudio -->
+
+<Plugin>XplicitLuaPlugin.dll</Plugin>
+
+<GameVar Name="Actor">
+	<WalkSpeed Value="5.f"/>
+	<RunSpeed Value="10.f"/>
+</GameVar>

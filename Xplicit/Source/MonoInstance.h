@@ -43,6 +43,7 @@ namespace Xplicit
 		virtual void update() override;
 
 		MonoClass* make(Ref<MonoScriptInstance*>& assembly, const char* namespase, const char* klass);
+		void add_internal_call(const char* name, const void* method) noexcept;
 		MonoDomain* domain() noexcept;
 
 	private:

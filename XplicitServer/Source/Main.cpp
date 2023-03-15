@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *				XplicitNgin C++ Game Engine
+ *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
  *			File: Server.cpp
@@ -11,22 +11,27 @@
  */
 
 #include "SDK.h"
-
 #include "Actor.h"
 #include "ServerWatchdog.h"
+#include "PlayerPhysicsEvent.h"
 #include "PlayerJoinLeaveEvent.h"
+#include "PlayerSpawnDeathEvent.h"
 
 static void xplicit_send_stop_packet(Xplicit::NetworkServerInstance* server);
 static void xplicit_attach_mono();
 static void xplicit_load_shell();
 static void xplicit_read_xml();
 
+#define XPLICIT_MANIFEST_FILE "Manifest.xml"
+
 static void xplicit_read_xml()
 {
 	XPLICIT_GET_DATA_DIR(data);
 
 	std::string path = data;
-	path += "\\Server.xml";
+
+	path += "\\"; 
+	path += XPLICIT_MANIFEST_FILE;
 
 	rapidxml::file<> xml{ path.c_str() };
 	XPLICIT_ASSERT(xml.size() > 0);
@@ -104,7 +109,7 @@ static void xplicit_load_shell()
 			while (Xplicit::InstanceManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 			{
 				if (!Xplicit::ApplicationContext::get_singleton().ShouldExit)
-					std::cout << "# ";
+					std::cout << "$ ";
 
 				std::cin.getline(cmd_buf, 1024);
 
@@ -116,8 +121,8 @@ static void xplicit_load_shell()
 					xplicit_send_stop_packet(server);
 					Xplicit::NetworkServerTraits::send(server);
 
+					// finally stop
 					Xplicit::ApplicationContext::get_singleton().ShouldExit = true;
-
 				}
 
 				if (strcmp(cmd_buf, "help") == 0)
@@ -159,7 +164,9 @@ int main(int argc, char** argv)
 		auto server = Xplicit::InstanceManager::get_singleton_ptr()->add<Xplicit::NetworkServerInstance>(ip_address);
 		XPLICIT_ASSERT(server);
 
+		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerPhysicsEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
+		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::ServerWatchdogEvent>();
 
 		xplicit_attach_mono();

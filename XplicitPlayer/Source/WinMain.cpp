@@ -11,7 +11,6 @@
  */
 
 #include "Application.h"
-#include "Uri.h"
 
 #ifdef XPLICIT_WINDOWS
 
@@ -33,7 +32,7 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 			Xplicit::Utils::UriParser xdp{ XPLICIT_XDP_PROTOCOL };
 			xdp /= pCmdLine;
 			
-			// TODO: XDP Lookup.
+			// TODO: Lookup for the specified game using XDP.
 
 			return 1;
 		}

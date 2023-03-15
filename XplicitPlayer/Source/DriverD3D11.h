@@ -22,13 +22,21 @@
 #include <dxgi.h>
 #include <d3d11.h>
 
+/* Also include the physics engine */
+#include <Nplicit.h>
+
+/* Include nuklear, for debugging */
+
+#ifdef XPLICIT_DEBUG
+
 #include <nuklear/nuklear.h>
 #include <nuklear/nuklear_d3d11.h>
 #include <nuklear/nuklear_d3d11_pixel_shader.h>
 #include <nuklear/nuklear_d3d11_vertex_shader.h>
 
 #include <nuklear/nuklear.h>
-#include <Instance.h>
+
+#endif
 
 namespace Xplicit::Renderer
 {

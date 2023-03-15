@@ -40,7 +40,7 @@ namespace Xplicit::Client
 		virtual void update() override;
 
 	public:
-		void attach(CameraInstance* cam) noexcept { m_camera = cam; }
+		void attach(CameraInstance* cam) noexcept;
 
 	private:
 		NetworkInstance* m_network;

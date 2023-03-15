@@ -58,9 +58,7 @@ namespace Xplicit
 	void PlayerJoinLeaveEvent::operator()()
 	{
 		auto server = InstanceManager::get_singleton_ptr()->get<NetworkServerInstance>("NetworkServerInstance");
-
-		if (!server)
-			return;
+		if (!server) return;
 
 		for (size_t peer = 0; peer < server->size(); ++peer)
 		{
@@ -113,7 +111,7 @@ namespace Xplicit
 
 	bool PlayerJoinLeaveEvent::leave_event(NetworkServerInstance* server) noexcept
 	{
-		if (this->size() < 0)
+		if (this->size() <= 0)
 			return false;
 
 		if (!server)
