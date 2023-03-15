@@ -14,7 +14,7 @@
 
 namespace Xplicit
 {
-	static size_t xplicit_hash_from_uuid(uuids::uuid& uuid)
+	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid)
 	{
 		std::string uuid_str = uuids::to_string(uuid);
 		auto hash = std::hash<std::string>();
@@ -25,14 +25,21 @@ namespace Xplicit
 
 	static void xplicit_join_event(NetworkPeer* cl, Actor* actor, NetworkServerInstance* server)
 	{
-		auto hash = xplicit_hash_from_uuid(cl->unique_addr.uuid);
+		auto hash = xplicit_hash_from_uuid(cl->unique_addr.get());
+		
+		// I use version 4, to avoid collisions.
+		auto public_hash_uuid = UUIDFactory::version<4>();
+		cl->public_hash = xplicit_hash_from_uuid(public_hash_uuid);
+
 		cl->hash = hash;
 
 		actor->set(cl);
 
 		cl->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
+		cl->packet.public_hash = cl->public_hash;
 		cl->packet.hash = hash;
+
 		cl->stat = NETWORK_STAT_CONNECTED;
 	}
 
@@ -97,7 +104,7 @@ namespace Xplicit
 			++m_size;
 			xplicit_join_event(server->get(peer_idx), actor, server);
 
-			XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.uuid));
+			XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 
 			m_locked = false;
 
@@ -125,7 +132,7 @@ namespace Xplicit
 				if (xplicit_leave_event(server->get(peer_idx), server))
 				{
 					--m_size;
-					XPLICIT_INFO("[DISCONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.uuid));
+					XPLICIT_INFO("[DISCONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 				}
 			}
 		}

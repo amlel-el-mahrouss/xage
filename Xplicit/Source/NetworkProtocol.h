@@ -83,8 +83,9 @@ namespace Xplicit
         NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
 
     public:
-        int64_t health;
-        int64_t hash;
+        int64_t public_hash; /* Public hash being sent */
+        int64_t health; /* the health being sent (SERVER only) */
+        int64_t hash; /* the private hash (SERVER only) */
 
     public:
         float X;
@@ -113,15 +114,23 @@ namespace Xplicit
             UniqueAddress& operator=(const UniqueAddress&) = default;
             UniqueAddress(const UniqueAddress&) = default;
 
-            uuids::uuid uuid;
+            const uuids::uuid& get() noexcept { return uuid; }
+
+        private:
+            uuids::uuid public_uuid; /* Just here for saving purposes. */
+            uuids::uuid uuid; /* Given to the connecting client */
+
             std::string name;
+
+            friend NetworkPeer;
 
         };
 
     public:
         UniqueAddress unique_addr; /* unique network address of this peer */
         PrivateAddressData addr; /* current socket address. */
-        NetworkPacket packet; /* current packet. */
+        NetworkPacket packet; /* current network packet. */
+        int64_t public_hash; /* Public hash, for other clients */
         NETWORK_STAT stat; /* current network status */
         int64_t hash; /* connection hash. */
         bool bad; /* is the current peer bad, (has sent bad packets?) */

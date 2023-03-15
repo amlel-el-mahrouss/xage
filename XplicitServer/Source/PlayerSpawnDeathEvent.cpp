@@ -32,6 +32,17 @@ namespace Xplicit
 				actor->get()->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
 
 				m_dead_actors.push_back(actor);
+
+				for (size_t peer = 0; peer < m_network->size(); ++peer)
+				{
+					auto* ref = m_network->get(peer);
+
+					if (ref)
+					{
+						ref->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
+						ref->packet.public_hash = actor->get()->public_hash;
+					}
+				}
 			}
 			else
 			{
@@ -41,6 +52,18 @@ namespace Xplicit
 				{
 					m_dead_actors.erase(it);
 					actor->get()->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+
+					for (size_t peer = 0; peer < m_network->size(); ++peer)
+					{
+						auto* ref = m_network->get(peer);
+
+						if (ref)
+						{
+							ref->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+							ref->packet.health = actor->health();
+							ref->packet.public_hash = actor->get()->public_hash;
+						}
+					}
 				}
 			}
 		}

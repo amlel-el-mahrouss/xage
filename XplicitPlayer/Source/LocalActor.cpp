@@ -17,8 +17,9 @@
 namespace Xplicit::Client
 {
 	LocalActor::LocalActor(const int64_t& id)
-		: Instance(), m_packet(), m_id(id), m_camera(nullptr)
+		: Instance(), m_packet(), m_id(-1), m_camera(nullptr)
 	{
+		m_id = id;
 		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
 
 		XPLICIT_ASSERT(m_network);
@@ -41,12 +42,7 @@ namespace Xplicit::Client
 		if (!m_network)
 			return;
 
-		auto& packet = m_network->get();
-
-		if (packet.hash == this->m_id)
-		{
-
-		}
+		// TODO:
 	}
 
 	void LocalActor::attach(CameraInstance* cam) noexcept { m_camera = cam; }

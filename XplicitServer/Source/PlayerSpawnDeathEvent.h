@@ -19,7 +19,12 @@ namespace Xplicit
 	class PlayerSpawnDeathEvent : public Event
 	{
 	public:
-		PlayerSpawnDeathEvent() = default;
+		PlayerSpawnDeathEvent() 
+			: m_network(InstanceManager::get_singleton_ptr()->get<NetworkServerInstance>("NetworkServerInstance"))
+		{
+			XPLICIT_ASSERT(m_network);
+		}
+
 		virtual ~PlayerSpawnDeathEvent() = default;
 
 		PlayerSpawnDeathEvent& operator=(const PlayerSpawnDeathEvent&) = default;
@@ -31,6 +36,7 @@ namespace Xplicit
 
 	private:
 		std::vector<Actor*> m_dead_actors;
+		NetworkServerInstance* m_network;
 
 	};
 }

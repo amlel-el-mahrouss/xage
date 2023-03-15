@@ -42,7 +42,7 @@ namespace Xplicit
 						server->get(i)->packet.hash != server->get(i)->hash)
 					{
 						server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-						XPLICIT_INFO("[WATCHDOG] " + uuids::to_string(server->get(i)->unique_addr.uuid));
+						XPLICIT_INFO("[WATCHDOG] " + uuids::to_string(server->get(i)->unique_addr.get()));
 					}
 				}
 
