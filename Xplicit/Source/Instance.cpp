@@ -43,7 +43,7 @@ namespace Xplicit {
 
 	const char* Instance::name() noexcept { return ("Instance"); }
 
-	Instance::PHYSICS_TYPE Instance::physics() noexcept { return PHYSICS_FAST; }
+	Instance::PHYSICS_TYPE Instance::physics() noexcept { return PHYSICS_SIMPLE; }
 	Instance::INSTANCE_TYPE Instance::type() noexcept { return INSTANCE_LOGIC; }
 
 }

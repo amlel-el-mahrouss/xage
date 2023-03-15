@@ -19,7 +19,7 @@ namespace Xplicit::Client
 	CameraInstance::CameraInstance()
 		: Instance(), m_camera(nullptr)
 	{
-		m_camera = IRR->getSceneManager()->addCameraSceneNodeMaya(nullptr);
+		m_camera = IRR->getSceneManager()->addCameraSceneNodeFPS(nullptr);
 		XPLICIT_ASSERT(m_camera);
 
 		m_camera->setName(this->name());

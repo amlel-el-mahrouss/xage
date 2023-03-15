@@ -49,7 +49,7 @@ T* Xplicit::InstanceManager::get(const char* name)
 }
 
 template <typename T>
-std::vector<T*> Xplicit::InstanceManager::get_all(const char* name)
+std::vector<T*> Xplicit::InstanceManager::all_of(const char* name)
 {
 	std::vector<T*> list;
 

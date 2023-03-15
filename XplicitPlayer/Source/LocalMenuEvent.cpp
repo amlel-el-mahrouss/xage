@@ -57,7 +57,8 @@ namespace Xplicit::Client
 
 		if (m_enabled)
 		{
-			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / tween_start));
+			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, 
+				Xplicit::Client::XPLICIT_DIM.Height / tween_start));
 
 			if (tween_start > 4)
 				tween_start -= 0.01f;

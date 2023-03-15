@@ -66,6 +66,7 @@ namespace Xplicit
 
 		virtual const char* name() noexcept override;
 		virtual INSTANCE_TYPE type() noexcept override;
+		virtual bool should_update() noexcept override;
 
 		Ref<MonoEngineInstance*>& get();
 

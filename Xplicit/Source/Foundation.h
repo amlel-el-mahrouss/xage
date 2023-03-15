@@ -1,11 +1,11 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin C++ Game Engine
+ *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
  *			File: Foundation.h
- *			Purpose: Xplicit Foundation Header
+ *			Purpose: Foundation
  *
  * =====================================================================
  */

@@ -38,24 +38,22 @@ namespace Xplicit::Client
 
 	void LoadingInstance::update()
 	{
-		if (!m_run)
-			return;
-		
 		NetworkPacket packet{};
 		m_network->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
 			InstanceManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
-			auto actor = InstanceManager::get_singleton_ptr()->add<Xplicit::Client::LocalActor>(packet.hash);
+			auto actor = InstanceManager::get_singleton_ptr()->add<Xplicit::Client::LocalActor>(packet.hash, packet.public_hash);
 			XPLICIT_ASSERT(actor);
 
-			actor->attach(InstanceManager::get_singleton_ptr()->add<Xplicit::Client::CameraInstance>());
+			if (actor)
+				actor->attach(InstanceManager::get_singleton_ptr()->add<Xplicit::Client::CameraInstance>());
 
-			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
-			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.hash);
 			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalResetEvent>();
+			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
 			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalWatchdogEvent>(packet.hash);
+			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.hash, packet.public_hash);
 
 			m_run = false;
 

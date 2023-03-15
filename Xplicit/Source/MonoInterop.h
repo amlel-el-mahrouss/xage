@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  * 
- *				XplicitNgin C++ Game Engine
+ *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  * 
  *			File: MonoInterop.h
@@ -11,8 +11,6 @@
  */
 
 #pragma once
-
-// foundation headers
 
 #include "Event.h"
 #include "Instance.h"

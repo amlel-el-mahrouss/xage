@@ -26,6 +26,7 @@ namespace Xplicit::Client
 		LoadingInstance& operator=(const LoadingInstance&) = default;
 		LoadingInstance(const LoadingInstance&) = default;
 
+		virtual bool should_update() noexcept override { return m_run; }
 		virtual void update() override;
 		void connect(const char* ip);
 

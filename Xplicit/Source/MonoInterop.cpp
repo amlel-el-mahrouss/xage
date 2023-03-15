@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *				XplicitNgin C++ Game Engine
+ *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
  *			File: MonoInterop.cpp
@@ -40,7 +40,7 @@ namespace Xplicit
 		 * FIXME: Let MonoScriptInstance have it's own name -> get_all<MonoScriptInstance>("MyScript.dll");
 		 */
 
-		auto scripts = InstanceManager::get_singleton_ptr()->get_all<MonoScriptInstance>("MonoScriptInstance");
+		auto scripts = InstanceManager::get_singleton_ptr()->all_of<MonoScriptInstance>("MonoScriptInstance");
 
 		for (size_t i = 0; i < scripts.size(); i++)
 		{
@@ -145,7 +145,7 @@ namespace Xplicit
 		if (m_name.empty())
 			return;
 
-		auto scripts = InstanceManager::get_singleton_ptr()->get_all<MonoClassInstance>(m_name.c_str());
+		auto scripts = InstanceManager::get_singleton_ptr()->all_of<MonoClassInstance>(m_name.c_str());
 
 		for (size_t i = 0; i < scripts.size(); i++)
 		{

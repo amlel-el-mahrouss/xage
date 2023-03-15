@@ -309,8 +309,10 @@ namespace Xplicit
 
 	void MonoScriptInstance::update()
 	{
-		
+		// nothing.
 	}
+
+	bool MonoScriptInstance::should_update() noexcept { return false; }
 
 	MonoObject* MonoScriptInstance::run(const char* method_name)
 	{

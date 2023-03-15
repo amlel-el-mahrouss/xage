@@ -16,7 +16,7 @@
 
 namespace Xplicit::Client
 {
-	constexpr const int XPLICIT_MAX_RESETS = 1000; // max RST timeout
+	constexpr const int XPLICIT_MAX_RESETS = 10000; // max RST timeout
 
 	LocalResetEvent::LocalResetEvent()
 		: m_network(nullptr), m_num_resets(0)

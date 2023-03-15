@@ -13,7 +13,7 @@
 #pragma once
 
 #include "Config.h"
-#include "NMath.h" /* NPlicit math library */
+#include "NMath.h" /* Nplicit math library */
 
 #include <Instance.h>
 #include <Avx.h>

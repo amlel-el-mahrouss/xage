@@ -28,7 +28,7 @@ namespace Xplicit::Client
 	class LocalActor : public Instance
 	{
 	public:
-		LocalActor(const int64_t& id);
+		LocalActor(const int64_t& id, const int64_t& public_id);
 		virtual ~LocalActor();
 
 		LocalActor& operator=(const LocalActor&) = default;
@@ -46,6 +46,7 @@ namespace Xplicit::Client
 		NetworkInstance* m_network;
 		CameraInstance* m_camera;
 		NetworkPacket m_packet;
+		int64_t m_public_id;
 		int64_t m_id;
 
 	};
@@ -54,7 +55,7 @@ namespace Xplicit::Client
 	{
 	public:
 		LocalMoveEvent() = delete;
-		explicit LocalMoveEvent(const int64_t& id);
+		explicit LocalMoveEvent(const int64_t& id, const int64_t& public_id);
 		virtual ~LocalMoveEvent();
 
 		LocalMoveEvent& operator=(const LocalMoveEvent&) = default;
@@ -66,6 +67,7 @@ namespace Xplicit::Client
 	private:
 		NetworkInstance* m_network;
 		NetworkPacket m_packet;
+		int64_t m_public_id;
 		int64_t m_id;
 
 	};

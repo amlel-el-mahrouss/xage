@@ -45,7 +45,7 @@ namespace Xplicit
 
 	static bool xplicit_leave_event(NetworkPeer* cl, NetworkServerInstance* server)
 	{
-		auto actors = InstanceManager::get_singleton_ptr()->get_all<Actor>("Actor");
+		auto actors = InstanceManager::get_singleton_ptr()->all_of<Actor>("Actor");
 
 		for (size_t at = 0; at < actors.size(); ++at)
 		{

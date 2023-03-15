@@ -45,6 +45,7 @@ namespace Xplicit
 
 	private:
 		NetworkPeer* m_peer;
+		int64_t m_timeout;
 		int64_t m_health;
 
 	};

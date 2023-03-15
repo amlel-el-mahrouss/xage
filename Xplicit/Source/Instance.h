@@ -31,16 +31,16 @@ namespace Xplicit
 		InstanceManager(const InstanceManager&) = default;
 
 		template <typename T>
-		std::vector<T*> get_all(const char* name);
+		std::vector<T*> all_of(const char* name);
 
 		template <typename T, typename... Args>
 		T* add(Args&&... args);
 
 		template <typename T>
-		bool remove(T* ptr);
+		bool remove(const char* name);
 
 		template <typename T>
-		bool remove(const char* name);
+		bool remove(T* ptr);
 
 		template <typename T>
 		T* get(const char* name);
@@ -53,8 +53,6 @@ namespace Xplicit
 
 	private:
 		std::vector<Instance*> m_instances;
-
-		friend class Instance;
 
 	};
 
@@ -83,15 +81,15 @@ namespace Xplicit
 
 		enum PHYSICS_TYPE : uint8_t
 		{
-			PHYSICS_FAST, // Fast physics calculation
-			PHYSICS_COMPLEX, // Complex physics calculation
+			PHYSICS_SIMPLE, /* Rigidbody */
+			PHYSICS_COMPLEX, /* Complex Physics, Softbody */
 			PHYSICS_NONE,
 			PHYSICS_COUNT,
 		};
 
 	public:
-		virtual void update();
 		virtual bool should_update() noexcept;
+		virtual void update();
 
 	public:
 		virtual const char* name() noexcept;
