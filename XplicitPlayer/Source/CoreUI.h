@@ -22,24 +22,24 @@
 
 namespace Xplicit::CoreUI
 {
-	enum class ERROR_TYPE
+	enum class POPUP_TYPE
 	{
 		NetworkError,
 		Shutdown,
 		Kicked,
 	};
 
-	class ErrorMessage final : public Instance
+	class Popup final : public Instance
 	{
 	public:
-		ErrorMessage() = delete;
+		Popup() = delete;
 
 	public:
-		ErrorMessage(std::function<void()> on_click, const vector2di pos = vector2di(0, 0), const ERROR_TYPE shutdown_type = ERROR_TYPE::NetworkError) noexcept;
-		virtual ~ErrorMessage();
+		Popup(std::function<void()> on_click, const vector2di pos = vector2di(0, 0), const POPUP_TYPE shutdown_type = POPUP_TYPE::NetworkError) noexcept;
+		virtual ~Popup();
 
-		ErrorMessage& operator=(const ErrorMessage&) = delete;
-		ErrorMessage(const ErrorMessage&) = delete;
+		Popup& operator=(const Popup&) = delete;
+		Popup(const Popup&) = delete;
 
 		virtual void update() override;
 

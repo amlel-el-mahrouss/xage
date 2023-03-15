@@ -162,4 +162,24 @@ namespace Xplicit
 			}
 		}
 	}
+
+	void NetworkServerTraits::correct_collisions(NetworkServerInstance* server)
+	{
+		if (server)
+		{
+			NetworkPeer* prev_peer = nullptr;
+
+			for (size_t i = 0; i < server->size(); i++)
+			{
+				auto peer = server->get(i);
+
+				if (prev_peer && equals(prev_peer->addr, peer->addr))
+				{
+					peer->reset();
+				}
+
+				prev_peer = peer;
+			}
+		}
+	}
 }

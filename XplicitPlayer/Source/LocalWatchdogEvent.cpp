@@ -44,11 +44,11 @@ namespace Xplicit::Client
 
 			if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				if (!InstanceManager::get_singleton_ptr()->get<CoreUI::ErrorMessage>("ErrorMessage"))
+				if (!InstanceManager::get_singleton_ptr()->get<CoreUI::Popup>("Popup"))
 				{
-					InstanceManager::get_singleton_ptr()->add<CoreUI::ErrorMessage>([]()-> void {
+					InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 						IRR->closeDevice();
-						}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::ERROR_TYPE::Kicked);
+						}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::Kicked);
 
 				}
 			}

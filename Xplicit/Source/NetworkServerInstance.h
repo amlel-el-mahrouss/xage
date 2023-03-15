@@ -57,5 +57,8 @@ namespace Xplicit
 		static void send(NetworkServerInstance* instance);
 		static void recv(NetworkServerInstance* instance);
 
+		// correct any peer duplications.
+		static void correct_collisions(NetworkServerInstance* instance);
+
 	};
 }

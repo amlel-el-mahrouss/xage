@@ -1,18 +1,13 @@
 /*
  * =====================================================================
  *
- *			NplicitNgin
+ *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: RigidBody.cpp
- *			Purpose: Rigid Bodies
+ *			File: SDK.cpp
+ *			Purpose: Xplicit and Nplicit SDK
  *
  * =====================================================================
  */
 
-#include "RigidBody.h"
-
-namespace Xplicit::Physics
-{
-
-}
+#include "SDK.h"

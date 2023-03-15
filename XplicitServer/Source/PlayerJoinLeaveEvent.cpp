@@ -67,6 +67,8 @@ namespace Xplicit
 		auto server = InstanceManager::get_singleton_ptr()->get<NetworkServerInstance>("NetworkServerInstance");
 		if (!server) return;
 
+		NetworkServerTraits::correct_collisions(server);
+
 		for (size_t peer = 0; peer < server->size(); ++peer)
 		{
 			if (this->size() > XPLICIT_MAX_CONNECTIONS)
@@ -82,8 +84,11 @@ namespace Xplicit
 
 	bool PlayerJoinLeaveEvent::join_event(NetworkServerInstance* server, size_t peer_idx) noexcept
 	{
-		if (!server) return false;
-		if (m_locked) return false;
+		if (!server) 
+			return false;
+		
+		if (m_locked) 
+			return false;
 
 		m_locked = true;
 
@@ -99,7 +104,7 @@ namespace Xplicit
 			auto actor = InstanceManager::get_singleton_ptr()->add<Actor>();
 
 			if (!actor)
-				throw EngineError();
+				return false;
 
 			++m_size;
 			xplicit_join_event(server->get(peer_idx), actor, server);

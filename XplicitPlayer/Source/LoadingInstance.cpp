@@ -69,9 +69,9 @@ namespace Xplicit::Client
 		// peek after the ++timeout
 		if (m_timeout < 0)
 		{
-			InstanceManager::get_singleton_ptr()->add<CoreUI::ErrorMessage>([]()-> void {
+			InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 				IRR->closeDevice();
-			}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::ERROR_TYPE::NetworkError);
+			}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
 
 			m_run = false; // sprious reponse
 		}
@@ -108,9 +108,9 @@ namespace Xplicit::Client
 
 	void LoadingInstance::reset() noexcept
 	{
-		InstanceManager::get_singleton_ptr()->add<CoreUI::ErrorMessage>([]()-> void {
+		InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 			IRR->closeDevice();
-			}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::ERROR_TYPE::NetworkError);
+			}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
 
 	}
 }

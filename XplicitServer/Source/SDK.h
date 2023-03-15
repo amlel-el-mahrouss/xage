@@ -5,13 +5,14 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: SDK.h
- *			Purpose: Xplicit SDK Headers
+ *			Purpose: Xplicit and Nplicit SDK
  *
  * =====================================================================
  */
 
 #pragma once
 
+#include <Uri.h>
 #include <Event.h>
 #include <Instance.h>
 #include <Foundation.h>
@@ -27,8 +28,8 @@ extern "C"
 };
 #endif
 
-#include <rapidxml/rapidxml.hpp>
-#include <rapidxml/rapidxml_utils.hpp>
-
 #include <Nplicit.h>
 #include <RigidBody.h>
+
+#include <rapidxml/rapidxml.hpp>
+#include <rapidxml/rapidxml_utils.hpp>

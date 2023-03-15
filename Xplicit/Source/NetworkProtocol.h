@@ -65,7 +65,7 @@ namespace Xplicit
         NETWORK_CMD_WATCHDOG,
         NETWORK_CMD_ACK, // acknowledge
         NETWORK_CMD_KICK,
-        NETWORK_CMD_INVALID,
+        NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 15,
     };
 
