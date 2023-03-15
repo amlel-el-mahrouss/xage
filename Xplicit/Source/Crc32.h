@@ -12,6 +12,6 @@
 
 #pragma once
 
-#include "Foundation.h"
+#include "Xplicit.h"
 
 int crc32(const char* byte, int len);

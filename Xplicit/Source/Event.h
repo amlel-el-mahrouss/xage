@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Foundation.h"
+#include "Xplicit.h"
 #include "Instance.h"
 
 namespace Xplicit {
@@ -27,10 +27,8 @@ namespace Xplicit {
 	public:
 		~EventDispatcher() {}
 
-		EventDispatcher& operator=(const EventDispatcher&) = default;
-		EventDispatcher(const EventDispatcher&) = default;
-
-		void update() noexcept;
+		EventDispatcher& operator=(const EventDispatcher&) = delete;
+		EventDispatcher(const EventDispatcher&) = delete;
 
 		template <typename T, typename... Args>
 		T* add(Args&&... args);
@@ -39,7 +37,10 @@ namespace Xplicit {
 		T* get(const char* name);
 
 		template <typename T>
-		bool remove(const char* name);
+		bool remove(T* name);
+
+	public:
+		void update() noexcept;
 
 	public:
 		static EventDispatcher* get_singleton_ptr();

@@ -15,7 +15,7 @@
 
 namespace Xplicit::CoreUI
 {
-	Popup::Popup(std::function<void()> on_click, const vector2di pos, const POPUP_TYPE shutdown_type) noexcept
+	Popup::Popup(const std::function<void()>& on_click, const vector2di pos, const POPUP_TYPE shutdown_type) noexcept
 		: m_on_click(on_click), m_pos(pos)
 	{
 		XPLICIT_ASSERT(on_click);

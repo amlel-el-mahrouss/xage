@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Foundation.h"
+#include "Xplicit.h"
 
 namespace Xplicit 
 {
@@ -27,8 +27,8 @@ namespace Xplicit
 	public:
 		~InstanceManager() {}
 
-		InstanceManager& operator=(const InstanceManager&) = default;
-		InstanceManager(const InstanceManager&) = default;
+		InstanceManager& operator=(const InstanceManager&) = delete;
+		InstanceManager(const InstanceManager&) = delete;
 
 		template <typename T>
 		std::vector<T*> all_of(const char* name);
@@ -37,13 +37,10 @@ namespace Xplicit
 		T* add(Args&&... args);
 
 		template <typename T>
-		bool remove(const char* name);
+		T* get(const char* name);
 
 		template <typename T>
 		bool remove(T* ptr);
-
-		template <typename T>
-		T* get(const char* name);
 
 	public:
 		void update() noexcept;

@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: Foundation.h
- *			Purpose: Foundation
+ *			File: Xplicit.h
+ *			Purpose: Xplicit Core Classes
  *
  * =====================================================================
  */
@@ -20,10 +20,8 @@
 
 #define XPLICIT_END_OF_BUFFER '\0'
 
-XPLICIT_API size_t fstrlen(const char* str);
-
 XPLICIT_API void xplicit_log(const char* str);
-
+XPLICIT_API size_t fstrlen(const char* str);
 XPLICIT_API time_t xplicit_get_epoch();
 XPLICIT_API FILE* xplicit_get_logger();
 XPLICIT_API bool xplicit_open_logger();
@@ -440,10 +438,6 @@ namespace Xplicit
 
 	};
 
-#define XPLICIT_CRITICAL(XMSG) Xplicit::Logger::get_singleton().get()->critical(XMSG)
-#define XPLICIT_ERROR(XMSG) Xplicit::Logger::get_singleton().get()->error(XMSG)
-#define XPLICIT_INFO(XMSG) Xplicit::Logger::get_singleton().get()->info(XMSG)
-
 	class Timer final
 	{
 	public:
@@ -473,3 +467,7 @@ namespace Xplicit
 
 #define XPLICIT_INIT_COM XPLICIT_ASSERT(SUCCEEDED(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE)))
 #define XPLICIT_FINI_COM CoUninitialize()
+
+#define XPLICIT_CRITICAL(...) Xplicit::Logger::get_singleton().get()->critical(__VA_ARGS__)
+#define XPLICIT_ERROR(...) Xplicit::Logger::get_singleton().get()->error(__VA_ARGS__)
+#define XPLICIT_INFO(...) Xplicit::Logger::get_singleton().get()->info(__VA_ARGS__)

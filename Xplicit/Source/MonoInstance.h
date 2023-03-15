@@ -13,7 +13,7 @@
 #pragma once
 
 #include "Instance.h"
-#include "Foundation.h"
+#include "Xplicit.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>

@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Foundation.h"
+#include "Xplicit.h"
 
 namespace Xplicit::Utils
 {

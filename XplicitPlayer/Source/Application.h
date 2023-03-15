@@ -13,9 +13,6 @@
 #pragma once
 
 #include <Uri.h>
-#include <Event.h>
-#include <Instance.h>
-#include <Foundation.h>
 #include <ApplicationContext.h>
 
 #include "Camera.h"

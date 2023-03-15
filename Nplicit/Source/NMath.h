@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <Foundation.h>
+#include <Xplicit.h>
 #include <Avx.h>
 
 template <typename TypeLeft, typename TypeRight>

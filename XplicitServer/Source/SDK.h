@@ -15,7 +15,7 @@
 #include <Uri.h>
 #include <Event.h>
 #include <Instance.h>
-#include <Foundation.h>
+#include <Xplicit.h>
 #include <MonoInterop.h>
 #include <MonoInstance.h>
 #include <ApplicationContext.h>

@@ -16,9 +16,6 @@
 #include "MonoInstance.h"
 #include "MonoInterop.h"
 
-// std::runtime_error
-#include <stdexcept>
-
 namespace Xplicit
 {
 	XPLICIT_API MonoString* xplicit_read_packet()
@@ -289,11 +286,11 @@ namespace Xplicit
 			throw std::runtime_error("MonoScriptInstance: Couldn't load C# DLL..");
 	}
 
-	// destructor
+	// destructor, also destroys the EngineInstance, if ref count is below one.
 	MonoScriptInstance::~MonoScriptInstance() 
 	{
 		if (this->m_engine_ref.count() < 1)
-			InstanceManager::get_singleton_ptr()->remove<MonoEngineInstance>("MonoEngineInstance");
+			InstanceManager::get_singleton_ptr()->remove<MonoEngineInstance>(this->m_engine_ref.get());
 	}
 
 

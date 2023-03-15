@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Foundation.h"
+#include "Xplicit.h"
 
 #ifndef XPLICIT_URI_PROTOCOL
 #define XPLICIT_URI_PROTOCOL ("xconnect://")

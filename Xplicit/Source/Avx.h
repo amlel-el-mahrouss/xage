@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Foundation.h"
+#include "Xplicit.h"
 
 #ifdef XPLICIT_WINDOWS
 
@@ -20,10 +20,10 @@
 
 XPLICIT_API bool avx_strcmp(const char* str1, const char* str2);
 
-// use XPLICIT_USE_AVX, in order to tell if you want AVX or not.
+// use XPLICIT_USE_VECTOR, in order to tell if you want AVX or not.
 
 #ifdef XPLICIT_WANT_AVX
-#define XPLICIT_USE_AVX (1)
+#define XPLICIT_USE_VECTOR (1)
 #endif // idef XPLICIT_WANT_AVX
 
 #endif

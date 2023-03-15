@@ -13,7 +13,7 @@
 #pragma once
 
 #include "NetworkInstance.h"
-#include "Foundation.h"
+#include "Xplicit.h"
 #include "Event.h"
 
 namespace Xplicit

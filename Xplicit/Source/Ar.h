@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Foundation.h"
+#include "Xplicit.h"
 
 constexpr auto AR_MAGIC = 0xBADF00D;
 

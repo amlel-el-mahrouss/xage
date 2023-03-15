@@ -4,13 +4,13 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: Foundation.cpp
- *			Purpose: Foundation
+ *			File: Xplicit.cpp
+ *			Purpose: Foundation Classes
  *
  * =====================================================================
  */
 
-#include "Foundation.h"
+#include "Xplicit.h"
 
 static FILE* g_stdlog{ nullptr };
 

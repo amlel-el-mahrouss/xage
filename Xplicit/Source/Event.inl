@@ -35,35 +35,19 @@ T* Xplicit::EventDispatcher::get(const char* name)
 }
 
 template <typename T>
-bool Xplicit::EventDispatcher::remove(const char* id)
+bool Xplicit::EventDispatcher::remove(T* ptr)
 {
-	if (!id)
+	if (!ptr)
 		return false;
 
-	if (*id == 0)
-		return false;
+	auto iterator = std::find(m_events.cbegin(), m_events.cend(), ptr);
 
-	for (auto it = 0; it < m_events.size(); ++it)
+	if (iterator != m_events.cend())
 	{
-		T* obj = static_cast<T*>(m_events[it]);
+		m_events.erase(iterator);
+		delete ptr;
 
-		if (obj && (strcmp(obj->name(), id) == 0))
-		{
-			//
-			auto where_is = std::find(m_events.cbegin(), m_events.cend(), m_events[it]);
-
-			if (where_is != m_events.cend())
-				m_events.erase(where_is);
-
-			// finally remove the object
-			delete obj;
-
-#ifndef _NDEBUG
-			XPLICIT_INFO("Dropped Instance from InstanceManager");
-#endif
-
-			return true;
-		}
+		return true;
 	}
 
 	return false;

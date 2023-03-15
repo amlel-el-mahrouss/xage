@@ -35,7 +35,9 @@ namespace Xplicit::CoreUI
 		Popup() = delete;
 
 	public:
-		Popup(std::function<void()> on_click, const vector2di pos = vector2di(0, 0), const POPUP_TYPE shutdown_type = POPUP_TYPE::NetworkError) noexcept;
+		Popup(const std::function<void()>& on_click, const vector2di pos = vector2di(0, 0), 
+			const POPUP_TYPE shutdown_type = POPUP_TYPE::NetworkError) noexcept;
+
 		virtual ~Popup();
 
 		Popup& operator=(const Popup&) = delete;

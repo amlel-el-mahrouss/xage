@@ -16,7 +16,7 @@ template <typename T, typename... Args>
 T* Xplicit::InstanceManager::add(Args&&... args)
 {
 	T* ptr = new T{ args... };
-	assert(ptr);
+	XPLICIT_ASSERT(ptr);
 
 	m_instances.push_back(ptr);
 
@@ -26,10 +26,8 @@ T* Xplicit::InstanceManager::add(Args&&... args)
 template <typename T>
 T* Xplicit::InstanceManager::get(const char* name)
 {
-	if (!name)
-		return nullptr;
-
-	if (*name == 0)
+	if (!name ||
+		*name == 0)
 		return nullptr;
 
 	for (size_t i = 0; i < m_instances.size(); ++i)
@@ -37,7 +35,7 @@ T* Xplicit::InstanceManager::get(const char* name)
 		if (!m_instances[i])
 			continue;
 
-#ifdef XPLICIT_USE_AVX
+#ifdef XPLICIT_USE_VECTOR
 		if (avx_strcmp(name, m_instances[i]->name()))
 #else
 		if (strcmp(name, m_instances[i]->name()) == 0)
@@ -61,7 +59,7 @@ std::vector<T*> Xplicit::InstanceManager::all_of(const char* name)
 		if (!m_instances[i])
 			continue;
 
-#ifdef XPLICIT_USE_AVX
+#ifdef XPLICIT_USE_VECTOR
 		if (avx_strcmp(name, m_instances[i]->name()))
 #else
 		if (strcmp(name, m_instances[i]->name()) == 0)
@@ -78,52 +76,14 @@ bool Xplicit::InstanceManager::remove(T* ptr)
 	if (!ptr)
 		return false;
 
-	auto element = std::find(m_instances.cbegin(), m_instances.cend(), ptr);
+	auto iterator = std::find(m_instances.cbegin(), m_instances.cend(), ptr);
 
-	if (element != m_instances.cend())
+	if (iterator != m_instances.cend())
 	{
-		m_instances.erase(element);
+		m_instances.erase(iterator);
 		delete ptr;
 
 		return true;
-	}
-
-	return false;
-}
-
-template <typename T>
-bool Xplicit::InstanceManager::remove(const char* name)
-{
-	if (!name)
-		return false;
-
-	if (*name == 0)
-		return false;
-
-	for (size_t it = 0; it < m_instances.size(); ++it)
-	{
-#ifdef XPLICIT_USE_AVX
-		if (m_instances[it] && avx_strcmp(name, m_instances[it]->name()))
-#else
-		if (m_instances[it] && strcmp(name, m_instances[it]->name()) == 0)
-#endif
-		{
-			auto obj = m_instances[it];
-
-			auto element = std::find(m_instances.cbegin(), m_instances.cend(), m_instances[it]);
-
-			if (element != m_instances.cend())
-			{
-				m_instances.erase(element);
-
-				// finally remove the object
-				delete obj;
-
-				return true;
-			}
-
-			break;
-		}
 	}
 
 	return false;
