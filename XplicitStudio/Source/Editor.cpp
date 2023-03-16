@@ -26,7 +26,7 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 
 		std::cin.get();
 	}
-	catch (Xplicit::EngineError err)
+	catch (Xplicit::EngineError& err)
 	{
 		Xplicit::GUI::message_box(L"Uh Oh", L"No adapters we're found");
 	}
