@@ -354,7 +354,7 @@ namespace Xplicit
 	class GUI
 	{
 	public:
-		static int32_t message_box(LPCWSTR title, LPCWSTR message, int flags)
+		static int32_t message_box(LPCWSTR title, LPCWSTR message, int flags = MB_OK)
 		{
 			if (!title)
 				return -1;

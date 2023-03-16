@@ -21,6 +21,11 @@
 #include <cstdint>
 
 #include <uuid/uuid.h>
+
+#ifdef _WIN32
+#define SPDLOG_WCHAR_TO_UTF8_SUPPORT
+#endif
+
 #include <spdlog/spdlog.h>
 
 #include <WinSock2.h>

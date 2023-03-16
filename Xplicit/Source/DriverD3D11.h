@@ -16,10 +16,10 @@
 
 #ifdef XPLICIT_WINDOWS
 
+#include "Xplicit.h"
 #include "Avx.h"
 
 #include <wrl.h> /* Microsoft::WRL::ComPtr */
-
 #include <dxgi.h>
 #include <d3d11.h>
 #include <d3dcommon.h>

@@ -26,7 +26,7 @@ namespace Xplicit::Renderer
 		std::vector<IDXGIOutput*> Outputs;
 	};
 
-	static DxgiOutputResult&& xplicit_enum_outputs(IDXGIAdapter* adapter) noexcept
+	static DxgiOutputResult xplicit_enum_outputs(IDXGIAdapter* adapter) noexcept
 	{
 		DxgiOutputResult result;
 		IDXGIOutput* pOutput = nullptr;
@@ -37,10 +37,10 @@ namespace Xplicit::Renderer
 			++result.NumOutputs;
 		}
 
-		return std::move(result);
+		return result;
 	}
 
-	static void xplicit_d3d11_init_swapchain(DXGI_SWAP_CHAIN_DESC& swapDesc, DriverSystemD3D11::PrivateData& privateData)
+	static void xplicit_d3d11_make_swapchain(DXGI_SWAP_CHAIN_DESC& swapDesc, DriverSystemD3D11::PrivateData& privateData)
 	{
 		RtlZeroMemory(&swapDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
@@ -56,16 +56,17 @@ namespace Xplicit::Renderer
 		: m_swap_desc(), m_private()
 	{
 		m_private.WindowHandle = hwnd;
-		xplicit_d3d11_init_swapchain(m_swap_desc, m_private);
+		xplicit_d3d11_make_swapchain(m_swap_desc, m_private);
 
 		Microsoft::WRL::ComPtr<IDXGIFactory> factory;
 		CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(factory.GetAddressOf()));
 
-		while (FAILED(factory->EnumAdapters(0, m_private.Adapter.GetAddressOf())));
+		if (FAILED(factory->EnumAdapters(0, m_private.Adapter.GetAddressOf())))
+			throw EngineError();
 
 		if (m_private.Adapter)
 		{
-			auto outputs = xplicit_enum_outputs(m_private.Adapter.Get());
+			DxgiOutputResult outputs = xplicit_enum_outputs(m_private.Adapter.Get());
 		
 #ifdef XPLICIT_DEBUG
 			DXGI_OUTPUT_DESC desc;
@@ -77,7 +78,7 @@ namespace Xplicit::Renderer
 				output->GetDesc(&desc);
 
 				XPLICIT_INFO("AttachedToDesktop: ", desc.AttachedToDesktop ? "true" : "false");
-				// XPLICIT_INFO(desc.DeviceName);
+				XPLICIT_INFO(desc.DeviceName);
 			}
 #endif
 		}

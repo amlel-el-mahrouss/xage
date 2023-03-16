@@ -4,19 +4,24 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: MeshComponent.cpp
- *			Purpose:
+ *			File: MeshInstance.h
+ *			Purpose: Custom Mesh Instance (.dae or .xm)
  *
  * =====================================================================
  */
 
- /**
- @file
- */
+#pragma once
 
-#include "MeshComponent.h"
+#include <Xplicit.h>
+#include <ApplicationContext.h>
 
 namespace Xplicit::Client
 {
-
+	enum class RENDER_COMPONENT_TYPE
+	{
+		MESH,
+		TEXTURE,
+		PARTICLE_SYSTEM,
+		COUNT,
+	};
 }
