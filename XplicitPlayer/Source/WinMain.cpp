@@ -10,7 +10,13 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "Application.h"
+
+#ifdef XPLICIT_WINDOWS
 
 INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
@@ -61,3 +67,5 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 		return -1;
 	}
 }
+
+#endif

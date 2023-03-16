@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "NetworkServerInstance.h"
 #include "NetworkInstance.h"
 

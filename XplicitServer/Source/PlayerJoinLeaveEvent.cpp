@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "PlayerJoinLeaveEvent.h"
 
 namespace Xplicit

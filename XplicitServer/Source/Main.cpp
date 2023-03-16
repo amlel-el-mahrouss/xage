@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "SDK.h"
 #include "Actor.h"
 #include "ServerWatchdog.h"

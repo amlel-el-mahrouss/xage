@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "LocalWatchdogEvent.h"
 #include "LoadingInstance.h"
 #include "LocalResetEvent.h"
@@ -51,14 +55,30 @@ namespace Xplicit::Client
 			XPLICIT_ASSERT(actor);
 
 			if (actor)
+			{
 				actor->attach(InstanceManager::get_singleton_ptr()->add<Xplicit::Client::CameraInstance>());
 
-			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalResetEvent>();
-			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
-			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalWatchdogEvent>(packet.hash);
-			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.public_hash);
+				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalResetEvent>();
+				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
+				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalWatchdogEvent>(packet.hash);
+				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.public_hash);
 
-			m_run = false;
+				m_run = false;
+			}
+			else
+			{
+				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+				packet.hash = packet.hash;
+
+				m_network->send(packet);
+				
+				InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
+					IRR->closeDevice();
+				}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
+
+
+				m_run = false;
+			}
 		}
 		else
 		{
@@ -76,15 +96,18 @@ namespace Xplicit::Client
 					}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
 
 				m_run = false; // sprious reponse
+
 			}
+			else
+			{
+				// retry...
+				packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
+				packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
-			// retry...
-			packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
-			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+				m_network->send(packet);
 
-			m_network->send(packet);
-
-			XPLICIT_SLEEP(100);
+				XPLICIT_SLEEP(100);
+			}
 		}
 	}
 

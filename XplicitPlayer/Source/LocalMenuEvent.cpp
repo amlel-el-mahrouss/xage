@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
@@ -61,9 +65,6 @@ namespace Xplicit::Client
 
 		if (m_enabled)
 		{
-			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, 
-				Xplicit::Client::XPLICIT_DIM.Height / tween_start));
-
 			if (tween_start > LOCAL_MENU_TWEEN_END)
 				tween_start -= LOCAL_MENU_TWEENING;
 
@@ -83,6 +84,17 @@ namespace Xplicit::Client
 			{
 				m_enabled = false;
 			}
+		}
+		else
+		{
+			if (tween_start < LOCAL_MENU_TWEEN_START)
+				tween_start += LOCAL_MENU_TWEENING;
+		}
+
+		if (tween_start < LOCAL_MENU_TWEEN_START)
+		{
+			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45,
+				Xplicit::Client::XPLICIT_DIM.Height / tween_start));
 		}
 
 		--m_timeout;

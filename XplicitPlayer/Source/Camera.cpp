@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "Application.h"
 #include "Camera.h"
 #include "CoreUI.h"

@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "Application.h"
 #include "LocalActor.h"
 #include "CoreUI.h"

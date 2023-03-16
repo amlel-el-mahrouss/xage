@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "MeshComponent.h"
 
 namespace Xplicit::Client

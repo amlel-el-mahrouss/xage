@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "LocalResetEvent.h"
 #include "Application.h"
 #include "CoreUI.h"

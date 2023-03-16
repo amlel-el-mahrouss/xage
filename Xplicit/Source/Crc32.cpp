@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "Crc32.h"
 
 unsigned crc32_tab[256] = {
@@ -58,16 +62,16 @@ unsigned crc32_tab[256] = {
     0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 };
 
-static unsigned crc_byte(int crc, unsigned char byte) {
+static unsigned xplicit_crc_byte(int crc, unsigned char byte) {
     crc = (crc >> 8) ^ crc32_tab[(byte) ^ (crc & 0x000000FF)]; // shift 8 bytes to the right XOR polynomial XOR the crc without the 2 highest bytes
     return crc;
 }
 
-int crc32(const char* byte, int len) {
+int xplicit_crc32(const char* byte, int len) {
     int checksum = 0;
 
     for (unsigned char index = 1; index < len; ++index)
-        checksum = crc_byte(checksum, byte[index]);
+        checksum = xplicit_crc_byte(checksum, byte[index]);
 
     return checksum;
 }

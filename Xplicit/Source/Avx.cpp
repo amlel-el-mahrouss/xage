@@ -10,11 +10,15 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "Avx.h"
 
 #ifdef XPLICIT_WINDOWS
 
-bool avx_strcmp(const char* str1, const char* str2)
+bool avx_strequals(const char* str1, const char* str2)
 {
 	__m256i a = _mm256_load_si256((__m256i*)str2);
 	__m256i b = _mm256_load_si256((__m256i*)str2);

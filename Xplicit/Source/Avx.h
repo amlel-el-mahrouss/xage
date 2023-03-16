@@ -18,7 +18,7 @@
 
 #include <immintrin.h>
 
-XPLICIT_API bool avx_strcmp(const char* str1, const char* str2);
+XPLICIT_API bool avx_strequals(const char* str1, const char* str2);
 
 // use XPLICIT_USE_VECTOR, in order to tell if you want AVX or not.
 

@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "PlayerSpawnDeathEvent.h"
 
 namespace Xplicit

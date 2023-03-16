@@ -14,4 +14,4 @@
 
 #include "Xplicit.h"
 
-int crc32(const char* byte, int len);
+XPLICIT_API int xplicit_crc32(const char* byte, int len);

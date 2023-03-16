@@ -36,7 +36,7 @@ T* Xplicit::InstanceManager::get(const char* name)
 			continue;
 
 #ifdef XPLICIT_USE_VECTOR
-		if (avx_strcmp(name, m_instances[i]->name()))
+		if (avx_strequals(name, m_instances[i]->name()))
 #else
 		if (strcmp(name, m_instances[i]->name()) == 0)
 #endif
@@ -60,7 +60,7 @@ std::vector<T*> Xplicit::InstanceManager::all_of(const char* name)
 			continue;
 
 #ifdef XPLICIT_USE_VECTOR
-		if (avx_strcmp(name, m_instances[i]->name()))
+		if (avx_strequals(name, m_instances[i]->name()))
 #else
 		if (strcmp(name, m_instances[i]->name()) == 0)
 #endif

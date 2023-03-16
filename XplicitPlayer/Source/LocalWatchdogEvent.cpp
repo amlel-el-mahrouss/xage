@@ -10,6 +10,10 @@
  * =====================================================================
  */
 
+ /**
+ @file
+ */
+
 #include "LocalWatchdogEvent.h"
 #include "Application.h"
 #include "CoreUI.h"
