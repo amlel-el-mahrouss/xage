@@ -24,27 +24,34 @@ namespace Xplicit
 
 		for (Actor* actor : actors)
 		{
-			if (!actor->get() ||
-				actor->health() <= 0)
+			if (!actor ||
+				actor->health() <= 0 ||
+				!actor->get())
 				continue;
 
-			actor->get()->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+			auto peer = actor->get();
 
-			if (actor->get()->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
+			peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+
+			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 			{
-				actor->get()->packet.X = 10.f;
+				peer->packet.X = 10.f;
 			}
-			else if (actor->get()->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARDS)
+			else if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
 			{
-				actor->get()->packet.X = -10.f;
+				peer->packet.X = -10.f;
 			}
-			else if (actor->get()->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
+			else if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
 			{
-				actor->get()->packet.Z = 10.f;
+				peer->packet.Z = 10.f;
 			}
-			else if (actor->get()->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
+			else if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 			{
-				actor->get()->packet.Z = -10.f;
+				peer->packet.Z = -10.f;
+			}
+			else
+			{
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
 			}
 		}
 	}

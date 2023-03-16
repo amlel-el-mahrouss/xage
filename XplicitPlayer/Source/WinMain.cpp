@@ -42,6 +42,7 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 		}
 
 		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri.get().c_str());
+
 		if (!app)
 			throw Xplicit::EngineError();
 

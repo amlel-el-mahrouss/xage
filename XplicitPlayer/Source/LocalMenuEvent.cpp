@@ -32,7 +32,11 @@ namespace Xplicit::Client
 		m_menu = IRR->getVideoDriver()->getTexture(frame_path.c_str());
 	}
 
-	LocalMenuEvent::~LocalMenuEvent() {}
+	LocalMenuEvent::~LocalMenuEvent() 
+	{
+		if (m_menu)
+			m_menu->drop();
+	}
 
 	const char* LocalMenuEvent::name() noexcept { return ("LocalMenuEvent"); }
 
@@ -70,14 +74,14 @@ namespace Xplicit::Client
 
 			if (KB->key_down(KEY_KEY_L))
 			{
-				NetworkPacket pckt{};
+				NetworkPacket stop_packet{};
 
-				pckt.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-				pckt.hash = m_hash;
+				stop_packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+				stop_packet.hash = m_hash;
 
-				m_network->send(pckt);
-
+				m_network->send(stop_packet);
 				m_enabled = false;
+				
 				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))

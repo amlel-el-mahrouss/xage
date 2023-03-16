@@ -27,7 +27,8 @@ namespace Xplicit
 
 		for (Actor* actor : actors)
 		{
-			if (!actor->get())
+			if (!actor ||
+				!actor->get())
 				continue;
 
 			if (actor->health() <= 0)

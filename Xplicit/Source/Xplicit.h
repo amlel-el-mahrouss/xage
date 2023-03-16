@@ -254,17 +254,18 @@ namespace Xplicit
 				return {};
 
 			Ref<HINSTANCE> instance = ShellExecuteA(priv, SHELL_MANAGER_EXEC_OPEN, appname.c_str(), nullptr, nullptr, SW_SHOW);
-			if (!instance) throw Win32Error("HINSTANCE has a problem, check hr()");
+			if (!instance) throw Win32Error("HINSTANCE Error, check hr()");
 
 			return instance;
 		}
 
-		static Ref<HINSTANCE> open(const char* appname, PrivShellData priv) {
+		static Ref<HINSTANCE> open(const char* appname, PrivShellData priv) 
+		{
 			if (!appname) 
 				return {};
 
 			Ref<HINSTANCE> instance = ShellExecuteA(priv, SHELL_MANAGER_EXEC_OPEN, appname, nullptr, nullptr, SW_SHOW);
-			if (!instance) throw Win32Error("HINSTANCE has a problem, check hr()");
+			if (!instance) throw Win32Error("HINSTANCE Error, check hr()");
 
 			return instance;
 		}
