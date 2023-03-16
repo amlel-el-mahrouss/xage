@@ -17,6 +17,10 @@
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
+#define LOCAL_MENU_TWEEN_START (8)
+#define LOCAL_MENU_TWEEN_END (4)
+#define LOCAL_MENU_TWEENING (0.1f)
+
 namespace Xplicit::Client
 {
 	LocalMenuEvent::LocalMenuEvent(const int64_t& hash)
@@ -48,10 +52,6 @@ namespace Xplicit::Client
 	bool LocalMenuEvent::enabled() noexcept { return m_enabled; }
 
 	static const int XPLICIT_TIMEOUT_MENU = 200;
-
-#define LOCAL_MENU_TWEEN_START (8)
-#define LOCAL_MENU_TWEEN_END (4)
-#define LOCAL_MENU_TWEENING (0.1f)
 
 	void LocalMenuEvent::operator()()
 	{

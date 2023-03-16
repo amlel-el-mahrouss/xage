@@ -98,9 +98,9 @@ static void xplicit_attach_mono()
 
 static void xplicit_print_help()
 {
-	puts("\a-------------- HELP --------------");
-	puts("stop: Stops and exits the server.");
-	puts("-------------- HELP --------------");
+	puts("\a-------------- Xplicit Shell --------------");
+	puts("exit: exits the server.");
+	puts("-------------- Xplicit Shell --------------");
 }
 
 static void xplicit_load_shell()
@@ -117,7 +117,7 @@ static void xplicit_load_shell()
 
 				std::cin.getline(cmd_buf, 1024);
 
-				if (strcmp(cmd_buf, "stop") == 0)
+				if (strcmp(cmd_buf, "exit") == 0)
 				{
 					auto server = Xplicit::InstanceManager::get_singleton_ptr()->get<Xplicit::NetworkServerInstance>("NetworkServerInstance");
 					XPLICIT_ASSERT(server);
@@ -129,7 +129,7 @@ static void xplicit_load_shell()
 					Xplicit::ApplicationContext::get_singleton().ShouldExit = true;
 				}
 
-				if (strcmp(cmd_buf, "help") == 0)
+				if (strcmp(cmd_buf, "man") == 0)
 				{
 					xplicit_print_help();
 				}

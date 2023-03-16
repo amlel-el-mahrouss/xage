@@ -39,14 +39,11 @@ namespace Xplicit
 					if (server->get(i)->stat == NETWORK_STAT_DISCONNECTED)
 						continue;
 
-					if (server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
-						continue;
-
 					if (server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK ||
 						server->get(i)->packet.hash != server->get(i)->hash)
 					{
 						server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-						XPLICIT_INFO("[WATCHDOG] " + uuids::to_string(server->get(i)->unique_addr.get()));
+						XPLICIT_INFO("[WATCHDOG] Flagged " + uuids::to_string(server->get(i)->unique_addr.get()));
 					}
 				}
 
