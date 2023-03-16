@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Nplicit.h
- *			Purpose: 
+ *			Purpose: Nplicit Common Header, Nplicit Handles from mathematics to equation solving (for physics)
  *
  * =====================================================================
  */

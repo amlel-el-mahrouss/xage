@@ -68,9 +68,10 @@ namespace Xplicit::Renderer
 			auto outputs = xplicit_enum_outputs(m_private.Adapter.Get());
 		
 #ifdef XPLICIT_DEBUG
+			DXGI_OUTPUT_DESC desc;
+
 			for (auto* output : outputs.Outputs)
 			{
-				DXGI_OUTPUT_DESC desc;
 				RtlZeroMemory(&desc, sizeof(DXGI_OUTPUT_DESC));
 		
 				output->GetDesc(&desc);

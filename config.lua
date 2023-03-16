@@ -1,6 +1,7 @@
 XPLICIT_PROJ = "Xplicit"
 XPLICIT_SERVER_PROJ = "XplicitServer"
 XPLICIT_CLIENT_PROJ = "XplicitPlayer"
+XPLICIT_STUDIO_PROJ = "XplicitStudio"
 XPLICIT_WORKSPACE = "XplicitNgin"
 NPLICIT_PROJ = "Nplicit"
 
@@ -21,6 +22,9 @@ XPLICIT_CONFIG = {
     ["_LIBDIR"] = {
     	  "Vendor/lib/Irrlicht",
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
+	  "dxgi",
+	  "d3d11",
+	  "d3dcompiler"
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -86,6 +90,39 @@ XPLICIT_CLIENT_CONFIG = {
     	"Xplicit/Source/",
     	"Xplicit/Vendor/include/",
     	"Vendor/irr/include",
+        "Vendor/lua/",
+        "Vendor/stb/",
+        "Vendor/nuklear/",
+    	  "Nplicit/Source/",
+        "C:/Program Files/Mono/include/mono-2.0",
+    }
+};
+
+XPLICIT_STUDIO_CONFIG = {
+    ["_CXXDIALECT"] = 2022,
+    ["_CONFIGS"] = { "Debug", "Release" },
+    ["_MACROS"] = { "__XPLICIT__", "_CRT_SECURE_NO_WARNINGS", "_WINSOCK_DEPRECATED_NO_WARNINGS" },
+    ["_DIALECT"] = "C++",
+    ["_FILES"] = {
+        ["_INC"] = {
+            "XplicitStudio/Source/**.h",
+            "XplicitStudio/Source/**.inl",
+        },
+        ["_SRC"] = {
+            "XplicitStudio/Source/**.cpp",
+            "XplicitStudio/Source/**.c"
+        },
+    },
+    ["_LIBDIR"] = {
+    	"bin/Debug/Xplicit",
+	"d3d11",
+	"dxgi",
+    },
+    ["_INCDIR"] = {
+        "Vendor/",
+    	 "Xplicit/Source/",
+    	 "Xplicit/Vendor/include/",
+    	 "Vendor/irr/include",
         "Vendor/lua/",
         "Vendor/stb/",
         "Vendor/nuklear/",

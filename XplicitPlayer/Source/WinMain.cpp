@@ -45,11 +45,11 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 
 		if (!app)
 			throw Xplicit::EngineError();
-
+		
 		while (IRR->run() && Xplicit::InstanceManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{
 			// To match the loading's screen colour.
-			IRR->getVideoDriver()->beginScene(true, true, irr::video::SColor(40, 40, 40, 40));
+			IRR->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 40, 40, 40));
 
 			IRR->getSceneManager()->drawAll();
 			IRR->getGUIEnvironment()->drawAll();
