@@ -159,7 +159,11 @@ int main(int argc, char** argv)
 		WSADATA wsa;
 		Xplicit::init_winsock(&wsa);
 
-		// the address to bind to is located in the XPLICIT_SERVER_ADDR environement variable.
+		/*
+			The address to bind
+			is located in the XPLICIT_SERVER_ADDR
+		*/
+
 		const char* ip_address = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
 		if (!ip_address)

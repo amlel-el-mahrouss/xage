@@ -33,6 +33,7 @@ namespace Xplicit
 
 			peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
+			// TODO: Game Vars, needs to be taken into consideration here.
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 			{
 				peer->packet.X = 10.f;

@@ -42,7 +42,8 @@ namespace Xplicit::Client
 
 	void LocalActor::update()
 	{
-		// TODO:
+		// TODO: update according to public_hash
+		// And then set the position.
 	}
 
 	void LocalActor::attach(CameraInstance* cam) noexcept { m_camera = cam; }

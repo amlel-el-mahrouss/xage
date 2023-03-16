@@ -49,7 +49,6 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 		// create a new app.
 		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri.get().c_str());
 
-
 		if (!app)
 			throw Xplicit::EngineError();
 		
@@ -63,7 +62,6 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 				irr::video::SColor(255, 40, 40, 40));
 
 			IRR->getSceneManager()->drawAll();
-			IRR->getGUIEnvironment()->drawAll();
 
 			Xplicit::EventDispatcher::get_singleton_ptr()->update();
 			Xplicit::InstanceManager::get_singleton_ptr()->update();
@@ -75,7 +73,11 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 	}
 	catch (const std::runtime_error& err)
 	{
-		MessageBoxA(nullptr, err.what(), "XplicitNgin", MB_OK);
+#ifdef XPLICIT_DEBUG
+		XPLICIT_INFO(err.what());
+#endif
+
+		Xplicit::GUI::message_box(L"Something Bad happen!\r\nExiting", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
 		return -1;
 	}
 }

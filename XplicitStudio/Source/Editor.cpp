@@ -21,14 +21,13 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 	try
 	{
 		Xplicit::open_terminal();
-		Xplicit::Renderer::DriverSystemD3D11 my_render_system(nullptr);
-		XPLICIT_INFO(my_render_system.name());
 
-		std::cin.get();
+		// HWND, should be borderless.
+		Xplicit::Renderer::DriverSystemD3D11 studio_renderer(nullptr);
 	}
 	catch (Xplicit::EngineError& err)
 	{
-		Xplicit::GUI::message_box(L"Uh Oh", L"No adapters we're found");
+		Xplicit::GUI::message_box(L"XplicitStudio", L"C++ Engine Error!\r\nCan't Continue :(", MB_ICONASTERISK | MB_OK);
 	}
 
 	return 0;

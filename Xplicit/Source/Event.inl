@@ -10,6 +10,8 @@
  * =====================================================================
  */
 
+#include "Avx.h"
+
 template <typename T, typename... Args>
 T* Xplicit::EventDispatcher::add(Args&&... args)
 {
@@ -33,7 +35,11 @@ T* Xplicit::EventDispatcher::get(const char* name)
 		if (!m_events[i])
 			continue;
 
+#ifdef XPLICIT_USE_VECTOR
+		if (avx_strequals(name, m_events[i]->name()))
+#else
 		if (strcmp(name, m_events[i]->name()) == 0)
+#endif
 			return static_cast<T*>(m_events[i]);
 	}
 

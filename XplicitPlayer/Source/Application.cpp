@@ -22,10 +22,9 @@ namespace Xplicit::Bites
 		: m_settings(), m_wsa(), m_data_path("")
 	{
 		XPLICIT_GET_DATA_DIR(data_tmp);
-
 		m_data_path += data_tmp;
 
-		assert(!m_data_path.empty());
+		XPLICIT_ASSERT(!m_data_path.empty());
 
 #ifdef XPLICIT_WINDOWS
 		Xplicit::init_winsock(&m_wsa);

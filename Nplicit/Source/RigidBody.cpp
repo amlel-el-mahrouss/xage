@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: RigidBody.cpp
- *			Purpose: Rigid Bodies
+ *			Purpose: RigidBody Class
  *
  * =====================================================================
  */
