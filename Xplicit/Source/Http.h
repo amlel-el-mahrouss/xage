@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Http.h
- *			Purpose: HTTP client
+ *			Purpose: C++ HTTP client
  *
  * =====================================================================
  */
@@ -23,17 +23,30 @@ namespace Xplicit::Utils
     class HTTPHelpers;
     class HTTPWriter;
 
-    class MIMEFactory final {
+    class MIMEFactory final 
+    {
     public:
-        struct mime final {
+        struct MIME final 
+        {
             std::string t_name;
             std::string t_mime;
         };
 
     public:
-        static MIMEFactory::mime get(char* name) {
-            if (!name) return { .t_name = "Any", .t_mime = "*/*" };
+        MIMEFactory() = default;
+        ~MIMEFactory() = default;
+
+        MIMEFactory& operator=(const MIMEFactory&) = default;
+        MIMEFactory(const MIMEFactory&) = default;
+
+    public:
+        MIMEFactory::MIME operator()(char* name) 
+        {
+            if (!name) 
+                return { .t_name = "Any", .t_mime = "*/*" };
+
             std::string extension = strchr(name, '.');
+            XPLICIT_ASSERT(!extension.empty());
 
             if (!strcmp(extension.c_str(), ".png"))
                 return { .t_name = "PNG", .t_mime = "Content-Type: image/png" };
@@ -51,7 +64,8 @@ namespace Xplicit::Utils
 
     };
 
-    namespace HTTP {
+    namespace HTTP 
+    {
         class HTTPSocket final 
         {
         private:
@@ -117,7 +131,6 @@ namespace Xplicit::Utils
     class HTTPHelpers 
     {
     public:
-
         static std::string make_get(const std::string& path, 
             const std::string& host,
             const char* user_agent = "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36\n"
@@ -180,10 +193,10 @@ namespace Xplicit::Utils
 
         ~HTTPWriter() noexcept 
         {
-            shutdown(m_Socket->m_Socket, SD_BOTH);
-            closesocket(m_Socket->m_Socket);
+            if (shutdown(m_Socket->m_Socket, SD_BOTH) == SOCKET_ERROR)
+                closesocket(m_Socket->m_Socket);
 
-#ifndef _NDEBUG
+#ifdef XPLICIT_DEBUG
             char buf[256];
             vsprintf_s<256U>(buf, "[SERVER] %s has been closed!", m_Socket->m_Dns.data());
 
@@ -195,9 +208,10 @@ namespace Xplicit::Utils
         HTTPWriter& operator=(const HTTPWriter&) = default;
         HTTPWriter(const HTTPWriter&) = default;
 
-        HTTPSharedPtr create_and_connect(const std::string& dns) {
+        HTTPSharedPtr create_and_connect(const std::string& dns) 
+        {
             if (dns.empty()) 
-                throw HTTPError(HTTP_INTERNAL_ERROR);
+                throw HTTPError(HTTP_DNS_ERROR);
 
             HTTPSharedPtr sock = std::make_unique<HTTP::HTTPSocket>();
 
@@ -219,29 +233,35 @@ namespace Xplicit::Utils
 
             int result = connect(sock->m_Socket, reinterpret_cast<SOCKADDR*>(&sock->m_Addr), sizeof(sock->m_Addr));
             
-            if (result == -1) 
+            if (result == SOCKET_ERROR) 
                 throw HTTPError(HTTP_DNS_ERROR);
 
             return sock;
         }
 
-        int64_t send_from_socket(HTTPSharedPtr& sock, HTTP::HTTPHeader* hdr) {
+        int64_t send_from_socket(HTTPSharedPtr& sock, Ref<HTTP::HTTPHeader*>& hdr) 
+        {
 #ifndef NDEBUG
             assert(sock);
             assert(hdr);
             assert(!sock->m_Dns.empty());
 #endif
 
-            int64_t result{ -1 };
+            int64_t result{ SOCKET_ERROR };
+
             if (result = send(sock->m_Socket, hdr->Bytes, hdr->Size, 0) != hdr->Size)
                 throw HTTPError(HTTP_INTERNAL_ERROR);
 
             return result;
         }
 
-        int64_t read_from_socket(HTTPSharedPtr& sock, char* bytes, int len) {
-            if (!sock) throw HTTPError(HTTP_INTERNAL_ERROR);
-            if (!bytes) throw HTTPError(HTTP_INTERNAL_ERROR);
+        int64_t read_from_socket(HTTPSharedPtr& sock, char* bytes, int len) 
+        {
+            if (!sock) 
+                throw HTTPError(HTTP_INTERNAL_ERROR);
+
+            if (!bytes) 
+                throw HTTPError(HTTP_INTERNAL_ERROR);
 
 #ifdef XPLICIT_DEBUG
             XPLICIT_ASSERT(sock);

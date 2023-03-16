@@ -1,3 +1,19 @@
+/*
+ * =====================================================================
+ *
+ *			XplicitNgin
+ *			Copyright XPX, all rights reserved.
+ *
+ *			File: Editor.cpp
+ *			Purpose: Xplicit Studio
+ *
+ * =====================================================================
+ */
+
+/**
+* @file
+*/
+
 #include <DriverD3D11.h>
 
 INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)

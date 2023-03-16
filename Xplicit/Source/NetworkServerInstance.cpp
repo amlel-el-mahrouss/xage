@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: NetworkServerInstance.cpp
- *			Purpose: XPX Protocol Server
+ *			Purpose: XDP Protocol Server
  * 
  * =====================================================================
  */
@@ -134,7 +134,7 @@ namespace Xplicit
 				NetworkPacket tmp{};
 				int fromLen = sizeof(struct sockaddr_in);
 
-				int res = ::recvfrom(server->m_socket, (char*)&tmp, sizeof(NetworkPacket), 0,
+				int res = ::recvfrom(server->m_socket, reinterpret_cast<char*>(&tmp), sizeof(NetworkPacket), 0,
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &fromLen);
 
 				if (res == SOCKET_ERROR)

@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Http.h
- *			Purpose: HTTP client
+ *			Purpose: C++ HTTP client
  *
  * =====================================================================
  */

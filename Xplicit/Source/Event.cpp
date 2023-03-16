@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Event.cpp
- *			Purpose: Xplicit Event System
+ *			Purpose: Xplicit Event Dispatcher
  *
  * =====================================================================
  */
@@ -23,7 +23,6 @@ namespace Xplicit
 		for (size_t i = 0; i < m_events.size(); i++)
 		{
 			XPLICIT_ASSERT(m_events[i]);
-
 			m_events[i]->update();
 		}
 	}

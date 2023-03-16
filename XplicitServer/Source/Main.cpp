@@ -171,12 +171,13 @@ int main(int argc, char** argv)
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
-		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::ServerWatchdogEvent>();
+		auto watchdog = Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::ServerWatchdogEvent>();
 
 		xplicit_attach_mono();
 		xplicit_read_xml();
-
 		xplicit_load_shell();
+
+		int32_t countdown_watchdog = 10000;
 
 		while (Xplicit::InstanceManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{
@@ -189,6 +190,14 @@ int main(int argc, char** argv)
 			Xplicit::InstanceManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerTraits::send(server);
+
+			--countdown_watchdog;
+
+			if (countdown_watchdog <= 0)
+			{
+				watchdog->enable(true);
+				countdown_watchdog = 1000;
+			}
 		}
 
 		return 0;

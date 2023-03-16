@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Protocol.cpp
- *			Purpose: Game Network Protocol
+ *			Purpose: XDP Network Protocol
  *
  * =====================================================================
  */

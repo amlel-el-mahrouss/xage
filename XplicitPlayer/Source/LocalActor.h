@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: LocalActor.h
- *			Purpose: Client-side Actor Instance
+ *			Purpose: Client-side Actors
  *
  * =====================================================================
  */

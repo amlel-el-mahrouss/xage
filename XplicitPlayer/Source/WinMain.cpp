@@ -22,12 +22,14 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 {
 	try
 	{
+		// Search and exit, if another Xplicit app is open.
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
 			Xplicit::GUI::message_box(Xplicit::Bites::XPLICIT_APP_NAME, L"Cannot open more than one instance of XplicitNgin!", MB_OK);
 			return 1;
 		}
 
+		// parse the connection uri.
 		Xplicit::Utils::UriParser uri{ XPLICIT_URI_PROTOCOL };
 		uri /= pCmdLine;
 
@@ -41,11 +43,14 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 			return 1;
 		}
 
+		// create a new app.
 		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri.get().c_str());
+
 
 		if (!app)
 			throw Xplicit::EngineError();
 		
+		// and run.
 		while (IRR->run() && Xplicit::InstanceManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{
 			// To match the loading's screen colour.

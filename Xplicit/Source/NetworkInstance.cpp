@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: NetworkInstance.cpp
- *			Purpose: XPX Protocol Client
+ *			Purpose: XDP client
  *
  * =====================================================================
  */
@@ -101,7 +101,7 @@ namespace Xplicit
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
 #ifdef XPLICIT_WINDOWS
-		int res = ::sendto(m_socket, (const char*)&packet, sizeof(NetworkPacket), 0, 
+		int res = ::sendto(m_socket, reinterpret_cast<const char*>(&packet), sizeof(NetworkPacket), 0,
 			reinterpret_cast<SOCKADDR*>(&m_addr), sizeof(m_addr));
 
 		if (res == SOCKET_ERROR)
@@ -125,7 +125,7 @@ namespace Xplicit
 		int length{ sizeof(struct sockaddr_in) };
 
 #ifdef XPLICIT_WINDOWS
-		int res = ::recvfrom(m_socket, (char*)&packet, sizeof(NetworkPacket), 0,
+		int res = ::recvfrom(m_socket, reinterpret_cast<char*>(&packet), sizeof(NetworkPacket), 0,
 			(struct sockaddr*)&m_addr, &length);
 #else
 #pragma error("DEFINE ME NetworkInstance.cpp")

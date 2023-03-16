@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: NetworkServerInstance.h
- *			Purpose: XPX Protocol Server
+ *			Purpose: XDP Protocol Server
  *
  * =====================================================================
  */

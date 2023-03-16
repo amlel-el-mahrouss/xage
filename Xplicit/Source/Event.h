@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Event.h
- *			Purpose: Xplicit Event System
+ *			Purpose: Xplicit Event Dispatcher
  *
  * =====================================================================
  */
@@ -13,11 +13,11 @@
 #pragma once
 
 #include "Xplicit.h"
-#include "Instance.h"
 
-namespace Xplicit {
-	class Event;
+namespace Xplicit 
+{
 	class EventDispatcher;
+	class Event;
 
 	class XPLICIT_API EventDispatcher final 
 	{
