@@ -18,10 +18,10 @@
 
 namespace Xplicit::Client
 {
-	class XPLICIT_API LocalMenuEvent : public Event
+	class XPLICIT_API LocalMenuEvent final : public Event
 	{
 	public:
-		LocalMenuEvent(const int64_t& id);
+		LocalMenuEvent(const int64_t& hash);
 		virtual ~LocalMenuEvent();
 
 		LocalMenuEvent& operator=(const LocalMenuEvent&) = default;

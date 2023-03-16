@@ -17,7 +17,7 @@
 
 namespace Xplicit::Client
 {
-	class LoadingInstance : public Instance
+	class LoadingInstance final : public Instance
 	{
 	public:
 		LoadingInstance();

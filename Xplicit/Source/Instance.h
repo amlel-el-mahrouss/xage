@@ -43,7 +43,7 @@ namespace Xplicit
 		bool remove(T* ptr);
 
 	public:
-		void update() noexcept;
+		void update();
 
 	public:
 		static InstanceManager* get_singleton_ptr();

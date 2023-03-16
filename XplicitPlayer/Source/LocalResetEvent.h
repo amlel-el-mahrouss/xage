@@ -18,7 +18,7 @@
 
 namespace Xplicit::Client
 {
-	class XPLICIT_API LocalResetEvent : public Event
+	class XPLICIT_API LocalResetEvent final : public Event
 	{
 	public:
 		LocalResetEvent();

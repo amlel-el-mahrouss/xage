@@ -15,11 +15,11 @@
 
 namespace Xplicit::Client
 {
-	LocalMenuEvent::LocalMenuEvent(const int64_t& id)
-		: m_network(nullptr), m_enabled(false), m_menu(nullptr), m_timeout(0), m_hash(id)
+	LocalMenuEvent::LocalMenuEvent(const int64_t& hash)
+		: m_network(nullptr), m_enabled(false), m_menu(nullptr), m_timeout(0), m_hash(hash)
 	{
 		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
-		assert(m_network);
+		XPLICIT_ASSERT(m_network);
 
 		XPLICIT_GET_DATA_DIR(data_dir);
 		std::string frame_path = data_dir;
@@ -39,18 +39,22 @@ namespace Xplicit::Client
 
 	bool LocalMenuEvent::enabled() noexcept { return m_enabled; }
 
-	static const int XPLICIT_TIMEOUT_MENU = 2000;
+	static const int XPLICIT_TIMEOUT_MENU = 200;
+
+#define LOCAL_MENU_TWEEN_START (8)
+#define LOCAL_MENU_TWEEN_END (4)
+#define LOCAL_MENU_TWEENING (0.1f)
 
 	void LocalMenuEvent::operator()()
 	{
 		if (!m_network)
 			return;
 
-		static float tween_start = 8;
+		static float tween_start = LOCAL_MENU_TWEEN_START;
 
 		if (KB->key_down(KEY_ESCAPE) && m_timeout < 0)
 		{
-			tween_start = 8;
+			tween_start = LOCAL_MENU_TWEEN_START;
 			m_enabled = !m_enabled;
 			m_timeout = XPLICIT_TIMEOUT_MENU;
 		}
@@ -60,12 +64,13 @@ namespace Xplicit::Client
 			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, 
 				Xplicit::Client::XPLICIT_DIM.Height / tween_start));
 
-			if (tween_start > 4)
-				tween_start -= 0.01f;
+			if (tween_start > LOCAL_MENU_TWEEN_END)
+				tween_start -= LOCAL_MENU_TWEENING;
 
 			if (KB->key_down(KEY_KEY_L))
 			{
 				NetworkPacket pckt{};
+
 				pckt.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 				pckt.hash = m_hash;
 

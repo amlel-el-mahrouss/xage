@@ -18,7 +18,7 @@
 
 namespace Xplicit::Client
 {
-	class LocalWatchdogEvent : public Event
+	class LocalWatchdogEvent final : public Event
 	{
 	public:
 		LocalWatchdogEvent() = delete;

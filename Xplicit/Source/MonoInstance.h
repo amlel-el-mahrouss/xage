@@ -24,7 +24,7 @@ namespace Xplicit
 	class MonoScriptInstance;
 	class MonoEngineInstance;
 
-	class XPLICIT_API MonoEngineInstance : public Instance
+	class XPLICIT_API MonoEngineInstance final : public Instance
 	{
 	public:
 		MonoEngineInstance();
@@ -52,7 +52,7 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API MonoScriptInstance : public Instance
+	class XPLICIT_API MonoScriptInstance final : public Instance
 	{
 	public:
 		MonoScriptInstance(const char* filename, bool can_fail);

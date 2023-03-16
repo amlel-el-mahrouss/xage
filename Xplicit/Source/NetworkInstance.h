@@ -69,7 +69,7 @@ namespace Xplicit {
 
     };
 
-    class XPLICIT_API NetworkInstance : public Instance
+    class XPLICIT_API NetworkInstance final : public Instance
     {
     public:
         NetworkInstance();

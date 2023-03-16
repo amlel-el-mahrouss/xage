@@ -40,7 +40,7 @@ namespace Xplicit {
 		bool remove(T* name);
 
 	public:
-		void update() noexcept;
+		void update();
 
 	public:
 		static EventDispatcher* get_singleton_ptr();
@@ -48,11 +48,9 @@ namespace Xplicit {
 	private:
 		std::vector<Event*> m_events;
 
-		friend class Event;
-
 	};
 
-	class XPLICIT_API Event 
+	class XPLICIT_API Event
 	{
 	public:
 		Event() {}

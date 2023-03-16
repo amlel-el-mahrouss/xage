@@ -76,7 +76,7 @@ namespace Xplicit
         NETWORK_STAT_COUNT,
     };
 
-    class NetworkPacket
+    class NetworkPacket final
     {
     public:
         char magic[XPLICIT_NETWORK_MAG_COUNT];

@@ -19,7 +19,7 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API MonoClassInstance : public Instance
+	class XPLICIT_API MonoClassInstance final : public Instance
 	{
 	public:
 		MonoClassInstance() = delete;
@@ -51,7 +51,7 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API MonoEvent : public Event
+	class XPLICIT_API MonoEvent final : public Event
 	{
 	public:
 		MonoEvent() = delete;

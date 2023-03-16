@@ -51,7 +51,7 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API NetworkServerTraits
+	class XPLICIT_API NetworkServerTraits final
 	{
 	public:
 		static void send(NetworkServerInstance* instance);

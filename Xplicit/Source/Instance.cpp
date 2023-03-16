@@ -13,11 +13,11 @@
 #include "Instance.h"
 
 namespace Xplicit {
-	void InstanceManager::update() noexcept
+	void InstanceManager::update()
 	{
 		for (size_t i = 0; i < m_instances.size(); i++)
 		{
-			assert(m_instances[i]);
+			XPLICIT_ASSERT(m_instances[i]);
 
 			if (m_instances[i]->should_update())
 				m_instances[i]->update();
