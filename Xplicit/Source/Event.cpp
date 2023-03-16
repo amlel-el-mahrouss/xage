@@ -22,13 +22,15 @@ namespace Xplicit
 	{
 		for (size_t i = 0; i < m_events.size(); i++)
 		{
-			(*m_events[i])();
+			XPLICIT_ASSERT(m_events[i]);
+
+			m_events[i]->update();
 		}
 	}
 
 	EventDispatcher* EventDispatcher::get_singleton_ptr()
 	{
-		static EventDispatcher* ptr;
+		static EventDispatcher* ptr = nullptr;
 
 		if (!ptr)
 			ptr = new EventDispatcher();
@@ -38,7 +40,7 @@ namespace Xplicit
 
 	void Event::operator()() {}
 
-	void Event::update() noexcept { this->operator()(); }
+	void Event::update() { this->operator()(); }
 
 	const char* Event::name() noexcept { return ("Event"); }
 }

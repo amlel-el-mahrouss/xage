@@ -60,10 +60,11 @@ namespace Xplicit {
 		Event(const Event&) = default;
 
 		virtual void operator()();
+
 		virtual const char* name() noexcept;
 		
 	public:
-		void update() noexcept;
+		void update();
 
 	};
 

@@ -31,7 +31,7 @@ namespace Xplicit {
 	InstanceManager* InstanceManager::get_singleton_ptr()
 	{
 		static InstanceManager* ptr = nullptr;
-		
+
 		if (!ptr)
 			ptr = new InstanceManager();
 

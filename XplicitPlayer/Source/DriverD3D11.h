@@ -60,6 +60,7 @@ namespace Xplicit::Renderer
 			HWND WindowHandle;
 
 			Microsoft::WRL::ComPtr<ID3D11Device> Device;
+			Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 			Microsoft::WRL::ComPtr<IDXGISwapChain> SwapChain;
 			Microsoft::WRL::ComPtr<ID3D11DeviceContext> DeviceCtx;
 		};

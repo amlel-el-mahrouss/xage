@@ -20,20 +20,66 @@
 
 namespace Xplicit::Renderer
 {
+	struct DxgiOutputResult
+	{
+		uint32_t NumOutputs;
+		std::vector<IDXGIOutput*> Outputs;
+	};
+
+	static DxgiOutputResult&& xplicit_enum_outputs(IDXGIAdapter* adapter) noexcept
+	{
+		DxgiOutputResult result;
+		IDXGIOutput* pOutput = nullptr;
+
+		while (adapter->EnumOutputs(result.NumOutputs, &pOutput) != DXGI_ERROR_NOT_FOUND)
+		{
+			result.Outputs.push_back(pOutput);
+			++result.NumOutputs;
+		}
+
+		return std::move(result);
+	}
+
+	static void xplicit_d3d11_init_swapchain(DXGI_SWAP_CHAIN_DESC& swapDesc, DriverSystemD3D11::PrivateData& privateData)
+	{
+		RtlZeroMemory(&swapDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+
+		swapDesc.BufferCount = 1;
+		swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapDesc.SampleDesc.Count = 1;
+		swapDesc.Windowed = true;
+		swapDesc.OutputWindow = privateData.WindowHandle;
+	}
+
 	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd)
 		: m_swap_desc(), m_private()
 	{
-		memset(&m_swap_desc, 0, sizeof(DXGI_SWAP_CHAIN_DESC));
-		m_swap_desc.BufferCount = 1;
-		m_swap_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		m_swap_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-
 		m_private.WindowHandle = hwnd;
-		
-		m_swap_desc.SampleDesc.Count = 1;
-		m_swap_desc.Windowed = true;
+		xplicit_d3d11_init_swapchain(m_swap_desc, m_private);
 
-		m_swap_desc.OutputWindow = m_private.WindowHandle;
+		Microsoft::WRL::ComPtr<IDXGIFactory> factory;
+		CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(factory.GetAddressOf()));
+
+		while (FAILED(factory->EnumAdapters(0, m_private.Adapter.GetAddressOf())));
+
+		if (m_private.Adapter)
+		{
+			auto outputs = xplicit_enum_outputs(m_private.Adapter.Get());
+		
+#ifdef XPLICIT_DEBUG
+			for (auto* output : outputs.Outputs)
+			{
+				DXGI_OUTPUT_DESC desc;
+				RtlZeroMemory(&desc, sizeof(DXGI_OUTPUT_DESC));
+		
+				output->GetDesc(&desc);
+
+				XPLICIT_INFO("AttachedToDesktop: ", desc.AttachedToDesktop ? "true" : "false");
+				// XPLICIT_INFO(desc.DeviceName);
+			}
+#endif
+		}
 	}
 
 	DriverSystemD3D11::~DriverSystemD3D11() 

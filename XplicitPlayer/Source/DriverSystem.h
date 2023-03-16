@@ -19,8 +19,8 @@ namespace Xplicit::Renderer
 	enum class RENDER_SYSTEM : uint8_t
 	{
 		DIRECT3D11,
-		INVALID,
 		VULKAN,
+		INVALID,
 	};
 
 	class DriverSystem
