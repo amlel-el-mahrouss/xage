@@ -25,7 +25,10 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 		// Search and exit, if another Xplicit app is open.
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
-			Xplicit::GUI::message_box(Xplicit::Bites::XPLICIT_APP_NAME, L"Cannot open more than one instance of XplicitNgin!", MB_OK);
+			Xplicit::GUI::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
+				L"Cannot open more than one instance of XplicitNgin!", 
+				MB_OK);
+
 			return 1;
 		}
 
@@ -51,10 +54,13 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 			throw Xplicit::EngineError();
 		
 		// and run.
-		while (IRR->run() && Xplicit::InstanceManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
+		while (IRR->run() && 
+			Xplicit::InstanceManager::get_singleton_ptr() && 
+			Xplicit::EventDispatcher::get_singleton_ptr())
 		{
 			// To match the loading's screen colour.
-			IRR->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 40, 40, 40));
+			IRR->getVideoDriver()->beginScene(true, true, 
+				irr::video::SColor(255, 40, 40, 40));
 
 			IRR->getSceneManager()->drawAll();
 			IRR->getGUIEnvironment()->drawAll();

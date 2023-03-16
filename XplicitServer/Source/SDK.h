@@ -14,22 +14,26 @@
 
 #include <Uri.h>
 #include <Event.h>
-#include <Instance.h>
 #include <Xplicit.h>
+#include <Instance.h>
 #include <MonoInterop.h>
 #include <MonoInstance.h>
 #include <ApplicationContext.h>
 #include <NetworkServerInstance.h>
 
 #ifdef XPLICIT_WINDOWS
+
 extern "C"
 {
 #	include <conio.h>
 };
+
 #endif
 
+// NplictNgine
 #include <Nplicit.h>
 #include <RigidBody.h>
 
+// RapidXML (very fast XML library)
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>

@@ -18,9 +18,13 @@ T* Xplicit::InstanceManager::add(Args&&... args)
 	T* ptr = new T{ args... };
 	XPLICIT_ASSERT(ptr);
 
-	m_instances.push_back(ptr);
+	if (ptr)
+	{
+		m_instances.push_back(reinterpret_cast<Instance*>(ptr));
+		return ptr;
+	}
 
-	return ptr;
+	return nullptr;
 }
 
 template <typename T>

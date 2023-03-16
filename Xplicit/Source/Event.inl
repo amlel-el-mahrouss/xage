@@ -14,9 +14,15 @@ template <typename T, typename... Args>
 T* Xplicit::EventDispatcher::add(Args&&... args)
 {
 	T* ptr = new T{ args... };
-	m_events.push_back(ptr);
+	XPLICIT_ASSERT(ptr);
 
-	return ptr;
+	if (ptr)
+	{
+		m_events.push_back(reinterpret_cast<Event*>(ptr));
+		return ptr;
+	}
+
+	return nullptr;
 }
 
 template <typename T>
