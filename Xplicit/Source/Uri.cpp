@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Uri.cpp
- *			Purpose: Xplicit URI API.
+ *			Purpose: Xplicit URI parser
  *
  * =====================================================================
  */
@@ -33,7 +33,7 @@ namespace Xplicit::Utils
 
 	}
 
-	std::string UriParser::get() noexcept
+	std::string UriParser::get(const UriAccessor offset) noexcept
 	{
 		if (m_data.empty())
 			return (m_protocol + "invalid");
@@ -42,8 +42,8 @@ namespace Xplicit::Utils
 
 		for (size_t i = 0; i < m_data.size(); i++)
 		{
-			if (m_data[i] == URI_SEPARATOR)
-				continue;
+			if (m_data[offset] == URI_SEPARATOR)
+				break;
 
 			uri.push_back(m_data[i]);
 		}

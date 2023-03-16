@@ -12,8 +12,6 @@
 
 #include "Application.h"
 
-#ifdef XPLICIT_WINDOWS
-
 INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
 {
 	try
@@ -57,11 +55,9 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 
 		return 0;
 	}
-	catch (std::runtime_error err)
+	catch (const std::runtime_error& err)
 	{
 		MessageBoxA(nullptr, err.what(), "XplicitNgin", MB_OK);
 		return -1;
 	}
 }
-
-#endif

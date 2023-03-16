@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Nplicit.h
- *			Purpose: Nplicit standard includes
+ *			Purpose: 
  *
  * =====================================================================
  */
@@ -14,9 +14,6 @@
 
 #include "Config.h"
 #include "NMath.h" /* Nplicit math library */
-
-#include <Instance.h>
-#include <Avx.h>
 
 namespace Xplicit::Physics
 {
@@ -30,13 +27,13 @@ namespace Xplicit::Physics
 		Vector() = default;
 		~Vector() = default;
 
-		explicit Vector(TypeFloat x = 0, TypeFloat y = 0, TypeFloat z = 0) noexcept
+		Vector(TypeFloat x = 0, TypeFloat y = 0, TypeFloat z = 0) noexcept
 		{
 			this->add(x, y, z);
 		}
 
-		Vector& operator=(const Vector&) = delete;
-		Vector(const Vector&) = delete;
+		Vector& operator=(const Vector&) = default;
+		Vector(const Vector&) = default;
 
 		Vector& add(TypeFloat x = 0.f, TypeFloat y = 0.f, TypeFloat z = 0.f) noexcept
 		{
@@ -107,12 +104,16 @@ namespace Xplicit::Physics
 
 	};
 
-	using VectorFloat = Vector<float>;
-	using VectorDouble = Vector<double>;
-
 	template <typename TypeFloat = float>
 	class NPLICIT_API PhysicsComponent final
 	{
+	public:
+		PhysicsComponent() : Position(0, 0, 0), Velocity(0, 0, 0), Force(0, 0, 0) {}
+		~PhysicsComponent() {}
+
+		PhysicsComponent& operator=(const PhysicsComponent&) = default;
+		PhysicsComponent(const PhysicsComponent&) = default;
+
 	public:
 		Vector<TypeFloat> Position;
 		Vector<TypeFloat> Velocity;
@@ -132,11 +133,11 @@ namespace Xplicit::Physics
 		PhysicsSystem& operator=(const PhysicsSystem&) = delete;
 		PhysicsSystem(const PhysicsSystem&) = delete;
 
-		virtual void update(const int32_t& dt) override
+		void update(const int32_t& dt)
 		{
 			for (PhysicsComponent<TypeFloat>* rigid : m_rigid_bodies)
 			{
-				rigid->Force.mul(m_gravity.X * rigid->Mass, m_gravity.Y * rigid->Mass, m_gravity.Z * rigid->Mass);
+				rigid->Force.add(m_gravity.X * rigid->Mass, m_gravity.Y * rigid->Mass, m_gravity.Z * rigid->Mass);
 
 				rigid->Velocity.add(rigid->Force.X / rigid->Mass * dt,
 					rigid->Force.Y / rigid->Mass * dt,
@@ -144,7 +145,7 @@ namespace Xplicit::Physics
 
 				rigid->Position.add(rigid->Velocity.X * dt, rigid->Velocity.Y * dt, rigid->Velocity.Z * dt);
 
-				rigid->Force = Vector<TypeFloat>(1, 1, 1);
+				rigid->Force = Vector<TypeFloat>(0, 0, 0);
 			}
 		}
 

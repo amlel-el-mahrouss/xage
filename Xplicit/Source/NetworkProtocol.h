@@ -64,7 +64,7 @@ namespace Xplicit
         NETWORK_CMD_ACCEPT, // handshake has been accepted.
         NETWORK_CMD_WATCHDOG,
         NETWORK_CMD_ACK, // acknowledge
-        NETWORK_CMD_KICK,
+        NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 15,
     };

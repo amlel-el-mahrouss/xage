@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Client.h
- *			Purpose: Client Logic
+ *			Purpose:
  *
  * =====================================================================
  */
@@ -37,7 +37,7 @@ namespace Xplicit::Client
 	private:
 		irr::video::ITexture* m_logo_tex; /* Texture to show when loading the game.. */
 		NetworkInstance* m_network; /* Network instance */
-		int64_t m_timeout;
+		int64_t m_timeout; /* Network Timeout. */
 		bool m_run; /* Should we seek for a connection? */
 
 	};

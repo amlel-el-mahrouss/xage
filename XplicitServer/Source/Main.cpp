@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Server.cpp
- *			Purpose: Server Main Procedure
+ *			Purpose: Server entrypoint
  *
  * =====================================================================
  */
@@ -13,7 +13,7 @@
 #include "SDK.h"
 #include "Actor.h"
 #include "ServerWatchdog.h"
-#include "PlayerPhysicsEvent.h"
+#include "PlayerMovementEvent.h"
 #include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
 
@@ -22,7 +22,7 @@ static void xplicit_attach_mono();
 static void xplicit_load_shell();
 static void xplicit_read_xml();
 
-#define XPLICIT_MANIFEST_FILE "Manifest.xml"
+static const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
 
 static void xplicit_read_xml()
 {
@@ -164,7 +164,7 @@ int main(int argc, char** argv)
 		auto server = Xplicit::InstanceManager::get_singleton_ptr()->add<Xplicit::NetworkServerInstance>(ip_address);
 		XPLICIT_ASSERT(server);
 
-		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerPhysicsEvent>();
+		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::ServerWatchdogEvent>();

@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Actor.cpp
- *			Purpose: Actors
+ *			Purpose:
  *
  * =====================================================================
  */

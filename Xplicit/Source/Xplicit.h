@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Xplicit.h
- *			Purpose: Xplicit Core Classes
+ *			Purpose: 
  *
  * =====================================================================
  */

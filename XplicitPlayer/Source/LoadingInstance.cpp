@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Common.cpp
- *			Purpose: Common components
+ *			Purpose:
  *
  * =====================================================================
  */
@@ -38,13 +38,16 @@ namespace Xplicit::Client
 
 	void LoadingInstance::update()
 	{
+		if (!m_network)
+			return;
+
 		NetworkPacket packet{};
 		m_network->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
 			InstanceManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
-			auto actor = InstanceManager::get_singleton_ptr()->add<Xplicit::Client::LocalActor>(packet.hash, packet.public_hash);
+			auto actor = InstanceManager::get_singleton_ptr()->add<Xplicit::Client::LocalActor>(packet.public_hash);
 			XPLICIT_ASSERT(actor);
 
 			if (actor)
@@ -53,36 +56,36 @@ namespace Xplicit::Client
 			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalResetEvent>();
 			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
 			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalWatchdogEvent>(packet.hash);
-			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.hash, packet.public_hash);
+			EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.public_hash);
 
 			m_run = false;
-
-			return;
 		}
-
-		IRR->getVideoDriver()->draw2DImage(m_logo_tex, vector2di(Xplicit::Client::XPLICIT_DIM.Width * 0.02, Xplicit::Client::XPLICIT_DIM.Height * 0.825),
-			core::rect<s32>(0, 0, 105, 105), 0,
-			video::SColor(255, 255, 255, 255), true);
-
-		--m_timeout;
-
-		// peek after the ++timeout
-		if (m_timeout < 0)
+		else
 		{
-			InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
-				IRR->closeDevice();
-			}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
+			IRR->getVideoDriver()->draw2DImage(m_logo_tex, vector2di(Xplicit::Client::XPLICIT_DIM.Width * 0.02, Xplicit::Client::XPLICIT_DIM.Height * 0.825),
+				core::rect<s32>(0, 0, 105, 105), 0,
+				video::SColor(255, 255, 255, 255), true);
 
-			m_run = false; // sprious reponse
+			--m_timeout;
+
+			// peek after the ++timeout
+			if (m_timeout < 0)
+			{
+				InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
+					IRR->closeDevice();
+					}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
+
+				m_run = false; // sprious reponse
+			}
+
+			// retry...
+			packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
+			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
+			m_network->send(packet);
+
+			XPLICIT_SLEEP(100);
 		}
-
-		// retry...
-		packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
-		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
-		m_network->send(packet);
-
-		XPLICIT_SLEEP(100);
 	}
 
 	void LoadingInstance::connect(const char* ip)

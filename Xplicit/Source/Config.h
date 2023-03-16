@@ -70,8 +70,12 @@ using namespace scene;
 #define XPLICIT_API
 #endif // ifdef __XPLICIT_DLL__
 
+#define XPLICIT_MSVC (1)
+#define XPLICIT_GCC (2)
+
 #ifdef _MSC_VER
 #define XPLICIT_CXX_COMPILER "Visual C++"
+#define XPLICIT_CXX (1)
 #endif // ifdef _MSC_VER
 
 #ifndef _NDEBUG

@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Xplicit.cpp
- *			Purpose: Foundation Classes
+ *			Purpose: 
  *
  * =====================================================================
  */

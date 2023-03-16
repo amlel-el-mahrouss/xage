@@ -22,10 +22,10 @@ namespace Xplicit
 	class XPLICIT_API InstanceManager final 
 	{
 	private:
-		InstanceManager() {}
+		InstanceManager() = default;
 
 	public:
-		~InstanceManager() {}
+		~InstanceManager() = default;
 
 		InstanceManager& operator=(const InstanceManager&) = delete;
 		InstanceManager(const InstanceManager&) = delete;
@@ -56,8 +56,8 @@ namespace Xplicit
 	class XPLICIT_API Instance 
 	{
 	public:
-		Instance() {}
-		virtual ~Instance() {}
+		Instance() = default;
+		virtual ~Instance() = default;
 
 		Instance& operator=(const Instance&) = default;
 		Instance(const Instance&) = default;

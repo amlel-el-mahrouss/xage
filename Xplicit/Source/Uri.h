@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Uri.h
- *			Purpose: Xplicit URI API.
+ *			Purpose: Xplicit URI parser
  *
  * =====================================================================
  */
@@ -24,6 +24,9 @@
 
 namespace Xplicit::Utils
 {
+	// Accessors are like iterators, but with an offset.
+	using UriAccessor = int32_t;
+
 	class XPLICIT_API UriParser final
 	{
 	public:
@@ -33,7 +36,7 @@ namespace Xplicit::Utils
 		UriParser& operator=(const UriParser&) = default;
 		UriParser(const UriParser&) = default;
 
-		std::string get() noexcept;
+		std::string get(const UriAccessor offset = 0) noexcept;
 
 	public:
 		UriParser& operator/=(const std::string& uri);

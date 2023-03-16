@@ -12,8 +12,7 @@
 
 #pragma once
 
-#include <Xplicit.h>
-#include <Avx.h>
+#include "Config.h"
 
 template <typename TypeLeft, typename TypeRight>
 static inline constexpr auto nplicit_circle_add(

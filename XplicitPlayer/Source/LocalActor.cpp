@@ -16,12 +16,9 @@
 
 namespace Xplicit::Client
 {
-	LocalActor::LocalActor(const int64_t& id, const int64_t& public_id)
-		: Instance(), m_packet(), m_id(-1), m_camera(nullptr), m_public_id(-1)
+	LocalActor::LocalActor(const int64_t& public_hash)
+		: Instance(), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
 	{
-		m_id = id;
-		m_public_id = public_id;
-
 		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
 
 		XPLICIT_ASSERT(m_network);
@@ -46,8 +43,8 @@ namespace Xplicit::Client
 
 	void LocalActor::attach(CameraInstance* cam) noexcept { m_camera = cam; }
 
-	LocalMoveEvent::LocalMoveEvent(const int64_t& id, const int64_t& public_id)
-		: m_packet(), m_network(nullptr), m_id(id), m_public_id(public_id)
+	LocalMoveEvent::LocalMoveEvent(const int64_t& public_hash)
+		: m_packet(), m_network(nullptr), m_public_hash(public_hash)
 	{
 		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
 		XPLICIT_ASSERT(m_network);
@@ -62,8 +59,8 @@ namespace Xplicit::Client
 		if (!m_network)
 			return;
 
-		XPLICIT_ASSERT(m_public_id != -1);
-		m_packet.public_hash = m_public_id;
+		XPLICIT_ASSERT(m_public_hash != -1);
+		m_packet.public_hash = m_public_hash;
 
 		if (KB->key_down(KEY_KEY_W))
 			m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_FORWARD;
