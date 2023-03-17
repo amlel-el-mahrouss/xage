@@ -4,17 +4,17 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: NetworkInstance.cpp
+ *			File: NetworkComponent.cpp
  *			Purpose: XDP client
  *
  * =====================================================================
  */
 
-#include "NetworkInstance.h"
+#include "NetworkComponent.h"
 
 namespace Xplicit 
 {
-	// common operations for NetworkInstance.
+	// common operations for NetworkComponent.
 	static void xplicit_set_ioctl(SOCKET sock)
 	{
 #ifdef XPLICIT_WINDOWS
@@ -23,13 +23,13 @@ namespace Xplicit
 
 		XPLICIT_ASSERT(err == NO_ERROR);
 #else
-#pragma error("DEFINE ME NetworkInstance.cpp")
+#pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
 	}
 
-	// NetworkInstance Constructor
-	NetworkInstance::NetworkInstance()
-		: Instance(), m_packet(), m_addr(), m_reset(false)
+	// NetworkComponent Constructor
+	NetworkComponent::NetworkComponent()
+		: Component(), m_packet(), m_addr(), m_reset(false)
 	{
 #ifdef XPLICIT_WINDOWS
 		m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -39,35 +39,35 @@ namespace Xplicit
 
 		xplicit_set_ioctl(m_socket);
 #else
-#pragma error("DEFINE ME NetworkInstance.cpp")
+#pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
 
 #ifndef _NDEBUG
-		XPLICIT_INFO("Created NetworkInstance");
+		XPLICIT_INFO("Created NetworkComponent");
 #endif
 
 	}
 
-	NetworkInstance::~NetworkInstance()
+	NetworkComponent::~NetworkComponent()
 	{
 		if (reset())
 			closesocket(m_socket);
 
 #ifndef _NDEBUG
-		XPLICIT_INFO("~NetworkInstance, Epoch: " + std::to_string(xplicit_get_epoch()));
+		XPLICIT_INFO("~NetworkComponent, Epoch: " + std::to_string(xplicit_get_epoch()));
 #endif
 	}
 
-	bool NetworkInstance::reset() noexcept
+	bool NetworkComponent::reset() noexcept
 	{
 #ifdef XPLICIT_WINDOWS
 		return shutdown(m_socket, SD_BOTH) != SOCKET_ERROR;
 #else
-#pragma error("DEFINE ME NetworkInstance.cpp")
+#pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
 	}
 
-	bool NetworkInstance::connect(const char* ip)
+	bool NetworkComponent::connect(const char* ip)
 	{
 		if (m_socket == SOCKET_ERROR)
 			return false;
@@ -84,17 +84,17 @@ namespace Xplicit
 		if (result == SOCKET_ERROR)
 			throw NetworkError(NETERR_INTERNAL_ERROR);
 #else
-#pragma error("DEFINE ME NetworkInstance.cpp")
+#pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
 
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[NetworkInstance] Connected!");
+		XPLICIT_INFO("[NetworkComponent] Connected!");
 #endif
 
 		return true;
 	}
 
-	bool NetworkInstance::send(NetworkPacket& packet)
+	bool NetworkComponent::send(NetworkPacket& packet)
 	{
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
@@ -107,18 +107,18 @@ namespace Xplicit
 		if (res == SOCKET_ERROR)
 			throw NetworkError(NETERR_INTERNAL_ERROR);
 #else
-#pragma error("DEFINE ME NetworkInstance.cpp")
+#pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
 
 		return true;
 	}
 
-	void NetworkInstance::update() 
+	void NetworkComponent::update() 
 	{
 		this->read(m_packet);
 	}
 
-	bool NetworkInstance::read(NetworkPacket& packet)
+	bool NetworkComponent::read(NetworkPacket& packet)
 	{
 		m_reset = false; // we gotta clear this one, we don't know if RST was sent.
 
@@ -128,7 +128,7 @@ namespace Xplicit
 		int res = ::recvfrom(m_socket, reinterpret_cast<char*>(&packet), sizeof(NetworkPacket), 0,
 			(struct sockaddr*)&m_addr, &length);
 #else
-#pragma error("DEFINE ME NetworkInstance.cpp")
+#pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
 
 		if (length > 0)
@@ -157,7 +157,7 @@ namespace Xplicit
 				packet.magic[2] == XPLICIT_NETWORK_MAG_2;
 	}
 
-	bool NetworkInstance::is_reset() noexcept { return m_reset; }
+	bool NetworkComponent::is_reset() noexcept { return m_reset; }
 
-	NetworkPacket& NetworkInstance::get() noexcept { return m_packet; }
+	NetworkPacket& NetworkComponent::get() noexcept { return m_packet; }
 }

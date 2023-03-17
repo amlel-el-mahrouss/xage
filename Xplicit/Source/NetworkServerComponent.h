@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: NetworkServerInstance.h
+ *			File: NetworkServerComponent.h
  *			Purpose: XDP Protocol Server
  *
  * =====================================================================
@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "NetworkInstance.h"
+#include "NetworkComponent.h"
 #include "Xplicit.h"
 #include "Event.h"
 
@@ -21,14 +21,14 @@ namespace Xplicit
 	constexpr const int XPLICIT_MAX_CONNECTIONS = 30;
 
 	// the main instance behind the networking.
-	class XPLICIT_API NetworkServerInstance final : public Instance
+	class XPLICIT_API NetworkServerComponent final : public Component
 	{
 	public:
-		explicit NetworkServerInstance(const char* ip);
-		virtual ~NetworkServerInstance();
+		explicit NetworkServerComponent(const char* ip);
+		virtual ~NetworkServerComponent();
 
-		NetworkServerInstance& operator=(const NetworkServerInstance&) = default;
-		NetworkServerInstance(const NetworkServerInstance&) = default;
+		NetworkServerComponent& operator=(const NetworkServerComponent&) = default;
+		NetworkServerComponent(const NetworkServerComponent&) = default;
 
 		virtual INSTANCE_TYPE type() noexcept;
 		virtual const char* name() noexcept;
@@ -54,11 +54,11 @@ namespace Xplicit
 	class XPLICIT_API NetworkServerTraits final
 	{
 	public:
-		static void send(NetworkServerInstance* instance);
-		static void recv(NetworkServerInstance* instance);
+		static void send(NetworkServerComponent* instance);
+		static void recv(NetworkServerComponent* instance);
 
 		// correct any peer duplications.
-		static void correct_collisions(NetworkServerInstance* instance);
+		static void correct_collisions(NetworkServerComponent* instance);
 
 	};
 }

@@ -21,7 +21,7 @@ namespace Xplicit
 	constexpr const int16_t XPLICIT_ACTOR_COOLDOWN = 100;
 
 	Actor::Actor() 
-		: m_peer(nullptr), m_health(0), m_timeout(0) 
+		: Component(), m_peer(nullptr), m_health(0), m_timeout(0) 
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("Actor::Actor");

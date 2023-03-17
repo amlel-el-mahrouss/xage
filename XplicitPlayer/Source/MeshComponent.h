@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: MeshInstance.h
- *			Purpose: Custom Mesh Instance (.dae or .xm)
+ *			File: MeshComponent.h
+ *			Purpose: Custom Mesh Component (.dae or .xm)
  *
  * =====================================================================
  */

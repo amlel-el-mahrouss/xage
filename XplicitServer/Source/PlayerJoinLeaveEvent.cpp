@@ -27,7 +27,7 @@ namespace Xplicit
 		return res;
 	}
 
-	static void xplicit_join_event(NetworkPeer* cl, Actor* actor, NetworkServerInstance* server)
+	static void xplicit_join_event(NetworkPeer* cl, Actor* actor, NetworkServerComponent* server)
 	{
 		auto hash = xplicit_hash_from_uuid(cl->unique_addr.get());
 		
@@ -47,9 +47,9 @@ namespace Xplicit
 		cl->stat = NETWORK_STAT_CONNECTED;
 	}
 
-	static bool xplicit_leave_event(NetworkPeer* cl, NetworkServerInstance* server)
+	static bool xplicit_leave_event(NetworkPeer* cl, NetworkServerComponent* server)
 	{
-		auto actors = InstanceManager::get_singleton_ptr()->all_of<Actor>("Actor");
+		auto actors = ComponentManager::get_singleton_ptr()->all_of<Actor>("Actor");
 
 		for (size_t at = 0; at < actors.size(); ++at)
 		{
@@ -68,7 +68,7 @@ namespace Xplicit
 
 	void PlayerJoinLeaveEvent::operator()()
 	{
-		auto server = InstanceManager::get_singleton_ptr()->get<NetworkServerInstance>("NetworkServerInstance");
+		auto server = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 		if (!server) return;
 
 		NetworkServerTraits::correct_collisions(server);
@@ -86,7 +86,7 @@ namespace Xplicit
 
 	const size_t& PlayerJoinLeaveEvent::size() noexcept { return m_size; }
 
-	bool PlayerJoinLeaveEvent::join_event(NetworkServerInstance* server, size_t peer_idx) noexcept
+	bool PlayerJoinLeaveEvent::join_event(NetworkServerComponent* server, size_t peer_idx) noexcept
 	{
 		if (!server) 
 			return false;
@@ -105,7 +105,7 @@ namespace Xplicit
 		if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 			server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 		{
-			auto actor = InstanceManager::get_singleton_ptr()->add<Actor>();
+			auto actor = ComponentManager::get_singleton_ptr()->add<Actor>();
 
 			if (!actor)
 				return false;
@@ -125,7 +125,7 @@ namespace Xplicit
 		return false;
 	}
 
-	bool PlayerJoinLeaveEvent::leave_event(NetworkServerInstance* server) noexcept
+	bool PlayerJoinLeaveEvent::leave_event(NetworkServerComponent* server) noexcept
 	{
 		if (this->size() <= 0)
 			return false;

@@ -34,6 +34,15 @@ XPLICIT_API bool xplicit_open_logger();
 
 namespace Xplicit 
 {
+	// platform dependent chars
+#ifdef XPLICIT_WINDOWS
+	using pchar = wchar_t;
+#else
+	using pchar = char;
+#endif
+
+	using string = std::basic_string<pchar>;
+
 	class EngineError : public std::runtime_error
 	{
 	public:
@@ -104,6 +113,7 @@ namespace Xplicit
 
 				if (string == compare || !lstrcmpW(compare, string))
 					return hCurWnd;
+
 			} while (hCurWnd != nullptr);
 
 			return nullptr;

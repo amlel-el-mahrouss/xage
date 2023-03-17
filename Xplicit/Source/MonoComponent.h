@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: MonoInstance.h
+ *			File: MonoComponent.h
  *			Purpose: C# Foundations
  *
  * =====================================================================
@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Instance.h"
+#include "Component.h"
 #include "Xplicit.h"
 
 #include <mono/jit/jit.h>
@@ -21,17 +21,17 @@
 
 namespace Xplicit
 {
-	class MonoScriptInstance;
-	class MonoEngineInstance;
+	class MonoScriptComponent;
+	class MonoEngineComponent;
 
-	class XPLICIT_API MonoEngineInstance final : public Instance
+	class XPLICIT_API MonoEngineComponent final : public Component
 	{
 	public:
-		MonoEngineInstance();
-		virtual ~MonoEngineInstance();
+		MonoEngineComponent();
+		virtual ~MonoEngineComponent();
 
-		MonoEngineInstance& operator=(const MonoEngineInstance&) = default;
-		MonoEngineInstance(const MonoEngineInstance&) = default;
+		MonoEngineComponent& operator=(const MonoEngineComponent&) = default;
+		MonoEngineComponent(const MonoEngineComponent&) = default;
 
 		MonoAssembly* open(const char* assembly_file);
 
@@ -42,7 +42,7 @@ namespace Xplicit
 		virtual INSTANCE_TYPE type() noexcept override;
 		virtual void update() override;
 
-		MonoClass* make(Ref<MonoScriptInstance*>& assembly, const char* namespase, const char* klass);
+		MonoClass* make(Ref<MonoScriptComponent*>& assembly, const char* namespase, const char* klass);
 		void add_internal_call(const char* name, const void* method) noexcept;
 		MonoDomain* domain() noexcept;
 
@@ -52,14 +52,14 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API MonoScriptInstance final : public Instance
+	class XPLICIT_API MonoScriptComponent final : public Component
 	{
 	public:
-		MonoScriptInstance(const char* filename, bool can_fail);
-		virtual ~MonoScriptInstance();
+		MonoScriptComponent(const char* filename, bool can_fail);
+		virtual ~MonoScriptComponent();
 
-		MonoScriptInstance& operator=(const MonoScriptInstance&) = default;
-		MonoScriptInstance(const MonoScriptInstance&) = default;
+		MonoScriptComponent& operator=(const MonoScriptComponent&) = default;
+		MonoScriptComponent(const MonoScriptComponent&) = default;
 
 		MonoObject* run(const char* method_name);
 		virtual void update() override;
@@ -68,14 +68,14 @@ namespace Xplicit
 		virtual INSTANCE_TYPE type() noexcept override;
 		virtual bool should_update() noexcept override;
 
-		Ref<MonoEngineInstance*>& get();
+		Ref<MonoEngineComponent*>& get();
 
 	private:
-		Ref<MonoEngineInstance*> m_engine_ref;
+		Ref<MonoEngineComponent*> m_engine_ref;
 		std::basic_string<char> m_filename;
 		MonoAssembly* m_assembly;
 
-		friend MonoEngineInstance;
+		friend MonoEngineComponent;
 
 	};
 

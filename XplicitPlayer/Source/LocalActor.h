@@ -16,7 +16,7 @@
 #include <RigidBody.h>
 
 #include "ApplicationContext.h"
-#include "NetworkInstance.h"
+#include "NetworkComponent.h"
 #include "Camera.h"
 
 // FIXME: rework them when we will roll our own renderer.
@@ -25,7 +25,7 @@ namespace Xplicit::Client
 	constexpr const int XPLICIT_NETWORK_DELAY = 100;
 	constexpr const float XPLICIT_SPEED = 20.f;
 
-	class LocalActor : public Instance
+	class LocalActor : public Component
 	{
 	public:
 		LocalActor(const int64_t& public_id);
@@ -40,11 +40,11 @@ namespace Xplicit::Client
 		virtual void update() override;
 
 	public:
-		void attach(CameraInstance* cam) noexcept;
+		void attach(CameraComponent* cam) noexcept;
 
 	private:
-		NetworkInstance* m_network;
-		CameraInstance* m_camera;
+		NetworkComponent* m_network;
+		CameraComponent* m_camera;
 		NetworkPacket m_packet;
 		int64_t m_public_hash;
 
@@ -66,7 +66,7 @@ namespace Xplicit::Client
 		const char* name() noexcept;
 
 	private:
-		NetworkInstance* m_network;
+		NetworkComponent* m_network;
 		NetworkPacket m_packet;
 		int64_t m_public_hash;
 

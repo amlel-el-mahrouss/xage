@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: NetworkInstance.h
+ *			File: NetworkComponent.h
  *			Purpose: XDP Protocol Client
  *
  * =====================================================================
@@ -13,7 +13,7 @@
 #pragma once
 
 #include "NetworkProtocol.h"
-#include "Instance.h"
+#include "Component.h"
 #include "Event.h"
 
 #ifdef XPLICIT_WINDOWS
@@ -69,17 +69,17 @@ namespace Xplicit {
 
     };
 
-    class XPLICIT_API NetworkInstance final : public Instance
+    class XPLICIT_API NetworkComponent final : public Component
     {
     public:
-        NetworkInstance();
+        NetworkComponent();
 
-        virtual ~NetworkInstance();
+        virtual ~NetworkComponent();
 
-        NetworkInstance& operator=(const NetworkInstance& ctx) = default;
-        NetworkInstance(const NetworkInstance& ctx) = default;
+        NetworkComponent& operator=(const NetworkComponent& ctx) = default;
+        NetworkComponent(const NetworkComponent& ctx) = default;
 
-        virtual const char* name() noexcept override { return ("NetworkInstance"); }
+        virtual const char* name() noexcept override { return ("NetworkComponent"); }
         virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_NETWORK; }
 
         virtual void update() override;

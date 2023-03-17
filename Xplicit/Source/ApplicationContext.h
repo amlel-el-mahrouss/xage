@@ -359,8 +359,7 @@ namespace Xplicit
 #ifdef XPLICIT_WINDOWS
 #ifndef XPLICIT_GET_DATA_DIR
 #define XPLICIT_GET_DATA_DIR(DIR)\
-char DIR[15];\
-memcpy(DIR, "..\\Data\\", 15);
+const char* DIR = "..\\Data";
 
 #endif
 #else

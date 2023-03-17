@@ -16,7 +16,7 @@
 
 namespace Xplicit
 {
-	class Actor final : public Instance
+	class Actor final : public Component
 	{
 	public:
 		Actor();

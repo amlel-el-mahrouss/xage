@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: Instance.h
+ *			File: Component.h
  *			Purpose: Xplicit's ECS
  *
  * =====================================================================
@@ -16,19 +16,19 @@
 
 namespace Xplicit 
 {
-	class InstanceManager;
-	class Instance;
+	class ComponentManager;
+	class Component;
 
-	class XPLICIT_API InstanceManager final 
+	class XPLICIT_API ComponentManager final 
 	{
 	private:
-		InstanceManager() = default;
+		ComponentManager() = default;
 
 	public:
-		~InstanceManager() = default;
+		~ComponentManager() = default;
 
-		InstanceManager& operator=(const InstanceManager&) = delete;
-		InstanceManager(const InstanceManager&) = delete;
+		ComponentManager& operator=(const ComponentManager&) = delete;
+		ComponentManager(const ComponentManager&) = delete;
 
 		template <typename T>
 		std::vector<T*> all_of(const char* name);
@@ -46,27 +46,27 @@ namespace Xplicit
 		void update();
 
 	public:
-		static InstanceManager* get_singleton_ptr();
+		static ComponentManager* get_singleton_ptr();
 
 	private:
-		std::vector<Instance*> m_instances;
+		std::vector<Component*> m_instances;
 
 	};
 
-	class XPLICIT_API Instance 
+	class XPLICIT_API Component 
 	{
 	public:
-		Instance() = default;
-		virtual ~Instance() = default;
+		Component() = default;
+		virtual ~Component() = default;
 
-		Instance& operator=(const Instance&) = default;
-		Instance(const Instance&) = default;
+		Component& operator=(const Component&) = default;
+		Component(const Component&) = default;
 
 	public:
 		enum INSTANCE_TYPE : uint8_t 
 		{
 			INSTANCE_ACTOR, // Engine Actor
-			INSTANCE_LOGIC, // Generic Logic Instance
+			INSTANCE_LOGIC, // Generic Logic Component
 			INSTANCE_CAMERA, // Camera instance
 			INSTANCE_SCRIPT, // C#/Lua instance
 			INSTANCE_RENDER, // Renderable instance.
@@ -100,4 +100,4 @@ namespace Xplicit
 	};
 }
 
-#include "Instance.inl"
+#include "Component.inl"

@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: MeshComponent.cpp
- *			Purpose: Custom Mesh Instance (.dae or .xm)
+ *			Purpose: Custom Mesh Component (.dae or .xm)
  *
  * =====================================================================
  */
@@ -14,7 +14,7 @@
  @file
  */
 
-#include "MeshInstance.h"
+#include "MeshComponent.h"
 
 namespace Xplicit::Client
 {

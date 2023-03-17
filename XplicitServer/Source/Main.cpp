@@ -21,18 +21,17 @@
 #include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
 
-static void xplicit_send_stop_packet(Xplicit::NetworkServerInstance* server);
+static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server);
 static void xplicit_attach_mono();
 static void xplicit_load_shell();
 static void xplicit_read_xml();
 
-static const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
+static constexpr const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
 
 static void xplicit_read_xml()
 {
-	XPLICIT_GET_DATA_DIR(data);
-
-	std::string path = data;
+	XPLICIT_GET_DATA_DIR(data_path);
+	std::string path = data_path;
 
 	path += "\\"; 
 	path += XPLICIT_MANIFEST_FILE;
@@ -40,7 +39,7 @@ static void xplicit_read_xml()
 	rapidxml::file<> xml{ path.c_str() };
 	XPLICIT_ASSERT(xml.size() > 0);
 
-	auto mono = Xplicit::InstanceManager::get_singleton_ptr()->get<Xplicit::MonoEngineInstance>("MonoEngineInstance");
+	auto mono = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::MonoEngineComponent>("MonoEngineComponent");
 
 	const int argc = 2;
 	const char* argv[] = { "XplicitNgin", "1.0.0" };
@@ -58,11 +57,11 @@ static void xplicit_read_xml()
 
 			path.clear();
 
-			path += data;
+			path += data_path;
 			path += "\\Lib\\";
 			path += dll;
 
-			auto csharp_dll = Xplicit::InstanceManager::get_singleton_ptr()->add<Xplicit::MonoScriptInstance>(path.c_str(), false);
+			auto csharp_dll = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
 
 			auto assembly_file = mono->open(path.c_str());
 
@@ -74,7 +73,7 @@ static void xplicit_read_xml()
 			else
 			{
 				XPLICIT_INFO("[C#] " + path + " Was found found.");
-				Xplicit::InstanceManager::get_singleton_ptr()->remove(csharp_dll);
+				Xplicit::ComponentManager::get_singleton_ptr()->remove(csharp_dll);
 			}
 		}
 
@@ -92,8 +91,8 @@ static void xplicit_attach_mono()
 	std::string path = data;
 	path += "\\Lib\\Xplicit.dll"; // The game dll.
 
-	Xplicit::InstanceManager::get_singleton_ptr()->add<Xplicit::MonoEngineInstance>();
-	Xplicit::InstanceManager::get_singleton_ptr()->add<Xplicit::MonoScriptInstance>(path.c_str(), false);
+	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoEngineComponent>();
+	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
 }
 
 static void xplicit_print_help()
@@ -110,7 +109,7 @@ static void xplicit_load_shell()
 		{
 			char cmd_buf[1024];
 
-			while (Xplicit::InstanceManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
+			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 			{
 				if (!Xplicit::ApplicationContext::get_singleton().ShouldExit)
 					std::cout << "$ ";
@@ -119,7 +118,7 @@ static void xplicit_load_shell()
 
 				if (strcmp(cmd_buf, "exit") == 0)
 				{
-					auto server = Xplicit::InstanceManager::get_singleton_ptr()->get<Xplicit::NetworkServerInstance>("NetworkServerInstance");
+					auto server = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 					XPLICIT_ASSERT(server);
 
 					xplicit_send_stop_packet(server);
@@ -141,7 +140,7 @@ static void xplicit_load_shell()
 	shell.detach();
 }
 
-static void xplicit_send_stop_packet(Xplicit::NetworkServerInstance* server)
+static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
 {
 	XPLICIT_ASSERT(server);
 
@@ -169,7 +168,7 @@ int main(int argc, char** argv)
 		if (!ip_address)
 			return 1;
 
-		auto server = Xplicit::InstanceManager::get_singleton_ptr()->add<Xplicit::NetworkServerInstance>(ip_address);
+		auto server = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip_address);
 		XPLICIT_ASSERT(server);
 
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
@@ -181,9 +180,10 @@ int main(int argc, char** argv)
 		xplicit_read_xml();
 		xplicit_load_shell();
 
-		int32_t countdown_watchdog = 10000;
+		constexpr const int32_t XPLICIT_COUNTDOWN_WATCHDOG = 1000;
+		int32_t countdown_watchdog = XPLICIT_COUNTDOWN_WATCHDOG;
 
-		while (Xplicit::InstanceManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
+		while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{
 			if (Xplicit::ApplicationContext::get_singleton().ShouldExit)
 				break;
@@ -191,7 +191,7 @@ int main(int argc, char** argv)
 			Xplicit::NetworkServerTraits::recv(server);
 
 			Xplicit::EventDispatcher::get_singleton_ptr()->update();
-			Xplicit::InstanceManager::get_singleton_ptr()->update();
+			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerTraits::send(server);
 
@@ -200,7 +200,7 @@ int main(int argc, char** argv)
 			if (countdown_watchdog <= 0)
 			{
 				watchdog->enable(true);
-				countdown_watchdog = 1000;
+				countdown_watchdog = XPLICIT_COUNTDOWN_WATCHDOG;
 			}
 		}
 

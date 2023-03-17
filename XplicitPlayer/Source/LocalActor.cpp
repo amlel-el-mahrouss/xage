@@ -21,9 +21,9 @@
 namespace Xplicit::Client
 {
 	LocalActor::LocalActor(const int64_t& public_hash)
-		: Instance(), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
+		: Component(), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
 	{
-		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
+		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(m_network);
 
@@ -46,12 +46,12 @@ namespace Xplicit::Client
 		// And then set the position.
 	}
 
-	void LocalActor::attach(CameraInstance* cam) noexcept { m_camera = cam; }
+	void LocalActor::attach(CameraComponent* cam) noexcept { m_camera = cam; }
 
 	LocalMoveEvent::LocalMoveEvent(const int64_t& public_hash)
 		: m_packet(), m_network(nullptr), m_public_hash(public_hash)
 	{
-		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
+		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(m_network);
 	}
 

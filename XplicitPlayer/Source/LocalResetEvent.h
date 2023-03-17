@@ -13,7 +13,7 @@
 #pragma once
 
 #include <ApplicationContext.h>
-#include <NetworkInstance.h>
+#include <NetworkComponent.h>
 #include <Event.h>
 
 namespace Xplicit::Client
@@ -31,7 +31,7 @@ namespace Xplicit::Client
 		const char* name() noexcept;
 
 	private:
-		NetworkInstance* m_network;
+		NetworkComponent* m_network;
 		int32_t m_num_resets;
 
 	};

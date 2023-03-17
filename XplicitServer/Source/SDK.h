@@ -12,14 +12,23 @@
 
 #pragma once
 
-#include <Uri.h>
+// ECS
 #include <Event.h>
+#include <Component.h>
+
+// Useful
+#include <Uri.h>
 #include <Xplicit.h>
-#include <Instance.h>
+
+// Console Variables
+#include <ConVar.h>
+
+// Mono support
 #include <MonoInterop.h>
-#include <MonoInstance.h>
-#include <ApplicationContext.h>
-#include <NetworkServerInstance.h>
+#include <MonoComponent.h>
+
+// Networking
+#include <NetworkServerComponent.h>
 
 #ifdef XPLICIT_WINDOWS
 

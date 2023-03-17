@@ -13,23 +13,23 @@
 #pragma once
 
 #include "Event.h"
-#include "Instance.h"
+#include "Component.h"
 #include "Xplicit.h"
-#include "MonoInstance.h"
+#include "MonoComponent.h"
 
 namespace Xplicit
 {
-	class XPLICIT_API MonoClassInstance final : public Instance
+	class XPLICIT_API MonoClassComponent final : public Component
 	{
 	public:
-		MonoClassInstance() = delete;
+		MonoClassComponent() = delete;
 
 	public:
-		MonoClassInstance(const char* namespase, const char* klass);
-		virtual ~MonoClassInstance();
+		MonoClassComponent(const char* namespase, const char* klass);
+		virtual ~MonoClassComponent();
 
-		MonoClassInstance& operator=(const MonoClassInstance&) = default;
-		MonoClassInstance(const MonoClassInstance&) = default;
+		MonoClassComponent& operator=(const MonoClassComponent&) = default;
+		MonoClassComponent(const MonoClassComponent&) = default;
 
 		virtual INSTANCE_TYPE type() noexcept override;
 		virtual const char* name() noexcept override;
@@ -45,7 +45,7 @@ namespace Xplicit
 		operator bool();
 
 	private:
-		Ref<MonoScriptInstance*> m_script; // Image Handle, for the specified Mono app.
+		Ref<MonoScriptComponent*> m_script; // Image Handle, for the specified Mono app.
 		MonoObject* m_object_klass;
 		MonoClass* m_klass;
 

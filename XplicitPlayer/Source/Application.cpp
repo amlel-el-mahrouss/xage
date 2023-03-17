@@ -18,7 +18,7 @@
 
 namespace Xplicit::Bites
 {
-	Application::Application(const char* ip)
+	Application::Application(const char* dns)
 		: m_settings(), m_wsa(), m_data_path("")
 	{
 		XPLICIT_GET_DATA_DIR(data_tmp);
@@ -36,10 +36,8 @@ namespace Xplicit::Bites
 
 		this->setup();
 
-		auto loading_instance = InstanceManager::get_singleton_ptr()->add<Client::LoadingInstance>();
-		XPLICIT_ASSERT(loading_instance);
-
-		loading_instance->connect(ip);
+		auto loading_instance = ComponentManager::get_singleton_ptr()->add<Client::LoadingComponent>();
+		loading_instance->connect(dns);
 	}
 
 	Application::~Application()
@@ -63,17 +61,17 @@ namespace Xplicit::Bites
 			KB));
 
 #ifdef XPLICIT_WINDOWS
-		HMENU menuHandle = GetSystemMenu((HWND)IRR->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd, FALSE);
-		EnableMenuItem(menuHandle, SC_CLOSE, MF_GRAYED);
+		HMENU handle = GetSystemMenu(reinterpret_cast<HWND>(IRR->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd), false);
+		EnableMenuItem(handle, SC_CLOSE, MF_GRAYED);
 #endif
 
 		m_settings = std::make_unique<Settings>();
-		assert(m_settings);
+		XPLICIT_ASSERT(m_settings);
 
 		Settings::Traits traits{};
 		m_settings->read(traits);
 
-		if (traits.window_width >= 800 && traits.window_width >= 600) 
+		if (traits.window_width >= XPLICIT_MIN_WIDTH && traits.window_width >= XPLICIT_MIN_HEIGHT)
 			IRR->setWindowSize(dimension2d<irr::u32>(traits.window_width, traits.window_height));
 
 		IRR->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);

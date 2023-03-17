@@ -20,8 +20,8 @@
 
 namespace Xplicit::Client
 {
-	CameraInstance::CameraInstance()
-		: Instance(), m_camera(nullptr)
+	CameraComponent::CameraComponent()
+		: Component(), m_camera(nullptr)
 	{
 		m_camera = IRR->getSceneManager()->addCameraSceneNodeFPS(nullptr);
 		XPLICIT_ASSERT(m_camera);
@@ -35,17 +35,17 @@ namespace Xplicit::Client
 		XPLICIT_ASSERT(m_cursor);
 	}
 
-	CameraInstance::~CameraInstance()
+	CameraComponent::~CameraComponent()
 	{
 		if (m_camera)
 			m_camera->drop();
 
 	}
 
-	CameraInstance::INSTANCE_TYPE CameraInstance::type() noexcept { return INSTANCE_CAMERA; }
-	const char* CameraInstance::name() noexcept { return ("CameraInstance"); }
+	CameraComponent::INSTANCE_TYPE CameraComponent::type() noexcept { return INSTANCE_CAMERA; }
+	const char* CameraComponent::name() noexcept { return ("CameraComponent"); }
 
-	void CameraInstance::update()
+	void CameraComponent::update()
 	{
 		if (!m_cursor)
 			return;
@@ -53,5 +53,5 @@ namespace Xplicit::Client
 		IRR->getVideoDriver()->draw2DImage(m_cursor, IRR->getCursorControl()->getPosition(), rect<s32>(0, 0, 38, 38), nullptr, SColor(255, 255, 255, 255), true);
 	}
 
-	irr::scene::ICameraSceneNode* CameraInstance::get() noexcept { return m_camera; }
+	irr::scene::ICameraSceneNode* CameraComponent::get() noexcept { return m_camera; }
 }

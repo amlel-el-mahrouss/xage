@@ -37,14 +37,14 @@ namespace Xplicit
 		return mono_runtime_invoke(method, klass, nullptr, nullptr);
 	}
 
-	MonoClassInstance::MonoClassInstance(const char* namespase, const char* klass)
-		: Instance(), m_klass(nullptr), m_object_klass(nullptr), m_script()
+	MonoClassComponent::MonoClassComponent(const char* namespase, const char* klass)
+		: Component(), m_klass(nullptr), m_object_klass(nullptr), m_script()
 	{
 		/*
-		 * FIXME: Let MonoScriptInstance have it's own name -> get_all<MonoScriptInstance>("MyScript.dll");
+		 * FIXME: Let MonoScriptComponent have it's own name -> get_all<MonoScriptComponent>("MyScript.dll");
 		 */
 
-		auto scripts = InstanceManager::get_singleton_ptr()->all_of<MonoScriptInstance>("MonoScriptInstance");
+		auto scripts = ComponentManager::get_singleton_ptr()->all_of<MonoScriptComponent>("MonoScriptComponent");
 
 		for (size_t i = 0; i < scripts.size(); i++)
 		{
@@ -67,20 +67,20 @@ namespace Xplicit
 		}
 	}
 
-	MonoClassInstance::operator bool() { return m_script; }
+	MonoClassComponent::operator bool() { return m_script; }
 
-	MonoClassInstance::~MonoClassInstance()
+	MonoClassComponent::~MonoClassComponent()
 	{
 		// Free anything that you allocated here.
 		// use smart pointers if you can.
 	}
 
-	MonoClassInstance::INSTANCE_TYPE MonoClassInstance::type() noexcept
+	MonoClassComponent::INSTANCE_TYPE MonoClassComponent::type() noexcept
 	{
 		return INSTANCE_SCRIPT;
 	}
 
-	const char* MonoClassInstance::name() noexcept
+	const char* MonoClassComponent::name() noexcept
 	{
 		MonoObject* obj = xplicit_mono_call(":Name()", m_klass);
 
@@ -89,16 +89,16 @@ namespace Xplicit
 			return mono_string_to_utf8((MonoString*)obj);
 		}
 
-		return ("MonoClassInstance");
+		return ("MonoClassComponent");
 	}
 
-	void MonoClassInstance::update() 
+	void MonoClassComponent::update() 
 	{
 		// Nothing to do for now.
 	}
 
 	// this method actually updates the C# methods.
-	void MonoClassInstance::script_update() noexcept
+	void MonoClassComponent::script_update() noexcept
 	{
 		if (!this->should_update())
 			return;
@@ -106,7 +106,7 @@ namespace Xplicit
 		xplicit_mono_call(":OnUpdate()", m_klass);
 	}
 
-	bool MonoClassInstance::can_collide() noexcept
+	bool MonoClassComponent::can_collide() noexcept
 	{
 		MonoObject* obj = xplicit_mono_call(":CanCollide()", m_klass);
 		if (obj) return *((bool*)mono_object_unbox(obj));
@@ -114,7 +114,7 @@ namespace Xplicit
 		return false;
 	}
 
-	bool MonoClassInstance::has_physics() noexcept
+	bool MonoClassComponent::has_physics() noexcept
 	{
 		MonoObject* obj = xplicit_mono_call(":HasPhysics()", m_klass);
 		if (obj) return *((bool*)mono_object_unbox(obj));
@@ -122,7 +122,7 @@ namespace Xplicit
 		return false;
 	}
 
-	bool MonoClassInstance::should_update() noexcept
+	bool MonoClassComponent::should_update() noexcept
 	{
 		MonoObject* obj = xplicit_mono_call(":ShouldUpdate()", m_klass);
 		if (obj) return *((bool*)mono_object_unbox(obj));
@@ -149,7 +149,7 @@ namespace Xplicit
 		if (m_name.empty())
 			return;
 
-		auto scripts = InstanceManager::get_singleton_ptr()->all_of<MonoClassInstance>(m_name.c_str());
+		auto scripts = ComponentManager::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
 
 		for (size_t i = 0; i < scripts.size(); i++)
 		{

@@ -12,20 +12,20 @@
 
 #pragma once
 
-#include "Instance.h"
+#include "Component.h"
 #include "ApplicationContext.h"
 
 namespace Xplicit::Client
 {
 	// The 'player' in-person.
-	class CameraInstance : public Instance
+	class CameraComponent : public Component
 	{
 	public:
-		CameraInstance();
-		virtual ~CameraInstance();
+		CameraComponent();
+		virtual ~CameraComponent();
 
-		CameraInstance& operator=(const CameraInstance&) = default;
-		CameraInstance(const CameraInstance&) = default;
+		CameraComponent& operator=(const CameraComponent&) = default;
+		CameraComponent(const CameraComponent&) = default;
 
 		virtual INSTANCE_TYPE type() noexcept override;
 		virtual const char* name() noexcept override;

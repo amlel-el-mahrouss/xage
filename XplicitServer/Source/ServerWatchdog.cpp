@@ -28,7 +28,7 @@ namespace Xplicit
 
 	void ServerWatchdogEvent::operator()() 
 	{
-		auto server = InstanceManager::get_singleton_ptr()->get<NetworkServerInstance>("NetworkServerInstance");
+		auto server = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
 		if (server)
 		{

@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: MonoInstance.cpp
+ *			File: MonoComponent.cpp
  *			Purpose: C# Foundations
  *
  * =====================================================================
@@ -14,27 +14,14 @@
  @file
  */
 
-#include "NetworkServerInstance.h"
-#include "NetworkInstance.h"
+#include "NetworkServerComponent.h"
+#include "NetworkComponent.h"
 
-#include "MonoInstance.h"
+#include "MonoComponent.h"
 #include "MonoInterop.h"
 
 namespace Xplicit
 {
-	XPLICIT_API MonoString* xplicit_read_packet()
-	{
-		// TODO: Script Messaging Protocol.
-
-		return nullptr;
-	}
-
-	XPLICIT_API void xplicit_write_packet(char* data, int64_t sz)
-	{
-		(void)data;
-		(void)sz;
-	}
-
 	XPLICIT_API bool xplicit_register_class(MonoString* namespase, MonoString* klass)
 	{
 		const char* _namespase = mono_string_to_utf8(namespase);
@@ -45,20 +32,17 @@ namespace Xplicit
 
 		if (_namespase && _klass)
 		{
-			InstanceManager::get_singleton_ptr()->add<MonoClassInstance>(_namespase, _klass);
+			ComponentManager::get_singleton_ptr()->add<MonoClassComponent>(_namespase, _klass);
 			return true;
 		}
 
 		return false;
 	}
 
-	static void xplicit_register_events()
+	static void xplicit_register_events() noexcept
 	{
 		mono_add_internal_call("Xplicit.RuntimeService::RegisterEvent", xplicit_register_event);
 		mono_add_internal_call("Xplicit.RuntimeService::RegisterClass", xplicit_register_class);
-
-		mono_add_internal_call("Xplicit.NetworkService::Read", xplicit_read_packet);
-		mono_add_internal_call("Xplicit.NetworkService::Write", xplicit_write_packet);
 	}
 
 	static std::string mono_to_cxx(MonoString* str)
@@ -106,7 +90,7 @@ namespace Xplicit
 		return buffer;
 	}
 
-	MonoEngineInstance::MonoEngineInstance()
+	MonoEngineComponent::MonoEngineComponent()
 		: m_domain(nullptr), m_app_domain(nullptr)
 	{
 		XPLICIT_GET_DATA_DIR(data_dir);
@@ -137,7 +121,7 @@ namespace Xplicit
 		}
 	}
 
-	MonoEngineInstance::~MonoEngineInstance()
+	MonoEngineComponent::~MonoEngineComponent()
 	{
 		if (m_domain)
 			mono_jit_cleanup(m_domain);
@@ -146,11 +130,11 @@ namespace Xplicit
 			mono_jit_cleanup(m_app_domain);
 	}
 
-	const char* MonoEngineInstance::name() noexcept { return ("MonoEngineInstance"); }
+	const char* MonoEngineComponent::name() noexcept { return ("MonoEngineComponent"); }
 
-	MonoEngineInstance::INSTANCE_TYPE MonoEngineInstance::type() noexcept { return INSTANCE_LOGIC; }
+	MonoEngineComponent::INSTANCE_TYPE MonoEngineComponent::type() noexcept { return INSTANCE_LOGIC; }
 
-	void MonoEngineInstance::update() {}
+	void MonoEngineComponent::update() {}
 
 	// checks args
 	static bool xplicit_check_args(int argc, const char** argv)
@@ -166,7 +150,7 @@ namespace Xplicit
 
 	// execute a CIL program
 
-	int MonoEngineInstance::run(MonoAssembly* in, int argc, const char** argv)
+	int MonoEngineComponent::run(MonoAssembly* in, int argc, const char** argv)
 	{
 		if (in)
 		{
@@ -180,7 +164,7 @@ namespace Xplicit
 	}
 
 	// execute a specific method/function
-	MonoObject* MonoEngineInstance::run(MonoAssembly* in, const char* env)
+	MonoObject* MonoEngineComponent::run(MonoAssembly* in, const char* env)
 	{
 		if (!env)
 			return nullptr;
@@ -214,7 +198,7 @@ namespace Xplicit
 	}
 
 	// opens a new C# script.
-	MonoAssembly* MonoEngineInstance::open(const char* assembly_file)
+	MonoAssembly* MonoEngineComponent::open(const char* assembly_file)
 	{
 		if (!assembly_file) return nullptr;
 		if (*assembly_file == 0) return nullptr;
@@ -250,7 +234,7 @@ namespace Xplicit
 		return in_file;
 	}
 
-	MonoClass* MonoEngineInstance::make(Ref<MonoScriptInstance*>& assembly, const char* namespase, const char* klass)
+	MonoClass* MonoEngineComponent::make(Ref<MonoScriptComponent*>& assembly, const char* namespase, const char* klass)
 	{
 		if (!assembly)
 			return nullptr;
@@ -263,7 +247,7 @@ namespace Xplicit
 		return mono_class_from_name(img, namespase, klass);
 	}
 
-	void MonoEngineInstance::add_internal_call(const char* name, const void* method) noexcept 
+	void MonoEngineComponent::add_internal_call(const char* name, const void* method) noexcept 
 	{
 		if (!method)
 			return;
@@ -274,48 +258,48 @@ namespace Xplicit
 		mono_add_internal_call(name, method);
 	}
 
-	MonoDomain* MonoEngineInstance::domain() noexcept { return m_app_domain; }
+	MonoDomain* MonoEngineComponent::domain() noexcept { return m_app_domain; }
 
-	// Script Instance constructor
-	MonoScriptInstance::MonoScriptInstance(const char* filename, bool can_fail)
+	// Script Component constructor
+	MonoScriptComponent::MonoScriptComponent(const char* filename, bool can_fail)
 		: m_filename(filename), m_assembly(nullptr)
 	{
-		this->m_engine_ref = InstanceManager::get_singleton_ptr()->get<MonoEngineInstance>("MonoEngineInstance");
+		this->m_engine_ref = ComponentManager::get_singleton_ptr()->get<MonoEngineComponent>("MonoEngineComponent");
 		assert(this->m_engine_ref);
 
 		// Get the C# assembly.
 		m_assembly = this->m_engine_ref->open(this->m_filename.c_str());
 
 		if (!m_assembly && !can_fail)
-			throw std::runtime_error("MonoScriptInstance: Couldn't load C# DLL..");
+			throw std::runtime_error("MonoScriptComponent: Couldn't load C# DLL..");
 	}
 
-	// destructor, also destroys the EngineInstance, if ref count is below one.
-	MonoScriptInstance::~MonoScriptInstance() 
+	// destructor, also destroys the EngineComponent, if ref count is below one.
+	MonoScriptComponent::~MonoScriptComponent() 
 	{
 		if (this->m_engine_ref.count() < 1)
-			InstanceManager::get_singleton_ptr()->remove<MonoEngineInstance>(this->m_engine_ref.get());
+			ComponentManager::get_singleton_ptr()->remove<MonoEngineComponent>(this->m_engine_ref.get());
 	}
 
 
-	MonoScriptInstance::INSTANCE_TYPE MonoScriptInstance::type() noexcept
+	MonoScriptComponent::INSTANCE_TYPE MonoScriptComponent::type() noexcept
 	{
 		return INSTANCE_SCRIPT;
 	}
 
-	const char* MonoScriptInstance::name() noexcept
+	const char* MonoScriptComponent::name() noexcept
 	{
-		return ("MonoScriptInstance");
+		return ("MonoScriptComponent");
 	}
 
-	void MonoScriptInstance::update()
+	void MonoScriptComponent::update()
 	{
 		// nothing.
 	}
 
-	bool MonoScriptInstance::should_update() noexcept { return false; }
+	bool MonoScriptComponent::should_update() noexcept { return false; }
 
-	MonoObject* MonoScriptInstance::run(const char* method_name)
+	MonoObject* MonoScriptComponent::run(const char* method_name)
 	{
 		if (!method_name)
 			return nullptr; // avoid useless lookups!
@@ -330,5 +314,5 @@ namespace Xplicit
 		return nullptr;
 	}
 
-	Ref<MonoEngineInstance*>& MonoScriptInstance::get() { return m_engine_ref; }
+	Ref<MonoEngineComponent*>& MonoScriptComponent::get() { return m_engine_ref; }
 }

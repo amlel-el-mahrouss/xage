@@ -26,7 +26,7 @@ namespace Xplicit::Client
 	LocalMenuEvent::LocalMenuEvent(const int64_t& hash)
 		: m_network(nullptr), m_enabled(false), m_menu(nullptr), m_timeout(0), m_hash(hash)
 	{
-		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
+		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(m_network);
 
 		XPLICIT_GET_DATA_DIR(data_dir);

@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: Common.cpp
+ *			File: LoadingComponent.cpp
  *			Purpose:
  *
  * =====================================================================
@@ -15,7 +15,7 @@
  */
 
 #include "LocalWatchdogEvent.h"
-#include "LoadingInstance.h"
+#include "LoadingComponent.h"
 #include "LocalResetEvent.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
@@ -27,7 +27,7 @@ namespace Xplicit::Client
 {
 	constexpr const int XPLICIT_TIMEOUT = 1000; // connection timeout
 
-	LoadingInstance::LoadingInstance() 
+	LoadingComponent::LoadingComponent() 
 		: m_run(true), m_network(nullptr), m_logo_tex(nullptr), m_timeout(XPLICIT_TIMEOUT)
 	{
 		XPLICIT_GET_DATA_DIR(data_dir);
@@ -38,9 +38,9 @@ namespace Xplicit::Client
 		m_logo_tex = IRR->getVideoDriver()->getTexture(health_path.c_str());
 	}
 
-	LoadingInstance::~LoadingInstance() {}
+	LoadingComponent::~LoadingComponent() {}
 
-	void LoadingInstance::update()
+	void LoadingComponent::update()
 	{
 		if (!m_network)
 			return;
@@ -50,13 +50,13 @@ namespace Xplicit::Client
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
-			InstanceManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
-			auto actor = InstanceManager::get_singleton_ptr()->add<Xplicit::Client::LocalActor>(packet.public_hash);
+			ComponentManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
+			auto actor = ComponentManager::get_singleton_ptr()->add<Xplicit::Client::LocalActor>(packet.public_hash);
 			XPLICIT_ASSERT(actor);
 
 			if (actor)
 			{
-				actor->attach(InstanceManager::get_singleton_ptr()->add<Xplicit::Client::CameraInstance>());
+				actor->attach(ComponentManager::get_singleton_ptr()->add<Xplicit::Client::CameraComponent>());
 
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalResetEvent>();
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
@@ -72,7 +72,7 @@ namespace Xplicit::Client
 
 				m_network->send(packet);
 				
-				InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
+				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 					IRR->closeDevice();
 				}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
 
@@ -91,7 +91,7 @@ namespace Xplicit::Client
 			// peek after the ++timeout
 			if (m_timeout < 0)
 			{
-				InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
+				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 					IRR->closeDevice();
 					}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
 
@@ -111,13 +111,13 @@ namespace Xplicit::Client
 		}
 	}
 
-	void LoadingInstance::connect(const char* ip)
+	void LoadingComponent::connect(const char* ip)
 	{
-		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
+		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		if (!m_network)
 		{
-			m_network = InstanceManager::get_singleton_ptr()->add<NetworkInstance>();
+			m_network = ComponentManager::get_singleton_ptr()->add<NetworkComponent>();
 			assert(m_network);
 		}
 
@@ -132,9 +132,9 @@ namespace Xplicit::Client
 		}
 	}
 
-	void LoadingInstance::reset() noexcept
+	void LoadingComponent::reset() noexcept
 	{
-		InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
+		ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 			IRR->closeDevice();
 			}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
 

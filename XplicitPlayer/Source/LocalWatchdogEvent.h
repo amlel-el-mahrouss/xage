@@ -13,7 +13,7 @@
 #pragma once
 
 #include "Event.h"
-#include "NetworkInstance.h"
+#include "NetworkComponent.h"
 #include "ApplicationContext.h"
 
 namespace Xplicit::Client
@@ -34,7 +34,7 @@ namespace Xplicit::Client
 		virtual void operator()() override;
 
 	private:
-		NetworkInstance* m_network;
+		NetworkComponent* m_network;
 		int64_t m_id;
 
 	};

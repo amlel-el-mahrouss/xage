@@ -12,17 +12,25 @@
 
 #pragma once
 
+// URLs
 #include <Uri.h>
-#include <ApplicationContext.h>
 
 #include "Camera.h"
 #include "LocalActor.h"
 #include "DriverD3D11.h"
-#include "LoadingInstance.h"
+#include "LoadingComponent.h"
+
+// Application Context
+#include <ApplicationContext.h>
 
 #define XPLICIT_DEFAULT_WIDTH (1280)
 #define XPLICIT_DEFAULT_HEIGHT (720)
 
+/* VGA */
+#define XPLICIT_MIN_WIDTH  (800)
+#define XPLICIT_MIN_HEIGHT (600)
+
+// TODO: rework that after direct3d 11 support.
 namespace Xplicit::Client
 {
 	static inline dimension2du XPLICIT_DIM = dimension2du(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
@@ -30,7 +38,7 @@ namespace Xplicit::Client
 
 namespace Xplicit::Bites
 {
-	constexpr const wchar_t* XPLICIT_APP_NAME = L"Xplicit";
+	constexpr const pchar* XPLICIT_APP_NAME = L"Xplicit";
 
 	class Application final
 	{
@@ -38,7 +46,7 @@ namespace Xplicit::Bites
 		Application() = delete;
 
 	public:
-		Application(const char* ip);
+		Application(const char* dns);
 		~Application();
 
 		Application& operator=(const Application&) = delete;
@@ -76,7 +84,11 @@ namespace Xplicit::Bites
 	private:
 		std::unique_ptr<Settings> m_settings;
 		std::string m_data_path;
+
+#ifdef XPLICIT_WINDOWS
+		// WinSock data
 		WSADATA m_wsa;
+#endif
 
 	};
 }

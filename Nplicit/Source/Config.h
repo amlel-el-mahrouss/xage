@@ -14,6 +14,6 @@
 #define NPLICIT_API
 #endif // ifdef __XPLICIT_DLL__
 
-#include <Instance.h>
+#include <Component.h>
 #include <Xplicit.h>
 #include <Avx.h>

@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: NetworkServerInstance.cpp
+ *			File: NetworkServerComponent.cpp
  *			Purpose: XDP Protocol Server
  * 
  * =====================================================================
@@ -14,7 +14,7 @@
  @file
  */
 
-#include "NetworkServerInstance.h"
+#include "NetworkServerComponent.h"
 
 namespace Xplicit
 {
@@ -26,16 +26,16 @@ namespace Xplicit
 
 		XPLICIT_ASSERT(err == NO_ERROR);
 #else
-#pragma error("DEFINE ME ServerInstance.cpp")
+#pragma error("DEFINE ME ServerComponent.cpp")
 #endif
 	}
 
-	NetworkServerInstance::NetworkServerInstance(const char* ip)
+	NetworkServerComponent::NetworkServerComponent(const char* ip)
 		: m_socket(INVALID_SOCKET), m_dns(ip), m_server()
 	{
 #ifndef _NDEBUG
 		std::string message;
-		message += "Class NetworkServerInstance, Epoch: ";
+		message += "Class NetworkServerComponent, Epoch: ";
 		message += std::to_string(xplicit_get_epoch());
 
 		XPLICIT_INFO(message);
@@ -58,7 +58,7 @@ namespace Xplicit
 
 		auto ret_bind = bind(m_socket, reinterpret_cast<SOCKADDR*>(&m_server), sizeof(m_server));
 #else
-#pragma error("DEFINE ME ServerInstance.cpp")
+#pragma error("DEFINE ME ServerComponent.cpp")
 #endif
 
 		if (ret_bind == SOCKET_ERROR)
@@ -81,32 +81,32 @@ namespace Xplicit
 		XPLICIT_INFO("[SERVER] IP: " + m_dns);
 	}
 
-	size_t NetworkServerInstance::size() noexcept 
+	size_t NetworkServerComponent::size() noexcept 
 	{ 
 		return m_peers.size(); 
 	}
 
-	NetworkPeer* NetworkServerInstance::get(size_t idx) noexcept 
+	NetworkPeer* NetworkServerComponent::get(size_t idx) noexcept 
 	{
 		XPLICIT_ASSERT(m_peers[idx]);
 		return m_peers[idx].get(); 
 	}
 
-	const char* NetworkServerInstance::name() noexcept { return ("NetworkServerInstance"); }
+	const char* NetworkServerComponent::name() noexcept { return ("NetworkServerComponent"); }
 
-	NetworkServerInstance::INSTANCE_TYPE NetworkServerInstance::type() noexcept { return INSTANCE_NETWORK; }
+	NetworkServerComponent::INSTANCE_TYPE NetworkServerComponent::type() noexcept { return INSTANCE_NETWORK; }
 
-	void NetworkServerInstance::update() 
+	void NetworkServerComponent::update() 
 	{
 
 	}
 
-	NetworkServerInstance::~NetworkServerInstance()
+	NetworkServerComponent::~NetworkServerComponent()
 	{
 		// don't print that in release builds.
 #ifndef _NDEBUG
 		std::string message;
-		message += "Class NetworkServerInstance::~NetworkServerInstance(), Epoch: ";
+		message += "Class NetworkServerComponent::~NetworkServerComponent(), Epoch: ";
 		message += std::to_string(xplicit_get_epoch());
 
 		XPLICIT_INFO(message);
@@ -116,16 +116,16 @@ namespace Xplicit
 		if (shutdown(m_socket, SD_BOTH) == SOCKET_ERROR)
 			closesocket(m_socket);
 #else
-#pragma error("DEFINE ME ServerInstance.cpp")
+#pragma error("DEFINE ME ServerComponent.cpp")
 #endif
 
 		WSACleanup();
 	}
 
-	const char* NetworkServerInstance::dns() noexcept { return m_dns.c_str(); }
+	const char* NetworkServerComponent::dns() noexcept { return m_dns.c_str(); }
 
 	// we need a way to tell which client is who.
-	void NetworkServerTraits::recv(NetworkServerInstance* server)
+	void NetworkServerTraits::recv(NetworkServerComponent* server)
 	{
 		if (server)
 		{
@@ -150,7 +150,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerTraits::send(NetworkServerInstance* server)
+	void NetworkServerTraits::send(NetworkServerComponent* server)
 	{
 		if (server)
 		{
@@ -167,7 +167,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerTraits::correct_collisions(NetworkServerInstance* server)
+	void NetworkServerTraits::correct_collisions(NetworkServerComponent* server)
 	{
 		if (server)
 		{

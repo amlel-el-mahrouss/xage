@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include <NetworkInstance.h>
+#include <NetworkComponent.h>
 #include <ApplicationContext.h>
-#include <Instance.h>
+#include <Component.h>
 
 #ifdef XPLICIT_WINDOWS
 #include "DriverD3D11.h"
@@ -29,7 +29,7 @@ namespace Xplicit::CoreUI
 		Kicked,
 	};
 
-	class Popup final : public Instance
+	class Popup final : public Component
 	{
 	public:
 		Popup() = delete;
@@ -55,7 +55,7 @@ namespace Xplicit::CoreUI
 
 	};
 
-	class HUD final : public Instance
+	class HUD final : public Component
 	{
 	public:
 		HUD();
@@ -70,7 +70,7 @@ namespace Xplicit::CoreUI
 		virtual void update() override;
 
 	private:
-		NetworkInstance* m_network;
+		NetworkComponent* m_network;
 		ITexture* m_texture;
 		int64_t m_health;
 

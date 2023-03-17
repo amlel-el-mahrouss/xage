@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: Client.h
+ *			File: LoadingComponent.h
  *			Purpose:
  *
  * =====================================================================
@@ -13,18 +13,18 @@
 #pragma once
 
 #include <ApplicationContext.h>
-#include <NetworkInstance.h>
+#include <NetworkComponent.h>
 
 namespace Xplicit::Client
 {
-	class LoadingInstance final : public Instance
+	class LoadingComponent final : public Component
 	{
 	public:
-		LoadingInstance();
-		virtual ~LoadingInstance();
+		LoadingComponent();
+		virtual ~LoadingComponent();
 
-		LoadingInstance& operator=(const LoadingInstance&) = default;
-		LoadingInstance(const LoadingInstance&) = default;
+		LoadingComponent& operator=(const LoadingComponent&) = default;
+		LoadingComponent(const LoadingComponent&) = default;
 
 		virtual bool should_update() noexcept override { return m_run; }
 		virtual void update() override;
@@ -36,7 +36,7 @@ namespace Xplicit::Client
 
 	private:
 		irr::video::ITexture* m_logo_tex; /* Texture to show when loading the game.. */
-		NetworkInstance* m_network; /* Network instance */
+		NetworkComponent* m_network; /* Network instance */
 		int64_t m_timeout; /* Network Timeout. */
 		bool m_run; /* Should we seek for a connection? */
 

@@ -23,7 +23,7 @@ namespace Xplicit::Client
 	LocalWatchdogEvent::LocalWatchdogEvent(const int64_t& id)
 		: m_network(nullptr), m_id(id)
 	{
-		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
+		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(m_network);
 	}
 
@@ -48,9 +48,9 @@ namespace Xplicit::Client
 
 			if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				if (!InstanceManager::get_singleton_ptr()->get<CoreUI::Popup>("Popup"))
+				if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("Popup"))
 				{
-					InstanceManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
+					ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 						IRR->closeDevice();
 						}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::Kicked);
 

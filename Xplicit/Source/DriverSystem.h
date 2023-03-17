@@ -43,15 +43,6 @@ namespace Xplicit::Renderer
 		FORMAT_COUNT,
 	};
 
-	// platform depedent chars
-#ifdef XPLICIT_WINDOWS
-	using pchar = wchar_t;
-#else
-	using pchar = char;
-#endif
-
-	using string = std::basic_string<pchar>;
-
 	class XPLICIT_API ShaderSystem
 	{
 	public:

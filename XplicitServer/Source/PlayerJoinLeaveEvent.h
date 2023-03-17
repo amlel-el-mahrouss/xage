@@ -33,8 +33,8 @@ namespace Xplicit
 		const size_t& size() noexcept;
 
 	private:
-		bool leave_event(NetworkServerInstance* server) noexcept;
-		bool join_event(NetworkServerInstance* server, size_t peer_idx) noexcept;
+		bool leave_event(NetworkServerComponent* server) noexcept;
+		bool join_event(NetworkServerComponent* server, size_t peer_idx) noexcept;
 
 	private:
 		bool m_locked;

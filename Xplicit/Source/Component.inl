@@ -4,7 +4,7 @@
  *			XplicitNgin C++ Game Engine
  *			Copyright XPX, all rights reserved.
  *
- *			File: Instance.h
+ *			File: Component.h
  *			Purpose: Xplicit's ECS
  *
  * =====================================================================
@@ -13,14 +13,14 @@
 #include "Avx.h"
 
 template <typename T, typename... Args>
-T* Xplicit::InstanceManager::add(Args&&... args)
+T* Xplicit::ComponentManager::add(Args&&... args)
 {
 	T* ptr = new T{ args... };
 	XPLICIT_ASSERT(ptr);
 
 	if (ptr)
 	{
-		m_instances.push_back(reinterpret_cast<Instance*>(ptr));
+		m_instances.push_back(reinterpret_cast<Component*>(ptr));
 		return ptr;
 	}
 
@@ -28,7 +28,7 @@ T* Xplicit::InstanceManager::add(Args&&... args)
 }
 
 template <typename T>
-T* Xplicit::InstanceManager::get(const char* name)
+T* Xplicit::ComponentManager::get(const char* name)
 {
 	if (!name ||
 		*name == 0)
@@ -51,7 +51,7 @@ T* Xplicit::InstanceManager::get(const char* name)
 }
 
 template <typename T>
-std::vector<T*> Xplicit::InstanceManager::all_of(const char* name)
+std::vector<T*> Xplicit::ComponentManager::all_of(const char* name)
 {
 	std::vector<T*> list;
 
@@ -75,7 +75,7 @@ std::vector<T*> Xplicit::InstanceManager::all_of(const char* name)
 }
 
 template <typename T>
-bool Xplicit::InstanceManager::remove(T* ptr)
+bool Xplicit::ComponentManager::remove(T* ptr)
 {
 	if (!ptr)
 		return false;

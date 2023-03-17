@@ -77,7 +77,7 @@ namespace Xplicit::CoreUI
 	HUD::HUD()
 		: m_health(50), m_network(nullptr), m_texture(nullptr)
 	{
-		m_network = InstanceManager::get_singleton_ptr()->get<NetworkInstance>("NetworkInstance");
+		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(m_network);
 
 		m_texture = IRR->getVideoDriver()->getTexture("health.png");

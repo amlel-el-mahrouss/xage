@@ -18,7 +18,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
+INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
 {
 	try
 	{
@@ -54,7 +54,7 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 		
 		// and run.
 		while (IRR->run() && 
-			Xplicit::InstanceManager::get_singleton_ptr() && 
+			Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventDispatcher::get_singleton_ptr())
 		{
 			// To match the loading's screen colour.
@@ -64,7 +64,7 @@ INT32 WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine
 			IRR->getSceneManager()->drawAll();
 
 			Xplicit::EventDispatcher::get_singleton_ptr()->update();
-			Xplicit::InstanceManager::get_singleton_ptr()->update();
+			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			IRR->getVideoDriver()->endScene();
 		}

@@ -23,7 +23,7 @@ namespace Xplicit
 
 	void PlayerSpawnDeathEvent::operator()()
 	{
-		auto actors = InstanceManager::get_singleton_ptr()->all_of<Actor>("Actor");
+		auto actors = ComponentManager::get_singleton_ptr()->all_of<Actor>("Actor");
 
 		for (Actor* actor : actors)
 		{
