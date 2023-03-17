@@ -1,8 +1,6 @@
 <!-- Scene Manifest -->
 <!-- Generated from XplicitStudio -->
 
-<Plugin>XplicitLuaPlugin.dll</Plugin>
-
 <ConVar For="Actor">
 	<WalkSpeed Value="5.f"/>
 	<RunSpeed Value="10.f"/>
