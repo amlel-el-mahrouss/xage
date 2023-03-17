@@ -16,8 +16,8 @@
 
 namespace Xplicit 
 {
-	class EventDispatcher;
 	class Event;
+	class EventDispatcher;
 
 	class XPLICIT_API EventDispatcher final 
 	{

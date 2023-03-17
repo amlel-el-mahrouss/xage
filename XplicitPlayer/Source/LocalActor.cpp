@@ -24,7 +24,6 @@ namespace Xplicit::Client
 		: Component(), MeshComponent("../Data/Studio/Character.dae"), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
 	{
 		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
-
 		XPLICIT_ASSERT(m_network);
 
 #ifdef XPLICIT_DEBUG

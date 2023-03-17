@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: DriverSystem.h
- *			Purpose: C++ Rendering Driver
+ *			Purpose: C++ Rendering Driver API
  *
  * =====================================================================
  */
@@ -13,6 +13,7 @@
 #pragma once
 
 #include "Xplicit.h"
+#include <Nplicit.h>
 
 namespace Xplicit::Renderer
 {
@@ -38,8 +39,8 @@ namespace Xplicit::Renderer
 	};
 
 	enum XPLICIT_SHADER_FORMAT : uint8_t {
-		FORMAT_GLSL, // vulkan
-		FORMAT_HLSL, // direct3d
+		FORMAT_GLSL, // Vulkan legacy shader.
+		FORMAT_HLSL, // Direct3D 11 shader type.
 		FORMAT_COUNT,
 	};
 
@@ -77,5 +78,29 @@ namespace Xplicit::Renderer
 		RENDER_POLYGON, // applies for 2d and 3d contexts.
 		RENDER_PARTICLE_SYSTEM, // Emitter
 		RENDER_TYPE_COUNT,
+	};
+
+	template <typename Implementer>
+	class XPLICIT_API MeshComponent final
+	{
+	public:
+		MeshComponent(
+			Nplicit::Vector<float> position,
+			Nplicit::Color<float> color
+		)
+			: m_position(position), m_color(color)
+		{}
+
+		~MeshComponent() = default;
+
+		MeshComponent& operator=(const MeshComponent&) = default;
+		MeshComponent(const MeshComponent&) = default;
+
+	protected:
+		Nplicit::Vector<float> m_position;
+		Nplicit::Color<float> m_color;
+
+		friend Implementer;
+
 	};
 }

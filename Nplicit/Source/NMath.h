@@ -14,6 +14,8 @@
 
 #include "Config.h"
 
+#define NPLICIT_PI (3.1415926535897932384626)
+
 template <typename TypeLeft, typename TypeRight>
 static inline constexpr auto nplicit_circle_add(
 	const TypeLeft& lhs,
@@ -247,8 +249,78 @@ namespace Xplicit::Nplicit
 			return *this;
 		}
 
+	};
+
+	template <typename TypeFloat = float>
+	class NPLICIT_API Color final
+	{
+	public:
+		TypeFloat R, G, B, A;
+
+	public:
+		Color() = default;
+		~Color() = default;
+
+		Color(TypeFloat r = 0, TypeFloat g = 0, TypeFloat b = 0, TypeFloat a = 1.f) noexcept
+			: R(r), G(b), B(b), A(a)
+		{
+		}
+
+		Color& operator=(const Color&) = default;
+		Color(const Color&) = default;
+
+	public:
+		Color& operator*=(const Color& vec)
+		{
+#ifdef NPLICIT_USE_VECTORS
+			__m256d x1{ R, G, B, A };
+			__m256d x2{ vec.R, vec.G, vec.B, vec.A };
+
+			__m256d sum = _mm256_mul_pd(x1, x2);
+#else
+			R *= vec.R;
+			G *= vec.G;
+			B *= vec.B;
+			A *= vec.A;
+#endif
+
+			return *this;
+		}
+
+		Color& operator+=(const Color& vec)
+		{
+#ifdef NPLICIT_USE_VECTORS
+			__m256d x1{ R, G, B, A };
+			__m256d x2{ vec.R, vec.G, vec.B, vec.A };
+
+			__m256d sum = _mm256_add_pd(x1, x2);
+#else
+			R += vec.R;
+			G += vec.G;
+			B += vec.B;
+			A += vec.A;
+#endif
+
+			return *this;
+		}
+
+		Color& operator-=(const Color& vec)
+		{
+#ifdef NPLICIT_USE_VECTORS
+			__m256d x1{ R, G, B, A };
+			__m256d x2{ vec.R, vec.G, vec.B, vec.A };
+
+			__m256d sum = _mm256_sub_pd(x1, x2);
+#else
+			R -= vec.R;
+			G -= vec.G;
+			B -= vec.B;
+			A -= vec.A;
+#endif
+
+			return *this;
+		}
+
 
 	};
 }
-
-#define NPLICIT_PI (3.1415926535897932384626)

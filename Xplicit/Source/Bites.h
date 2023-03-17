@@ -48,14 +48,18 @@ namespace Xplicit::Bites
 
 			RegisterClassExA(&m_traits.WndClass);
 
-			m_traits.WindowHandle = CreateWindowA(wndClass, wndName, WS_CAPTION, 0, 0, XPLICIT_MIN_WIDTH, XPLICIT_MIN_HEIGHT, nullptr, nullptr, hInstance, nullptr);
+			float x = GetSystemMetrics(SM_CXSCREEN);
+			float y = GetSystemMetrics(SM_CYSCREEN);
+
+			x = (x - XPLICIT_MIN_WIDTH) / 2;
+			y = (y - XPLICIT_MIN_HEIGHT) / 2;
+
+			m_traits.WindowHandle = CreateWindowA(wndClass, wndName, WS_BORDER, x, y, XPLICIT_MIN_WIDTH, XPLICIT_MIN_HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
 			XPLICIT_ASSERT(m_traits.WindowHandle);
 
 			ShowWindow(m_traits.WindowHandle, SW_SHOW);
 			UpdateWindow(m_traits.WindowHandle);
-
-			ShowCursor(false);
 		}
 
 		static LRESULT CALLBACK window_procedure(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
@@ -112,14 +116,14 @@ namespace Xplicit::Bites
 				if (msg.message == WM_QUIT)
 					done = true;
 
-				driver->begin_scene(1.0f, 0.40f, 0.40f, 0.40f);
+				driver->begin_scene(1.0f, 0.2f, 0.2f, 0.2f);
 
 				ComponentManager::get_singleton_ptr()->update();
 				EventDispatcher::get_singleton_ptr()->update();
 
 				driver->end_scene();
 
-				if (driver->should_end())
+				if (driver->is_closed())
 					done = true;
 			}
 

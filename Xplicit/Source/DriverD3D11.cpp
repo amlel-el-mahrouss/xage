@@ -19,8 +19,6 @@
 
 #ifdef XPLICIT_WINDOWS
 
-#define XPLICIT_PI (3.1415926535897932384626)
-
 namespace Xplicit::Renderer
 {
 	struct DxgiOutputResult
@@ -55,16 +53,16 @@ namespace Xplicit::Renderer
 		swapDesc.OutputWindow = privateData.WindowHandle;
 
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[DIRECTX Backend] xplicit_d3d11_make_swapchain was a success!");
+		XPLICIT_INFO("[xplicit_d3d11_make_swapchain] was a success!");
 #endif
 
 	}
 
 	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd)
-		: m_swap_desc(), m_private()
+		: m_private()
 	{
 		m_private.WindowHandle = hwnd;
-		xplicit_d3d11_make_swapchain(m_swap_desc, m_private);
+		xplicit_d3d11_make_swapchain(m_private.SwapDesc, m_private);
 
 		this->setup();
 	}
@@ -86,7 +84,7 @@ namespace Xplicit::Renderer
 			feature,
 			ARRAYSIZE(feature),
 			D3D11_SDK_VERSION,
-			&m_swap_desc,
+			&m_private.SwapDesc,
 			m_private.SwapChain.GetAddressOf(),
 			m_private.Device.GetAddressOf(),
 			nullptr,
@@ -220,7 +218,7 @@ namespace Xplicit::Renderer
 		XPLICIT_ASSERT(m_private.DepthStencil);
 		XPLICIT_ASSERT(m_private.RenderTarget);
 
-		float rgba[4]{ a, r, g, b };
+		float rgba[4]{ r, g, b, a };
 
 		m_private.DeviceCtx->ClearRenderTargetView(m_private.RenderTarget.Get(), rgba);
 		m_private.DeviceCtx->ClearDepthStencilView(m_private.DepthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -243,7 +241,5 @@ namespace Xplicit::Renderer
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 }
-
-#undef XPLICIT_PI
 
 #endif // XPLICIT_WINDOWS

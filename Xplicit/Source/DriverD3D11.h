@@ -69,6 +69,7 @@ namespace Xplicit::Renderer
 			bool EndRendering{ false };
 			HWND WindowHandle{ nullptr };
 
+			DXGI_SWAP_CHAIN_DESC SwapDesc;
 			Microsoft::WRL::ComPtr<ID3D11Device> Device;
 			Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 			Microsoft::WRL::ComPtr<IDXGISwapChain> SwapChain;
@@ -81,21 +82,20 @@ namespace Xplicit::Renderer
 		};
 
 	private:
-		void setup();
-
-	public:
-		PrivateData& get() noexcept;
+		void setup(); // internal directx setup.
 
 	public:
 		void begin_scene(const float a, const float r, const float g, const float b) const;
 		bool end_scene() const;
 
-	public:
-		void close_device() noexcept { m_private.EndRendering = true; }
-		const bool& should_end() noexcept { return m_private.EndRendering; }
+		PrivateData& get() noexcept;
+
+		void close() noexcept { m_private.EndRendering = true; }
+
+		const bool& is_closed() noexcept { return m_private.EndRendering; }
+		operator bool() { return is_closed(); }
 
 	private:
-		DXGI_SWAP_CHAIN_DESC m_swap_desc;
 		PrivateData m_private;
 
 	};
@@ -141,7 +141,9 @@ namespace Xplicit::Renderer
 	private:
 		std::shared_ptr<ShaderData> m_data;
 
-};
+	};
+
+
 }
 
 #else

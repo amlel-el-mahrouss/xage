@@ -30,6 +30,7 @@ XPLICIT_CONFIG = {
         "Vendor/",
     	  "Xplicit/Vendor/include/",
     	  "Vendor/irr/include",
+    	  "Nplicit/Source/",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };

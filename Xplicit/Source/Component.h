@@ -16,8 +16,8 @@
 
 namespace Xplicit 
 {
-	class ComponentManager;
 	class Component;
+	class ComponentManager;
 
 	class XPLICIT_API ComponentManager final 
 	{

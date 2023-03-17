@@ -25,10 +25,10 @@ namespace Xplicit::Client
 	constexpr const int XPLICIT_NETWORK_DELAY = 100;
 	constexpr const float XPLICIT_SPEED = 20.f;
 
-	class LocalActor : public Component, MeshComponent
+	class LocalActor : public Component, public MeshComponent
 	{
 	public:
-		LocalActor(const int64_t& public_id);
+		LocalActor(const int64_t& public_hash);
 		virtual ~LocalActor();
 
 		LocalActor& operator=(const LocalActor&) = default;
