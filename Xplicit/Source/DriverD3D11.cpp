@@ -55,8 +55,9 @@ namespace Xplicit::Renderer
 		swapDesc.OutputWindow = privateData.WindowHandle;
 
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[DIRECTX] xplicit_d3d11_make_swapchain was a success!");
+		XPLICIT_INFO("[DIRECTX Backend] xplicit_d3d11_make_swapchain was a success!");
 #endif
+
 	}
 
 	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd)
@@ -65,52 +66,20 @@ namespace Xplicit::Renderer
 		m_private.WindowHandle = hwnd;
 		xplicit_d3d11_make_swapchain(m_swap_desc, m_private);
 
-		Microsoft::WRL::ComPtr<IDXGIFactory> factory;
-		CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(factory.GetAddressOf()));
+		this->setup();
+	}
 
-		if (FAILED(factory->EnumAdapters(0, m_private.Adapter.GetAddressOf())))
-			throw EngineError();
+	DriverSystemD3D11::~DriverSystemD3D11() 
+	{
+		// ComPtr will drop everything.. called after m_swap_desc, see class.
+	}
 
-		if (m_private.Adapter)
-		{
-			DxgiOutputResult outputs = xplicit_enum_outputs(m_private.Adapter.Get());
-
-			DXGI_ADAPTER_DESC adapter_desc;
-			RtlZeroMemory(&adapter_desc, sizeof(DXGI_ADAPTER_DESC));
-
-			m_private.Adapter->GetDesc(&adapter_desc);
-
-			auto err = memcpy_s(m_private.CardDesc, 128, adapter_desc.Description, 128);
-			if (err != 0)
-				throw EngineError();
-
-#ifdef XPLICIT_DEBUG
-			DXGI_OUTPUT_DESC desc;
-
-			for (auto* output : outputs.Outputs)
-			{
-				RtlZeroMemory(&desc, sizeof(DXGI_OUTPUT_DESC));
-		
-				output->GetDesc(&desc);
-
-				XPLICIT_INFO("AttachedToDesktop: ", desc.AttachedToDesktop ? "true" : "false");
-				XPLICIT_INFO(desc.DeviceName);
-			}
-#endif
-		}
-		else
-		{
-#ifdef XPLICIT_DEBUG
-			XPLICIT_INFO("EngineError! No Suitable adapters found!");
-#endif
-
-			throw EngineError();
-		}
-
-		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_0 , D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_10_1 };
+	void DriverSystemD3D11::setup()
+	{
+		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_0 , D3D_FEATURE_LEVEL_11_1 };
 
 		auto hr = D3D11CreateDeviceAndSwapChain(
-			m_private.Adapter.Get(),
+			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
 			nullptr,
 			0,
@@ -139,12 +108,8 @@ namespace Xplicit::Renderer
 		if (FAILED(hr))
 			throw Win32Error("[CreateRenderTargetView] Failed to call function correctly!");
 
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[DIRECTX 11] Driver is up and running!");
-#endif
-
 		D3D11_TEXTURE2D_DESC depthBufferDesc;
-		RtlZeroMemory(&depthBufferDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+		RtlZeroMemory(&depthBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
 		depthBufferDesc.Width = XPLICIT_MIN_WIDTH;
 		depthBufferDesc.Height = XPLICIT_MIN_HEIGHT;
@@ -243,11 +208,6 @@ namespace Xplicit::Renderer
 		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] Driver has been created.");
 	}
 
-	DriverSystemD3D11::~DriverSystemD3D11() 
-	{
-		// ComPtr will drop everything.. called after m_swap_desc, see class.
-	}
-
 	const char* DriverSystemD3D11::name() noexcept { return ("DriverSystemD3D11"); }
 
 	RENDER_SYSTEM DriverSystemD3D11::api() { return RENDER_SYSTEM::DIRECT3D11; }
@@ -278,7 +238,8 @@ namespace Xplicit::Renderer
 
 	std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd) 
 	{ 
-		assert(hwnd);
+		XPLICIT_ASSERT(hwnd);
+
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 }

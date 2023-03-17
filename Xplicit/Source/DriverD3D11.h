@@ -80,6 +80,9 @@ namespace Xplicit::Renderer
 			Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DepthStencilState;
 		};
 
+	private:
+		void setup();
+
 	public:
 		PrivateData& get() noexcept;
 

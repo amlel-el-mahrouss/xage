@@ -48,16 +48,12 @@ namespace Xplicit::Bites
 
 			RegisterClassExA(&m_traits.WndClass);
 
-			m_traits.WindowHandle = CreateWindowExA(WS_EX_APPWINDOW, wndClass, wndName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-				GetSystemMetrics(SM_CXSCREEN) - XPLICIT_MIN_WIDTH / 2, GetSystemMetrics(SM_CXSCREEN) - XPLICIT_MIN_HEIGHT / 2,
-				XPLICIT_MIN_WIDTH, XPLICIT_MIN_HEIGHT, nullptr, nullptr, hInstance, this);
+			m_traits.WindowHandle = CreateWindowA(wndClass, wndName, WS_CAPTION, 0, 0, XPLICIT_MIN_WIDTH, XPLICIT_MIN_HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
 			XPLICIT_ASSERT(m_traits.WindowHandle);
 
 			ShowWindow(m_traits.WindowHandle, SW_SHOW);
 			UpdateWindow(m_traits.WindowHandle);
-			SetForegroundWindow(m_traits.WindowHandle);
-			SetFocus(m_traits.WindowHandle);
 
 			ShowCursor(false);
 		}
@@ -116,7 +112,7 @@ namespace Xplicit::Bites
 				if (msg.message == WM_QUIT)
 					done = true;
 
-				driver->begin_scene(1.0f, 0.4, 0.4, 0.4);
+				driver->begin_scene(1.0f, 0.40f, 0.40f, 0.40f);
 
 				ComponentManager::get_singleton_ptr()->update();
 				EventDispatcher::get_singleton_ptr()->update();

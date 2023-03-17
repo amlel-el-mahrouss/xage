@@ -74,13 +74,13 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 
 		return 0;
 	}
-	catch (const std::runtime_error& err)
+	catch (Xplicit::EngineError& err)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO(err.what());
 #endif
 
-		Xplicit::GUI::message_box(L"Something Bad happen!\r\nExiting", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
+		Xplicit::GUI::message_box(L"Something Bad happen!\r\nExiting..", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
 		return -1;
 	}
 }
