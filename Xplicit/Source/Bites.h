@@ -19,9 +19,8 @@
 #define XPLICIT_DEFAULT_WIDTH (1280)
 #define XPLICIT_DEFAULT_HEIGHT (720)
 
-/* Basic VGA dimensions */
-#define XPLICIT_MIN_WIDTH  (800)
-#define XPLICIT_MIN_HEIGHT (600)
+#define XPLICIT_MIN_WIDTH  (XPLICIT_DEFAULT_WIDTH)
+#define XPLICIT_MIN_HEIGHT (XPLICIT_DEFAULT_HEIGHT)
 
 #ifdef XPLICIT_WINDOWS
 
@@ -114,6 +113,9 @@ namespace Xplicit::Bites
 					DispatchMessageA(&msg);
 				}
 
+				if (msg.message == WM_QUIT)
+					done = true;
+
 				driver->begin_scene(1, 0.4, 0.4, 0.4);
 
 				ComponentManager::get_singleton_ptr()->update();
@@ -122,8 +124,6 @@ namespace Xplicit::Bites
 				driver->end_scene();
 
 				if (driver->should_end())
-					done = true;
-				else if (msg.message == WM_QUIT)
 					done = true;
 			}
 

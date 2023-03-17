@@ -17,8 +17,11 @@
 #include <DriverD3D11.h>
 #include <Bites.h>
 
+#ifdef XPLICIT_WINDOWS
+
 namespace Xplicit::Studio
 {
+	// this is horrendous, but windows imposes us that.
 	constexpr const wchar_t* XPLICIT_APP_NAME_WIDE = L"Xplicit Studio";
 	constexpr const char* XPLICIT_APP_NAME = "Xplicit Studio";
 }
@@ -46,3 +49,5 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 
 	return 0;
 }
+
+#endif

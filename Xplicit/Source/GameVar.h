@@ -37,7 +37,7 @@ namespace Xplicit
 		};
 
 	public:
-		const char* as_str() noexcept;
+		std::string& as_str() noexcept;
 		int32_t as_int() noexcept;
 		float as_float() noexcept;
 		int32_t flags() noexcept;
@@ -66,10 +66,12 @@ namespace Xplicit
 		~GameVarSingleton() = default;
 
 	public:
-		GameVarSingleton* get_singleton_ptr() noexcept;
+		static GameVarSingleton* get_singleton_ptr() noexcept;
 
+	public:
 		GameVarViewPtr get(const char* name);
 		GameVarViewPtr create(const char* name, const char* default_value, int flags);
+		void remove(GameVarView* ptr);
 
 	private:
 		std::vector<GameVarView*> m_cvars;

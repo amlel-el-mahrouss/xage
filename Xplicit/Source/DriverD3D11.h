@@ -64,16 +64,20 @@ namespace Xplicit::Renderer
 
 		struct XPLICIT_API PrivateData
 		{
-			bool VSync;
-			bool EndRendering;
-			HWND WindowHandle;
+			bool VSync{ false };
+			char CardDesc[128];
+			bool EndRendering{ false };
+			HWND WindowHandle{ nullptr };
 
 			Microsoft::WRL::ComPtr<ID3D11Device> Device;
 			Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 			Microsoft::WRL::ComPtr<IDXGISwapChain> SwapChain;
+			Microsoft::WRL::ComPtr<ID3D11Texture2D> DepthTexture;
 			Microsoft::WRL::ComPtr<ID3D11DeviceContext> DeviceCtx;
+			Microsoft::WRL::ComPtr<ID3D11RasterizerState> RasterState;
 			Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthStencil;
 			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTarget;
+			Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DepthStencilState;
 		};
 
 	public:

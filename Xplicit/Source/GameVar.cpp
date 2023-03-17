@@ -28,6 +28,8 @@ namespace Xplicit
 
 	GameVarView::~GameVarView()
 	{
+		GameVarSingleton::get_singleton_ptr()->remove(this);
+
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("GameVarView::~GameVarView");
 #endif
@@ -36,9 +38,10 @@ namespace Xplicit
 	int32_t GameVarView::flags() noexcept { return m_flags; }
 
 	int32_t GameVarView::as_int() noexcept { return std::stoi(m_value); }
+
 	float GameVarView::as_float() noexcept { return std::stof(m_value); }
 
-	const char* GameVarView::as_str() noexcept { return m_value.c_str(); }
+	std::string& GameVarView::as_str() noexcept { return m_value; }
 	const char* GameVarView::name() noexcept { return m_name.c_str(); }
 
 	GameVarSingleton* GameVarSingleton::get_singleton_ptr() noexcept 
@@ -80,5 +83,16 @@ namespace Xplicit
 		}
 
 		return {};
+	}
+
+	void GameVarSingleton::remove(GameVarView* ptr)
+	{
+		if (!ptr)
+			return;
+
+		auto it = std::find(m_cvars.cbegin(), m_cvars.cend(), ptr);
+
+		if (it != m_cvars.cend())
+			m_cvars.erase(it);
 	}
 }
