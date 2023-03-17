@@ -20,10 +20,10 @@
 #include <Uri.h>
 #include <Xplicit.h>
 
-// Console Variables
-#include <ConVar.h>
+// Game Variables (Sevrer Only)
+#include <GameVar.h>
 
-// Mono support
+// Mono support (C#)
 #include <MonoInterop.h>
 #include <MonoComponent.h>
 

@@ -1,11 +1,11 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			NplicitNgin
  *			Copyright XPX, all rights reserved.
  *
  *			File: Nplicit.h
- *			Purpose: Nplicit Common Header, Nplicit Handles 
+ *			Purpose: Nplicit SDK, Nplicit handles 
 			from mathematics to equation solving
  *
  * =====================================================================
@@ -19,11 +19,11 @@
 namespace Xplicit::Physics
 {
 	template <typename TypeFloat = float>
-	class NPLICIT_API PhysicsComponent final
+	class NPLICIT_API PhysicsComponent
 	{
 	public:
 		PhysicsComponent() : Position(0, 0, 0), Velocity(0, 0, 0), Force(0, 0, 0) {}
-		~PhysicsComponent() {}
+		virtual ~PhysicsComponent() {}
 
 		PhysicsComponent& operator=(const PhysicsComponent&) = default;
 		PhysicsComponent(const PhysicsComponent&) = default;
@@ -38,28 +38,28 @@ namespace Xplicit::Physics
 	};
 
 	template <typename TypeFloat = float>
-	class NPLICIT_API PhysicsSystem final
+	class NPLICIT_API DynamicsSystem final
 	{
 	public:
-		PhysicsSystem() : m_rigid_bodies(), m_gravity(0, -9.81f, 0) {}
-		virtual ~PhysicsSystem() = default;
+		DynamicsSystem() : m_components(), m_gravity(0, -9.81f, 0) {}
+		virtual ~DynamicsSystem() = default;
 
-		PhysicsSystem& operator=(const PhysicsSystem&) = delete;
-		PhysicsSystem(const PhysicsSystem&) = delete;
+		DynamicsSystem& operator=(const DynamicsSystem&) = delete;
+		DynamicsSystem(const DynamicsSystem&) = delete;
 
-		void update(const int32_t& dt)
+		void step(const int32_t& dt) noexcept
 		{
-			for (PhysicsComponent<TypeFloat>* rigid : m_rigid_bodies)
+			for (auto* component : m_components)
 			{
-				rigid->Force.add(m_gravity.X * rigid->Mass, m_gravity.Y * rigid->Mass, m_gravity.Z * rigid->Mass);
+				component->Force.add(m_gravity.X * component->Mass, m_gravity.Y * component->Mass, m_gravity.Z * component->Mass);
 
-				rigid->Velocity.add(rigid->Force.X / rigid->Mass * dt,
-					rigid->Force.Y / rigid->Mass * dt,
-					rigid->Force.Z / rigid->Mass * dt);
+				component->Velocity.add(component->Force.X / component->Mass * dt,
+					component->Force.Y / component->Mass * dt,
+					component->Force.Z / component->Mass * dt);
 
-				rigid->Position.add(rigid->Velocity.X * dt, rigid->Velocity.Y * dt, rigid->Velocity.Z * dt);
+				component->Position.add(component->Velocity.X * dt, component->Velocity.Y * dt, component->Velocity.Z * dt);
 
-				rigid->Force = Vector<TypeFloat>(0, 0, 0);
+				component->Force = Vector<TypeFloat>(0, 0, 0);
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace Xplicit::Physics
 			if (!rigid)
 				return;
 
-			m_rigid_bodies.push_back(rigid);
+			m_components.push_back(rigid);
 		}
 
 		bool remove(PhysicsComponent<TypeFloat>* rigid)
@@ -80,11 +80,11 @@ namespace Xplicit::Physics
 			if (!rigid)
 				return false;
 
-			auto it = std::find(m_rigid_bodies.cbegin(), m_rigid_bodies.cend(), rigid);
+			auto it = std::find(m_components.cbegin(), m_components.cend(), rigid);
 
-			if (it != m_rigid_bodies.cend())
+			if (it != m_components.cend())
 			{
-				m_rigid_bodies.erase(it);
+				m_components.erase(it);
 				return true;
 			}
 
@@ -92,8 +92,17 @@ namespace Xplicit::Physics
 		}
 
 	private:
-		std::vector<PhysicsComponent<TypeFloat>*> m_rigid_bodies;
+		std::vector<PhysicsComponent<TypeFloat>*> m_components;
 		Vector<float> m_gravity;
+
+	};
+
+	template <typename TypeFloat = float>
+	struct NPLICIT_API Transform
+	{
+		Vector<TypeFloat> Position;
+		Vector<TypeFloat> Scale;
+		Quaternion<TypeFloat> Rotation;
 
 	};
 }

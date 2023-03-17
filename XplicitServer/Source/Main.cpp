@@ -155,8 +155,12 @@ int main(int argc, char** argv)
 {
 	try
 	{
+#ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
+		ZeroMemory(&wsa, sizeof(WSADATA));
+
 		Xplicit::init_winsock(&wsa);
+#endif
 
 		/*
 			The address to bind
@@ -174,14 +178,11 @@ int main(int argc, char** argv)
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
-		auto watchdog = Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::ServerWatchdogEvent>();
+		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::ServerWatchdogEvent>();
 
 		xplicit_attach_mono();
 		xplicit_read_xml();
 		xplicit_load_shell();
-
-		constexpr const int32_t XPLICIT_COUNTDOWN_WATCHDOG = 1000;
-		int32_t countdown_watchdog = XPLICIT_COUNTDOWN_WATCHDOG;
 
 		while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{
@@ -194,14 +195,6 @@ int main(int argc, char** argv)
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerTraits::send(server);
-
-			--countdown_watchdog;
-
-			if (countdown_watchdog <= 0)
-			{
-				watchdog->enable(true);
-				countdown_watchdog = XPLICIT_COUNTDOWN_WATCHDOG;
-			}
 		}
 
 		return 0;

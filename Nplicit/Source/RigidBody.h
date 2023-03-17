@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: RigidBody.h
- *			Purpose: RigidBody Class
+ *			Purpose: RigidBodyComponent Class
  *
  * =====================================================================
  */
@@ -17,38 +17,25 @@
 namespace Xplicit::Physics
 {
 	template <typename TypeFloat = float>
-	class NPLICIT_API RigidBody final
+	class NPLICIT_API RigidBodyComponent final : public virtual PhysicsComponent<TypeFloat>
 	{
 	public:
-		RigidBody() = default;
-		~RigidBody() = default;
+		RigidBodyComponent() = default;
+		virtual ~RigidBodyComponent() = default;
 
-		RigidBody& operator=(const RigidBody&) = default;
-		RigidBody(const RigidBody&) = default;
-
-		/*
-				We need to take into consideration:
-
-				Vector<TypeFloat> Position;
-				Vector<TypeFloat> Velocity;
-				Vector<TypeFloat> Force;
-		*/
+		RigidBodyComponent& operator=(const RigidBodyComponent&) = default;
+		RigidBodyComponent(const RigidBodyComponent&) = default;
 
 		void set(const Vector<TypeFloat>& pos, const Vector<TypeFloat>& velocity, const Vector<TypeFloat>& force) noexcept
 		{
-			m_physics.Position = pos;
-			m_physics.Force = force;
-			m_physics.Velocity = velocity;
+			this->Position = pos;
+			this->Force = force;
+			this->Velocity = velocity;
 
 #ifdef XPLICIT_DEBUG
-			XPLICIT_INFO("[RigidBody::set] New parameters set for RigidBody");
+			XPLICIT_INFO("[RigidBodyComponent::set] New parameters set for RigidBody.");
 #endif
 		}
-
-		PhysicsComponent<TypeFloat>& get() noexcept { return m_physics; }
-
-	private:
-		PhysicsComponent<TypeFloat> m_physics;
 
 	};
 }

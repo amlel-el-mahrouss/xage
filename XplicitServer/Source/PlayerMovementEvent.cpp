@@ -42,17 +42,14 @@ namespace Xplicit
 			{
 				peer->packet.X = -10.f;
 			}
-			else if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
+			
+			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
 			{
 				peer->packet.Z = 10.f;
 			}
 			else if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 			{
 				peer->packet.Z = -10.f;
-			}
-			else
-			{
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
 			}
 		}
 	}

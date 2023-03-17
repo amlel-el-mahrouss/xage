@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			NplicitNgin
  *			Copyright XPX, all rights reserved.
  *
  *			File: NMath.h
@@ -174,6 +174,79 @@ namespace Xplicit::Physics
 			this->sub(vec.X, vec.Y, vec.Z);
 			return *this;
 		}
+
+	};
+
+	template <typename TypeFloat = float>
+	class NPLICIT_API Quaternion final
+	{
+	public:
+		TypeFloat X, Y, Z, W;
+
+	public:
+		Quaternion() = default;
+		~Quaternion() = default;
+
+		Quaternion(TypeFloat x = 0, TypeFloat y = 0, TypeFloat z = 0, TypeFloat w = 0) noexcept
+		{
+			this->add(x, y, z);
+		}
+
+		Quaternion& operator=(const Quaternion&) = default;
+		Quaternion(const Quaternion&) = default;
+
+	public:
+		Quaternion& operator*=(const Quaternion& vec)
+		{
+#ifdef NPLICIT_USE_VECTORS
+			__m256d x1{ X, Y, Z, W };
+			__m256d x2{ vec.X, vec.Y, vec.Z, vec.W };
+
+			__m256d sum = _mm256_mul_pd(x1, x2);
+#else
+			X *= vec.X;
+			Y *= vec.Y;
+			Z *= vec.Z;
+			W *= vec.W;
+#endif
+
+			return *this;
+		}
+
+		Quaternion& operator+=(const Quaternion& vec)
+		{
+#ifdef NPLICIT_USE_VECTORS
+			__m256d x1{ X, Y, Z, W };
+			__m256d x2{ vec.X, vec.Y, vec.Z, vec.W };
+
+			__m256d sum = _mm256_add_pd(x1, x2);
+#else
+			X += vec.X;
+			Y += vec.Y;
+			Z += vec.Z;
+			W += vec.W;
+#endif
+
+			return *this;
+		}
+
+		Quaternion& operator-=(const Quaternion& vec)
+		{
+#ifdef NPLICIT_USE_VECTORS
+			__m256d x1{ X, Y, Z, W };
+			__m256d x2{ vec.X, vec.Y, vec.Z, vec.W };
+
+			__m256d sum = _mm256_sub_pd(x1, x2);
+#else
+			X -= vec.X;
+			Y -= vec.Y;
+			Z -= vec.Z;
+			W -= vec.W;
+#endif
+
+			return *this;
+		}
+
 
 	};
 }

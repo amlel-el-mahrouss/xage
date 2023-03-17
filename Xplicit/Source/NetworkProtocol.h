@@ -76,14 +76,14 @@ namespace Xplicit
         NETWORK_STAT_COUNT,
     };
 
-    class NetworkPacket final
+    class XPLICIT_API NetworkPacket final
     {
     public:
         char magic[XPLICIT_NETWORK_MAG_COUNT];
         NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
 
     public:
-        int64_t public_hash; /* Public hash being sent */
+        int64_t public_hash; /* Public hash being sent (SHARED) */
         int64_t health; /* the health being sent (SERVER only) */
         int64_t hash; /* the private hash (SERVER only) */
 
@@ -91,11 +91,7 @@ namespace Xplicit
         float X;
         float Y;
         float Z;
-
-    public:
-        float pitch;
-        float yaw;
-        float roll;
+        float W;
 
     };
 

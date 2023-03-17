@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			NplicitNgin
  *			Copyright XPX, all rights reserved.
  *
  *			File: NMath.cpp
