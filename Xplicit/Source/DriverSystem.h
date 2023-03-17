@@ -69,4 +69,13 @@ namespace Xplicit::Renderer
 		uint8_t m_type;
 
 	};
+
+	enum class RENDER_TYPE
+	{
+		RENDER_MESH, // .dae meshes (.fbx support is planned)
+		RENDER_TEXTURE, // ID3D11Texture
+		RENDER_POLYGON, // applies for 2d and 3d contexts.
+		RENDER_PARTICLE_SYSTEM, // Emitter
+		RENDER_TYPE_COUNT,
+	};
 }

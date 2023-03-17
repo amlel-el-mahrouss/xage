@@ -20,15 +20,11 @@
 #include "DriverD3D11.h"
 #include "LoadingComponent.h"
 
+// Windows Bites library
+#include <Bites.h>
+
 // Application Context
 #include <ApplicationContext.h>
-
-#define XPLICIT_DEFAULT_WIDTH (1280)
-#define XPLICIT_DEFAULT_HEIGHT (720)
-
-/* VGA */
-#define XPLICIT_MIN_WIDTH  (800)
-#define XPLICIT_MIN_HEIGHT (600)
 
 // TODO: rework that after direct3d 11 support.
 namespace Xplicit::Client

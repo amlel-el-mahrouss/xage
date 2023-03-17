@@ -50,6 +50,10 @@ namespace Xplicit::Renderer
 		swapDesc.SampleDesc.Count = 1;
 		swapDesc.Windowed = true;
 		swapDesc.OutputWindow = privateData.WindowHandle;
+
+#ifdef XPLICIT_DEBUG
+		XPLICIT_INFO("[DIRECTX] xplicit_d3d11_make_swapchain was a success!");
+#endif
 	}
 
 	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd)
@@ -80,6 +84,10 @@ namespace Xplicit::Renderer
 				XPLICIT_INFO("AttachedToDesktop: ", desc.AttachedToDesktop ? "true" : "false");
 				XPLICIT_INFO(desc.DeviceName);
 			}
+
+#ifdef XPLICIT_DEBUG
+			XPLICIT_INFO("[DIRECTX] DriverSystemD3D11::DriverSystemD3D11(HWND hwnd) was a success!");
+#endif
 #endif
 		}
 	}
@@ -90,7 +98,32 @@ namespace Xplicit::Renderer
 	}
 
 	const char* DriverSystemD3D11::name() noexcept { return ("DriverSystemD3D11"); }
+
 	RENDER_SYSTEM DriverSystemD3D11::api() { return RENDER_SYSTEM::DIRECT3D11; }
+
+	DriverSystemD3D11::PrivateData& DriverSystemD3D11::get() noexcept { return m_private; }
+
+	void DriverSystemD3D11::begin_scene(const float a, const float r, const float g, const float b) const 
+	{
+		XPLICIT_ASSERT(m_private.DeviceCtx);
+		XPLICIT_ASSERT(m_private.DepthStencil);
+		XPLICIT_ASSERT(m_private.RenderTarget);
+
+		float rgba[4]{ a, r, g, b };
+
+		m_private.DeviceCtx->ClearRenderTargetView(m_private.RenderTarget.Get(), rgba);
+		m_private.DeviceCtx->ClearDepthStencilView(m_private.DepthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	}
+
+	bool DriverSystemD3D11::end_scene() const 
+	{
+		XPLICIT_ASSERT(m_private.SwapChain);
+
+		m_private.SwapChain->Present(m_private.VSync, 0);
+
+		return true; 
+	}
 
 	std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd) 
 	{ 

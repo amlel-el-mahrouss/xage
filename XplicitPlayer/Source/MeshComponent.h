@@ -17,11 +17,20 @@
 
 namespace Xplicit::Client
 {
-	enum class RENDER_COMPONENT_TYPE
+	using MeshPrivateData = void*;
+
+	// Render Traits
+	class MeshComponent
 	{
-		MESH,
-		TEXTURE,
-		PARTICLE_SYSTEM,
-		COUNT,
+	public:
+		MeshComponent() = default;
+		virtual ~MeshComponent() = default;
+
+		MeshComponent& operator=(const MeshComponent&) = default;
+		MeshComponent(const MeshComponent&) = default;
+
+	public:
+		MeshPrivateData _Ptr; // Model Data pointer, generic
+
 	};
 }

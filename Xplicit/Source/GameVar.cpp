@@ -43,7 +43,7 @@ namespace Xplicit
 
 	GameVarSingleton* GameVarSingleton::get_singleton_ptr() noexcept 
 	{
-		GameVarSingleton* singleton = nullptr;
+		static GameVarSingleton* singleton = nullptr;
 
 		if (!singleton)
 			singleton = new GameVarSingleton();

@@ -6,6 +6,7 @@
  *
  *			File: DriverD3D11.h
  *			Purpose: C++ Rendering Driver for Direct3D 11
+ *			Very Low Level by the way.
  *
  * =====================================================================
  */
@@ -63,13 +64,28 @@ namespace Xplicit::Renderer
 
 		struct XPLICIT_API PrivateData
 		{
+			bool VSync;
+			bool EndRendering;
 			HWND WindowHandle;
 
 			Microsoft::WRL::ComPtr<ID3D11Device> Device;
 			Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 			Microsoft::WRL::ComPtr<IDXGISwapChain> SwapChain;
 			Microsoft::WRL::ComPtr<ID3D11DeviceContext> DeviceCtx;
+			Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthStencil;
+			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTarget;
 		};
+
+	public:
+		PrivateData& get() noexcept;
+
+	public:
+		void begin_scene(const float a, const float r, const float g, const float b) const;
+		bool end_scene() const;
+
+	public:
+		void close_device() noexcept { m_private.EndRendering = true; }
+		const bool& should_end() noexcept { return m_private.EndRendering; }
 
 	private:
 		DXGI_SWAP_CHAIN_DESC m_swap_desc;
