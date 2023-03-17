@@ -32,6 +32,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 			return 1;
 		}
 
+#ifndef XPLICIT_DEBUG
 		// parse the connection uri.
 		Xplicit::Utils::UriParser uri{ XPLICIT_URI_PROTOCOL };
 		uri /= pCmdLine;
@@ -40,7 +41,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		{
 			Xplicit::Utils::UriParser xdp{ XPLICIT_XDP_PROTOCOL };
 			xdp /= pCmdLine;
-			
+
 			// TODO: Lookup for the specified game using XDP.
 
 			return 1;
@@ -48,6 +49,9 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 
 		// create a new app.
 		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri.get().c_str());
+#else
+		Xplicit::Bites::Application* app = new Xplicit::Bites::Application("127.0.0.1");
+#endif
 
 		if (!app)
 			throw Xplicit::EngineError();
@@ -57,7 +61,6 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 			Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventDispatcher::get_singleton_ptr())
 		{
-			// To match the loading's screen colour.
 			IRR->getVideoDriver()->beginScene(true, true, 
 				irr::video::SColor(255, 40, 40, 40));
 

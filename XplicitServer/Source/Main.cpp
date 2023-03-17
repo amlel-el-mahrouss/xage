@@ -15,8 +15,12 @@
  */
 
 #include "SDK.h"
+
 #include "Actor.h"
+
 #include "ServerWatchdog.h"
+#include "SpawnComponent.h"
+
 #include "PlayerMovementEvent.h"
 #include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
@@ -170,15 +174,18 @@ int main(int argc, char** argv)
 		const char* ip_address = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
 		if (!ip_address)
+		{
+			XPLICIT_INFO("[XPLICIT_SERVER_ADDR] Is undefined! please set this in the env.");
 			return 1;
+		}
 
 		auto server = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip_address);
 		XPLICIT_ASSERT(server);
 
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
+		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::ServerWatchdogEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
-		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::ServerWatchdogEvent>();
 
 		xplicit_attach_mono();
 		xplicit_read_xml();

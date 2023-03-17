@@ -17,15 +17,15 @@
 
 #include "ApplicationContext.h"
 #include "NetworkComponent.h"
+#include "MeshComponent.h"
 #include "Camera.h"
 
-// FIXME: rework them when we will roll our own renderer.
 namespace Xplicit::Client
 {
 	constexpr const int XPLICIT_NETWORK_DELAY = 100;
 	constexpr const float XPLICIT_SPEED = 20.f;
 
-	class LocalActor : public Component
+	class LocalActor : public Component, MeshComponent
 	{
 	public:
 		LocalActor(const int64_t& public_id);

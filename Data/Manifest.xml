@@ -1,7 +1,7 @@
 <!-- Scene Manifest -->
 <!-- Generated from XplicitStudio -->
 
-<ConVar For="Actor">
-	<WalkSpeed Value="5.f"/>
-	<RunSpeed Value="10.f"/>
-</ConVar>
+<GameVar>
+	<ServerName Value="Xplicit Server"/>
+	<Description Value="Come play on our official servers!"/>
+</GameVar>

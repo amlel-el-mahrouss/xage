@@ -65,7 +65,7 @@ namespace Xplicit
 	public:
 		enum INSTANCE_TYPE : uint8_t 
 		{
-			INSTANCE_ACTOR, // Engine Actor
+			INSTANCE_ACTOR, // Engine Actor (According to which side you're on (client or server))
 			INSTANCE_LOGIC, // Generic Logic Component
 			INSTANCE_CAMERA, // Camera instance
 			INSTANCE_SCRIPT, // C#/Lua instance
@@ -73,7 +73,7 @@ namespace Xplicit
 			INSTANCE_NETWORK, // Network instance
 			INSTANCE_PHYSICS, // Physics instance
 			INSTANCE_GUI, // GUI instance
-			INSTANCE_COUNT
+			INSTANCE_COUNT // the number of Instances type we have here!
 		};
 
 		enum PHYSICS_TYPE : uint8_t

@@ -116,7 +116,7 @@ namespace Xplicit::Bites
 				if (msg.message == WM_QUIT)
 					done = true;
 
-				driver->begin_scene(1, 0.4, 0.4, 0.4);
+				driver->begin_scene(1.0f, 0.4, 0.4, 0.4);
 
 				ComponentManager::get_singleton_ptr()->update();
 				EventDispatcher::get_singleton_ptr()->update();

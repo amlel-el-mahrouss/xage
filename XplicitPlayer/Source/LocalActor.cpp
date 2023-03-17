@@ -21,7 +21,7 @@
 namespace Xplicit::Client
 {
 	LocalActor::LocalActor(const int64_t& public_hash)
-		: Component(), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
+		: Component(), MeshComponent("../Data/Studio/Character.dae"), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
 	{
 		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -42,8 +42,28 @@ namespace Xplicit::Client
 
 	void LocalActor::update()
 	{
-		// TODO: update according to public_hash
-		// And then set the position.
+		if (!m_network)
+			return;
+
+		auto& pckt = m_network->get();
+		
+		if (pckt.public_hash == m_public_hash)
+		{
+			if (pckt.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
+			{
+				auto vec = vector3df(pckt.X, pckt.Y, pckt.Z);
+				auto prev = this->_Node->getPosition();
+
+				prev += vec;
+
+				this->_Node->setPosition(prev);
+
+				vec.Z = pckt.W;
+				this->_Node->setRotation(vec);
+
+				pckt.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
+			}
+		}
 	}
 
 	void LocalActor::attach(CameraComponent* cam) noexcept { m_camera = cam; }

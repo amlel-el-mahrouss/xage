@@ -40,7 +40,6 @@ namespace Xplicit
 		actor->set(cl);
 
 		cl->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
-
 		cl->packet.public_hash = cl->public_hash;
 		cl->packet.hash = hash;
 
@@ -55,7 +54,9 @@ namespace Xplicit
 		{
 			if (actors[at]->get() == cl)
 			{
+				ComponentManager::get_singleton_ptr()->remove<Actor>(actors[at]);
 				cl->reset();
+
 				return true;
 			}
 		}
@@ -63,7 +64,13 @@ namespace Xplicit
 		return false;
 	}
 
-	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() : m_size(0), m_locked(false) {}
+	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() : m_size(0), 
+		m_locked(false), 
+		m_watchdog(EventDispatcher::get_singleton_ptr()->get<ServerWatchdogEvent>("ServerWatchdogEvent")) 
+	{
+		XPLICIT_ASSERT(m_watchdog);
+	}
+
 	PlayerJoinLeaveEvent::~PlayerJoinLeaveEvent() {}
 
 	void PlayerJoinLeaveEvent::operator()()
@@ -82,6 +89,9 @@ namespace Xplicit
 		}
 
 		this->leave_event(server);
+
+		if (m_watchdog)
+			m_watchdog->enable(true);
 	}
 
 	const size_t& PlayerJoinLeaveEvent::size() noexcept { return m_size; }

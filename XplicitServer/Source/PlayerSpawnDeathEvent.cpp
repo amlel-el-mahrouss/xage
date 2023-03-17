@@ -19,7 +19,26 @@
 namespace Xplicit
 {
 	constexpr int16_t XPLICIT_DEATH_DELAY = 1000;
-	constexpr int16_t XPLICIT_FORCEFIELD_DELAY = 2000;
+
+	static void xplicit_handle_spawn(SpawnComponent* spawner, NetworkPeer* peer) noexcept
+	{
+		if (spawner)
+		{
+			auto& pos = spawner->get();
+
+			peer->packet.X = pos.X;
+			peer->packet.Y = pos.Y;
+			peer->packet.Z = pos.Z;
+			peer->packet.W = pos.W;
+		}
+		else
+		{
+			peer->packet.X = 0;
+			peer->packet.Y = 0;
+			peer->packet.Z = 0;
+			peer->packet.W = 0;
+		}
+	}
 
 	void PlayerSpawnDeathEvent::operator()()
 	{
@@ -57,7 +76,7 @@ namespace Xplicit
 				{
 					m_dead_actors.erase(it);
 					actor->get()->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
-
+					
 					for (size_t peer = 0; peer < m_network->size(); ++peer)
 					{
 						auto* ref = m_network->get(peer);
@@ -65,8 +84,10 @@ namespace Xplicit
 						if (ref)
 						{
 							ref->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
-							ref->packet.health = actor->health();
 							ref->packet.public_hash = actor->get()->public_hash;
+
+							xplicit_handle_spawn(m_spawner, ref);
+							ref->packet.health = actor->health();
 						}
 					}
 				}

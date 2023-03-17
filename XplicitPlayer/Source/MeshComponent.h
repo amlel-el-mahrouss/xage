@@ -17,20 +17,34 @@
 
 namespace Xplicit::Client
 {
-	using MeshPrivateData = void*;
+	using MeshPrivateData = IAnimatedMesh;
+	using MeshPrivateData2 = IAnimatedMeshSceneNode;
 
 	// Render Traits
 	class MeshComponent
 	{
 	public:
-		MeshComponent() = default;
-		virtual ~MeshComponent() = default;
+		MeshComponent(const char* path)
+		{
+			_Model = IRR->getSceneManager()->getMesh(path);
+			XPLICIT_ASSERT(_Model);
+
+			_Node = IRR->getSceneManager()->addAnimatedMeshSceneNode(_Model);
+			XPLICIT_ASSERT(_Node);
+		}
+
+		virtual ~MeshComponent()
+		{
+			if (_Node)
+				_Node->drop();
+		}
 
 		MeshComponent& operator=(const MeshComponent&) = default;
 		MeshComponent(const MeshComponent&) = default;
 
-	public:
-		MeshPrivateData _Ptr; // Model Data pointer, generic
+	protected:
+		MeshPrivateData* _Model; // Model Data pointer, generic
+		MeshPrivateData2* _Node; // Model Data pointer, generic
 
 	};
 }

@@ -1,4 +1,4 @@
-#define MyAppName "XplicitPlayer"
+#define MyAppName "Xplicit SDK"
 #define MyAppVersion "1.1.1"
 #define MyAppPublisher "Xplicit, Inc."
 #define MyAppURL "https://www.xplicit.com/"

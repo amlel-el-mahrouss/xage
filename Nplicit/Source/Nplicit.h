@@ -16,7 +16,7 @@
 #include "Config.h"
 #include "NMath.h" /* Nplicit Math Library */
 
-namespace Xplicit::Physics
+namespace Xplicit::Nplicit
 {
 	template <typename TypeFloat = float>
 	class NPLICIT_API PhysicsComponent

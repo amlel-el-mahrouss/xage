@@ -13,7 +13,9 @@
 #pragma once
 
 #include "SDK.h"
+
 #include "Actor.h"
+#include "ServerWatchdog.h"
 
 namespace Xplicit
 {
@@ -37,6 +39,7 @@ namespace Xplicit
 		bool join_event(NetworkServerComponent* server, size_t peer_idx) noexcept;
 
 	private:
+		ServerWatchdogEvent* m_watchdog;
 		bool m_locked;
 		size_t m_size;
 

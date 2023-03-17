@@ -16,6 +16,12 @@
 
 namespace Xplicit
 {
+	/// <summary>
+	/// Either accepts of refuses player movement.
+	/// Refuses if:
+	///		- Player is dead
+	///		- Player is inactive
+	/// </summary>
 	class PlayerMovementEvent : public Event
 	{
 	public:

@@ -49,6 +49,7 @@ namespace Xplicit
     using Socket = socket;
 #endif
 
+    // network idents for network commands.
     enum NETWORK_CMD : int16_t
     {
         NETWORK_CMD_BEGIN = 100, // start network, handshake
@@ -129,7 +130,7 @@ namespace Xplicit
         int64_t public_hash; /* Public hash, for other clients */
         NETWORK_STAT stat; /* current network status */
         int64_t hash; /* connection hash. */
-        bool bad; /* is the current peer bad, (has sent bad packets?) */
+        bool bad; /* is the current peer invalid? */
 
     public:
         NetworkPeer();

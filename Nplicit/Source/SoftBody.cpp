@@ -16,7 +16,7 @@
 
 #include "SoftBody.h"
 
-namespace Xplicit::Physics
+namespace Xplicit::Nplicit
 {
 
 }
