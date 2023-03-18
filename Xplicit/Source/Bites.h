@@ -48,8 +48,8 @@ namespace Xplicit::Bites
 
 			RegisterClassExA(&m_traits.WndClass);
 
-			float x = GetSystemMetrics(SM_CXSCREEN);
-			float y = GetSystemMetrics(SM_CYSCREEN);
+			int x = GetSystemMetrics(SM_CXSCREEN);
+			int y = GetSystemMetrics(SM_CYSCREEN);
 
 			x = (x - XPLICIT_MIN_WIDTH) / 2;
 			y = (y - XPLICIT_MIN_HEIGHT) / 2;
@@ -97,7 +97,7 @@ namespace Xplicit::Bites
 
 		using Traits = Win32Traits;
 
-		int run(Renderer::DriverSystemD3D11* driver) noexcept
+		int run(Renderer::DX11::DriverSystemD3D11* driver) noexcept
 		{
 			MSG msg;
 			RtlZeroMemory(&msg, sizeof(MSG));

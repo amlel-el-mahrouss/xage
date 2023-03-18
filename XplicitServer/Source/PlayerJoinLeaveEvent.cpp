@@ -64,11 +64,9 @@ namespace Xplicit
 		return false;
 	}
 
-	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() : m_size(0), 
-		m_locked(false), 
-		m_watchdog(EventDispatcher::get_singleton_ptr()->get<ServerWatchdogEvent>("ServerWatchdogEvent")) 
+	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() 
+		: m_size(0)
 	{
-		XPLICIT_ASSERT(m_watchdog);
 	}
 
 	PlayerJoinLeaveEvent::~PlayerJoinLeaveEvent() {}
@@ -80,62 +78,44 @@ namespace Xplicit
 
 		NetworkServerTraits::correct_collisions(server);
 
-		for (size_t peer = 0; peer < server->size(); ++peer)
-		{
-			if (this->size() > XPLICIT_MAX_CONNECTIONS)
-				break;
-
-			this->join_event(server, peer);
-		}
-
-		this->leave_event(server);
-
-		if (m_watchdog)
-			m_watchdog->enable(true);
+		this->on_join(server);
+		this->on_leave(server);
 	}
 
 	const size_t& PlayerJoinLeaveEvent::size() noexcept { return m_size; }
 
-	bool PlayerJoinLeaveEvent::join_event(NetworkServerComponent* server, size_t peer_idx) noexcept
+	bool PlayerJoinLeaveEvent::on_join(NetworkServerComponent* server) noexcept
 	{
+		if (this->size() > XPLICIT_MAX_CONNECTIONS)
+			return false;
+
 		if (!server) 
 			return false;
-		
-		if (m_locked) 
-			return false;
 
-		m_locked = true;
-
-		if (server->get(peer_idx)->stat == NETWORK_STAT_CONNECTED)
+		for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 		{
-			m_locked = false;
-			return false;
+			if (server->get(peer_idx)->stat == NETWORK_STAT_CONNECTED)
+				continue;
+
+			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
+				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
+			{
+				auto actor = ComponentManager::get_singleton_ptr()->add<Actor>();
+
+				if (!actor)
+					return false;
+
+				++m_size;
+				xplicit_join_event(server->get(peer_idx), actor, server);
+
+				XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+			}
 		}
-
-		if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
-			server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
-		{
-			auto actor = ComponentManager::get_singleton_ptr()->add<Actor>();
-
-			if (!actor)
-				return false;
-
-			++m_size;
-			xplicit_join_event(server->get(peer_idx), actor, server);
-
-			XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
-
-			m_locked = false;
-
-			return true;
-		}
-
-		m_locked = false;
 
 		return false;
 	}
 
-	bool PlayerJoinLeaveEvent::leave_event(NetworkServerComponent* server) noexcept
+	bool PlayerJoinLeaveEvent::on_leave(NetworkServerComponent* server) noexcept
 	{
 		if (this->size() <= 0)
 			return false;

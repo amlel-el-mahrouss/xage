@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: NMath.h
- *			Purpose: Nplicit C++ Math Library
+ *			Purpose: Nplicit Math Library (with no vtables!)
  *
  * =====================================================================
  */
@@ -198,52 +198,52 @@ namespace Xplicit::Nplicit
 		Quaternion(const Quaternion&) = default;
 
 	public:
-		Quaternion& operator*=(const Quaternion& vec)
+		Quaternion& operator*=(const Quaternion& quat)
 		{
 #ifdef NPLICIT_USE_VECTORS
 			__m256d x1{ X, Y, Z, W };
-			__m256d x2{ vec.X, vec.Y, vec.Z, vec.W };
+			__m256d x2{ quat.X, quat.Y, quat.Z, quat.W };
 
 			__m256d sum = _mm256_mul_pd(x1, x2);
 #else
-			X *= vec.X;
-			Y *= vec.Y;
-			Z *= vec.Z;
-			W *= vec.W;
+			X *= quat.X;
+			Y *= quat.Y;
+			Z *= quat.Z;
+			W *= quat.W;
 #endif
 
 			return *this;
 		}
 
-		Quaternion& operator+=(const Quaternion& vec)
+		Quaternion& operator+=(const Quaternion& quat)
 		{
 #ifdef NPLICIT_USE_VECTORS
 			__m256d x1{ X, Y, Z, W };
-			__m256d x2{ vec.X, vec.Y, vec.Z, vec.W };
+			__m256d x2{ quat.X, quat.Y, quat.Z, quat.W };
 
 			__m256d sum = _mm256_add_pd(x1, x2);
 #else
-			X += vec.X;
-			Y += vec.Y;
-			Z += vec.Z;
-			W += vec.W;
+			X += quat.X;
+			Y += quat.Y;
+			Z += quat.Z;
+			W += quat.W;
 #endif
 
 			return *this;
 		}
 
-		Quaternion& operator-=(const Quaternion& vec)
+		Quaternion& operator-=(const Quaternion& quat)
 		{
 #ifdef NPLICIT_USE_VECTORS
 			__m256d x1{ X, Y, Z, W };
-			__m256d x2{ vec.X, vec.Y, vec.Z, vec.W };
+			__m256d x2{ quat.X, quat.Y, quat.Z, quat.W };
 
 			__m256d sum = _mm256_sub_pd(x1, x2);
 #else
-			X -= vec.X;
-			Y -= vec.Y;
-			Z -= vec.Z;
-			W -= vec.W;
+			X -= quat.X;
+			Y -= quat.Y;
+			Z -= quat.Z;
+			W -= quat.W;
 #endif
 
 			return *this;
@@ -270,57 +270,55 @@ namespace Xplicit::Nplicit
 		Color(const Color&) = default;
 
 	public:
-		Color& operator*=(const Color& vec)
+		Color& operator*=(const Color& clr)
 		{
 #ifdef NPLICIT_USE_VECTORS
 			__m256d x1{ R, G, B, A };
-			__m256d x2{ vec.R, vec.G, vec.B, vec.A };
+			__m256d x2{ clr.R, clr.G, clr.B, clr.A };
 
 			__m256d sum = _mm256_mul_pd(x1, x2);
 #else
-			R *= vec.R;
-			G *= vec.G;
-			B *= vec.B;
-			A *= vec.A;
+			R *= clr.R;
+			G *= clr.G;
+			B *= clr.B;
+			A *= clr.A;
 #endif
 
 			return *this;
 		}
 
-		Color& operator+=(const Color& vec)
+		Color& operator+=(const Color& clr)
 		{
 #ifdef NPLICIT_USE_VECTORS
 			__m256d x1{ R, G, B, A };
-			__m256d x2{ vec.R, vec.G, vec.B, vec.A };
+			__m256d x2{ clr.R, clr.G, clr.B, clr.A };
 
 			__m256d sum = _mm256_add_pd(x1, x2);
 #else
-			R += vec.R;
-			G += vec.G;
-			B += vec.B;
-			A += vec.A;
+			R += clr.R;
+			G += clr.G;
+			B += clr.B;
+			A += clr.A;
 #endif
 
 			return *this;
 		}
 
-		Color& operator-=(const Color& vec)
+		Color& operator-=(const Color& clr)
 		{
 #ifdef NPLICIT_USE_VECTORS
 			__m256d x1{ R, G, B, A };
-			__m256d x2{ vec.R, vec.G, vec.B, vec.A };
+			__m256d x2{ clr.R, clr.G, clr.B, clr.A };
 
 			__m256d sum = _mm256_sub_pd(x1, x2);
 #else
-			R -= vec.R;
-			G -= vec.G;
-			B -= vec.B;
-			A -= vec.A;
+			R -= clr.R;
+			G -= clr.G;
+			B -= clr.B;
+			A -= clr.A;
 #endif
 
 			return *this;
 		}
-
-
 	};
 }

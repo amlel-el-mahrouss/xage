@@ -50,7 +50,12 @@ namespace Xplicit::Client
 		if (!m_cursor)
 			return;
 
-		IRR->getVideoDriver()->draw2DImage(m_cursor, IRR->getCursorControl()->getPosition(), rect<s32>(0, 0, 38, 38), nullptr, SColor(255, 255, 255, 255), true);
+		IRR->getVideoDriver()->draw2DImage(m_cursor, 
+			IRR->getCursorControl()->getPosition(), 
+			rect<s32>(0, 0, 38, 38), 
+			nullptr, 
+			SColor(255, 255, 255, 255), 
+			true);
 	}
 
 	irr::scene::ICameraSceneNode* CameraComponent::get() noexcept { return m_camera; }

@@ -20,13 +20,13 @@
 #include "DriverD3D11.h"
 #include "LoadingComponent.h"
 
-// Windows Bites library
+// Xplicit Bites library
 #include <Bites.h>
 
-// Application Context
+// Application Context (will be deprecated soon)
 #include <ApplicationContext.h>
 
-// TODO: rework that after direct3d 11 support.
+// will be deprecated soon.
 namespace Xplicit::Client
 {
 	static inline dimension2du XPLICIT_DIM = dimension2du(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
@@ -34,7 +34,7 @@ namespace Xplicit::Client
 
 namespace Xplicit::Bites
 {
-	constexpr const pchar* XPLICIT_APP_NAME = L"Xplicit";
+	constexpr const pchar* XPLICIT_APP_NAME = L"XplicitNgin";
 
 	class Application final
 	{

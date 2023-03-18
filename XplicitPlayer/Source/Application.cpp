@@ -18,6 +18,19 @@
 
 namespace Xplicit::Bites
 {
+	static void open_prebuilt_dialogs()
+	{
+		XPLICIT_GET_DATA_DIR(dir);
+
+		std::string prebuilt = dir;
+		prebuilt += "Textures\\PreBuiltDialogs.zip";
+
+		auto res = IRR->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true);
+
+		XPLICIT_ASSERT(res);
+		if (!res) std::exit(3);
+	}
+
 	Application::Application(const char* dns)
 		: m_settings(), m_wsa(), m_data_path("")
 	{
@@ -36,8 +49,11 @@ namespace Xplicit::Bites
 
 		this->setup();
 
-		auto loading_instance = ComponentManager::get_singleton_ptr()->add<Client::LoadingComponent>();
-		loading_instance->connect(dns);
+		auto loader = ComponentManager::get_singleton_ptr()->add<Client::LoadingComponent>();
+		XPLICIT_ASSERT(loader);
+
+		if (loader)
+			loader->connect(dns);
 	}
 
 	Application::~Application()
@@ -47,12 +63,11 @@ namespace Xplicit::Bites
 
 	void Application::setup()
 	{
-		Xplicit::ApplicationContext::get_singleton().set(new Xplicit::InputReceiver());
+		Xplicit::ApplicationContext::get_singleton_ptr()->set(new Xplicit::InputReceiver());
 
-		if (!KB)
-			throw std::bad_alloc();
+		if (!KB) std::exit(3);
 
-		Xplicit::ApplicationContext::get_singleton().set(irr::createDevice(irr::video::EDT_DIRECT3D9,
+		Xplicit::ApplicationContext::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_DIRECT3D9,
 			Xplicit::Client::XPLICIT_DIM,
 			32U,
 			false,
@@ -60,14 +75,21 @@ namespace Xplicit::Bites
 			false,
 			KB));
 
-		XPLICIT_GET_DATA_DIR(dat);
-		std::string prebuilt = dat;
-		prebuilt += "\\Textures\\PreBuiltDialogs.zip";
+#ifdef XPLICIT_WINDOWS
+		HMENU menuHandle = GetSystemMenu((HWND)IRR->getVideoDriver()->getExposedVideoData().D3D9.HWnd, false);
+		EnableMenuItem(menuHandle, SC_CLOSE, MF_GRAYED);
+#endif
 
-		XPLICIT_ASSERT(IRR->getFileSystem()->addFileArchive(prebuilt.c_str()));
+		open_prebuilt_dialogs();
+
+		/*
+		 * Read game settings here 
+		 */
 
 		m_settings = std::make_unique<Settings>();
+
 		XPLICIT_ASSERT(m_settings);
+		if (!m_settings) std::exit(3);
 
 		Settings::Traits traits{};
 		m_settings->read(traits);

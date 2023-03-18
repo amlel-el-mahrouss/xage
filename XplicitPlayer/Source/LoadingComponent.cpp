@@ -28,17 +28,15 @@ namespace Xplicit::Client
 	constexpr const int XPLICIT_TIMEOUT = 1000; // connection timeout
 
 	LoadingComponent::LoadingComponent() 
-		: m_run(true), m_network(nullptr), m_logo_tex(nullptr), m_timeout(XPLICIT_TIMEOUT)
+		: m_run(true), m_network(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
 	{
-		XPLICIT_GET_DATA_DIR(data_dir);
-
-		std::string health_path = data_dir;
-		health_path += "\\Textures\\logo.png";
-
-		m_logo_tex = IRR->getVideoDriver()->getTexture(health_path.c_str());
+		m_texture = IRR->getVideoDriver()->getTexture("logo.png");
 	}
 
-	LoadingComponent::~LoadingComponent() {}
+	LoadingComponent::~LoadingComponent() 
+	{
+
+	}
 
 	void LoadingComponent::update()
 	{
@@ -82,13 +80,9 @@ namespace Xplicit::Client
 		}
 		else
 		{
-			IRR->getVideoDriver()->draw2DImage(m_logo_tex, vector2di(Xplicit::Client::XPLICIT_DIM.Width * 0.02, Xplicit::Client::XPLICIT_DIM.Height * 0.825),
-				core::rect<s32>(0, 0, 105, 105), 0,
-				video::SColor(255, 255, 255, 255), true);
-
 			--m_timeout;
 
-			// peek after the ++timeout
+			// peek after the ++timeout, or retry
 			if (m_timeout < 0)
 			{
 				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
@@ -100,15 +94,18 @@ namespace Xplicit::Client
 			}
 			else
 			{
-				// retry...
 				packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
 				packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 				m_network->send(packet);
 
-				XPLICIT_SLEEP(100);
+				IRR->getVideoDriver()->draw2DImage(m_texture, vector2di(Xplicit::Client::XPLICIT_DIM.Width * 0.02, Xplicit::Client::XPLICIT_DIM.Height * 0.825),
+					core::rect<s32>(0, 0, 105, 105), 0,
+					video::SColor(255, 255, 255, 255), true);
 			}
+
 		}
+
 	}
 
 	void LoadingComponent::connect(const char* ip)

@@ -38,8 +38,19 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		Xplicit::Bites::Win32_Window* window = new Xplicit::Bites::Win32_Window(Xplicit::Studio::XPLICIT_APP_NAME,
 																				  Xplicit::Studio::XPLICIT_APP_CLASS, hInst);
 
-		std::unique_ptr<Xplicit::Renderer::DriverSystemD3D11> renderer = Xplicit::Renderer::make_driver_system_d3d11(window->get().WindowHandle);
+		std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11> renderer = Xplicit::Renderer::DX11::make_driver_system_d3d11(window->get().WindowHandle);
 		XPLICIT_ASSERT(renderer);
+
+		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::RenderComponent>();
+
+		component->push_back(Xplicit::Nplicit::Vector<float>(-1.0f, -1.0f, 0.0f), 
+			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
+		component->push_back(Xplicit::Nplicit::Vector<float>(0.0f, 1.0f, 0.0f),
+			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
+		component->push_back(Xplicit::Nplicit::Vector<float>(1.0f, -1.0f, 0.0f),
+			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
+
+		component->set(renderer.get());
 
 		return window->run(renderer.get());
 	}

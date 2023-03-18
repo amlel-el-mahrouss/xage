@@ -35,12 +35,10 @@ namespace Xplicit
 		const size_t& size() noexcept;
 
 	private:
-		bool leave_event(NetworkServerComponent* server) noexcept;
-		bool join_event(NetworkServerComponent* server, size_t peer_idx) noexcept;
+		bool on_leave(NetworkServerComponent* server) noexcept;
+		bool on_join(NetworkServerComponent* server) noexcept;
 
 	private:
-		ServerWatchdogEvent* m_watchdog;
-		bool m_locked;
 		size_t m_size;
 
 	};

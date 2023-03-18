@@ -13,7 +13,9 @@
 #pragma once
 
 #include "Xplicit.h"
+
 #include <Nplicit.h>
+#include <map>
 
 namespace Xplicit::Renderer
 {
@@ -79,28 +81,19 @@ namespace Xplicit::Renderer
 		RENDER_PARTICLE_SYSTEM, // Emitter
 		RENDER_TYPE_COUNT,
 	};
-
-	template <typename Implementer>
-	class XPLICIT_API MeshComponent final
+	
+	// generic mesh component type.
+	class XPLICIT_API IRenderCmd
 	{
 	public:
-		MeshComponent(
-			Nplicit::Vector<float> position,
-			Nplicit::Color<float> color
-		)
-			: m_position(position), m_color(color)
-		{}
+		IRenderCmd() = default;
+		virtual ~IRenderCmd() = default;
 
-		~MeshComponent() = default;
-
-		MeshComponent& operator=(const MeshComponent&) = default;
-		MeshComponent(const MeshComponent&) = default;
+		IRenderCmd& operator=(const IRenderCmd&) = default;
+		IRenderCmd(const IRenderCmd&) = default;
 
 	protected:
-		Nplicit::Vector<float> m_position;
-		Nplicit::Color<float> m_color;
-
-		friend Implementer;
+		std::map<Nplicit::Vector<float>, Nplicit::Color<float>> m_coord;
 
 	};
 }

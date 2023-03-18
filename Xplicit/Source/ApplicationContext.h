@@ -295,9 +295,11 @@ namespace Xplicit
 		ApplicationContext(const ApplicationContext&) = default;
 
 	public:
-		static ApplicationContext& get_singleton() noexcept
+		static ApplicationContext* get_singleton_ptr() noexcept
 		{
-			static ApplicationContext app;
+			static ApplicationContext* app = nullptr;
+			if (!app)
+				app = new ApplicationContext();
 
 			// return a static singleton, simple!
 			return app;
@@ -352,16 +354,13 @@ namespace Xplicit
 	};
 }
 
-#define XML Xplicit::ApplicationContext::get_singleton().Reader
-#define IRR  Xplicit::ApplicationContext::get_singleton().Dev
-#define KB  Xplicit::ApplicationContext::get_singleton().Keyboard
+#define XML Xplicit::ApplicationContext::get_singleton_ptr()->Reader
+#define IRR  Xplicit::ApplicationContext::get_singleton_ptr()->Dev
+#define KB  Xplicit::ApplicationContext::get_singleton_ptr()->Keyboard
 
-#ifdef XPLICIT_WINDOWS
 #ifndef XPLICIT_GET_DATA_DIR
 #define XPLICIT_GET_DATA_DIR(DIR)\
-const char* DIR = "..\\Data";
+char DIR[14];\
+memcpy(DIR, "..\\Data", 14);
 
-#endif
-#else
-#error You need XPLICIT_GET_DATA_DIR!
 #endif

@@ -14,6 +14,7 @@
 #pragma once
 
 #include "DriverSystem.h"
+#include "Component.h"
 
 #ifdef XPLICIT_WINDOWS
 
@@ -45,7 +46,7 @@
 #define XPLICIT_DOMAIN_SHADER "ds_5_0"
 #define XPLICIT_GEOMETRY_SHADER "gs_5_0"
 
-namespace Xplicit::Renderer
+namespace Xplicit::Renderer::DX11
 {
 	class XPLICIT_API DriverSystemD3D11 : public DriverSystem
 	{
@@ -74,7 +75,7 @@ namespace Xplicit::Renderer
 			Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 			Microsoft::WRL::ComPtr<IDXGISwapChain> SwapChain;
 			Microsoft::WRL::ComPtr<ID3D11Texture2D> DepthTexture;
-			Microsoft::WRL::ComPtr<ID3D11DeviceContext> DeviceCtx;
+			Microsoft::WRL::ComPtr<ID3D11DeviceContext> Ctx;
 			Microsoft::WRL::ComPtr<ID3D11RasterizerState> RasterState;
 			Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthStencil;
 			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTarget;
@@ -123,14 +124,14 @@ namespace Xplicit::Renderer
 		const uint8_t& type() noexcept { return m_type; }
 
 	public:
-		class ShaderData
+		class XPLICIT_API ShaderData
 		{
 		public:
 			char* entrypoint;
 			char* shader_type;
-			uint32_t flags1, flags2;
 			ID3D10Blob** blobs;
 			ID3D10Blob** error_blobs;
+			uint32_t flags1, flags2;
 
 		};
 
@@ -143,11 +144,55 @@ namespace Xplicit::Renderer
 
 	};
 
+	class XPLICIT_API RenderComponent final : public IRenderCmd, public Component
+	{
+	public:
+		class XPLICIT_API Vertex
+		{
+		public:
+			struct
+			{
+				float X, Y, Z;
+			} pos;
 
+			struct
+			{
+				float R, G, B, A;
+			} clr;
+
+		};
+
+	public:
+		RenderComponent();
+		~RenderComponent();
+
+		RenderComponent& operator=(const RenderComponent&) = default;
+		RenderComponent(const RenderComponent&) = default;
+		
+		void push_back(const Nplicit::Vector<float>& vert, const Nplicit::Color<float>& clr);
+		void create(std::unique_ptr<DriverSystemD3D11>& driver);
+
+		void set(DriverSystemD3D11* dx11);
+
+		virtual void update() override;
+		virtual const char* name() noexcept override { return ("RenderComponent"); }
+		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_RENDER; }
+
+	private:
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertex_buffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_index_buffer;
+
+	private:
+		D3D11_SUBRESOURCE_DATA m_vertex_data;
+		D3D11_SUBRESOURCE_DATA m_index_data;
+		D3D11_BUFFER_DESC m_vertex_buf_desc;
+		D3D11_BUFFER_DESC m_index_buf_desc;
+		DriverSystemD3D11* m_driver;
+		Vertex* m_vertex_arr;
+		int64_t* m_index_arr;
+		HRESULT m_hr;
+
+	};
 }
-
-#else
-
-
 
 #endif

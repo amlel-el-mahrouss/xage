@@ -19,7 +19,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-namespace Xplicit::Renderer
+namespace Xplicit::Renderer::DX11
 {
 	void D3D11ShaderSystem::set(std::shared_ptr<ShaderData> data) noexcept
 	{

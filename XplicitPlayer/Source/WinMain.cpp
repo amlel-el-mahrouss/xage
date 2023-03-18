@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Main.cpp
- *			Purpose: Main unit.
+ *			Purpose: Main App unit.
  *
  * =====================================================================
  */
@@ -32,26 +32,15 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 			return 1;
 		}
 
-#ifndef XPLICIT_DEBUG
 		// parse the connection uri.
-		Xplicit::Utils::UriParser uri{ XPLICIT_URI_PROTOCOL };
+		Xplicit::Utils::UriParser uri{ XPLICIT_XDP_PROTOCOL };
 		uri /= pCmdLine;
 
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
-		{
-			Xplicit::Utils::UriParser xdp{ XPLICIT_XDP_PROTOCOL };
-			xdp /= pCmdLine;
-
-			// TODO: Lookup for the specified game using XDP.
-
 			return 1;
-		}
 
 		// create a new app.
 		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri.get().c_str());
-#else
-		Xplicit::Bites::Application* app = new Xplicit::Bites::Application("127.0.0.1");
-#endif
 
 		if (!app)
 			throw Xplicit::EngineError();
@@ -80,7 +69,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		XPLICIT_INFO(err.what());
 #endif
 
-		Xplicit::GUI::message_box(L"Something Bad happen!\r\nExiting..", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
+		Xplicit::GUI::message_box(L"Something bad happen!\r\nExiting..", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
 		return -1;
 	}
 }

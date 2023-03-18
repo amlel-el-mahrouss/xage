@@ -115,7 +115,7 @@ static void xplicit_load_shell()
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 			{
-				if (!Xplicit::ApplicationContext::get_singleton().ShouldExit)
+				if (!Xplicit::ApplicationContext::get_singleton_ptr()->ShouldExit)
 					std::cout << "$ ";
 
 				std::cin.getline(cmd_buf, 1024);
@@ -129,7 +129,7 @@ static void xplicit_load_shell()
 					Xplicit::NetworkServerTraits::send(server);
 
 					// finally stop
-					Xplicit::ApplicationContext::get_singleton().ShouldExit = true;
+					Xplicit::ApplicationContext::get_singleton_ptr()->ShouldExit = true;
 				}
 
 				if (strcmp(cmd_buf, "man") == 0)
@@ -193,7 +193,7 @@ int main(int argc, char** argv)
 
 		while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{
-			if (Xplicit::ApplicationContext::get_singleton().ShouldExit)
+			if (Xplicit::ApplicationContext::get_singleton_ptr()->ShouldExit)
 				break;
 
 			Xplicit::NetworkServerTraits::recv(server);

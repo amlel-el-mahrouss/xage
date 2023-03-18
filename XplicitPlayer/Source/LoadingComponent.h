@@ -35,7 +35,7 @@ namespace Xplicit::Client
 		void reset() noexcept;
 
 	private:
-		irr::video::ITexture* m_logo_tex; /* Texture to show when loading the game.. */
+		irr::video::ITexture* m_texture; /* Texture to show when loading the game.. */
 		NetworkComponent* m_network; /* Network instance */
 		int64_t m_timeout; /* Network Timeout. */
 		bool m_run; /* Should we seek for a connection? */

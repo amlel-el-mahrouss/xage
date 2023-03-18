@@ -14,10 +14,6 @@
 
 #include "Xplicit.h"
 
-#ifndef XPLICIT_URI_PROTOCOL
-#define XPLICIT_URI_PROTOCOL ("xconnect://")
-#endif // XPLICIT_URI_PROTOCOL
-
 #ifndef XPLICIT_XDP_PROTOCOL
 #define XPLICIT_XDP_PROTOCOL ("xdp://")
 #endif // XPLICIT_XDP_PROTOCOL
