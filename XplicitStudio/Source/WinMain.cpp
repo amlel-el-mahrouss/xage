@@ -41,7 +41,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11> renderer = Xplicit::Renderer::DX11::make_driver_system_d3d11(window->get().WindowHandle);
 		XPLICIT_ASSERT(renderer);
 
-		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::RenderComponent>();
+		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::D3D11RenderComponent>();
 
 		component->push_back(Xplicit::Nplicit::Vector<float>(-1.0f, -1.0f, 0.0f), 
 			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
@@ -51,6 +51,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
 
 		component->set(renderer.get());
+		component->create(renderer);
 
 		return window->run(renderer.get());
 	}

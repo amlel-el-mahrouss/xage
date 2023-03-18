@@ -144,7 +144,7 @@ namespace Xplicit::Renderer::DX11
 
 	};
 
-	class XPLICIT_API RenderComponent final : public IRenderCmd, public Component
+	class XPLICIT_API D3D11RenderComponent final : public Component
 	{
 	public:
 		class XPLICIT_API Vertex
@@ -163,11 +163,11 @@ namespace Xplicit::Renderer::DX11
 		};
 
 	public:
-		RenderComponent();
-		~RenderComponent();
+		D3D11RenderComponent();
+		~D3D11RenderComponent();
 
-		RenderComponent& operator=(const RenderComponent&) = default;
-		RenderComponent(const RenderComponent&) = default;
+		D3D11RenderComponent& operator=(const D3D11RenderComponent&) = default;
+		D3D11RenderComponent(const D3D11RenderComponent&) = default;
 		
 		void push_back(const Nplicit::Vector<float>& vert, const Nplicit::Color<float>& clr);
 		void create(std::unique_ptr<DriverSystemD3D11>& driver);
@@ -175,14 +175,17 @@ namespace Xplicit::Renderer::DX11
 		void set(DriverSystemD3D11* dx11);
 
 		virtual void update() override;
-		virtual const char* name() noexcept override { return ("RenderComponent"); }
+		virtual const char* name() noexcept override { return ("D3D11RenderComponent"); }
 		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_RENDER; }
+		virtual bool should_update() noexcept override { return true; }
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertex_buffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_index_buffer;
 
 	private:
+		std::map<Nplicit::Vector<float>, Nplicit::Color<float>> m_coord;
+
 		D3D11_SUBRESOURCE_DATA m_vertex_data;
 		D3D11_SUBRESOURCE_DATA m_index_data;
 		D3D11_BUFFER_DESC m_vertex_buf_desc;

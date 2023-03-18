@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: ApplicationContext.h
- *			Purpose: Application Context and helpers.
+ *			Purpose: Application Context.
  *
  * =====================================================================
  */
@@ -360,7 +360,6 @@ namespace Xplicit
 
 #ifndef XPLICIT_GET_DATA_DIR
 #define XPLICIT_GET_DATA_DIR(DIR)\
-char DIR[14];\
-memcpy(DIR, "..\\Data", 14);
+const char* DIR = "..\\Data";
 
 #endif

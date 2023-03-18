@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Actor.h
- *			Purpose: Server-Side Actors
+ *			Purpose: Server-Side Actors (players)
  *
  * =====================================================================
  */
@@ -40,8 +40,13 @@ namespace Xplicit
 
 	public:
 		virtual PHYSICS_TYPE physics() noexcept override;
+
 		virtual bool can_collide() noexcept override;
 		virtual bool has_physics() noexcept override;
+
+	public:
+		Nplicit::Quaternion<float> Rotation;
+		Nplicit::Vector<float> Position;
 
 	private:
 		NetworkPeer* m_peer;

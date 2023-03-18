@@ -17,6 +17,7 @@
 namespace Xplicit 
 {
 	class Event;
+	class EventListener;
 	class EventDispatcher;
 
 	class XPLICIT_API EventDispatcher final 
@@ -60,7 +61,6 @@ namespace Xplicit
 		Event(const Event&) = default;
 
 		virtual void operator()();
-
 		virtual const char* name() noexcept;
 		
 	public:
@@ -68,6 +68,7 @@ namespace Xplicit
 
 	};
 
+	// TODO: EventListener
 }
 
 #include "Event.inl"

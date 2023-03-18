@@ -131,10 +131,10 @@ namespace Xplicit
 		{
 			for (size_t i = 0; i < server->size(); ++i)
 			{
-				NetworkPacket tmp{};
+				NetworkPacketHeader tmp{};
 				int fromLen = sizeof(struct sockaddr_in);
 
-				int res = ::recvfrom(server->m_socket, reinterpret_cast<char*>(&tmp), sizeof(NetworkPacket), 0,
+				int res = ::recvfrom(server->m_socket, reinterpret_cast<char*>(&tmp), sizeof(NetworkPacketHeader) * XPLICIT_MAX_PEEK_SIZE, 0,
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &fromLen);
 
 				if (res == SOCKET_ERROR)
@@ -162,7 +162,7 @@ namespace Xplicit
 				peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 				peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
-				sendto(server->m_socket, reinterpret_cast<char*>(&peer->packet), sizeof(NetworkPacket), 0, reinterpret_cast<sockaddr*>(&peer->addr), sizeof(PrivateAddressData));
+				sendto(server->m_socket, reinterpret_cast<char*>(&peer->packet), peer->packet.size, 0, reinterpret_cast<sockaddr*>(&peer->addr), sizeof(PrivateAddressData));
 			}
 		}
 	}

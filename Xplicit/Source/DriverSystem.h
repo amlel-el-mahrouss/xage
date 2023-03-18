@@ -81,18 +81,4 @@ namespace Xplicit::Renderer
 		RENDER_PARTICLE_SYSTEM, // Emitter
 		RENDER_TYPE_COUNT,
 	};
-	
-	class XPLICIT_API IRenderCmd
-	{
-	public:
-		IRenderCmd() = default;
-		virtual ~IRenderCmd() = default;
-
-		IRenderCmd& operator=(const IRenderCmd&) = default;
-		IRenderCmd(const IRenderCmd&) = default;
-
-	protected:
-		std::map<Nplicit::Vector<float>, Nplicit::Color<float>> m_coord;
-
-	};
 }

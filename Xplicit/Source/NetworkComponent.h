@@ -85,10 +85,10 @@ namespace Xplicit {
         virtual void update() override;
 
         bool connect(const char* ip);
-        bool send(NetworkPacket& packet);
-        bool read(NetworkPacket& packet);
+        bool send(NetworkPacketHeader& packet);
+        bool read(NetworkPacketHeader& packet);
 
-        NetworkPacket& get() noexcept;
+        NetworkPacketHeader& get() noexcept;
         bool is_reset() noexcept;
 
     private:
@@ -96,7 +96,7 @@ namespace Xplicit {
 
     private:
         PrivateAddressData m_addr;
-        NetworkPacket m_packet;
+        NetworkPacketHeader m_packet;
         Socket m_socket;
         bool m_reset;
 

@@ -27,6 +27,11 @@
 #define XPLICIT_ADDRESS_ANY_STR "0.0.0.0"
 #endif
 
+#ifndef XPLICIT_MAX_PEEK_SIZE
+ /* how many spaces should we attribute */
+#define XPLICIT_MAX_PEEK_SIZE (10)
+#endif
+
 #define XPLICIT_NETWORK_MAG_0 ('X')
 #define XPLICIT_NETWORK_MAG_1 ('P')
 #define XPLICIT_NETWORK_MAG_2 ('X')
@@ -77,24 +82,21 @@ namespace Xplicit
         NETWORK_STAT_COUNT,
     };
 
-    class XPLICIT_API NetworkPacket final
-    {
-    public:
-        char magic[XPLICIT_NETWORK_MAG_COUNT];
-        NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
+    PACKED_STRUCT(
+        class XPLICIT_API NetworkPacketHeader final
+        {
+        public:
+            char magic[XPLICIT_NETWORK_MAG_COUNT];
+            NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
 
-    public:
-        int64_t public_hash; /* Public hash being sent (SHARED) */
-        int64_t health; /* the health being sent (SERVER only) */
-        int64_t hash; /* the private hash (SERVER only) */
+        public:
+            int64_t public_hash; /* Public hash being sent (SHARED) */
+            int64_t health; /* the health being sent (SERVER only) */
+            int64_t hash; /* the private hash (SERVER only) */
+            size_t size; /* size of currently sent packet. */
 
-    public:
-        float X;
-        float Y;
-        float Z;
-        float W;
-
-    };
+        };
+    );
 
     class XPLICIT_API NetworkPeer final
     {
@@ -126,7 +128,7 @@ namespace Xplicit
     public:
         UniqueAddress unique_addr; /* unique network address of this peer */
         PrivateAddressData addr; /* current socket address. */
-        NetworkPacket packet; /* current network packet. */
+        NetworkPacketHeader packet; /* current network packet. */
         int64_t public_hash; /* Public hash, for other clients */
         NETWORK_STAT stat; /* current network status */
         int64_t hash; /* connection hash. */
@@ -171,4 +173,5 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_SPAWN (12)
 #define XPLICIT_NETWORK_CMD_DAMAGE (13)
 
+// bascially the last command reserved.
 #define XPLICIT_LAST_RESERVED_CMD XPLICIT_NETWORK_CMD_DAMAGE

@@ -18,34 +18,45 @@
 
 namespace Xplicit
 {
-	constexpr int XPLICIT_WALK_SPEED = 10.f;
-	constexpr int XPLICIT_SIDE_SPEED = 5.f;
+	static bool xplicit_detect_collisions(std::vector<Actor*>& actors, Actor* actor)
+	{
+		if (!actor ||
+			!actor->can_collide())
+			return false;
+
+		if (actors.empty())
+			return false;
+
+		/*
+		for (size_t i = 0; i < actors.size(); i++)
+		{
+
+		}
+		*/
+
+		return false;
+	}
 
 	void PlayerMovementEvent::operator()()
 	{
 		auto actors = ComponentManager::get_singleton_ptr()->all_of<Actor>("Actor");
 
-		for (Actor* actor : actors)
+		for (size_t i = 0; i < actors.size(); i++)
 		{
+			Actor* actor = actors[i];
+
 			if (!actor ||
 				actor->health() <= 0 ||
 				!actor->get())
 				continue;
 
-			auto peer = actor->get();
+			NetworkPeer* peer = actor->get();
 
-			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-				peer->packet.X = XPLICIT_WALK_SPEED;
-			else if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-				peer->packet.X = -XPLICIT_WALK_SPEED;
-			else if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-				peer->packet.Z = -XPLICIT_SIDE_SPEED;
-			else if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-				peer->packet.Z = XPLICIT_SIDE_SPEED;
-			else
-				continue;
-
-			peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
+			{
+				if (!xplicit_detect_collisions(actors, actor))
+					peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_ACCEPT;
+			}
 		}
 	}
 }

@@ -94,14 +94,14 @@ namespace Xplicit
 		return true;
 	}
 
-	bool NetworkComponent::send(NetworkPacket& packet)
+	bool NetworkComponent::send(NetworkPacketHeader& packet)
 	{
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
 #ifdef XPLICIT_WINDOWS
-		int res = ::sendto(m_socket, reinterpret_cast<const char*>(&packet), sizeof(NetworkPacket), 0,
+		int res = ::sendto(m_socket, reinterpret_cast<const char*>(&packet), packet.size, 0,
 			reinterpret_cast<SOCKADDR*>(&m_addr), sizeof(m_addr));
 
 		if (res == SOCKET_ERROR)
@@ -118,14 +118,14 @@ namespace Xplicit
 		this->read(m_packet);
 	}
 
-	bool NetworkComponent::read(NetworkPacket& packet)
+	bool NetworkComponent::read(NetworkPacketHeader& packet)
 	{
 		m_reset = false; // we gotta clear this one, we don't know if RST was sent.
 
 		int length{ sizeof(struct sockaddr_in) };
 
 #ifdef XPLICIT_WINDOWS
-		int res = ::recvfrom(m_socket, reinterpret_cast<char*>(&packet), sizeof(NetworkPacket), 0,
+		int res = ::recvfrom(m_socket, reinterpret_cast<char*>(&packet), sizeof(NetworkPacketHeader) * XPLICIT_MAX_PEEK_SIZE, 0,
 			(struct sockaddr*)&m_addr, &length);
 #else
 #pragma error("DEFINE ME NetworkComponent.cpp")
@@ -159,5 +159,5 @@ namespace Xplicit
 
 	bool NetworkComponent::is_reset() noexcept { return m_reset; }
 
-	NetworkPacket& NetworkComponent::get() noexcept { return m_packet; }
+	NetworkPacketHeader& NetworkComponent::get() noexcept { return m_packet; }
 }

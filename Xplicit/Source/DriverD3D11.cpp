@@ -242,14 +242,14 @@ namespace Xplicit::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 
-	RenderComponent::RenderComponent()
-		: IRenderCmd(), m_vertex_data(), m_hr(0), m_vertex_buf_desc(), m_index_buf_desc(), m_vertex_buffer(nullptr),
+	D3D11RenderComponent::D3D11RenderComponent()
+		: m_vertex_data(), m_hr(0), m_vertex_buf_desc(), m_index_buf_desc(), m_vertex_buffer(nullptr),
 		m_index_buffer(nullptr), m_driver(nullptr), m_index_arr(nullptr), m_vertex_arr(nullptr)
 	{
 		
 	}
 
-	RenderComponent::~RenderComponent()
+	D3D11RenderComponent::~D3D11RenderComponent()
 	{
 		if (m_index_arr)
 			delete[] m_index_arr;
@@ -258,13 +258,13 @@ namespace Xplicit::Renderer::DX11
 			delete[] m_vertex_arr;
 	}
 
-	void RenderComponent::push_back(const Nplicit::Vector<float>& vert, const Nplicit::Color<float>& clr)
+	void D3D11RenderComponent::push_back(const Nplicit::Vector<float>& vert, const Nplicit::Color<float>& clr)
 	{
-		// auto pair = std::make_pair(vert, clr);
-		// this->m_coord.emplace(std::move(pair));
+		auto pair = std::pair<Nplicit::Vector<float>, Nplicit::Color<float>>(vert, clr);
+		this->m_coord.emplace(std::move(pair));
 	}
 
-	void RenderComponent::create(std::unique_ptr<DriverSystemD3D11>& driver)
+	void D3D11RenderComponent::create(std::unique_ptr<DriverSystemD3D11>& driver)
 	{
 		if (m_coord.empty())
 			return;
@@ -308,7 +308,7 @@ namespace Xplicit::Renderer::DX11
 		m_hr = driver->get().Device->CreateBuffer(&m_vertex_buf_desc, &m_vertex_data, m_vertex_buffer.GetAddressOf());
 		
 		if (FAILED(m_hr))
-			throw Win32Error("DirectX Error (RenderComponent::create)");
+			throw Win32Error("DirectX Error (D3D11RenderComponent::create)");
 
 		m_index_buf_desc.Usage = D3D11_USAGE_DEFAULT;
 		m_index_buf_desc.ByteWidth = sizeof(unsigned long) * m_coord.size();
@@ -322,7 +322,7 @@ namespace Xplicit::Renderer::DX11
 
 		XPLICIT_ASSERT(m_vertex_arr);
 
-		for (size_t i = 0; i < m_coord.size(); i++)
+		for (size_t i = 0; i < m_coord.size(); ++i)
 			m_index_arr[i] = i;
 
 		m_index_data.pSysMem = m_index_arr;
@@ -332,21 +332,21 @@ namespace Xplicit::Renderer::DX11
 		m_hr = driver->get().Device->CreateBuffer(&m_index_buf_desc, &m_index_data, m_index_buffer.GetAddressOf());
 
 		if (FAILED(m_hr))
-			throw Win32Error("DirectX Error (RenderComponent::create) Index Buffer initialization failed!");
+			throw Win32Error("DirectX Error (D3D11RenderComponent::create) Index Buffer initialization failed!");
 	}
 
-	void RenderComponent::set(DriverSystemD3D11* dx11)
+	void D3D11RenderComponent::set(DriverSystemD3D11* dx11)
 	{
 		if (dx11)
 			m_driver = dx11;
 	}
 
-	void RenderComponent::update()
+	void D3D11RenderComponent::update()
 	{
-		if (m_driver)
+		if (m_driver && m_driver->get().Ctx)
 		{
-			static const uint32_t stride = sizeof(Vertex);
-			static const uint32_t offset = 0;
+			const uint32_t stride = sizeof(Vertex);
+			const uint32_t offset = 0;
 
 			m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), &stride, &offset);
 			m_driver->get().Ctx->IASetIndexBuffer(m_index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);

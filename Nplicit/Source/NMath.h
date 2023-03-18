@@ -177,6 +177,33 @@ namespace Xplicit::Nplicit
 			return *this;
 		}
 
+		size_t operator()(const Vector<TypeFloat>& key) const 
+		{
+			return std::hash<TypeFloat>(key.X) ^
+				std::hash<TypeFloat>(key.Y) ^
+				std::hash<TypeFloat>(key.Z);
+		}
+
+		bool operator<(const Vector<TypeFloat>& vec) const
+		{
+			return vec.X < X && vec.Y < Y && vec.Z < Z;
+		}
+
+		bool operator>(const Vector<TypeFloat>& vec) const
+		{
+			return vec.X > X && vec.Y > Y && vec.Z > Z;
+		}
+
+		bool operator==(const Vector& vec)
+		{
+			return vec.X == X && vec.Y == Y && vec.Z == Z;
+		}
+
+		bool operator!=(const Vector& vec)
+		{
+			return vec.X != X && vec.Y != Y && vec.Z != Z;
+		}
+
 	};
 
 	template <typename TypeFloat = float>
@@ -190,8 +217,8 @@ namespace Xplicit::Nplicit
 		~Quaternion() = default;
 
 		Quaternion(TypeFloat x = 0, TypeFloat y = 0, TypeFloat z = 0, TypeFloat w = 0) noexcept
+			: X(x), Y(y), Z(z), W(w)
 		{
-			this->add(x, y, z);
 		}
 
 		Quaternion& operator=(const Quaternion&) = default;
@@ -249,6 +276,22 @@ namespace Xplicit::Nplicit
 			return *this;
 		}
 
+		size_t operator()(const Quaternion<TypeFloat>& key) const 
+		{ 
+			return std::hash<TypeFloat>(key.X) ^
+			std::hash<TypeFloat>(key.Y) ^
+			std::hash<TypeFloat>(key.Z) ^
+			std::hash<TypeFloat>(key.W); }
+
+		bool operator<(const Quaternion<TypeFloat>& quat) const
+		{
+			return quat.X < X && quat.Y < Y && quat.Z < Z && quat.W < W;
+		}
+
+		bool operator>(const Quaternion<TypeFloat>& quat) const
+		{
+			return quat.X > X && quat.Y > Y && quat.Z > Z && quat.W > W;
+		}
 	};
 
 	template <typename TypeFloat = float>
@@ -320,5 +363,23 @@ namespace Xplicit::Nplicit
 
 			return *this;
 		}
+
+		size_t operator()(const Color<TypeFloat>& key) const 
+		{ 
+			return std::hash<TypeFloat>(key.A) ^ 
+			std::hash<TypeFloat>(key.G) ^ 
+			std::hash<TypeFloat>(key.B) ^
+			std::hash<TypeFloat>(key.R); }
+
+		bool operator<(const Color<TypeFloat>& clr) const
+		{
+			return clr.R < R && clr.G < G && clr.B < B && clr.A < A;
+		}
+
+		bool operator>(const Color<TypeFloat>& clr) const
+		{
+			return clr.R > R && clr.G > G && clr.B > B && clr.A > A;
+		}
+
 	};
 }

@@ -19,9 +19,10 @@
 namespace Xplicit
 {
 	constexpr const int16_t XPLICIT_ACTOR_COOLDOWN = 100;
+	constexpr const int64_t XPLICIT_DEFAULT_HEALTH = 100;
 
 	Actor::Actor() 
-		: Component(), m_peer(nullptr), m_health(0), m_timeout(0) 
+		: Component(), m_peer(nullptr), m_health(XPLICIT_DEFAULT_HEALTH), m_timeout(0), Position(0, 0, 0), Rotation(0, 0, 0, 0)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("Actor::Actor");

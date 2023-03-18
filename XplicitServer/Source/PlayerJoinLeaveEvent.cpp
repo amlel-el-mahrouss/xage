@@ -42,6 +42,7 @@ namespace Xplicit
 		cl->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 		cl->packet.public_hash = cl->public_hash;
 		cl->packet.hash = hash;
+		cl->packet.size = sizeof(NetworkPacketHeader);
 
 		cl->stat = NETWORK_STAT_CONNECTED;
 	}
@@ -97,6 +98,9 @@ namespace Xplicit
 		for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 		{
 			if (server->get(peer_idx)->stat == NETWORK_STAT_CONNECTED)
+				continue;
+
+			if (server->get(peer_idx)->packet.size < 1)
 				continue;
 
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&

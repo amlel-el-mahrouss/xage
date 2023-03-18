@@ -50,17 +50,6 @@ namespace Xplicit::Client
 		{
 			if (pckt.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
 			{
-				auto vec = vector3df(pckt.X, pckt.Y, pckt.Z);
-				auto prev = this->_Node->getPosition();
-
-				prev += vec;
-
-				this->_Node->setPosition(prev);
-
-				vec.Z = pckt.W;
-				this->_Node->setRotation(vec);
-
-				pckt.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
 			}
 		}
 	}
@@ -86,18 +75,14 @@ namespace Xplicit::Client
 		XPLICIT_ASSERT(m_public_hash != -1);
 		m_packet.public_hash = m_public_hash;
 
-		if (KB->key_down(KEY_KEY_W))
-			m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_FORWARD;
+		if (KB->key_down(Details::KEY_KEY_W) ||
+			KB->key_down(Details::KEY_KEY_S) ||
+			KB->key_down(Details::KEY_KEY_A) ||
+			KB->key_down(Details::KEY_KEY_D))
+		{
+			m_packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+			m_network->send(m_packet);
+		}
 
-		if (KB->key_down(KEY_KEY_S))
-			m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_BACKWARD;
-
-		if (KB->key_down(KEY_KEY_A))
-			m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_LEFT;
-
-		if (KB->key_down(KEY_KEY_D))
-			m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_RIGHT;
-
-		m_network->send(m_packet);
 	}
 }

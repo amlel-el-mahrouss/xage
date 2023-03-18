@@ -20,23 +20,21 @@ namespace Xplicit
 {
 	constexpr int16_t XPLICIT_DEATH_DELAY = 1000;
 
-	static void xplicit_handle_spawn(SpawnComponent* spawner, NetworkPeer* peer) noexcept
+	static void xplicit_handle_spawn(SpawnComponent* spawner, Actor* peer) noexcept
 	{
 		if (spawner)
 		{
 			auto& pos = spawner->get();
 
-			peer->packet.X = pos.X;
-			peer->packet.Y = pos.Y;
-			peer->packet.Z = pos.Z;
-			peer->packet.W = pos.W;
+			peer->Position.X = pos.X;
+			peer->Position.Y = pos.Y;
+			peer->Position.Z = pos.Z;
 		}
 		else
 		{
-			peer->packet.X = 0;
-			peer->packet.Y = 0;
-			peer->packet.Z = 0;
-			peer->packet.W = 0;
+			peer->Position.X = 0;
+			peer->Position.Y = 0;
+			peer->Position.Z = 0;
 		}
 	}
 
@@ -86,7 +84,7 @@ namespace Xplicit
 							ref->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 							ref->packet.public_hash = actor->get()->public_hash;
 
-							xplicit_handle_spawn(m_spawner, ref);
+							xplicit_handle_spawn(m_spawner, actor);
 							ref->packet.health = actor->health();
 						}
 					}
