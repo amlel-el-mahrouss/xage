@@ -82,7 +82,6 @@ namespace Xplicit::Renderer
 		RENDER_TYPE_COUNT,
 	};
 	
-	// generic mesh component type.
 	class XPLICIT_API IRenderCmd
 	{
 	public:
