@@ -30,34 +30,54 @@ namespace Xplicit::XDP
 {
 	namespace Details
 	{
-		class XPLICIT_API XDPDownloadPacket
-		{
-		public:
-			char magic[XPLICIT_TCP_MAG_COUNT];
+		PACKED_STRUCT
+		(
+			class XPLICIT_API XDPDownloadPacket
+			{
+			public:
+				char magic[XPLICIT_TCP_MAG_COUNT];
+				char version;
 
-		public:
-			int32_t file_size;
-			int32_t version;
-			int32_t crc32;
-
-		};
+			};
+		);
 	}
 
-	class XPLICIT_API XDPDownloadManager final
+	class XPLICIT_API XDPDownloadFile final
 	{
 	public:
-		XDPDownloadManager();
-		~XDPDownloadManager();
+		XDPDownloadFile();
+		~XDPDownloadFile();
+		XDPDownloadFile(char* bytes, size_t len);
 
-		XDPDownloadManager& operator=(const XDPDownloadManager&) = default;
-		XDPDownloadManager(const XDPDownloadManager&) = default;
+		XDPDownloadFile& operator=(const XDPDownloadFile&) = default;
+		XDPDownloadFile(const XDPDownloadFile&) = default;
 
 	public:
-		void set(char* file_bytes, size_t len);
+		int set(char* bytes, size_t len);
 		char* get() noexcept;
+		size_t size() noexcept;
 
 	private:
 		std::vector<char> m_bytes;
+
+	};
+
+	class XPLICIT_API XDPDownloadTask final
+	{
+	public:
+		XDPDownloadTask();
+		~XDPDownloadTask();
+
+		XDPDownloadTask& operator=(const XDPDownloadTask&) = delete;
+		XDPDownloadTask(const XDPDownloadTask&) = delete;
+
+		void add(XDPDownloadFile* file);
+		bool remove(XDPDownloadFile* file);
+
+		void operator()(Socket& socket);
+
+	private:
+		std::vector<XDPDownloadFile*> m_files;
 
 	};
 }

@@ -27,9 +27,9 @@ XPLICIT_API FILE* xplicit_get_logger();
 XPLICIT_API bool xplicit_open_logger();
 
 #ifdef _MSC_VER
-#define PACKED_STRUCT( decl ) __pragma( pack(push, 1) ) decl; __pragma( pack(pop))
+#define PACKED_STRUCT(DECL) __pragma( pack(push, 1) ) DECL; __pragma( pack(pop))
 #else
-#define PACKED_STRUCT( decl )
+#define PACKED_STRUCT(DECL)
 #endif
 
 namespace Xplicit 
@@ -292,11 +292,9 @@ namespace Xplicit
 	public:
 		AsyncAction() = delete;
 
-		AsyncAction(FnT fn, Args&&... args) 
+		AsyncAction(FnT fn, Args&&... args)
 		{
-			if (!fn)
-				throw std::bad_alloc();
-
+			XPLICIT_ASSERT(fn);
 			m_thread = std::thread(fn, args...);
 		}
 

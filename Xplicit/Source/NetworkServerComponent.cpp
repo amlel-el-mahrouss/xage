@@ -26,7 +26,7 @@ namespace Xplicit
 
 		XPLICIT_ASSERT(err == NO_ERROR);
 #else
-#pragma error("DEFINE ME ServerComponent.cpp")
+#pragma error("ServerComponent.cpp")
 #endif
 	}
 
@@ -58,7 +58,7 @@ namespace Xplicit
 
 		auto ret_bind = bind(m_socket, reinterpret_cast<SOCKADDR*>(&m_server), sizeof(m_server));
 #else
-#pragma error("DEFINE ME ServerComponent.cpp")
+#pragma error("ServerComponent.cpp")
 #endif
 
 		if (ret_bind == SOCKET_ERROR)
@@ -116,7 +116,7 @@ namespace Xplicit
 		if (shutdown(m_socket, SD_BOTH) == SOCKET_ERROR)
 			closesocket(m_socket);
 #else
-#pragma error("DEFINE ME ServerComponent.cpp")
+#pragma error("ServerComponent.cpp")
 #endif
 
 		WSACleanup();

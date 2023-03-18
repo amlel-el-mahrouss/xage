@@ -51,7 +51,7 @@ namespace Xplicit::Client
 
 	bool LocalMenuEvent::enabled() noexcept { return m_enabled; }
 
-	static const int XPLICIT_TIMEOUT_MENU = 200;
+	static const int XPLICIT_TIMEOUT_MENU = 2000;
 
 	void LocalMenuEvent::operator()()
 	{

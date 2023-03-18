@@ -298,6 +298,7 @@ namespace Xplicit
 		static ApplicationContext* get_singleton_ptr() noexcept
 		{
 			static ApplicationContext* app = nullptr;
+
 			if (!app)
 				app = new ApplicationContext();
 

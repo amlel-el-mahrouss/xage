@@ -89,7 +89,7 @@ namespace Xplicit
 		EventListener& operator=(const EventListener&) = default;
 		EventListener(const EventListener&) = default;
 
-		virtual void update(EventTypePtr pEvent) = 0;
+		virtual void update(EventTypePtr pEvent) {}
 
 	};
 }

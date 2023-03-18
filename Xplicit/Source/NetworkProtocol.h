@@ -84,20 +84,23 @@ namespace Xplicit
         NETWORK_STAT_COUNT,
     };
 
-    class XPLICIT_API UDPNetworkPacket final
-    {
-    public:
-        char magic[XPLICIT_NETWORK_MAG_COUNT];
-        NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
-        int32_t version;
+    PACKED_STRUCT
+    (
+        class XPLICIT_API UDPNetworkPacket final
+        {
+        public:
+            char magic[XPLICIT_NETWORK_MAG_COUNT];
+            NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
+            int32_t version;
 
-    public:
-        int64_t public_hash; /* Public hash being sent (SHARED) */
-        int64_t health; /* the health being sent (SERVER only) */
-        int64_t hash; /* the private hash (SERVER only) */
-        size_t size; /* size of currently sent packet. */
+        public:
+            int64_t public_hash; /* Public hash being sent (SHARED) */
+            int64_t health; /* the health being sent (SERVER only) */
+            int64_t hash; /* the private hash (SERVER only) */
+            size_t size; /* size of currently sent packet. */
 
-    };
+        };
+    );
 
     class XPLICIT_API NetworkPeer final
     {
