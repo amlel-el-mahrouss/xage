@@ -54,7 +54,7 @@ namespace Xplicit
 
 		m_server.sin_family = AF_INET;
 		inet_pton(AF_INET, ip, &m_server.sin_addr.S_un.S_addr);
-		m_server.sin_port = htons(XPLICIT_NETWORK_PORT);
+		m_server.sin_port = htons(XPLICIT_UDP_PORT);
 
 		auto ret_bind = bind(m_socket, reinterpret_cast<SOCKADDR*>(&m_server), sizeof(m_server));
 #else
@@ -131,20 +131,23 @@ namespace Xplicit
 		{
 			for (size_t i = 0; i < server->size(); ++i)
 			{
-				NetworkPacketHeader tmp{};
+				static char tmp[sizeof(UDPNetworkPacket) + XPLICIT_NETWORK_OPT_SIZE];
 				int fromLen = sizeof(struct sockaddr_in);
 
-				int res = ::recvfrom(server->m_socket, reinterpret_cast<char*>(&tmp), sizeof(NetworkPacketHeader) * XPLICIT_MAX_PEEK_SIZE, 0,
+				int res = ::recvfrom(server->m_socket, tmp, sizeof(UDPNetworkPacket) * XPLICIT_MAX_PEEK_SIZE, 0,
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &fromLen);
 
 				if (res == SOCKET_ERROR)
 					break;
 
-				if (tmp.magic[0] == XPLICIT_NETWORK_MAG_0 &&
-					tmp.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-					tmp.magic[2] == XPLICIT_NETWORK_MAG_2 && server->get(i)->hash == tmp.hash)
+				if (tmp[0] == XPLICIT_NETWORK_MAG_0 &&
+					tmp[1] == XPLICIT_NETWORK_MAG_1 &&
+					(reinterpret_cast<UDPNetworkPacket*>(&tmp))->magic[2] == XPLICIT_NETWORK_MAG_2 && 
+					server->get(i)->hash == (reinterpret_cast<UDPNetworkPacket*>(&tmp))->hash &&
+					(reinterpret_cast<UDPNetworkPacket*>(&tmp))->version == XPLICIT_NETWORK_VERSION)
 				{
-					server->get(i)->packet = tmp;
+					std::memcpy(&server->get(i)->packet, tmp, sizeof(UDPNetworkPacket));
+					std::memcpy(server->get(i)->opt, tmp + sizeof(UDPNetworkPacket), XPLICIT_NETWORK_OPT_SIZE);
 				}
 			}
 		}
@@ -162,7 +165,14 @@ namespace Xplicit
 				peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 				peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
-				sendto(server->m_socket, reinterpret_cast<char*>(&peer->packet), peer->packet.size, 0, reinterpret_cast<sockaddr*>(&peer->addr), sizeof(PrivateAddressData));
+				peer->packet.version = XPLICIT_NETWORK_VERSION;
+
+				static char tmp[sizeof(UDPNetworkPacket) + XPLICIT_NETWORK_OPT_SIZE];
+
+				std::memcpy(tmp , &server->get(i)->packet, sizeof(UDPNetworkPacket));
+				std::memcpy(tmp + sizeof(UDPNetworkPacket), server->get(i)->opt, XPLICIT_NETWORK_OPT_SIZE);
+
+				sendto(server->m_socket, tmp, peer->packet.size, 0, reinterpret_cast<sockaddr*>(&peer->addr), sizeof(PrivateAddressData));
 			}
 		}
 	}

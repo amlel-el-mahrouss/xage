@@ -74,13 +74,14 @@ namespace Xplicit::Client
 
 			if (KB->key_down(KEY_KEY_L))
 			{
-				NetworkPacketHeader stop_packet{};
+				UDPNetworkPacket stop_packet{};
 
 				stop_packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 				stop_packet.hash = m_hash;
-				stop_packet.size = sizeof(NetworkPacketHeader);
+				stop_packet.size = sizeof(UDPNetworkPacket);
 
 				m_network->send(stop_packet);
+
 				m_enabled = false;
 				
 				IRR->closeDevice();

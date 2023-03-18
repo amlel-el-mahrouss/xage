@@ -43,7 +43,7 @@ namespace Xplicit::Client
 		if (!m_network)
 			return;
 
-		NetworkPacketHeader packet{};
+		UDPNetworkPacket packet{};
 		m_network->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
@@ -66,7 +66,7 @@ namespace Xplicit::Client
 			else
 			{
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-				packet.size = sizeof(NetworkPacketHeader);
+				packet.size = sizeof(UDPNetworkPacket);
 				packet.hash = packet.hash;
 
 				m_network->send(packet);
@@ -97,7 +97,7 @@ namespace Xplicit::Client
 			{
 				packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
 				packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-				packet.size = sizeof(NetworkPacketHeader);
+				packet.size = sizeof(UDPNetworkPacket);
 
 				m_network->send(packet);
 
@@ -122,11 +122,11 @@ namespace Xplicit::Client
 
 		if (m_network->connect(ip))
 		{
-			NetworkPacketHeader spawn{};
+			UDPNetworkPacket spawn{};
 
 			spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
 			spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-			spawn.size = sizeof(NetworkPacketHeader);
+			spawn.size = sizeof(UDPNetworkPacket);
 		
 			m_network->send(spawn);
 		}

@@ -14,9 +14,7 @@
  @file
  */
 
-#include "NetworkServerComponent.h"
-#include "NetworkComponent.h"
-
+#include "ApplicationContext.h"
 #include "MonoComponent.h"
 #include "MonoInterop.h"
 

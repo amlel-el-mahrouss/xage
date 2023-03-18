@@ -474,6 +474,33 @@ namespace Xplicit
 		std::chrono::steady_clock::time_point m_then;
 
 	};
+
+	class XPLICIT_API UUIDFactory final
+	{
+	public:
+		template <int ver>
+		static uuids::uuid version()
+		{
+			switch (ver)
+			{
+			case 4:
+			{
+				std::random_device rd;
+				auto seed_data = std::array<int, std::mt19937::state_size> {};
+				std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
+				std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
+				std::mt19937 generator(seq);
+
+				auto gen = uuids::uuid_random_generator(generator);
+
+				return gen();
+			}
+			}
+
+			return {};
+		}
+
+	};
 }
 
 #define XPLICIT_INIT_COM XPLICIT_ASSERT(SUCCEEDED(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE)))

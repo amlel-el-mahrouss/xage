@@ -18,7 +18,7 @@ namespace Xplicit
 	static void xplicit_set_ioctl(SOCKET sock)
 	{
 #ifdef XPLICIT_WINDOWS
-		u_long ul = 1;
+		ULONG ul = 1;
 		auto err = ioctlsocket(sock, FIONBIO, &ul);
 
 		XPLICIT_ASSERT(err == NO_ERROR);
@@ -77,7 +77,7 @@ namespace Xplicit
 
 		m_addr.sin_family = AF_INET;
 		inet_pton(AF_INET, ip, &m_addr.sin_addr);
-		m_addr.sin_port = htons(XPLICIT_NETWORK_PORT);
+		m_addr.sin_port = htons(XPLICIT_UDP_PORT);
 
 		int result = ::connect(m_socket, reinterpret_cast<SOCKADDR*>(&m_addr), sizeof(m_addr));
 
@@ -94,14 +94,20 @@ namespace Xplicit
 		return true;
 	}
 
-	bool NetworkComponent::send(NetworkPacketHeader& packet)
+	bool NetworkComponent::send(UDPNetworkPacket& packet)
 	{
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+		packet.version = XPLICIT_NETWORK_VERSION;
+
+		static char tmp[sizeof(UDPNetworkPacket) + XPLICIT_NETWORK_OPT_SIZE];
+
+		std::memcpy(tmp, &packet, sizeof(UDPNetworkPacket));
+		std::memcpy(tmp + sizeof(UDPNetworkPacket), this->m_opt, XPLICIT_NETWORK_OPT_SIZE);
 
 #ifdef XPLICIT_WINDOWS
-		int res = ::sendto(m_socket, reinterpret_cast<const char*>(&packet), packet.size, 0,
+		int res = ::sendto(m_socket, tmp, packet.size, 0,
 			reinterpret_cast<SOCKADDR*>(&m_addr), sizeof(m_addr));
 
 		if (res == SOCKET_ERROR)
@@ -118,18 +124,23 @@ namespace Xplicit
 		this->read(m_packet);
 	}
 
-	bool NetworkComponent::read(NetworkPacketHeader& packet)
+	bool NetworkComponent::read(UDPNetworkPacket& packet)
 	{
 		m_reset = false; // we gotta clear this one, we don't know if RST was sent.
 
 		int length{ sizeof(struct sockaddr_in) };
 
+		static char tmp[sizeof(UDPNetworkPacket) + XPLICIT_NETWORK_OPT_SIZE];
+
 #ifdef XPLICIT_WINDOWS
-		int res = ::recvfrom(m_socket, reinterpret_cast<char*>(&packet), sizeof(NetworkPacketHeader) * XPLICIT_MAX_PEEK_SIZE, 0,
+		int res = ::recvfrom(m_socket, tmp, XPLICIT_NETWORK_OPT_SIZE, 0,
 			(struct sockaddr*)&m_addr, &length);
 #else
 #pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
+
+		std::memcpy(&packet, tmp, sizeof(UDPNetworkPacket));
+		std::memcpy(this->m_opt, tmp + sizeof(UDPNetworkPacket), XPLICIT_NETWORK_OPT_SIZE);
 
 		if (length > 0)
 		{
@@ -154,10 +165,10 @@ namespace Xplicit
 		}
 
 		return packet.magic[0] == XPLICIT_NETWORK_MAG_0 && packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-				packet.magic[2] == XPLICIT_NETWORK_MAG_2;
+				packet.magic[2] == XPLICIT_NETWORK_MAG_2 && packet.version == XPLICIT_NETWORK_VERSION;
 	}
 
 	bool NetworkComponent::is_reset() noexcept { return m_reset; }
 
-	NetworkPacketHeader& NetworkComponent::get() noexcept { return m_packet; }
+	UDPNetworkPacket& NetworkComponent::get() noexcept { return m_packet; }
 }

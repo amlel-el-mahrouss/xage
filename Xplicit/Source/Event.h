@@ -66,9 +66,32 @@ namespace Xplicit
 	public:
 		void update();
 
+	public:
+		void push_back(EventListener* listener);
+		bool remove(EventListener* listener);
+
+	private:
+		std::vector<EventListener*> m_listeners;
+
 	};
 
 	// TODO: EventListener
+
+	class XPLICIT_API EventListener
+	{
+	public:
+		using EventTypePtr = void*;
+
+	public:
+		EventListener() = default;
+		virtual ~EventListener() = default;
+
+		EventListener& operator=(const EventListener&) = default;
+		EventListener(const EventListener&) = default;
+
+		virtual void update(EventTypePtr pEvent) = 0;
+
+	};
 }
 
 #include "Event.inl"

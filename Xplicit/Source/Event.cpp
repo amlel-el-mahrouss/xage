@@ -39,7 +39,38 @@ namespace Xplicit
 
 	void Event::operator()() {}
 
-	void Event::update() { this->operator()(); }
+	void Event::update() 
+	{
+		for (size_t i = 0; i < m_listeners.size(); i++)
+		{
+			XPLICIT_ASSERT(m_listeners[i]);
+			m_listeners[i]->update(this);
+		}
+
+		this->operator()(); 
+	}
 
 	const char* Event::name() noexcept { return ("Event"); }
+
+	void Event::push_back(EventListener* listener) 
+	{
+		if (listener)
+			m_listeners.push_back(listener);
+	}
+
+	bool Event::remove(EventListener* listener) 
+	{
+		if (listener)
+		{
+			auto it = std::find(m_listeners.cbegin(), m_listeners.cend(), listener);
+
+			if (it != m_listeners.cend())
+			{
+				m_listeners.erase(it);
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

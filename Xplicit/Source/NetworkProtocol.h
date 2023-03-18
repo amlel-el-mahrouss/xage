@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: Protocol.h
- *			Purpose: Lightwieght Game Network Protocol
+ *			File: NetworkProtocol.h
+ *			Purpose: Lightweight Game Network Protocol
  *
  * =====================================================================
  */
@@ -13,11 +13,10 @@
 #pragma once
 
 #include "Xplicit.h"
-#include "ApplicationContext.h"
 
-#ifndef XPLICIT_NETWORK_PORT
-#define XPLICIT_NETWORK_PORT (60001)
-#endif // ifndef XPLICIT_NETWORK_PORT
+#ifndef XPLICIT_UDP_PORT
+#define XPLICIT_UDP_PORT (60001)
+#endif // ifndef XPLICIT_UDP_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY
 #define XPLICIT_ADDRESS_ANY INADDR_ANY
@@ -29,12 +28,12 @@
 
 #ifndef XPLICIT_MAX_PEEK_SIZE
  /* how many spaces should we attribute */
-#define XPLICIT_MAX_PEEK_SIZE (10)
+#define XPLICIT_MAX_PEEK_SIZE (2)
 #endif
 
 #define XPLICIT_NETWORK_MAG_0 ('X')
-#define XPLICIT_NETWORK_MAG_1 ('P')
-#define XPLICIT_NETWORK_MAG_2 ('X')
+#define XPLICIT_NETWORK_MAG_1 ('D')
+#define XPLICIT_NETWORK_MAG_2 ('P')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
 #define XPLICIT_NETWORK_CMD_MAX (20U)
@@ -43,9 +42,12 @@
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
-namespace Xplicit 
-{
+#define XPLICIT_NETWORK_OPT_SIZE (sizeof(UDPNetworkPacket) * XPLICIT_MAX_PEEK_SIZE)
 
+#define XPLICIT_NETWORK_VERSION (1)
+
+namespace Xplicit
+{
 #ifdef XPLICIT_WINDOWS
     using PrivateAddressData = SOCKADDR_IN;
     using Socket = SOCKET;
@@ -82,21 +84,20 @@ namespace Xplicit
         NETWORK_STAT_COUNT,
     };
 
-    PACKED_STRUCT(
-        class XPLICIT_API NetworkPacketHeader final
-        {
-        public:
-            char magic[XPLICIT_NETWORK_MAG_COUNT];
-            NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
+    class XPLICIT_API UDPNetworkPacket final
+    {
+    public:
+        char magic[XPLICIT_NETWORK_MAG_COUNT];
+        NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
+        int32_t version;
 
-        public:
-            int64_t public_hash; /* Public hash being sent (SHARED) */
-            int64_t health; /* the health being sent (SERVER only) */
-            int64_t hash; /* the private hash (SERVER only) */
-            size_t size; /* size of currently sent packet. */
+    public:
+        int64_t public_hash; /* Public hash being sent (SHARED) */
+        int64_t health; /* the health being sent (SERVER only) */
+        int64_t hash; /* the private hash (SERVER only) */
+        size_t size; /* size of currently sent packet. */
 
-        };
-    );
+    };
 
     class XPLICIT_API NetworkPeer final
     {
@@ -128,7 +129,8 @@ namespace Xplicit
     public:
         UniqueAddress unique_addr; /* unique network address of this peer */
         PrivateAddressData addr; /* current socket address. */
-        NetworkPacketHeader packet; /* current network packet. */
+        UDPNetworkPacket packet; /* current network packet. */
+        char opt[XPLICIT_NETWORK_OPT_SIZE]; /* additional data */
         int64_t public_hash; /* Public hash, for other clients */
         NETWORK_STAT stat; /* current network status */
         int64_t hash; /* connection hash. */
@@ -146,6 +148,13 @@ namespace Xplicit
 
     public:
         void reset() noexcept;
+
+        template <typename As>
+        As* get_as() noexcept
+        {
+            XPLICIT_ASSERT(*opt != 0);
+            return reinterpret_cast<As*>(opt);
+        }
 
     };
 

@@ -325,33 +325,6 @@ namespace Xplicit
 		bool ShouldExit;
 
 	};
-
-	class UUIDFactory final
-	{
-	public:
-		template <int ver>
-		static uuids::uuid version()
-		{
-			switch (ver)
-			{
-			case 4:
-			{
-				std::random_device rd;
-				auto seed_data = std::array<int, std::mt19937::state_size> {};
-				std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
-				std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
-				std::mt19937 generator(seq);
-
-				auto gen = uuids::uuid_random_generator(generator);
-
-				return gen();
-			}
-			}
-
-			return {};
-		}
-
-	};
 }
 
 #define XML Xplicit::ApplicationContext::get_singleton_ptr()->Reader

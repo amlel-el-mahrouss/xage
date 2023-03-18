@@ -14,6 +14,7 @@
  @file
  */
 
+#include "CommonPackets.h"
 #include "Application.h"
 #include "LocalActor.h"
 #include "CoreUI.h"
@@ -48,8 +49,11 @@ namespace Xplicit::Client
 		
 		if (pckt.public_hash == m_public_hash)
 		{
-			if (pckt.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
+			if (pckt.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
+				pckt.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
 			{
+				auto pos = m_network->get_as<PositionPacket>();
+				_Node->setPosition(vector3df(pos->X, pos->Y, pos->Z));
 			}
 		}
 	}
@@ -75,14 +79,10 @@ namespace Xplicit::Client
 		XPLICIT_ASSERT(m_public_hash != -1);
 		m_packet.public_hash = m_public_hash;
 
-		if (KB->key_down(Details::KEY_KEY_W) ||
-			KB->key_down(Details::KEY_KEY_S) ||
-			KB->key_down(Details::KEY_KEY_A) ||
-			KB->key_down(Details::KEY_KEY_D))
+		if (KB->key_down(Details::KEY_KEY_W))
 		{
-			m_packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+			m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_FORWARD;
 			m_network->send(m_packet);
 		}
-
 	}
 }

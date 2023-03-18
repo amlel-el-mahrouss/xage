@@ -21,6 +21,8 @@
 #include "ServerWatchdog.h"
 #include "SpawnComponent.h"
 
+#include "ApplicationContext.h"
+
 #include "PlayerMovementEvent.h"
 #include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
@@ -185,7 +187,7 @@ int main(int argc, char** argv)
 		if (!server)
 			return 1;
 
-		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::ServerWatchdogEvent>();
+
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
@@ -215,7 +217,7 @@ int main(int argc, char** argv)
 		XPLICIT_CRITICAL(err.what());
 
 #ifdef XPLICIT_WINDOWS
-		MessageBoxA(nullptr, err.what(), "XplicitNgin", MB_OK);
+		Xplicit::GUI::message_box(L"Xplicit Dedicated Server", L"Fatal server error!", MB_OK | MB_ICONASTERISK);
 #endif
 #endif
 

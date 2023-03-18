@@ -311,7 +311,7 @@ namespace Xplicit::Renderer::DX11
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create)");
 
 		m_index_buf_desc.Usage = D3D11_USAGE_DEFAULT;
-		m_index_buf_desc.ByteWidth = sizeof(unsigned long) * m_coord.size();
+		m_index_buf_desc.ByteWidth = sizeof(ULONG) * m_coord.size();
 		m_index_buf_desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		m_index_buf_desc.CPUAccessFlags = 0;
 		m_index_buf_desc.MiscFlags = 0;

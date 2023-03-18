@@ -27,8 +27,13 @@ namespace Xplicit
 		return res;
 	}
 
-	static void xplicit_join_event(NetworkPeer* cl, Actor* actor, NetworkServerComponent* server)
+	static bool xplicit_join_event(NetworkPeer* cl, Actor* actor, NetworkServerComponent* server)
 	{
+		if (!cl ||
+			!actor ||
+			!server)
+			return false;
+
 		auto hash = xplicit_hash_from_uuid(cl->unique_addr.get());
 		
 		// I use version 4, to avoid collisions.
@@ -42,9 +47,11 @@ namespace Xplicit
 		cl->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 		cl->packet.public_hash = cl->public_hash;
 		cl->packet.hash = hash;
-		cl->packet.size = sizeof(NetworkPacketHeader);
+		cl->packet.size = sizeof(UDPNetworkPacket);
 
 		cl->stat = NETWORK_STAT_CONNECTED;
+
+		return true;
 	}
 
 	static bool xplicit_leave_event(NetworkPeer* cl, NetworkServerComponent* server)
@@ -101,7 +108,10 @@ namespace Xplicit
 				continue;
 
 			if (server->get(peer_idx)->packet.size < 1)
+			{
+				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 				continue;
+			}
 
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
@@ -111,10 +121,12 @@ namespace Xplicit
 				if (!actor)
 					return false;
 
-				++m_size;
-				xplicit_join_event(server->get(peer_idx), actor, server);
+				if (xplicit_join_event(server->get(peer_idx), actor, server))
+				{
+					XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+					++m_size;
+				}
 
-				XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 			}
 		}
 
@@ -131,6 +143,9 @@ namespace Xplicit
 
 		for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 		{
+			if (server->get(peer_idx)->stat == NETWORK_STAT_DISCONNECTED)
+				continue;
+
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{

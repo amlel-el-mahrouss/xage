@@ -85,18 +85,26 @@ namespace Xplicit {
         virtual void update() override;
 
         bool connect(const char* ip);
-        bool send(NetworkPacketHeader& packet);
-        bool read(NetworkPacketHeader& packet);
+        bool send(UDPNetworkPacket& packet);
+        bool read(UDPNetworkPacket& packet);
 
-        NetworkPacketHeader& get() noexcept;
+        UDPNetworkPacket& get() noexcept;
         bool is_reset() noexcept;
+
+        template <typename As>
+        As* get_as() noexcept
+        {
+            XPLICIT_ASSERT(m_opt[0] != 0);
+            return reinterpret_cast<As*>(m_opt);
+        }
 
     private:
         bool reset() noexcept;
 
     private:
+        char m_opt[XPLICIT_NETWORK_OPT_SIZE];
         PrivateAddressData m_addr;
-        NetworkPacketHeader m_packet;
+        UDPNetworkPacket m_packet;
         Socket m_socket;
         bool m_reset;
 

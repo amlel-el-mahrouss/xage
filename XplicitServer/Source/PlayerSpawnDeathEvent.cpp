@@ -20,21 +20,21 @@ namespace Xplicit
 {
 	constexpr int16_t XPLICIT_DEATH_DELAY = 1000;
 
-	static void xplicit_handle_spawn(SpawnComponent* spawner, Actor* peer) noexcept
+	static void xplicit_handle_spawn(SpawnComponent* spawner, Actor* actor) noexcept
 	{
-		if (spawner)
+		if (spawner && actor)
 		{
 			auto& pos = spawner->get();
 
-			peer->Position.X = pos.X;
-			peer->Position.Y = pos.Y;
-			peer->Position.Z = pos.Z;
+			actor->Position.X = pos.X;
+			actor->Position.Y = pos.Y;
+			actor->Position.Z = pos.Z;
 		}
 		else
 		{
-			peer->Position.X = 0;
-			peer->Position.Y = 0;
-			peer->Position.Z = 0;
+			actor->Position.X = 0;
+			actor->Position.Y = 0;
+			actor->Position.Z = 0;
 		}
 	}
 

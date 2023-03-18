@@ -19,40 +19,48 @@
 namespace Xplicit
 {
 	ServerWatchdogEvent::ServerWatchdogEvent() 
-		: Event(), m_watchdog(false)
+		: Event(), m_watchdog_timer(1000), m_server(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
 	{
-
+		XPLICIT_ASSERT(m_server);
 	}
 
 	ServerWatchdogEvent::~ServerWatchdogEvent() {}
 
 	void ServerWatchdogEvent::operator()() 
 	{
-		auto server = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
-
-		if (server)
+		if (m_server)
 		{
-			if (this->m_watchdog)
+			if (m_watchdog_timer <= 0)
 			{
-				for (size_t i = 0; i < server->size(); i++)
+				for (size_t i = 0; i < m_server->size(); i++)
 				{
-					if (server->get(i)->stat == NETWORK_STAT_DISCONNECTED)
+					if (m_server->get(i)->stat == NETWORK_STAT_DISCONNECTED)
 						continue;
 
-					if (server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK ||
-						server->get(i)->packet.hash != server->get(i)->hash)
+					if (m_server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
 					{
-						server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-						XPLICIT_INFO("[WATCHDOG] Flagged " + uuids::to_string(server->get(i)->unique_addr.get()));
+						m_server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+
+						XPLICIT_INFO("[WATCHDOG] Flagged " + uuids::to_string(m_server->get(i)->unique_addr.get()));
 					}
 				}
 
-				this->m_watchdog = false;
+				m_watchdog_timer = 1000;
+			}
+			else
+			{
+				for (size_t i = 0; i < m_server->size(); i++)
+				{
+					if (m_server->get(i)->stat == NETWORK_STAT_DISCONNECTED)
+						continue;
+
+					m_server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_WATCHDOG] = NETWORK_CMD_WATCHDOG;
+				}
+
+				--m_watchdog_timer;
 			}
 		}
 	}
-
-	void ServerWatchdogEvent::enable(const bool enable) noexcept { this->m_watchdog = enable; }
 
 	const char* ServerWatchdogEvent::name() noexcept { return ("ServerWatchdogEvent"); }
 }

@@ -54,4 +54,6 @@ namespace Xplicit
 		int64_t m_health;
 
 	};
+
+	using ActorArray = std::vector<Actor*>;
 }

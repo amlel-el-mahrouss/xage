@@ -28,11 +28,9 @@ namespace Xplicit
 		virtual const char* name() noexcept override;
 		virtual void operator()() override;
 
-	public:
-		void enable(const bool enable = true) noexcept;
-
 	private:
-		bool m_watchdog; // Watchdog delay
+		NetworkServerComponent* m_server; // Wacthdog ServerComponent.
+		int64_t m_watchdog_timer; // Watchdog delay
 
 	};
 }
