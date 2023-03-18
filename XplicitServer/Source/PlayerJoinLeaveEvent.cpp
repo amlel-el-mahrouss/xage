@@ -74,7 +74,9 @@ namespace Xplicit
 	void PlayerJoinLeaveEvent::operator()()
 	{
 		auto server = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
-		if (!server) return;
+
+		if (!server) 
+			return;
 
 		NetworkServerTraits::correct_collisions(server);
 
@@ -130,8 +132,8 @@ namespace Xplicit
 			{
 				if (xplicit_leave_event(server->get(peer_idx), server))
 				{
-					--m_size;
 					XPLICIT_INFO("[DISCONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+					--m_size;
 				}
 			}
 		}

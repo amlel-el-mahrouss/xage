@@ -23,7 +23,7 @@ namespace Xplicit::Bites
 		XPLICIT_GET_DATA_DIR(dir);
 
 		std::string prebuilt = dir;
-		prebuilt += "Textures\\PreBuiltDialogs.zip";
+		prebuilt += "\\Textures\\PreBuiltDialogs.zip";
 
 		auto res = IRR->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true);
 

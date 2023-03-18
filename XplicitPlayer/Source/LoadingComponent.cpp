@@ -25,7 +25,7 @@
 
 namespace Xplicit::Client
 {
-	constexpr const int XPLICIT_TIMEOUT = 1000; // connection timeout
+	constexpr const int XPLICIT_TIMEOUT = (1 * 60 * 60) * 60; // connection timeout
 
 	LoadingComponent::LoadingComponent() 
 		: m_run(true), m_network(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)

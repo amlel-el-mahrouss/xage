@@ -173,16 +173,20 @@ namespace Xplicit
 		{
 			NetworkPeer* prev_peer = nullptr;
 
-			for (size_t i = 0; i < server->size(); i++)
+			for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 			{
-				auto peer = server->get(i);
+				auto peer = server->get(peer_idx);
 
 				if (prev_peer && equals(prev_peer->addr, peer->addr))
-				{
 					peer->reset();
-				}
 
 				prev_peer = peer;
+
+				for (size_t second_peer_idx = peer_idx; second_peer_idx < server->size(); ++second_peer_idx)
+				{
+					if (server->get(second_peer_idx) != server->get(peer_idx) && equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr))
+						server->get(second_peer_idx)->reset();
+				}
 			}
 		}
 	}

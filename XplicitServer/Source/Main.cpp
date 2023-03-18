@@ -206,7 +206,7 @@ int main(int argc, char** argv)
 
 		return 0;
 	}
-	catch (std::runtime_error err)
+	catch (std::runtime_error& err)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_CRITICAL(err.what());

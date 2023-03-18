@@ -25,6 +25,9 @@ namespace Xplicit::Client
 
 		_Node = IRR->getSceneManager()->addAnimatedMeshSceneNode(_Model);
 		XPLICIT_ASSERT(_Node);
+	
+		if (_Model)
+			_Model->setMaterialFlag(EMF_LIGHTING, false);
 	}
 
 	MeshComponent::~MeshComponent()
