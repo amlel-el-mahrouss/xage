@@ -66,6 +66,8 @@ namespace Xplicit
 	public:
 		void add(EventListener* listener);
 		bool remove(EventListener* listener);
+
+	public:
 		virtual const char* name() noexcept;
 
 	protected:

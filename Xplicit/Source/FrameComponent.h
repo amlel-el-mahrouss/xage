@@ -24,10 +24,10 @@ namespace Xplicit
 {
 	struct XPLICIT_API Rect
 	{
-		int32_t right;
-		int32_t bottom;
-		int32_t left;
-		int32_t top;
+		float right;
+		float bottom;
+		float left;
+		float top;
 	};
 }
 
@@ -35,6 +35,9 @@ namespace Xplicit
 
 namespace Xplicit::XUI
 {
+	class View;
+	class FrameComponent;
+
 	class View
 	{
 	public:
@@ -44,7 +47,7 @@ namespace Xplicit::XUI
 		View& operator=(const View&) = default;
 		View(const View&) = default;
 
-		virtual void operator()() = 0;
+		virtual void operator()(FrameComponent*) {}
 
 	};
 
@@ -95,7 +98,7 @@ namespace Xplicit::XUI
 
 			for (size_t i = 0; i < m_views.size(); ++i)
 			{
-				(*m_views[i])();
+				m_views[i](this);
 			}
 
 			this->end_scene();
@@ -158,6 +161,11 @@ namespace Xplicit::XUI
 			m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(x, y));
 		}
 
+		void queue(View& view)
+		{
+			m_views.push_back(view);
+		}
+
 	private:
 		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_pGhostWhiteBrush;
 		Microsoft::WRL::ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
@@ -167,7 +175,7 @@ namespace Xplicit::XUI
 		HWND m_hwnd;
 
 	private:
-		std::vector<View*> m_views;
+		std::vector<View> m_views;
 
 	};
 }

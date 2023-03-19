@@ -29,6 +29,20 @@ namespace Xplicit::Studio
 	constexpr const char* XPLICIT_APP_CLASS = "StudioXplicit";
 }
 
+struct RectangleView : public Xplicit::XUI::View
+{
+	void operator()(Xplicit::XUI::FrameComponent* frame)
+	{
+		Xplicit::Rect rct;
+		rct.left = 20.f;
+		rct.top = 20.f;
+		rct.right = 150.f;
+		rct.bottom = 100.f;
+		
+		frame->draw_rectangle(rct, 10, 10);
+	}
+};
+
 INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
 {
 	try
@@ -44,7 +58,6 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		XPLICIT_ASSERT(renderer);
 
  		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::D3D11RenderComponent>();
-		auto frame = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::XUI::FrameComponent>(window->get().WindowHandle);
 
 		component->push_back(Xplicit::Nplicit::Vector<float>(-1.0f, -1.0f, 0.0f), 
 			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
