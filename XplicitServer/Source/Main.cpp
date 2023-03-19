@@ -18,7 +18,6 @@
 
 #include "Actor.h"
 
-#include "ServerWatchdog.h"
 #include "SpawnComponent.h"
 
 #include "ApplicationContext.h"
@@ -210,8 +209,6 @@ int main(int argc, char** argv)
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerTraits::send(server);
-
-			XPLICIT_SLEEP(XPLICIT_TICKRATE);
 		}
 
 		return 0;

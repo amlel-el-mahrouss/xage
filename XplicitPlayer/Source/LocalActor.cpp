@@ -14,7 +14,6 @@
  @file
  */
 
-#include "CommonPackets.h"
 #include "Application.h"
 #include "LocalActor.h"
 #include "CoreUI.h"

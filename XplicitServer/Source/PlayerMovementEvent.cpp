@@ -15,7 +15,6 @@
  */
 
 #include "PlayerMovementEvent.h"
-#include "CommonPackets.h"
 
 namespace Xplicit
 {

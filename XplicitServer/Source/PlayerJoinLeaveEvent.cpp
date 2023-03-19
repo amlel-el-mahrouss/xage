@@ -45,11 +45,12 @@ namespace Xplicit
 		actor->set(cl);
 
 		cl->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+
 		cl->packet.public_hash = cl->public_hash;
 		cl->packet.hash = hash;
 		cl->packet.size = sizeof(UDPNetworkPacket);
 
-		cl->stat = NETWORK_STAT_CONNECTED;
+		NetworkServerTraits::send(server);
 
 		return true;
 	}
@@ -63,17 +64,21 @@ namespace Xplicit
 			if (actors[at]->get() == cl)
 			{
 				ComponentManager::get_singleton_ptr()->remove<Actor>(actors[at]);
-				cl->reset();
 
+				cl->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+				NetworkServerTraits::send(server);
+
+				cl->reset();
 				return true;
 			}
 		}
+
 
 		return false;
 	}
 
 	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() 
-		: m_size(0)
+		: m_player_size(0)
 	{
 	}
 
@@ -92,7 +97,7 @@ namespace Xplicit
 		this->on_leave(server);
 	}
 
-	const size_t& PlayerJoinLeaveEvent::size() noexcept { return m_size; }
+	const size_t& PlayerJoinLeaveEvent::size() noexcept { return m_player_size; }
 
 	bool PlayerJoinLeaveEvent::on_join(NetworkServerComponent* server) noexcept
 	{
@@ -107,12 +112,8 @@ namespace Xplicit
 			if (server->get(peer_idx)->stat == NETWORK_STAT_CONNECTED)
 				continue;
 
-			if (server->get(peer_idx)->packet.size < 1)
-			{
-				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-				continue;
-			}
-
+			// if we start the connection.
+			// then allocate the player and wait for a response.
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
@@ -121,10 +122,11 @@ namespace Xplicit
 				if (!actor)
 					return false;
 
+				// setup the new actor.
 				if (xplicit_join_event(server->get(peer_idx), actor, server))
 				{
-					XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
-					++m_size;
+					XPLICIT_INFO("[CONNECTING] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+					++m_player_size;
 				}
 
 			}
@@ -152,7 +154,7 @@ namespace Xplicit
 				if (xplicit_leave_event(server->get(peer_idx), server))
 				{
 					XPLICIT_INFO("[DISCONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
-					--m_size;
+					--m_player_size;
 				}
 			}
 		}

@@ -13,9 +13,7 @@
 #pragma once
 
 #include "SDK.h"
-
 #include "Actor.h"
-#include "ServerWatchdog.h"
 
 namespace Xplicit
 {
@@ -39,7 +37,7 @@ namespace Xplicit
 		bool on_join(NetworkServerComponent* server) noexcept;
 
 	private:
-		size_t m_size;
+		size_t m_player_size;
 
 	};
 }

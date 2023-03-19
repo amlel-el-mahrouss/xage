@@ -78,7 +78,9 @@ namespace Xplicit
 			m_peers.push_back(std::shared_ptr<NetworkPeer>(cl));
 		}
 
+#ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("[SERVER] IP: " + m_dns);
+#endif
 	}
 
 	size_t NetworkServerComponent::size() noexcept 
@@ -166,7 +168,7 @@ namespace Xplicit
 
 				peer->packet.version = XPLICIT_NETWORK_VERSION;
 
-				::sendto(server->m_socket, reinterpret_cast<const char*>(&server->get(i)->packet), 
+				::sendto(server->m_socket, reinterpret_cast<const char*>(&peer->packet),
 					sizeof(UDPNetworkPacket), 
 					0, 
 					reinterpret_cast<sockaddr*>(&peer->addr), 
@@ -179,19 +181,13 @@ namespace Xplicit
 	{
 		if (server)
 		{
-			NetworkPeer* prev_peer = nullptr;
-
 			for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 			{
-				auto peer = server->get(peer_idx);
-
-				if (prev_peer && equals(prev_peer->addr, peer->addr))
-					peer->reset();
-
-				prev_peer = peer;
-
 				for (size_t second_peer_idx = peer_idx; second_peer_idx < server->size(); ++second_peer_idx)
 				{
+					if (server->get(second_peer_idx) == server->get(peer_idx))
+						continue;
+
 					if (server->get(second_peer_idx) != server->get(peer_idx) && equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr))
 						server->get(second_peer_idx)->reset();
 				}
