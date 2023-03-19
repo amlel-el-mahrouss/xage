@@ -23,18 +23,18 @@ namespace Xplicit::XDP
 
 	const char* XDPEvent::name() noexcept { return ("XDPEvent"); }
 	
-	XDPListener::XDPListener(Socket listeningSocket)
-		: m_socket(listeningSocket)
+	XDPListener::XDPListener(Socket socket)
+		: m_socket(socket)
 	{
-
+		XPLICIT_ASSERT(socket != SOCKET_ERROR);
 	}
 
 	const char* XDPListener::name() noexcept { return ("XDPListener"); }
 	
 	void XDPListener::update(EventTypePtr ptr_event)
 	{
-		std::jthread thrd([&]()-> void {
-			if (this->get())
+		std::thread thrd([&]()-> void {
+			if (this->get().is_ready())
 				this->get()(this->m_socket);
 		});
 

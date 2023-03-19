@@ -80,6 +80,9 @@ namespace Xplicit::XDP
 		void operator()(Socket& socket, const bool compressed = false);
 
 		operator bool() noexcept;
+		
+		bool is_ready() noexcept { return m_ready; }
+
 		void set(const bool ready = false) noexcept;
 
 	private:

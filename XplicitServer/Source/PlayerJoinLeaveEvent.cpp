@@ -18,6 +18,10 @@
 
 namespace Xplicit
 {
+	static bool xplicit_join_event(NetworkPeer* cl, Actor* actor, NetworkServerComponent* server);
+	static bool xplicit_leave_event(NetworkPeer* cl, NetworkServerComponent* server);
+	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid);
+
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid)
 	{
 		std::string uuid_str = uuids::to_string(uuid);
@@ -50,6 +54,8 @@ namespace Xplicit
 		cl->packet.size = sizeof(UDPNetworkPacket);
 
 		cl->stat = NETWORK_STAT_CONNECTED;
+
+		NetworkServerTraits::send(server);
 
 		return true;
 	}
@@ -112,17 +118,37 @@ namespace Xplicit
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				auto actor = ComponentManager::get_singleton_ptr()->add<Actor>();
+				auto actors = ComponentManager::get_singleton_ptr()->all_of<Actor>("Actor");
 
-				if (!actor)
-					return false;
+				Actor* actor = nullptr;
+				
+				for (size_t i = 0; i < actors.size(); ++i)
+				{
+					actor = actors[i];
+
+					if (actor->get() != server->get(peer_idx))
+					{
+						actor = ComponentManager::get_singleton_ptr()->add<Actor>();
+						XPLICIT_ASSERT(actor);
+
+						if (xplicit_join_event(server->get(peer_idx), actor, server))
+						{
+							XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+							++m_player_size;
+
+							return true;
+						}
+					}
+				}
+
+				actor = ComponentManager::get_singleton_ptr()->add<Actor>();
+				XPLICIT_ASSERT(actor);
 
 				if (xplicit_join_event(server->get(peer_idx), actor, server))
 				{
 					XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					++m_player_size;
 				}
-
 			}
 		}
 

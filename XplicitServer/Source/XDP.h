@@ -34,11 +34,10 @@ namespace Xplicit::XDP
 
 	};
 
-
 	class XDPListener final : public EventListener
 	{
 	public:
-		XDPListener(Socket listeningSocket);
+		XDPListener(Socket socket);
 
 		virtual ~XDPListener() = default;
 
