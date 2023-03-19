@@ -47,6 +47,10 @@
 
 namespace Xplicit::Renderer::DX11
 {
+	class DriverSystemD3D11;
+	class D3D11ShaderSystem;
+	class D3D11RenderComponent;
+
 	class XPLICIT_API DriverSystemD3D11 : public DriverSystem
 	{
 	public:
@@ -133,15 +137,24 @@ namespace Xplicit::Renderer::DX11
 			ID3D10Blob* error_blob;
 			uint32_t flags1, flags2;
 
+			Microsoft::WRL::ComPtr<ID3D11HullShader> hull;
+			Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel;
+			Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex;
+
 		};
 
 		ShaderData* get() const;
 
 	public:
-		virtual int operator()() override;
+		virtual int compile() noexcept override;
+
+	private:
+		void update(D3D11RenderComponent* component);
 
 	private:
 		std::unique_ptr<ShaderData> m_data;
+
+		friend D3D11RenderComponent;
 
 	};
 
@@ -174,11 +187,14 @@ namespace Xplicit::Renderer::DX11
 		void create(std::unique_ptr<DriverSystemD3D11>& driver);
 
 		void set(DriverSystemD3D11* dx11);
+		void set(D3D11ShaderSystem* shader);
 
 		virtual void update() override;
-		virtual const char* name() noexcept override { return ("D3D11RenderComponent"); }
-		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_RENDER; }
+
+	public:
 		virtual bool should_update() noexcept override { return true; }
+		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_RENDER; }
+		virtual const char* name() noexcept override { return ("D3D11RenderComponent"); }
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertex_buffer;
@@ -191,10 +207,13 @@ namespace Xplicit::Renderer::DX11
 		D3D11_SUBRESOURCE_DATA m_index_data;
 		D3D11_BUFFER_DESC m_vertex_buf_desc;
 		D3D11_BUFFER_DESC m_index_buf_desc;
+		D3D11ShaderSystem* m_shader;
 		DriverSystemD3D11* m_driver;
 		Vertex* m_vertex_arr;
 		int64_t* m_index_arr;
 		HRESULT m_hr;
+
+		friend D3D11ShaderSystem;
 
 	};
 }

@@ -75,7 +75,7 @@ namespace Xplicit::Renderer
 		const uint8_t& type() noexcept { return m_type; }
 
 	public:
-		virtual int operator()() = 0;
+		virtual int compile() = 0;
 
 	protected:
 		string m_shader;

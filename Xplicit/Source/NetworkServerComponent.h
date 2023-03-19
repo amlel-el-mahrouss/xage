@@ -41,8 +41,6 @@ namespace Xplicit
 
 	private:
 		std::vector<std::shared_ptr<NetworkPeer>> m_peers;
-
-	private:
 		PrivateAddressData m_server;
 		std::string m_dns;
 		Socket m_socket;

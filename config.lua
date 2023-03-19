@@ -32,6 +32,7 @@ XPLICIT_CONFIG = {
     	  "Vendor/irr/include",
     	  "Nplicit/Source/",
 	  "Vendor/libzip/lib",
+	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -63,6 +64,7 @@ XPLICIT_SERVER_CONFIG = {
     	  "Vendor/irr/include",
     	  "Nplicit/Source/",
 	  "Vendor/libzip/lib",
+	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -98,6 +100,7 @@ XPLICIT_CLIENT_CONFIG = {
         "Vendor/nuklear/",
     	  "Nplicit/Source/",
 	  "Vendor/libzip/lib",
+	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -132,6 +135,7 @@ XPLICIT_STUDIO_CONFIG = {
         "Vendor/nuklear/",
 	  "Vendor/libzip/lib",
     	  "Nplicit/Source/",
+	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -166,6 +170,7 @@ NPLICIT_CONFIG = {
         "Vendor/stb/",
 	  "Vendor/libzip/lib",
         "Vendor/nuklear/",
+	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };

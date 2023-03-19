@@ -22,7 +22,7 @@
 
 namespace Xplicit::Renderer::DX11
 {
-	int D3D11ShaderSystem::operator()()
+	int D3D11ShaderSystem::compile() noexcept
 	{
 		if (!m_data)
 			return 1;
@@ -36,6 +36,28 @@ namespace Xplicit::Renderer::DX11
 	}
 
 	D3D11ShaderSystem::ShaderData* D3D11ShaderSystem::get() const { return m_data.get(); }
+
+	void D3D11ShaderSystem::update(D3D11RenderComponent* component)
+	{
+		if (!component)
+			return;
+
+		if (this->m_data->vertex)
+		{
+			component->m_driver->get().Ctx->VSSetShader(this->m_data->vertex.Get(), nullptr, 0);
+			return;
+		}
+		else if (this->m_data->pixel)
+		{
+			component->m_driver->get().Ctx->PSSetShader(this->m_data->pixel.Get(), nullptr, 0);
+			return;
+		}
+		else if (this->m_data->hull)
+		{
+			component->m_driver->get().Ctx->HSSetShader(this->m_data->hull.Get(), nullptr, 0);
+			return;
+		}
+	}
 }
 
 #endif

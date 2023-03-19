@@ -16,6 +16,8 @@
 
 #include "PlayerMovementEvent.h"
 
+#define XPLICIT_DEFAULT_VEL (10.f)
+
 namespace Xplicit
 {
 	/// <summary>
@@ -53,7 +55,26 @@ namespace Xplicit
 	}
 
 	PlayerMovementEvent::PlayerMovementEvent()
+		: m_walk_speed_gamevar(GameVarSingleton::get_singleton_ptr()->get("Xplicit::WalkSpeed")), 
+		m_side_speed_gamevar(GameVarSingleton::get_singleton_ptr()->get("Xplicit::SideSpeed")), 
+		m_jump_height_gamevar(GameVarSingleton::get_singleton_ptr()->get("Xplicit::JumpHeight"))
 	{
+		auto val = std::to_string(XPLICIT_DEFAULT_VEL);
+
+		// create them if not already created
+		if (!m_walk_speed_gamevar)
+			GameVarSingleton::get_singleton_ptr()->create("Xplicit::WalkSpeed", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
+
+		if (!m_side_speed_gamevar)
+			GameVarSingleton::get_singleton_ptr()->create("Xplicit::SideSpeed", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
+
+		if (!m_jump_height_gamevar)
+			GameVarSingleton::get_singleton_ptr()->create("Xplicit::JumpHeight", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
+	
+		// Seek them again.
+		m_walk_speed_gamevar = GameVarSingleton::get_singleton_ptr()->get("Xplicit::WalkSpeed");
+		m_side_speed_gamevar = GameVarSingleton::get_singleton_ptr()->get("Xplicit::SideSpeed");
+		m_jump_height_gamevar = GameVarSingleton::get_singleton_ptr()->get("Xplicit::JumpHeight");
 	}
 
 	PlayerMovementEvent::~PlayerMovementEvent() 
@@ -83,17 +104,28 @@ namespace Xplicit
 			if (peer->public_hash != peer->packet.public_hash)
 				continue;
 
-			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD ||
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD ||
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT ||
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
+			if (xplicit_can_move(actors, actor))
 			{
-				if (xplicit_can_move(actors, actor))
-				{
-					peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
-					peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
-				}
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+
+				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
+					actor->Position.X += m_walk_speed_gamevar ? m_walk_speed_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+
+				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
+					actor->Position.X -= m_walk_speed_gamevar ? m_walk_speed_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+
+				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
+					actor->Position.Y -= m_side_speed_gamevar ? m_side_speed_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+
+				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
+					actor->Position.Y -= m_side_speed_gamevar ? m_side_speed_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+
+				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
+					actor->Position.Z -= m_jump_height_gamevar ? m_jump_height_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
 			}
 		}
 	}
 }
+
+#undef XPLICIT_DEFAULT_VEL

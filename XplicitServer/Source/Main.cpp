@@ -106,9 +106,9 @@ static void xplicit_attach_mono()
 
 static void xplicit_print_help()
 {
-	puts("\a-------------- Xplicit Shell --------------");
-	puts("exit: exits the server.");
-	puts("-------------- Xplicit Shell --------------");
+	XPLICIT_INFO("\a-------------- XplicitNgin Game Server - Manual --------------");
+	XPLICIT_INFO("exit: exits the server.");
+	XPLICIT_INFO("-------------- XplicitNgin Game Server - Manual --------------");
 }
 
 static void xplicit_load_shell()
@@ -219,7 +219,7 @@ int main(int argc, char** argv)
 		XPLICIT_CRITICAL(err.what());
 
 #ifdef XPLICIT_WINDOWS
-		Xplicit::GUI::message_box(L"Xplicit Dedicated Server", L"Fatal server error!", MB_OK | MB_ICONASTERISK);
+		Xplicit::GUI::message_box(L"XplicitNgin Server", L"Fatal server error!", MB_OK | MB_ICONASTERISK);
 #endif
 #endif
 
