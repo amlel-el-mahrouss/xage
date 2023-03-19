@@ -24,6 +24,7 @@ XPLICIT_CONFIG = {
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
 	  "dxgi",
 	  "d3d11",
+	  "d2d1",
 	  "d3dcompiler"
     },
     ["_INCDIR"] = {
@@ -124,6 +125,7 @@ XPLICIT_STUDIO_CONFIG = {
     	"bin/Debug/Xplicit",
 	"d3d11",
 	"dxgi",
+	  "d2d1",
     },
     ["_INCDIR"] = {
         "Vendor/",

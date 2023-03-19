@@ -4,14 +4,10 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: RendererD3D11.h
- *			Purpose: C++ D3D Renderer API.
+ *			File: FrameComponent.cpp
+ *			Purpose:
  *
  * =====================================================================
  */
 
-#pragma once
-
-#include "Xplicit.h"
-#include "DriverD3D11.h"
-
+#include "FrameComponent.h"

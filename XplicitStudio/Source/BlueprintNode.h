@@ -14,4 +14,5 @@
 #pragma once
 
 #include <Xplicit.h>
-#include <RendererD2D.h>
+#include <FrameComponent.h>
+

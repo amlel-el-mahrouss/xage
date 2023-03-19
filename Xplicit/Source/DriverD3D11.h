@@ -15,10 +15,10 @@
 #include "DriverSystem.h"
 #include "Component.h"
 
-#ifdef XPLICIT_WINDOWS
-
 #include "Xplicit.h"
 #include "Avx.h"
+
+#ifdef XPLICIT_WINDOWS
 
 #include <wrl.h> /* Microsoft::WRL::ComPtr */
 #include <dxgi.h>

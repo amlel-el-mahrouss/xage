@@ -14,6 +14,8 @@
 * @file
 */
 
+#include "BlueprintNode.h"
+
 #include <DriverD3D11.h>
 #include <Bites.h>
 
@@ -42,8 +44,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		XPLICIT_ASSERT(renderer);
 
  		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::D3D11RenderComponent>();
-
-
+		auto frame = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::XUI::FrameComponent>(window->get().WindowHandle);
 
 		component->push_back(Xplicit::Nplicit::Vector<float>(-1.0f, -1.0f, 0.0f), 
 			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
