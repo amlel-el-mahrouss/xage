@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  * 
  *			File: MonoInterop.h
- *			Purpose: C# Classes in C++
+ *			Purpose: C# Interop
  * 
  * =====================================================================
  */
@@ -19,6 +19,10 @@
 
 namespace Xplicit
 {
+	class MonoClassComponent;
+	class MonoEventListener;
+	class MonoEvent;
+
 	class XPLICIT_API MonoClassComponent final : public Component
 	{
 	public:
@@ -49,15 +53,24 @@ namespace Xplicit
 		MonoObject* m_object_klass;
 		MonoClass* m_klass;
 
+		friend MonoEventListener;
+
 	};
 
+	/// <summary>
+	/// Generic Mono Class, written in C++
+	/// </summary>
 	class XPLICIT_API MonoEvent final : public Event
 	{
 	public:
 		MonoEvent() = delete;
 
 	public:
-		MonoEvent(const char* event_name);
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="name">The Event name</param>
+		MonoEvent(const char* name);
 		virtual ~MonoEvent() = default;
 
 		MonoEvent& operator=(const MonoEvent&) = default;
@@ -65,6 +78,33 @@ namespace Xplicit
 
 		virtual void operator()() override;
 
+		virtual const char* name() noexcept override;
+
+	private:
+		std::string m_name;
+
+	};
+
+	/// 
+	/// <summary>
+	/// MonoEventListener: Inheritable Class
+	/// which listens at a MonoEvent.
+	/// </summary>
+	/// 
+	class XPLICIT_API MonoEventListener : public EventListener
+	{
+	public:
+		MonoEventListener() = delete;
+		virtual ~MonoEventListener() = default;
+
+	public:
+		MonoEventListener(std::string& str);
+		MonoEventListener(const char* str);
+
+		MonoEventListener& operator=(const MonoEventListener&) = default;
+		MonoEventListener(const MonoEventListener&) = default;
+
+		virtual void update(EventTypePtr pEvent) override;
 		virtual const char* name() noexcept override;
 
 	private:

@@ -82,10 +82,6 @@ namespace Xplicit::Bites
 
 		open_prebuilt_dialogs();
 
-		/*
-		 * Read game settings here 
-		 */
-
 		m_settings = std::make_unique<Settings>();
 
 		XPLICIT_ASSERT(m_settings);

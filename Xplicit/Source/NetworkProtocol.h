@@ -152,11 +152,12 @@ namespace Xplicit
     public:
         void reset() noexcept;
 
+    public:
         template <typename As>
-        As* get_as() noexcept
+        As* get_as(const int off = 0) noexcept
         {
             XPLICIT_ASSERT(*opt != 0);
-            return reinterpret_cast<As*>(opt);
+            return reinterpret_cast<As*>(opt + off);
         }
 
     };

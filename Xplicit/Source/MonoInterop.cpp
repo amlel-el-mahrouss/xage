@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: MonoInterop.cpp
- *			Purpose: C# Classes in C++
+ *			Purpose: C# Interop.
  *
  * =====================================================================
  */
@@ -133,15 +133,12 @@ namespace Xplicit
 	MonoEvent::MonoEvent(const char* event_name) 
 		: m_name(event_name)
 	{
+		XPLICIT_ASSERT(event_name);
+		XPLICIT_ASSERT(*event_name != 0);
+
 		if (m_name.empty())
-		{
-			XPLICIT_CRITICAL("EngineError: MonoEvent::MonoEvent");
-			XPLICIT_CRITICAL("EngineError: m_name.empty()");
-		}
-		else
-		{
-			XPLICIT_INFO("MonoEvent: Listening at: " + m_name);
-		}
+			throw EngineError();
+
 	}
 
 	void MonoEvent::operator()()
@@ -149,12 +146,12 @@ namespace Xplicit
 		if (m_name.empty())
 			return;
 
-		auto scripts = ComponentManager::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
-
-		for (size_t i = 0; i < scripts.size(); i++)
+		for (size_t i = 0; i < m_listeners.size(); i++)
 		{
-			if (scripts[i])
-				scripts[i]->script_update();
+			auto* listener = m_listeners[i];
+
+			if (strcmp(listener->name(), this->name()) == 0)
+				listener->update(this);
 		}
 	}
 
@@ -178,4 +175,24 @@ namespace Xplicit
 
 		return false;
 	}
+
+	MonoEventListener::MonoEventListener(std::string& str) : m_name(std::move(str)) {}
+	MonoEventListener::MonoEventListener(const char* str) : m_name(str) {}
+
+	void MonoEventListener::update(EventTypePtr pEvent)
+	{
+		(void)pEvent;
+
+		auto components = ComponentManager::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
+
+		for (size_t i = 0; i < components.size(); ++i)
+		{
+			auto* comp = components[i];
+
+			if (strcmp(comp->name(), m_name.c_str()) == 0)
+				comp->script_update();
+		}
+	}
+
+	const char* MonoEventListener::name() noexcept { return ("EventListener"); }
 }

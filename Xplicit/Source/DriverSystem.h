@@ -21,8 +21,8 @@ namespace Xplicit::Renderer
 {
 	enum class RENDER_SYSTEM : uint8_t
 	{
-		DIRECT3D11, // Direct3D 11, to make things explicit.
-		VULKAN, // For Mobile users
+		DIRECT3D11,
+		VULKAN,
 		INVALID,
 	};
 
@@ -40,7 +40,8 @@ namespace Xplicit::Renderer
 
 	};
 
-	enum XPLICIT_SHADER_FORMAT : uint8_t {
+	enum XPLICIT_SHADER_FORMAT : uint8_t 
+	{
 		FORMAT_GLSL, // Vulkan legacy shader.
 		FORMAT_HLSL, // Direct3D 11 shader type.
 		FORMAT_COUNT,

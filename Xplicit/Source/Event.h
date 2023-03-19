@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Event.h
- *			Purpose: Xplicit Event Dispatcher
+ *			Purpose: Xplicit Event Dispatcher and listeners
  *
  * =====================================================================
  */
@@ -70,7 +70,7 @@ namespace Xplicit
 		void push_back(EventListener* listener);
 		bool remove(EventListener* listener);
 
-	private:
+	protected:
 		std::vector<EventListener*> m_listeners;
 
 	};
@@ -90,6 +90,7 @@ namespace Xplicit
 		EventListener(const EventListener&) = default;
 
 		virtual void update(EventTypePtr pEvent) {}
+		virtual const char* name() noexcept { return ("EventListener"); }
 
 	};
 }

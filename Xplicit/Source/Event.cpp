@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Event.cpp
- *			Purpose: Xplicit Event Dispatcher
+ *			Purpose: Xplicit Event Dispatcher and listeners
  *
  * =====================================================================
  */

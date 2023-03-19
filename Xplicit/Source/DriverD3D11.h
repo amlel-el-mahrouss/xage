@@ -6,7 +6,6 @@
  *
  *			File: DriverD3D11.h
  *			Purpose: C++ Rendering Driver for Direct3D 11
- *			Very Low Level by the way.
  *
  * =====================================================================
  */

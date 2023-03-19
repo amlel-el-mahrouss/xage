@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: DriverD3D11.cpp
- *			Purpose: C++ Rendering Driver for Direct 3D 11
+ *			Purpose: C++ Rendering Driver for Direct3D 11
  *
  * =====================================================================
  */

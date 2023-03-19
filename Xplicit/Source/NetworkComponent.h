@@ -91,11 +91,12 @@ namespace Xplicit {
         UDPNetworkPacket& get() noexcept;
         bool is_reset() noexcept;
 
+    public:
         template <typename As>
-        As* get_as() noexcept
+        As* get_as(const int off = 0) noexcept
         {
-            XPLICIT_ASSERT(m_opt[0] != 0);
-            return reinterpret_cast<As*>(m_opt);
+            XPLICIT_ASSERT(*m_opt != 0);
+            return reinterpret_cast<As*>(m_opt + off);
         }
 
     private:
