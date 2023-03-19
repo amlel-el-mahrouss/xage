@@ -24,14 +24,14 @@ namespace Xplicit::XDP
 
 	}
 
-	XDPDownloadFile::XDPDownloadFile(char* bytes, size_t len)
-	{
-		this->set(bytes, len);
-	}
-
 	XDPDownloadFile::~XDPDownloadFile()
 	{
 
+	}
+
+	XDPDownloadFile::XDPDownloadFile(char* bytes, size_t len)
+	{
+		this->set(bytes, len);
 	}
 
 	int XDPDownloadFile::set(char* bytes, size_t len)

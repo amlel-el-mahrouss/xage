@@ -48,6 +48,8 @@ namespace Xplicit::XDP
 	public:
 		XDPDownloadFile();
 		~XDPDownloadFile();
+
+	public:
 		XDPDownloadFile(char* bytes, size_t len);
 
 		XDPDownloadFile& operator=(const XDPDownloadFile&) = default;

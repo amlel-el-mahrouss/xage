@@ -89,7 +89,11 @@ namespace Xplicit::Renderer::DX11
 			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
 			nullptr,
+#ifdef XPLICIT_DEBUG
+			D3D11_CREATE_DEVICE_DEBUG,
+#else
 			0,
+#endif
 			feature,
 			ARRAYSIZE(feature),
 			D3D11_SDK_VERSION,
