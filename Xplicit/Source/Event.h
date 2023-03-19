@@ -23,10 +23,10 @@ namespace Xplicit
 	class XPLICIT_API EventDispatcher final 
 	{
 	private:
-		EventDispatcher() {}
+		EventDispatcher() = default;
 
 	public:
-		~EventDispatcher() {}
+		~EventDispatcher() = default;
 
 		EventDispatcher& operator=(const EventDispatcher&) = delete;
 		EventDispatcher(const EventDispatcher&) = delete;
@@ -61,17 +61,17 @@ namespace Xplicit
 		Event(const Event&) = default;
 
 		virtual void operator()();
-		virtual const char* name() noexcept;
-		
-	public:
 		void update();
 
 	public:
 		void add(EventListener* listener);
 		bool remove(EventListener* listener);
+		virtual const char* name() noexcept;
 
 	protected:
 		std::vector<EventListener*> m_listeners;
+
+		friend EventDispatcher;
 
 	};
 
@@ -95,7 +95,7 @@ namespace Xplicit
 		/// Update function
 		/// </summary>
 		/// <param name="pEvent">The Event* class</param>
-		virtual void update(EventTypePtr pEvent) {}
+		virtual void update(EventTypePtr ptr_event) {}
 		virtual const char* name() noexcept { return ("EventListener"); }
 
 	};

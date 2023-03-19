@@ -30,11 +30,6 @@
 #endif
 #endif
 
-
-#ifndef XPLICIT_SLEEP
-#define XPLICIT_SLEEP Sleep
-#endif
-
 namespace Xplicit {
     enum NETWORK_ERR : int
     {
@@ -91,19 +86,10 @@ namespace Xplicit {
         UDPNetworkPacket& get() noexcept;
         bool is_reset() noexcept;
 
-    public:
-        template <typename As>
-        As* get_as(const int off = 0) noexcept
-        {
-            XPLICIT_ASSERT(*m_opt != 0);
-            return reinterpret_cast<As*>(m_opt + off);
-        }
-
     private:
         bool reset() noexcept;
 
     private:
-        char m_opt[XPLICIT_NETWORK_OPT_SIZE];
         PrivateAddressData m_addr;
         UDPNetworkPacket m_packet;
         Socket m_socket;

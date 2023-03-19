@@ -101,3 +101,20 @@ using namespace scene;
 #ifndef XPLICIT_ENV
 #define XPLICIT_ENV getenv
 #endif // XPLICIT_ENV
+
+#define XPLICIT_COPY_DELETE(KLASS)\
+KLASS& operator=(const KLASS&) = delete;\
+KLASS(const KLASS&) = delete;\
+
+
+
+#define XPLICIT_COPY_DEFAULT(KLASS)\
+KLASS& operator=(const KLASS&) = default;\
+KLASS(const KLASS&) = default;\
+
+
+
+
+#ifndef XPLICIT_SLEEP
+#define XPLICIT_SLEEP Sleep
+#endif

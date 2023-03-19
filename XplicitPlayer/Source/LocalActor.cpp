@@ -30,6 +30,8 @@ namespace Xplicit::Client
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("LocalActor::LocalActor");
 #endif
+
+		memset(&m_packet, 0, sizeof(UDPNetworkPacket));
 	}
 
 	LocalActor::~LocalActor()
@@ -45,15 +47,13 @@ namespace Xplicit::Client
 		if (!m_network)
 			return;
 
-		auto& pckt = m_network->get();
-		
-		if (pckt.public_hash == m_public_hash)
+		m_packet = m_network->get();
+
+		if (m_packet.public_hash == m_public_hash)
 		{
-			if (pckt.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
-				pckt.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
+			if (m_packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
+				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
 			{
-				auto pos = m_network->get_as<PositionPacket>();
-				_Node->setPosition(vector3df(pos->X, pos->Y, pos->Z));
 			}
 		}
 	}
@@ -71,18 +71,37 @@ namespace Xplicit::Client
 
 	const char* LocalMoveEvent::name() noexcept { return ("LocalMoveEvent"); }
 
+#define XPLICIT_SEND_NETCMD(SLOT, CMD)\
+	XPLICIT_ASSERT(m_public_hash != -1);\
+	m_packet.public_hash = m_public_hash;\
+\
+	m_packet.cmd[SLOT] = CMD;\
+	m_network->send(m_packet);\
+
+
+
 	void LocalMoveEvent::operator()()
 	{
 		if (!m_network)
 			return;
 
-		XPLICIT_ASSERT(m_public_hash != -1);
-		m_packet.public_hash = m_public_hash;
-
 		if (KB->key_down(Details::KEY_KEY_W))
 		{
-			m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_FORWARD;
-			m_network->send(m_packet);
+			XPLICIT_SEND_NETCMD(XPLICIT_NETWORK_CMD_FORWARD, NETWORK_CMD_FORWARD);
+		}
+		else if (KB->key_down(Details::KEY_KEY_S))
+		{
+			XPLICIT_SEND_NETCMD(XPLICIT_NETWORK_CMD_BACKWARD, NETWORK_CMD_BACKWARD);
+		}
+		else if (KB->key_down(Details::KEY_KEY_A))
+		{
+			XPLICIT_SEND_NETCMD(XPLICIT_NETWORK_CMD_LEFT, NETWORK_CMD_LEFT);
+		}
+		else if (KB->key_down(Details::KEY_KEY_D))
+		{
+			XPLICIT_SEND_NETCMD(XPLICIT_NETWORK_CMD_RIGHT, NETWORK_CMD_RIGHT);
 		}
 	}
+
+#undef XPLICIT_SEND_NETCMD
 }

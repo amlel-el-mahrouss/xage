@@ -146,12 +146,14 @@ namespace Xplicit
 		if (m_name.empty())
 			return;
 
-		for (size_t i = 0; i < m_listeners.size(); i++)
-		{
-			auto* listener = m_listeners[i];
+		auto components = ComponentManager::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
 
-			if (strcmp(listener->name(), this->name()) == 0)
-				listener->update(this);
+		for (size_t i = 0; i < components.size(); ++i)
+		{
+			auto* comp = components[i];
+
+			if (strcmp(comp->name(), m_name.c_str()) == 0)
+				comp->script_update();
 		}
 	}
 

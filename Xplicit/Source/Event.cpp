@@ -41,13 +41,13 @@ namespace Xplicit
 
 	void Event::update() 
 	{
+		this->operator()();
+
 		for (size_t i = 0; i < m_listeners.size(); i++)
 		{
 			XPLICIT_ASSERT(m_listeners[i]);
 			m_listeners[i]->update(this);
 		}
-
-		this->operator()(); 
 	}
 
 	const char* Event::name() noexcept { return ("Event"); }

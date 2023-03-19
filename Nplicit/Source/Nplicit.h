@@ -38,14 +38,14 @@ namespace Xplicit::Nplicit
 	};
 
 	template <typename TypeFloat = float>
-	class NPLICIT_API DynamicsSystem final
+	class NPLICIT_API SolverSystem final
 	{
 	public:
-		DynamicsSystem() : m_components(), m_gravity(0, -9.81f, 0) {}
-		virtual ~DynamicsSystem() = default;
+		SolverSystem() : m_components(), m_gravity(0, -9.81f, 0) {}
+		virtual ~SolverSystem() = default;
 
-		DynamicsSystem& operator=(const DynamicsSystem&) = delete;
-		DynamicsSystem(const DynamicsSystem&) = delete;
+		SolverSystem& operator=(const SolverSystem&) = delete;
+		SolverSystem(const SolverSystem&) = delete;
 
 		void step(const int32_t& dt) noexcept
 		{

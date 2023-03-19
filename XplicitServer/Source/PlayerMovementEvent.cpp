@@ -53,6 +53,15 @@ namespace Xplicit
 		return true;
 	}
 
+	PlayerMovementEvent::PlayerMovementEvent()
+	{
+	}
+
+	PlayerMovementEvent::~PlayerMovementEvent() 
+	{
+		
+	}
+
 	/// <summary>
 	/// The Main loop behind the Actor movement event.
 	/// Basic and simple.
@@ -70,10 +79,10 @@ namespace Xplicit
 				!actor->get())
 				continue;
 
-			if (actor->get()->public_hash != actor->get()->public_hash)
-				continue;
-
 			NetworkPeer* peer = actor->get();
+
+			if (peer->public_hash != peer->packet.public_hash)
+				continue;
 
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD ||
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD ||
@@ -82,16 +91,6 @@ namespace Xplicit
 			{
 				if (xplicit_can_move(actors, actor))
 				{
-					auto pos_packet = peer->get_as<PositionPacket>();
-
-					pos_packet->X = actor->Position.X +=
-						(peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD ? 10.f : 
-							(peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD ? -10.f : 0));
-
-					pos_packet->Y = actor->Position.Y +=
-						(peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_FORWARD ? 10.f :
-							(peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_BACKWARD ? -10.f : 0));
-
 					peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 					peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 				}

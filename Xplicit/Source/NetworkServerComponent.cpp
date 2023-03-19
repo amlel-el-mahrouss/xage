@@ -131,23 +131,22 @@ namespace Xplicit
 		{
 			for (size_t i = 0; i < server->size(); ++i)
 			{
-				static char tmp[sizeof(UDPNetworkPacket) + XPLICIT_NETWORK_OPT_SIZE];
-				int fromLen = sizeof(struct sockaddr_in);
+				int from_len = sizeof(PrivateAddressData);
 
-				int res = ::recvfrom(server->m_socket, tmp, sizeof(UDPNetworkPacket) * XPLICIT_MAX_PEEK_SIZE, 0,
-					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &fromLen);
+				static UDPNetworkPacket packet;
+				int res = ::recvfrom(server->m_socket, reinterpret_cast<char*>(&packet),
+					sizeof(UDPNetworkPacket), 0,
+					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &from_len);
 
 				if (res == SOCKET_ERROR)
 					break;
 
-				if (tmp[0] == XPLICIT_NETWORK_MAG_0 &&
-					tmp[1] == XPLICIT_NETWORK_MAG_1 &&
-					(reinterpret_cast<UDPNetworkPacket*>(&tmp))->magic[2] == XPLICIT_NETWORK_MAG_2 && 
-					server->get(i)->hash == (reinterpret_cast<UDPNetworkPacket*>(&tmp))->hash &&
-					(reinterpret_cast<UDPNetworkPacket*>(&tmp))->version == XPLICIT_NETWORK_VERSION)
+				if (server->get(i)->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
+					server->get(i)->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+					server->get(i)->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
+					server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
 				{
-					std::memcpy(&server->get(i)->packet, tmp, sizeof(UDPNetworkPacket));
-					std::memcpy(server->get(i)->opt, tmp + sizeof(UDPNetworkPacket), XPLICIT_NETWORK_OPT_SIZE);
+					server->get(i)->packet = packet;
 				}
 			}
 		}
@@ -167,12 +166,11 @@ namespace Xplicit
 
 				peer->packet.version = XPLICIT_NETWORK_VERSION;
 
-				static char tmp[sizeof(UDPNetworkPacket) + XPLICIT_NETWORK_OPT_SIZE];
-
-				std::memcpy(tmp , &server->get(i)->packet, sizeof(UDPNetworkPacket));
-				std::memcpy(tmp + sizeof(UDPNetworkPacket), server->get(i)->opt, XPLICIT_NETWORK_OPT_SIZE);
-
-				sendto(server->m_socket, tmp, peer->packet.size, 0, reinterpret_cast<sockaddr*>(&peer->addr), sizeof(PrivateAddressData));
+				::sendto(server->m_socket, reinterpret_cast<const char*>(&server->get(i)->packet), 
+					sizeof(UDPNetworkPacket), 
+					0, 
+					reinterpret_cast<sockaddr*>(&peer->addr), 
+					sizeof(PrivateAddressData));
 			}
 		}
 	}

@@ -44,8 +44,8 @@ namespace Xplicit::Client
 
 	private:
 		NetworkComponent* m_network;
-		CameraComponent* m_camera;
 		UDPNetworkPacket m_packet;
+		CameraComponent* m_camera;
 		int64_t m_public_hash;
 
 	};

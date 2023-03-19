@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "SDK.h" /* For NplicitNgin */
+
 #include "Actor.h"
 
 namespace Xplicit
@@ -25,8 +27,8 @@ namespace Xplicit
 	class PlayerMovementEvent : public Event
 	{
 	public:
-		PlayerMovementEvent() = default;
-		virtual ~PlayerMovementEvent() = default;
+		PlayerMovementEvent();
+		virtual ~PlayerMovementEvent();
 
 		PlayerMovementEvent& operator=(const PlayerMovementEvent&) = default;
 		PlayerMovementEvent(const PlayerMovementEvent&) = default;

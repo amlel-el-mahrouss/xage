@@ -26,11 +26,6 @@
 #define XPLICIT_ADDRESS_ANY_STR "0.0.0.0"
 #endif
 
-#ifndef XPLICIT_MAX_PEEK_SIZE
- /* how many spaces should we attribute */
-#define XPLICIT_MAX_PEEK_SIZE (2)
-#endif
-
 #define XPLICIT_NETWORK_MAG_0 ('X')
 #define XPLICIT_NETWORK_MAG_1 ('D')
 #define XPLICIT_NETWORK_MAG_2 ('P')
@@ -41,8 +36,6 @@
 #ifndef XPLICIT_INVALID_ADDR
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
-
-#define XPLICIT_NETWORK_OPT_SIZE (sizeof(UDPNetworkPacket) * XPLICIT_MAX_PEEK_SIZE)
 
 #define XPLICIT_NETWORK_VERSION (1)
 
@@ -133,7 +126,6 @@ namespace Xplicit
         UniqueAddress unique_addr; /* unique network address of this peer */
         PrivateAddressData addr; /* current socket address. */
         UDPNetworkPacket packet; /* current network packet. */
-        char opt[XPLICIT_NETWORK_OPT_SIZE]; /* additional data */
         int64_t public_hash; /* Public hash, for other clients */
         NETWORK_STAT stat; /* current network status */
         int64_t hash; /* connection hash. */
@@ -151,20 +143,6 @@ namespace Xplicit
 
     public:
         void reset() noexcept;
-
-    public:
-        /// <summary>
-        /// Returns an optional data at off
-        /// </summary>
-        /// <typeparam name="As">The Class to reinterpret_cast.</typeparam>
-        /// <param name="off">the offset (zero by default)</param>
-        /// <returns>'As' Pointer</returns>
-        template <typename As>
-        As* get_as(const int off = 0) noexcept
-        {
-            XPLICIT_ASSERT(*opt != 0);
-            return reinterpret_cast<As*>(opt + off);
-        }
 
     };
 

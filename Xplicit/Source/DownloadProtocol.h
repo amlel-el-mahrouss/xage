@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: XDPDownloadProtocol.h
- *			Purpose: XDP download protocol
+ *			File: DownloadProtocol.h
+ *			Purpose: Xplicit download protocol
  *
  * =====================================================================
  */
@@ -79,8 +79,12 @@ namespace Xplicit::XDP
 
 		void operator()(Socket& socket, const bool compressed = false);
 
+		operator bool() noexcept;
+		void set(const bool ready = false) noexcept;
+
 	private:
 		std::vector<XDPDownloadFile*> m_files;
+		bool m_ready;
 
 	};
 }

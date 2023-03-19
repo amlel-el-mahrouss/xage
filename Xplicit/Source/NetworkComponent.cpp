@@ -81,7 +81,8 @@ namespace Xplicit
 		inet_pton(AF_INET, ip, &m_addr.sin_addr);
 		m_addr.sin_port = htons(XPLICIT_UDP_PORT);
 
-		int result = ::connect(m_socket, reinterpret_cast<SOCKADDR*>(&m_addr), sizeof(m_addr));
+		int result = ::connect(m_socket, reinterpret_cast<SOCKADDR*>(&m_addr), 
+			sizeof(PrivateAddressData));
 
 		if (result == SOCKET_ERROR)
 			throw NetworkError(NETERR_INTERNAL_ERROR);
@@ -103,13 +104,8 @@ namespace Xplicit
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 		packet.version = XPLICIT_NETWORK_VERSION;
 
-		static char tmp[sizeof(UDPNetworkPacket) + XPLICIT_NETWORK_OPT_SIZE];
-
-		std::memcpy(tmp, &packet, sizeof(UDPNetworkPacket));
-		std::memcpy(tmp + sizeof(UDPNetworkPacket), this->m_opt, XPLICIT_NETWORK_OPT_SIZE);
-
 #ifdef XPLICIT_WINDOWS
-		int res = ::sendto(m_socket, tmp, packet.size, 0,
+		int res = ::sendto(m_socket, reinterpret_cast<const char*>(&packet), sizeof(UDPNetworkPacket), 0,
 			reinterpret_cast<SOCKADDR*>(&m_addr), sizeof(m_addr));
 
 		if (res == SOCKET_ERROR)
@@ -132,17 +128,12 @@ namespace Xplicit
 
 		int length{ sizeof(struct sockaddr_in) };
 
-		static char tmp[sizeof(UDPNetworkPacket) + XPLICIT_NETWORK_OPT_SIZE];
-
 #ifdef XPLICIT_WINDOWS
-		int res = ::recvfrom(m_socket, tmp, XPLICIT_NETWORK_OPT_SIZE, 0,
+		int res = ::recvfrom(m_socket, reinterpret_cast<char*>(&packet), sizeof(UDPNetworkPacket), 0,
 			(struct sockaddr*)&m_addr, &length);
 #else
 #pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
-
-		std::memcpy(&packet, tmp, sizeof(UDPNetworkPacket));
-		std::memcpy(this->m_opt, tmp + sizeof(UDPNetworkPacket), XPLICIT_NETWORK_OPT_SIZE);
 
 		if (length > 0)
 		{

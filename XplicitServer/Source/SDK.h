@@ -46,3 +46,6 @@ extern "C"
 // RapidXML (very fast XML library)
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
+
+// XDP
+#include <DownloadProtocol.h>
