@@ -82,15 +82,9 @@ namespace Xplicit::Client
 
 				m_network->send(stop_packet);
 
-				stop_packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
-
-				while (m_network->read(stop_packet))
-				{
-					if (stop_packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
-						break;
-				}
-
 				m_enabled = false;
+
+				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))
 			{

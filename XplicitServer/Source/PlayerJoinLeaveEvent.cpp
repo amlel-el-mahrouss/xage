@@ -23,7 +23,7 @@ namespace Xplicit
 		std::string uuid_str = uuids::to_string(uuid);
 		auto hash = std::hash<std::string>();
 		auto res = hash(uuid_str);
-		
+
 		return res;
 	}
 
@@ -35,7 +35,7 @@ namespace Xplicit
 			return false;
 
 		auto hash = xplicit_hash_from_uuid(cl->unique_addr.get());
-		
+
 		// I use version 4, to avoid collisions.
 		auto public_hash_uuid = UUIDFactory::version<4>();
 		cl->public_hash = xplicit_hash_from_uuid(public_hash_uuid);
@@ -45,12 +45,11 @@ namespace Xplicit
 		actor->set(cl);
 
 		cl->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
-
 		cl->packet.public_hash = cl->public_hash;
 		cl->packet.hash = hash;
 		cl->packet.size = sizeof(UDPNetworkPacket);
 
-		NetworkServerTraits::send(server);
+		cl->stat = NETWORK_STAT_CONNECTED;
 
 		return true;
 	}
@@ -64,31 +63,23 @@ namespace Xplicit
 			if (actors[at]->get() == cl)
 			{
 				ComponentManager::get_singleton_ptr()->remove<Actor>(actors[at]);
-
-				cl->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-				NetworkServerTraits::send(server);
-
 				cl->reset();
+
 				return true;
 			}
 		}
 
-
 		return false;
 	}
 
-	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() 
-		: m_player_size(0)
-	{
-	}
-
+	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() : m_player_size(0) {}
 	PlayerJoinLeaveEvent::~PlayerJoinLeaveEvent() {}
 
 	void PlayerJoinLeaveEvent::operator()()
 	{
 		auto server = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
-		if (!server) 
+		if (!server)
 			return;
 
 		NetworkServerTraits::correct_collisions(server);
@@ -104,7 +95,7 @@ namespace Xplicit
 		if (this->size() > XPLICIT_MAX_CONNECTIONS)
 			return false;
 
-		if (!server) 
+		if (!server)
 			return false;
 
 		for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
@@ -112,8 +103,12 @@ namespace Xplicit
 			if (server->get(peer_idx)->stat == NETWORK_STAT_CONNECTED)
 				continue;
 
-			// if we start the connection.
-			// then allocate the player and wait for a response.
+			if (server->get(peer_idx)->packet.size < 1)
+			{
+				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+				continue;
+			}
+
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
@@ -122,10 +117,9 @@ namespace Xplicit
 				if (!actor)
 					return false;
 
-				// setup the new actor.
 				if (xplicit_join_event(server->get(peer_idx), actor, server))
 				{
-					XPLICIT_INFO("[CONNECTING] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+					XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					++m_player_size;
 				}
 
