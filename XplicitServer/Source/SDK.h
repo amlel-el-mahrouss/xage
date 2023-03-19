@@ -28,6 +28,8 @@
 #include <MonoComponent.h>
 
 // Networking
+#include <SocketWrapper.h>
+#include <DownloadProtocol.h>
 #include <NetworkServerComponent.h>
 
 #ifdef XPLICIT_WINDOWS
@@ -46,6 +48,3 @@ extern "C"
 // RapidXML (very fast XML library)
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
-
-// XDP
-#include <DownloadProtocol.h>

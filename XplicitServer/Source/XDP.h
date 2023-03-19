@@ -37,7 +37,7 @@ namespace Xplicit::XDP
 	class XDPListener final : public EventListener
 	{
 	public:
-		XDPListener(Socket socket);
+		XDPListener();
 
 		virtual ~XDPListener() = default;
 
@@ -51,7 +51,7 @@ namespace Xplicit::XDP
 
 	private:
 		XDPDownloadTask m_task;
-		Socket m_socket;
+		Xplicit::Details::Socket m_socket;
 
 		friend XDPEvent;
 

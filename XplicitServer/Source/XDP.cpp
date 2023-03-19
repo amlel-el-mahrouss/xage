@@ -23,21 +23,17 @@ namespace Xplicit::XDP
 
 	const char* XDPEvent::name() noexcept { return ("XDPEvent"); }
 	
-	XDPListener::XDPListener(Socket socket)
-		: m_socket(socket)
+	XDPListener::XDPListener()
+		: m_socket(Xplicit::Details::SOCKET_TYPE::TCP)
 	{
-		XPLICIT_ASSERT(socket != SOCKET_ERROR);
+		XPLICIT_ASSERT(m_socket);
 	}
 
 	const char* XDPListener::name() noexcept { return ("XDPListener"); }
 	
 	void XDPListener::update(EventTypePtr ptr_event)
 	{
-		std::thread thrd([&]()-> void {
-			if (this->get().is_ready())
-				this->get()(this->m_socket);
-		});
-
-		thrd.detach();
+		if (this->get().is_ready())
+			this->get()(this->m_socket._Socket);
 	}
 }
