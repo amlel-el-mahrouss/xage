@@ -21,6 +21,15 @@
 
 namespace Xplicit::Renderer::DX11
 {
+	namespace Details
+	{
+		static void ThrowIfFailed(HRESULT hr)
+		{
+			if (FAILED(hr))
+				throw Win32Error("[ThrowIfFailed] Fatal DirectX error!");
+		}
+	}
+
 	struct DxgiOutputResult
 	{
 		uint32_t NumOutputs;
@@ -213,7 +222,7 @@ namespace Xplicit::Renderer::DX11
 
 	DriverSystemD3D11::PrivateData& DriverSystemD3D11::get() noexcept { return m_private; }
 
-	void DriverSystemD3D11::begin_scene(const float a, const float r, const float g, const float b) const 
+	void DriverSystemD3D11::begin_scene(const float a, const float r, const float g, const float b) 
 	{
 		XPLICIT_ASSERT(m_private.Ctx);
 		XPLICIT_ASSERT(m_private.DepthStencil);
@@ -226,13 +235,33 @@ namespace Xplicit::Renderer::DX11
 
 	}
 
-	bool DriverSystemD3D11::end_scene() const 
+	void DriverSystemD3D11::handle_device_removed()
+	{
+
+	}
+
+	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
+	{
+		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+		{
+			this->handle_device_removed();
+
+			return true;
+		}
+		else
+		{
+			Details::ThrowIfFailed(hr);
+		}
+
+		return false;
+	}
+
+	bool DriverSystemD3D11::end_scene() 
 	{
 		XPLICIT_ASSERT(m_private.SwapChain);
+		HRESULT hr = m_private.SwapChain->Present(m_private.VSync, 0);
 
-		m_private.SwapChain->Present(m_private.VSync, 0);
-
-		return true; 
+		return !this->check_device_removed(hr);
 	}
 
 	std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd) 
@@ -335,18 +364,18 @@ namespace Xplicit::Renderer::DX11
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create) Index Buffer initialization failed!");
 	}
 
-	void D3D11RenderComponent::set(DriverSystemD3D11* dx11)
+	void D3D11RenderComponent::set(DriverSystemD3D11* driver)
 	{
-		if (dx11)
-			m_driver = dx11;
+		if (driver)
+			m_driver = driver;
 	}
 
 	void D3D11RenderComponent::update()
 	{
 		if (m_driver && m_driver->get().Ctx)
 		{
-			const uint32_t stride = sizeof(Vertex);
-			const uint32_t offset = 0;
+			static const uint32_t stride = sizeof(Vertex);
+			static const uint32_t offset = 0;
 
 			m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), &stride, &offset);
 			m_driver->get().Ctx->IASetIndexBuffer(m_index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);

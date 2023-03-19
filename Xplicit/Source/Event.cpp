@@ -52,7 +52,7 @@ namespace Xplicit
 
 	const char* Event::name() noexcept { return ("Event"); }
 
-	void Event::push_back(EventListener* listener) 
+	void Event::add(EventListener* listener) 
 	{
 		if (listener)
 			m_listeners.push_back(listener);

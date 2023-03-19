@@ -98,7 +98,7 @@ namespace Xplicit::XDP
 		return false;
 	}
 
-	void XDPDownloadTask::operator()(Socket& socket)
+	void XDPDownloadTask::operator()(Socket& socket, const bool compressed)
 	{
 		if (socket != SOCKET_ERROR)
 		{
@@ -107,6 +107,8 @@ namespace Xplicit::XDP
 			data.push_back(XPLICIT_TCP_MAG_0);
 			data.push_back(XPLICIT_TCP_MAG_1);
 			data.push_back(XPLICIT_TCP_VERSION);
+
+			data.push_back(compressed);
 
 			std::jthread worker = std::jthread([&]() -> void
 				{

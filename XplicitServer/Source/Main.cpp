@@ -39,7 +39,7 @@ static void xplicit_read_xml()
 	XPLICIT_GET_DATA_DIR(data_path);
 	std::string path = data_path;
 
-	path += "\\"; 
+	path += "/"; 
 	path += XPLICIT_MANIFEST_FILE;
 
 	rapidxml::file<> xml{ path.c_str() };
@@ -64,7 +64,7 @@ static void xplicit_read_xml()
 			path.clear();
 
 			path += data_path;
-			path += "\\Lib\\";
+			path += "/Lib/";
 			path += dll;
 
 			auto csharp_dll = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
@@ -95,7 +95,7 @@ static void xplicit_attach_mono()
 	XPLICIT_GET_DATA_DIR(data);
 
 	std::string path = data;
-	path += "\\Lib\\Xplicit.dll"; // The game dll.
+	path += "/Lib/Xplicit.dll"; // The game dll.
 
 	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoEngineComponent>();
 	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
@@ -186,7 +186,6 @@ int main(int argc, char** argv)
 
 		if (!server)
 			return 1;
-
 
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();

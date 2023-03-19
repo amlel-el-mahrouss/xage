@@ -85,8 +85,8 @@ namespace Xplicit::Renderer::DX11
 		void setup(); // internal directx setup.
 
 	public:
-		void begin_scene(const float a, const float r, const float g, const float b) const;
-		bool end_scene() const;
+		void begin_scene(const float a, const float r, const float g, const float b);
+		bool end_scene();
 
 		PrivateData& get() noexcept;
 
@@ -96,31 +96,32 @@ namespace Xplicit::Renderer::DX11
 		operator bool() { return is_closed(); }
 
 	private:
+		void handle_device_removed();
+		bool check_device_removed(HRESULT hr);
+
+	private:
 		PrivateData m_private;
 
 	};
 
 	XPLICIT_API std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd);
 
-	class XPLICIT_API D3D11ShaderSystem final : public ShaderSystem
+	class XPLICIT_API D3D11ShaderSystem final : public virtual ShaderSystem
 	{
 	public:
 		D3D11ShaderSystem() = delete;
 
 	public:
 		explicit D3D11ShaderSystem(const pchar* filename, uint8_t format)
-			: ShaderSystem(filename, format), m_data(nullptr)
+			: ShaderSystem(filename, format), m_data(std::make_unique<ShaderData>())
 		{
-			XPLICIT_ASSERT(format != FORMAT_HLSL);
+			XPLICIT_ASSERT(format == FORMAT_HLSL);
 		}
 
 		virtual ~D3D11ShaderSystem() = default;
 
 		D3D11ShaderSystem& operator=(const D3D11ShaderSystem&) = default;
 		D3D11ShaderSystem(const D3D11ShaderSystem&) = default;
-
-		const string& shader() noexcept { return m_shader; }
-		const uint8_t& type() noexcept { return m_type; }
 
 	public:
 		class XPLICIT_API ShaderData
@@ -134,12 +135,13 @@ namespace Xplicit::Renderer::DX11
 
 		};
 
+		ShaderData* get() const;
+
 	public:
 		virtual int operator()() override;
-		void set(std::shared_ptr<ShaderData> data) noexcept;
 
 	private:
-		std::shared_ptr<ShaderData> m_data;
+		std::unique_ptr<ShaderData> m_data;
 
 	};
 

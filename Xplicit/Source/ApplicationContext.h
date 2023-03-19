@@ -334,6 +334,6 @@ namespace Xplicit
 
 #ifndef XPLICIT_GET_DATA_DIR
 #define XPLICIT_GET_DATA_DIR(DIR)\
-const char* DIR = "..\\Data";
+const char* DIR = "../Data";
 
 #endif

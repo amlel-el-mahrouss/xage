@@ -37,6 +37,7 @@ namespace Xplicit::XDP
 			public:
 				char magic[XPLICIT_TCP_MAG_COUNT];
 				char version;
+				bool compressed;
 
 			};
 		);
@@ -74,7 +75,7 @@ namespace Xplicit::XDP
 		void add(XDPDownloadFile* file);
 		bool remove(XDPDownloadFile* file);
 
-		void operator()(Socket& socket);
+		void operator()(Socket& socket, const bool compressed = false);
 
 	private:
 		std::vector<XDPDownloadFile*> m_files;

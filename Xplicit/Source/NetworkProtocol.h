@@ -153,6 +153,12 @@ namespace Xplicit
         void reset() noexcept;
 
     public:
+        /// <summary>
+        /// Returns an optional data at off
+        /// </summary>
+        /// <typeparam name="As">The Class to reinterpret_cast.</typeparam>
+        /// <param name="off">the offset (zero by default)</param>
+        /// <returns>'As' Pointer</returns>
         template <typename As>
         As* get_as(const int off = 0) noexcept
         {

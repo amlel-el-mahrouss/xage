@@ -31,6 +31,7 @@ XPLICIT_CONFIG = {
     	  "Xplicit/Vendor/include/",
     	  "Vendor/irr/include",
     	  "Nplicit/Source/",
+	  "Vendor/libzip/lib",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -51,8 +52,8 @@ XPLICIT_SERVER_CONFIG = {
     },
     ["_LIBDIR"] = {
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
-    	"Vendor/lib/Irrlicht",
-    	"bin/Debug/Xplicit",
+    	  "Vendor/lib/Irrlicht",
+    	  "bin/Debug/Xplicit",
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -61,6 +62,7 @@ XPLICIT_SERVER_CONFIG = {
         "Vendor/nuklear/",
     	  "Vendor/irr/include",
     	  "Nplicit/Source/",
+	  "Vendor/libzip/lib",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -95,6 +97,7 @@ XPLICIT_CLIENT_CONFIG = {
         "Vendor/stb/",
         "Vendor/nuklear/",
     	  "Nplicit/Source/",
+	  "Vendor/libzip/lib",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -127,6 +130,7 @@ XPLICIT_STUDIO_CONFIG = {
         "Vendor/lua/",
         "Vendor/stb/",
         "Vendor/nuklear/",
+	  "Vendor/libzip/lib",
     	  "Nplicit/Source/",
         "C:/Program Files/Mono/include/mono-2.0",
     }
@@ -160,6 +164,7 @@ NPLICIT_CONFIG = {
     	  "Vendor/irr/include",
         "Vendor/lua/",
         "Vendor/stb/",
+	  "Vendor/libzip/lib",
         "Vendor/nuklear/",
         "C:/Program Files/Mono/include/mono-2.0",
     }

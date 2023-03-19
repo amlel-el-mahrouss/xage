@@ -35,6 +35,8 @@ namespace Xplicit::Bites
 			HINSTANCE hInstance)
 			: m_traits()
 		{
+			RtlZeroMemory(&m_traits.WndClass, sizeof(WNDCLASSEXA));
+
 			m_traits.WndClass.cbSize = sizeof(WNDCLASSEXA);
 			m_traits.WndClass.lpfnWndProc = Win32_Window::window_procedure;
 			m_traits.WndClass.lpszClassName = wndClass;
@@ -77,6 +79,8 @@ namespace Xplicit::Bites
 				return 0;
 			}
 			}
+
+			return DefWindowProcA(hwnd, umessage, wparam, lparam);
 		}
 
 		~Win32_Window()

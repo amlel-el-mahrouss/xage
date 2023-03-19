@@ -67,7 +67,7 @@ namespace Xplicit
 		void update();
 
 	public:
-		void push_back(EventListener* listener);
+		void add(EventListener* listener);
 		bool remove(EventListener* listener);
 
 	protected:
@@ -75,8 +75,10 @@ namespace Xplicit
 
 	};
 
-	// TODO: EventListener
-
+	/// <summary>
+	/// It listens to a specific event.
+	/// For example, PlayerJoinEvent or whatever.
+	/// </summary>
 	class XPLICIT_API EventListener
 	{
 	public:
@@ -89,6 +91,10 @@ namespace Xplicit
 		EventListener& operator=(const EventListener&) = default;
 		EventListener(const EventListener&) = default;
 
+		/// <summary>
+		/// Update function
+		/// </summary>
+		/// <param name="pEvent">The Event* class</param>
 		virtual void update(EventTypePtr pEvent) {}
 		virtual const char* name() noexcept { return ("EventListener"); }
 

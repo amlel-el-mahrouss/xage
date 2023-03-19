@@ -21,12 +21,6 @@
 
 namespace Xplicit::Renderer::DX11
 {
-	void D3D11ShaderSystem::set(std::shared_ptr<ShaderData> data) noexcept
-	{
-		XPLICIT_ASSERT(m_data);
-		m_data = data;
-	}
-
 	int D3D11ShaderSystem::operator()()
 	{
 		if (!m_data)
@@ -39,6 +33,8 @@ namespace Xplicit::Renderer::DX11
 
 		return SUCCEEDED(hr) ? 0 : -1;
 	}
+
+	D3D11ShaderSystem::ShaderData* D3D11ShaderSystem::get() const { return m_data.get(); }
 }
 
 #endif

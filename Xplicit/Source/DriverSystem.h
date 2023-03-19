@@ -19,6 +19,9 @@
 
 namespace Xplicit::Renderer
 {
+	/// <summary>
+	/// Tells what rendering api we're using.
+	/// </summary>
 	enum class RENDER_SYSTEM : uint8_t
 	{
 		DIRECT3D11,
@@ -26,6 +29,9 @@ namespace Xplicit::Renderer
 		INVALID,
 	};
 
+	/// <summary>
+	/// A generic DriverSystem
+	/// </summary>
 	class XPLICIT_API DriverSystem
 	{
 	public:
@@ -47,6 +53,9 @@ namespace Xplicit::Renderer
 		FORMAT_COUNT,
 	};
 
+	/// <summary>
+	/// Generic Shader System
+	/// </summary>
 	class XPLICIT_API ShaderSystem
 	{
 	public:
@@ -74,12 +83,17 @@ namespace Xplicit::Renderer
 
 	};
 
+	/// <summary>
+	/// RENDER_TYPE describes the type of render we're doing
+	/// (Mesh, Texture, Polygon, Particles)
+	/// </summary>
 	enum class RENDER_TYPE
 	{
 		RENDER_MESH, // .dae meshes (.fbx support is planned)
 		RENDER_TEXTURE, // ID3D11Texture
 		RENDER_POLYGON, // applies for 2d and 3d contexts.
 		RENDER_PARTICLE_SYSTEM, // Emitter
+		RENDER_LIGHT,
 		RENDER_TYPE_COUNT,
 	};
 }
