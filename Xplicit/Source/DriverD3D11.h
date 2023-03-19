@@ -129,8 +129,8 @@ namespace Xplicit::Renderer::DX11
 		public:
 			char* entrypoint;
 			char* shader_type;
-			ID3D10Blob** blobs;
-			ID3D10Blob** error_blobs;
+			ID3D10Blob* blob;
+			ID3D10Blob* error_blob;
 			uint32_t flags1, flags2;
 
 		};

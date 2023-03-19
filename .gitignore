@@ -5,6 +5,8 @@
 # Prerequisites
 *.d
 
+*.cso
+
 Docs/html/
 
 *.ini

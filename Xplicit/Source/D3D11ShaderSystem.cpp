@@ -15,6 +15,7 @@
  */
 
 #include "DriverD3D11.h"
+
 #include <d3dcompiler.h>
 
 #ifdef XPLICIT_WINDOWS
@@ -29,7 +30,7 @@ namespace Xplicit::Renderer::DX11
 		HRESULT hr = D3DCompileFromFile(m_shader.c_str(), nullptr, nullptr, m_data->entrypoint, m_data->shader_type,
 			m_data->flags1, 
 			m_data->flags2, 
-			m_data->blobs, m_data->error_blobs);
+			&m_data->blob, &m_data->error_blob);
 
 		return SUCCEEDED(hr) ? 0 : -1;
 	}
