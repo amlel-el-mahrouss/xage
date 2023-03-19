@@ -38,7 +38,7 @@ namespace Xplicit::Bites
 			RtlZeroMemory(&m_traits.WndClass, sizeof(WNDCLASSEXA));
 
 			m_traits.WndClass.cbSize = sizeof(WNDCLASSEXA);
-			m_traits.WndClass.lpfnWndProc = Win32_Window::window_procedure;
+			m_traits.WndClass.lpfnWndProc = Win32_Window::cdecl_window_procedure;
 			m_traits.WndClass.lpszClassName = wndClass;
 			m_traits.WndClass.hInstance = hInstance;
 			m_traits.WndClass.hIcon = LoadIcon(hInstance, IDI_WINLOGO);
@@ -56,7 +56,16 @@ namespace Xplicit::Bites
 			x = (x - XPLICIT_MIN_WIDTH) / 2;
 			y = (y - XPLICIT_MIN_HEIGHT) / 2;
 
-			m_traits.WindowHandle = CreateWindowA(wndClass, wndName, WS_BORDER, x, y, XPLICIT_MIN_WIDTH, XPLICIT_MIN_HEIGHT, nullptr, nullptr, hInstance, nullptr);
+			m_traits.WindowHandle = CreateWindowA(wndClass, 
+				wndName, 
+				WS_BORDER, 
+				x, 
+				y, XPLICIT_MIN_WIDTH,
+				XPLICIT_MIN_HEIGHT, 
+				nullptr, 
+				nullptr,
+				hInstance, 
+				this);
 
 			XPLICIT_ASSERT(m_traits.WindowHandle);
 
@@ -64,9 +73,9 @@ namespace Xplicit::Bites
 			UpdateWindow(m_traits.WindowHandle);
 		}
 
-		static LRESULT CALLBACK window_procedure(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+		static LRESULT CALLBACK window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		{
-			switch (umessage)
+			switch (msg)
 			{
 			case WM_DESTROY:
 			{
@@ -80,7 +89,18 @@ namespace Xplicit::Bites
 			}
 			}
 
-			return DefWindowProcA(hwnd, umessage, wparam, lparam);
+			return DefWindowProcA(hwnd, msg, wparam, lparam);
+		}
+
+		static LRESULT CALLBACK cdecl_window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+		{
+			static Win32_Window* win = nullptr;
+
+			if (win == nullptr && msg == WM_CREATE)
+				win = reinterpret_cast<Win32_Window*>(lparam);
+
+			return win ? win->window_procedure(hwnd, msg, wparam, lparam) :
+				DefWindowProcA(hwnd, msg, wparam, lparam);
 		}
 
 		~Win32_Window()
