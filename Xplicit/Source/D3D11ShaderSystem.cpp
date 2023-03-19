@@ -16,7 +16,8 @@
 
 #include "DriverD3D11.h"
 
-#include <d3dcompiler.h>
+// Stupid workaround...
+#include <../um/d3dcompiler.h>
 
 #ifdef XPLICIT_WINDOWS
 

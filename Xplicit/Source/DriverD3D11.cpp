@@ -83,7 +83,7 @@ namespace Xplicit::Renderer::DX11
 
 	void DriverSystemD3D11::setup()
 	{
-		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_0 , D3D_FEATURE_LEVEL_11_1 };
+		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_11_1 };
 
 		auto hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,
