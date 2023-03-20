@@ -33,11 +33,18 @@ namespace Xplicit
 
 #ifdef XPLICIT_WINDOWS
 
-namespace Xplicit::XUI
+namespace Xplicit::Canvas
 {
 	class View;
 	class CanvasComponent;
 
+	struct BrushDescriptor;
+	struct OutlineDescriptor;
+
+	/// <summary>
+	/// A renderable 2D view, can be pused into CanvasComponent.
+	/// Removed after update.
+	/// </summary>
 	class View
 	{
 	public:
@@ -47,7 +54,7 @@ namespace Xplicit::XUI
 		View& operator=(const View&) = default;
 		View(const View&) = default;
 
-		virtual void operator()(CanvasComponent*) {}
+		virtual void operator()(CanvasComponent*) = 0;
 
 	};
 
@@ -68,7 +75,7 @@ namespace Xplicit::XUI
 
 		void end_scene();
 		void begin_scene();
-		void queue(View& view);
+		void queue(View* view);
 		void transform(const float x = 0, const float y = 0) noexcept;
 		void draw_line(const float x1, const float y1, const float x2, const float y2, const float stroke = 1.f) noexcept;
 		void draw_rectangle(const Rect rct, const float radiusX = 0, const float radiusY = 0, const float stroke = 1.f);
@@ -83,7 +90,7 @@ namespace Xplicit::XUI
 		HWND m_hwnd;
 
 	private:
-		std::vector<View> m_views;
+		std::vector<View*> m_views;
 
 	};
 }

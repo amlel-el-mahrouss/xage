@@ -29,20 +29,6 @@ namespace Xplicit::Studio
 	constexpr const char* XPLICIT_APP_CLASS = "StudioXplicit";
 }
 
-struct RectangleView : public Xplicit::XUI::View
-{
-	void operator()(Xplicit::XUI::CanvasComponent* frame)
-	{
-		Xplicit::Rect rct;
-		rct.left = 20.f;
-		rct.top = 20.f;
-		rct.right = 150.f;
-		rct.bottom = 100.f;
-		
-		frame->draw_rectangle(rct, 10, 10);
-	}
-};
-
 INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
 {
 	try

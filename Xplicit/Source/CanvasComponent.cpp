@@ -12,7 +12,7 @@
 
 #include "CanvasComponent.h"
 
-namespace Xplicit::XUI
+namespace Xplicit::Canvas
 {
 	CanvasComponent::CanvasComponent(HWND hwnd)
 		: m_hwnd(hwnd)
@@ -54,7 +54,8 @@ namespace Xplicit::XUI
 
 		for (size_t i = 0; i < m_views.size(); ++i)
 		{
-			m_views[i](this);
+			if (m_views[i])
+				(*m_views[i])(this);
 		}
 
 		this->end_scene();
@@ -125,7 +126,7 @@ namespace Xplicit::XUI
 		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(x, y));
 	}
 
-	void CanvasComponent::queue(View& view) { m_views.push_back(view); }
+	void CanvasComponent::queue(View* view) { m_views.push_back(view); }
 
 	const char* CanvasComponent::name() noexcept { return ("CanvasComponent"); }
 	CanvasComponent::INSTANCE_TYPE CanvasComponent::type() noexcept { return INSTANCE_GUI; }
