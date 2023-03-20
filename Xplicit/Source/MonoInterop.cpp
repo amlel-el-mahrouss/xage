@@ -92,17 +92,21 @@ namespace Xplicit
 		return ("MonoClassComponent");
 	}
 
-	void MonoClassComponent::update() 
+	void MonoClassComponent::update() {}
+
+	// C# should_update method
+	bool MonoClassComponent::script_should_update() noexcept
 	{
-		// Nothing to do for now.
+		MonoObject* obj = xplicit_mono_call(":ShouldUpdate()", m_klass);
+		if (obj)
+			return *((bool*)mono_object_unbox(obj));
+
+		return false;
 	}
 
-	// this method actually updates the C# methods.
+	// C# update method.
 	void MonoClassComponent::script_update() noexcept
 	{
-		if (!this->should_update())
-			return;
-
 		xplicit_mono_call(":OnUpdate()", m_klass);
 	}
 
@@ -122,13 +126,7 @@ namespace Xplicit
 		return false;
 	}
 
-	bool MonoClassComponent::should_update() noexcept
-	{
-		MonoObject* obj = xplicit_mono_call(":ShouldUpdate()", m_klass);
-		if (obj) return *((bool*)mono_object_unbox(obj));
-
-		return false;
-	}
+	bool MonoClassComponent::should_update() noexcept { return false; }
 
 	MonoEvent::MonoEvent(const char* event_name) 
 		: m_name(event_name)
@@ -152,8 +150,14 @@ namespace Xplicit
 		{
 			auto* comp = components[i];
 
+			if (!comp)
+				continue;
+
 			if (strcmp(comp->name(), m_name.c_str()) == 0)
-				comp->script_update();
+			{
+				if (comp->script_should_update())
+					comp->script_update();
+			}
 		}
 	}
 

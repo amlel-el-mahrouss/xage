@@ -39,14 +39,18 @@ namespace Xplicit
 		virtual const char* name() noexcept override;
 
 		virtual void update() override;
-		void script_update() noexcept;
 
 		virtual bool can_collide() noexcept override;
 		virtual bool has_physics() noexcept override;
 
 		virtual bool should_update() noexcept override;
 
+	public:
 		operator bool();
+
+	public:
+		bool script_should_update() noexcept;
+		void script_update() noexcept;
 
 	private:
 		Ref<MonoScriptComponent*> m_script; // Image Handle, for the specified Mono app.

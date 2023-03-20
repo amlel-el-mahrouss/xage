@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: Hazel.h
- *			Purpose: Hazel Direct3D renderer.
+ *			File: VideoDriver.h
+ *			Purpose: Direct3D renderer.
  *
  * =====================================================================
  */
@@ -21,18 +21,18 @@ namespace Xplicit
 {
 	namespace Renderer
 	{
-		class XPLICIT_API DeviceDriverWindows final
+		class XPLICIT_API VideoDriver final
 		{
 		public:
-			DeviceDriverWindows(HWND hwnd)
+			VideoDriver(HWND hwnd)
 				: m_driver(DX11::make_driver_system_d3d11(hwnd)), m_hwnd(hwnd)
 			{}
 
-			~DeviceDriverWindows() 
+			~VideoDriver()
 			{}
 
-			DeviceDriverWindows& operator=(const DeviceDriverWindows&) = default;
-			DeviceDriverWindows(const DeviceDriverWindows&) = default;
+			VideoDriver& operator=(const VideoDriver&) = default;
+			VideoDriver(const VideoDriver&) = default;
 
 		private:
 			std::unique_ptr<DX11::DriverSystemD3D11> m_driver;
@@ -40,8 +40,6 @@ namespace Xplicit
 
 		};
 	}
-
-
 }
 
 #endif
