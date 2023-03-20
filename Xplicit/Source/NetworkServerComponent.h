@@ -35,6 +35,8 @@ namespace Xplicit
 		virtual void update() override;
 		const char* dns() noexcept;
 
+		virtual bool should_update() noexcept override;
+
 	public:
 		NetworkPeer* get(size_t idx) noexcept;
 		size_t size() noexcept;
@@ -52,11 +54,11 @@ namespace Xplicit
 	class XPLICIT_API NetworkServerTraits final
 	{
 	public:
-		static void send(NetworkServerComponent* instance);
-		static void recv(NetworkServerComponent* instance);
+		static void send(NetworkServerComponent* server, const size_t sz = sizeof(UDPNetworkPacket));
+		static void recv(NetworkServerComponent* server, const size_t sz = sizeof(UDPNetworkPacket));
 
 		// correct any peer duplications.
-		static void correct_collisions(NetworkServerComponent* instance);
+		static void correct_collisions(NetworkServerComponent* server);
 
 	};
 }

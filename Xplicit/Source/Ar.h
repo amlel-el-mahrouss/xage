@@ -97,100 +97,27 @@ ar_close(struct ar_context* ctx);
 
 namespace Xplicit 
 {
-    class ArchiveManager final 
+    class XPLICIT_API ArchiveManager final 
     {
     public:
-        ArchiveManager(const char* path, const char* rest) 
-            : m_ar(ar_new(path, rest)), m_err(false), m_off(0)
-        {
-#ifdef XPLICIT_DEBUG
-            std::string message;
-            message += "Class ArchiveManager, Epoch: ";
-            message += std::to_string(xplicit_get_epoch());
+        ArchiveManager(const char* path, const char* rest);
+        ~ArchiveManager();
 
-            XPLICIT_INFO(message);
-#endif
-        }
+        ArchiveManager& operator<<(const unsigned char* bytes);
+        ArchiveManager& operator>>(unsigned char* bytes);
 
-        ~ArchiveManager() 
-        { 
-            if (m_ar) 
-                ar_close(m_ar);
-
-#ifdef XPLICIT_DEBUG
-            std::string message;
-            message += "~ArchiveManager, Epoch: ";
-            message += std::to_string(xplicit_get_epoch());
-
-            XPLICIT_INFO(message);
-#endif
-        }
-
-        long size() 
-        {
-            auto fp = m_ar->fp;
-            
-            XPLICIT_ASSERT(fp);
-
-            fseek(fp, 0, SEEK_END);
-            return ftell(fp);
-        }
-
-        ArchiveManager& operator<<(const unsigned char* bytes) 
-        {
-            if (!bytes) 
-                return *this;
-
-            auto len = ar_len(bytes, 1024);
-
-            ar_write(m_ar, bytes, m_off, len);
-
-            ++m_off;
-
-            m_err = (ferror(m_ar->fp) != 0);
-
-            return *this;
-        }
-
-        ArchiveManager& operator>>(unsigned char* bytes) 
-        {
-            if (!bytes) 
-            {
-                m_err = true;
-                return *this;
-            }
-
-            auto len = ar_len(bytes, 1024);
-
-            ar_read(m_ar, bytes, m_off, len);
-            ++m_off;
-
-            m_err = (ferror(m_ar->fp) != 0);
-
-            return *this;
-        }
-
-        void seek(const size_t seek = 0) noexcept 
-        {
-            m_off = seek; 
-        }
-
-        size_t tell() noexcept 
-        {
-            if (!m_ar)
-                return ArchiveManager::npos;
-
-            return ftell(m_ar->fp);
-        }
-
-        bool good() const noexcept { return !m_err; }
+    public:
+        long size() noexcept;
+        void seek(const size_t seek = 0) noexcept;
+        size_t tell() noexcept;
+        bool good() const noexcept;
 
         static const size_t npos = 0xFFFFFF;
 
     private:
         ar_context* m_ar;
         size_t m_off;
-        bool m_err;
+        bool m_good;
 
     };
 

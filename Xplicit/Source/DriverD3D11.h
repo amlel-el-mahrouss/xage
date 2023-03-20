@@ -129,18 +129,27 @@ namespace Xplicit::Renderer::DX11
 #define XPLICIT_DX11_STRING_SZ (32)
 
 	public:
+		/// <summary>
+		/// Everything related to shaders are located here
+		/// Internal uses only.
+		/// </summary>
 		class XPLICIT_API ShaderData
 		{
 		public:
-			char entrypoint[XPLICIT_DX11_STRING_SZ];
-			char shader_type[XPLICIT_DX11_STRING_SZ];
+			std::string entrypoint;
+			std::string shader_type;
+
 			ID3D10Blob* blob;
 			ID3D10Blob* error_blob;
 			uint32_t flags1, flags2;
 
+			D3D11_BUFFER_DESC matrix_buffer_desc;
 			Microsoft::WRL::ComPtr<ID3D11HullShader> hull;
 			Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel;
 			Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex;
+			std::vector<D3D11_INPUT_ELEMENT_DESC> polygon_layout;
+			Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout;
+			Microsoft::WRL::ComPtr<ID3D11Buffer> matrix_buffer_ptr;
 
 		};
 
@@ -188,8 +197,9 @@ namespace Xplicit::Renderer::DX11
 		void create(std::unique_ptr<DriverSystemD3D11>& driver);
 
 		void set(DriverSystemD3D11* dx11);
-		void set(D3D11ShaderSystem* shader);
+		void add_shader(D3D11ShaderSystem* shader);
 
+	public:
 		virtual void update() override;
 
 	public:
@@ -209,11 +219,13 @@ namespace Xplicit::Renderer::DX11
 		D3D11_SUBRESOURCE_DATA m_index_data;
 		D3D11_BUFFER_DESC m_vertex_buf_desc;
 		D3D11_BUFFER_DESC m_index_buf_desc;
-		D3D11ShaderSystem* m_shader;
 		DriverSystemD3D11* m_driver;
 		Vertex* m_vertex_arr;
 		int64_t* m_index_arr;
 		HRESULT m_hr;
+
+	private:
+		std::vector<D3D11ShaderSystem*> m_shaders;
 
 		friend D3D11ShaderSystem;
 
@@ -232,8 +244,8 @@ namespace Xplicit::Renderer::DX11
 		template <D3D11_SHADER_TYPE ShaderType>
 		static D3D11ShaderSystem* make_shader(
 			const pchar* filename,
-			const pchar entrypoint[XPLICIT_DX11_STRING_SZ],
-			DriverSystemD3D11* driver
+			const char* entrypoint,
+			std::unique_ptr<DriverSystemD3D11>& driver
 		);
 
 	};

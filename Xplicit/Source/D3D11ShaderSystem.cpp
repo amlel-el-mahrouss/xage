@@ -28,7 +28,7 @@ namespace Xplicit::Renderer::DX11
 		if (!m_data)
 			return 1;
 
-		HRESULT hr = D3DCompileFromFile(m_shader.c_str(), nullptr, nullptr, m_data->entrypoint, m_data->shader_type,
+		HRESULT hr = D3DCompileFromFile(m_shader.c_str(), nullptr, nullptr, m_data->entrypoint.c_str(), m_data->shader_type.c_str(),
 			m_data->flags1, 
 			m_data->flags2, 
 			&m_data->blob, &m_data->error_blob);

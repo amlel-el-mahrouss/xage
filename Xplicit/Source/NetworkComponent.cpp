@@ -97,7 +97,7 @@ namespace Xplicit
 		return true;
 	}
 
-	bool NetworkComponent::send(UDPNetworkPacket& packet)
+	bool NetworkComponent::send(UDPNetworkPacket& packet, const size_t sz)
 	{
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
@@ -105,7 +105,7 @@ namespace Xplicit
 		packet.version = XPLICIT_NETWORK_VERSION;
 
 #ifdef XPLICIT_WINDOWS
-		int res = ::sendto(m_socket, reinterpret_cast<const char*>(&packet), sizeof(UDPNetworkPacket), 0,
+		int res = ::sendto(m_socket, reinterpret_cast<const char*>(&packet), sz, 0,
 			reinterpret_cast<SOCKADDR*>(&m_addr), sizeof(m_addr));
 
 		if (res == SOCKET_ERROR)
@@ -122,14 +122,14 @@ namespace Xplicit
 		this->read(m_packet);
 	}
 
-	bool NetworkComponent::read(UDPNetworkPacket& packet)
+	bool NetworkComponent::read(UDPNetworkPacket& packet, const size_t sz)
 	{
 		m_reset = false; // we gotta clear this one, we don't know if RST was sent.
 
 		int length{ sizeof(struct sockaddr_in) };
 
 #ifdef XPLICIT_WINDOWS
-		int res = ::recvfrom(m_socket, reinterpret_cast<char*>(&packet), sizeof(UDPNetworkPacket), 0,
+		int res = ::recvfrom(m_socket, reinterpret_cast<char*>(&packet), sz, 0,
 			(struct sockaddr*)&m_addr, &length);
 #else
 #pragma error("DEFINE ME NetworkComponent.cpp")

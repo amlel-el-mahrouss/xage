@@ -46,6 +46,33 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		if (!renderer)
 			return 1;
 
+		std::string entrypoint = "main";
+
+		auto color = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader<
+			Xplicit::Renderer::DX11::D3D11_SHADER_TYPE::Pixel>(L"XplicitStudio/Source/Color.hlsl",
+			entrypoint.c_str(),
+			renderer);
+
+		auto vertex = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader<
+			Xplicit::Renderer::DX11::D3D11_SHADER_TYPE::Vertex>(L"XplicitStudio/Source/Vertex.hlsl",
+				entrypoint.c_str(),
+				renderer);
+
+		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::RenderComponent>();
+
+		component->add_shader(color);
+		component->add_shader(vertex);
+		
+		component->push_back(Xplicit::Nplicit::Vector<float>(-1.0f, -1.0f, 0.0f),
+			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
+		component->push_back(Xplicit::Nplicit::Vector<float>(0.0f, 1.0f, 0.0f),
+			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
+		component->push_back(Xplicit::Nplicit::Vector<float>(1.0f, -1.0f, 0.0f),
+			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
+
+		component->set(renderer.get());
+		component->create(renderer);
+
 		return window->run(renderer.get(), Xplicit::Nplicit::Color<float>(40, 40, 40, 255));
 	}
 	catch (Xplicit::EngineError& err)

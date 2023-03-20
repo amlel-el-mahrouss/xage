@@ -277,8 +277,7 @@ namespace Xplicit::Renderer::DX11
 
 	D3D11RenderComponent::D3D11RenderComponent()
 		: m_vertex_data(), m_hr(0), m_vertex_buf_desc(), m_index_buf_desc(), m_vertex_buffer(nullptr),
-		m_index_buffer(nullptr), m_driver(nullptr), m_index_arr(nullptr), m_vertex_arr(nullptr),
-		m_shader(nullptr)
+		m_index_buffer(nullptr), m_driver(nullptr), m_index_arr(nullptr), m_vertex_arr(nullptr)
 	{
 		
 	}
@@ -384,7 +383,7 @@ namespace Xplicit::Renderer::DX11
 
 	void D3D11RenderComponent::update()
 	{
-		if (m_driver && m_driver->get().Ctx && m_shader)
+		if (m_driver && m_driver->get().Ctx)
 		{
 			static const uint32_t stride = sizeof(Vertex);
 			static const uint32_t offset = 0;
@@ -394,13 +393,17 @@ namespace Xplicit::Renderer::DX11
 
 			m_driver->get().Ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-			m_shader->update(this);
+			for (size_t i = 0; i < m_shaders.size(); i++)
+			{
+				m_shaders[i]->update(this);
+			}
 		}
 	}
 
-	void D3D11RenderComponent::set(D3D11ShaderSystem* shader)
+	void D3D11RenderComponent::add_shader(D3D11ShaderSystem* shader)
 	{
-
+		if (shader)
+			m_shaders.push_back(shader);
 	}
 }
 

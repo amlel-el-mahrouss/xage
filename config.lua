@@ -117,6 +117,7 @@ XPLICIT_STUDIO_CONFIG = {
             "XplicitStudio/Source/**.inl",
         },
         ["_SRC"] = {
+            "XplicitStudio/Source/**.hlsl",
             "XplicitStudio/Source/**.cpp",
             "XplicitStudio/Source/**.c"
         },

@@ -233,3 +233,90 @@ ar_close(struct ar_context* ctx) {
 
     return false;
 }
+
+namespace Xplicit
+{
+    ArchiveManager::ArchiveManager(const char* path, const char* rest)
+        : m_ar(ar_new(path, rest)), m_good(true), m_off(0)
+    {
+#ifdef XPLICIT_DEBUG
+        std::string message;
+        message += "Class ArchiveManager, Epoch: ";
+        message += std::to_string(xplicit_get_epoch());
+
+        XPLICIT_INFO(message);
+#endif
+    }
+
+    ArchiveManager::~ArchiveManager()
+    {
+        if (m_ar)
+            ar_close(m_ar);
+
+#ifdef XPLICIT_DEBUG
+        std::string message;
+        message += "~ArchiveManager, Epoch: ";
+        message += std::to_string(xplicit_get_epoch());
+
+        XPLICIT_INFO(message);
+#endif
+    }
+
+    long ArchiveManager::size() noexcept
+    {
+        if (!m_ar)
+            return -1;
+
+        auto fp = m_ar->fp;
+        XPLICIT_ASSERT(fp);
+
+        fseek(fp, 0, SEEK_END);
+        return ftell(fp);
+    }
+
+    void ArchiveManager::seek(const size_t seek) noexcept
+    {
+        m_off = seek;
+    }
+
+    size_t ArchiveManager::tell() noexcept
+    {
+        if (!m_ar)
+            return ArchiveManager::npos;
+
+        return ftell(m_ar->fp);
+    }
+
+    bool ArchiveManager::good() const noexcept { return m_good; }
+
+    ArchiveManager& ArchiveManager::operator<<(const unsigned char* bytes)
+    {
+        if (!bytes)
+            return *this;
+
+        auto len = ar_len(bytes, 1024);
+
+        ar_write(m_ar, bytes, m_off, len);
+
+        ++m_off;
+
+        m_good = (ferror(m_ar->fp) == 0);
+
+        return *this;
+    }
+
+    ArchiveManager& ArchiveManager::operator>>(unsigned char* bytes)
+    {
+        if (!bytes)
+            return *this;
+
+        auto len = ar_len(bytes, 1024);
+
+        ar_read(m_ar, bytes, m_off, len);
+        ++m_off;
+
+        m_good = (ferror(m_ar->fp) == 0);
+
+        return *this;
+    }
+}

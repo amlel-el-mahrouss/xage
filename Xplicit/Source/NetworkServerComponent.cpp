@@ -103,6 +103,8 @@ namespace Xplicit
 
 	}
 
+	bool NetworkServerComponent::should_update() noexcept { return false; }
+
 	NetworkServerComponent::~NetworkServerComponent()
 	{
 		// don't print that in release builds.
@@ -126,8 +128,7 @@ namespace Xplicit
 
 	const char* NetworkServerComponent::dns() noexcept { return m_dns.c_str(); }
 
-	// we need a way to tell which client is who.
-	void NetworkServerTraits::recv(NetworkServerComponent* server)
+	void NetworkServerTraits::recv(NetworkServerComponent* server, const size_t sz)
 	{
 		if (server)
 		{
@@ -137,7 +138,7 @@ namespace Xplicit
 
 				static UDPNetworkPacket packet;
 				int res = ::recvfrom(server->m_socket, reinterpret_cast<char*>(&packet),
-					sizeof(UDPNetworkPacket), 0,
+					sz, 0,
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &from_len);
 
 				if (res == SOCKET_ERROR)
@@ -154,7 +155,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerTraits::send(NetworkServerComponent* server)
+	void NetworkServerTraits::send(NetworkServerComponent* server, const size_t sz)
 	{
 		if (server)
 		{
@@ -169,7 +170,7 @@ namespace Xplicit
 				peer->packet.version = XPLICIT_NETWORK_VERSION;
 
 				::sendto(server->m_socket, reinterpret_cast<const char*>(&peer->packet),
-					sizeof(UDPNetworkPacket), 
+					sz, 
 					0, 
 					reinterpret_cast<sockaddr*>(&peer->addr), 
 					sizeof(PrivateAddressData));

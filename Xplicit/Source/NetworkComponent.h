@@ -80,8 +80,8 @@ namespace Xplicit {
         virtual void update() override;
 
         bool connect(const char* ip);
-        bool send(UDPNetworkPacket& packet);
-        bool read(UDPNetworkPacket& packet);
+        bool send(UDPNetworkPacket& packet, const size_t sz = sizeof(UDPNetworkPacket));
+        bool read(UDPNetworkPacket& packet, const size_t sz = sizeof(UDPNetworkPacket));
 
         UDPNetworkPacket& get() noexcept;
         bool is_reset() noexcept;
