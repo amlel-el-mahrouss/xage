@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			XplicitNgin (XplicitRenderer)
  *			Copyright XPX, all rights reserved.
  *
  *			File: DriverD3D11.cpp
@@ -368,6 +368,13 @@ namespace Xplicit::Renderer::DX11
 		if (FAILED(m_hr))
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create) Index Buffer initialization failed!");
 	}
+
+
+	bool D3D11RenderComponent::should_update() noexcept { return true; }
+
+	const char* D3D11RenderComponent::name() noexcept { return ("D3D11RenderComponent"); }
+
+	D3D11RenderComponent::INSTANCE_TYPE D3D11RenderComponent::type() noexcept { return INSTANCE_RENDER; }
 
 	void D3D11RenderComponent::set(DriverSystemD3D11* driver)
 	{

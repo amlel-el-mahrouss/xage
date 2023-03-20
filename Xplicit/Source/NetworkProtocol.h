@@ -80,7 +80,7 @@ namespace Xplicit
 
     PACKED_STRUCT
     (
-        class XPLICIT_API UDPNetworkPacket final
+        class XPLICIT_API UDPNetworkPacket
         {
         public:
             char magic[XPLICIT_NETWORK_MAG_COUNT];

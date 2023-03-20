@@ -117,23 +117,23 @@ namespace Xplicit::Renderer::DX11
 		D3D11ShaderSystem() = delete;
 
 	public:
-		explicit D3D11ShaderSystem(const pchar* filename, uint8_t format)
-			: ShaderSystem(filename, format), m_data(std::make_unique<ShaderData>())
-		{
-			XPLICIT_ASSERT(format == FORMAT_HLSL);
-		}
+		explicit D3D11ShaderSystem(const pchar* filename)
+			: ShaderSystem(filename, FORMAT_HLSL), m_data(std::make_unique<ShaderData>())
+		{}
 
 		virtual ~D3D11ShaderSystem() = default;
 
 		D3D11ShaderSystem& operator=(const D3D11ShaderSystem&) = default;
 		D3D11ShaderSystem(const D3D11ShaderSystem&) = default;
 
+#define XPLICIT_DX11_STRING_SZ (32)
+
 	public:
 		class XPLICIT_API ShaderData
 		{
 		public:
-			char* entrypoint;
-			char* shader_type;
+			char entrypoint[XPLICIT_DX11_STRING_SZ];
+			char shader_type[XPLICIT_DX11_STRING_SZ];
 			ID3D10Blob* blob;
 			ID3D10Blob* error_blob;
 			uint32_t flags1, flags2;
@@ -193,16 +193,17 @@ namespace Xplicit::Renderer::DX11
 		virtual void update() override;
 
 	public:
-		virtual bool should_update() noexcept override { return true; }
-		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_RENDER; }
-		virtual const char* name() noexcept override { return ("D3D11RenderComponent"); }
+		virtual bool should_update() noexcept override;
+		virtual INSTANCE_TYPE type() noexcept override;
+		virtual const char* name() noexcept override;
+
+	private:
+		using Map = std::map<Nplicit::Vector<float>, Nplicit::Color<float>>;
+		Map m_coord;
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertex_buffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_index_buffer;
-
-	private:
-		std::map<Nplicit::Vector<float>, Nplicit::Color<float>> m_coord;
 
 		D3D11_SUBRESOURCE_DATA m_vertex_data;
 		D3D11_SUBRESOURCE_DATA m_index_data;
@@ -217,6 +218,32 @@ namespace Xplicit::Renderer::DX11
 		friend D3D11ShaderSystem;
 
 	};
+
+	enum class D3D11_SHADER_TYPE
+	{
+		Vertex,
+		Pixel,
+		Hull,
+	};
+
+	class XPLICIT_API D3D11ShaderHelper1 final
+	{
+	public:
+		template <D3D11_SHADER_TYPE ShaderType>
+		static D3D11ShaderSystem* make_shader(
+			const pchar* filename,
+			const pchar entrypoint[XPLICIT_DX11_STRING_SZ],
+			DriverSystemD3D11* driver
+		);
+
+	};
 }
+
+namespace Xplicit::Renderer
+{
+	using RenderComponent = DX11::D3D11RenderComponent;
+}
+
+#include "DriverD3D11.inl"
 
 #endif

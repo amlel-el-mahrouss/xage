@@ -22,11 +22,11 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 {
 	try
 	{
-		// Search and exit, if another Xplicit app is open.
+		// Search and exit if another Xplicit app is open.
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
 			Xplicit::GUI::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
-				L"Cannot open more than one instance of XplicitNgin!", 
+				L"Cannot open more than one instance of the XplicitNgin!", 
 				MB_OK);
 
 			return 1;

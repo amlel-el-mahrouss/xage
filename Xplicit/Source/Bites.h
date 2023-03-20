@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Bites.h
- *			Purpose: C++ Header only, window class for Direct3D 11.
+ *			Purpose: The C++ Windowing library for DirectX
  *
  * =====================================================================
  */
@@ -121,7 +121,7 @@ namespace Xplicit::Bites
 
 		using Traits = Win32Traits;
 
-		int run(Renderer::DX11::DriverSystemD3D11* driver) noexcept
+		int run(Renderer::DX11::DriverSystemD3D11* driver, const Nplicit::Color<float>& clr) noexcept
 		{
 			MSG msg;
 			RtlZeroMemory(&msg, sizeof(MSG));
@@ -140,7 +140,7 @@ namespace Xplicit::Bites
 				if (msg.message == WM_QUIT)
 					done = true;
 
-				driver->begin_scene(1.0f, 0.2f, 0.2f, 0.2f);
+				driver->begin_scene(clr.A / 255, clr.R / 255, clr.G / 255, clr.B / 255);
 
 				ComponentManager::get_singleton_ptr()->update();
 				EventDispatcher::get_singleton_ptr()->update();

@@ -304,7 +304,7 @@ namespace Xplicit::Nplicit
 		Color() = default;
 		~Color() = default;
 
-		Color(TypeFloat r = 0, TypeFloat g = 0, TypeFloat b = 0, TypeFloat a = 1.f) noexcept
+		Color(TypeFloat r = 0, TypeFloat g = 0, TypeFloat b = 0, TypeFloat a = 255) noexcept
 			: R(r), G(b), B(b), A(a)
 		{
 		}

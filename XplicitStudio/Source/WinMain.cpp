@@ -31,7 +31,7 @@ namespace Xplicit::Studio
 
 struct RectangleView : public Xplicit::XUI::View
 {
-	void operator()(Xplicit::XUI::FrameComponent* frame)
+	void operator()(Xplicit::XUI::CanvasComponent* frame)
 	{
 		Xplicit::Rect rct;
 		rct.left = 20.f;
@@ -57,19 +57,10 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11> renderer = Xplicit::Renderer::DX11::make_driver_system_d3d11(window->get().WindowHandle);
 		XPLICIT_ASSERT(renderer);
 
- 		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::D3D11RenderComponent>();
+		if (!renderer)
+			return 1;
 
-		component->push_back(Xplicit::Nplicit::Vector<float>(-1.0f, -1.0f, 0.0f), 
-			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
-		component->push_back(Xplicit::Nplicit::Vector<float>(0.0f, 1.0f, 0.0f),
-			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
-		component->push_back(Xplicit::Nplicit::Vector<float>(1.0f, -1.0f, 0.0f),
-			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
-
-		component->set(renderer.get());
-		component->create(renderer);
-
-		return window->run(renderer.get());
+		return window->run(renderer.get(), Xplicit::Nplicit::Color<float>(40, 40, 40, 255));
 	}
 	catch (Xplicit::EngineError& err)
 	{

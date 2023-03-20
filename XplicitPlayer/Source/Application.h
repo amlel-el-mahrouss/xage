@@ -34,7 +34,7 @@ namespace Xplicit::Client
 
 namespace Xplicit::Bites
 {
-	constexpr const pchar* XPLICIT_APP_NAME = L"XplicitNgin";
+	constexpr const pchar* XPLICIT_APP_NAME = L"Xplicit Engine";
 
 	class Application final
 	{
