@@ -25,7 +25,8 @@ XPLICIT_CONFIG = {
 	  "dxgi",
 	  "d3d11",
 	  "d2d1",
-	  "d3dcompiler"
+	  "d3dcompiler",
+ 	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -90,6 +91,8 @@ XPLICIT_CLIENT_CONFIG = {
     	"bin/Debug/Xplicit",
 	"d3d11",
 	"dxgi",
+	"d2d1",
+ 	"C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -126,7 +129,8 @@ XPLICIT_STUDIO_CONFIG = {
     	"bin/Debug/Xplicit",
 	"d3d11",
 	"dxgi",
-	  "d2d1",
+	"d2d1",
+ 	"C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {
         "Vendor/",

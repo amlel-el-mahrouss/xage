@@ -43,6 +43,9 @@ namespace Xplicit::Renderer::DX11
 		if (!component)
 			return;
 
+		if (this->m_data->input_layout_ptr)
+			component->m_driver->get().Ctx->IASetInputLayout(this->m_data->input_layout_ptr.Get());
+
 		if (this->m_data->vertex)
 		{
 			component->m_driver->get().Ctx->VSSetShader(this->m_data->vertex.Get(), nullptr, 0);
@@ -58,6 +61,8 @@ namespace Xplicit::Renderer::DX11
 			component->m_driver->get().Ctx->HSSetShader(this->m_data->hull.Get(), nullptr, 0);
 			return;
 		}
+
+		component->m_driver->get().Ctx->DrawIndexed(component->m_coord.size(), 0, 0);
 	}
 }
 

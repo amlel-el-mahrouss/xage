@@ -26,6 +26,8 @@
 #include <../um/d3d11.h>
 #include <../um/d3dcommon.h>
 
+#include <D3DX10math.h>
+
 /* Include nuklear, for debugging */
 
 #ifdef XPLICIT_DEBUG
@@ -45,6 +47,23 @@
 #define XPLICIT_COMPUTE_SHADER "ds_5_0"
 #define XPLICIT_DOMAIN_SHADER "ds_5_0"
 #define XPLICIT_GEOMETRY_SHADER "gs_5_0"
+
+namespace Xplicit::Details
+{
+	__declspec(align(16))
+		struct VERTEX
+	{
+		D3DXVECTOR3 position;
+		D3DXVECTOR4 color;
+	};
+
+	struct MATRIX
+	{
+		D3DXMATRIX world_matrix;
+		D3DXMATRIX view_matrix;
+		D3DXMATRIX projection_matrix;
+	};
+}
 
 namespace Xplicit::Renderer::DX11
 {
@@ -77,9 +96,9 @@ namespace Xplicit::Renderer::DX11
 			DXGI_SWAP_CHAIN_DESC SwapDesc;
 			Microsoft::WRL::ComPtr<ID3D11Device> Device;
 			Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
+			Microsoft::WRL::ComPtr<ID3D11DeviceContext> Ctx;
 			Microsoft::WRL::ComPtr<IDXGISwapChain> SwapChain;
 			Microsoft::WRL::ComPtr<ID3D11Texture2D> DepthTexture;
-			Microsoft::WRL::ComPtr<ID3D11DeviceContext> Ctx;
 			Microsoft::WRL::ComPtr<ID3D11RasterizerState> RasterState;
 			Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthStencil;
 			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTarget;
@@ -142,14 +161,17 @@ namespace Xplicit::Renderer::DX11
 			ID3D10Blob* blob;
 			ID3D10Blob* error_blob;
 			uint32_t flags1, flags2;
-
 			D3D11_BUFFER_DESC matrix_buffer_desc;
+
+		public:
 			Microsoft::WRL::ComPtr<ID3D11HullShader> hull;
 			Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel;
 			Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex;
-			std::vector<D3D11_INPUT_ELEMENT_DESC> polygon_layout;
-			Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout;
 			Microsoft::WRL::ComPtr<ID3D11Buffer> matrix_buffer_ptr;
+			Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout_ptr;
+
+		public:
+			std::vector<D3D11_INPUT_ELEMENT_DESC> input_layout_desc;
 
 		};
 
@@ -195,9 +217,8 @@ namespace Xplicit::Renderer::DX11
 		
 		void push_back(const Nplicit::Vector<float>& vert, const Nplicit::Color<float>& clr);
 		void create(std::unique_ptr<DriverSystemD3D11>& driver);
-
-		void set(DriverSystemD3D11* dx11);
 		void add_shader(D3D11ShaderSystem* shader);
+		void set(DriverSystemD3D11* dx11);
 
 	public:
 		virtual void update() override;

@@ -46,7 +46,9 @@ namespace Xplicit::XDP
 	class XPLICIT_API XDPDownloadFile final
 	{
 	public:
-		XDPDownloadFile();
+		XDPDownloadFile() = delete;
+
+	public:
 		~XDPDownloadFile();
 
 	public:

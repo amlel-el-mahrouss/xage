@@ -328,7 +328,7 @@ namespace Xplicit::Renderer::DX11
 		}
 
 		m_vertex_buf_desc.Usage = D3D11_USAGE_DEFAULT;
-		m_vertex_buf_desc.ByteWidth = sizeof(Vertex) * m_coord.size();
+		m_vertex_buf_desc.ByteWidth = sizeof(Xplicit::Details::VERTEX) * m_coord.size();
 		m_vertex_buf_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		m_vertex_buf_desc.CPUAccessFlags = 0;
 		m_vertex_buf_desc.MiscFlags = 0;
@@ -383,9 +383,9 @@ namespace Xplicit::Renderer::DX11
 
 	void D3D11RenderComponent::update()
 	{
-		if (m_driver && m_driver->get().Ctx)
+		if (m_driver && m_driver->get().Ctx && m_vertex_buffer)
 		{
-			static const uint32_t stride = sizeof(Vertex);
+			static const uint32_t stride = sizeof(Xplicit::Details::VERTEX);
 			static const uint32_t offset = 0;
 
 			m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), &stride, &offset);

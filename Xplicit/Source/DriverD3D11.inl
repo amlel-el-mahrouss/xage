@@ -10,8 +10,6 @@
  * =====================================================================
  */
 
-#include <D3DX10math.h>
-
 namespace Xplicit
 {
 	static inline void print_error(ID3D10Blob* error)
@@ -38,11 +36,11 @@ namespace Xplicit
 /// <summary>
 /// Direct3D Shader creation helper.
 /// </summary>
-/// <typeparam name="ShaderType">Either Pixel, Vertex or Hull.</typeparam>
-/// <param name="filename">The file to open.</param>
-/// <param name="entrypoint">The entrypoint to look at.</param>
-/// <param name="driver">The rendering driver.</param>
-/// <returns>Pointer to a new ShaderSystem.</returns>
+/// <typeparam name="ShaderType">Either Pixel, Vertex or Hull</typeparam>
+/// <param name="filename">The shader to open</param>
+/// <param name="entrypoint">The entrypoint to look at</param>
+/// <param name="driver">The rendering driver</param>
+/// <returns>Pointer to a new ShaderSystem</returns>
 /// 
 template <Xplicit::Renderer::DX11::D3D11_SHADER_TYPE ShaderType>
 Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader(
@@ -66,7 +64,7 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 		{
 		case D3D11_SHADER_TYPE::Vertex:
 		{
-			shader_system->get()->shader_type  += XPLICIT_VERTEX_SHADER;
+			shader_system->get()->shader_type += XPLICIT_VERTEX_SHADER;
 			if (shader_system->compile() != 0)
 			{
 				print_error(shader_system->get()->error_blob);
@@ -75,21 +73,60 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 				return nullptr;
 			}
 
-			driver->get().Device->CreateVertexShader(shader_system->get()->blob->GetBufferPointer(),
+			if (FAILED(driver->get().Device->CreateVertexShader(shader_system->get()->blob->GetBufferPointer(),
 				shader_system->get()->blob->GetBufferSize(),
 				nullptr,
-				shader_system->get()->vertex.GetAddressOf());
+				shader_system->get()->vertex.GetAddressOf())))
+			{
+				delete shader_system;
+				return nullptr;
+			}
 
 			shader_system->get()->matrix_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-			shader_system->get()->matrix_buffer_desc.ByteWidth = sizeof(D3DXMATRIX);
+			shader_system->get()->matrix_buffer_desc.ByteWidth = sizeof(Xplicit::Details::VERTEX);
 			shader_system->get()->matrix_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 			shader_system->get()->matrix_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			shader_system->get()->matrix_buffer_desc.MiscFlags = 0;
 			shader_system->get()->matrix_buffer_desc.StructureByteStride = 0;
 
-			driver->get().Device->CreateBuffer(&shader_system->get()->matrix_buffer_desc, 
+			if (FAILED(driver->get().Device->CreateBuffer(&shader_system->get()->matrix_buffer_desc, 
 				nullptr, 
-				shader_system->get()->matrix_buffer_ptr.GetAddressOf());
+				shader_system->get()->matrix_buffer_ptr.GetAddressOf())))
+			{
+				delete shader_system;
+				return nullptr;
+			}
+
+			shader_system->get()->input_layout_desc.push_back(D3D11_INPUT_ELEMENT_DESC());
+			shader_system->get()->input_layout_desc.push_back(D3D11_INPUT_ELEMENT_DESC());
+
+			shader_system->get()->input_layout_desc[0].SemanticName = "POSITION";
+			shader_system->get()->input_layout_desc[0].SemanticIndex = 0;
+			shader_system->get()->input_layout_desc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+			shader_system->get()->input_layout_desc[0].InputSlot = 0;
+			shader_system->get()->input_layout_desc[0].AlignedByteOffset = 0;
+			shader_system->get()->input_layout_desc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			shader_system->get()->input_layout_desc[0].InstanceDataStepRate = 0;
+
+			shader_system->get()->input_layout_desc[1].SemanticName = "COLOR";
+			shader_system->get()->input_layout_desc[1].SemanticIndex = 0;
+			shader_system->get()->input_layout_desc[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			shader_system->get()->input_layout_desc[1].InputSlot = 0;
+			shader_system->get()->input_layout_desc[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+			shader_system->get()->input_layout_desc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			shader_system->get()->input_layout_desc[1].InstanceDataStepRate = 0;
+
+			size_t num = shader_system->get()->input_layout_desc.size();
+
+			if (FAILED(driver->get().Device->CreateInputLayout(shader_system->get()->input_layout_desc.data(),
+				num,
+				shader_system->get()->blob->GetBufferPointer(),
+				shader_system->get()->blob->GetBufferSize(),
+				shader_system->get()->input_layout_ptr.GetAddressOf())))
+			{
+				delete shader_system;
+				return nullptr;
+			}
 
 			break;
 		}
@@ -105,37 +142,14 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 				return nullptr;
 			}
 
-			driver->get().Device->CreatePixelShader(shader_system->get()->blob->GetBufferPointer(),
+			if (FAILED(driver->get().Device->CreatePixelShader(shader_system->get()->blob->GetBufferPointer(),
 				shader_system->get()->blob->GetBufferSize(),
 				nullptr,
-				shader_system->get()->pixel.GetAddressOf());
-
-			shader_system->get()->polygon_layout.push_back(D3D11_INPUT_ELEMENT_DESC());
-			shader_system->get()->polygon_layout.push_back(D3D11_INPUT_ELEMENT_DESC());
-
-			shader_system->get()->polygon_layout[0].SemanticName = "POSITION";
-			shader_system->get()->polygon_layout[0].SemanticIndex = 0;
-			shader_system->get()->polygon_layout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-			shader_system->get()->polygon_layout[0].InputSlot = 0;
-			shader_system->get()->polygon_layout[0].AlignedByteOffset = 0;
-			shader_system->get()->polygon_layout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-			shader_system->get()->polygon_layout[0].InstanceDataStepRate = 0;
-
-			shader_system->get()->polygon_layout[1].SemanticName = "COLOR";
-			shader_system->get()->polygon_layout[1].SemanticIndex = 0;
-			shader_system->get()->polygon_layout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-			shader_system->get()->polygon_layout[1].InputSlot = 0;
-			shader_system->get()->polygon_layout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-			shader_system->get()->polygon_layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-			shader_system->get()->polygon_layout[1].InstanceDataStepRate = 0;
-
-			size_t num = shader_system->get()->polygon_layout.size();
-
-			XPLICIT_ASSERT(SUCCEEDED(driver->get().Device->CreateInputLayout(shader_system->get()->polygon_layout.data(),
-				num,
-				shader_system->get()->blob->GetBufferPointer(),
-				shader_system->get()->blob->GetBufferSize(),
-				shader_system->get()->input_layout.GetAddressOf())));
+				shader_system->get()->pixel.GetAddressOf())))
+			{
+				delete shader_system;
+				return nullptr;
+			}
 
 			break;
 		}
@@ -151,10 +165,14 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 				return nullptr;
 			}
 
-			driver->get().Device->CreateHullShader(shader_system->get()->blob->GetBufferPointer(),
+			if (FAILED(driver->get().Device->CreateHullShader(shader_system->get()->blob->GetBufferPointer(),
 				shader_system->get()->blob->GetBufferSize(),
 				nullptr,
-				shader_system->get()->hull.GetAddressOf());
+				shader_system->get()->hull.GetAddressOf())))
+			{
+				delete shader_system;
+				return nullptr;
+			}
 
 			break;
 		}

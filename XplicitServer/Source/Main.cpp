@@ -219,7 +219,7 @@ int main(int argc, char** argv)
 		XPLICIT_CRITICAL(err.what());
 
 #ifdef XPLICIT_WINDOWS
-		Xplicit::GUI::message_box(L"XplicitNgin Server", L"Fatal server error!", MB_OK | MB_ICONASTERISK);
+		Xplicit::GUI::message_box(L"Something bad happen.. exiting!", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
 #endif
 #endif
 

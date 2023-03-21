@@ -23,10 +23,9 @@
 
 namespace Xplicit::Studio
 {
-	// this is horrendous, but windows imposes us that.
-	constexpr const wchar_t* XPLICIT_APP_NAME_WIDE = L"Xplicit Studio";
-	constexpr const char* XPLICIT_APP_NAME = "Xplicit Studio";
-	constexpr const char* XPLICIT_APP_CLASS = "StudioXplicit";
+	constexpr const wchar_t* XPLICIT_APP_NAME_WIDE = L"XplicitStudio";
+	constexpr const char* XPLICIT_APP_NAME = "XplicitStudio";
+	constexpr const char* XPLICIT_APP_CLASS = "XplicitStudio";
 }
 
 INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
@@ -36,6 +35,16 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 #ifdef XPLICIT_DEBUG
 		Xplicit::open_terminal();
 #endif
+
+		// Search and exit if another Xplicit app is open.
+		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Studio::XPLICIT_APP_NAME_WIDE))
+		{
+			Xplicit::GUI::message_box(Xplicit::Studio::XPLICIT_APP_NAME_WIDE,
+				L"Cannot open more than one instance of the XplicitNgin!",
+				MB_OK);
+
+			return 1;
+		}
 
 		Xplicit::Bites::Win32_Window* window = new Xplicit::Bites::Win32_Window(Xplicit::Studio::XPLICIT_APP_NAME,
 																				  Xplicit::Studio::XPLICIT_APP_CLASS, hInst);
@@ -60,12 +69,12 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 
 		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::RenderComponent>();
 
-		component->add_shader(color);
 		component->add_shader(vertex);
+		component->add_shader(color);
 		
 		component->push_back(Xplicit::Nplicit::Vector<float>(-1.0f, -1.0f, 0.0f),
 			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
-		component->push_back(Xplicit::Nplicit::Vector<float>(0.0f, 1.0f, 0.0f),
+		component->push_back(Xplicit::Nplicit::Vector<float>(0.f, 1.0f, 0.0f),
 			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
 		component->push_back(Xplicit::Nplicit::Vector<float>(1.0f, -1.0f, 0.0f),
 			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
@@ -77,7 +86,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 	}
 	catch (Xplicit::EngineError& err)
 	{
-		Xplicit::GUI::message_box(L"Something bad happen!\r\nExiting..", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
+		Xplicit::GUI::message_box(L"Something bad happen.. exiting!", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
 	}
 
 	return 0;

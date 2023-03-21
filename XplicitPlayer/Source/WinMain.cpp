@@ -69,7 +69,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		XPLICIT_INFO(err.what());
 #endif
 
-		Xplicit::GUI::message_box(L"Something bad happen!\r\nExiting..", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
+		Xplicit::GUI::message_box(L"Something bad happen.. exiting!", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
 		return -1;
 	}
 }
