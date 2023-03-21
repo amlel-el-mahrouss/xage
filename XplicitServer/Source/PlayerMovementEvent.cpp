@@ -63,18 +63,13 @@ namespace Xplicit
 
 		// create them if not already created
 		if (!m_walk_speed_gamevar)
-			GameVarSingleton::get_singleton_ptr()->create("Xplicit::WalkSpeed", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
+			m_walk_speed_gamevar= GameVarSingleton::get_singleton_ptr()->create("Xplicit::WalkSpeed", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
 
 		if (!m_side_speed_gamevar)
-			GameVarSingleton::get_singleton_ptr()->create("Xplicit::SideSpeed", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
+			m_side_speed_gamevar = GameVarSingleton::get_singleton_ptr()->create("Xplicit::SideSpeed", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
 
 		if (!m_jump_height_gamevar)
-			GameVarSingleton::get_singleton_ptr()->create("Xplicit::JumpHeight", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
-	
-		// Seek them again.
-		m_walk_speed_gamevar = GameVarSingleton::get_singleton_ptr()->get("Xplicit::WalkSpeed");
-		m_side_speed_gamevar = GameVarSingleton::get_singleton_ptr()->get("Xplicit::SideSpeed");
-		m_jump_height_gamevar = GameVarSingleton::get_singleton_ptr()->get("Xplicit::JumpHeight");
+			m_jump_height_gamevar = GameVarSingleton::get_singleton_ptr()->create("Xplicit::JumpHeight", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
 	}
 
 	PlayerMovementEvent::~PlayerMovementEvent() 
