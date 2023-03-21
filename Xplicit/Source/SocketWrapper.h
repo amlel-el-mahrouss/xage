@@ -41,20 +41,8 @@ namespace Xplicit::Details
 	class XPLICIT_API Socket final
 	{
 	public:
-		Socket(const SOCKET_TYPE type)
-		{
-			_Socket = socket(AF_INET,
-				type == SOCKET_TYPE::TCP ? SOCK_STREAM : SOCK_DGRAM,
-				type == SOCKET_TYPE::TCP ? IPPROTO_TCP : IPPROTO_UDP);
-
-			XPLICIT_ASSERT(_Socket != SOCKET_ERROR);
-		}
-
-		~Socket()
-		{
-			if (XPLICIT_SHUTDOWN(_Socket, SD_BOTH))
-				XPLICIT_CLOSE(_Socket);
-		}
+		Socket(const SOCKET_TYPE type);
+		~Socket();
 
 		Socket& operator=(const Socket&) = default;
 		Socket(const Socket&) = default;

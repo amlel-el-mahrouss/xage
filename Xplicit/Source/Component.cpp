@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Component.h
- *			Purpose: Xplicit's
+ *			Purpose: Xplicit's Component System
  *
  * =====================================================================
  */
@@ -49,5 +49,4 @@ namespace Xplicit {
 
 	Component::PHYSICS_TYPE Component::physics() noexcept { return PHYSICS_SIMPLE; }
 	Component::INSTANCE_TYPE Component::type() noexcept { return INSTANCE_LOGIC; }
-
 }

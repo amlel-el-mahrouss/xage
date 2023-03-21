@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Component.h
- *			Purpose: Xplicit's ECS
+ *			Purpose: Xplicit's Component System
  *
  * =====================================================================
  */
