@@ -23,8 +23,8 @@
 
 namespace Xplicit::Studio
 {
-	constexpr const wchar_t* XPLICIT_APP_NAME_WIDE = L"XplicitStudio";
-	constexpr const char* XPLICIT_APP_NAME = "XplicitStudio";
+	constexpr const wchar_t* XPLICIT_APP_NAME_WIDE = L"Xplicit Studio";
+	constexpr const char* XPLICIT_APP_NAME = "Xplicit Studio";
 	constexpr const char* XPLICIT_APP_CLASS = "XplicitStudio";
 }
 
@@ -62,6 +62,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 			entrypoint.c_str(),
 			renderer);
 
+
 		auto vertex = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader<
 			Xplicit::Renderer::DX11::D3D11_SHADER_TYPE::Vertex>(L"XplicitStudio/Source/Vertex.hlsl",
 				entrypoint.c_str(),
@@ -71,7 +72,28 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 
 		component->add_shader(vertex);
 		component->add_shader(color);
-		
+
+		vertex->get()->input_layouts.push_back(D3D11_INPUT_ELEMENT_DESC());
+		vertex->get()->input_layouts.push_back(D3D11_INPUT_ELEMENT_DESC());
+
+		vertex->get()->input_layouts[0].SemanticName = "POSITION";
+		vertex->get()->input_layouts[0].SemanticIndex = 0;
+		vertex->get()->input_layouts[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		vertex->get()->input_layouts[0].InputSlot = 0;
+		vertex->get()->input_layouts[0].AlignedByteOffset = 0;
+		vertex->get()->input_layouts[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		vertex->get()->input_layouts[0].InstanceDataStepRate = 0;
+
+		vertex->get()->input_layouts[1].SemanticName = "COLOR";
+		vertex->get()->input_layouts[1].SemanticIndex = 0;
+		vertex->get()->input_layouts[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		vertex->get()->input_layouts[1].InputSlot = 0;
+		vertex->get()->input_layouts[1].AlignedByteOffset = 0;
+		vertex->get()->input_layouts[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		vertex->get()->input_layouts[1].InstanceDataStepRate = 0;
+
+		vertex->get()->_CreateInputLayout(renderer->get().Device.Get());
+
 		component->push_back(Xplicit::Nplicit::Vector<float>(-1.0f, -1.0f, 0.0f),
 			Xplicit::Nplicit::Color<float>(0.0f, 1.0f, 0.0f, 1.0f));
 		component->push_back(Xplicit::Nplicit::Vector<float>(0.f, 1.0f, 0.0f),

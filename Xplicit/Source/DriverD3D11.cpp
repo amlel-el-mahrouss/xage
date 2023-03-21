@@ -58,6 +58,7 @@ namespace Xplicit::Renderer::DX11
 		swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapDesc.SampleDesc.Count = 1;
+		swapDesc.SampleDesc.Quality = 0;
 		swapDesc.Windowed = true;
 		swapDesc.OutputWindow = privateData.WindowHandle;
 

@@ -145,8 +145,6 @@ namespace Xplicit::Renderer::DX11
 		D3D11ShaderSystem& operator=(const D3D11ShaderSystem&) = default;
 		D3D11ShaderSystem(const D3D11ShaderSystem&) = default;
 
-#define XPLICIT_DX11_STRING_SZ (32)
-
 	public:
 		/// <summary>
 		/// Everything related to shaders are located here
@@ -163,6 +161,56 @@ namespace Xplicit::Renderer::DX11
 			uint32_t flags1, flags2;
 			D3D11_BUFFER_DESC matrix_buffer_desc;
 
+			// Internal directx call.
+			inline HRESULT _SetShaderParams(ID3D11DeviceContext* deviceContext,
+				D3DXMATRIX worldMatrix,
+				D3DXMATRIX viewMatrix,
+				D3DXMATRIX projectionMatrix)
+			{
+				HRESULT hr = S_OK;
+
+				if (!deviceContext)
+					return hr;
+
+				D3D11_MAPPED_SUBRESOURCE mapped_res;
+				Xplicit::Details::MATRIX* matrix = nullptr;
+
+				D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
+				D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
+				D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
+
+				hr = deviceContext->Map(matrix_buffer_ptr.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res);
+				
+				if (FAILED(hr))
+					return hr;
+
+				matrix = reinterpret_cast<Xplicit::Details::MATRIX*>(mapped_res.pData);
+
+				matrix->projection_matrix = projectionMatrix;
+				matrix->view_matrix = viewMatrix;
+				matrix->world_matrix = worldMatrix;
+
+				deviceContext->Unmap(matrix_buffer_ptr.Get(), 0);
+				deviceContext->VSSetConstantBuffers(0, 1, matrix_buffer_ptr.GetAddressOf());
+
+				return hr;
+			}
+
+			inline HRESULT _CreateInputLayout(ID3D11Device* device)
+			{
+				HRESULT hr = S_OK;
+
+				if (!device)
+					return hr;
+
+				hr = device->CreateInputLayout(input_layouts.data(), input_layouts.size(), blob->GetBufferPointer(),
+					blob->GetBufferSize(), input_layout_ptr.GetAddressOf());
+
+				XPLICIT_ASSERT(SUCCEEDED(hr));
+
+				return hr;
+			}
+
 		public:
 			Microsoft::WRL::ComPtr<ID3D11HullShader> hull;
 			Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel;
@@ -171,7 +219,7 @@ namespace Xplicit::Renderer::DX11
 			Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout_ptr;
 
 		public:
-			std::vector<D3D11_INPUT_ELEMENT_DESC> input_layout_desc;
+			std::vector<D3D11_INPUT_ELEMENT_DESC> input_layouts;
 
 		};
 
@@ -231,11 +279,12 @@ namespace Xplicit::Renderer::DX11
 	private:
 		using Map = std::map<Nplicit::Vector<float>, Nplicit::Color<float>>;
 		Map m_coord;
-
+	
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertex_buffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_index_buffer;
 
+	private:
 		D3D11_SUBRESOURCE_DATA m_vertex_data;
 		D3D11_SUBRESOURCE_DATA m_index_data;
 		D3D11_BUFFER_DESC m_vertex_buf_desc;

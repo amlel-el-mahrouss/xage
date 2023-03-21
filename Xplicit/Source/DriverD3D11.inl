@@ -97,37 +97,6 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 				return nullptr;
 			}
 
-			shader_system->get()->input_layout_desc.push_back(D3D11_INPUT_ELEMENT_DESC());
-			shader_system->get()->input_layout_desc.push_back(D3D11_INPUT_ELEMENT_DESC());
-
-			shader_system->get()->input_layout_desc[0].SemanticName = "POSITION";
-			shader_system->get()->input_layout_desc[0].SemanticIndex = 0;
-			shader_system->get()->input_layout_desc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-			shader_system->get()->input_layout_desc[0].InputSlot = 0;
-			shader_system->get()->input_layout_desc[0].AlignedByteOffset = 0;
-			shader_system->get()->input_layout_desc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-			shader_system->get()->input_layout_desc[0].InstanceDataStepRate = 0;
-
-			shader_system->get()->input_layout_desc[1].SemanticName = "COLOR";
-			shader_system->get()->input_layout_desc[1].SemanticIndex = 0;
-			shader_system->get()->input_layout_desc[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-			shader_system->get()->input_layout_desc[1].InputSlot = 0;
-			shader_system->get()->input_layout_desc[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-			shader_system->get()->input_layout_desc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-			shader_system->get()->input_layout_desc[1].InstanceDataStepRate = 0;
-
-			size_t num = shader_system->get()->input_layout_desc.size();
-
-			if (FAILED(driver->get().Device->CreateInputLayout(shader_system->get()->input_layout_desc.data(),
-				num,
-				shader_system->get()->blob->GetBufferPointer(),
-				shader_system->get()->blob->GetBufferSize(),
-				shader_system->get()->input_layout_ptr.GetAddressOf())))
-			{
-				delete shader_system;
-				return nullptr;
-			}
-
 			break;
 		}
 		case D3D11_SHADER_TYPE::Pixel:
