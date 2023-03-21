@@ -1,10 +1,4 @@
-struct PixelIn
+float4 main() : SV_TARGET
 {
-	float4 pos : SV_POSITION;
-	float4 clr : COLOR;
-};
-
-float4 main(PixelIn input) : SV_TARGET
-{
-	return input.clr;
+	return float4(1.0f, 1.0f, 1.0f, 1.0f);
 }

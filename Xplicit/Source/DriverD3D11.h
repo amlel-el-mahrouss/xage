@@ -93,7 +93,9 @@ namespace Xplicit::Renderer::DX11
 			bool EndRendering{ false };
 			HWND WindowHandle{ nullptr };
 
+			D3D11_VIEWPORT Viewport;
 			DXGI_SWAP_CHAIN_DESC SwapDesc;
+
 			Microsoft::WRL::ComPtr<ID3D11Device> Device;
 			Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 			Microsoft::WRL::ComPtr<ID3D11DeviceContext> Ctx;
@@ -140,7 +142,7 @@ namespace Xplicit::Renderer::DX11
 			: ShaderSystem(filename, FORMAT_HLSL), m_data(std::make_unique<ShaderData>())
 		{}
 
-		virtual ~D3D11ShaderSystem() = default;
+		virtual ~D3D11ShaderSystem();
 
 		D3D11ShaderSystem& operator=(const D3D11ShaderSystem&) = default;
 		D3D11ShaderSystem(const D3D11ShaderSystem&) = default;
@@ -157,6 +159,7 @@ namespace Xplicit::Renderer::DX11
 			std::string shader_type;
 
 			ID3D10Blob* blob;
+			int64_t start_vertex;
 			ID3D10Blob* error_blob;
 			uint32_t flags1, flags2;
 			D3D11_BUFFER_DESC matrix_buffer_desc;
@@ -227,9 +230,7 @@ namespace Xplicit::Renderer::DX11
 
 	public:
 		virtual int compile() noexcept override;
-
-	private:
-		void update(D3D11RenderComponent* component);
+		void make(D3D11RenderComponent* component);
 
 	private:
 		std::unique_ptr<ShaderData> m_data;
@@ -241,22 +242,6 @@ namespace Xplicit::Renderer::DX11
 	class XPLICIT_API D3D11RenderComponent final : public Component
 	{
 	public:
-		class XPLICIT_API Vertex
-		{
-		public:
-			struct
-			{
-				float X, Y, Z;
-			} pos;
-
-			struct
-			{
-				float R, G, B, A;
-			} clr;
-
-		};
-
-	public:
 		D3D11RenderComponent();
 		~D3D11RenderComponent();
 
@@ -264,9 +249,9 @@ namespace Xplicit::Renderer::DX11
 		D3D11RenderComponent(const D3D11RenderComponent&) = default;
 		
 		void push_back(const Nplicit::Vector<float>& vert, const Nplicit::Color<float>& clr);
-		void create(std::unique_ptr<DriverSystemD3D11>& driver);
 		void add_shader(D3D11ShaderSystem* shader);
 		void set(DriverSystemD3D11* dx11);
+		void create();
 
 	public:
 		virtual void update() override;
@@ -285,12 +270,12 @@ namespace Xplicit::Renderer::DX11
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_index_buffer;
 
 	private:
+		Xplicit::Details::VERTEX* m_vertex_arr;
 		D3D11_SUBRESOURCE_DATA m_vertex_data;
 		D3D11_SUBRESOURCE_DATA m_index_data;
 		D3D11_BUFFER_DESC m_vertex_buf_desc;
 		D3D11_BUFFER_DESC m_index_buf_desc;
 		DriverSystemD3D11* m_driver;
-		Vertex* m_vertex_arr;
 		int64_t* m_index_arr;
 		HRESULT m_hr;
 

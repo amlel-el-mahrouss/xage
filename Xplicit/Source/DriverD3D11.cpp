@@ -56,9 +56,22 @@ namespace Xplicit::Renderer::DX11
 
 		swapDesc.BufferCount = 1;
 		swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapDesc.BufferDesc.Width = XPLICIT_DEFAULT_WIDTH;
+		swapDesc.BufferDesc.Height = XPLICIT_DEFAULT_HEIGHT;
+		swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+
+		swapDesc.BufferDesc.RefreshRate.Denominator = 1;
+		swapDesc.BufferDesc.RefreshRate.Numerator = 0;
+
+		swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapDesc.SampleDesc.Count = 1;
 		swapDesc.SampleDesc.Quality = 0;
+
+		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		
+		swapDesc.Flags = 0;
+
 		swapDesc.Windowed = true;
 		swapDesc.OutputWindow = privateData.WindowHandle;
 
@@ -84,7 +97,7 @@ namespace Xplicit::Renderer::DX11
 
 	void DriverSystemD3D11::setup()
 	{
-		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_11_1 };
+		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_0 };
 
 		auto hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,
@@ -180,8 +193,6 @@ namespace Xplicit::Renderer::DX11
 		if (FAILED(hr))
 			throw Win32Error("[CreateDepthStencilView] Failed to call function correctly!");
 
-		m_private.Ctx->OMSetRenderTargets(1, m_private.RenderTarget.GetAddressOf(), m_private.DepthStencil.Get());
-
 		D3D11_RASTERIZER_DESC rasterDesc;
 		RtlZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
@@ -203,20 +214,20 @@ namespace Xplicit::Renderer::DX11
 
 		m_private.Ctx->RSSetState(m_private.RasterState.Get());
 
-		D3D11_VIEWPORT viewport;
-		RtlZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+		RtlZeroMemory(&m_private.Viewport, sizeof(D3D11_VIEWPORT));
 
-		viewport.Width = static_cast<float>(XPLICIT_MIN_WIDTH);
-		viewport.Height = static_cast<float>(XPLICIT_MIN_HEIGHT);
+		m_private.Viewport.Width = static_cast<float>(XPLICIT_MIN_WIDTH);
+		m_private.Viewport.Height = static_cast<float>(XPLICIT_MIN_HEIGHT);
 
-		viewport.MinDepth = 0.0f;
-		viewport.MaxDepth = 1.0f;
-		viewport.TopLeftX = 0.0f;
-		viewport.TopLeftY = 0.0f;
-
-		m_private.Ctx->RSSetViewports(1, &viewport);
+		m_private.Viewport.MinDepth = 0.0f;
+		m_private.Viewport.MaxDepth = 1.0f;
+		m_private.Viewport.TopLeftX = 0.0f;
+		m_private.Viewport.TopLeftY = 0.0f;
 
 		// we are dore here, phew!
+
+		m_private.Ctx->OMSetRenderTargets(1, m_private.RenderTarget.GetAddressOf(), nullptr);
+		m_private.Ctx->RSSetViewports(1, &m_private.Viewport);
 
 		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] Driver has been created.");
 	}
@@ -230,14 +241,15 @@ namespace Xplicit::Renderer::DX11
 	void DriverSystemD3D11::begin_scene(const float a, const float r, const float g, const float b) 
 	{
 		XPLICIT_ASSERT(m_private.Ctx);
-		XPLICIT_ASSERT(m_private.DepthStencil);
 		XPLICIT_ASSERT(m_private.RenderTarget);
 
 		float rgba[4]{ r, g, b, a };
 
 		m_private.Ctx->ClearRenderTargetView(m_private.RenderTarget.Get(), rgba);
-		m_private.Ctx->ClearDepthStencilView(m_private.DepthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
+		m_private.Ctx->ClearDepthStencilView(m_private.DepthStencil.Get(),
+			D3D11_CLEAR_DEPTH,
+			0.5,
+			true);
 	}
 
 	void DriverSystemD3D11::handle_device_removed()
@@ -264,6 +276,8 @@ namespace Xplicit::Renderer::DX11
 	bool DriverSystemD3D11::end_scene() 
 	{
 		XPLICIT_ASSERT(m_private.SwapChain);
+		XPLICIT_ASSERT(m_private.Ctx);
+
 		HRESULT hr = m_private.SwapChain->Present(m_private.VSync, 0);
 
 		return !this->check_device_removed(hr);
@@ -278,7 +292,8 @@ namespace Xplicit::Renderer::DX11
 
 	D3D11RenderComponent::D3D11RenderComponent()
 		: m_vertex_data(), m_hr(0), m_vertex_buf_desc(), m_index_buf_desc(), m_vertex_buffer(nullptr),
-		m_index_buffer(nullptr), m_driver(nullptr), m_index_arr(nullptr), m_vertex_arr(nullptr)
+		m_index_buffer(nullptr), m_driver(nullptr), m_index_arr(nullptr), m_vertex_arr(nullptr),
+		m_index_data()
 	{
 		
 	}
@@ -298,7 +313,7 @@ namespace Xplicit::Renderer::DX11
 		this->m_coord.emplace(std::move(pair));
 	}
 
-	void D3D11RenderComponent::create(std::unique_ptr<DriverSystemD3D11>& driver)
+	void D3D11RenderComponent::create()
 	{
 		if (m_coord.empty())
 			return;
@@ -308,24 +323,18 @@ namespace Xplicit::Renderer::DX11
 		RtlZeroMemory(&m_index_buf_desc, sizeof(D3D11_BUFFER_DESC));
 
 		if (!m_vertex_arr)
-			m_vertex_arr = new Vertex[m_coord.size()];
+			m_vertex_arr = new Xplicit::Details::VERTEX[m_coord.size()];
 
 		XPLICIT_ASSERT(m_vertex_arr);
 
-		size_t i = 0;
+		size_t vertex_cnt = 0;
 
 		for (auto it = m_coord.cbegin(); it != m_coord.cend(); ++it)
 		{
-			m_vertex_arr[i].pos.X = it->first.X;
-			m_vertex_arr[i].pos.Y = it->first.Y;
-			m_vertex_arr[i].pos.Z = it->first.Z;
+			m_vertex_arr[vertex_cnt].position = D3DXVECTOR3(it->first.X, it->first.Y, it->first.Z);
+			m_vertex_arr[vertex_cnt].color = D3DXVECTOR4(it->second.A, it->second.R, it->second.G, it->second.B);
 
-			m_vertex_arr[i].clr.R = it->second.R;
-			m_vertex_arr[i].clr.G = it->second.G;
-			m_vertex_arr[i].clr.B = it->second.B;
-			m_vertex_arr[i].clr.A = it->second.A;
-
-			++i;
+			++vertex_cnt;
 		}
 
 		m_vertex_buf_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -339,13 +348,13 @@ namespace Xplicit::Renderer::DX11
 		m_vertex_data.SysMemPitch = 0;
 		m_vertex_data.SysMemSlicePitch = 0;
 
-		m_hr = driver->get().Device->CreateBuffer(&m_vertex_buf_desc, &m_vertex_data, m_vertex_buffer.GetAddressOf());
+		m_hr = m_driver->get().Device->CreateBuffer(&m_vertex_buf_desc, &m_vertex_data, m_vertex_buffer.GetAddressOf());
 		
 		if (FAILED(m_hr))
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create)");
 
 		m_index_buf_desc.Usage = D3D11_USAGE_DEFAULT;
-		m_index_buf_desc.ByteWidth = sizeof(ULONG) * m_coord.size();
+		m_index_buf_desc.ByteWidth = sizeof(ULONG) * vertex_cnt;
 		m_index_buf_desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		m_index_buf_desc.CPUAccessFlags = 0;
 		m_index_buf_desc.MiscFlags = 0;
@@ -356,14 +365,15 @@ namespace Xplicit::Renderer::DX11
 
 		XPLICIT_ASSERT(m_vertex_arr);
 
-		for (size_t i = 0; i < m_coord.size(); ++i)
-			m_index_arr[i] = i;
+		m_index_arr[0] = 0;
+		m_index_arr[1] = 1;
+		m_index_arr[2] = 2;
 
 		m_index_data.pSysMem = m_index_arr;
 		m_index_data.SysMemPitch = 0;
 		m_index_data.SysMemSlicePitch = 0;
 
-		m_hr = driver->get().Device->CreateBuffer(&m_index_buf_desc, &m_index_data, m_index_buffer.GetAddressOf());
+		m_hr = m_driver->get().Device->CreateBuffer(&m_index_buf_desc, &m_index_data, m_index_buffer.GetAddressOf());
 
 		if (FAILED(m_hr))
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create) Index Buffer initialization failed!");
@@ -384,21 +394,25 @@ namespace Xplicit::Renderer::DX11
 
 	void D3D11RenderComponent::update()
 	{
+		static size_t sz = m_coord.size() - 1;
+		if (m_coord.size() != sz)
+			sz = m_coord.size() - 1;
+
+		static const uint32_t stride = sizeof(Xplicit::Details::VERTEX) * sz;
+		static const uint32_t offset = 0;
+
+		m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), &stride, &offset);
+		m_driver->get().Ctx->IASetIndexBuffer(m_index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		m_driver->get().Ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 		if (m_driver && m_driver->get().Ctx && m_vertex_buffer)
 		{
-			static const uint32_t stride = sizeof(Xplicit::Details::VERTEX);
-			static const uint32_t offset = 0;
+			for (size_t i = 0; i < m_shaders.size(); ++i)
+				m_shaders[i]->make(this);
 
-			m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), &stride, &offset);
-			m_driver->get().Ctx->IASetIndexBuffer(m_index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-			m_driver->get().Ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-			for (size_t i = 0; i < m_shaders.size(); i++)
-			{
-				m_shaders[i]->update(this);
-			}
 		}
+
+		m_driver->get().Ctx->Draw(sz, 0u);
 	}
 
 	void D3D11RenderComponent::add_shader(D3D11ShaderSystem* shader)
