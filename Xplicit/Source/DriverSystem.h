@@ -25,6 +25,7 @@ namespace Xplicit::Renderer
 	enum class RENDER_SYSTEM : uint8_t
 	{
 		DIRECT3D11,
+		OPENGL,
 		VULKAN,
 		INVALID,
 	};
@@ -97,3 +98,7 @@ namespace Xplicit::Renderer
 		RENDER_TYPE_COUNT,
 	};
 }
+
+#define XPLICIT_DRIVER_SYSTEM_OVERRIDE()\
+		virtual const char* name() noexcept override;\
+		virtual RENDER_SYSTEM api() override;

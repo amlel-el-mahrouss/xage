@@ -24,6 +24,9 @@ namespace Xplicit
 	class MonoScriptComponent;
 	class MonoEngineComponent;
 
+	/// <summary>
+	/// Mono C# context
+	/// </summary>
 	class XPLICIT_API MonoEngineComponent final : public Component
 	{
 	public:
@@ -35,7 +38,21 @@ namespace Xplicit
 
 		MonoAssembly* open(const char* assembly_file);
 
-		MonoObject* run(MonoAssembly* in, const char* env);
+		/// <summary>
+		/// Runs a function inside of a C# assembly.
+		/// </summary>
+		/// <param name="in">The imput assembly</param>
+		/// <param name="fn">The function</param>
+		/// <returns>error code</returns>
+		MonoObject* run(MonoAssembly* in, const char* fn);
+
+		/// <summary>
+		/// Runs a C# assembly.
+		/// </summary>
+		/// <param name="in">Input Assembly</param>
+		/// <param name="argc">Arg count</param>
+		/// <param name="argv">Arg variable.</param>
+		/// <returns>error code</returns>
 		int run(MonoAssembly* in, int argc, const char** argv);
 
 		virtual const char* name() noexcept override;

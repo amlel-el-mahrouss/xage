@@ -10,8 +10,8 @@
  * =====================================================================
  */
 
-#include "DriverOpenGL.h"
 #include "GLad.h"
+#include "DriverOpenGL.h"
 
 namespace Xplicit::Renderer::OpenGL
 {
@@ -25,4 +25,8 @@ namespace Xplicit::Renderer::OpenGL
 
 
 	}
+
+	const char* DriverSystemOpenGL::name() noexcept { return ("DriverSystemOpenGL"); }
+
+	RENDER_SYSTEM DriverSystemOpenGL::api() { return RENDER_SYSTEM::OPENGL; }
 }

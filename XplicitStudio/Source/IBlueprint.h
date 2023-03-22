@@ -4,34 +4,33 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: BlueprintNode.h
- *			Purpose: C++/C# Blueprints Node.
+ *			File: IBlueprint.h
+ *			Purpose: C++/C# Blueprints
  *
  * =====================================================================
  */
-
 
 #pragma once
 
 #include <Xplicit.h>
 #include <CanvasComponent.h>
 
-namespace Xplicit
+namespace Xplicit::Scripting
 {
-	class BlueprintNode
+	class IBlueprint
 	{
 	public:
-		BlueprintNode() = default;
-		~BlueprintNode() = default;
+		IBlueprint() = default;
+		~IBlueprint() = default;
 
-		XPLICIT_COPY_DEFAULT(BlueprintNode);
+		XPLICIT_COPY_DEFAULT(IBlueprint);
 
 		virtual void draw() = 0;
 		virtual void update(void*) = 0;
 		virtual void move(float x, float y) = 0;
 
 	protected:
-		std::vector<BlueprintNode*> m_pAttachedNodes;
+		std::vector<IBlueprint*> m_pAttachedNodes;
 
 	};
 }

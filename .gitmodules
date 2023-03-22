@@ -1,3 +1,6 @@
 [submodule "Vendor/libzip"]
 	path = Vendor/libzip
 	url = https://github.com/nih-at/libzip.git
+[submodule "Vendor/glfw"]
+	path = Vendor/glfw
+	url = https://github.com/glfw/glfw.git

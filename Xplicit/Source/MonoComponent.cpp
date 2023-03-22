@@ -162,9 +162,9 @@ namespace Xplicit
 	}
 
 	// execute a specific method/function
-	MonoObject* MonoEngineComponent::run(MonoAssembly* in, const char* env)
+	MonoObject* MonoEngineComponent::run(MonoAssembly* in, const char* fn)
 	{
-		if (!env)
+		if (!fn)
 			return nullptr;
 
 		if (in)
@@ -175,7 +175,7 @@ namespace Xplicit
 				return nullptr;
 
 			MonoMethodDesc* desc = nullptr;
-			desc = mono_method_desc_new(env, true);
+			desc = mono_method_desc_new(fn, true);
 
 			if (!desc)
 				return nullptr;

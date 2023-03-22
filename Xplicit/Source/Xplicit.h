@@ -359,7 +359,7 @@ namespace Xplicit
 	}
 #endif
 
-	class GUI
+	class Dialog
 	{
 	public:
 		static int32_t message_box(LPCWSTR title, LPCWSTR message, int flags = MB_OK)

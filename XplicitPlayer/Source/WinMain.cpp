@@ -25,7 +25,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		// Search and exit if another Xplicit app is open.
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
-			Xplicit::GUI::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
+			Xplicit::Dialog::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
 				L"Cannot open more than one instance of the XplicitNgin!", 
 				MB_OK);
 
@@ -69,7 +69,7 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		XPLICIT_INFO(err.what());
 #endif
 
-		Xplicit::GUI::message_box(L"XplicitNgin", L"Something bad happen.. exiting!", MB_ICONASTERISK | MB_OK);
+		Xplicit::Dialog::message_box(L"XplicitNgin", L"Something bad happen.. exiting!", MB_ICONASTERISK | MB_OK);
 		return -1;
 	}
 }
