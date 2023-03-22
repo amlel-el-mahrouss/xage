@@ -97,7 +97,7 @@ namespace Xplicit
 		return true;
 	}
 
-	bool NetworkComponent::send(UDPNetworkPacket& packet, const size_t sz)
+	bool NetworkComponent::send(NetworkPacket& packet, const size_t sz)
 	{
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
@@ -122,7 +122,7 @@ namespace Xplicit
 		this->read(m_packet);
 	}
 
-	bool NetworkComponent::read(UDPNetworkPacket& packet, const size_t sz)
+	bool NetworkComponent::read(NetworkPacket& packet, const size_t sz)
 	{
 		m_reset = false; // we gotta clear this one, we don't know if RST was sent.
 
@@ -163,5 +163,5 @@ namespace Xplicit
 
 	bool NetworkComponent::is_reset() noexcept { return m_reset; }
 
-	UDPNetworkPacket& NetworkComponent::get() noexcept { return m_packet; }
+	NetworkPacket& NetworkComponent::get() noexcept { return m_packet; }
 }

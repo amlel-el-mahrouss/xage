@@ -51,7 +51,7 @@ namespace Xplicit
 		cl->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 		cl->packet.public_hash = cl->public_hash;
 		cl->packet.hash = hash;
-		cl->packet.size = sizeof(UDPNetworkPacket);
+		cl->packet.size = sizeof(NetworkPacket);
 
 		cl->stat = NETWORK_STAT_CONNECTED;
 

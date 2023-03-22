@@ -230,11 +230,27 @@ namespace Xplicit::Renderer::DX11
 		ShaderData& get();
 
 	public:
+		/// <summary>
+		/// Attachs either a pixel or vertex shader system.
+		/// </summary>
+		void attach(D3D11ShaderSystem* system);
+
+
+		/// <summary>
+		/// Compiles the HLSL shader
+		/// </summary>
 		virtual int compile() noexcept override;
+
+		/// <summary>
+		/// Updates the shader.
+		/// </summary>
 		void update(D3D11RenderComponent* component);
 
 	private:
 		ShaderData m_data;
+
+	private:
+		std::shared_ptr<D3D11ShaderSystem> m_sibling;
 
 		friend D3D11RenderComponent;
 
@@ -249,9 +265,10 @@ namespace Xplicit::Renderer::DX11
 		D3D11RenderComponent& operator=(const D3D11RenderComponent&) = default;
 		D3D11RenderComponent(const D3D11RenderComponent&) = default;
 		
-		void push_back(const Nplicit::Vector<float>& vert, const Nplicit::Color<float>& clr);
+		void push_back(const Nplicit::Vector<float>& vert);
 		void set(D3D11ShaderSystem* shader) noexcept;
 		void set(DriverSystemD3D11* dx11) noexcept;
+		size_t size() noexcept;
 		void create();
 
 	public:
@@ -263,8 +280,7 @@ namespace Xplicit::Renderer::DX11
 		virtual const char* name() noexcept override;
 
 	private:
-		using Map = std::map<Nplicit::Vector<float>, Nplicit::Color<float>>;
-		Map m_coord;
+		std::vector<Nplicit::Vector<float>> m_verts;
 	
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertex_buffer;
@@ -272,12 +288,17 @@ namespace Xplicit::Renderer::DX11
 
 	private:
 		Xplicit::Details::VERTEX* m_vertex_arr;
+
+	private:
 		D3D11_SUBRESOURCE_DATA m_vertex_data;
 		D3D11_SUBRESOURCE_DATA m_index_data;
 		D3D11_BUFFER_DESC m_vertex_buf_desc;
 		D3D11_BUFFER_DESC m_index_buf_desc;
 		DriverSystemD3D11* m_driver;
+
+	private:
 		int64_t* m_index_arr;
+		size_t m_vertex_cnt;
 		HRESULT m_hr;
 
 	private:

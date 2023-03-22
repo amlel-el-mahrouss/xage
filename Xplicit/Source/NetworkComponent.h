@@ -80,10 +80,10 @@ namespace Xplicit {
         virtual void update() override;
 
         bool connect(const char* ip);
-        bool send(UDPNetworkPacket& packet, const size_t sz = sizeof(UDPNetworkPacket));
-        bool read(UDPNetworkPacket& packet, const size_t sz = sizeof(UDPNetworkPacket));
+        bool send(NetworkPacket& packet, const size_t sz = sizeof(NetworkPacket));
+        bool read(NetworkPacket& packet, const size_t sz = sizeof(NetworkPacket));
 
-        UDPNetworkPacket& get() noexcept;
+        NetworkPacket& get() noexcept;
         bool is_reset() noexcept;
 
     private:
@@ -91,7 +91,7 @@ namespace Xplicit {
 
     private:
         PrivateAddressData m_addr;
-        UDPNetworkPacket m_packet;
+        NetworkPacket m_packet;
         Socket m_socket;
         bool m_reset;
 

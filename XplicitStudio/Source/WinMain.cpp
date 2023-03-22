@@ -14,8 +14,6 @@
 * @file
 */
 
-#include "BlueprintNode.h"
-
 #include <DriverD3D11.h>
 #include <Bites.h>
 
@@ -62,8 +60,16 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 				entrypoint.c_str(),
 				renderer);
 
+		auto color = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader<
+			Xplicit::Renderer::DX11::D3D11_SHADER_TYPE::Pixel>(L"bin/debug/Color.cso",
+				entrypoint.c_str(),
+				renderer);
+
+		vertex->attach(color);
+
 		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::RenderComponent>();
 
+		vertex->get().input_layouts.push_back(D3D11_INPUT_ELEMENT_DESC());
 		vertex->get().input_layouts.push_back(D3D11_INPUT_ELEMENT_DESC());
 
 		vertex->get().input_layouts[0].SemanticName = "POSITION";
@@ -74,21 +80,26 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		vertex->get().input_layouts[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		vertex->get().input_layouts[0].InstanceDataStepRate = 0;
 
+		vertex->get().input_layouts[1].SemanticName = "COLOR";
+		vertex->get().input_layouts[1].SemanticIndex = 0;
+		vertex->get().input_layouts[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		vertex->get().input_layouts[1].InputSlot = 0;
+		vertex->get().input_layouts[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		vertex->get().input_layouts[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		vertex->get().input_layouts[1].InstanceDataStepRate = 0;
+
 		vertex->get()._CreateInputLayout(renderer->get().Device.Get());
 
 		component->set(vertex);
 
-		component->push_back(Xplicit::Nplicit::Vector<float>(-0.5f, 0.5f, 0.0f),
-			Xplicit::Nplicit::Color<float>(1.0f, 1.0f, 1.0f, 1.0f));
-		component->push_back(Xplicit::Nplicit::Vector<float>(0.0f, 0.5f, 0.0f),
-			Xplicit::Nplicit::Color<float>(1.0f, 1.0f, 1.0f, 1.0f));
-		component->push_back(Xplicit::Nplicit::Vector<float>(0.5f, -0.5f, 0.0f),
-			Xplicit::Nplicit::Color<float>(1.0f, 1.0f, 1.0f, 1.0f));
+		component->push_back(Xplicit::Nplicit::Vector<float>(0.0f, 0.5f, 0.0f));
+		component->push_back(Xplicit::Nplicit::Vector<float>(0.5f, -0.5f, 0.0f));
+		component->push_back(Xplicit::Nplicit::Vector<float>(-0.5f, -0.5f, 0.0f));
 
 		component->set(renderer.get());
 		component->create();
 
-		return window->run(renderer, Xplicit::Nplicit::Color<float>(20, 59, 99, 255));
+		return window->run(renderer, Xplicit::Nplicit::Color<float>(20, 20, 20, 255));
 	}
 	catch (Xplicit::EngineError& err)
 	{

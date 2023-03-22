@@ -54,8 +54,8 @@ namespace Xplicit
 	class XPLICIT_API NetworkServerTraits final
 	{
 	public:
-		static void send(NetworkServerComponent* server, const size_t sz = sizeof(UDPNetworkPacket));
-		static void recv(NetworkServerComponent* server, const size_t sz = sizeof(UDPNetworkPacket));
+		static void send(NetworkServerComponent* server, const size_t sz = sizeof(NetworkPacket));
+		static void recv(NetworkServerComponent* server, const size_t sz = sizeof(NetworkPacket));
 
 		// correct any peer duplications.
 		static void correct_collisions(NetworkServerComponent* server);

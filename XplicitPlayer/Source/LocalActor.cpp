@@ -30,7 +30,7 @@ namespace Xplicit::Client
 		XPLICIT_INFO("LocalActor::LocalActor");
 #endif
 
-		memset(&m_packet, 0, sizeof(UDPNetworkPacket));
+		memset(&m_packet, 0, sizeof(NetworkPacket));
 	}
 
 	LocalActor::~LocalActor()

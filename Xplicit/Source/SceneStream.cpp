@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin (XplicitRenderer)
+ *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
  *			File: SceneStream.cpp

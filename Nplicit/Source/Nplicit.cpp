@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Nplicit.cpp
- *			Purpose:
+ *			Purpose: Nplicit Physics Engine
  *
  * =====================================================================
  */

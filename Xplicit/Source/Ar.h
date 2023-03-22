@@ -16,16 +16,16 @@
 
 constexpr auto AR_MAGIC = 0xBADF00D;
 
-#define AR_EXTENSION ".ar"
+#define AR_EXTENSION ".xplicit.ar"
 #define AR_MAKE_EXTENSION(NAME) NAME AR_EXTENSION
 
 struct ar_extension_table;
 struct ar_header;
 
 typedef enum {
-    AR_FLAG_EXEC, // one of the files is a PE+ executable.
-    AR_FLAG_ZLIB, // one of the files is a zlib archive.
-    AR_FLAG_PASSWORD, // this archive has a password.
+    AR_FLAG_EXEC, // one of the files is a PE+/Mach-O/ELF executable
+    AR_FLAG_ZLIB, // The archive is compressed using DEFLATE.
+    AR_FLAG_PASSWORD, // this archive has a password (AR Extension)
 } AR_FLAGS;
 
 PACKED_STRUCT(struct ar_extension_table {

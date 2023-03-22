@@ -40,10 +40,10 @@ struct gladGLversionStruct {
 typedef void* (* GLADloadproc)(const char *name);
 
 #ifndef GLAPI
-#  define GLAPI XPLICIT_API
+#  define GLAPI extern
 #endif
 
-GLAPI struct gladGLversionStruct GLVersion = { 0, 0 };
+GLAPI struct gladGLversionStruct GLVersion;
 
 GLAPI int gladLoadGL(void);
 

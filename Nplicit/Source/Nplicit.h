@@ -5,8 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Nplicit.h
- *			Purpose: Nplicit SDK, Nplicit handles 
-			from mathematics to equation solving
+ *			Purpose: Nplicit Physics Engine
  *
  * =====================================================================
  */

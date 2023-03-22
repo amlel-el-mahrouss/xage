@@ -26,6 +26,7 @@ namespace Xplicit
 		}
 
 		XPLICIT_CRITICAL(err);
+		OutputDebugStringA(err.c_str());
 
 #ifdef XPLICIT_DEBUG
 		XPLICIT_ASSERT(false);

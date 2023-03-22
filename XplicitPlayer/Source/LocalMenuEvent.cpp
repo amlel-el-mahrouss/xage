@@ -74,11 +74,11 @@ namespace Xplicit::Client
 
 			if (KB->key_down(KEY_KEY_L))
 			{
-				UDPNetworkPacket stop_packet{};
+				NetworkPacket stop_packet{};
 
 				stop_packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 				stop_packet.hash = m_hash;
-				stop_packet.size = sizeof(UDPNetworkPacket);
+				stop_packet.size = sizeof(NetworkPacket);
 
 				m_network->send(stop_packet);
 

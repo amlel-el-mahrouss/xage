@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: NetworkProtocol.h
- *			Purpose: Lightweight Game Network Protocol
+ *			Purpose: Game Network Protocol
  *
  * =====================================================================
  */
@@ -80,7 +80,7 @@ namespace Xplicit
 
     PACKED_STRUCT
     (
-        class XPLICIT_API UDPNetworkPacket
+        class XPLICIT_API NetworkPacket
         {
         public:
             char magic[XPLICIT_NETWORK_MAG_COUNT];
@@ -126,7 +126,7 @@ namespace Xplicit
     public:
         UniqueAddress unique_addr; /* unique network address of this peer */
         PrivateAddressData addr; /* current socket address. */
-        UDPNetworkPacket packet; /* current network packet. */
+        NetworkPacket packet; /* current network packet. */
         int64_t public_hash; /* Public hash, for other clients */
         NETWORK_STAT stat; /* current network status */
         int64_t hash; /* connection hash. */

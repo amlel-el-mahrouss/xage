@@ -4,6 +4,7 @@ XplicitNgin
 REQUIREMENTS:
 =============
 
+- GLFW
 - Mono.
 - Lua.
 - Windows 11.

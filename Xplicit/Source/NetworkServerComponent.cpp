@@ -136,7 +136,7 @@ namespace Xplicit
 			{
 				int from_len = sizeof(PrivateAddressData);
 
-				static UDPNetworkPacket packet;
+				static NetworkPacket packet;
 				int res = ::recvfrom(server->m_socket, reinterpret_cast<char*>(&packet),
 					sz, 0,
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &from_len);
