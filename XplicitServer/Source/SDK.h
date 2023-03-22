@@ -20,7 +20,7 @@
 #include <Uri.h>
 #include <Xplicit.h>
 
-// Game Variables (Sevrer Only)
+// Game Variables (Server Only)
 #include <GameVar.h>
 
 // Mono support (C#)
@@ -29,7 +29,7 @@
 
 // Networking
 #include <SocketWrapper.h>
-#include <DownloadProtocol.h>
+#include <NetworkDownload.h>
 #include <NetworkServerComponent.h>
 
 #ifdef XPLICIT_WINDOWS

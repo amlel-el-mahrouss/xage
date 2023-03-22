@@ -65,8 +65,5 @@ namespace Xplicit::Renderer::OpenGL
 		XPLICIT_COPY_DELETE(DriverSystemOpenGL);
 		XPLICIT_DRIVER_SYSTEM_OVERRIDE();
 
-	private:
-
-
 	};
 }

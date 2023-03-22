@@ -14,19 +14,19 @@
  @file
  */
 
-#include "DownloadProtocol.h"
+#include "NetworkDownload.h"
 #include "Crc32.h"
 
-namespace Xplicit::XDP
+namespace Xplicit::ContentSync
 {
-	XDPDownloadFile::XDPDownloadFile(char* bytes, size_t len)
+	NetworkSharedFile::NetworkSharedFile(char* bytes, size_t len)
 	{
 		this->set(bytes, len);
 	}
 
-	XDPDownloadFile::~XDPDownloadFile() {}
+	NetworkSharedFile::~NetworkSharedFile() {}
 
-	int XDPDownloadFile::set(char* bytes, size_t len)
+	int NetworkSharedFile::set(char* bytes, size_t len)
 	{
 		if (!bytes)
 			return -1;
@@ -49,36 +49,36 @@ namespace Xplicit::XDP
 		return 0;
 	}
 
-	char* XDPDownloadFile::get() noexcept
+	char* NetworkSharedFile::get() noexcept
 	{
 		XPLICIT_ASSERT(!m_bytes.empty());
 		return m_bytes.data(); 
 	}
 
-	size_t XDPDownloadFile::size() noexcept { return m_bytes.size(); }
+	size_t NetworkSharedFile::size() noexcept { return m_bytes.size(); }
 
-	XDPDownloadTask::XDPDownloadTask() 
+	NetworkDownloadTask::NetworkDownloadTask() 
 	{
 	
 	}
 
-	XDPDownloadTask::~XDPDownloadTask()
+	NetworkDownloadTask::~NetworkDownloadTask()
 	{
 
 	}
 
-	void XDPDownloadTask::add(XDPDownloadFile* file)
+	void NetworkDownloadTask::add(NetworkSharedFile* file)
 	{
 		if (file)
 			m_files.push_back(file);
 	}
 
-	bool XDPDownloadTask::remove(XDPDownloadFile* file)
+	bool NetworkDownloadTask::remove(NetworkSharedFile* file)
 	{
 		if (file)
 		{
 			auto it = std::find_if(m_files.cbegin(), m_files.cend(), 
-			[&](XDPDownloadFile* ptr) -> bool
+			[&](NetworkSharedFile* ptr) -> bool
 			{
 				return file == ptr;
 			});
@@ -90,7 +90,7 @@ namespace Xplicit::XDP
 		return false;
 	}
 
-	void XDPDownloadTask::operator()(Socket& socket, const bool compressed)
+	void NetworkDownloadTask::operator()(Socket& socket, const bool compressed)
 	{
 		if (socket != SOCKET_ERROR)
 		{
@@ -137,6 +137,9 @@ namespace Xplicit::XDP
 		}
 	}
 
-	XDPDownloadTask::operator bool() noexcept { return m_ready; }
-	void XDPDownloadTask::set(const bool ready) noexcept { m_ready = true; }
+	NetworkDownloadTask::operator bool() noexcept { return m_ready; }
+
+	bool NetworkDownloadTask::is_ready() noexcept { return m_ready; }
+
+	void NetworkDownloadTask::set(const bool ready) noexcept { m_ready = true; }
 }

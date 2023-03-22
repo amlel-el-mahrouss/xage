@@ -119,7 +119,8 @@ namespace Xplicit::Bites
 			ComponentManager::get_singleton_ptr()->update();
 			EventDispatcher::get_singleton_ptr()->update();
 
-			driver->end_scene();
+			if (!driver->end_scene())
+				throw EngineError();
 
 			if (driver->is_closed())
 				done = true;

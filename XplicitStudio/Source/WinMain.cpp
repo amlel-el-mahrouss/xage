@@ -18,17 +18,21 @@
 #include <DriverD3D11.h>
 #include <Bites.h>
 
+#ifdef XPLICIT_WINDOWS
+
+#define XPLICIT_APP_NAME L"Xplicit Editor"
+
 namespace Xplicit::Studio
 {
-	class Runner final
+	class RunnerDirectX final
 	{
 	public:
-		Runner(HINSTANCE hInst)
+		RunnerDirectX(HINSTANCE hInst)
 		{
 			// Search and exit if another Xplicit app is open.
-			if (Xplicit::Win32Helpers::find_wnd(L"XplicitEd"))
+			if (Xplicit::Win32Helpers::find_wnd(XPLICIT_APP_NAME))
 			{
-				Xplicit::Dialog::message_box(L"XplicitEd",
+				Xplicit::Dialog::message_box(XPLICIT_APP_NAME,
 					L"Cannot open more than one instance of the XplicitNgin!",
 					MB_OK);
 
@@ -40,7 +44,38 @@ namespace Xplicit::Studio
 
 			auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::D3D11RenderComponent>();
 
+			auto shader = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader< Xplicit::Renderer::DX11::D3D11_SHADER_TYPE::Vertex>(
+				L"bin/debug/Vertex.cso",
+				"main",
+				drv
+			);
+
+			auto color = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader< Xplicit::Renderer::DX11::D3D11_SHADER_TYPE::Pixel>(
+				L"bin/debug/Color.cso",
+				"main",
+				drv
+			);
+
+			shader->attach(color);
+
+			component->set(shader);
+
+			shader->get().input_layouts.push_back(D3D11_INPUT_ELEMENT_DESC());
+			shader->get().input_layouts[0].SemanticName = "POSITION";
+			shader->get().input_layouts[0].SemanticIndex = 0;
+			shader->get().input_layouts[0].Format = DXGI_FORMAT_R32G32_FLOAT;
+			shader->get().input_layouts[0].InputSlot = 0;
+			shader->get().input_layouts[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			shader->get().input_layouts[0].AlignedByteOffset = 0;
+
+			shader->get()._CreateInputLayout(drv->get().Device.Get());
+
+			component->push_back(Xplicit::Nplicit::Vector<float>(-0.5f, 0.5f, 0.0f));
+			component->push_back(Xplicit::Nplicit::Vector<float>(0.0f, 0.5f, 0.0f));
+			component->push_back(Xplicit::Nplicit::Vector<float>(0.5f, -0.5f, 0.0f));
+
 			component->set(drv.get());
+
 			component->create();
 
 			ExitCode = win->run(drv, Xplicit::Nplicit::Color<float>(40, 40, 40));
@@ -51,15 +86,13 @@ namespace Xplicit::Studio
 	};
 }
 
-#ifdef XPLICIT_WINDOWS
-
 INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
 {
 	try
 	{
 #ifdef XPLICIT_DEBUG
 		Xplicit::open_terminal();
-		Xplicit::Studio::Runner runner(hInst);
+		Xplicit::Studio::RunnerDirectX runner(hInst);
 
 		return runner.ExitCode;
 #endif

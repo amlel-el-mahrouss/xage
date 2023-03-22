@@ -257,7 +257,7 @@ namespace Xplicit::Renderer::DX11
 
 	void DriverSystemD3D11::handle_device_removed()
 	{
-
+		Details::ThrowIfFailed(E_FAIL);
 	}
 
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
@@ -337,6 +337,8 @@ namespace Xplicit::Renderer::DX11
 			m_vertex_arr[m_vertex_cnt].position.x = m_verts[vertex_index].X;
 			m_vertex_arr[m_vertex_cnt].position.y = m_verts[vertex_index].Y;
 
+			m_vertex_arr[m_vertex_cnt].color = D3DXVECTOR4(1.f, 1.f, 1.f, 1.f);
+
 			++m_vertex_cnt;
 		}
 
@@ -402,11 +404,11 @@ namespace Xplicit::Renderer::DX11
 			m_vertex_cnt < 1)
 			return;
 
-		static const uint32_t stride = sizeof(Xplicit::Details::VERTEX) * m_vertex_cnt;
+		static const uint32_t stride[] = { sizeof(Xplicit::Details::VERTEX) };
 		static const uint32_t offset = 0;
 
 		m_driver->get().Ctx->IASetIndexBuffer(m_index_buffer.Get(), DXGI_FORMAT_R32_UINT, offset);
-		m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), &stride, &offset);
+		m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), stride, &offset);
 
 		m_driver->get().Ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

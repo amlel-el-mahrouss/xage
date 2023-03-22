@@ -16,7 +16,8 @@
 
 #include "Component.h"
 
-namespace Xplicit {
+namespace Xplicit 
+{
 	void ComponentManager::update()
 	{
 		for (size_t i = 0; i < m_instances.size(); i++)

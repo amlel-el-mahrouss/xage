@@ -4,13 +4,13 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: SceneStream.cpp
- *			Purpose: Scene I/O for XplicitNgine
+ *			File: SceneManager.cpp
+ *			Purpose:
  *
  * =====================================================================
  */
 
-#include "SceneStream.h"
+#include "SceneManager.h"
 
 namespace Xplicit
 {

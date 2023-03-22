@@ -31,14 +31,12 @@ namespace Xplicit::Renderer::OpenGL
 			Traits traits;
 
 			fseek(file, 0, SEEK_END);
-			traits.shader_size = ftell(file);
 
+			traits.shader_size = ftell(file);
 			traits.shader_text.reserve(traits.shader_size);
 
 			fseek(file, 0, SEEK_SET);
-
 			fread(traits.shader_text.data(), traits.shader_size, SEEK_CUR, file);
-
 			fclose(file);
 
 			return traits;
@@ -52,8 +50,7 @@ namespace Xplicit::Renderer::OpenGL
 
 	DriverSystemOpenGL::~DriverSystemOpenGL()
 	{
-
-
+		
 	}
 
 	const char* DriverSystemOpenGL::name() noexcept { return ("DriverSystemOpenGL"); }

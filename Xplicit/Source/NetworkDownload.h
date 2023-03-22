@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: DownloadProtocol.h
+ *			File: NetworkDownload.h
  *			Purpose: Xplicit download protocol
  *
  * =====================================================================
@@ -26,13 +26,13 @@
 #define XPLICIT_TCP_MAG_COUNT (2U)
 #define XPLICIT_TCP_VERSION (1)
 
-namespace Xplicit::XDP
+namespace Xplicit::ContentSync
 {
 	namespace Details
 	{
 		PACKED_STRUCT
 		(
-			class XPLICIT_API XDPDownloadPacket
+			class XPLICIT_API DownloadPacket
 			{
 			public:
 				char magic[XPLICIT_TCP_MAG_COUNT];
@@ -43,52 +43,50 @@ namespace Xplicit::XDP
 		);
 	}
 
-	class XPLICIT_API XDPDownloadFile final
+	/// <summary>
+	/// A file shared on the network.
+	/// </summary>
+	class XPLICIT_API NetworkSharedFile final
 	{
 	public:
-		XDPDownloadFile() = delete;
+		NetworkSharedFile() = delete;
 
 	public:
-		~XDPDownloadFile();
+		~NetworkSharedFile();
 
 	public:
-		XDPDownloadFile(char* bytes, size_t len);
+		NetworkSharedFile(char* bytes, size_t len);
 
-		XDPDownloadFile& operator=(const XDPDownloadFile&) = default;
-		XDPDownloadFile(const XDPDownloadFile&) = default;
+		XPLICIT_COPY_DEFAULT(NetworkSharedFile);
 
 	public:
 		int set(char* bytes, size_t len);
-		char* get() noexcept;
 		size_t size() noexcept;
+		char* get() noexcept;
 
 	private:
 		std::vector<char> m_bytes;
 
 	};
 
-	class XPLICIT_API XDPDownloadTask final
+	class XPLICIT_API NetworkDownloadTask final
 	{
 	public:
-		XDPDownloadTask();
-		~XDPDownloadTask();
+		NetworkDownloadTask();
+		~NetworkDownloadTask();
 
-		XDPDownloadTask& operator=(const XDPDownloadTask&) = delete;
-		XDPDownloadTask(const XDPDownloadTask&) = delete;
+		XPLICIT_COPY_DELETE(NetworkDownloadTask);
 
-		void add(XDPDownloadFile* file);
-		bool remove(XDPDownloadFile* file);
-
-		void operator()(Socket& socket, const bool compressed = false);
+		void add(NetworkSharedFile* file);
+		bool remove(NetworkSharedFile* file);
 
 		operator bool() noexcept;
-		
-		bool is_ready() noexcept { return m_ready; }
-
+		bool is_ready() noexcept;
 		void set(const bool ready = false) noexcept;
+		void operator()(Socket& socket, const bool compressed = false);
 
 	private:
-		std::vector<XDPDownloadFile*> m_files;
+		std::vector<NetworkSharedFile*> m_files;
 		bool m_ready;
 
 	};

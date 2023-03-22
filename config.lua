@@ -26,6 +26,7 @@ XPLICIT_CONFIG = {
 	  "d3d11",
 	  "d2d1",
 	  "d3dcompiler",
+	  "opengl32",
  	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {
@@ -94,6 +95,7 @@ XPLICIT_CLIENT_CONFIG = {
 	"d3d11",
 	"dxgi",
 	"d2d1",
+	"opengl32",
  	"C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {
@@ -123,6 +125,7 @@ XPLICIT_STUDIO_CONFIG = {
             "XplicitStudio/Source/**.inl",
         },
         ["_SRC"] = {
+            "XplicitStudio/Source/**.hlsl",
             "XplicitStudio/Source/**.cpp",
             "XplicitStudio/Source/**.c"
         },
@@ -132,6 +135,8 @@ XPLICIT_STUDIO_CONFIG = {
 	"d3d11",
 	"dxgi",
 	"d2d1",
+	"Vendor/glfw/build/src/glfw3dll",
+	"opengl32",
  	"C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {

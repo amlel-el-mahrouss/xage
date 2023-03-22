@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: SceneStream.h
- *			Purpose: Scene I/O for XplicitNgine
+ *			File: SceneManager.h
+ *			Purpose:
  *
  * =====================================================================
  */
