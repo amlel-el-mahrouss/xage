@@ -62,31 +62,25 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 				entrypoint.c_str(),
 				renderer);
 
-		auto color = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader<
-			Xplicit::Renderer::DX11::D3D11_SHADER_TYPE::Pixel>(L"bin/debug/Color.cso",
-				entrypoint.c_str(),
-				renderer);
-
 		auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::RenderComponent>();
 
-		component->add_shader(vertex);
-		component->add_shader(color);
+		vertex->get().input_layouts.push_back(D3D11_INPUT_ELEMENT_DESC());
 
-		vertex->get()->input_layouts.push_back(D3D11_INPUT_ELEMENT_DESC());
+		vertex->get().input_layouts[0].SemanticName = "POSITION";
+		vertex->get().input_layouts[0].SemanticIndex = 0;
+		vertex->get().input_layouts[0].Format = DXGI_FORMAT_R32G32_FLOAT;
+		vertex->get().input_layouts[0].InputSlot = 0;
+		vertex->get().input_layouts[0].AlignedByteOffset = 0;
+		vertex->get().input_layouts[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		vertex->get().input_layouts[0].InstanceDataStepRate = 0;
 
-		vertex->get()->input_layouts[0].SemanticName = "POSITION";
-		vertex->get()->input_layouts[0].SemanticIndex = 0;
-		vertex->get()->input_layouts[0].Format = DXGI_FORMAT_R32G32_FLOAT;
-		vertex->get()->input_layouts[0].InputSlot = 0;
-		vertex->get()->input_layouts[0].AlignedByteOffset = 0;
-		vertex->get()->input_layouts[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-		vertex->get()->input_layouts[0].InstanceDataStepRate = 0;
+		vertex->get()._CreateInputLayout(renderer->get().Device.Get());
 
-		vertex->get()->_CreateInputLayout(renderer->get().Device.Get());
+		component->set(vertex);
 
 		component->push_back(Xplicit::Nplicit::Vector<float>(-0.5f, 0.5f, 0.0f),
 			Xplicit::Nplicit::Color<float>(1.0f, 1.0f, 1.0f, 1.0f));
-		component->push_back(Xplicit::Nplicit::Vector<float>(0.f, 0.5f, 0.0f),
+		component->push_back(Xplicit::Nplicit::Vector<float>(0.0f, 0.5f, 0.0f),
 			Xplicit::Nplicit::Color<float>(1.0f, 1.0f, 1.0f, 1.0f));
 		component->push_back(Xplicit::Nplicit::Vector<float>(0.5f, -0.5f, 0.0f),
 			Xplicit::Nplicit::Color<float>(1.0f, 1.0f, 1.0f, 1.0f));
@@ -94,11 +88,11 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		component->set(renderer.get());
 		component->create();
 
-		return window->run(renderer.get(), Xplicit::Nplicit::Color<float>(40, 40, 40, 255));
+		return window->run(renderer, Xplicit::Nplicit::Color<float>(20, 59, 99, 255));
 	}
 	catch (Xplicit::EngineError& err)
 	{
-		Xplicit::GUI::message_box(L"Something bad happen.. exiting!", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
+		Xplicit::GUI::message_box(L"XplicitNgin", L"Something bad happen.. exiting!", MB_ICONASTERISK | MB_OK);
 	}
 
 	return 0;

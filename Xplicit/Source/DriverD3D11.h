@@ -53,7 +53,7 @@ namespace Xplicit::Details
 	__declspec(align(16))
 		struct VERTEX
 	{
-		D3DXVECTOR3 position;
+		D3DXVECTOR2 position;
 		D3DXVECTOR4 color;
 	};
 
@@ -139,7 +139,7 @@ namespace Xplicit::Renderer::DX11
 
 	public:
 		explicit D3D11ShaderSystem(const pchar* filename)
-			: ShaderSystem(filename, FORMAT_HLSL), m_data(std::make_unique<ShaderData>())
+			: ShaderSystem(filename, FORMAT_HLSL), m_data()
 		{}
 
 		virtual ~D3D11ShaderSystem();
@@ -196,6 +196,8 @@ namespace Xplicit::Renderer::DX11
 				deviceContext->Unmap(matrix_buffer_ptr.Get(), 0);
 				deviceContext->VSSetConstantBuffers(0, 1, matrix_buffer_ptr.GetAddressOf());
 
+				XPLICIT_ASSERT(SUCCEEDED(hr));
+
 				return hr;
 			}
 
@@ -210,7 +212,6 @@ namespace Xplicit::Renderer::DX11
 					blob->GetBufferSize(), input_layout_ptr.GetAddressOf());
 
 				XPLICIT_ASSERT(SUCCEEDED(hr));
-
 				return hr;
 			}
 
@@ -226,14 +227,14 @@ namespace Xplicit::Renderer::DX11
 
 		};
 
-		ShaderData* get() const;
+		ShaderData& get();
 
 	public:
 		virtual int compile() noexcept override;
-		void make(D3D11RenderComponent* component);
+		void update(D3D11RenderComponent* component);
 
 	private:
-		std::unique_ptr<ShaderData> m_data;
+		ShaderData m_data;
 
 		friend D3D11RenderComponent;
 
@@ -249,8 +250,8 @@ namespace Xplicit::Renderer::DX11
 		D3D11RenderComponent(const D3D11RenderComponent&) = default;
 		
 		void push_back(const Nplicit::Vector<float>& vert, const Nplicit::Color<float>& clr);
-		void add_shader(D3D11ShaderSystem* shader);
-		void set(DriverSystemD3D11* dx11);
+		void set(D3D11ShaderSystem* shader) noexcept;
+		void set(DriverSystemD3D11* dx11) noexcept;
 		void create();
 
 	public:
@@ -280,7 +281,7 @@ namespace Xplicit::Renderer::DX11
 		HRESULT m_hr;
 
 	private:
-		std::vector<D3D11ShaderSystem*> m_shaders;
+		D3D11ShaderSystem* m_shader;
 
 		friend D3D11ShaderSystem;
 

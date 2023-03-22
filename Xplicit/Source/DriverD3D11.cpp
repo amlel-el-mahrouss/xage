@@ -313,6 +313,7 @@ namespace Xplicit::Renderer::DX11
 		this->m_coord.emplace(std::move(pair));
 	}
 
+	// this needs to be more generic.
 	void D3D11RenderComponent::create()
 	{
 		if (m_coord.empty())
@@ -331,7 +332,9 @@ namespace Xplicit::Renderer::DX11
 
 		for (auto it = m_coord.cbegin(); it != m_coord.cend(); ++it)
 		{
-			m_vertex_arr[vertex_cnt].position = D3DXVECTOR3(it->first.X, it->first.Y, it->first.Z);
+			m_vertex_arr[vertex_cnt].position.x = it->first.X;
+			m_vertex_arr[vertex_cnt].position.y = it->first.Y;
+
 			m_vertex_arr[vertex_cnt].color = D3DXVECTOR4(it->second.A, it->second.R, it->second.G, it->second.B);
 
 			++vertex_cnt;
@@ -386,7 +389,7 @@ namespace Xplicit::Renderer::DX11
 
 	D3D11RenderComponent::INSTANCE_TYPE D3D11RenderComponent::type() noexcept { return INSTANCE_RENDER; }
 
-	void D3D11RenderComponent::set(DriverSystemD3D11* driver)
+	void D3D11RenderComponent::set(DriverSystemD3D11* driver) noexcept
 	{
 		if (driver)
 			m_driver = driver;
@@ -395,30 +398,26 @@ namespace Xplicit::Renderer::DX11
 	void D3D11RenderComponent::update()
 	{
 		static size_t sz = m_coord.size() - 1;
+
 		if (m_coord.size() != sz)
 			sz = m_coord.size() - 1;
 
 		static const uint32_t stride = sizeof(Xplicit::Details::VERTEX) * sz;
 		static const uint32_t offset = 0;
 
-		m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), &stride, &offset);
 		m_driver->get().Ctx->IASetIndexBuffer(m_index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 		m_driver->get().Ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		if (m_driver && m_driver->get().Ctx && m_vertex_buffer)
-		{
-			for (size_t i = 0; i < m_shaders.size(); ++i)
-				m_shaders[i]->make(this);
+		m_shader->update(this);
 
-		}
-
-		m_driver->get().Ctx->Draw(sz, 0u);
+		m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), &stride, &offset);
+		m_driver->get().Ctx->Draw(sz, offset);
 	}
 
-	void D3D11RenderComponent::add_shader(D3D11ShaderSystem* shader)
+	void D3D11RenderComponent::set(D3D11ShaderSystem* shader) noexcept
 	{
 		if (shader)
-			m_shaders.push_back(shader);
+			m_shader = shader;
 	}
 }
 

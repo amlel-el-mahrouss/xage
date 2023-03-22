@@ -57,41 +57,41 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 
 	if (shader_system)
 	{
-		shader_system->get()->flags1 |= D3D10_SHADER_ENABLE_STRICTNESS;
-		shader_system->get()->entrypoint += entrypoint;
+		shader_system->get().flags1 |= D3D10_SHADER_ENABLE_STRICTNESS;
+		shader_system->get().entrypoint += entrypoint;
 
 		switch (ShaderType)
 		{
 		case D3D11_SHADER_TYPE::Vertex:
 		{
-			shader_system->get()->shader_type += XPLICIT_VERTEX_SHADER;
+			shader_system->get().shader_type += XPLICIT_VERTEX_SHADER;
 			if (shader_system->compile() != 0)
 			{
-				print_error(shader_system->get()->error_blob);
+				print_error(shader_system->get().error_blob);
 				delete shader_system;
 
 				return nullptr;
 			}
 
-			if (FAILED(driver->get().Device->CreateVertexShader(shader_system->get()->blob->GetBufferPointer(),
-				shader_system->get()->blob->GetBufferSize(),
+			if (FAILED(driver->get().Device->CreateVertexShader(shader_system->get().blob->GetBufferPointer(),
+				shader_system->get().blob->GetBufferSize(),
 				nullptr,
-				shader_system->get()->vertex.GetAddressOf())))
+				shader_system->get().vertex.GetAddressOf())))
 			{
 				delete shader_system;
 				return nullptr;
 			}
 
-			shader_system->get()->matrix_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-			shader_system->get()->matrix_buffer_desc.ByteWidth = sizeof(Xplicit::Details::VERTEX);
-			shader_system->get()->matrix_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			shader_system->get()->matrix_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			shader_system->get()->matrix_buffer_desc.MiscFlags = 0;
-			shader_system->get()->matrix_buffer_desc.StructureByteStride = 0;
+			shader_system->get().matrix_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+			shader_system->get().matrix_buffer_desc.ByteWidth = sizeof(Xplicit::Details::VERTEX);
+			shader_system->get().matrix_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			shader_system->get().matrix_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			shader_system->get().matrix_buffer_desc.MiscFlags = 0;
+			shader_system->get().matrix_buffer_desc.StructureByteStride = 0;
 
-			if (FAILED(driver->get().Device->CreateBuffer(&shader_system->get()->matrix_buffer_desc, 
+			if (FAILED(driver->get().Device->CreateBuffer(&shader_system->get().matrix_buffer_desc, 
 				nullptr, 
-				shader_system->get()->matrix_buffer_ptr.GetAddressOf())))
+				shader_system->get().matrix_buffer_ptr.GetAddressOf())))
 			{
 				delete shader_system;
 				return nullptr;
@@ -101,20 +101,20 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 		}
 		case D3D11_SHADER_TYPE::Pixel:
 		{
-			shader_system->get()->shader_type += XPLICIT_PIXEL_SHADER;
+			shader_system->get().shader_type += XPLICIT_PIXEL_SHADER;
 
 			if (shader_system->compile() != 0)
 			{
-				print_error(shader_system->get()->error_blob);
+				print_error(shader_system->get().error_blob);
 				delete shader_system;
 
 				return nullptr;
 			}
 
-			if (FAILED(driver->get().Device->CreatePixelShader(shader_system->get()->blob->GetBufferPointer(),
-				shader_system->get()->blob->GetBufferSize(),
+			if (FAILED(driver->get().Device->CreatePixelShader(shader_system->get().blob->GetBufferPointer(),
+				shader_system->get().blob->GetBufferSize(),
 				nullptr,
-				shader_system->get()->pixel.GetAddressOf())))
+				shader_system->get().pixel.GetAddressOf())))
 			{
 				delete shader_system;
 				return nullptr;
@@ -124,20 +124,20 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 		}
 		case D3D11_SHADER_TYPE::Hull:
 		{
-			shader_system->get()->shader_type += XPLICIT_HULL_SHADER;
+			shader_system->get().shader_type += XPLICIT_HULL_SHADER;
 
 			if (shader_system->compile() != 0)
 			{
-				print_error(shader_system->get()->error_blob);
+				print_error(shader_system->get().error_blob);
 				delete shader_system;
 
 				return nullptr;
 			}
 
-			if (FAILED(driver->get().Device->CreateHullShader(shader_system->get()->blob->GetBufferPointer(),
-				shader_system->get()->blob->GetBufferSize(),
+			if (FAILED(driver->get().Device->CreateHullShader(shader_system->get().blob->GetBufferPointer(),
+				shader_system->get().blob->GetBufferSize(),
 				nullptr,
-				shader_system->get()->hull.GetAddressOf())))
+				shader_system->get().hull.GetAddressOf())))
 			{
 				delete shader_system;
 				return nullptr;

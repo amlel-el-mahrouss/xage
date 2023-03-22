@@ -95,7 +95,7 @@ namespace Xplicit::Bites
 
 	Win32_Window::Traits& Win32_Window::get() noexcept { return m_traits; }
 
-	int Win32_Window::run(Renderer::DX11::DriverSystemD3D11* driver, const Nplicit::Color<float>& clr) noexcept
+	int Win32_Window::run(std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver, const Nplicit::Color<float>& clr) noexcept
 	{
 		MSG msg;
 		RtlZeroMemory(&msg, sizeof(MSG));

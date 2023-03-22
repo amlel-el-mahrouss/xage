@@ -51,7 +51,8 @@ namespace Xplicit::Bites
 
 		using Traits = Win32Traits;
 
-		int run(Renderer::DX11::DriverSystemD3D11* driver, const Nplicit::Color<float>& clr) noexcept;
+		int run(std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver, 
+			const Nplicit::Color<float>& clr) noexcept;
 
 		Traits& get() noexcept;
 

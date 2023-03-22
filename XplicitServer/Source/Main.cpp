@@ -15,13 +15,9 @@
  */
 
 #include "SDK.h"
-
 #include "Actor.h"
-
 #include "SpawnComponent.h"
-
 #include "ApplicationContext.h"
-
 #include "PlayerMovementEvent.h"
 #include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
@@ -219,7 +215,7 @@ int main(int argc, char** argv)
 		XPLICIT_CRITICAL(err.what());
 
 #ifdef XPLICIT_WINDOWS
-		Xplicit::GUI::message_box(L"Something bad happen.. exiting!", L"XplicitNgin", MB_ICONASTERISK | MB_OK);
+		Xplicit::GUI::message_box(L"XplicitNgin", L"Something bad happen.. exiting!", MB_ICONASTERISK | MB_OK);
 #endif
 #endif
 

@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: ApplicationContext.h
- *			Purpose: Application Context.
+ *			Purpose: Application Context
  *
  * =====================================================================
  */
@@ -226,6 +226,7 @@ namespace Xplicit
 		{
 			int32_t X;
 			int32_t Y;
+
 			bool Down;
 		};
 
@@ -334,6 +335,7 @@ namespace Xplicit
 
 #ifndef XPLICIT_GET_DATA_DIR
 #define XPLICIT_GET_DATA_DIR(DIR)\
-const char* DIR = "../Data";
+std::string DIR = getenv("APPDATA");\
+DIR += "/Data/";
 
 #endif
