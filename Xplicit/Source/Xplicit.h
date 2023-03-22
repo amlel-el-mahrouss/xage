@@ -46,7 +46,6 @@ namespace Xplicit
 	class EngineError : public std::runtime_error
 	{
 	public:
-		/* should allocated on the heap btw, anything on the stack can pop out.. */
 		EngineError() : std::runtime_error("XplicitNgin Error") {}
 		~EngineError() = default; // let the ABI define that.
 

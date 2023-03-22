@@ -14,6 +14,7 @@
 * @file
 */
 
+#include <DriverOpenGL.h>
 #include <DriverD3D11.h>
 #include <Bites.h>
 
@@ -41,8 +42,6 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 
 			return 1;
 		}
-
-
 
 		return 0;
 	}

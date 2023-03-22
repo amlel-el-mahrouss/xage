@@ -94,7 +94,7 @@ static void xplicit_attach_mono()
 	XPLICIT_GET_DATA_DIR(data);
 
 	std::string path = data;
-	path += "/Lib/Xplicit.dll"; // The game dll.
+	path += "Lib/Xplicit.dll"; // The game dll.
 
 	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoEngineComponent>();
 	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
@@ -102,9 +102,9 @@ static void xplicit_attach_mono()
 
 static void xplicit_print_help()
 {
-	XPLICIT_INFO("\a-------------- XplicitNgin Game Server - Manual --------------");
-	XPLICIT_INFO("exit: exits the server.");
-	XPLICIT_INFO("-------------- XplicitNgin Game Server - Manual --------------");
+	XPLICIT_INFO("\a-------------- XplicitNgin Game Server Manual --------------");
+	XPLICIT_INFO("exit: Exist the current server.");
+	XPLICIT_INFO("-------------- XplicitNgin Game Server Manual --------------");
 }
 
 static void xplicit_load_shell()
@@ -162,7 +162,7 @@ int main(int argc, char** argv)
 	{
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
-		ZeroMemory(&wsa, sizeof(WSADATA));
+		RtlZeroMemory(&wsa, sizeof(WSADATA));
 
 		Xplicit::init_winsock(&wsa);
 #endif

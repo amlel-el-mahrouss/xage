@@ -20,20 +20,43 @@
 
 namespace Xplicit::Renderer::OpenGL
 {
+	class ShaderError : public std::runtime_error
+	{
+	public:
+		ShaderError(const char* file) : std::runtime_error("Shader Error (OpenGL)"), Path(file) {}
+		~ShaderError() = default; // let the ABI define that.
+
+		ShaderError& operator=(const ShaderError&) = default;
+		ShaderError(const ShaderError&) = default;
+
+	public:
+		std::filesystem::path Path;
+
+	};
+
 	namespace Details
 	{
-		class OpenGLShaderCompiler final
+		class XPLICIT_API OpenGLShaderFactory final
 		{
 		public:
-			OpenGLShaderCompiler() = default;
-			~OpenGLShaderCompiler() = default;
+			struct Traits
+			{
+				std::string shader_text;
+				size_t shader_size;
+			};
 
-			XPLICIT_COPY_DEFAULT(OpenGLShaderCompiler);
+		public:
+			OpenGLShaderFactory() = default;
+			~OpenGLShaderFactory() = default;
+
+			XPLICIT_COPY_DEFAULT(OpenGLShaderFactory);
+
+			OpenGLShaderFactory::Traits operator()(const char* path);
 
 		};
 	}
 
-	class DriverSystemOpenGL : public DriverSystem
+	class XPLICIT_API DriverSystemOpenGL : public DriverSystem
 	{
 	public:
 		DriverSystemOpenGL();
