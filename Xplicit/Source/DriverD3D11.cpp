@@ -397,10 +397,9 @@ namespace Xplicit::Renderer::DX11
 
 	void D3D11RenderComponent::update()
 	{
-		if (!m_shader)
-			return;
-
-		if (!m_driver)
+		if (!m_shader ||
+			!m_driver ||
+			m_vertex_cnt < 1)
 			return;
 
 		static const uint32_t stride = sizeof(Xplicit::Details::VERTEX) * m_vertex_cnt;
@@ -415,7 +414,7 @@ namespace Xplicit::Renderer::DX11
 
 		m_driver->get().Ctx->RSSetState(m_driver->get().RasterState.Get());
 
-		m_driver->get().Ctx->DrawIndexed(m_vertex_cnt, 0, 0);
+		m_driver->get().Ctx->DrawIndexed(m_vertex_cnt, m_index_arr[0], m_index_arr[m_vertex_cnt - 1]);
 	}
 
 	void D3D11RenderComponent::set(D3D11ShaderSystem* shader) noexcept
