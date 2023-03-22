@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Server.cpp
- *			Purpose: Server entrypoint
+ *			Purpose: Server main unit
  *
  * =====================================================================
  */
@@ -126,18 +126,18 @@ static void xplicit_load_shell()
 					auto server = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 					XPLICIT_ASSERT(server);
 
-					xplicit_send_stop_packet(server);
-					Xplicit::NetworkServerTraits::send(server);
+					if (server)
+					{
+						xplicit_send_stop_packet(server);
+						Xplicit::NetworkServerTraits::send(server);
+					}
 
-					// finally stop
+					XPLICIT_INFO("Warning, server is not connected to the Internet.");
 					Xplicit::ApplicationContext::get_singleton_ptr()->ShouldExit = true;
 				}
 
 				if (strcmp(cmd_buf, "man") == 0)
-				{
 					xplicit_print_help();
-				}
-
 			}
 		}
 	);
@@ -193,6 +193,8 @@ int main(int argc, char** argv)
 		xplicit_attach_mono();
 		xplicit_read_xml();
 		xplicit_load_shell();
+
+		const int32_t TICKRATE = XPLICIT_TICKRATE;
 
 		while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{

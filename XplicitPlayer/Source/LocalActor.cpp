@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: LocalActor.cpp
- *			Purpose: Client-side Actors
+ *			Purpose: Client-side Actor
  *
  * =====================================================================
  */
@@ -21,7 +21,7 @@
 namespace Xplicit::Client
 {
 	LocalActor::LocalActor(const int64_t& public_hash)
-		: Component(), MeshComponent("../Data/Studio/Character.dae"), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
+		: Component(), MeshComponent("Character.dae"), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
 	{
 		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(m_network);
@@ -29,8 +29,6 @@ namespace Xplicit::Client
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("LocalActor::LocalActor");
 #endif
-
-		memset(&m_packet, 0, sizeof(NetworkPacket));
 	}
 
 	LocalActor::~LocalActor()
@@ -53,7 +51,15 @@ namespace Xplicit::Client
 			if (m_packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
 				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
 			{
+				auto pos = _Node->getPosition();
 
+				pos.rotateXYBy(m_packet.w);
+
+				pos.X += m_packet.x;
+				pos.Y += m_packet.y;
+				pos.Z += m_packet.z;
+
+				_Node->setPosition(pos);
 			}
 		}
 	}

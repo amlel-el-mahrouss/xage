@@ -26,6 +26,10 @@
 #define XPLICIT_TCP_MAG_COUNT (2U)
 #define XPLICIT_TCP_VERSION (1)
 
+ /// <summary>
+ /// This namespace contains everything from file downloading, to replication.
+ /// We mainly use that to send assets to the player.
+ /// </summary>
 namespace Xplicit::ContentSync
 {
 	namespace Details

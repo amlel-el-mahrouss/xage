@@ -118,6 +118,10 @@ namespace Xplicit
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
 					actor->Position.Z -= m_jump_height_gamevar ? m_jump_height_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+
+				peer->packet.x = actor->Position.X;
+				peer->packet.y = actor->Position.Y;
+				peer->packet.z = actor->Position.Z;
 			}
 		}
 	}

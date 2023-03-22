@@ -17,7 +17,9 @@
 
 namespace Xplicit::Client
 {
-	// Render Traits
+	/// <summary>
+	/// The Component loads according to the Studio/ directory.
+	/// </summary>
 	class MeshComponent
 	{
 	public:

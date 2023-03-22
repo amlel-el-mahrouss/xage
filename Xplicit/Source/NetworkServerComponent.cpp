@@ -18,6 +18,17 @@
 
 namespace Xplicit
 {
+	/// <summary>
+	/// Utility function which removes the peer and actor from the server.
+	/// </summary>
+	/// <param name="peer">The NetworkPeer being targeted.</param>
+	static void xplicit_invalidate_peer(NetworkPeer* peer)
+	{
+		peer->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+		peer->stat = NETWORK_STAT_DISCONNECTED;
+	}
+
+
 	static void xplicit_set_ioctl(SOCKET sock)
 	{
 #ifdef XPLICIT_WINDOWS
@@ -151,6 +162,9 @@ namespace Xplicit
 				{
 					server->get(i)->packet = packet;
 				}
+
+				if (sz < 0)
+					xplicit_invalidate_peer(server->get(i));
 			}
 		}
 	}

@@ -20,7 +20,11 @@ namespace Xplicit::Client
 {
 	MeshComponent::MeshComponent(const char* path)
 	{
-		_Model = IRR->getSceneManager()->getMesh(path);
+		std::string _path = XPLICIT_ENV("APPDATA");
+		_path += "/Data/Studio/";
+		_path += path;
+
+		_Model = IRR->getSceneManager()->getMesh(_path.c_str());
 		XPLICIT_ASSERT(_Model);
 
 		_Node = IRR->getSceneManager()->addAnimatedMeshSceneNode(_Model);

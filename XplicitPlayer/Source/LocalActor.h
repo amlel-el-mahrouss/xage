@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: LocalActor.h
- *			Purpose: Client-side Actors
+ *			Purpose: Client-side Actor
  *
  * =====================================================================
  */
@@ -23,7 +23,6 @@
 namespace Xplicit::Client
 {
 	constexpr const int XPLICIT_NETWORK_DELAY = 100;
-	constexpr const float XPLICIT_SPEED = 20.f;
 
 	class LocalActor : public Component, public MeshComponent
 	{
@@ -44,8 +43,8 @@ namespace Xplicit::Client
 
 	private:
 		NetworkComponent* m_network;
-		NetworkPacket m_packet;
 		CameraComponent* m_camera;
+		NetworkPacket m_packet;
 		int64_t m_public_hash;
 
 	};

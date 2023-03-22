@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: LocalMenuEvent.h
- *			Purpose: CoreUI menu.
+ *			Purpose: Client menu
  *
  * =====================================================================
  */

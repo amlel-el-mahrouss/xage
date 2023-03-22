@@ -37,7 +37,7 @@
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
-#define XPLICIT_NETWORK_VERSION (1)
+#define XPLICIT_NETWORK_VERSION (2U)
 
 namespace Xplicit
 {
@@ -78,23 +78,36 @@ namespace Xplicit
         NETWORK_STAT_COUNT,
     };
 
-    PACKED_STRUCT
-    (
-        class XPLICIT_API NetworkPacket
-        {
-        public:
-            char magic[XPLICIT_NETWORK_MAG_COUNT];
-            NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
-            int32_t version;
+    /// <summary>
+    /// Network floats.
+    /// </summary>
+    using nfloat = float;
 
-        public:
-            int64_t public_hash; /* Public hash being sent (SHARED) */
-            int64_t health; /* the health being sent (SERVER only) */
-            int64_t hash; /* the private hash (SERVER only) */
-            size_t size; /* size of currently sent packet. */
+	/// <summary>
+	/// NetworkPacket for Actor Replication and Network Status.
+    /// Part of the Xplicit Game Protocol.
+	/// </summary>
+	class XPLICIT_API NetworkPacket
+	{
+	public:
+		char magic[XPLICIT_NETWORK_MAG_COUNT];
+		NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
+		int32_t version;
 
-        };
-    );
+	public:
+		int64_t public_hash; /* Public hash being sent (SHARED) */
+        int64_t health; /* the health being sent (SERVER to CLIENT) */
+        int64_t delta; /* delta time from the server. */
+		int64_t hash; /* the private hash (CLIENT to SERVER) */
+		size_t size; /* size of currently sent packet. */
+
+        // position coordinates
+        nfloat x;
+        nfloat y;
+        nfloat z;
+        nfloat w;
+
+	};
 
     class XPLICIT_API NetworkPeer final
     {

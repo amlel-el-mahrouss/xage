@@ -35,6 +35,8 @@ namespace Xplicit::ContentSync
 	
 	void AssetListener::update(EventTypePtr ptr_event)
 	{
+		(void)ptr_event;
+
 		if (!this->get())
 			return;
 
