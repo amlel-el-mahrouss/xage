@@ -161,9 +161,10 @@ namespace Xplicit
 					server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
 				{
 					server->get(i)->packet = packet;
+					return;
 				}
 
-				if (sz < 0)
+				if (sz < 0 || from_len < 0)
 					xplicit_invalidate_peer(server->get(i));
 			}
 		}

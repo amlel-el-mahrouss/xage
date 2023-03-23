@@ -43,7 +43,7 @@ namespace Xplicit
 /// <param name="driver">The rendering driver</param>
 /// <returns>Pointer to a new ShaderSystem</returns>
 /// 
-template <Xplicit::Renderer::DX11::D3D11_SHADER_TYPE ShaderType>
+template <Xplicit::Renderer::DX11::XPLICIT_SHADER_TYPE ShaderType>
 Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader(
 	const pchar* filename,
 	const char* entrypoint,
@@ -63,9 +63,10 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 
 		switch (ShaderType)
 		{
-		case D3D11_SHADER_TYPE::Vertex:
+		case XPLICIT_SHADER_TYPE::Vertex:
 		{
 			shader_system->get().shader_type += XPLICIT_VERTEX_SHADER;
+
 			if (shader_system->compile() != 0)
 			{
 				print_error(shader_system->get().error_blob);
@@ -100,7 +101,7 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 
 			break;
 		}
-		case D3D11_SHADER_TYPE::Pixel:
+		case XPLICIT_SHADER_TYPE::Pixel:
 		{
 			shader_system->get().shader_type += XPLICIT_PIXEL_SHADER;
 
@@ -123,7 +124,7 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 
 			break;
 		}
-		case D3D11_SHADER_TYPE::Hull:
+		case XPLICIT_SHADER_TYPE::Hull:
 		{
 			shader_system->get().shader_type += XPLICIT_HULL_SHADER;
 

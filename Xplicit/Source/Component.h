@@ -68,8 +68,8 @@ namespace Xplicit
 			INSTANCE_ACTOR, // Engine Actor (According to which side you're on (client or server))
 			INSTANCE_LOGIC, // Generic Logic Component
 			INSTANCE_CAMERA, // Camera instance
-			INSTANCE_SCRIPT, // C#/Lua instance
-			INSTANCE_RENDER, // Renderable instance.
+			INSTANCE_SCRIPT, // C#/lua instance
+			INSTANCE_RENDER, // An instance which can be rendered
 			INSTANCE_NETWORK, // Network instance
 			INSTANCE_PHYSICS, // Physics instance
 			INSTANCE_GUI, // GUI instance
@@ -78,8 +78,8 @@ namespace Xplicit
 
 		enum PHYSICS_TYPE : uint8_t
 		{
-			PHYSICS_SIMPLE, /* Rigidbody */
-			PHYSICS_COMPLEX, /* Complex Physics, Softbody */
+			PHYSICS_SIMPLE, /* Rigid-body */
+			PHYSICS_COMPLEX, /* Complex Physics, Soft-body */
 			PHYSICS_NONE,
 			PHYSICS_COUNT,
 		};

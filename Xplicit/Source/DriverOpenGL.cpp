@@ -45,7 +45,7 @@ namespace Xplicit::Renderer::OpenGL
 
 	DriverSystemOpenGL::DriverSystemOpenGL()
 	{
-		// TODO
+		
 	}
 
 	DriverSystemOpenGL::~DriverSystemOpenGL()

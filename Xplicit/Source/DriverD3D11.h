@@ -54,7 +54,6 @@ namespace Xplicit::Details
 		struct VERTEX
 	{
 		D3DXVECTOR2 position;
-		D3DXVECTOR4 color;
 	};
 
 	struct MATRIX
@@ -67,6 +66,8 @@ namespace Xplicit::Details
 
 namespace Xplicit::Renderer::DX11
 {
+	namespace WRL = Microsoft::WRL;
+
 	class DriverSystemD3D11;
 	class D3D11ShaderSystem;
 	class D3D11RenderComponent;
@@ -132,7 +133,7 @@ namespace Xplicit::Renderer::DX11
 
 	XPLICIT_API std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd);
 
-	class XPLICIT_API D3D11ShaderSystem final : public virtual ShaderSystem
+	class XPLICIT_API D3D11ShaderSystem final : public ShaderSystem
 	{
 	public:
 		D3D11ShaderSystem() = delete;
@@ -164,8 +165,7 @@ namespace Xplicit::Renderer::DX11
 			uint32_t flags1, flags2;
 			D3D11_BUFFER_DESC matrix_buffer_desc;
 
-			// Internal directx call.
-			inline HRESULT _SetShaderParams(ID3D11DeviceContext* deviceContext,
+			inline HRESULT set_shader_params(ID3D11DeviceContext* deviceContext,
 				D3DXMATRIX worldMatrix,
 				D3DXMATRIX viewMatrix,
 				D3DXMATRIX projectionMatrix)
@@ -201,7 +201,7 @@ namespace Xplicit::Renderer::DX11
 				return hr;
 			}
 
-			inline HRESULT _CreateInputLayout(ID3D11Device* device)
+			inline HRESULT create_input_layout(ID3D11Device* device)
 			{
 				HRESULT hr = S_OK;
 
@@ -231,12 +231,6 @@ namespace Xplicit::Renderer::DX11
 
 	public:
 		/// <summary>
-		/// Attachs either a pixel or vertex shader system.
-		/// </summary>
-		void attach(D3D11ShaderSystem* system);
-
-
-		/// <summary>
 		/// Compiles the HLSL shader
 		/// </summary>
 		virtual int compile() noexcept override;
@@ -250,8 +244,6 @@ namespace Xplicit::Renderer::DX11
 		ShaderData m_data;
 
 	private:
-		std::shared_ptr<D3D11ShaderSystem> m_sibling;
-
 		friend D3D11RenderComponent;
 
 	};
@@ -265,10 +257,10 @@ namespace Xplicit::Renderer::DX11
 		D3D11RenderComponent& operator=(const D3D11RenderComponent&) = default;
 		D3D11RenderComponent(const D3D11RenderComponent&) = default;
 		
-		void push_back(const Nplicit::Vector<float>& vert);
-		
-		void set(D3D11ShaderSystem* shader) noexcept;
+		void push(const Nplicit::Vector<float>& vert);
+
 		void set(DriverSystemD3D11* dx11) noexcept;
+		void set(D3D11ShaderSystem* system) noexcept;
 
 		size_t size() noexcept;
 		void create();
@@ -283,10 +275,10 @@ namespace Xplicit::Renderer::DX11
 
 	private:
 		std::vector<Nplicit::Vector<float>> m_verts;
+		D3D11ShaderSystem* m_shader;
 	
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertex_buffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> m_index_buffer;
 
 	private:
 		Xplicit::Details::VERTEX* m_vertex_arr;
@@ -299,18 +291,14 @@ namespace Xplicit::Renderer::DX11
 		DriverSystemD3D11* m_driver;
 
 	private:
-		int64_t* m_index_arr;
 		size_t m_vertex_cnt;
 		HRESULT m_hr;
-
-	private:
-		D3D11ShaderSystem* m_shader;
 
 		friend D3D11ShaderSystem;
 
 	};
 
-	enum class D3D11_SHADER_TYPE
+	enum class XPLICIT_SHADER_TYPE
 	{
 		Vertex,
 		Pixel,
@@ -320,7 +308,7 @@ namespace Xplicit::Renderer::DX11
 	class XPLICIT_API D3D11ShaderHelper1 final
 	{
 	public:
-		template <D3D11_SHADER_TYPE ShaderType>
+		template <XPLICIT_SHADER_TYPE ShaderType>
 		static D3D11ShaderSystem* make_shader(
 			const pchar* filename,
 			const char* entrypoint,

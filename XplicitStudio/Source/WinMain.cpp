@@ -24,10 +24,10 @@
 
 namespace Xplicit::Studio
 {
-	class RunnerDirectX final
+	class Runner final
 	{
 	public:
-		RunnerDirectX(HINSTANCE hInst)
+		Runner(HINSTANCE hInst)
 		{
 			// Search and exit if another Xplicit app is open.
 			if (Xplicit::Win32Helpers::find_wnd(XPLICIT_APP_NAME))
@@ -44,23 +44,16 @@ namespace Xplicit::Studio
 
 			auto component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::D3D11RenderComponent>();
 
-			auto shader = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader< Xplicit::Renderer::DX11::D3D11_SHADER_TYPE::Vertex>(
-				L"bin/debug/Vertex.cso",
+			auto shader = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader< Xplicit::Renderer::DX11::XPLICIT_SHADER_TYPE::Vertex>(
+				L"XplicitStudio/Source/Vertex.hlsl",
 				"main",
 				drv
-			);
-
-			auto color = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader< Xplicit::Renderer::DX11::D3D11_SHADER_TYPE::Pixel>(
-				L"bin/debug/Color.cso",
-				"main",
-				drv
-			);
-
-			shader->attach(color);
+				);
 
 			component->set(shader);
 
 			shader->get().input_layouts.push_back(D3D11_INPUT_ELEMENT_DESC());
+
 			shader->get().input_layouts[0].SemanticName = "POSITION";
 			shader->get().input_layouts[0].SemanticIndex = 0;
 			shader->get().input_layouts[0].Format = DXGI_FORMAT_R32G32_FLOAT;
@@ -68,11 +61,11 @@ namespace Xplicit::Studio
 			shader->get().input_layouts[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 			shader->get().input_layouts[0].AlignedByteOffset = 0;
 
-			shader->get()._CreateInputLayout(drv->get().Device.Get());
+			shader->get().create_input_layout(drv->get().Device.Get());
 
-			component->push_back(Xplicit::Nplicit::Vector<float>(-0.5f, 0.5f, 0.0f));
-			component->push_back(Xplicit::Nplicit::Vector<float>(0.0f, 0.5f, 0.0f));
-			component->push_back(Xplicit::Nplicit::Vector<float>(0.5f, -0.5f, 0.0f));
+			component->push(Xplicit::Nplicit::Vector<float>(-0.5f, 0.5f, 0.0f));
+			component->push(Xplicit::Nplicit::Vector<float>(0.0f, 0.5f, 0.0f));
+			component->push(Xplicit::Nplicit::Vector<float>(0.5f, -0.5f, 0.0f));
 
 			component->set(drv.get());
 
@@ -81,7 +74,7 @@ namespace Xplicit::Studio
 			ExitCode = win->run(drv, Xplicit::Nplicit::Color<float>(40, 40, 40));
 		}
 
-		int ExitCode;
+		int ExitCode{ 0 };
 
 	};
 }
@@ -92,10 +85,11 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 	{
 #ifdef XPLICIT_DEBUG
 		Xplicit::open_terminal();
-		Xplicit::Studio::RunnerDirectX runner(hInst);
+#endif
+
+		Xplicit::Studio::Runner runner(hInst);
 
 		return runner.ExitCode;
-#endif
 	}
 	catch (Xplicit::EngineError& err)
 	{

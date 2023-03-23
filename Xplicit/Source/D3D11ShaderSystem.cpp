@@ -34,20 +34,13 @@ namespace Xplicit::Renderer::DX11
 
 	int D3D11ShaderSystem::compile() noexcept
 	{
-		HRESULT hr = D3DReadFileToBlob(m_shader.c_str(), &m_data.blob);
+		HRESULT hr = D3DCompileFromFile(m_shader.c_str(), nullptr, nullptr, m_data.entrypoint.c_str(), m_data.shader_type.c_str(),
+			m_data.flags1,
+			m_data.flags2,
+			&m_data.blob,
+			&m_data.error_blob);
 
-		if (FAILED(hr))
-		{
-			hr = D3DCompileFromFile(m_shader.c_str(), nullptr, nullptr, m_data.entrypoint.c_str(), m_data.shader_type.c_str(),
-				m_data.flags1,
-				m_data.flags2,
-				&m_data.blob,
-				&m_data.error_blob);
-
-			return SUCCEEDED(hr) ? 0 : -1;
-		}
-
-		return 0;
+		return SUCCEEDED(hr) ? 0 : 1;
 	}
 
 	D3D11ShaderSystem::ShaderData& D3D11ShaderSystem::get() { return m_data; }
@@ -59,43 +52,15 @@ namespace Xplicit::Renderer::DX11
 
 		if (this->m_data.input_layout_ptr)
 			component->m_driver->get().Ctx->IASetInputLayout(this->m_data.input_layout_ptr.Get());
-		
+	
 		if (this->m_data.vertex)
-		{
 			component->m_driver->get().Ctx->VSSetShader(this->m_data.vertex.Get(), nullptr, 0);
-		}
-		else
-		{
-			if (m_sibling && m_sibling->m_data.vertex)
-				component->m_driver->get().Ctx->VSSetShader(m_sibling->m_data.vertex.Get(), nullptr, 0);
-
-		}
 
 		if (this->m_data.pixel)
-		{
 			component->m_driver->get().Ctx->PSSetShader(this->m_data.pixel.Get(), nullptr, 0);
-		}
-		else
-		{
-			if (m_sibling && m_sibling->m_data.pixel)
-				component->m_driver->get().Ctx->PSSetShader(m_sibling->m_data.pixel.Get(), nullptr, 0);
-		}
 
 		if (this->m_data.hull)
-		{
 			component->m_driver->get().Ctx->HSSetShader(this->m_data.hull.Get(), nullptr, 0);
-		}
-		else
-		{
-			if (m_sibling && m_sibling->m_data.hull)
-				component->m_driver->get().Ctx->HSSetShader(m_sibling->m_data.hull.Get(), nullptr, 0);
-		}
-	}
-
-	void D3D11ShaderSystem::attach(D3D11ShaderSystem* system)
-	{
-		if (system)
-			m_sibling = std::shared_ptr<D3D11ShaderSystem>(system);
 	}
 }
 

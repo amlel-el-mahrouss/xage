@@ -141,9 +141,9 @@ namespace Xplicit::Renderer::DX11
 		depthBufferDesc.Height = XPLICIT_MIN_HEIGHT;
 		depthBufferDesc.MipLevels = 1;
 		depthBufferDesc.ArraySize = 1;
-		depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		depthBufferDesc.SampleDesc.Count = 1;
-		depthBufferDesc.SampleDesc.Quality = 0;
+		depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthBufferDesc.SampleDesc.Count = 1u;
+		depthBufferDesc.SampleDesc.Quality = 0u;
 		depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		depthBufferDesc.CPUAccessFlags = 0;
@@ -180,16 +180,18 @@ namespace Xplicit::Renderer::DX11
 		if (FAILED(hr))
 			throw Win32Error("[CreateDepthStencilState] Failed to call function correctly!");
 
-		m_private.Ctx->OMSetDepthStencilState(m_private.DepthStencilState.Get(), 1);
+		m_private.Ctx->OMSetDepthStencilState(m_private.DepthStencilState.Get(), 1u);
 
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 		RtlZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 
-		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-		hr = m_private.Device->CreateDepthStencilView(m_private.DepthTexture.Get(), &depthStencilViewDesc, m_private.DepthStencil.GetAddressOf());
+		hr = m_private.Device->CreateDepthStencilView(m_private.DepthTexture.Get(), 
+			&depthStencilViewDesc,
+			m_private.DepthStencil.GetAddressOf());
 
 		if (FAILED(hr))
 			throw Win32Error("[CreateDepthStencilView] Failed to call function correctly!");
@@ -198,12 +200,12 @@ namespace Xplicit::Renderer::DX11
 		RtlZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
 		rasterDesc.AntialiasedLineEnable = false;
-		rasterDesc.CullMode = D3D11_CULL_BACK;
+		rasterDesc.CullMode = D3D11_CULL_FRONT;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
 		rasterDesc.DepthClipEnable = true;
 		rasterDesc.FillMode = D3D11_FILL_SOLID;
-		rasterDesc.FrontCounterClockwise = false;
+		rasterDesc.FrontCounterClockwise = true;
 		rasterDesc.MultisampleEnable = false;
 		rasterDesc.ScissorEnable = false;
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
@@ -224,6 +226,8 @@ namespace Xplicit::Renderer::DX11
 		m_private.Viewport.MaxDepth = 1.0f;
 		m_private.Viewport.TopLeftX = 0.0f;
 		m_private.Viewport.TopLeftY = 0.0f;
+
+		m_private.Ctx->RSSetViewports(1u, &m_private.Viewport);
 
 		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] Driver has been created.");
 	}
@@ -295,22 +299,19 @@ namespace Xplicit::Renderer::DX11
 
 	D3D11RenderComponent::D3D11RenderComponent()
 		: m_vertex_data(), m_hr(0), m_vertex_buf_desc(), m_index_buf_desc(), m_vertex_buffer(nullptr),
-		m_index_buffer(nullptr), m_driver(nullptr), m_index_arr(nullptr), m_vertex_arr(nullptr),
-		m_index_data(), m_vertex_cnt(0)
+		 m_driver(nullptr), m_vertex_arr(nullptr),
+		m_index_data(), m_vertex_cnt(0), m_shader(nullptr)
 	{
 		
 	}
 
 	D3D11RenderComponent::~D3D11RenderComponent()
 	{
-		if (m_index_arr)
-			delete[] m_index_arr;
-
 		if (m_vertex_arr)
 			delete[] m_vertex_arr;
 	}
 
-	void D3D11RenderComponent::push_back(const Nplicit::Vector<float>& vert)
+	void D3D11RenderComponent::push(const Nplicit::Vector<float>& vert)
 	{
 		this->m_verts.push_back(vert);
 	}
@@ -337,53 +338,25 @@ namespace Xplicit::Renderer::DX11
 			m_vertex_arr[m_vertex_cnt].position.x = m_verts[vertex_index].X;
 			m_vertex_arr[m_vertex_cnt].position.y = m_verts[vertex_index].Y;
 
-			m_vertex_arr[m_vertex_cnt].color = D3DXVECTOR4(1.f, 1.f, 1.f, 1.f);
-
 			++m_vertex_cnt;
 		}
 
 		m_vertex_buf_desc.Usage = D3D11_USAGE_DEFAULT;
-		m_vertex_buf_desc.ByteWidth = sizeof(Xplicit::Details::VERTEX) * m_vertex_cnt;
+		m_vertex_buf_desc.ByteWidth = m_vertex_cnt;
 		m_vertex_buf_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		m_vertex_buf_desc.CPUAccessFlags = 0;
 		m_vertex_buf_desc.MiscFlags = 0;
-		m_vertex_buf_desc.StructureByteStride = 0;
+		m_vertex_buf_desc.StructureByteStride = sizeof(Xplicit::Details::VERTEX);
 
 		m_vertex_data.pSysMem = m_vertex_arr;
-		m_vertex_data.SysMemPitch = 0;
-		m_vertex_data.SysMemSlicePitch = 0;
 
 		m_hr = m_driver->get().Device->CreateBuffer(&m_vertex_buf_desc, &m_vertex_data, m_vertex_buffer.GetAddressOf());
 		
 		if (FAILED(m_hr))
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create)");
 
-		m_index_buf_desc.Usage = D3D11_USAGE_DEFAULT;
-		m_index_buf_desc.ByteWidth = sizeof(ULONG) * m_vertex_cnt;
-		m_index_buf_desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		m_index_buf_desc.CPUAccessFlags = 0;
-		m_index_buf_desc.MiscFlags = 0;
-		m_index_buf_desc.StructureByteStride = 0;
-
-		if (!m_index_arr)
-			m_index_arr = new int64_t[m_vertex_cnt];
-
 		XPLICIT_ASSERT(m_vertex_arr);
-
-		m_index_arr[0] = 0;
-		m_index_arr[1] = 1;
-		m_index_arr[2] = 2;
-
-		m_index_data.pSysMem = m_index_arr;
-		m_index_data.SysMemPitch = 0;
-		m_index_data.SysMemSlicePitch = 0;
-
-		m_hr = m_driver->get().Device->CreateBuffer(&m_index_buf_desc, &m_index_data, m_index_buffer.GetAddressOf());
-
-		if (FAILED(m_hr))
-			throw Win32Error("DirectX Error (D3D11RenderComponent::create) Index Buffer initialization failed!");
 	}
-
 
 	bool D3D11RenderComponent::should_update() noexcept { return true; }
 
@@ -397,7 +370,13 @@ namespace Xplicit::Renderer::DX11
 			m_driver = driver;
 	}
 
-	void D3D11RenderComponent::update()
+	void D3D11RenderComponent::set(D3D11ShaderSystem* system) noexcept
+	{
+		if (system)
+			m_shader = system;
+	}
+	
+	void D3D11RenderComponent::update() 
 	{
 		if (!m_shader ||
 			!m_driver ||
@@ -407,7 +386,6 @@ namespace Xplicit::Renderer::DX11
 		static const uint32_t stride[] = { sizeof(Xplicit::Details::VERTEX) };
 		static const uint32_t offset = 0;
 
-		m_driver->get().Ctx->IASetIndexBuffer(m_index_buffer.Get(), DXGI_FORMAT_R32_UINT, offset);
 		m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), stride, &offset);
 
 		m_driver->get().Ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -416,13 +394,7 @@ namespace Xplicit::Renderer::DX11
 
 		m_driver->get().Ctx->RSSetState(m_driver->get().RasterState.Get());
 
-		m_driver->get().Ctx->DrawIndexed(m_vertex_cnt, m_index_arr[0], m_index_arr[m_vertex_cnt - 1]);
-	}
-
-	void D3D11RenderComponent::set(D3D11ShaderSystem* shader) noexcept
-	{
-		if (shader)
-			m_shader = shader;
+		m_driver->get().Ctx->Draw(m_vertex_cnt, 0);
 	}
 
 	size_t D3D11RenderComponent::size() noexcept

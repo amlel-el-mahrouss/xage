@@ -34,6 +34,8 @@ XPLICIT_API bool xplicit_open_logger();
 
 namespace Xplicit 
 {
+	namespace FS = std::filesystem;
+
 	// platform dependent chars
 #ifdef XPLICIT_WINDOWS
 	using pchar = wchar_t;
