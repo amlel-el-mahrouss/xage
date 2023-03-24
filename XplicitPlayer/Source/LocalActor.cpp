@@ -53,11 +53,7 @@ namespace Xplicit::Client
 			{
 				auto pos = m_pNode->getPosition();
 
-				pos.rotateXYBy(m_packet.w);
-
-				pos.X += m_packet.x;
-				pos.Y += m_packet.y;
-				pos.Z += m_packet.z;
+				
 
 				m_pNode->setPosition(pos);
 			}

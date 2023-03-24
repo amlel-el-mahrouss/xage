@@ -101,12 +101,6 @@ namespace Xplicit
 		int64_t hash; /* the private hash (CLIENT to SERVER) */
 		size_t size; /* size of currently sent packet. */
 
-        // position coordinates
-        nfloat x;
-        nfloat y;
-        nfloat z;
-        nfloat w;
-
 	};
 
     class XPLICIT_API NetworkPeer final

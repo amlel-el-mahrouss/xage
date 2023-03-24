@@ -16,16 +16,14 @@
 
 #include "PlayerMovementEvent.h"
 
-#define XPLICIT_DEFAULT_VEL (7.f)
-
 namespace Xplicit
 {
 	/// <summary>
 	/// xplicit_can_move: Checks if a player can move
 	/// </summary>
-	/// <param name="actors">The Actor List</param>
-	/// <param name="actor">The Actor Pointer</param>
-	/// <returns>True if it can move.</returns>
+	/// <param name="actors">Type: ActorArray</param>
+	/// <param name="actor">Type: Actor* Description: Actor pointer</param>
+	/// <returns>Boolean: Returns true if the actor can move.</returns>
 	static bool xplicit_can_move(ActorArray& actors, Actor* actor)
 	{
 		XPLICIT_ASSERT(actor);

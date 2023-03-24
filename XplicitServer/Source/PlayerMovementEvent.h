@@ -12,9 +12,10 @@
 
 #pragma once
 
-#include "SDK.h" /* For NplicitNgin */
-
+#include "SDK.h"
 #include "Actor.h"
+
+#define XPLICIT_DEFAULT_VEL (7.f)
 
 namespace Xplicit
 {
