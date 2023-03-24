@@ -27,7 +27,7 @@
 #endif // XPLICIT_WINDOWS
 
 
-namespace Xplicit::Details
+namespace Xplicit::Network
 {
 	enum class SOCKET_TYPE
 	{

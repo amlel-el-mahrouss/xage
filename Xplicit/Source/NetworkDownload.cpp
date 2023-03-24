@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: DownloadProtocol.cpp
- *			Purpose: Xplicit asset protocol
+ *			Purpose: Xplicit download protocol
  *
  * =====================================================================
  */
@@ -17,16 +17,16 @@
 #include "NetworkDownload.h"
 #include "Crc32.h"
 
-namespace Xplicit::ContentSync
+namespace Xplicit::Network
 {
-	NetworkSharedFile::NetworkSharedFile(char* bytes, size_t len)
+	NetworkSharedFile::NetworkSharedFile(const char* bytes, size_t len)
 	{
 		this->set(bytes, len);
 	}
 
 	NetworkSharedFile::~NetworkSharedFile() {}
 
-	int NetworkSharedFile::set(char* bytes, size_t len)
+	int NetworkSharedFile::set(const char* bytes, size_t len)
 	{
 		if (!bytes)
 			return -1;
@@ -34,31 +34,37 @@ namespace Xplicit::ContentSync
 		if (len < 1)
 			return -2;
 
-		m_arrBytes.clear();
-		m_arrBytes.reserve(len);
+		m_bytes.clear();
+		m_bytes.reserve(len);
 
-		for (size_t i = 0; i < m_arrBytes.size(); ++i)
+		for (size_t i = 0; i < m_bytes.size(); ++i)
 		{
-			m_arrBytes[i] = bytes[i];
+			m_bytes[i] = bytes[i];
 		}
 
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[XDPDownloadFile::set] Call returned 0.");
+		XPLICIT_INFO("[DebugInterface] Call returned 0.");
+
+#ifdef XPLICIT_WINDOWS
+		OutputDebugStringA("[DebugInterface] Call returned 0.");
+#endif
 #endif
 
 		return 0;
 	}
 
-	char* NetworkSharedFile::get() noexcept
+	const char* NetworkSharedFile::get() noexcept
 	{
-		XPLICIT_ASSERT(!m_arrBytes.empty());
-		return m_arrBytes.data();
+		if (m_bytes.empty())
+			return "(null)";
+
+		return m_bytes.data();
 	}
 
-	size_t NetworkSharedFile::size() noexcept { return m_arrBytes.size(); }
+	size_t NetworkSharedFile::size() noexcept { return m_bytes.size(); }
 
 	NetworkDownloadTask::NetworkDownloadTask()
-		: m_bReady(false), m_vFiles()
+		: m_bReady(false), m_files()
 	{
 	
 	}
@@ -71,21 +77,20 @@ namespace Xplicit::ContentSync
 	void NetworkDownloadTask::add(NetworkSharedFile* file)
 	{
 		if (file)
-			m_vFiles.push_back(file);
+			m_files.push_back(file);
 	}
 
 	bool NetworkDownloadTask::remove(NetworkSharedFile* file)
 	{
 		if (file)
 		{
-			auto it = std::find_if(m_vFiles.cbegin(), m_vFiles.cend(),
-			[&](NetworkSharedFile* ptr) -> bool
-			{
-				return file == ptr;
-			});
+			auto it = std::find(m_files.cbegin(), m_files.cend(), file);
 
-			if (it != m_vFiles.cend())
+			if (it != m_files.cend())
+			{
+				m_files.erase(it);
 				return true;
+			}
 		}
 
 		return false;
@@ -99,26 +104,28 @@ namespace Xplicit::ContentSync
 
 			data.push_back(XPLICIT_TCP_MAG_0);
 			data.push_back(XPLICIT_TCP_MAG_1);
+			data.push_back(XPLICIT_TCP_MAG_2);
+			data.push_back(compressed);
 			data.push_back(XPLICIT_TCP_VERSION);
 
-			data.push_back(compressed);
+			data.push_back('\r');
+			data.push_back('\n');
 
-			std::jthread worker = std::jthread([&]() -> void
+			Thread worker([&]() -> void
 				{
-					for (size_t i = 0; i < m_vFiles.size(); ++i)
+					for (size_t file_index = 0; file_index < m_files.size(); ++file_index)
 					{
-						for (size_t y = 0; y < m_vFiles[y]->size(); ++y)
+						for (size_t data_index = 0; data_index < m_files[file_index]->size(); ++data_index)
 						{
-							data_tmp.push_back(m_vFiles[i]->get()[y]);
+							data_tmp.push_back(m_files[file_index]->get()[data_index]);
 						}
 
-						// add these 5 characters, to separate each archives.
+						// add these 4 characters, to separate each file.
 
-						data.push_back('!');
-						data.push_back('<');
-						data.push_back('A');
-						data.push_back('R');
-						data.push_back('>');
+						data.push_back('\r');
+						data.push_back('\n');
+						data.push_back('\r');
+						data.push_back('\n');
 					}
 			});
 

@@ -12,7 +12,7 @@
 
 #include "SocketWrapper.h"
 
-namespace Xplicit::Details
+namespace Xplicit::Network
 {
 	Socket::Socket(const SOCKET_TYPE type)
 	{

@@ -36,6 +36,7 @@ namespace Xplicit
 {
 	namespace FS = std::filesystem;
 
+	using Thread = std::jthread;
 	using String = std::string;
 
 	template <typename CharType>

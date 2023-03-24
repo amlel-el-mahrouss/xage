@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: VideoDriver.cpp
- *			Purpose: Direct3D renderer.
+ *			Purpose: Generic Video driver.
  *
  * =====================================================================
  */

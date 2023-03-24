@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: VideoDriver.h
- *			Purpose: Video Driver, abstracted Graphics back-end.
+ *			Purpose: Generic Video driver.
  *
  * =====================================================================
  */
@@ -14,10 +14,11 @@
 
 #include "Xplicit.h"
 
-#include "DriverD3D11.h"
 #include "DriverOpenGL.h"
 
 #ifdef XPLICIT_WINDOWS
+
+#include "DriverD3D11.h"
 
 namespace Xplicit
 {

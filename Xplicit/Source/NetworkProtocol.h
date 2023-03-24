@@ -53,7 +53,7 @@ namespace Xplicit
     using Socket = socket;
 #endif
 
-    // network idents for network commands.
+    // network commands.
     enum NETWORK_CMD : int16_t
     {
         NETWORK_CMD_BEGIN = 100, // start network, handshake
@@ -82,18 +82,12 @@ namespace Xplicit
         NETWORK_STAT_COUNT,
     };
 
-    /// <summary>
-    /// Network floats.
-    /// </summary>
     using nfloat = float;
 
-	/// <summary>
-	/// An XDP NetworkPacket.
-	/// </summary>
 	class XPLICIT_API NetworkPacket
 	{
 	public:
-		char magic[XPLICIT_NETWORK_MAG_COUNT];
+        char8_t magic[XPLICIT_NETWORK_MAG_COUNT];
 		NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
 		int32_t version;
 
@@ -118,14 +112,13 @@ namespace Xplicit
             UniqueAddress();
             ~UniqueAddress();
 
-            UniqueAddress& operator=(const UniqueAddress&) = default;
-            UniqueAddress(const UniqueAddress&) = default;
+			XPLICIT_COPY_DEFAULT(UniqueAddress);
 
             const uuids::uuid& get() noexcept { return uuid; }
 
         private:
-            uuids::uuid public_uuid; /* Just here for saving purposes. */
-            uuids::uuid uuid; /* Given to the connecting client */
+            uuids::uuid public_uuid;
+            uuids::uuid uuid;
 
             std::string name;
 
@@ -146,8 +139,7 @@ namespace Xplicit
         NetworkPeer();
         ~NetworkPeer();
 
-        NetworkPeer& operator=(const NetworkPeer&) = default;
-        NetworkPeer(const NetworkPeer&) = default;
+        XPLICIT_COPY_DEFAULT(NetworkPeer);
 
         bool operator==(const NetworkPeer& cl);
         bool operator!=(const NetworkPeer& cl);

@@ -22,10 +22,6 @@
 #include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
 
-#ifndef XPLICIT_TICKRATE
-#define XPLICIT_TICKRATE (128U)
-#endif // !XPLICIT_TICKRATE
-
 static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server);
 static void xplicit_attach_mono();
 static void xplicit_load_shell();
@@ -193,8 +189,6 @@ int main(int argc, char** argv)
 		xplicit_attach_mono();
 		xplicit_read_xml();
 		xplicit_load_shell();
-
-		const int32_t TICKRATE = XPLICIT_TICKRATE;
 
 		while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{
