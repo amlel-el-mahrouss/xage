@@ -53,7 +53,8 @@ namespace Xplicit::Details
 	__declspec(align(16))
 		struct VERTEX
 	{
-		D3DXVECTOR2 position;
+		D3DXVECTOR3 position;
+		D3DXVECTOR4 color;
 	};
 
 	struct MATRIX
@@ -139,7 +140,7 @@ namespace Xplicit::Renderer::DX11
 		D3D11ShaderSystem() = delete;
 
 	public:
-		explicit D3D11ShaderSystem(const pchar* filename)
+		explicit D3D11ShaderSystem(const PChar* filename)
 			: ShaderSystem(filename, FORMAT_HLSL), m_data()
 		{}
 
@@ -310,17 +311,12 @@ namespace Xplicit::Renderer::DX11
 	public:
 		template <XPLICIT_SHADER_TYPE ShaderType>
 		static D3D11ShaderSystem* make_shader(
-			const pchar* filename,
+			const PChar* filename,
 			const char* entrypoint,
 			std::unique_ptr<DriverSystemD3D11>& driver
 		);
 
 	};
-}
-
-namespace Xplicit::Renderer
-{
-	using RenderComponent = DX11::D3D11RenderComponent;
 }
 
 #include "DriverD3D11.inl"

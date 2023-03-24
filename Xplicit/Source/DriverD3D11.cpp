@@ -98,7 +98,7 @@ namespace Xplicit::Renderer::DX11
 
 	void DriverSystemD3D11::setup()
 	{
-		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_0 };
+		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
 
 		auto hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,
@@ -247,6 +247,7 @@ namespace Xplicit::Renderer::DX11
 		float rgba[4]{ r, g, b, a };
 
 		m_private.Ctx->ClearRenderTargetView(m_private.RenderTarget.Get(), rgba);
+
 		m_private.Ctx->ClearDepthStencilView(m_private.DepthStencil.Get(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 			1,
@@ -254,8 +255,6 @@ namespace Xplicit::Renderer::DX11
 
 		m_private.Ctx->OMSetRenderTargets(1, m_private.RenderTarget.GetAddressOf(),
 			m_private.DepthStencil.Get());
-
-		m_private.Ctx->RSSetViewports(1, &m_private.Viewport);
 
 	}
 
@@ -337,6 +336,7 @@ namespace Xplicit::Renderer::DX11
 		{
 			m_vertex_arr[m_vertex_cnt].position.x = m_verts[vertex_index].X;
 			m_vertex_arr[m_vertex_cnt].position.y = m_verts[vertex_index].Y;
+			m_vertex_arr[m_vertex_cnt].position.z = m_verts[vertex_index].Z;
 
 			++m_vertex_cnt;
 		}
@@ -383,17 +383,15 @@ namespace Xplicit::Renderer::DX11
 			m_vertex_cnt < 1)
 			return;
 
-		static const uint32_t stride[] = { sizeof(Xplicit::Details::VERTEX) };
+		static const uint32_t stride[] = { sizeof(Xplicit::Details::VERTEX), m_vertex_cnt };
 		static const uint32_t offset = 0;
 
 		m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), stride, &offset);
-
 		m_driver->get().Ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		m_shader->update(this);
 
 		m_driver->get().Ctx->RSSetState(m_driver->get().RasterState.Get());
-
 		m_driver->get().Ctx->Draw(m_vertex_cnt, 0);
 	}
 

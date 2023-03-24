@@ -36,19 +36,24 @@ namespace Xplicit
 {
 	namespace FS = std::filesystem;
 
+	using String = std::string;
+
+	template <typename CharType>
+	using BasicString = std::basic_string<CharType>;
+
 	// platform dependent chars
 #ifdef XPLICIT_WINDOWS
-	using pchar = wchar_t;
+	using PChar = wchar_t;
 #else
-	using pchar = char;
+	using PChar = char;
 #endif
 
-	using string = std::basic_string<pchar>;
+	using PString = BasicString<PChar>;
 
 	class EngineError : public std::runtime_error
 	{
 	public:
-		EngineError() : std::runtime_error("XplicitNgin Error") {}
+		EngineError() : std::runtime_error("Engine Error") {}
 		~EngineError() = default; // let the ABI define that.
 
 		EngineError& operator=(const EngineError&) = default;

@@ -15,14 +15,14 @@
 namespace Xplicit::Bites
 {
 #ifdef XPLICIT_WINDOWS
-	Win32_Window::Win32_Window(const char* wndName, const char* wndClass,
+	Win32Window::Win32Window(const char* wndName, const char* wndClass,
 		HINSTANCE hInstance)
 		: m_traits()
 	{
 		RtlZeroMemory(&m_traits.WndClass, sizeof(WNDCLASSEXA));
 
 		m_traits.WndClass.cbSize = sizeof(WNDCLASSEXA);
-		m_traits.WndClass.lpfnWndProc = Win32_Window::cdecl_window_procedure;
+		m_traits.WndClass.lpfnWndProc = Win32Window::cdecl_window_procedure;
 		m_traits.WndClass.lpszClassName = wndClass;
 		m_traits.WndClass.hInstance = hInstance;
 		m_traits.WndClass.hIcon = LoadIcon(hInstance, IDI_WINLOGO);
@@ -44,7 +44,8 @@ namespace Xplicit::Bites
 			wndName,
 			WS_BORDER,
 			x,
-			y, XPLICIT_MIN_WIDTH,
+			y, 
+			XPLICIT_MIN_WIDTH,
 			XPLICIT_MIN_HEIGHT,
 			nullptr,
 			nullptr,
@@ -57,7 +58,7 @@ namespace Xplicit::Bites
 		UpdateWindow(m_traits.WindowHandle);
 	}
 
-	LRESULT Win32_Window::window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	LRESULT Win32Window::window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
 		switch (msg)
 		{
@@ -76,26 +77,26 @@ namespace Xplicit::Bites
 		return DefWindowProcA(hwnd, msg, wparam, lparam);
 	}
 
-	LRESULT CALLBACK Win32_Window::cdecl_window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	LRESULT CALLBACK Win32Window::cdecl_window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		static Win32_Window* win = nullptr;
+		static Win32Window* win = nullptr;
 
 		if (win == nullptr && msg == WM_CREATE)
-			win = reinterpret_cast<Win32_Window*>(lparam);
+			win = reinterpret_cast<Win32Window*>(lparam);
 
 		return win ? win->window_procedure(hwnd, msg, wparam, lparam) :
 			DefWindowProcA(hwnd, msg, wparam, lparam);
 	}
 
-	Win32_Window::~Win32_Window()
+	Win32Window::~Win32Window()
 	{
 		if (m_traits.WindowHandle)
 			DestroyWindow(m_traits.WindowHandle);
 	}
 
-	Win32_Window::Traits& Win32_Window::get() noexcept { return m_traits; }
+	Win32Window::Traits& Win32Window::get() noexcept { return m_traits; }
 
-	int Win32_Window::run(std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver, const Nplicit::Color<float>& clr) noexcept
+	int Win32Window::run(std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver, const Nplicit::Color<float>& clr) noexcept
 	{
 		MSG msg;
 		RtlZeroMemory(&msg, sizeof(MSG));

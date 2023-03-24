@@ -66,9 +66,9 @@ namespace Xplicit
 		enum INSTANCE_TYPE : uint8_t 
 		{
 			INSTANCE_ACTOR, // Engine Actor (According to which side you're on (client or server))
-			INSTANCE_LOGIC, // Generic Logic Component
+			INSTANCE_LOGIC, // Generic Component
 			INSTANCE_CAMERA, // Camera instance
-			INSTANCE_SCRIPT, // C#/lua instance
+			INSTANCE_SCRIPT, // Script instance
 			INSTANCE_RENDER, // An instance which can be rendered
 			INSTANCE_NETWORK, // Network instance
 			INSTANCE_PHYSICS, // Physics instance

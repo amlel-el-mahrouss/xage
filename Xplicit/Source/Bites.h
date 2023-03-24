@@ -26,21 +26,24 @@
 
 #include "DriverD3D11.h"
 
+#define XPLICIT_GET_X_POS(LPARAM) GET_X_LPARAM(LPARAM)
+#define XPLICIT_GET_Y_POS(LPARAM) GET_Y_LPARAM(LPARAM)
+
 namespace Xplicit::Bites
 {
-	class XPLICIT_API Win32_Window final
+	class XPLICIT_API Win32Window final
 	{
 	public:
-		Win32_Window(const char* wndName, const char* wndClass,
+		Win32Window(const char* wndName, const char* wndClass,
 			HINSTANCE hInstance);
 
 		static LRESULT window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 		static LRESULT CALLBACK cdecl_window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-		~Win32_Window();
+		~Win32Window();
 
-		Win32_Window& operator=(const Win32_Window&) = default;
-		Win32_Window(const Win32_Window&) = default;
+		Win32Window& operator=(const Win32Window&) = default;
+		Win32Window(const Win32Window&) = default;
 
 	public:
 		struct Win32Traits
@@ -61,4 +64,8 @@ namespace Xplicit::Bites
 
 	};
 }
+
+#define XPLICIT_MAIN()\
+INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
+
 #endif

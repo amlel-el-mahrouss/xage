@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: NetworkDownload.h
- *			Purpose: Xplicit download protocol
+ *			Purpose: Xplicit asset protocol
  *
  * =====================================================================
  */
@@ -56,10 +56,8 @@ namespace Xplicit::ContentSync
 		NetworkSharedFile() = delete;
 
 	public:
-		~NetworkSharedFile();
-
-	public:
 		NetworkSharedFile(char* bytes, size_t len);
+		~NetworkSharedFile();
 
 		XPLICIT_COPY_DEFAULT(NetworkSharedFile);
 
@@ -69,7 +67,7 @@ namespace Xplicit::ContentSync
 		char* get() noexcept;
 
 	private:
-		std::vector<char> m_bytes;
+		std::vector<char> m_arrBytes;
 
 	};
 
@@ -81,17 +79,19 @@ namespace Xplicit::ContentSync
 
 		XPLICIT_COPY_DELETE(NetworkDownloadTask);
 
+	public:
 		void add(NetworkSharedFile* file);
 		bool remove(NetworkSharedFile* file);
 
+	public:
 		operator bool() noexcept;
 		bool is_ready() noexcept;
 		void set(const bool ready = false) noexcept;
 		void operator()(Socket& socket, const bool compressed = false);
 
 	private:
-		std::vector<NetworkSharedFile*> m_files;
-		bool m_ready;
+		std::vector<NetworkSharedFile*> m_vFiles;
+		bool m_bReady;
 
 	};
 }

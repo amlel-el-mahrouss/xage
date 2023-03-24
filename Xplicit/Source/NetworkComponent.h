@@ -30,34 +30,28 @@
 #endif
 #endif
 
-namespace Xplicit {
-    enum NETWORK_ERR : int
-    {
-        NETERR_BAD_CHALLENGE,
-        NETERR_PING_TOO_HIGH,
-        NETERR_INTERNAL_ERROR,
-        NETERR_BAN,
-        NETERR_KICK,
-        NETERR_COUNT,
-    };
+namespace Xplicit 
+{
+	enum NETWORK_ERR : int
+	{
+		NETERR_BAD_CHALLENGE,
+		NETERR_PING_TOO_HIGH,
+		NETERR_INTERNAL_ERROR,
+		NETERR_BAN,
+		NETERR_KICK,
+		NETERR_COUNT,
+	};
 
     class XPLICIT_API NetworkError final : public std::runtime_error 
     {
     public:
-        NetworkError(const int what = NETERR_INTERNAL_ERROR) : std::runtime_error("XplicitNetwork Error") 
-        { 
-            m_iErr = WSAGetLastError(); 
-            std::string err = "Error: ";
-            err += std::to_string(m_iErr);
-        }
-
+        NetworkError(const int what = NETERR_INTERNAL_ERROR);
         virtual ~NetworkError() = default; // let the A.B.I define that.
 
-        NetworkError& operator=(const NetworkError&) = default;
-        NetworkError(const NetworkError&) = default;
+        XPLICIT_COPY_DEFAULT(NetworkError);
 
     public:
-        int error() const noexcept { return m_iErr; }
+        int error() const noexcept;
 
     private:
         int m_iErr{ 200 };

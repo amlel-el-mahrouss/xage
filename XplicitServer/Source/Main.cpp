@@ -102,9 +102,9 @@ static void xplicit_attach_mono()
 
 static void xplicit_print_help()
 {
-	XPLICIT_INFO("\a-------------- XplicitNgin Game Server Manual --------------");
-	XPLICIT_INFO("exit: Exist the current server.");
-	XPLICIT_INFO("-------------- XplicitNgin Game Server Manual --------------");
+	XPLICIT_INFO("\a-------------- Xplicit Game Server Manual --------------");
+	XPLICIT_INFO("exit: Exits the current server.");
+	XPLICIT_INFO("-------------- Xplicit Game Server Manual --------------");
 }
 
 static void xplicit_load_shell()

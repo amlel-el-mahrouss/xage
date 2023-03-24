@@ -18,7 +18,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
+XPLICIT_MAIN()
 {
 	try
 	{

@@ -917,6 +917,11 @@ namespace uuids
 #endif
 }
 
+namespace Xplicit
+{
+    using UUID = uuids::uuid;
+}
+
 namespace std
 {
     template <>

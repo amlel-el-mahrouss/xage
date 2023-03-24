@@ -26,11 +26,104 @@ namespace Xplicit
 		}
 
 		XPLICIT_CRITICAL(err);
+
 		OutputDebugStringA(err.c_str());
 
 #ifdef XPLICIT_DEBUG
 		XPLICIT_ASSERT(false);
 #endif
+	}
+
+	static inline bool create_vertex_shader(Renderer::DX11::DriverSystemD3D11* driver,
+		Renderer::DX11::D3D11ShaderSystem* shader_system)
+	{
+		shader_system->get().shader_type += XPLICIT_VERTEX_SHADER;
+
+		if (shader_system->compile())
+		{
+			print_error(shader_system->get().error_blob);
+			delete shader_system;
+
+			return false;
+		}
+
+		if (FAILED(driver->get().Device->CreateVertexShader(shader_system->get().blob->GetBufferPointer(),
+			shader_system->get().blob->GetBufferSize(),
+			nullptr,
+			shader_system->get().vertex.GetAddressOf())))
+		{
+			delete shader_system;
+
+			return false;
+		}
+
+		shader_system->get().matrix_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+		shader_system->get().matrix_buffer_desc.ByteWidth = sizeof(Xplicit::Details::VERTEX);
+		shader_system->get().matrix_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		shader_system->get().matrix_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		shader_system->get().matrix_buffer_desc.MiscFlags = 0;
+		shader_system->get().matrix_buffer_desc.StructureByteStride = 0;
+
+		if (FAILED(driver->get().Device->CreateBuffer(&shader_system->get().matrix_buffer_desc,
+			nullptr,
+			shader_system->get().matrix_buffer_ptr.GetAddressOf())))
+		{
+			delete shader_system;
+			return false;
+		}
+
+		return true;
+	}
+
+	static inline bool create_pixel_shader(Renderer::DX11::DriverSystemD3D11* driver,
+		Renderer::DX11::D3D11ShaderSystem* shader_system)
+	{
+		shader_system->get().shader_type += XPLICIT_PIXEL_SHADER;
+
+		if (shader_system->compile())
+		{
+			print_error(shader_system->get().error_blob);
+			delete shader_system;
+
+			return false;
+		}
+
+		if (FAILED(driver->get().Device->CreatePixelShader(shader_system->get().blob->GetBufferPointer(),
+			shader_system->get().blob->GetBufferSize(),
+			nullptr,
+			shader_system->get().pixel.GetAddressOf())))
+		{
+			delete shader_system;
+			return false;
+		}
+
+		return true;
+	}
+
+	static inline bool create_hull_shader(Renderer::DX11::DriverSystemD3D11* driver,
+		Renderer::DX11::D3D11ShaderSystem* shader_system)
+	{
+		shader_system->get().shader_type += XPLICIT_HULL_SHADER;
+
+		if (shader_system->compile())
+		{
+			print_error(shader_system->get().error_blob);
+			delete shader_system;
+
+			return false;
+		}
+
+		if (FAILED(driver->get().Device->CreateHullShader(shader_system->get().blob->GetBufferPointer(),
+			shader_system->get().blob->GetBufferSize(),
+			nullptr,
+			shader_system->get().hull.GetAddressOf())))
+		{
+			delete shader_system;
+
+			return false;
+		}
+
+		return true;
 	}
 }
 
@@ -45,7 +138,7 @@ namespace Xplicit
 /// 
 template <Xplicit::Renderer::DX11::XPLICIT_SHADER_TYPE ShaderType>
 Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader(
-	const pchar* filename,
+	const PChar* filename,
 	const char* entrypoint,
 	std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver
 )
@@ -65,85 +158,22 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 		{
 		case XPLICIT_SHADER_TYPE::Vertex:
 		{
-			shader_system->get().shader_type += XPLICIT_VERTEX_SHADER;
-
-			if (shader_system->compile() != 0)
-			{
-				print_error(shader_system->get().error_blob);
-				delete shader_system;
-
-				return nullptr;
-			}
-
-			if (FAILED(driver->get().Device->CreateVertexShader(shader_system->get().blob->GetBufferPointer(),
-				shader_system->get().blob->GetBufferSize(),
-				nullptr,
-				shader_system->get().vertex.GetAddressOf())))
-			{
-				delete shader_system;
-				return nullptr;
-			}
-
-			shader_system->get().matrix_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-			shader_system->get().matrix_buffer_desc.ByteWidth = sizeof(Xplicit::Details::VERTEX);
-			shader_system->get().matrix_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			shader_system->get().matrix_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-			shader_system->get().matrix_buffer_desc.MiscFlags = 0;
-			shader_system->get().matrix_buffer_desc.StructureByteStride = 0;
-
-			if (FAILED(driver->get().Device->CreateBuffer(&shader_system->get().matrix_buffer_desc, 
-				nullptr, 
-				shader_system->get().matrix_buffer_ptr.GetAddressOf())))
-			{
-				delete shader_system;
-				return nullptr;
-			}
+			if (create_vertex_shader(driver.get(), shader_system))
+				return shader_system;
 
 			break;
 		}
 		case XPLICIT_SHADER_TYPE::Pixel:
 		{
-			shader_system->get().shader_type += XPLICIT_PIXEL_SHADER;
-
-			if (shader_system->compile() != 0)
-			{
-				print_error(shader_system->get().error_blob);
-				delete shader_system;
-
-				return nullptr;
-			}
-
-			if (FAILED(driver->get().Device->CreatePixelShader(shader_system->get().blob->GetBufferPointer(),
-				shader_system->get().blob->GetBufferSize(),
-				nullptr,
-				shader_system->get().pixel.GetAddressOf())))
-			{
-				delete shader_system;
-				return nullptr;
-			}
+			if (create_pixel_shader(driver.get(), shader_system))
+				return shader_system;
 
 			break;
 		}
 		case XPLICIT_SHADER_TYPE::Hull:
 		{
-			shader_system->get().shader_type += XPLICIT_HULL_SHADER;
-
-			if (shader_system->compile() != 0)
-			{
-				print_error(shader_system->get().error_blob);
-				delete shader_system;
-
-				return nullptr;
-			}
-
-			if (FAILED(driver->get().Device->CreateHullShader(shader_system->get().blob->GetBufferPointer(),
-				shader_system->get().blob->GetBufferSize(),
-				nullptr,
-				shader_system->get().hull.GetAddressOf())))
-			{
-				delete shader_system;
-				return nullptr;
-			}
+			if (create_hull_shader(driver.get(), shader_system))
+				return shader_system;
 
 			break;
 		}

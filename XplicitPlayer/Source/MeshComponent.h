@@ -17,9 +17,6 @@
 
 namespace Xplicit::Client
 {
-	/// <summary>
-	/// The Component loads according to the Studio/ directory.
-	/// </summary>
 	class MeshComponent
 	{
 	public:
@@ -32,8 +29,8 @@ namespace Xplicit::Client
 		MeshComponent(const MeshComponent&) = default;
 
 	protected:
-		IAnimatedMesh* _Model; // Model Data pointer, generic
-		IAnimatedMeshSceneNode* _Node; // Model Data pointer, generic
+		IAnimatedMesh* m_pModel; // Model Data pointer, generic
+		IAnimatedMeshSceneNode* m_pNode; // Model Data pointer, generic
 
 	};
 }

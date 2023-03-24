@@ -51,7 +51,7 @@ namespace Xplicit::Client
 			if (m_packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
 				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
 			{
-				auto pos = _Node->getPosition();
+				auto pos = m_pNode->getPosition();
 
 				pos.rotateXYBy(m_packet.w);
 
@@ -59,7 +59,7 @@ namespace Xplicit::Client
 				pos.Y += m_packet.y;
 				pos.Z += m_packet.z;
 
-				_Node->setPosition(pos);
+				m_pNode->setPosition(pos);
 			}
 		}
 	}

@@ -14,6 +14,17 @@
 
 namespace Xplicit 
 {
+	NetworkError::NetworkError(const int what) 
+		: std::runtime_error("XplicitNetwork Error")
+	{
+		m_iErr = WSAGetLastError();
+
+		std::string err = "NetworkError, code: ";
+		err += std::to_string(m_iErr);
+	}
+
+	int NetworkError::error() const noexcept { return m_iErr; }
+
 	// common operations for NetworkComponent.
 	static void xplicit_set_ioctl(SOCKET sock)
 	{

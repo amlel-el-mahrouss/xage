@@ -15,13 +15,13 @@
 #include <Xplicit.h>
 #include <CanvasComponent.h>
 
-namespace Xplicit::Scripting
+namespace Xplicit::Studio
 {
 	class IBlueprint
 	{
 	public:
-		IBlueprint() = default;
-		~IBlueprint() = default;
+		IBlueprint();
+		~IBlueprint();
 
 		XPLICIT_COPY_DEFAULT(IBlueprint);
 
@@ -29,7 +29,13 @@ namespace Xplicit::Scripting
 		virtual void update(void*) = 0;
 		virtual void move(float x, float y) = 0;
 
+		virtual void detach(IBlueprint* bp) = 0;
+		virtual void attach(IBlueprint* bp) = 0;
+
 	protected:
+		IBlueprint* m_pPrev;
+		IBlueprint* m_pNext;
+
 		std::vector<IBlueprint*> m_pAttachedNodes;
 
 	};

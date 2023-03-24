@@ -63,7 +63,7 @@ namespace Xplicit::Renderer
 		ShaderSystem() = delete;
 
 	public:
-		explicit ShaderSystem(const pchar* filename, uint8_t format = FORMAT_HLSL)
+		explicit ShaderSystem(const PChar* filename, uint8_t format = FORMAT_HLSL)
 			: m_shader(filename), m_type(format)
 		{}
 
@@ -72,14 +72,14 @@ namespace Xplicit::Renderer
 		ShaderSystem& operator=(const ShaderSystem&) = default;
 		ShaderSystem(const ShaderSystem&) = default;
 
-		const string& shader() noexcept { return m_shader; }
+		const PString& shader() noexcept { return m_shader; }
 		const uint8_t& type() noexcept { return m_type; }
 
 	public:
 		virtual int compile() = 0;
 
 	protected:
-		string m_shader;
+		PString m_shader;
 		uint8_t m_type;
 
 	};
