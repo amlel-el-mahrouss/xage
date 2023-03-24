@@ -16,14 +16,14 @@
 
 namespace Xplicit
 {
-	class Actor final : public Component
+	class PlayerComponent final : public Component
 	{
 	public:
-		Actor();
-		virtual ~Actor();
+		PlayerComponent();
+		virtual ~PlayerComponent();
 
-		Actor& operator=(const Actor&) = default;
-		Actor(const Actor&) = default;
+		PlayerComponent& operator=(const PlayerComponent&) = default;
+		PlayerComponent(const PlayerComponent&) = default;
 
 	public:
 		void health(const int32_t& health) noexcept;
@@ -55,5 +55,5 @@ namespace Xplicit
 
 	};
 
-	using ActorArray = std::vector<Actor*>;
+	using ActorArray = std::vector<PlayerComponent*>;
 }

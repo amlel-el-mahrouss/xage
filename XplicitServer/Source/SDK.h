@@ -20,12 +20,15 @@
 #include <Uri.h>
 #include <Xplicit.h>
 
-// Game Variables (Server Only)
+// Game Variables
 #include <GameVar.h>
 
-// Mono support (C#)
+// C# support.
 #include <MonoInterop.h>
 #include <MonoComponent.h>
+
+// Common
+#include <Common.h>
 
 // Networking
 #include <SocketWrapper.h>
@@ -41,10 +44,10 @@ extern "C"
 
 #endif
 
-// NplictNgine
+// Physics
 #include <Nplicit.h>
 #include <RigidBody.h>
 
-// RapidXML (very fast XML library)
+// XML
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>

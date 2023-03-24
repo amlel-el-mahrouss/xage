@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: SpawnComponent.h
- *			Purpose: Actor spawn component
+ *			Purpose: Spawn Component
  *
  * =====================================================================
  */

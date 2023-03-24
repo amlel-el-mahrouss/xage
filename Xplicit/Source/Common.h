@@ -4,14 +4,12 @@
  *			XplicitNgin
  *			Copyright XPX, all rights reserved.
  *
- *			File: SDK.cpp
- *			Purpose: Xplicit and Nplicit SDK
+ *			File: Common.h
+ *			Purpose: Common macros
  *
  * =====================================================================
  */
 
- /**
- @file
- */
+#pragma once
 
-#include "SDK.h"
+#define XPLICIT_DEFAULT_VEL (7.f)

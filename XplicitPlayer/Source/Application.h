@@ -16,7 +16,7 @@
 #include <Uri.h>
 
 #include "Camera.h"
-#include "LocalActor.h"
+#include "LocalPlayerComponent.h"
 #include "DriverD3D11.h"
 #include "LoadingComponent.h"
 

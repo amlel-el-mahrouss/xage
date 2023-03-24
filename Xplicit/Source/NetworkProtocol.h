@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: NetworkProtocol.h
- *			Purpose: Game Network Protocol
+ *			Purpose: XDP Network Protocol
  *
  * =====================================================================
  */
@@ -37,7 +37,11 @@
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
-#define XPLICIT_NETWORK_VERSION (2U)
+#define XPLICIT_NETWORK_VERSION (3U)
+
+#define XPLICIT_NETWORK_X (0)
+#define XPLICIT_NETWORK_Y (1)
+#define XPLICIT_NETWORK_Z (2)
 
 namespace Xplicit
 {
@@ -84,8 +88,7 @@ namespace Xplicit
     using nfloat = float;
 
 	/// <summary>
-	/// NetworkPacket for Actor Replication and Network Status.
-    /// Part of the Xplicit Game Protocol.
+	/// An XDP NetworkPacket.
 	/// </summary>
 	class XPLICIT_API NetworkPacket
 	{
@@ -96,10 +99,13 @@ namespace Xplicit
 
 	public:
 		int64_t public_hash; /* Public hash being sent (SHARED) */
-        int64_t health; /* the health being sent (SERVER to CLIENT) */
         int64_t delta; /* delta time from the server. */
 		int64_t hash; /* the private hash (CLIENT to SERVER) */
 		size_t size; /* size of currently sent packet. */
+
+	public:
+		int64_t health; /* Player's Health */
+        float speed[3]; /* Player's speed (X, Y, Z) */
 
 	};
 
@@ -109,11 +115,8 @@ namespace Xplicit
         class XPLICIT_API UniqueAddress final
         {
         public:
-            UniqueAddress()
-                : uuid(UUIDFactory::version<4>()), name("Peer")
-            {}
-
-            ~UniqueAddress() = default;
+            UniqueAddress();
+            ~UniqueAddress();
 
             UniqueAddress& operator=(const UniqueAddress&) = default;
             UniqueAddress(const UniqueAddress&) = default;

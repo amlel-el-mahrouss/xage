@@ -19,7 +19,7 @@
 #include "LocalResetEvent.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
-#include "LocalActor.h"
+#include "LocalPlayerComponent.h"
 #include "Camera.h"
 #include "CoreUI.h"
 
@@ -49,7 +49,7 @@ namespace Xplicit::Client
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
 			ComponentManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
-			auto actor = ComponentManager::get_singleton_ptr()->add<Xplicit::Client::LocalActor>(packet.public_hash);
+			auto actor = ComponentManager::get_singleton_ptr()->add<Xplicit::Client::LocalPlayerComponent>(packet.public_hash);
 			XPLICIT_ASSERT(actor);
 
 			if (actor)

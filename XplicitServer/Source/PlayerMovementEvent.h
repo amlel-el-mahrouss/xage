@@ -13,9 +13,7 @@
 #pragma once
 
 #include "SDK.h"
-#include "Actor.h"
-
-#define XPLICIT_DEFAULT_VEL (7.f)
+#include "PlayerComponent.h"
 
 namespace Xplicit
 {

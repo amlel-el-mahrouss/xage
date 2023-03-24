@@ -13,7 +13,9 @@
 #pragma once
 
 #include "Xplicit.h"
+
 #include "DriverD3D11.h"
+#include "DriverOpenGL.h"
 
 #ifdef XPLICIT_WINDOWS
 
@@ -39,10 +41,7 @@ namespace Xplicit
 		public:
 			~VideoBuffer();
 
-			Microsoft::WRL::ComPtr<ID3D11Buffer>& get()
-			{
-				return m_buffer;
-			}
+			Microsoft::WRL::ComPtr<ID3D11Buffer>& get();
 
 			XPLICIT_COPY_DEFAULT(VideoBuffer);
 

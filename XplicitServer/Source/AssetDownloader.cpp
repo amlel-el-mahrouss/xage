@@ -22,10 +22,11 @@ namespace Xplicit::ContentSync
 
 	const char* AssetEvent::name() noexcept { return ("AssetEvent"); }
 	
-	AssetListener::AssetListener()
-		: m_socket(Xplicit::Details::SOCKET_TYPE::TCP), m_task(nullptr)
+	AssetListener::AssetListener(NetworkDownloadTask* pTask)
+		: m_socket(Xplicit::Details::SOCKET_TYPE::TCP), m_task(pTask)
 	{
 		XPLICIT_ASSERT(m_socket);
+		XPLICIT_ASSERT(m_task);
 	}
 
 	NetworkDownloadTask* AssetListener::get() noexcept { return m_task; }

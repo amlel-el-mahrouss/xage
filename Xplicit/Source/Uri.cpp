@@ -83,4 +83,6 @@ namespace Xplicit::Utils
 
 		return *this;
 	}
+
+	UriParser& UriError::get() { return m_uri; }
 }

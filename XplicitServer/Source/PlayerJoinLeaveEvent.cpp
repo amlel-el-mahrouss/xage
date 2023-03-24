@@ -18,8 +18,9 @@
 
 namespace Xplicit
 {
-	static bool xplicit_join_event(NetworkPeer* cl, Actor* actor, NetworkServerComponent* server);
-	static bool xplicit_leave_event(NetworkPeer* cl, NetworkServerComponent* server);
+	static bool xplicit_join_event(NetworkPeer* peer, PlayerComponent* actor, NetworkServerComponent* server);
+	static bool xplicit_leave_event(NetworkPeer* peer, NetworkServerComponent* server);
+
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid);
 
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid)
@@ -31,45 +32,47 @@ namespace Xplicit
 		return res;
 	}
 
-	static bool xplicit_join_event(NetworkPeer* cl, Actor* actor, NetworkServerComponent* server)
+	static bool xplicit_join_event(NetworkPeer* peer, PlayerComponent* actor, NetworkServerComponent* server)
 	{
-		if (!cl ||
+		if (!peer ||
 			!actor ||
 			!server)
 			return false;
 
-		auto hash = xplicit_hash_from_uuid(cl->unique_addr.get());
+		auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
 
 		// I use version 4, to avoid collisions.
 		auto public_hash_uuid = UUIDFactory::version<4>();
-		cl->public_hash = xplicit_hash_from_uuid(public_hash_uuid);
 
-		cl->hash = hash;
+		peer->public_hash = xplicit_hash_from_uuid(public_hash_uuid);
+		peer->hash = hash;
 
-		actor->set(cl);
+		actor->set(peer);
 
-		cl->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
-		cl->packet.public_hash = cl->public_hash;
-		cl->packet.hash = hash;
-		cl->packet.size = sizeof(NetworkPacket);
+		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
-		cl->stat = NETWORK_STAT_CONNECTED;
+		peer->packet.public_hash = peer->public_hash;
+		peer->packet.hash = hash;
+		peer->packet.size = sizeof(NetworkPacket);
+
+		peer->stat = NETWORK_STAT_CONNECTED;
 
 		NetworkServerTraits::send(server);
 
 		return true;
 	}
 
-	static bool xplicit_leave_event(NetworkPeer* cl, NetworkServerComponent* server)
+	static bool xplicit_leave_event(NetworkPeer* peer, NetworkServerComponent* server)
 	{
-		auto actors = ComponentManager::get_singleton_ptr()->all_of<Actor>("Actor");
+		auto actors = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
 
 		for (size_t at = 0; at < actors.size(); ++at)
 		{
-			if (actors[at]->get() == cl)
+			if (actors[at]->get() == peer)
 			{
-				ComponentManager::get_singleton_ptr()->remove<Actor>(actors[at]);
-				cl->reset();
+				ComponentManager::get_singleton_ptr()->remove<PlayerComponent>(actors[at]);
+				peer->reset();
 
 				return true;
 			}
@@ -118,9 +121,9 @@ namespace Xplicit
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				auto actors = ComponentManager::get_singleton_ptr()->all_of<Actor>("Actor");
+				auto actors = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
 
-				Actor* actor = nullptr;
+				PlayerComponent* actor = nullptr;
 				
 				for (size_t i = 0; i < actors.size(); ++i)
 				{
@@ -128,7 +131,7 @@ namespace Xplicit
 
 					if (actor->get() != server->get(peer_idx))
 					{
-						actor = ComponentManager::get_singleton_ptr()->add<Actor>();
+						actor = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
 						XPLICIT_ASSERT(actor);
 
 						if (xplicit_join_event(server->get(peer_idx), actor, server))
@@ -141,7 +144,7 @@ namespace Xplicit
 					}
 				}
 
-				actor = ComponentManager::get_singleton_ptr()->add<Actor>();
+				actor = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
 				XPLICIT_ASSERT(actor);
 
 				if (xplicit_join_event(server->get(peer_idx), actor, server))

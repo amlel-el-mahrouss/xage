@@ -15,7 +15,7 @@
  */
 
 #include "SDK.h"
-#include "Actor.h"
+#include "PlayerComponent.h"
 #include "SpawnComponent.h"
 #include "ApplicationContext.h"
 #include "PlayerMovementEvent.h"

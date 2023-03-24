@@ -25,8 +25,7 @@ namespace Xplicit::ContentSync
 		AssetEvent() = default;
 		virtual ~AssetEvent() = default;
 
-		AssetEvent& operator=(const AssetEvent&) = default;
-		AssetEvent(const AssetEvent&) = default;
+		XPLICIT_COPY_DELETE(AssetEvent);
 
 		virtual const char* name() noexcept override;
 		virtual void operator()() override;
@@ -36,12 +35,11 @@ namespace Xplicit::ContentSync
 	class AssetListener final : public EventListener
 	{
 	public:
-		AssetListener();
+		AssetListener(NetworkDownloadTask* pTask);
 
 		virtual ~AssetListener() = default;
 
-		AssetListener& operator=(const AssetListener&) = default;
-		AssetListener(const AssetListener&) = default;
+		XPLICIT_COPY_DELETE(AssetListener);
 
 		virtual const char* name() noexcept override;
 		virtual void update(EventTypePtr ptr_event) override;

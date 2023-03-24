@@ -24,17 +24,17 @@ namespace Xplicit::Client
 {
 	constexpr const int XPLICIT_NETWORK_DELAY = 100;
 
-	class LocalActor : public Component, public MeshComponent
+	class LocalPlayerComponent : public Component, public MeshComponent
 	{
 	public:
-		LocalActor(const int64_t& public_hash);
-		virtual ~LocalActor();
+		LocalPlayerComponent(const int64_t& public_hash);
+		virtual ~LocalPlayerComponent();
 
-		LocalActor& operator=(const LocalActor&) = default;
-		LocalActor(const LocalActor&) = default;
+		LocalPlayerComponent& operator=(const LocalPlayerComponent&) = default;
+		LocalPlayerComponent(const LocalPlayerComponent&) = default;
 
-		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_ACTOR; }
-		virtual const char* name() noexcept override { return ("LocalActor"); }
+		virtual INSTANCE_TYPE type() noexcept override;
+		virtual const char* name() noexcept override;
 
 		virtual void update() override;
 

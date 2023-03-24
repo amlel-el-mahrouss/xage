@@ -66,6 +66,7 @@ namespace Xplicit
 		enum INSTANCE_TYPE : uint8_t 
 		{
 			INSTANCE_ACTOR, // Engine Actor (According to which side you're on (client or server))
+			INSTANCE_PLAYER,
 			INSTANCE_LOGIC, // Generic Component
 			INSTANCE_CAMERA, // Camera instance
 			INSTANCE_SCRIPT, // Script instance

@@ -22,6 +22,11 @@ namespace Xplicit::Renderer
 		delete this;
 	}
 
+	Microsoft::WRL::ComPtr<ID3D11Buffer>& VideoBuffer::get()
+	{
+		return m_buffer;
+	}
+
 	VideoDriver::VideoDriver(HWND hwnd)
 		: m_driver(DX11::make_driver_system_d3d11(hwnd)), m_hwnd(hwnd)
 	{

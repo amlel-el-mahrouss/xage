@@ -18,6 +18,10 @@
 #define XPLICIT_XDP_PROTOCOL ("xdp://")
 #endif // XPLICIT_XDP_PROTOCOL
 
+#ifndef XPLICIT_XCONNECT_PROTOCOL
+#define XPLICIT_XCONNECT_PROTOCOL ("xconnect://")
+#endif // XPLICIT_XDP_PROTOCOL
+
 namespace Xplicit::Utils
 {
 	// Accessors are like iterators, but with an offset.
@@ -47,14 +51,13 @@ namespace Xplicit::Utils
 	class XPLICIT_API UriError final : public std::runtime_error
 	{
 	public:
-		/* should allocated on the heap btw, anything on the stack can pop out.. */
 		UriError(UriParser& uri) : std::runtime_error("UriError"), m_uri(uri) {}
 		~UriError() = default; // let the ABI define that.
 
 		UriError& operator=(const UriError&) = default;
 		UriError(const UriError&) = default;
 
-		UriParser& get() { return m_uri; }
+		UriParser& get();
 
 	private:
 		UriParser m_uri;

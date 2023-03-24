@@ -14,45 +14,45 @@
  @file
  */
 
-#include "Actor.h"
+#include "PlayerComponent.h"
 
 namespace Xplicit
 {
-	constexpr const int16_t XPLICIT_ACTOR_COOLDOWN = 100;
+	constexpr const int16_t XPLICIT_PLAYER_COOLDOWN = 100;
 	constexpr const int64_t XPLICIT_DEFAULT_HEALTH = 100;
 
-	Actor::Actor() 
+	PlayerComponent::PlayerComponent() 
 		: Component(), m_peer(nullptr), m_health(XPLICIT_DEFAULT_HEALTH), m_timeout(0), Position(0, 0, 0), Rotation(0, 0, 0, 0)
 	{
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("Actor::Actor");
+		XPLICIT_INFO("PlayerComponent::PlayerComponent");
 #endif
 	}
 
-	Actor::~Actor() 
+	PlayerComponent::~PlayerComponent() 
 	{
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("Actor::~Actor");
+		XPLICIT_INFO("PlayerComponent::~PlayerComponent");
 #endif
 	}
 
-	Actor::PHYSICS_TYPE Actor::physics() noexcept 
+	PlayerComponent::PHYSICS_TYPE PlayerComponent::physics() noexcept 
 	{
 		return PHYSICS_NONE; 
 	}
 
-	bool Actor::has_physics() noexcept 
+	bool PlayerComponent::has_physics() noexcept 
 	{ 
 		return false; 
 	}
 
-	void Actor::update()
+	void PlayerComponent::update()
 	{
 		if (!m_peer)
 			return;
 
 		if (m_peer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] == NETWORK_CMD_DEAD)
-			m_timeout = XPLICIT_ACTOR_COOLDOWN;
+			m_timeout = XPLICIT_PLAYER_COOLDOWN;
 		
 		if (m_timeout > 0)
 		{
@@ -66,35 +66,36 @@ namespace Xplicit
 		}
 	}
 
-	void Actor::health(const int32_t& health) noexcept 
+	void PlayerComponent::health(const int32_t& health) noexcept 
 	{ 
 		this->m_health = health; 
 	}
 
-	const int64_t Actor::health() noexcept 
+	const int64_t PlayerComponent::health() noexcept 
 	{ 
 		return this->m_health; 
 	}
 
-	bool Actor::can_collide() noexcept 
+	bool PlayerComponent::can_collide() noexcept 
 	{
 		return true; 
 	}
 
-	Actor::INSTANCE_TYPE Actor::type() noexcept { return INSTANCE_ACTOR; }
-	const char* Actor::name() noexcept { return "Actor"; }
+	PlayerComponent::INSTANCE_TYPE PlayerComponent::type() noexcept { return INSTANCE_PLAYER; }
 
-	bool Actor::should_update() noexcept 
+	const char* PlayerComponent::name() noexcept { return "Player"; }
+
+	bool PlayerComponent::should_update() noexcept 
 	{ 
 		return true; 
 	}
 
-	NetworkPeer* Actor::get() noexcept 
+	NetworkPeer* PlayerComponent::get() noexcept 
 	{ 
 		return m_peer; 
 	}
 
-	void Actor::set(NetworkPeer* peer) noexcept 
+	void PlayerComponent::set(NetworkPeer* peer) noexcept 
 	{
 		XPLICIT_ASSERT(peer);
 		m_peer = peer;

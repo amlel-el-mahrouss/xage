@@ -31,6 +31,17 @@ namespace Xplicit
         return cl.addr.sin_addr.S_un.S_addr != this->addr.sin_addr.S_un.S_addr;
     }
 
+    NetworkPeer::UniqueAddress::UniqueAddress()
+		: uuid(UUIDFactory::version<4>()), name("Peer")
+	{
+        
+    }
+
+    NetworkPeer::UniqueAddress::~UniqueAddress()
+    {
+
+    }
+
     void NetworkPeer::reset() noexcept
     {
         for (size_t cmd_index = 0; cmd_index < XPLICIT_NETWORK_CMD_MAX; ++cmd_index)

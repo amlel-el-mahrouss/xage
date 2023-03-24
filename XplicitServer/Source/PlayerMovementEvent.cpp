@@ -22,11 +22,12 @@ namespace Xplicit
 	/// xplicit_can_move: Checks if a player can move
 	/// </summary>
 	/// <param name="actors">Type: ActorArray</param>
-	/// <param name="actor">Type: Actor* Description: Actor pointer</param>
+	/// <param name="actor">Type: Actor*</param>
 	/// <returns>Boolean: Returns true if the actor can move.</returns>
-	static bool xplicit_can_move(ActorArray& actors, Actor* actor)
+	static bool xplicit_can_move(ActorArray& actors, PlayerComponent* actor)
 	{
-		XPLICIT_ASSERT(actor);
+		if (!actor)
+			return false;
 
 		if (!actor->can_collide())
 			return false;
@@ -43,10 +44,7 @@ namespace Xplicit
 				continue;
 
 			if (actors[i]->Position == actor->Position)
-			{
-				actor->health(0);
 				return false;
-			}
 		}
 
 		return true;
@@ -81,11 +79,11 @@ namespace Xplicit
 	/// </summary>
 	void PlayerMovementEvent::operator()()
 	{
-		auto actors = ComponentManager::get_singleton_ptr()->all_of<Actor>("Actor");
+		auto actors = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
 
 		for (size_t i = 0; i < actors.size(); ++i)
 		{
-			Actor* actor = actors[i];
+			PlayerComponent* actor = actors[i];
 
 			if (!actor ||
 				actor->health() <= 0 ||
@@ -112,10 +110,14 @@ namespace Xplicit
 					actor->Position.Y -= m_side_speed_gamevar ? m_side_speed_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					actor->Position.Y -= m_side_speed_gamevar ? m_side_speed_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+					actor->Position.Y += m_side_speed_gamevar ? m_side_speed_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
-					actor->Position.Z -= m_jump_height_gamevar ? m_jump_height_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+					actor->Position.Z += m_jump_height_gamevar ? m_jump_height_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+
+				peer->packet.speed[XPLICIT_NETWORK_X] = m_walk_speed_gamevar ? m_walk_speed_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+				peer->packet.speed[XPLICIT_NETWORK_Y] = m_side_speed_gamevar ? m_side_speed_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
+				peer->packet.speed[XPLICIT_NETWORK_Z] = m_jump_height_gamevar ? m_jump_height_gamevar->as_float() : XPLICIT_DEFAULT_VEL;
 			}
 		}
 	}
