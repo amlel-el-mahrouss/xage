@@ -16,7 +16,7 @@ namespace Xplicit::Network
 {
 	Socket::Socket(const SOCKET_TYPE type)
 	{
-		_Socket = socket(AF_INET,
+		this->_Socket = XPLICIT_SOCKET(AF_INET,
 			type == SOCKET_TYPE::TCP ? SOCK_STREAM : SOCK_DGRAM,
 			type == SOCKET_TYPE::TCP ? IPPROTO_TCP : IPPROTO_UDP);
 

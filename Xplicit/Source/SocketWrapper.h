@@ -16,11 +16,13 @@
 
 #ifdef XPLICIT_WINDOWS
 
+#define XPLICIT_SOCKET socket
 #define XPLICIT_CLOSE closesocket
 #define XPLICIT_SHUTDOWN shutdown
 
 #else
 
+#define XPLICIT_SOCKET socket
 #define XPLICIT_CLOSE close
 #define XPLICIT_SHUTDOWN shutdown
 
