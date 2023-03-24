@@ -15,13 +15,14 @@
 */
 
 #include <DriverOpenGL.h>
-
 #include <DriverD3D11.h>
+
 #include <Bites.h>
 
 #ifdef XPLICIT_WINDOWS
 
-#define XPLICIT_APP_NAME L"XplicitEd"
+#define XPLICIT_APP_NAMEA "XplicitEd"
+#define XPLICIT_APP_NAMEW L"XplicitEd"
 
 namespace Xplicit::Studio
 {
@@ -31,14 +32,19 @@ namespace Xplicit::Studio
 		Runner(HINSTANCE hInst)
 		{
 			// Search and exit if another Xplicit app is open.
-			if (Xplicit::Win32Helpers::find_wnd(XPLICIT_APP_NAME))
+			if (Xplicit::Win32Helpers::find_wnd(XPLICIT_APP_NAMEW))
 			{
-				Xplicit::Dialog::message_box(XPLICIT_APP_NAME,
+				Xplicit::Dialog::message_box(XPLICIT_APP_NAMEW,
 					L"Cannot open more than one instance of the XplicitNgin!",
 					MB_OK);
 
 				throw EngineError();
 			}
+
+			std::unique_ptr<Xplicit::Renderer::OpenGL::DriverSystemOpenGL> drv = std::make_unique<Xplicit::Renderer::OpenGL::DriverSystemOpenGL>();
+
+			Xplicit::Bites::GLFWWindow* win = new Xplicit::Bites::GLFWWindow(XPLICIT_APP_NAMEA);
+			win->run(drv, Xplicit::Nplicit::Color<float>(40, 40, 40));
 
 			ExitCode = 0;
 		}

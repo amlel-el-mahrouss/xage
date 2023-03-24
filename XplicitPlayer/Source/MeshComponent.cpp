@@ -20,7 +20,7 @@ namespace Xplicit::Client
 {
 	MeshComponent::MeshComponent(const char* path)
 	{
-		std::string _path = XPLICIT_ENV("APPDATA");
+		String _path = XPLICIT_ENV("APPDATA");
 		_path += "/Data/Studio/";
 		_path += path;
 

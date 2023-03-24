@@ -289,6 +289,12 @@ namespace Xplicit::Renderer::DX11
 		return !this->check_device_removed(hr);
 	}
 
+	void DriverSystemD3D11::close() noexcept { m_private.EndRendering = true; }
+
+	const bool& DriverSystemD3D11::is_closed() noexcept { return m_private.EndRendering; }
+
+	DriverSystemD3D11::operator bool() { return is_closed(); }
+
 	std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd) 
 	{ 
 		XPLICIT_ASSERT(hwnd);

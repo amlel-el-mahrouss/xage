@@ -27,6 +27,7 @@ XPLICIT_CONFIG = {
 	  "d2d1",
 	  "d3dcompiler",
 	  "opengl32",
+	  "Vendor/glfw/build/src/glfw3dll",
  	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {

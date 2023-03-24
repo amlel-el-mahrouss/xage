@@ -12,11 +12,13 @@
 
 #pragma once
 
-#include "Bites.h"
 #include "Xplicit.h"
 #include "DriverSystem.h"
 
+#ifndef __gl_h_
+#include "GLad.h"
 #include <glfw3.h>
+#endif
 
 namespace Xplicit::Renderer::OpenGL
 {
@@ -64,6 +66,13 @@ namespace Xplicit::Renderer::OpenGL
 
 		XPLICIT_COPY_DELETE(DriverSystemOpenGL);
 		XPLICIT_DRIVER_SYSTEM_OVERRIDE();
+
+	public:
+		const bool& is_closed() noexcept;
+		void close() noexcept;
+
+	private:
+		bool m_bClose;
 
 	};
 }

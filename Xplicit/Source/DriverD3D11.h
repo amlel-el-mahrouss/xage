@@ -110,18 +110,17 @@ namespace Xplicit::Renderer::DX11
 		};
 
 	private:
-		void setup(); // internal directx setup.
+		void setup(); // internal DirectX setup.
 
 	public:
 		void begin_scene(const float a, const float r, const float g, const float b);
 		bool end_scene();
 
+	public:
+		const bool& is_closed() noexcept;
 		PrivateData& get() noexcept;
-
-		void close() noexcept { m_private.EndRendering = true; }
-
-		const bool& is_closed() noexcept { return m_private.EndRendering; }
-		operator bool() { return is_closed(); }
+		void close() noexcept;
+		operator bool();
 
 	private:
 		void handle_device_removed();

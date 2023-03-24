@@ -29,8 +29,14 @@
 #define XPLICIT_GET_X_POS(LPARAM) GET_X_LPARAM(LPARAM)
 #define XPLICIT_GET_Y_POS(LPARAM) GET_Y_LPARAM(LPARAM)
 
+#endif
+
+#include "DriverOpenGL.h"
+
 namespace Xplicit::Bites
 {
+#ifdef XPLICIT_WINDOWS
+
 	class XPLICIT_API Win32Window final
 	{
 	public:
@@ -42,8 +48,7 @@ namespace Xplicit::Bites
 
 		~Win32Window();
 
-		Win32Window& operator=(const Win32Window&) = default;
-		Win32Window(const Win32Window&) = default;
+		XPLICIT_COPY_DELETE(Win32Window);
 
 	public:
 		struct Win32Traits
@@ -63,9 +68,31 @@ namespace Xplicit::Bites
 		Win32Traits m_traits;
 
 	};
-}
 
 #define XPLICIT_MAIN()\
 INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
 
+#else
+
+#define XPLICIT_MAIN()\
+int main(int argc, char** argv)
+
 #endif
+
+	class XPLICIT_API GLFWWindow final
+	{
+	public:
+		GLFWWindow(const char* windowName);
+		~GLFWWindow();
+
+		XPLICIT_COPY_DELETE(GLFWWindow);
+
+	public:
+		int run(std::unique_ptr<Xplicit::Renderer::OpenGL::DriverSystemOpenGL>& driver,
+			const Nplicit::Color<float>& clr) noexcept;
+
+	private:
+		struct GLFWwindow* m_pWindow;
+
+	};
+}
