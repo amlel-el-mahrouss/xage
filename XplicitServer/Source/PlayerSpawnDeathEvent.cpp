@@ -23,7 +23,7 @@ namespace Xplicit
 	/// <summary>
 	/// Handle Spawn at a specific point.
 	/// </summary>
-	/// <param name="spawner">The Spawner Component</param>
+	/// <param name="spawner">The spawn component</param>
 	/// <param name="actor">The targeted actor</param>
 	/// <returns></returns>
 	static void xplicit_handle_spawn(SpawnComponent* spawner, PlayerComponent* actor) noexcept

@@ -156,23 +156,23 @@ namespace Xplicit::Renderer::DX11
 		class XPLICIT_API ShaderData
 		{
 		public:
-			std::string entrypoint;
-			std::string shader_type;
+			std::string entrypoint{};
+			std::string shader_type{};
 
-			ID3D10Blob* blob;
-			int64_t start_vertex;
-			ID3D10Blob* error_blob;
-			uint32_t flags1, flags2;
-			D3D11_BUFFER_DESC matrix_buffer_desc;
+			ID3D10Blob* blob{ nullptr };
+			ID3D10Blob* error_blob{ nullptr };
+			uint32_t flags1{ 0 };
+			uint32_t flags2{ 0 };
+			D3D11_BUFFER_DESC matrix_buffer_desc{};
 
-			inline HRESULT set_shader_params(ID3D11DeviceContext* deviceContext,
+			inline HRESULT set_matrixes(ID3D11DeviceContext* ctx,
 				D3DXMATRIX worldMatrix,
 				D3DXMATRIX viewMatrix,
 				D3DXMATRIX projectionMatrix)
 			{
 				HRESULT hr = S_OK;
 
-				if (!deviceContext)
+				if (!ctx)
 					return hr;
 
 				D3D11_MAPPED_SUBRESOURCE mapped_res;
@@ -182,7 +182,7 @@ namespace Xplicit::Renderer::DX11
 				D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
 				D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
 
-				hr = deviceContext->Map(matrix_buffer_ptr.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res);
+				hr = ctx->Map(matrix_buffer_ptr.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res);
 				
 				if (FAILED(hr))
 					return hr;
@@ -193,8 +193,8 @@ namespace Xplicit::Renderer::DX11
 				matrix->view_matrix = viewMatrix;
 				matrix->world_matrix = worldMatrix;
 
-				deviceContext->Unmap(matrix_buffer_ptr.Get(), 0);
-				deviceContext->VSSetConstantBuffers(0, 1, matrix_buffer_ptr.GetAddressOf());
+				ctx->Unmap(matrix_buffer_ptr.Get(), 0);
+				ctx->VSSetConstantBuffers(0, 1, matrix_buffer_ptr.GetAddressOf());
 
 				XPLICIT_ASSERT(SUCCEEDED(hr));
 

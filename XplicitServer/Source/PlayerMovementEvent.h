@@ -36,9 +36,9 @@ namespace Xplicit
 		virtual void operator()() override;
 
 	private:
-		GameVarViewPtr m_jump_height_gamevar;
-		GameVarViewPtr m_walk_speed_gamevar;
-		GameVarViewPtr m_side_speed_gamevar;
+		GameVarViewPtr m_jump_var;
+		GameVarViewPtr m_walk_var;
+		GameVarViewPtr m_side_var;
 
 	};
 }

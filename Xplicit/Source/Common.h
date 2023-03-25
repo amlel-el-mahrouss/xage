@@ -12,4 +12,5 @@
 
 #pragma once
 
-#define XPLICIT_DEFAULT_VEL (7.f)
+#define XPLICIT_DEFAULT_VEL (5.f)
+#define XPLICIT_DELTA_SECOND (1000.f)

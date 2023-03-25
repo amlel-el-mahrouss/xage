@@ -14,8 +14,8 @@
  @file
  */
 
+#include "CameraComponent.h"
 #include "Application.h"
-#include "Camera.h"
 #include "CoreUI.h"
 
 namespace Xplicit::Client
@@ -24,6 +24,7 @@ namespace Xplicit::Client
 		: Component(), m_camera(nullptr)
 	{
 		m_camera = IRR->getSceneManager()->addCameraSceneNodeFPS(nullptr);
+
 		XPLICIT_ASSERT(m_camera);
 
 		m_camera->setName(this->name());
@@ -43,6 +44,7 @@ namespace Xplicit::Client
 	}
 
 	CameraComponent::INSTANCE_TYPE CameraComponent::type() noexcept { return INSTANCE_CAMERA; }
+
 	const char* CameraComponent::name() noexcept { return ("CameraComponent"); }
 
 	void CameraComponent::update()
@@ -56,6 +58,8 @@ namespace Xplicit::Client
 			nullptr, 
 			SColor(255, 255, 255, 255), 
 			true);
+
+
 	}
 
 	irr::scene::ICameraSceneNode* CameraComponent::get() noexcept { return m_camera; }

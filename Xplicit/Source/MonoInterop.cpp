@@ -185,9 +185,9 @@ namespace Xplicit
 	MonoEventListener::MonoEventListener(std::string& str) : m_name(std::move(str)) {}
 	MonoEventListener::MonoEventListener(const char* str) : m_name(str) {}
 
-	void MonoEventListener::update(EventTypePtr pEvent)
+	void MonoEventListener::update(EventPtr eventPtr)
 	{
-		(void)pEvent;
+		(void)eventPtr;
 
 		auto components = ComponentManager::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
 

@@ -39,15 +39,15 @@ namespace Xplicit
 
 	void Event::operator()() {}
 
-	void Event::update() 
+	void Event::update() noexcept
 	{
-		this->operator()();
-
 		for (size_t i = 0; i < m_listeners.size(); i++)
 		{
 			XPLICIT_ASSERT(m_listeners[i]);
 			m_listeners[i]->update(this);
 		}
+
+		this->operator()();
 	}
 
 	const char* Event::name() noexcept { return ("Event"); }

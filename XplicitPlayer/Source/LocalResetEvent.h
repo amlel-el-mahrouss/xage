@@ -21,7 +21,10 @@ namespace Xplicit::Client
 	class XPLICIT_API LocalResetEvent final : public Event
 	{
 	public:
-		LocalResetEvent();
+		LocalResetEvent() = delete;
+
+	public:
+		LocalResetEvent(int64_t hash);
 		virtual ~LocalResetEvent();
 
 		LocalResetEvent& operator=(const LocalResetEvent&) = default;
@@ -32,7 +35,8 @@ namespace Xplicit::Client
 
 	private:
 		NetworkComponent* m_network;
-		int32_t m_num_resets;
+		int32_t m_resets;
+		int64_t m_hash;
 
 	};
 }

@@ -18,7 +18,7 @@
 
 namespace Xplicit
 {
-	static bool xplicit_join_event(NetworkPeer* peer, PlayerComponent* actor, NetworkServerComponent* server);
+	static bool xplicit_join_event(NetworkPeer* peer, PlayerComponent* player, NetworkServerComponent* server);
 	static bool xplicit_leave_event(NetworkPeer* peer, NetworkServerComponent* server);
 
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid);
@@ -32,10 +32,10 @@ namespace Xplicit
 		return res;
 	}
 
-	static bool xplicit_join_event(NetworkPeer* peer, PlayerComponent* actor, NetworkServerComponent* server)
+	static bool xplicit_join_event(NetworkPeer* peer, PlayerComponent* player, NetworkServerComponent* server)
 	{
 		if (!peer ||
-			!actor ||
+			!player ||
 			!server)
 			return false;
 
@@ -47,15 +47,15 @@ namespace Xplicit
 		peer->public_hash = xplicit_hash_from_uuid(public_hash_uuid);
 		peer->hash = hash;
 
-		actor->set(peer);
+		player->set(peer);
 
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
 		peer->packet.public_hash = peer->public_hash;
 		peer->packet.hash = hash;
-		peer->packet.size = sizeof(NetworkPacket);
 
+		peer->packet.size = sizeof(NetworkPacket);
 		peer->stat = NETWORK_STAT_CONNECTED;
 
 		NetworkServerTraits::send(server);
@@ -71,6 +71,15 @@ namespace Xplicit
 		{
 			if (actors[at]->get() == peer)
 			{
+				for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
+				{
+					if (server->get(peer_idx) != peer)
+					{
+						server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+						server->get(peer_idx)->packet.public_hash = actors[at]->get()->public_hash;
+					}
+				}
+
 				ComponentManager::get_singleton_ptr()->remove<PlayerComponent>(actors[at]);
 				peer->reset();
 
@@ -91,7 +100,7 @@ namespace Xplicit
 		if (!server)
 			return;
 
-		NetworkServerTraits::correct_collisions(server);
+		NetworkServerTraits::correct(server);
 
 		this->on_join(server);
 		this->on_leave(server);
@@ -113,44 +122,20 @@ namespace Xplicit
 				continue;
 
 			if (server->get(peer_idx)->packet.size < 1)
-			{
-				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 				continue;
-			}
 
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				auto actors = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
+				PlayerComponent* player = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
+				XPLICIT_ASSERT(player);
 
-				PlayerComponent* actor = nullptr;
-				
-				for (size_t i = 0; i < actors.size(); ++i)
+				if (xplicit_join_event(server->get(peer_idx), player, server))
 				{
-					actor = actors[i];
-
-					if (actor->get() != server->get(peer_idx))
-					{
-						actor = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
-						XPLICIT_ASSERT(actor);
-
-						if (xplicit_join_event(server->get(peer_idx), actor, server))
-						{
-							XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
-							++m_player_size;
-
-							return true;
-						}
-					}
-				}
-
-				actor = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
-				XPLICIT_ASSERT(actor);
-
-				if (xplicit_join_event(server->get(peer_idx), actor, server))
-				{
-					XPLICIT_INFO("[CONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+					XPLICIT_INFO("[CONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					++m_player_size;
+
+					return true;
 				}
 			}
 		}
@@ -176,8 +161,10 @@ namespace Xplicit
 			{
 				if (xplicit_leave_event(server->get(peer_idx), server))
 				{
-					XPLICIT_INFO("[DISCONNECT] Unique ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+					XPLICIT_INFO("[DISCONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					--m_player_size;
+
+					return true;
 				}
 			}
 		}

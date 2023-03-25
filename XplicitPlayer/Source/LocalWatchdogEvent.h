@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include "Event.h"
-#include "NetworkComponent.h"
-#include "ApplicationContext.h"
+#include <ApplicationContext.h>
+#include <NetworkComponent.h>
+#include <Event.h>
 
 namespace Xplicit::Client
 {

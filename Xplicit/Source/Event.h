@@ -61,7 +61,7 @@ namespace Xplicit
 		Event(const Event&) = default;
 
 		virtual void operator()();
-		void update();
+		void update() noexcept;
 
 	public:
 		void add(EventListener* listener);
@@ -84,7 +84,7 @@ namespace Xplicit
 	class XPLICIT_API EventListener
 	{
 	public:
-		using EventTypePtr = void*;
+		using EventPtr = void*;
 
 	public:
 		EventListener() = default;
@@ -97,7 +97,7 @@ namespace Xplicit
 		/// Update function
 		/// </summary>
 		/// <param name="pEvent">The Event* class</param>
-		virtual void update(EventTypePtr ptr_event) {}
+		virtual void update(EventPtr ptr_event) {}
 		virtual const char* name() noexcept { return ("EventListener"); }
 
 	};

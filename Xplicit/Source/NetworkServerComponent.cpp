@@ -193,18 +193,18 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerTraits::correct_collisions(NetworkServerComponent* server)
+	void NetworkServerTraits::correct(NetworkServerComponent* server)
 	{
 		if (server)
 		{
 			for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 			{
-				for (size_t second_peer_idx = peer_idx; second_peer_idx < server->size(); ++second_peer_idx)
+				for (size_t second_peer_idx = 0; second_peer_idx < server->size(); ++second_peer_idx)
 				{
 					if (server->get(second_peer_idx) == server->get(peer_idx))
 						continue;
 
-					if (server->get(second_peer_idx) != server->get(peer_idx) && equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr))
+					if (equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr))
 						server->get(second_peer_idx)->reset();
 				}
 			}

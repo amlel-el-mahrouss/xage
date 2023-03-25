@@ -90,7 +90,8 @@ namespace Xplicit::Bites
 		Settings::Traits traits{};
 		m_settings->read(traits);
 
-		if (traits.window_width >= XPLICIT_MIN_WIDTH && traits.window_width >= XPLICIT_MIN_HEIGHT)
+		if (traits.window_width >= XPLICIT_DEFAULT_WIDTH && 
+			traits.window_width >= XPLICIT_DEFAULT_HEIGHT)
 			IRR->setWindowSize(dimension2d<irr::u32>(traits.window_width, traits.window_height));
 
 		IRR->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);

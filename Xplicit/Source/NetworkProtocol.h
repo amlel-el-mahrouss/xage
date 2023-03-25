@@ -39,6 +39,7 @@
 
 #define XPLICIT_NETWORK_VERSION (3U)
 
+/* Used by the networking protocol, to determine speed. */
 #define XPLICIT_NETWORK_X (0)
 #define XPLICIT_NETWORK_Y (1)
 #define XPLICIT_NETWORK_Z (2)
@@ -77,7 +78,7 @@ namespace Xplicit
 
     enum NETWORK_STAT : int16_t
     {
-        NETWORK_STAT_CONNECTED,
+		NETWORK_STAT_CONNECTED,
         NETWORK_STAT_DISCONNECTED,
         NETWORK_STAT_COUNT,
     };
@@ -98,8 +99,8 @@ namespace Xplicit
 		size_t size; /* size of currently sent packet. */
 
 	public:
-		int64_t health; /* Player's Health */
-        float speed[3]; /* Player's speed (X, Y, Z) */
+		int64_t health; /* Player's Health 0-100 */
+        nfloat speed[3]; /* Player's speed (X, Y, Z) */
 
 	};
 

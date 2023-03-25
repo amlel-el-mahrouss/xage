@@ -15,16 +15,15 @@
 // URLs
 #include <Uri.h>
 
-#include "Camera.h"
 #include "LocalPlayerComponent.h"
-#include "DriverD3D11.h"
 #include "LoadingComponent.h"
-
-// Xplicit Bites library
-#include <Bites.h>
+#include "CameraComponent.h"
 
 // Application Context (will be deprecated soon)
 #include <ApplicationContext.h>
+
+#define XPLICIT_DEFAULT_WIDTH (1280)
+#define XPLICIT_DEFAULT_HEIGHT (720)
 
 // will be deprecated soon.
 namespace Xplicit::Client

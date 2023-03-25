@@ -37,7 +37,7 @@ namespace Xplicit
 			friend class VideoDriver;
 
 		private:
-			VideoBuffer() = default;
+			VideoBuffer();
 
 		public:
 			~VideoBuffer();

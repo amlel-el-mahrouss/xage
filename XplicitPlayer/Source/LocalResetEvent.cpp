@@ -20,10 +20,10 @@
 
 namespace Xplicit::Client
 {
-	constexpr const int XPLICIT_MAX_RESETS = 10000; // max RST timeout
+	constexpr const int XPLICIT_MAX_RESETS = 10000; // Max RST
 
-	LocalResetEvent::LocalResetEvent()
-		: m_network(nullptr), m_num_resets(0)
+	LocalResetEvent::LocalResetEvent(int64_t hash)
+		: m_network(nullptr), m_resets(0), m_hash(hash)
 	{
 		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		assert(m_network);
@@ -40,7 +40,8 @@ namespace Xplicit::Client
 
 		auto& packet = m_network->get();
 
-		if (packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
+		if (packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP &&
+			m_hash == packet.hash)
 		{
 			if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("Popup"))
 			{
@@ -54,9 +55,9 @@ namespace Xplicit::Client
 
 		if (m_network->is_reset())
 		{
-			++m_num_resets;
+			++m_resets;
 
-			if (m_num_resets > XPLICIT_MAX_RESETS)
+			if (m_resets > XPLICIT_MAX_RESETS)
 			{
 				if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("Popup"))
 				{

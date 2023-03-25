@@ -108,7 +108,7 @@ namespace Xplicit
 		MonoEventListener& operator=(const MonoEventListener&) = default;
 		MonoEventListener(const MonoEventListener&) = default;
 
-		virtual void update(EventTypePtr pEvent) override;
+		virtual void update(EventPtr pEvent) override;
 		virtual const char* name() noexcept override;
 
 	private:

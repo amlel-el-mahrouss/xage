@@ -15,6 +15,7 @@
  */
 
 #include "Application.h"
+#include <Bites.h>
 
 #ifdef XPLICIT_WINDOWS
 

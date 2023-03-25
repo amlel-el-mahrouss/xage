@@ -148,6 +148,7 @@ static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
 	for (size_t i = 0; i < server->size(); i++)
 	{
 		server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = Xplicit::NETWORK_CMD_STOP;
+		server->get(i)->packet.hash = server->get(i)->hash;
 	}
 }
 

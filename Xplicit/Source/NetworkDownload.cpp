@@ -28,11 +28,14 @@ namespace Xplicit::Network
 
 	int NetworkSharedFile::set(const char* bytes, size_t len)
 	{
-		if (!bytes)
-			return -1;
-
-		if (len < 1)
-			return -2;
+		if (!bytes ||
+			len < 1)
+		{
+#ifdef XPLICIT_DEBUG
+			XPLICIT_INFO("[DebugInterface] Call returned 1, check arguments.");
+#endif
+			return 1;
+		}
 
 		m_bytes.clear();
 		m_bytes.reserve(len);
@@ -44,10 +47,6 @@ namespace Xplicit::Network
 
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("[DebugInterface] Call returned 0.");
-
-#ifdef XPLICIT_WINDOWS
-		OutputDebugStringA("[DebugInterface] Call returned 0.");
-#endif
 #endif
 
 		return 0;

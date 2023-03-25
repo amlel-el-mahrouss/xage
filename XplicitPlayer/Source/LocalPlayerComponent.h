@@ -12,13 +12,11 @@
 
 #pragma once
 
-#include <Nplicit.h>
-#include <RigidBody.h>
 
-#include "ApplicationContext.h"
-#include "NetworkComponent.h"
+#include <ApplicationContext.h>
+#include <NetworkComponent.h>
+#include "CameraComponent.h"
 #include "MeshComponent.h"
-#include "Camera.h"
 
 namespace Xplicit::Client
 {
@@ -46,6 +44,7 @@ namespace Xplicit::Client
 		CameraComponent* m_camera;
 		NetworkPacket m_packet;
 		int64_t m_public_hash;
+		int64_t m_then;
 
 	};
 
