@@ -67,6 +67,11 @@ namespace Xplicit::Details
 
 namespace Xplicit::Renderer::DX11
 {
+	namespace Details
+	{
+		void ThrowIfFailed(HRESULT hr);
+	}
+
 	namespace WRL = Microsoft::WRL;
 
 	class DriverSystemD3D11;

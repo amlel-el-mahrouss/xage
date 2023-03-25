@@ -37,9 +37,10 @@
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
-#define XPLICIT_NETWORK_VERSION (3U)
+#define XPLICIT_NETWORK_VERSION (4U)
 
-/* Used by the networking protocol, to determine speed. */
+/* Used by the protocol to tell the velocity. */
+
 #define XPLICIT_NETWORK_X (0)
 #define XPLICIT_NETWORK_Y (1)
 #define XPLICIT_NETWORK_Z (2)
@@ -157,7 +158,7 @@ namespace Xplicit
 typedef int socklen_t;
 #endif // XPLICIT_WINDOWS
 
-// reserved slots
+// reserved network command slots
 
 #define XPLICIT_NETWORK_CMD_FORWARD (0)
 #define XPLICIT_NETWORK_CMD_BACKWARD (1)

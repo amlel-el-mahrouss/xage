@@ -127,8 +127,11 @@ static void xplicit_load_shell()
 						xplicit_send_stop_packet(server);
 						Xplicit::NetworkServerTraits::send(server);
 					}
+					else
+					{
+						XPLICIT_ERROR("ERROR: server is not connected to the internet.");
+					}
 
-					XPLICIT_INFO("Warning, server is not connected to the Internet.");
 					Xplicit::ApplicationContext::get_singleton_ptr()->ShouldExit = true;
 				}
 

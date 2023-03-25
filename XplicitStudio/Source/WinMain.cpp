@@ -14,9 +14,7 @@
 * @file
 */
 
-#include <DriverOpenGL.h>
-#include <DriverD3D11.h>
-
+#include <VideoDriver.h>
 #include <Bites.h>
 
 #ifdef XPLICIT_WINDOWS
@@ -41,9 +39,10 @@ namespace Xplicit::Studio
 				throw EngineError();
 			}
 
-			std::unique_ptr<Xplicit::Renderer::OpenGL::DriverSystemOpenGL> drv = std::make_unique<Xplicit::Renderer::OpenGL::DriverSystemOpenGL>();
 
-			Xplicit::Bites::GLFWWindow* win = new Xplicit::Bites::GLFWWindow(XPLICIT_APP_NAMEA);
+			Xplicit::Bites::Win32Window* win = new Xplicit::Bites::Win32Window(XPLICIT_APP_NAMEA, XPLICIT_APP_NAMEA, hInst);
+			std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11> drv = std::make_unique<Xplicit::Renderer::DX11::DriverSystemD3D11>(win->get().WindowHandle);
+
 			win->run(drv, Xplicit::Nplicit::Color<float>(40, 40, 40));
 
 			ExitCode = 0;

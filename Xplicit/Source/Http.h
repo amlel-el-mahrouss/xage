@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Http.h
- *			Purpose: C++ HTTP client
+ *			Purpose: Xplicit C++ HTTP client
  *
  * =====================================================================
  */
@@ -16,7 +16,7 @@
 
 namespace Xplicit::Utils
 {
-    constexpr int16_t HTTP_PORT = 80;
+    constexpr int16_t XPLICIT_HTTP_PORT = 80;
 
     class MIMEFactory;
     class HTTPError;
@@ -228,7 +228,7 @@ namespace Xplicit::Utils
             sock->m_Addr.sin_family = AF_INET;
             inet_pton(AF_INET, dns.c_str(), &sock->m_Addr.sin_addr);
 
-            sock->m_Addr.sin_port = htons(HTTP_PORT);
+            sock->m_Addr.sin_port = htons(XPLICIT_HTTP_PORT);
             sock->m_Dns = std::string{ dns.data() };
 
             int result = connect(sock->m_Socket, reinterpret_cast<SOCKADDR*>(&sock->m_Addr), sizeof(sock->m_Addr));

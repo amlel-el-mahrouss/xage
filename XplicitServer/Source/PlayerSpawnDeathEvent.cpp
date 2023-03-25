@@ -32,17 +32,17 @@ namespace Xplicit
 		{
 			auto& pos = spawner->get();
 
-			actor->Position.X = pos.X;
-			actor->Position.Y = pos.Y;
-			actor->Position.Z = pos.Z;
+			actor->pos().X = pos.X;
+			actor->pos().Y = pos.Y;
+			actor->pos().Z = pos.Z;
 		}
 		else
 		{
 			if (actor)
 			{
-				actor->Position.X = 0;
-				actor->Position.Y = 0;
-				actor->Position.Z = 0;
+				actor->pos().X = 0;
+				actor->pos().Y = 0;
+				actor->pos().Z = 0;
 			}
 		}
 	}

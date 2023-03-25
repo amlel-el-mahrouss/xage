@@ -18,11 +18,11 @@
 
 namespace Xplicit
 {
-	constexpr const int16_t XPLICIT_PLAYER_COOLDOWN = 100;
-	constexpr const int64_t XPLICIT_DEFAULT_HEALTH = 100;
-
 	PlayerComponent::PlayerComponent() 
-		: Component(), m_peer(nullptr), m_health(XPLICIT_DEFAULT_HEALTH), m_timeout(0), Position(0, 0, 0), Rotation(0, 0, 0, 0)
+		: Component(), m_peer(nullptr), m_health(XPLICIT_DEFAULT_HEALTH), 
+		m_death_timeout(0), 
+		m_position(0, 0, 0), 
+		m_freeze_cooldown(0)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("PlayerComponent::PlayerComponent");
@@ -52,18 +52,20 @@ namespace Xplicit
 			return;
 
 		if (m_peer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] == NETWORK_CMD_DEAD)
-			m_timeout = XPLICIT_PLAYER_COOLDOWN;
+			m_death_timeout = XPLICIT_PLAYER_DEATH_COOLDOWN;
 		
-		if (m_timeout > 0)
+		if (m_death_timeout > 0)
 		{
-			--m_timeout;
+			--m_death_timeout;
 
-			if (m_timeout <= 0)
+			if (m_death_timeout <= 0)
 			{
-				m_timeout = 0;
-				this->health(100);
+				m_death_timeout = 0;
+				this->health(XPLICIT_DEFAULT_HEALTH);
 			}
 		}
+
+		--m_freeze_cooldown;
 	}
 
 	void PlayerComponent::health(const int32_t& health) noexcept 
@@ -99,5 +101,20 @@ namespace Xplicit
 	{
 		XPLICIT_ASSERT(peer);
 		m_peer = peer;
+	}
+
+	bool PlayerComponent::is_frozen() noexcept
+	{
+		return m_freeze_cooldown > 0;
+	}
+
+	void PlayerComponent::freeze(const int64_t& cooldown) noexcept
+	{
+		m_freeze_cooldown = cooldown;
+	}
+
+	Nplicit::Vector<float>& PlayerComponent::pos() noexcept
+	{
+		return m_position;
 	}
 }

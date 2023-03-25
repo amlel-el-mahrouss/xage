@@ -24,7 +24,7 @@ namespace Xplicit
 	/// <param name="actors">Type: ActorArray</param>
 	/// <param name="actor">Type: Actor*</param>
 	/// <returns>Boolean: Returns true if the actor can move.</returns>
-	static bool xplicit_can_move(ActorArray& actors, PlayerComponent* actor)
+	static bool xplicit_can_move(PlayerArray& actors, PlayerComponent* actor)
 	{
 		if (!actor)
 			return false;
@@ -43,7 +43,7 @@ namespace Xplicit
 			if (actors[i] == actor)
 				continue;
 
-			if (actors[i]->Position == actor->Position)
+			if (actors[i]->get() == actor->get())
 				return false;
 		}
 
@@ -59,19 +59,22 @@ namespace Xplicit
 
 		// create them if not already created
 		if (!m_walk_var)
-			m_walk_var= GameVarSingleton::get_singleton_ptr()->create("Xplicit::WalkSpeed", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
+			m_walk_var= GameVarSingleton::get_singleton_ptr()->create("GV_WalkSpeed",
+				val.c_str(), 
+				GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
 
 		if (!m_side_var)
-			m_side_var = GameVarSingleton::get_singleton_ptr()->create("Xplicit::SideSpeed", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
+			m_side_var = GameVarSingleton::get_singleton_ptr()->create("GV_SideSpeed", 
+				val.c_str(),
+				GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
 
 		if (!m_jump_var)
-			m_jump_var = GameVarSingleton::get_singleton_ptr()->create("Xplicit::JumpHeight", val.c_str(), GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
+			m_jump_var = GameVarSingleton::get_singleton_ptr()->create("GV_JumpHeight", 
+				val.c_str(), 
+				GameVarView::FLAG_SERVER_ONLY | GameVarView::FLAG_CHEAT);
 	}
 
-	PlayerMovementEvent::~PlayerMovementEvent() 
-	{
-		
-	}
+	PlayerMovementEvent::~PlayerMovementEvent() {}
 
 	/// <summary>
 	/// The Main loop behind the Actor movement event.
@@ -95,30 +98,34 @@ namespace Xplicit
 			if (peer->public_hash != peer->packet.public_hash)
 				continue;
 
-			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
+			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] != NETWORK_CMD_ACCEPT &&
+				!actor->is_frozen())
 			{
 				if (xplicit_can_move(actors, actor))
 				{
 					peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
 					if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-						actor->Position.X += m_walk_var ? m_walk_var->as_float() : XPLICIT_DEFAULT_VEL;
+						actor->pos().Z += m_walk_var ? m_walk_var->as_float() : XPLICIT_DEFAULT_VEL;
 
 					if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-						actor->Position.X -= m_walk_var ? m_walk_var->as_float() : XPLICIT_DEFAULT_VEL;
+						actor->pos().Z -= m_walk_var ? m_walk_var->as_float() : XPLICIT_DEFAULT_VEL;
 
 					if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-						actor->Position.Y -= m_side_var ? m_side_var->as_float() : XPLICIT_DEFAULT_VEL;
+						actor->pos().X -= m_side_var ? m_side_var->as_float() : XPLICIT_DEFAULT_VEL;
 
 					if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-						actor->Position.Y += m_side_var ? m_side_var->as_float() : XPLICIT_DEFAULT_VEL;
+						actor->pos().X += m_side_var ? m_side_var->as_float() : XPLICIT_DEFAULT_VEL;
 
 					if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
-						actor->Position.Z += m_jump_var ? m_jump_var->as_float() : XPLICIT_DEFAULT_VEL;
+						actor->pos().Y += m_jump_var ? m_jump_var->as_float() : XPLICIT_DEFAULT_VEL;
 
 					peer->packet.speed[XPLICIT_NETWORK_X] = m_walk_var ? m_walk_var->as_float() : XPLICIT_DEFAULT_VEL;
 					peer->packet.speed[XPLICIT_NETWORK_Y] = m_side_var ? m_side_var->as_float() : XPLICIT_DEFAULT_VEL;
 					peer->packet.speed[XPLICIT_NETWORK_Z] = m_jump_var ? m_jump_var->as_float() : XPLICIT_DEFAULT_VEL;
+
+					actor->freeze(XPLICIT_MOVEMENT_RATE);
 				}
 			}
 		}

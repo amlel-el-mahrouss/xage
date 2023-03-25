@@ -22,13 +22,9 @@ namespace Xplicit
 		PlayerComponent();
 		virtual ~PlayerComponent();
 
-		PlayerComponent& operator=(const PlayerComponent&) = default;
-		PlayerComponent(const PlayerComponent&) = default;
+		XPLICIT_COPY_DELETE(PlayerComponent);
 
 	public:
-		void health(const int32_t& health) noexcept;
-		const int64_t health() noexcept; // gets the health of the actor.
-
 		void set(NetworkPeer* peer) noexcept;
 		NetworkPeer* get() noexcept;
 
@@ -40,20 +36,27 @@ namespace Xplicit
 
 	public:
 		virtual PHYSICS_TYPE physics() noexcept override;
-
 		virtual bool can_collide() noexcept override;
 		virtual bool has_physics() noexcept override;
 
 	public:
-		Nplicit::Quaternion<float> Rotation;
-		Nplicit::Vector<float> Position;
+		Nplicit::Vector<float>& pos() noexcept;
+
+	public:
+		void health(const int32_t& health) noexcept;
+		const int64_t health() noexcept;
+
+		void freeze(const int64_t& cooldown) noexcept;
+		bool is_frozen() noexcept;
 
 	private:
+		Nplicit::Vector<float> m_position;
+		int64_t m_freeze_cooldown;
+		int64_t m_death_timeout;
 		NetworkPeer* m_peer;
-		int64_t m_timeout;
 		int64_t m_health;
 
 	};
 
-	using ActorArray = std::vector<PlayerComponent*>;
+	using PlayerArray = std::vector<PlayerComponent*>;
 }
