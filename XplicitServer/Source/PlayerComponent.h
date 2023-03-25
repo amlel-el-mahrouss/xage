@@ -42,7 +42,6 @@ namespace Xplicit
 	public:
 		Nplicit::Vector<float>& pos() noexcept;
 
-	public:
 		void health(const int32_t& health) noexcept;
 		const int64_t health() noexcept;
 

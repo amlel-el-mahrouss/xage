@@ -72,65 +72,28 @@ namespace Xplicit::Client
 				auto y = m_packet.speed[XPLICIT_NETWORK_Y];
 				auto z = m_packet.speed[XPLICIT_NETWORK_Z];
 
-				m_packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_INVALID;
 				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
-
-				auto forward = m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD];
-				auto backward = m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD];
-				auto left = m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT];
-				auto right = m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT];
-				auto jump = m_packet.cmd[XPLICIT_NETWORK_CMD_JUMP];
-
-				m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
-				m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
-				m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
-				m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
-				m_packet.cmd[XPLICIT_NETWORK_CMD_JUMP] = NETWORK_CMD_INVALID;
 
 				m_network->send(m_packet);
 
-				f32 delta = (IRR->getTimer()->getTime() - m_then) / XPLICIT_DELTA_SECOND;
-				auto pos = m_pNode->getPosition();
+				f32 delta = (IRR->getTimer()->getTime() - m_then) / XPLICIT_DELTA_TIME;
 
-				if (forward == NETWORK_CMD_FORWARD)
-				{
+				auto pos = m_pNode->getAbsolutePosition();
+
+				if (m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 					pos.Z -= z * delta;
-					m_pNode->setPosition(pos);
-
-					return;
-				}
-
-				if (backward == NETWORK_CMD_BACKWARD)
-				{
+				
+				if (m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
 					pos.Z += z * delta;
-					m_pNode->setPosition(pos);
 
-					return;
-				}
+				if (m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
+					pos.X -= x * delta;
+				
+				if (m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
+					pos.X += x * delta;
 
-				if (left == NETWORK_CMD_LEFT)
-				{
-					pos.X -= y * delta;
-					m_pNode->setPosition(pos);
-
-					return;
-				}
-
-				if (right == NETWORK_CMD_RIGHT)
-				{
-					pos.X += y * delta;
-					m_pNode->setPosition(pos);
-
-					return;
-				}
-
-				if (jump == NETWORK_CMD_JUMP)
-				{
-					pos.Y += x * delta;
-					m_pNode->setPosition(pos);
-
-					return;
-				}
+				XPLICIT_INFO(std::to_string(pos.Z));
+				m_pNode->setPosition(pos);
 			}
 		}
 	}
@@ -155,23 +118,26 @@ namespace Xplicit::Client
 
 		if (KB->key_down(Details::KEY_KEY_W))
 		{
-
 			XPLICIT_SEND_POS_CMD(XPLICIT_NETWORK_CMD_FORWARD, NETWORK_CMD_FORWARD);
+			return;
 		}
 
 		if (KB->key_down(Details::KEY_KEY_S))
 		{
 			XPLICIT_SEND_POS_CMD(XPLICIT_NETWORK_CMD_BACKWARD, NETWORK_CMD_BACKWARD);
+			return;
 		}
 
 		if (KB->key_down(Details::KEY_KEY_D))
 		{
 			XPLICIT_SEND_POS_CMD(XPLICIT_NETWORK_CMD_RIGHT, NETWORK_CMD_RIGHT);
+			return;
 		}
 
 		if (KB->key_down(Details::KEY_KEY_A))
 		{
 			XPLICIT_SEND_POS_CMD(XPLICIT_NETWORK_CMD_LEFT, NETWORK_CMD_LEFT);
+			return;
 		}
 	}
 }

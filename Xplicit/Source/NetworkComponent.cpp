@@ -15,12 +15,17 @@
 namespace Xplicit 
 {
 	NetworkError::NetworkError(const int what) 
-		: std::runtime_error("XplicitNetwork Error")
+		: std::runtime_error("Xplicit Network Error")
+#ifdef XPLICIT_WINDOWS
+		, m_iErr(WSAGetLastError())
+#endif
 	{
-		m_iErr = WSAGetLastError();
-
-		std::string err = "NetworkError, code: ";
+#ifdef XPLICIT_DEBUG
+		std::string err = "NetworkError, error code: ";
 		err += std::to_string(m_iErr);
+
+		XPLICIT_CRITICAL(err);
+#endif
 	}
 
 	int NetworkError::error() const noexcept { return m_iErr; }
