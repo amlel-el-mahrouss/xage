@@ -68,9 +68,8 @@ namespace Xplicit::Client
 			if (m_packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
 				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
 			{
-				auto x = m_packet.speed[XPLICIT_NETWORK_X];
-				auto y = m_packet.speed[XPLICIT_NETWORK_Y];
-				auto z = m_packet.speed[XPLICIT_NETWORK_Z];
+				auto x_speed = m_packet.speed[XPLICIT_NETWORK_X];
+				auto z_speed = m_packet.speed[XPLICIT_NETWORK_Z];
 
 				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
 
@@ -81,18 +80,27 @@ namespace Xplicit::Client
 				auto pos = m_pNode->getAbsolutePosition();
 
 				if (m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					pos.Z -= z * delta;
+					pos.Z -= z_speed * delta;
 				
 				if (m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					pos.Z += z * delta;
-
+					pos.Z += z_speed * delta;
+				
 				if (m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					pos.X -= x * delta;
+					pos.X -= x_speed * delta;
 				
 				if (m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					pos.X += x * delta;
+					pos.X += x_speed * delta;
 
-				XPLICIT_INFO(std::to_string(pos.Z));
+#ifdef XPLICIT_DEBUG
+				XPLICIT_INFO("Z:" + std::to_string(pos.Z));
+				XPLICIT_INFO("X:" + std::to_string(pos.X));
+
+				XPLICIT_INFO("NETWORK_CMD_RIGHT:" + std::to_string(m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT]));
+				XPLICIT_INFO("NETWORK_CMD_LEFT:" + std::to_string(m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT]));
+				XPLICIT_INFO("NETWORK_CMD_BACKWARD:" + std::to_string(m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD]));
+				XPLICIT_INFO("NETWORK_CMD_FORWARD:" + std::to_string(m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD]));
+#endif // XPLICIT_DEBUG
+
 				m_pNode->setPosition(pos);
 			}
 		}
@@ -115,6 +123,11 @@ namespace Xplicit::Client
 	{
 		if (!m_network || m_public_hash == -1)
 			return;
+
+		m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
+		m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
+		m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
+		m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
 
 		if (KB->key_down(Details::KEY_KEY_W))
 		{
