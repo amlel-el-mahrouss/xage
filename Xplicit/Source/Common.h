@@ -28,10 +28,10 @@ namespace Xplicit
 	class XPLICIT_API PositionComponent final : public Component
 	{
 	public:
-		PositionComponent() : Position(0, 0, 0) {}
+		PositionComponent() : Position(0.f, 0.f, 0.f) {}
 		virtual ~PositionComponent() = default;
 
-		XPLICIT_COPY_DELETE(PositionComponent);
+		XPLICIT_COPY_DEFAULT(PositionComponent);
 
 	public:
 		Nplicit::Vector<float> Position;
@@ -44,7 +44,7 @@ namespace Xplicit
 		PhysicsComponent() = default;
 		virtual ~PhysicsComponent() = default;
 
-		XPLICIT_COPY_DELETE(PhysicsComponent);
+		XPLICIT_COPY_DEFAULT(PhysicsComponent);
 
 	public:
 		Nplicit::PhysicsComponent<float> Physics;

@@ -63,17 +63,16 @@ static void xplicit_read_xml()
 			path += dll;
 
 			auto csharp_dll = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
-
 			auto assembly_file = mono->open(path.c_str());
 
 			if (assembly_file)
 			{
-				XPLICIT_INFO("[C#] " + path + " Loaded.");
+				XPLICIT_INFO("[C#] Running: " + path);
 				mono->run(assembly_file, argc, argv);
 			}
 			else
 			{
-				XPLICIT_INFO("[C#] " + path + " Was found found.");
+				XPLICIT_INFO("[C#] " + path + " No such file.");
 				Xplicit::ComponentManager::get_singleton_ptr()->remove(csharp_dll);
 			}
 		}
@@ -89,11 +88,11 @@ static void xplicit_attach_mono()
 {
 	XPLICIT_GET_DATA_DIR(data);
 
-	std::string path = data;
-	path += "Lib/Xplicit.dll"; // The game dll.
+	Xplicit::String dll_path = data;
+	dll_path += "Lib/ScriptNgine.dll";
 
 	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoEngineComponent>();
-	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
+	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(dll_path.c_str(), false);
 }
 
 static void xplicit_print_help()
@@ -120,7 +119,7 @@ static void xplicit_load_shell()
 				if (strcmp(cmd_buf, "exit") == 0)
 				{
 					auto server = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
-					XPLICIT_ASSERT(server);
+					XPLICIT_ASSERT(server != nullptr);
 
 					if (server)
 					{
@@ -146,7 +145,10 @@ static void xplicit_load_shell()
 
 static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
 {
-	XPLICIT_ASSERT(server);
+	XPLICIT_ASSERT(server != nullptr);
+
+	if (!server)
+		return;
 
 	for (size_t i = 0; i < server->size(); i++)
 	{

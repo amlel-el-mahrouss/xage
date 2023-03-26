@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Camera.cpp
- *			Purpose: Client-side camera
+ *			Purpose: Client-side Camera
  *
  * =====================================================================
  */

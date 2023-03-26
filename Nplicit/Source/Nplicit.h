@@ -64,6 +64,7 @@ namespace Xplicit::Nplicit
 
 	public:
 		void set(const Vector<float>& gravity) noexcept { m_gravity.add(gravity.X, gravity.Y, gravity.Z); }
+
 		Vector<float>& get() noexcept { return m_gravity; }
 
 		void add(PhysicsComponent<TypeFloat>* rigid)

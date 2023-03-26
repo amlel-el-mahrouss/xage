@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: Camera.h
- *			Purpose: Client-side misc instances
+ *			Purpose: Client-side Camera
  *
  * =====================================================================
  */

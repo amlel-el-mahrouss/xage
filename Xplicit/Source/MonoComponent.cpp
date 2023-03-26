@@ -39,8 +39,8 @@ namespace Xplicit
 
 	static void xplicit_register_events() noexcept
 	{
-		mono_add_internal_call("Xplicit.RuntimeService::RegisterEvent", xplicit_register_event);
-		mono_add_internal_call("Xplicit.RuntimeService::RegisterClass", xplicit_register_class);
+		mono_add_internal_call("ScriptNgine.ScriptNgineManager::RegisterEvent", xplicit_register_event);
+		mono_add_internal_call("ScriptNgine.ScriptNgineManager::RegisterClass", xplicit_register_class);
 	}
 
 	static std::string mono_to_cxx(MonoString* str)

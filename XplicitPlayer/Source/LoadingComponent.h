@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: LoadingComponent.h
- *			Purpose:
+ *			Purpose: Loading Component
  *
  * =====================================================================
  */

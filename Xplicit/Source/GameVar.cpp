@@ -21,18 +21,12 @@ namespace Xplicit
 	GameVarView::GameVarView(const char* name, const char* default_value, int flags)
 		: m_name(name), m_value(default_value), m_flags(flags)
 	{
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("GameVarView::GameVarView");
-#endif
+
 	}
 
 	GameVarView::~GameVarView()
 	{
 		GameVarSingleton::get_singleton_ptr()->remove(this);
-
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("GameVarView::~GameVarView");
-#endif
 	}
 
 	int32_t GameVarView::flags() noexcept { return m_flags; }
@@ -42,6 +36,7 @@ namespace Xplicit
 	float GameVarView::as_float() noexcept { return std::stof(m_value); }
 
 	std::string& GameVarView::as_str() noexcept { return m_value; }
+
 	const char* GameVarView::name() noexcept { return m_name.c_str(); }
 
 	GameVarSingleton* GameVarSingleton::get_singleton_ptr() noexcept 
