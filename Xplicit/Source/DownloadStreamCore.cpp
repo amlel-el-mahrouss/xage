@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: DownloadProtocol.cpp
- *			Purpose: Xplicit download protocol
+ *			Purpose: Xplicit Stream Protocol
  *
  * =====================================================================
  */
@@ -14,28 +14,23 @@
  @file
  */
 
-#include "NetworkDownload.h"
+#include "DownloadStreamCore.h"
 #include "Crc32.h"
 
 namespace Xplicit::Network
 {
-	NetworkSharedFile::NetworkSharedFile(const char* bytes, size_t len)
+	StreamFile::StreamFile(const char* bytes, size_t len)
 	{
 		this->set(bytes, len);
 	}
 
-	NetworkSharedFile::~NetworkSharedFile() {}
+	StreamFile::~StreamFile() {}
 
-	int NetworkSharedFile::set(const char* bytes, size_t len)
+	int StreamFile::set(const char* bytes, size_t len)
 	{
 		if (!bytes ||
 			len < 1)
-		{
-#ifdef XPLICIT_DEBUG
-			XPLICIT_INFO("[DebugInterface] Call returned 1, check arguments.");
-#endif
 			return 1;
-		}
 
 		m_bytes.clear();
 		m_bytes.reserve(len);
@@ -45,14 +40,10 @@ namespace Xplicit::Network
 			m_bytes[i] = bytes[i];
 		}
 
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[DebugInterface] Call returned 0.");
-#endif
-
 		return 0;
 	}
 
-	const char* NetworkSharedFile::get() noexcept
+	const char* StreamFile::get() noexcept
 	{
 		if (m_bytes.empty())
 			return "(null)";
@@ -60,26 +51,26 @@ namespace Xplicit::Network
 		return m_bytes.data();
 	}
 
-	size_t NetworkSharedFile::size() noexcept { return m_bytes.size(); }
+	size_t StreamFile::size() noexcept { return m_bytes.size(); }
 
-	NetworkDownloadTask::NetworkDownloadTask()
+	DownloadTask::DownloadTask()
 		: m_bReady(false), m_files()
 	{
 	
 	}
 
-	NetworkDownloadTask::~NetworkDownloadTask()
+	DownloadTask::~DownloadTask()
 	{
 
 	}
 
-	void NetworkDownloadTask::add(NetworkSharedFile* file)
+	void DownloadTask::add(StreamFile* file)
 	{
 		if (file)
 			m_files.push_back(file);
 	}
 
-	bool NetworkDownloadTask::remove(NetworkSharedFile* file)
+	bool DownloadTask::remove(StreamFile* file)
 	{
 		if (file)
 		{
@@ -95,17 +86,17 @@ namespace Xplicit::Network
 		return false;
 	}
 
-	void NetworkDownloadTask::operator()(Socket& socket, const bool compressed)
+	void DownloadTask::operator()(Socket& socket, const bool compressed)
 	{
 		if (socket != SOCKET_ERROR)
 		{
 			std::vector<int> data, data_tmp;
 
-			data.push_back(XPLICIT_TCP_MAG_0);
-			data.push_back(XPLICIT_TCP_MAG_1);
-			data.push_back(XPLICIT_TCP_MAG_2);
+			data.push_back(XPLICIT_PROTO_MAG_0);
+			data.push_back(XPLICIT_PROTO_MAG_1);
+			data.push_back(XPLICIT_PROTO_MAG_2);
 			data.push_back(compressed);
-			data.push_back(XPLICIT_TCP_VERSION);
+			data.push_back(XPLICIT_PROTO_VERSION);
 
 			data.push_back('\r');
 			data.push_back('\n');
@@ -119,8 +110,6 @@ namespace Xplicit::Network
 							data_tmp.push_back(m_files[file_index]->get()[data_index]);
 						}
 
-						// add these 4 characters, to separate each file.
-
 						data.push_back('\r');
 						data.push_back('\n');
 						data.push_back('\r');
@@ -132,6 +121,7 @@ namespace Xplicit::Network
 			worker.join();
 
 			int crc = xplicit_crc32(reinterpret_cast<char*>(data_tmp.data()), data_tmp.size());
+
 			data.push_back(crc);
 
 			for (size_t i = 0; i < data_tmp.size(); ++i)
@@ -146,9 +136,9 @@ namespace Xplicit::Network
 		}
 	}
 
-	bool NetworkDownloadTask::is_ready() noexcept { return m_bReady; }
+	bool DownloadTask::is_ready() noexcept { return m_bReady; }
 
-	NetworkDownloadTask::operator bool() noexcept { return this->is_ready(); }
+	DownloadTask::operator bool() noexcept { return this->is_ready(); }
 
-	void NetworkDownloadTask::set(const bool ready) noexcept { m_bReady = true; }
+	void DownloadTask::set(const bool ready) noexcept { m_bReady = true; }
 }

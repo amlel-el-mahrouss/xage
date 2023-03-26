@@ -323,6 +323,8 @@ namespace Xplicit
 		irr::io::IIrrXMLReader<char, IReferenceCounted>* Reader;
 		irr::io::IXMLWriter* Writer;
 		irr::IrrlichtDevice* Dev;
+
+	public:
 		InputReceiver* Keyboard;
 		bool ShouldExit;
 
@@ -333,9 +335,17 @@ namespace Xplicit
 #define IRR  Xplicit::ApplicationContext::get_singleton_ptr()->Dev
 #define KB  Xplicit::ApplicationContext::get_singleton_ptr()->Keyboard
 
+#ifdef XPLICIT_WINDOWS
 #ifndef XPLICIT_GET_DATA_DIR
 #define XPLICIT_GET_DATA_DIR(DIR)\
-std::string DIR = getenv("APPDATA");\
+Xplicit::String DIR = getenv("APPDATA");\
 DIR += "/Data/";
 
+#endif
+#elif defined(__linux__)
+#ifndef XPLICIT_GET_DATA_DIR
+#define XPLICIT_GET_DATA_DIR(DIR)\
+DIR += "/var/Data/";
+
+#endif
 #endif

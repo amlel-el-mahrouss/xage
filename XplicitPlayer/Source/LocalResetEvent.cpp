@@ -43,11 +43,11 @@ namespace Xplicit::Client
 		if (packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP &&
 			m_hash == packet.hash)
 		{
-			if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("Popup"))
+			if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("StopPopup"))
 			{
 				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 					IRR->closeDevice();
-					}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::Shutdown);
+					}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::SHUTDOWN, "StopPopup");
 
 				return;
 			}
@@ -59,11 +59,11 @@ namespace Xplicit::Client
 
 			if (m_resets > XPLICIT_MAX_RESETS)
 			{
-				if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("Popup"))
+				if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("ResetPopup"))
 				{
 					ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 						IRR->closeDevice();
-						}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NetworkError);
+						}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
 
 				}
 			}

@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: CoreUI.h
- *			Purpose: Core Client UI
+ *			Purpose: Client UI
  *
  * =====================================================================
  */
@@ -16,17 +16,13 @@
 #include <ApplicationContext.h>
 #include <Component.h>
 
-#ifdef XPLICIT_WINDOWS
-#include "DriverD3D11.h"
-#endif
-
 namespace Xplicit::CoreUI
 {
 	enum class POPUP_TYPE
 	{
-		NetworkError,
-		Shutdown,
-		Kicked,
+		NETWORK_ERROR,
+		SHUTDOWN,
+		KICK,
 	};
 
 	class Popup final : public Component
@@ -36,7 +32,7 @@ namespace Xplicit::CoreUI
 
 	public:
 		Popup(const std::function<void()>& on_click, const vector2di pos = vector2di(0, 0), 
-			const POPUP_TYPE shutdown_type = POPUP_TYPE::NetworkError) noexcept;
+			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK_ERROR, const char* id = "Popup") noexcept;
 
 		virtual ~Popup();
 
@@ -49,9 +45,10 @@ namespace Xplicit::CoreUI
 		virtual INSTANCE_TYPE type() noexcept override;
 
 	private:
-		std::function<void()> m_on_click;
-		ITexture* m_texture;
-		vector2di m_pos;
+		std::function<void()> m_onClick;
+		ITexture* m_pTexture;
+		String m_strPopupId;
+		vector2di m_vecPos;
 
 	};
 

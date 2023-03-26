@@ -40,7 +40,6 @@ namespace Xplicit::Studio
 				throw EngineError();
 			}
 
-
 			Xplicit::Bites::Win32Window* win = new Xplicit::Bites::Win32Window(XPLICIT_APP_NAMEA, XPLICIT_APP_NAMEA, hInst);
 			std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11> drv = std::make_unique<Xplicit::Renderer::DX11::DriverSystemD3D11>(win->get().WindowHandle);
 

@@ -2,7 +2,8 @@ XPLICIT_PROJ = "Xplicit"
 XPLICIT_SERVER_PROJ = "XplicitServer"
 XPLICIT_CLIENT_PROJ = "XplicitPlayer"
 XPLICIT_STUDIO_PROJ = "XplicitStudio"
-XPLICIT_WORKSPACE = "XplicitNgin"
+XPLICIT_SCRIPT_PROJ = "XplicitScript"
+XPLICIT_WORKSPACE = "XplicitNgine"
 NPLICIT_PROJ = "Nplicit"
 
 XPLICIT_CONFIG = {
