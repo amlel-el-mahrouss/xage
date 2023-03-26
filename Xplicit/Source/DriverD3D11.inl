@@ -58,7 +58,7 @@ namespace Xplicit
 		}
 
 		shader_system->get().matrix_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-		shader_system->get().matrix_buffer_desc.ByteWidth = sizeof(Xplicit::Details::VERTEX);
+		shader_system->get().matrix_buffer_desc.ByteWidth = sizeof(Renderer::DX11::Details::VERTEX);
 		shader_system->get().matrix_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		shader_system->get().matrix_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		shader_system->get().matrix_buffer_desc.MiscFlags = 0;

@@ -16,6 +16,11 @@
 
 #include "Application.h"
 
+namespace Xplicit::Client
+{
+	dimension2du XPLICIT_DIM = dimension2du(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
+}
+
 namespace Xplicit::Bites
 {
 	static void open_prebuilt_dialogs()

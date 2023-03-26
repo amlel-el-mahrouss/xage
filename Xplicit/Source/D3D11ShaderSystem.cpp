@@ -51,16 +51,16 @@ namespace Xplicit::Renderer::DX11
 			return;
 
 		if (this->m_data.input_layout_ptr)
-			component->m_driver->get().Ctx->IASetInputLayout(this->m_data.input_layout_ptr.Get());
+			component->m_pDriver->get().Ctx->IASetInputLayout(this->m_data.input_layout_ptr.Get());
 	
 		if (this->m_data.vertex)
-			component->m_driver->get().Ctx->VSSetShader(this->m_data.vertex.Get(), nullptr, 0);
+			component->m_pDriver->get().Ctx->VSSetShader(this->m_data.vertex.Get(), nullptr, 0);
 
 		if (this->m_data.pixel)
-			component->m_driver->get().Ctx->PSSetShader(this->m_data.pixel.Get(), nullptr, 0);
+			component->m_pDriver->get().Ctx->PSSetShader(this->m_data.pixel.Get(), nullptr, 0);
 
 		if (this->m_data.hull)
-			component->m_driver->get().Ctx->HSSetShader(this->m_data.hull.Get(), nullptr, 0);
+			component->m_pDriver->get().Ctx->HSSetShader(this->m_data.hull.Get(), nullptr, 0);
 	}
 }
 

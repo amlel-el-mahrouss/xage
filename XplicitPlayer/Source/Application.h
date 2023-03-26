@@ -12,28 +12,24 @@
 
 #pragma once
 
-// URLs
 #include <Uri.h>
-
-#include "LocalPlayerComponent.h"
-#include "LoadingComponent.h"
-#include "CameraComponent.h"
-
-// Application Context (will be deprecated soon)
 #include <ApplicationContext.h>
+
+#include "CameraComponent.h"
+#include "LoadingComponent.h"
+#include "LocalPlayerComponent.h"
 
 #define XPLICIT_DEFAULT_WIDTH (1280)
 #define XPLICIT_DEFAULT_HEIGHT (720)
 
-// will be deprecated soon.
 namespace Xplicit::Client
 {
-	static inline dimension2du XPLICIT_DIM = dimension2du(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
+	extern dimension2du XPLICIT_DIM;
 }
 
 namespace Xplicit::Bites
 {
-	constexpr const PChar* XPLICIT_APP_NAME = L"Xplicit Engine";
+	constexpr const PChar* XPLICIT_APP_NAME = L"XplicitNgine - www.play-xplicit.com";
 
 	class Application final
 	{

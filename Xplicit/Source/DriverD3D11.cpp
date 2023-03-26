@@ -160,6 +160,7 @@ namespace Xplicit::Renderer::DX11
 		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
 		depthStencilDesc.StencilEnable = true;
+
 		depthStencilDesc.StencilReadMask = 0xFF;
 		depthStencilDesc.StencilWriteMask = 0xFF;
 
@@ -248,7 +249,6 @@ namespace Xplicit::Renderer::DX11
 		float rgba[4]{ r, g, b, a };
 
 		m_private.Ctx->ClearRenderTargetView(m_private.RenderTarget.Get(), rgba);
-
 		m_private.Ctx->ClearDepthStencilView(m_private.DepthStencil.Get(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 			1,
@@ -301,16 +301,16 @@ namespace Xplicit::Renderer::DX11
 
 	D3D11RenderComponent::D3D11RenderComponent()
 		: m_vertex_data(), m_hr(0), m_vertex_buf_desc(), m_index_buf_desc(), m_vertex_buffer(nullptr),
-		 m_driver(nullptr), m_vertex_arr(nullptr),
-		m_index_data(), m_vertex_cnt(0), m_shader(nullptr)
+		 m_pDriver(nullptr), m_pVertex(nullptr),
+		m_index_data(), m_iVertexCnt(0), m_pShader(nullptr)
 	{
 		
 	}
 
 	D3D11RenderComponent::~D3D11RenderComponent()
 	{
-		if (m_vertex_arr)
-			delete[] m_vertex_arr;
+		if (m_pVertex)
+			delete[] m_pVertex;
 	}
 
 	void D3D11RenderComponent::push(const Nplicit::Vector<float>& vert)
@@ -328,37 +328,37 @@ namespace Xplicit::Renderer::DX11
 		RtlZeroMemory(&m_vertex_buf_desc, sizeof(D3D11_BUFFER_DESC));
 		RtlZeroMemory(&m_index_buf_desc, sizeof(D3D11_BUFFER_DESC));
 
-		if (!m_vertex_arr)
-			m_vertex_arr = new Xplicit::Details::VERTEX[m_verts.size()];
+		if (!m_pVertex)
+			m_pVertex = new Details::VERTEX[m_verts.size()];
 
-		XPLICIT_ASSERT(m_vertex_arr);
+		XPLICIT_ASSERT(m_pVertex);
 
-		m_vertex_cnt = 0;
+		m_iVertexCnt = 0;
 
 		for (size_t vertex_index = 0; vertex_index < m_verts.size(); ++vertex_index)
 		{
-			m_vertex_arr[m_vertex_cnt].position.x = m_verts[vertex_index].X;
-			m_vertex_arr[m_vertex_cnt].position.y = m_verts[vertex_index].Y;
-			m_vertex_arr[m_vertex_cnt].position.z = m_verts[vertex_index].Z;
+			m_pVertex[vertex_index].position.x = m_verts[vertex_index].X;
+			m_pVertex[vertex_index].position.y = m_verts[vertex_index].Y;
+			m_pVertex[vertex_index].position.z = m_verts[vertex_index].Z;
 
-			++m_vertex_cnt;
+			++m_iVertexCnt;
 		}
 
 		m_vertex_buf_desc.Usage = D3D11_USAGE_DEFAULT;
-		m_vertex_buf_desc.ByteWidth = m_vertex_cnt;
+		m_vertex_buf_desc.ByteWidth = m_iVertexCnt;
 		m_vertex_buf_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		m_vertex_buf_desc.CPUAccessFlags = 0;
 		m_vertex_buf_desc.MiscFlags = 0;
-		m_vertex_buf_desc.StructureByteStride = sizeof(Xplicit::Details::VERTEX);
+		m_vertex_buf_desc.StructureByteStride = sizeof(Details::VERTEX);
 
-		m_vertex_data.pSysMem = m_vertex_arr;
+		m_vertex_data.pSysMem = m_pVertex;
 
-		m_hr = m_driver->get().Device->CreateBuffer(&m_vertex_buf_desc, &m_vertex_data, m_vertex_buffer.GetAddressOf());
+		m_hr = m_pDriver->get().Device->CreateBuffer(&m_vertex_buf_desc, &m_vertex_data, m_vertex_buffer.GetAddressOf());
 		
 		if (FAILED(m_hr))
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create)");
 
-		XPLICIT_ASSERT(m_vertex_arr);
+		XPLICIT_ASSERT(m_pVertex);
 	}
 
 	bool D3D11RenderComponent::should_update() noexcept { return true; }
@@ -370,37 +370,37 @@ namespace Xplicit::Renderer::DX11
 	void D3D11RenderComponent::set(DriverSystemD3D11* driver) noexcept
 	{
 		if (driver)
-			m_driver = driver;
+			m_pDriver = driver;
 	}
 
 	void D3D11RenderComponent::set(D3D11ShaderSystem* system) noexcept
 	{
 		if (system)
-			m_shader = system;
+			m_pShader = system;
 	}
 	
 	void D3D11RenderComponent::update() 
 	{
-		if (!m_shader ||
-			!m_driver ||
-			m_vertex_cnt < 1)
+		if (!m_pShader ||
+			!m_pDriver ||
+			m_iVertexCnt < 1)
 			return;
 
-		static const uint32_t stride[] = { sizeof(Xplicit::Details::VERTEX), m_vertex_cnt };
+		static const uint32_t stride[] = { sizeof(Details::VERTEX), m_iVertexCnt };
 		static const uint32_t offset = 0;
 
-		m_driver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), stride, &offset);
-		m_driver->get().Ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_pDriver->get().Ctx->IASetVertexBuffers(0, 1, m_vertex_buffer.GetAddressOf(), stride, &offset);
+		m_pDriver->get().Ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		m_shader->update(this);
+		m_pShader->update(this);
 
-		m_driver->get().Ctx->RSSetState(m_driver->get().RasterState.Get());
-		m_driver->get().Ctx->Draw(m_vertex_cnt, 0);
+		m_pDriver->get().Ctx->RSSetState(m_pDriver->get().RasterState.Get());
+		m_pDriver->get().Ctx->Draw(m_iVertexCnt, 0);
 	}
 
 	size_t D3D11RenderComponent::size() noexcept
 	{
-		return m_vertex_cnt;
+		return m_iVertexCnt;
 	}
 }
 

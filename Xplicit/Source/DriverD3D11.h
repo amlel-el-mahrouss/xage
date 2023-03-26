@@ -28,8 +28,6 @@
 
 #include <D3DX10math.h>
 
-/* Include nuklear, for debugging */
-
 #ifdef XPLICIT_DEBUG
 
 #include <nuklear/nuklear.h>
@@ -39,7 +37,7 @@
 
 #include <nuklear/nuklear.h>
 
-#endif
+#endif // XPLICIT_DEBUG
 
 #define XPLICIT_VERTEX_SHADER "vs_5_0"
 #define XPLICIT_PIXEL_SHADER "ps_5_0"
@@ -48,27 +46,23 @@
 #define XPLICIT_DOMAIN_SHADER "ds_5_0"
 #define XPLICIT_GEOMETRY_SHADER "gs_5_0"
 
-namespace Xplicit::Details
-{
-	__declspec(align(16))
-		struct VERTEX
-	{
-		D3DXVECTOR3 position;
-		D3DXVECTOR4 color;
-	};
-
-	struct MATRIX
-	{
-		D3DXMATRIX world_matrix;
-		D3DXMATRIX view_matrix;
-		D3DXMATRIX projection_matrix;
-	};
-}
-
 namespace Xplicit::Renderer::DX11
 {
 	namespace Details
 	{
+		__declspec(align(16)) struct VERTEX
+		{
+			D3DXVECTOR3 position;
+			D3DXVECTOR4 color;
+		};
+
+		struct MATRIX
+		{
+			D3DXMATRIX world_matrix;
+			D3DXMATRIX view_matrix;
+			D3DXMATRIX projection_matrix;
+		};
+
 		void ThrowIfFailed(HRESULT hr);
 	}
 
@@ -175,7 +169,7 @@ namespace Xplicit::Renderer::DX11
 			uint32_t flags2{ 0 };
 			D3D11_BUFFER_DESC matrix_buffer_desc{};
 
-			inline HRESULT set_matrixes(ID3D11DeviceContext* ctx,
+			inline HRESULT set_matrix(ID3D11DeviceContext* ctx,
 				D3DXMATRIX worldMatrix,
 				D3DXMATRIX viewMatrix,
 				D3DXMATRIX projectionMatrix)
@@ -186,7 +180,7 @@ namespace Xplicit::Renderer::DX11
 					return hr;
 
 				D3D11_MAPPED_SUBRESOURCE mapped_res;
-				Xplicit::Details::MATRIX* matrix = nullptr;
+				Details::MATRIX* matrix = nullptr;
 
 				D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
 				D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
@@ -197,7 +191,7 @@ namespace Xplicit::Renderer::DX11
 				if (FAILED(hr))
 					return hr;
 
-				matrix = reinterpret_cast<Xplicit::Details::MATRIX*>(mapped_res.pData);
+				matrix = reinterpret_cast<Details::MATRIX*>(mapped_res.pData);
 
 				matrix->projection_matrix = projectionMatrix;
 				matrix->view_matrix = viewMatrix;
@@ -284,24 +278,16 @@ namespace Xplicit::Renderer::DX11
 		virtual const char* name() noexcept override;
 
 	private:
-		std::vector<Nplicit::Vector<float>> m_verts;
-		D3D11ShaderSystem* m_shader;
-	
-	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertex_buffer;
-
-	private:
-		Xplicit::Details::VERTEX* m_vertex_arr;
-
-	private:
+		std::vector<Nplicit::Vector<float>> m_verts;
 		D3D11_SUBRESOURCE_DATA m_vertex_data;
 		D3D11_SUBRESOURCE_DATA m_index_data;
 		D3D11_BUFFER_DESC m_vertex_buf_desc;
 		D3D11_BUFFER_DESC m_index_buf_desc;
-		DriverSystemD3D11* m_driver;
-
-	private:
-		size_t m_vertex_cnt;
+		D3D11ShaderSystem* m_pShader;
+		DriverSystemD3D11* m_pDriver;
+		Details::VERTEX* m_pVertex;
+		size_t m_iVertexCnt;
 		HRESULT m_hr;
 
 		friend D3D11ShaderSystem;
