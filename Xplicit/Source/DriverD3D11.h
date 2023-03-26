@@ -93,29 +93,34 @@ namespace Xplicit::Renderer::DX11
 		virtual const char* name() noexcept override;
 		virtual RENDER_SYSTEM api() override;
 
-		struct XPLICIT_API PrivateData
+		class XPLICIT_API PrivateData
 		{
+		public:
 			bool VSync{ false };
 			char CardDesc[128];
 			bool EndRendering{ false };
 			HWND WindowHandle{ nullptr };
 
+		public:
 			D3D11_VIEWPORT Viewport;
 			DXGI_SWAP_CHAIN_DESC SwapDesc;
 
+		public:
 			Microsoft::WRL::ComPtr<ID3D11Device> Device;
 			Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
 			Microsoft::WRL::ComPtr<ID3D11DeviceContext> Ctx;
 			Microsoft::WRL::ComPtr<IDXGISwapChain> SwapChain;
 			Microsoft::WRL::ComPtr<ID3D11Texture2D> DepthTexture;
+			Microsoft::WRL::ComPtr<ID3D11Texture2D> RenderTexture;
 			Microsoft::WRL::ComPtr<ID3D11RasterizerState> RasterState;
 			Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthStencil;
 			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTarget;
 			Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DepthStencilState;
+
 		};
 
 	private:
-		void setup(); // internal DirectX setup.
+		void setup();
 
 	public:
 		void begin_scene(const float a, const float r, const float g, const float b);

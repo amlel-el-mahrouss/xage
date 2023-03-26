@@ -18,6 +18,19 @@
 
 namespace Xplicit
 {
+	XPLICIT_API bool xplicit_register_event(MonoString* event_name)
+	{
+		const char* name = mono_string_to_utf8(event_name);
+
+		if (name)
+		{
+			EventDispatcher::get_singleton_ptr()->add<MonoEvent>(name);
+			return true;
+		}
+
+		return false;
+	}
+
 	static MonoObject* xplicit_mono_call(const char* method_name, MonoClass* klass)
 	{
 		if (!method_name) return nullptr;
@@ -169,19 +182,6 @@ namespace Xplicit
 		return m_name.c_str();
 	}
 
-	XPLICIT_API bool xplicit_register_event(MonoString* event_name)
-	{
-		const char* name = mono_string_to_utf8(event_name);
-
-		if (name)
-		{
-			EventDispatcher::get_singleton_ptr()->add<MonoEvent>(name);
-			return true;
-		}
-
-		return false;
-	}
-
 	MonoEventListener::MonoEventListener(std::string& str) : m_name(std::move(str)) {}
 	MonoEventListener::MonoEventListener(const char* str) : m_name(str) {}
 
@@ -195,8 +195,14 @@ namespace Xplicit
 		{
 			auto* comp = components[i];
 
+			if (!comp)
+				continue;
+
 			if (strcmp(comp->name(), m_name.c_str()) == 0)
-				comp->script_update();
+			{
+				if (comp->script_should_update())
+					comp->script_update();
+			}
 		}
 	}
 

@@ -14,6 +14,7 @@
 
 #include "Crc32.h"
 #include "Xplicit.h"
+#include "SocketWrapper.h"
 #include "NetworkProtocol.h"
 
 #ifndef XPLICIT_TCP_PORT

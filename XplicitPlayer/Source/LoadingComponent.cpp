@@ -30,7 +30,7 @@ namespace Xplicit::Client
 	LoadingComponent::LoadingComponent() 
 		: m_run(true), m_network(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
 	{
-		m_texture = IRR->getVideoDriver()->getTexture("logo.png");
+		m_texture = IRR->getVideoDriver()->getTexture("xpx.png");
 	}
 
 	LoadingComponent::~LoadingComponent() 
@@ -106,8 +106,8 @@ namespace Xplicit::Client
 
 				m_network->send(packet);
 
-				IRR->getVideoDriver()->draw2DImage(m_texture, vector2di(Xplicit::Client::XPLICIT_DIM.Width * 0.02, Xplicit::Client::XPLICIT_DIM.Height * 0.825),
-					core::rect<s32>(0, 0, 105, 105), 0,
+				IRR->getVideoDriver()->draw2DImage(m_texture, vector2di(Xplicit::Client::XPLICIT_DIM.Width * 0.02, Xplicit::Client::XPLICIT_DIM.Height * 0.625),
+					core::rect<s32>(0, 0, 255, 255), 0,
 					video::SColor(255, 255, 255, 255), true);
 			}
 

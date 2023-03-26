@@ -14,6 +14,7 @@
 * @file
 */
 
+#include <CanvasComponent.h>
 #include <VideoDriver.h>
 #include <Bites.h>
 
@@ -43,9 +44,7 @@ namespace Xplicit::Studio
 			Xplicit::Bites::Win32Window* win = new Xplicit::Bites::Win32Window(XPLICIT_APP_NAMEA, XPLICIT_APP_NAMEA, hInst);
 			std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11> drv = std::make_unique<Xplicit::Renderer::DX11::DriverSystemD3D11>(win->get().WindowHandle);
 
-			win->run(drv, Xplicit::Nplicit::Color<float>(40, 40, 40));
-
-			ExitCode = 0;
+			ExitCode = win->run(drv, Xplicit::Nplicit::Color<float>(40, 40, 40));
 		}
 
 		int ExitCode{ 0 };

@@ -14,34 +14,54 @@
 
 namespace Xplicit::Canvas
 {
-	CanvasComponent::CanvasComponent(HWND hwnd)
-		: m_hwnd(hwnd)
+	CanvasComponent::CanvasComponent(Renderer::DX11::DriverSystemD3D11* drv)
+		: m_pDriver(drv)
 	{
+		if (ComponentManager::get_singleton_ptr()->get<CanvasComponent>("CanvasComponent"))
+			throw EngineError();
+
 		HRESULT hr = S_OK;
+
 		D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, m_pDirect2dFactory.GetAddressOf());
 		XPLICIT_ASSERT(hr == S_OK);
 
 		if (hr == S_OK)
 		{
-			RECT rc;
-			GetClientRect(hwnd, &rc);
+			Microsoft::WRL::ComPtr<IDXGISurface> surface;
+			hr = drv->get().SwapChain->GetBuffer(0, __uuidof(IDXGISurface), (void**)surface.GetAddressOf());
 
-			D2D1_SIZE_U size = D2D1::SizeU(
-				rc.right - rc.left,
-				rc.bottom - rc.top);
+			if (FAILED(hr))
+				throw EngineError();
 
-			hr = m_pDirect2dFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
-				D2D1::HwndRenderTargetProperties(m_hwnd, size),
+			D2D1_RENDER_TARGET_PROPERTIES renderProp =
+				D2D1::RenderTargetProperties(
+					D2D1_RENDER_TARGET_TYPE_DEFAULT,
+					D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+					0,
+					0);
+
+			hr = m_pDirect2dFactory->CreateDxgiSurfaceRenderTarget(
+				surface.Get(),
+				renderProp,
 				m_pRenderTarget.GetAddressOf());
 
-			if (hr == S_OK)
+			if (SUCCEEDED(hr))
 			{
 				hr = m_pRenderTarget->CreateSolidColorBrush(
 					D2D1::ColorF(D2D1::ColorF::GhostWhite),
 					m_pGhostWhiteBrush.GetAddressOf()
 				);
 
-				XPLICIT_ASSERT(hr == S_OK);
+				if (FAILED(hr))
+					throw EngineError();
+			}
+			else
+			{
+#ifdef XPLICIT_DEBUG
+				XPLICIT_INFO("EngineError: Could not create RenderTarget from DXGISurface!");
+#endif // XPLICIT_DEBUG
+
+				throw EngineError();
 			}
 		}
 	}
@@ -52,15 +72,15 @@ namespace Xplicit::Canvas
 	{
 		this->begin_scene();
 
-		for (size_t i = 0; i < m_views.size(); ++i)
+		for (size_t i = 0; i < m_pViews.size(); ++i)
 		{
-			if (m_views[i])
-				(*m_views[i])(this);
+			if (m_pViews[i])
+				(*m_pViews[i])(this);
 		}
 
 		this->end_scene();
 
-		m_views.clear();
+		m_pViews.clear();
 	}
 
 	void CanvasComponent::begin_scene()
@@ -126,8 +146,9 @@ namespace Xplicit::Canvas
 		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(x, y));
 	}
 
-	void CanvasComponent::queue(View* view) { m_views.push_back(view); }
+	void CanvasComponent::queue(CanvasView* view) { m_pViews.push_back(view); }
 
 	const char* CanvasComponent::name() noexcept { return ("CanvasComponent"); }
+
 	CanvasComponent::INSTANCE_TYPE CanvasComponent::type() noexcept { return INSTANCE_GUI; }
 }

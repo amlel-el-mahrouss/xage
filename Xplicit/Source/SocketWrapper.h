@@ -49,16 +49,19 @@ namespace Xplicit::Network
 		Socket& operator=(const Socket&) = default;
 		Socket(const Socket&) = default;
 
-		CSocket _Socket;
+		operator bool() noexcept;
 
-		operator bool()
-		{
-#ifdef XPLICIT_WINDOWS
-			return _Socket != SOCKET_ERROR;
-#else
-#	error SOCKET_ERROR is undefined
-#endif // XPLICIT_WINDOWS
-		}
+		template <typename Data, size_t Size = sizeof(Data)>
+		void send(Data ptr, size_t sz = 0);
+
+		template <typename Data, size_t Size = sizeof(Data)>
+		void recv(Data ptr, size_t sz = 0);
+
+	public:
+		CSocket m_iSocket;
+
 
 	};
 }
+
+#include "SocketWrapper.inl"

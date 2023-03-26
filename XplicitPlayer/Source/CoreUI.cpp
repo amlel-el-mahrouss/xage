@@ -92,17 +92,15 @@ namespace Xplicit::CoreUI
 
 	void HUD::update()
 	{
-		if (!m_network)
-			return;
-
-		if (!m_texture)
+		if (!m_network ||
+			!m_texture)
 			return;
 
 		auto packet = m_network->get();
 		
-		for (size_t i = XPLICIT_LAST_RESERVED_CMD; i < XPLICIT_NETWORK_CMD_MAX; ++i)
+		for (size_t network_cmd = XPLICIT_LAST_RESERVED_CMD; network_cmd < XPLICIT_NETWORK_CMD_MAX; ++network_cmd)
 		{
-			if (packet.cmd[i] == NETWORK_CMD_DAMAGE)
+			if (packet.cmd[network_cmd] == NETWORK_CMD_DAMAGE)
 				m_health = packet.health;
 		}
 

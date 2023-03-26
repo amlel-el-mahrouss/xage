@@ -139,7 +139,7 @@ namespace Xplicit::Network
 				data.push_back(data_tmp[i]);
 			}
 
-			::send(socket, reinterpret_cast<char*>(data_tmp.data()), data.size(), 0);
+			socket.send<int*>(data_tmp.data(), data.size());
 
 			/* Set status as non-ready. */
 			m_bReady = false;

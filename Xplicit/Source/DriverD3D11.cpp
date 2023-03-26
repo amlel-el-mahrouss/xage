@@ -122,14 +122,12 @@ namespace Xplicit::Renderer::DX11
 		if (FAILED(hr))
 			throw Win32Error("[D3D11CreateDeviceAndSwapChain] Failed to call function correctly!");
 
-		Microsoft::WRL::ComPtr<ID3D11Resource> TextureRes;
-
-		hr = m_private.SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(TextureRes.GetAddressOf()));
+		hr = m_private.SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(m_private.RenderTexture.GetAddressOf()));
 
 		if (FAILED(hr))
 			throw Win32Error("[GetBuffer] Failed to call function correctly!");
 
-		hr = m_private.Device->CreateRenderTargetView(TextureRes.Get(), nullptr, m_private.RenderTarget.GetAddressOf());
+		hr = m_private.Device->CreateRenderTargetView(m_private.RenderTexture.Get(), nullptr, m_private.RenderTarget.GetAddressOf());
 
 		if (FAILED(hr))
 			throw Win32Error("[CreateRenderTargetView] Failed to call function correctly!");
@@ -229,7 +227,10 @@ namespace Xplicit::Renderer::DX11
 
 		m_private.Ctx->RSSetViewports(1u, &m_private.Viewport);
 
-		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] Driver has been created.");
+		m_private.Ctx->OMSetRenderTargets(1, m_private.RenderTarget.GetAddressOf(),
+			m_private.DepthStencil.Get());
+
+		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] driver created.");
 	}
 
 	const char* DriverSystemD3D11::name() noexcept { return ("DriverSystemD3D11"); }
@@ -252,10 +253,6 @@ namespace Xplicit::Renderer::DX11
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 			1,
 			0);
-
-		m_private.Ctx->OMSetRenderTargets(1, m_private.RenderTarget.GetAddressOf(),
-			m_private.DepthStencil.Get());
-
 	}
 
 	void DriverSystemD3D11::handle_device_removed()
