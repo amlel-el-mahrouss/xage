@@ -28,14 +28,14 @@ XPLICIT_CONFIG = {
 	  "d3dcompiler",
 	  "opengl32",
 	  "Vendor/glfw/build/src/glfw3dll",
-      "Library/WickedEngine_Windows"
+      "Library/bgfx"
     },
     ["_INCDIR"] = {
         "Vendor/",
 	    "Vendor/glfw/include/GLFW/",
     	"Vendor/yaml/include",
     	"Nplicit/Source/",
-	    "Vendor/WickedEngine/WickedEngine",
+	    "Vendor/bgfx/include",
 	    "Vendor/libzip/lib",
         "C:/Program Files/Mono/include/mono-2.0",
     }
@@ -106,7 +106,7 @@ XPLICIT_CLIENT_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
     	"Nplicit/Source/",
 	    "Vendor/libzip/lib",
-	    "Vendor/WickedEngine/WickedEngine",
+	    "Vendor/bgfx/include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -146,7 +146,7 @@ XPLICIT_STUDIO_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
 	    "Vendor/libzip/lib",
     	"Nplicit/Source/",
-	    "Vendor/WickedEngine/WickedEngine",
+	    "Vendor/bgfx/include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };

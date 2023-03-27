@@ -14,14 +14,14 @@
 * @file
 */
 
-#include <DriverSystemD2D.h>
 #include <VideoDriver.h>
+#include <DriverD2D.h>
 #include <Bites.h>
 
 #ifdef XPLICIT_WINDOWS
 
-#define XPLICIT_APP_NAMEA "XplicitEd"
-#define XPLICIT_APP_NAMEW L"XplicitEd"
+#define XPLICIT_APP_NAME_ASCII "XplicitEd"
+#define XPLICIT_APP_NAME_UNICODE L"XplicitEd"
 
 namespace Xplicit::Studio
 {
@@ -31,16 +31,16 @@ namespace Xplicit::Studio
 		Runner(HINSTANCE hInst)
 		{
 			// Search and exit if another Xplicit app is open.
-			if (Xplicit::Win32Helpers::find_wnd(XPLICIT_APP_NAMEW))
+			if (Xplicit::Win32Helpers::find_wnd(XPLICIT_APP_NAME_UNICODE))
 			{
-				Xplicit::Dialog::message_box(XPLICIT_APP_NAMEW,
+				Xplicit::Dialog::message_box(XPLICIT_APP_NAME_UNICODE,
 					L"Cannot open more than one instance of the XplicitNgin!",
 					MB_OK);
 
 				throw EngineError();
 			}
 
-			Xplicit::Bites::Win32Window* win = new Xplicit::Bites::Win32Window(XPLICIT_APP_NAMEA, XPLICIT_APP_NAMEA, hInst);
+			Xplicit::Bites::Win32Window* win = new Xplicit::Bites::Win32Window(XPLICIT_APP_NAME_ASCII, XPLICIT_APP_NAME_ASCII, hInst);
 			std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11> drv = std::make_unique<Xplicit::Renderer::DX11::DriverSystemD3D11>(win->get().WindowHandle);
 
 			auto* component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::RenderComponentD3D11>();
@@ -108,6 +108,7 @@ XPLICIT_MAIN()
 	}
 	catch (Xplicit::EngineError& err)
 	{
+		(void)err;
 		Xplicit::Dialog::message_box(L"XplicitEd", L"Something bad happen.. exiting!", MB_ICONASTERISK | MB_OK);
 	}
 
