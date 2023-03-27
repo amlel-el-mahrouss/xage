@@ -4,8 +4,8 @@
  *			XplicitNgin (XplicitRenderer)
  *			Copyright XPX, all rights reserved.
  *
- *			File: CanvasComponent.h
- *			Purpose: D2D Canvas.
+ *			File: DriverD2D.h
+ *			Purpose: D2D renderer.
  *
  * =====================================================================
  */
@@ -37,7 +37,7 @@ namespace Xplicit
 
 #ifdef XPLICIT_WINDOWS
 
-namespace Xplicit::Canvas
+namespace Xplicit::Renderer
 {
 	class View;
 	class DriverSystemD2D;
