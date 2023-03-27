@@ -60,7 +60,7 @@ namespace Xplicit::Renderer
 		RtlZeroMemory(&buf->m_resource_data, sizeof(D3D11_SUBRESOURCE_DATA));
 		buf->m_resource_data.pSysMem = data;
 
-		HRESULT hr = m_driver->get().Device->CreateBuffer(&buf->m_resource_desc, &buf->m_resource_data, &buf->m_buffer);
+		HRESULT hr = m_driver->get().pDevice->CreateBuffer(&buf->m_resource_desc, &buf->m_resource_data, &buf->m_buffer);
 
 		if (SUCCEEDED(hr))
 			return buf;

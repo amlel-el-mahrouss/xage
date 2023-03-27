@@ -129,7 +129,6 @@ namespace Xplicit::Bites
 
 		return ret;
 	}
-#endif // XPLICIT_WINDOWS
 
 	void glfw_size_callback(GLFWwindow* window, int width, int height)
 	{
@@ -188,3 +187,5 @@ namespace Xplicit::Bites
 		return 0;
 	}
 }
+
+#endif // XPLICIT_WINDOWS

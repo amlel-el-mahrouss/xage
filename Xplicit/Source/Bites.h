@@ -25,18 +25,13 @@
 #ifdef XPLICIT_WINDOWS
 
 #include "DriverD3D11.h"
+#include "DriverOpenGL.h"
 
 #define XPLICIT_GET_X_POS(LPARAM) GET_X_LPARAM(LPARAM)
 #define XPLICIT_GET_Y_POS(LPARAM) GET_Y_LPARAM(LPARAM)
 
-#endif
-
-#include "DriverOpenGL.h"
-
 namespace Xplicit::Bites
 {
-#ifdef XPLICIT_WINDOWS
-
 	class XPLICIT_API Win32Window final
 	{
 	public:
@@ -69,16 +64,6 @@ namespace Xplicit::Bites
 
 	};
 
-#define XPLICIT_MAIN()\
-INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
-
-#else
-
-#define XPLICIT_MAIN()\
-int main(int argc, char** argv)
-
-#endif
-
 	class XPLICIT_API GLFWWindow final
 	{
 	public:
@@ -96,3 +81,9 @@ int main(int argc, char** argv)
 
 	};
 }
+
+#define XPLICIT_MAIN()\
+INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
+
+
+#endif // XPLICIT_WINDOWS

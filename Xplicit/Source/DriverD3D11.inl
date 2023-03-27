@@ -41,32 +41,32 @@ namespace Xplicit
 
 		if (shader_system->compile())
 		{
-			print_error(shader_system->get().error_blob);
+			print_error(shader_system->get().pErrorBlob);
 			delete shader_system;
 
 			return false;
 		}
 
-		if (FAILED(driver->get().Device->CreateVertexShader(shader_system->get().blob->GetBufferPointer(),
-			shader_system->get().blob->GetBufferSize(),
+		if (FAILED(driver->get().pDevice->CreateVertexShader(shader_system->get().pBlob->GetBufferPointer(),
+			shader_system->get().pBlob->GetBufferSize(),
 			nullptr,
-			shader_system->get().vertex.GetAddressOf())))
+			shader_system->get().pVertex.GetAddressOf())))
 		{
 			delete shader_system;
 
 			return false;
 		}
 
-		shader_system->get().matrix_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-		shader_system->get().matrix_buffer_desc.ByteWidth = sizeof(Renderer::DX11::Details::VERTEX);
-		shader_system->get().matrix_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		shader_system->get().matrix_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		shader_system->get().matrix_buffer_desc.MiscFlags = 0;
-		shader_system->get().matrix_buffer_desc.StructureByteStride = 0;
+		shader_system->get().matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		shader_system->get().matrixBufferDesc.ByteWidth = sizeof(Renderer::DX11::Details::VERTEX);
+		shader_system->get().matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		shader_system->get().matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		shader_system->get().matrixBufferDesc.MiscFlags = 0;
+		shader_system->get().matrixBufferDesc.StructureByteStride = 0;
 
-		if (FAILED(driver->get().Device->CreateBuffer(&shader_system->get().matrix_buffer_desc,
+		if (FAILED(driver->get().pDevice->CreateBuffer(&shader_system->get().matrixBufferDesc,
 			nullptr,
-			shader_system->get().matrix_buffer_ptr.GetAddressOf())))
+			shader_system->get().pMatrixBuffer.GetAddressOf())))
 		{
 			delete shader_system;
 			return false;
@@ -82,16 +82,16 @@ namespace Xplicit
 
 		if (shader_system->compile())
 		{
-			print_error(shader_system->get().error_blob);
+			print_error(shader_system->get().pErrorBlob);
 			delete shader_system;
 
 			return false;
 		}
 
-		if (FAILED(driver->get().Device->CreatePixelShader(shader_system->get().blob->GetBufferPointer(),
-			shader_system->get().blob->GetBufferSize(),
+		if (FAILED(driver->get().pDevice->CreatePixelShader(shader_system->get().pBlob->GetBufferPointer(),
+			shader_system->get().pBlob->GetBufferSize(),
 			nullptr,
-			shader_system->get().pixel.GetAddressOf())))
+			shader_system->get().pPixel.GetAddressOf())))
 		{
 			delete shader_system;
 			return false;
@@ -107,16 +107,16 @@ namespace Xplicit
 
 		if (shader_system->compile())
 		{
-			print_error(shader_system->get().error_blob);
+			print_error(shader_system->get().pErrorBlob);
 			delete shader_system;
 
 			return false;
 		}
 
-		if (FAILED(driver->get().Device->CreateHullShader(shader_system->get().blob->GetBufferPointer(),
-			shader_system->get().blob->GetBufferSize(),
+		if (FAILED(driver->get().pDevice->CreateHullShader(shader_system->get().pBlob->GetBufferPointer(),
+			shader_system->get().pBlob->GetBufferSize(),
 			nullptr,
-			shader_system->get().hull.GetAddressOf())))
+			shader_system->get().pHull.GetAddressOf())))
 		{
 			delete shader_system;
 
@@ -151,7 +151,7 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 
 	if (shader_system)
 	{
-		shader_system->get().flags1 |= D3D10_SHADER_ENABLE_STRICTNESS;
+		shader_system->get().iFlags1 |= D3D10_SHADER_ENABLE_STRICTNESS;
 		shader_system->get().entrypoint += entrypoint;
 
 		switch (ShaderType)

@@ -22,11 +22,10 @@
 
 #include <wrl.h> /* Microsoft::WRL::ComPtr */
 #include <dxgi.h>
+#include <d3d11.h>
+#include <d3dcommon.h>
 
-#include <../um/d3d11.h>
-#include <../um/d3dcommon.h>
-
-#include <D3DX10math.h>
+#include <DirectXMath.h>
 
 #ifdef XPLICIT_DEBUG
 
@@ -46,21 +45,23 @@
 #define XPLICIT_DOMAIN_SHADER "ds_5_0"
 #define XPLICIT_GEOMETRY_SHADER "gs_5_0"
 
+using namespace DirectX;
+
 namespace Xplicit::Renderer::DX11
 {
 	namespace Details
 	{
 		__declspec(align(16)) struct VERTEX
 		{
-			D3DXVECTOR3 position;
-			D3DXVECTOR4 color;
+			XMVECTOR position;
+			XMVECTOR color;
 		};
 
-		struct MATRIX
+		__declspec(align(16)) struct CBUFFER
 		{
-			D3DXMATRIX world_matrix;
-			D3DXMATRIX view_matrix;
-			D3DXMATRIX projection_matrix;
+			XMMATRIX view;
+			XMMATRIX world;
+			XMMATRIX projection;
 		};
 
 		void ThrowIfFailed(HRESULT hr);
@@ -87,29 +88,29 @@ namespace Xplicit::Renderer::DX11
 		virtual const char* name() noexcept override;
 		virtual RENDER_SYSTEM api() override;
 
-		class XPLICIT_API PrivateData
+		class XPLICIT_API DriverTraits
 		{
 		public:
-			bool VSync{ false };
-			char CardDesc[128];
-			bool EndRendering{ false };
-			HWND WindowHandle{ nullptr };
+			bool bVSync{ false };
+			char szCardDesc[128];
+			bool bEndRendering{ false };
+			HWND pWindowHandle{ nullptr };
 
 		public:
 			D3D11_VIEWPORT Viewport;
 			DXGI_SWAP_CHAIN_DESC SwapDesc;
 
 		public:
-			Microsoft::WRL::ComPtr<ID3D11Device> Device;
-			Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
-			Microsoft::WRL::ComPtr<ID3D11DeviceContext> Ctx;
-			Microsoft::WRL::ComPtr<IDXGISwapChain> SwapChain;
-			Microsoft::WRL::ComPtr<ID3D11Texture2D> DepthTexture;
-			Microsoft::WRL::ComPtr<ID3D11Texture2D> RenderTexture;
-			Microsoft::WRL::ComPtr<ID3D11RasterizerState> RasterState;
-			Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthStencil;
-			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTarget;
-			Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DepthStencilState;
+			Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
+			Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
+			Microsoft::WRL::ComPtr<ID3D11DeviceContext> pCtx;
+			Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
+			Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthTexture;
+			Microsoft::WRL::ComPtr<ID3D11Texture2D> pRenderTexture;
+			Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterState;
+			Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDepthStencil;
+			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pRenderTarget;
+			Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
 
 		};
 
@@ -122,7 +123,7 @@ namespace Xplicit::Renderer::DX11
 
 	public:
 		const bool& is_closed() noexcept;
-		PrivateData& get() noexcept;
+		DriverTraits& get() noexcept;
 		void close() noexcept;
 		operator bool();
 
@@ -131,7 +132,7 @@ namespace Xplicit::Renderer::DX11
 		bool check_device_removed(HRESULT hr);
 
 	private:
-		PrivateData m_private;
+		DriverTraits m_private;
 
 	};
 
@@ -153,85 +154,36 @@ namespace Xplicit::Renderer::DX11
 		D3D11ShaderSystem(const D3D11ShaderSystem&) = default;
 
 	public:
-		/// <summary>
-		/// Everything related to shaders are located here
-		/// Internal uses only.
-		/// </summary>
-		class XPLICIT_API ShaderData
+		class XPLICIT_API ShaderTraits
 		{
 		public:
 			std::string entrypoint{};
 			std::string shader_type{};
 
-			ID3D10Blob* blob{ nullptr };
-			ID3D10Blob* error_blob{ nullptr };
-			uint32_t flags1{ 0 };
-			uint32_t flags2{ 0 };
-			D3D11_BUFFER_DESC matrix_buffer_desc{};
+			uint32_t iFlags1{ 0 };
+			uint32_t iFlags2{ 0 };
+			ID3D10Blob* pBlob{ nullptr };
+			ID3D10Blob* pErrorBlob{ nullptr };
+			D3D11_BUFFER_DESC matrixBufferDesc{};
 
-			inline HRESULT set_matrix(ID3D11DeviceContext* ctx,
-				D3DXMATRIX worldMatrix,
-				D3DXMATRIX viewMatrix,
-				D3DXMATRIX projectionMatrix)
-			{
-				HRESULT hr = S_OK;
+			HRESULT create_input_layout(ID3D11Device* device);
 
-				if (!ctx)
-					return hr;
-
-				D3D11_MAPPED_SUBRESOURCE mapped_res;
-				Details::MATRIX* matrix = nullptr;
-
-				D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
-				D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
-				D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
-
-				hr = ctx->Map(matrix_buffer_ptr.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_res);
-				
-				if (FAILED(hr))
-					return hr;
-
-				matrix = reinterpret_cast<Details::MATRIX*>(mapped_res.pData);
-
-				matrix->projection_matrix = projectionMatrix;
-				matrix->view_matrix = viewMatrix;
-				matrix->world_matrix = worldMatrix;
-
-				ctx->Unmap(matrix_buffer_ptr.Get(), 0);
-				ctx->VSSetConstantBuffers(0, 1, matrix_buffer_ptr.GetAddressOf());
-
-				XPLICIT_ASSERT(SUCCEEDED(hr));
-
-				return hr;
-			}
-
-			inline HRESULT create_input_layout(ID3D11Device* device)
-			{
-				HRESULT hr = S_OK;
-
-				if (!device)
-					return hr;
-
-				hr = device->CreateInputLayout(input_layouts.data(), input_layouts.size(), blob->GetBufferPointer(),
-					blob->GetBufferSize(), input_layout_ptr.GetAddressOf());
-
-				XPLICIT_ASSERT(SUCCEEDED(hr));
-				return hr;
-			}
+			template <typename StructSz>
+			HRESULT create_matrix_buffer(ID3D11Device* device);
 
 		public:
-			Microsoft::WRL::ComPtr<ID3D11HullShader> hull;
-			Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel;
-			Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex;
-			Microsoft::WRL::ComPtr<ID3D11Buffer> matrix_buffer_ptr;
-			Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout_ptr;
+			Microsoft::WRL::ComPtr<ID3D11HullShader> pHull;
+			Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixel;
+			Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertex;
+			Microsoft::WRL::ComPtr<ID3D11Buffer> pMatrixBuffer;
+			Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
 
 		public:
 			std::vector<D3D11_INPUT_ELEMENT_DESC> input_layouts;
 
 		};
 
-		ShaderData& get();
+		ShaderTraits& get();
 
 	public:
 		/// <summary>
@@ -245,7 +197,7 @@ namespace Xplicit::Renderer::DX11
 		void update(D3D11RenderComponent* component);
 
 	private:
-		ShaderData m_data;
+		ShaderTraits m_data;
 
 	private:
 		friend D3D11RenderComponent;
@@ -262,9 +214,9 @@ namespace Xplicit::Renderer::DX11
 		D3D11RenderComponent(const D3D11RenderComponent&) = default;
 		
 		void push(const Nplicit::Vector<float>& vert);
+		void push(D3D11ShaderSystem* system) noexcept;
 
 		void set(DriverSystemD3D11* dx11) noexcept;
-		void set(D3D11ShaderSystem* system) noexcept;
 
 		size_t size() noexcept;
 		void create();
@@ -278,17 +230,21 @@ namespace Xplicit::Renderer::DX11
 		virtual const char* name() noexcept override;
 
 	private:
-		Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertex_buffer;
-		std::vector<Nplicit::Vector<float>> m_verts;
-		D3D11_SUBRESOURCE_DATA m_vertex_data;
-		D3D11_SUBRESOURCE_DATA m_index_data;
-		D3D11_BUFFER_DESC m_vertex_buf_desc;
-		D3D11_BUFFER_DESC m_index_buf_desc;
-		D3D11ShaderSystem* m_pShader;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;
+		std::vector<Nplicit::Vector<float>> m_arrayVerts;
+
+		D3D11_SUBRESOURCE_DATA m_vertexData;
+		D3D11_SUBRESOURCE_DATA m_indexData;
+		D3D11_BUFFER_DESC m_vertexBufferDesc;
+		D3D11_BUFFER_DESC m_indexBufDesc;
+
+	private:
+		std::vector<D3D11ShaderSystem*> m_pShader;
 		DriverSystemD3D11* m_pDriver;
 		Details::VERTEX* m_pVertex;
 		size_t m_iVertexCnt;
-		HRESULT m_hr;
+		HRESULT m_hResult;
 
 		friend D3D11ShaderSystem;
 
@@ -315,5 +271,6 @@ namespace Xplicit::Renderer::DX11
 }
 
 #include "DriverD3D11.inl"
+#include "D3D11ShaderSystem.inl"
 
 #endif

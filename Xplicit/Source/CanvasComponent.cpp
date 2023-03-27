@@ -28,7 +28,7 @@ namespace Xplicit::Canvas
 		if (hr == S_OK)
 		{
 			Microsoft::WRL::ComPtr<IDXGISurface> surface;
-			hr = drv->get().SwapChain->GetBuffer(0, __uuidof(IDXGISurface), (void**)surface.GetAddressOf());
+			hr = drv->get().pSwapChain->GetBuffer(0, __uuidof(IDXGISurface), (void**)surface.GetAddressOf());
 
 			if (FAILED(hr))
 				throw EngineError();

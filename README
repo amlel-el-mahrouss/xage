@@ -4,12 +4,13 @@ XplicitNgin
 REQUIREMENTS:
 =============
 
+- Git.
+- Lua.
 - GLFW
 - Mono.
-- Lua.
 - Windows 11.
+- DirectXMath.
 - Visual Studio 2022.
-- Git.
 
 ===================================
 Copyright XPX, all rights reserved.

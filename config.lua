@@ -29,7 +29,6 @@ XPLICIT_CONFIG = {
 	  "d3dcompiler",
 	  "opengl32",
 	  "Vendor/glfw/build/src/glfw3dll",
- 	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -39,7 +38,6 @@ XPLICIT_CONFIG = {
     	  "Vendor/yaml/include",
     	  "Nplicit/Source/",
 	  "Vendor/libzip/lib",
-	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -73,7 +71,6 @@ XPLICIT_SERVER_CONFIG = {
     	  "Vendor/yaml/include",
     	  "Nplicit/Source/",
 	  "Vendor/libzip/lib",
-	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -100,7 +97,6 @@ XPLICIT_CLIENT_CONFIG = {
 	"dxgi",
 	"d2d1",
 	"opengl32",
- 	"C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -114,7 +110,6 @@ XPLICIT_CLIENT_CONFIG = {
 	  "Vendor/glfw/include/GLFW/",
     	  "Nplicit/Source/",
 	  "Vendor/libzip/lib",
-	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -141,7 +136,6 @@ XPLICIT_STUDIO_CONFIG = {
 	"d2d1",
 	"Vendor/glfw/build/src/glfw3dll",
 	"opengl32",
- 	"C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Lib/x64/d3dx10",
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -155,7 +149,6 @@ XPLICIT_STUDIO_CONFIG = {
 	  "Vendor/glfw/include/GLFW/",
 	  "Vendor/libzip/lib",
     	  "Nplicit/Source/",
-	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -192,7 +185,6 @@ NPLICIT_CONFIG = {
     	  "Vendor/yaml/include",
 	  "Vendor/glfw/include/GLFW/",
         "Vendor/nuklear/",
-	  "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
