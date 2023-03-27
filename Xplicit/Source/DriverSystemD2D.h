@@ -39,54 +39,49 @@ namespace Xplicit
 
 namespace Xplicit::Canvas
 {
-	class CanvasView;
-	class CanvasComponent;
+	class View;
+	class DriverSystemD2D;
 
 	struct BrushDescriptor;
 	struct OutlineDescriptor;
 
-	class CanvasView
+	class View
 	{
 	public:
-		CanvasView() = default;
-		virtual ~CanvasView() = default;
+		View() = default;
+		virtual ~View() = default;
 
-		CanvasView& operator=(const CanvasView&) = default;
-		CanvasView(const CanvasView&) = default;
+		View& operator=(const View&) = default;
+		View(const View&) = default;
 
-		virtual void operator()(CanvasComponent*) = 0;
+		virtual void operator()(DriverSystemD2D*) = 0;
 
 	};
 
-	class XPLICIT_API CanvasComponent final : public Component
+	class XPLICIT_API DriverSystemD2D final
 	{
 	public:
-		CanvasComponent(Renderer::DX11::DriverSystemD3D11* drv);
-		virtual ~CanvasComponent();
+		DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv);
+		virtual ~DriverSystemD2D();
 
-		CanvasComponent& operator=(const CanvasComponent&) = default;
-		CanvasComponent(const CanvasComponent&) = default;
+		DriverSystemD2D& operator=(const DriverSystemD2D&) = default;
+		DriverSystemD2D(const DriverSystemD2D&) = default;
 
 	public:
-		virtual void update() override;
-
-		virtual const char* name() noexcept override;
-		virtual INSTANCE_TYPE type() noexcept override;
-
+		void update();
 		void end_scene();
 		void begin_scene();
-		void queue(CanvasView* view);
+		void queue(View* view);
 		void transform(const float x = 0, const float y = 0) noexcept;
 		void draw_line(const float x1, const float y1, const float x2, const float y2, const float stroke = 1.f) noexcept;
-		void draw_rectangle(const Rect rct, const float radiusX = 0, const float radiusY = 0, const float stroke = 1.f);
-
+		void draw_rectangle(const Rect rct, const float radiusX = 0, const float radiusY = 0, const float stroke = 1.f) noexcept;
 
 	private:
 		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_pGhostWhiteBrush;
 		Microsoft::WRL::ComPtr<ID2D1RenderTarget> m_pRenderTarget;
 		Microsoft::WRL::ComPtr<ID2D1Factory> m_pDirect2dFactory;
 		Renderer::DX11::DriverSystemD3D11* m_pDriver;
-		std::vector<CanvasView*> m_pViews;
+		std::vector<View*> m_pViews;
 
 	};
 }

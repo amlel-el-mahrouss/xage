@@ -7,3 +7,6 @@
 [submodule "Vendor/yaml"]
 	path = Vendor/yaml
 	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "Vendor/WickedEngine"]
+	path = Vendor/WickedEngine
+	url = git@github.com:XPXTechnologies/WickedEngine.git

@@ -15,6 +15,7 @@
  */
 
 #include "MonoComponent.h"
+#include "HelperMacros.h"
 #include "MonoInterop.h"
 
 namespace Xplicit

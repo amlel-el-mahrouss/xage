@@ -13,8 +13,8 @@
 #pragma once
 
 #include "Event.h"
-#include "Component.h"
 #include "Xplicit.h"
+#include "Component.h"
 #include "MonoComponent.h"
 
 namespace Xplicit

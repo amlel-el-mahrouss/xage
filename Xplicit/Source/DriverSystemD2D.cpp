@@ -10,16 +10,13 @@
  * =====================================================================
  */
 
-#include "CanvasComponent.h"
+#include "DriverSystemD2D.h"
 
 namespace Xplicit::Canvas
 {
-	CanvasComponent::CanvasComponent(Renderer::DX11::DriverSystemD3D11* drv)
+	DriverSystemD2D::DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv)
 		: m_pDriver(drv)
 	{
-		if (ComponentManager::get_singleton_ptr()->get<CanvasComponent>("CanvasComponent"))
-			throw EngineError();
-
 		HRESULT hr = S_OK;
 
 		D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, m_pDirect2dFactory.GetAddressOf());
@@ -66,9 +63,9 @@ namespace Xplicit::Canvas
 		}
 	}
 
-	CanvasComponent::~CanvasComponent() {}
+	DriverSystemD2D::~DriverSystemD2D() {}
 
-	void CanvasComponent::update()
+	void DriverSystemD2D::update()
 	{
 		this->begin_scene();
 
@@ -83,7 +80,7 @@ namespace Xplicit::Canvas
 		m_pViews.clear();
 	}
 
-	void CanvasComponent::begin_scene()
+	void DriverSystemD2D::begin_scene()
 	{
 		if (!m_pRenderTarget)
 			return;
@@ -91,7 +88,7 @@ namespace Xplicit::Canvas
 		m_pRenderTarget->BeginDraw();
 	}
 
-	void CanvasComponent::end_scene()
+	void DriverSystemD2D::end_scene()
 	{
 		if (!m_pRenderTarget)
 			return;
@@ -103,7 +100,7 @@ namespace Xplicit::Canvas
 		XPLICIT_ASSERT(SUCCEEDED(hr));
 	}
 
-	void CanvasComponent::draw_line(const float x1, const float y1, const float x2, const float y2, const float stroke) noexcept
+	void DriverSystemD2D::draw_line(const float x1, const float y1, const float x2, const float y2, const float stroke) noexcept
 	{
 		if (!m_pRenderTarget)
 			return;
@@ -116,7 +113,7 @@ namespace Xplicit::Canvas
 		);
 	}
 
-	void CanvasComponent::draw_rectangle(const Rect rct, const float radiusX, const float radiusY, const float stroke)
+	void DriverSystemD2D::draw_rectangle(const Rect rct, const float radiusX, const float radiusY, const float stroke) noexcept
 	{
 		if (!m_pRenderTarget)
 			return;
@@ -138,7 +135,7 @@ namespace Xplicit::Canvas
 			stroke);
 	}
 
-	void CanvasComponent::transform(const float x, const float y) noexcept
+	void DriverSystemD2D::transform(const float x, const float y) noexcept
 	{
 		if (!m_pRenderTarget)
 			return;
@@ -146,9 +143,5 @@ namespace Xplicit::Canvas
 		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(x, y));
 	}
 
-	void CanvasComponent::queue(CanvasView* view) { m_pViews.push_back(view); }
-
-	const char* CanvasComponent::name() noexcept { return ("CanvasComponent"); }
-
-	CanvasComponent::INSTANCE_TYPE CanvasComponent::type() noexcept { return INSTANCE_GUI; }
+	void DriverSystemD2D::queue(View* view) { m_pViews.push_back(view); }
 }

@@ -14,7 +14,7 @@
 * @file
 */
 
-#include <CanvasComponent.h>
+#include <DriverSystemD2D.h>
 #include <VideoDriver.h>
 #include <Bites.h>
 

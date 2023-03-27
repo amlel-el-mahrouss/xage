@@ -24,7 +24,7 @@
 
 static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server);
 static void xplicit_attach_mono();
-static void xplicit_load_shell();
+static void xplicit_load_sh();
 static void xplicit_read_xml();
 
 static constexpr const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
@@ -103,7 +103,7 @@ static void xplicit_print_help()
 	XPLICIT_INFO("-------------- Xplicit Game Server Manual --------------");
 }
 
-static void xplicit_load_shell()
+static void xplicit_load_sh()
 {
 	std::thread shell(
 		[]() -> void
@@ -195,7 +195,7 @@ int main(int argc, char** argv)
 
 		xplicit_attach_mono();
 		xplicit_read_xml();
-		xplicit_load_shell();
+		xplicit_load_sh();
 
 		while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{
