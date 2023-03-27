@@ -45,6 +45,8 @@
 #define XPLICIT_NETWORK_Y (1)
 #define XPLICIT_NETWORK_Z (2)
 
+#define XPLICIT_SOCKET_ERROR (-1)
+
 namespace Xplicit
 {
 #ifdef XPLICIT_WINDOWS

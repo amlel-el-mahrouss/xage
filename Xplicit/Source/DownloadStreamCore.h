@@ -18,60 +18,69 @@
 #include "SocketWrapper.h"
 #include "NetworkProtocol.h"
 
-#ifndef XPLICIT_PROTO_PORT
-#define XPLICIT_PROTO_PORT (60002)
-#endif // ifndef XPLICIT_PROTO_PORT
+#ifndef XPLICIT_STREAM_PORT
+#define XPLICIT_STREAM_PORT (60002)
+#endif // ifndef XPLICIT_STREAM_PORT
 
-#define XPLICIT_PROTO_MAG_0 ('X')
-#define XPLICIT_PROTO_MAG_1 ('S')
-#define XPLICIT_PROTO_MAG_2 ('P')
+#define XPLICIT_STREAM_MAG_0 ('S')
+#define XPLICIT_STREAM_MAG_1 ('T')
+#define XPLICIT_STREAM_MAG_2 ('R')
 
-#define XPLICIT_PROTO_MAG_COUNT (3U)
-#define XPLICIT_PROTO_VERSION (2U)
+#define XPLICIT_STREAM_MAG_COUNT (3U)
+#define XPLICIT_STREAM_VERSION (3U)
 
 namespace Xplicit::Network
 {
-	class XPLICIT_API StreamFile final
+	using ByteArray = std::vector<char>;
+
+	class XPLICIT_API FileStream final
 	{
 	public:
-		StreamFile() = delete;
+		FileStream() = delete;
 
 	public:
-		StreamFile(const char* bytes, size_t len);
-		~StreamFile();
+		FileStream(const char* bytes, size_t len);
+		~FileStream();
 
-		XPLICIT_COPY_DELETE(StreamFile);
+		XPLICIT_COPY_DELETE(FileStream);
 
 	public:
-		int set(const char* bytes, size_t len);
 		const char* get() noexcept;
 		size_t size() noexcept;
 
 	private:
-		std::vector<char> m_bytes;
+		int set(const char* bytes, size_t len);
+
+	private:
+		ByteArray m_byteList;
 
 	};
 
-	class XPLICIT_API DownloadTask final
+	using FileStreamPtr = std::unique_ptr<FileStream>;
+
+	class XPLICIT_API TaskStream final
 	{
 	public:
-		DownloadTask();
-		~DownloadTask();
+		TaskStream();
+		~TaskStream();
 
-		XPLICIT_COPY_DELETE(DownloadTask);
+		XPLICIT_COPY_DELETE(TaskStream);
 
 	public:
-		void add(StreamFile* file);
-		bool remove(StreamFile* file);
+		void add(FileStream* file);
+		bool remove(FileStream* file);
 
 	public:
 		operator bool() noexcept;
+		
 		bool is_ready() noexcept;
+
 		void set(const bool ready) noexcept;
-		void operator()(Socket& socket, const bool compressed);
+		
+		void operator()(Socket& socket, const bool isCompressed);
 
 	private:
-		std::vector<StreamFile*> m_files;
+		std::vector<FileStream*> m_fileList;
 		bool m_bReady;
 
 	};

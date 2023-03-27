@@ -35,7 +35,7 @@ namespace Xplicit
 	}
 
 	static inline bool create_vertex_shader(Renderer::DX11::DriverSystemD3D11* driver,
-		Renderer::DX11::D3D11ShaderSystem* shader_system)
+		Renderer::DX11::ShaderSystemD3D11* shader_system)
 	{
 		shader_system->get().shader_type += XPLICIT_VERTEX_SHADER;
 
@@ -76,7 +76,7 @@ namespace Xplicit
 	}
 
 	static inline bool create_pixel_shader(Renderer::DX11::DriverSystemD3D11* driver,
-		Renderer::DX11::D3D11ShaderSystem* shader_system)
+		Renderer::DX11::ShaderSystemD3D11* shader_system)
 	{
 		shader_system->get().shader_type += XPLICIT_PIXEL_SHADER;
 
@@ -101,7 +101,7 @@ namespace Xplicit
 	}
 
 	static inline bool create_hull_shader(Renderer::DX11::DriverSystemD3D11* driver,
-		Renderer::DX11::D3D11ShaderSystem* shader_system)
+		Renderer::DX11::ShaderSystemD3D11* shader_system)
 	{
 		shader_system->get().shader_type += XPLICIT_HULL_SHADER;
 
@@ -137,7 +137,7 @@ namespace Xplicit
 /// <returns>Pointer to a new ShaderSystem</returns>
 /// 
 template <Xplicit::Renderer::DX11::XPLICIT_SHADER_TYPE ShaderType>
-Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader(
+Xplicit::Renderer::DX11::ShaderSystemD3D11* Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader(
 	const PChar* filename,
 	const char* entrypoint,
 	std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver
@@ -147,7 +147,7 @@ Xplicit::Renderer::DX11::D3D11ShaderSystem* Xplicit::Renderer::DX11::D3D11Shader
 		*entrypoint == 0)
 		return nullptr;
 
-	Xplicit::Renderer::DX11::D3D11ShaderSystem* shader_system = new Xplicit::Renderer::DX11::D3D11ShaderSystem(filename);
+	Xplicit::Renderer::DX11::ShaderSystemD3D11* shader_system = new Xplicit::Renderer::DX11::ShaderSystemD3D11(filename);
 
 	if (shader_system)
 	{

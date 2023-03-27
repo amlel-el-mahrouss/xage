@@ -54,13 +54,6 @@
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-#include <irrlicht.h>
-
-using namespace irr;
-using namespace core;
-using namespace video;
-using namespace scene;
-
 #ifdef _WIN32
 #define XPLICIT_WINDOWS 1
 #endif // ifdef _MSC_VER

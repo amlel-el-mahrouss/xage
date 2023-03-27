@@ -15,9 +15,9 @@
  */
 
 #include "SDK.h"
-#include "PlayerComponent.h"
+
 #include "SpawnComponent.h"
-#include "ApplicationContext.h"
+#include "PlayerComponent.h"
 #include "PlayerMovementEvent.h"
 #include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
@@ -28,6 +28,7 @@ static void xplicit_load_shell();
 static void xplicit_read_xml();
 
 static constexpr const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
+static bool g_ShouldExit = false;
 
 static void xplicit_read_xml()
 {
@@ -111,7 +112,7 @@ static void xplicit_load_shell()
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 			{
-				if (!Xplicit::ApplicationContext::get_singleton_ptr()->ShouldExit)
+				if (!g_ShouldExit)
 					std::cout << "$ ";
 
 				std::cin.getline(cmd_buf, 1024);
@@ -131,7 +132,7 @@ static void xplicit_load_shell()
 						XPLICIT_ERROR("ERROR: server is not connected to the internet.");
 					}
 
-					Xplicit::ApplicationContext::get_singleton_ptr()->ShouldExit = true;
+					g_ShouldExit = true;
 				}
 
 				if (strcmp(cmd_buf, "man") == 0)
@@ -198,7 +199,7 @@ int main(int argc, char** argv)
 
 		while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 		{
-			if (Xplicit::ApplicationContext::get_singleton_ptr()->ShouldExit)
+			if (g_ShouldExit)
 				break;
 
 			Xplicit::NetworkServerTraits::recv(server);

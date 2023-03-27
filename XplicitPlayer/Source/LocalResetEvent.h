@@ -12,7 +12,6 @@
 
 #pragma once
 
-#include <ApplicationContext.h>
 #include <NetworkComponent.h>
 #include <Event.h>
 

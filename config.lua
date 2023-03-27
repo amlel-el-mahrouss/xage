@@ -21,7 +21,6 @@ XPLICIT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-    	  "Vendor/lib/Irrlicht",
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
 	  "dxgi",
 	  "d3d11",
@@ -58,7 +57,6 @@ XPLICIT_SERVER_CONFIG = {
     },
     ["_LIBDIR"] = {
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
-    	  "Vendor/lib/Irrlicht",
     	  "bin/Debug/Xplicit",
     },
     ["_INCDIR"] = {
@@ -91,7 +89,6 @@ XPLICIT_CLIENT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-    	"Vendor/lib/Irrlicht",
     	"bin/Debug/Xplicit",
 	"d3d11",
 	"dxgi",
@@ -169,7 +166,6 @@ NPLICIT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-    	"Vendor/lib/Irrlicht",
     	"bin/Debug/Xplicit",
 	"d3d11",
 	"dxgi",

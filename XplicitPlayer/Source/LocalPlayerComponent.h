@@ -12,8 +12,6 @@
 
 #pragma once
 
-
-#include <ApplicationContext.h>
 #include <NetworkComponent.h>
 #include "CameraComponent.h"
 #include "MeshComponent.h"

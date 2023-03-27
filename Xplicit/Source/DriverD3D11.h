@@ -70,8 +70,8 @@ namespace Xplicit::Renderer::DX11
 	namespace WRL = Microsoft::WRL;
 
 	class DriverSystemD3D11;
-	class D3D11ShaderSystem;
-	class D3D11RenderComponent;
+	class ShaderSystemD3D11;
+	class RenderComponentD3D11;
 
 	class XPLICIT_API DriverSystemD3D11 : public DriverSystem
 	{
@@ -138,20 +138,20 @@ namespace Xplicit::Renderer::DX11
 
 	XPLICIT_API std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd);
 
-	class XPLICIT_API D3D11ShaderSystem final : public ShaderSystem
+	class XPLICIT_API ShaderSystemD3D11 final : public ShaderSystem
 	{
 	public:
-		D3D11ShaderSystem() = delete;
+		ShaderSystemD3D11() = delete;
 
 	public:
-		explicit D3D11ShaderSystem(const PChar* filename)
+		explicit ShaderSystemD3D11(const PChar* filename)
 			: ShaderSystem(filename, FORMAT_HLSL), m_data()
 		{}
 
-		virtual ~D3D11ShaderSystem();
+		virtual ~ShaderSystemD3D11();
 
-		D3D11ShaderSystem& operator=(const D3D11ShaderSystem&) = default;
-		D3D11ShaderSystem(const D3D11ShaderSystem&) = default;
+		ShaderSystemD3D11& operator=(const ShaderSystemD3D11&) = default;
+		ShaderSystemD3D11(const ShaderSystemD3D11&) = default;
 
 	public:
 		class XPLICIT_API ShaderTraits
@@ -194,27 +194,27 @@ namespace Xplicit::Renderer::DX11
 		/// <summary>
 		/// Updates the shader.
 		/// </summary>
-		void update(D3D11RenderComponent* component);
+		void update(RenderComponentD3D11* component);
 
 	private:
 		ShaderTraits m_data;
 
 	private:
-		friend D3D11RenderComponent;
+		friend RenderComponentD3D11;
 
 	};
 
-	class XPLICIT_API D3D11RenderComponent final : public Component
+	class XPLICIT_API RenderComponentD3D11 final : public Component
 	{
 	public:
-		D3D11RenderComponent();
-		~D3D11RenderComponent();
+		RenderComponentD3D11();
+		~RenderComponentD3D11();
 
-		D3D11RenderComponent& operator=(const D3D11RenderComponent&) = default;
-		D3D11RenderComponent(const D3D11RenderComponent&) = default;
+		RenderComponentD3D11& operator=(const RenderComponentD3D11&) = default;
+		RenderComponentD3D11(const RenderComponentD3D11&) = default;
 		
 		void push(const Nplicit::Vector<float>& vert);
-		void push(D3D11ShaderSystem* system) noexcept;
+		void push(ShaderSystemD3D11* system) noexcept;
 
 		void set(DriverSystemD3D11* dx11) noexcept;
 
@@ -240,13 +240,13 @@ namespace Xplicit::Renderer::DX11
 		D3D11_BUFFER_DESC m_indexBufDesc;
 
 	private:
-		std::vector<D3D11ShaderSystem*> m_pShader;
+		std::vector<ShaderSystemD3D11*> m_pShader;
 		DriverSystemD3D11* m_pDriver;
 		Details::VERTEX* m_pVertex;
 		size_t m_iVertexCnt;
 		HRESULT m_hResult;
 
-		friend D3D11ShaderSystem;
+		friend ShaderSystemD3D11;
 
 	};
 
@@ -261,7 +261,7 @@ namespace Xplicit::Renderer::DX11
 	{
 	public:
 		template <XPLICIT_SHADER_TYPE ShaderType>
-		static D3D11ShaderSystem* make_shader(
+		static ShaderSystemD3D11* make_shader(
 			const PChar* filename,
 			const char* entrypoint,
 			std::unique_ptr<DriverSystemD3D11>& driver

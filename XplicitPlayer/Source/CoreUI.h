@@ -13,7 +13,6 @@
 #pragma once
 
 #include <NetworkComponent.h>
-#include <ApplicationContext.h>
 #include <Component.h>
 
 namespace Xplicit::CoreUI

@@ -68,7 +68,7 @@ namespace Xplicit::Renderer::DX11
 		swapDesc.SampleDesc.Count = 1;
 		swapDesc.SampleDesc.Quality = 0;
 
-		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		
 		swapDesc.Flags = 0;
 
@@ -139,7 +139,7 @@ namespace Xplicit::Renderer::DX11
 		depthBufferDesc.Height = XPLICIT_MIN_HEIGHT;
 		depthBufferDesc.MipLevels = 1;
 		depthBufferDesc.ArraySize = 1;
-		depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		depthBufferDesc.SampleDesc.Count = 1U;
 		depthBufferDesc.SampleDesc.Quality = 0U;
 		depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -184,7 +184,7 @@ namespace Xplicit::Renderer::DX11
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 		RtlZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 
-		depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
@@ -199,12 +199,12 @@ namespace Xplicit::Renderer::DX11
 		RtlZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
 		rasterDesc.AntialiasedLineEnable = false;
-		rasterDesc.CullMode = D3D11_CULL_FRONT;
+		rasterDesc.CullMode = D3D11_CULL_BACK;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
 		rasterDesc.DepthClipEnable = true;
 		rasterDesc.FillMode = D3D11_FILL_SOLID;
-		rasterDesc.FrontCounterClockwise = true;
+		rasterDesc.FrontCounterClockwise = false;
 		rasterDesc.MultisampleEnable = false;
 		rasterDesc.ScissorEnable = false;
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
@@ -245,14 +245,10 @@ namespace Xplicit::Renderer::DX11
 
 		float rgba[4]{ r, g, b, a };
 
-		m_private.pCtx->OMSetRenderTargets(1U, m_private.pRenderTarget.GetAddressOf(),
-			m_private.pDepthStencil.Get());
+		m_private.pCtx->OMSetRenderTargets(1, m_private.pRenderTarget.GetAddressOf(), m_private.pDepthStencil.Get());
 
 		m_private.pCtx->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
-		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(),
-			D3D11_CLEAR_DEPTH,
-			1.f,
-			0);
+		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	}
 
 	void DriverSystemD3D11::handle_device_removed()
@@ -281,7 +277,7 @@ namespace Xplicit::Renderer::DX11
 		XPLICIT_ASSERT(m_private.pSwapChain);
 		XPLICIT_ASSERT(m_private.pCtx);
 
-		HRESULT hr = m_private.pSwapChain->Present(m_private.bVSync, 0);
+		HRESULT hr = m_private.pSwapChain->Present(m_private.bVSync ? 1 : 0, 0);
 
 		return !this->check_device_removed(hr);
 	}
@@ -299,7 +295,7 @@ namespace Xplicit::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 
-	D3D11RenderComponent::D3D11RenderComponent()
+	RenderComponentD3D11::RenderComponentD3D11()
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
 		 m_pDriver(nullptr), m_pVertex(nullptr),
@@ -308,19 +304,19 @@ namespace Xplicit::Renderer::DX11
 		
 	}
 
-	D3D11RenderComponent::~D3D11RenderComponent()
+	RenderComponentD3D11::~RenderComponentD3D11()
 	{
 		if (m_pVertex)
 			delete[] m_pVertex;
 	}
 
-	void D3D11RenderComponent::push(const Nplicit::Vector<float>& vert)
+	void RenderComponentD3D11::push(const Nplicit::Vector<float>& vert)
 	{
 		this->m_arrayVerts.push_back(vert);
 	}
 
 	// this needs to be more generic.
-	void D3D11RenderComponent::create()
+	void RenderComponentD3D11::create()
 	{
 		if (m_arrayVerts.empty())
 			return;
@@ -346,7 +342,7 @@ namespace Xplicit::Renderer::DX11
 			m_pVertex[vertex_index].color = XMVectorSet(1.f,
 				1.f,
 				1.f,
-				0.f);
+				1.f);
 
 			++m_iVertexCnt;
 		}
@@ -389,32 +385,32 @@ namespace Xplicit::Renderer::DX11
 
 		if (FAILED(m_hResult))
 		{
-			delete pIndices;
+			delete[] pIndices;
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create(CreateBuffer(m_pIndexBuffer))");
 		}
 
-		delete pIndices;
+		delete[] pIndices;
 	}
 
-	bool D3D11RenderComponent::should_update() noexcept { return true; }
+	bool RenderComponentD3D11::should_update() noexcept { return true; }
 
-	const char* D3D11RenderComponent::name() noexcept { return ("D3D11RenderComponent"); }
+	const char* RenderComponentD3D11::name() noexcept { return ("D3D11RenderComponent"); }
 
-	D3D11RenderComponent::INSTANCE_TYPE D3D11RenderComponent::type() noexcept { return INSTANCE_RENDER; }
+	RenderComponentD3D11::INSTANCE_TYPE RenderComponentD3D11::type() noexcept { return INSTANCE_RENDER; }
 
-	void D3D11RenderComponent::set(DriverSystemD3D11* driver) noexcept
+	void RenderComponentD3D11::set(DriverSystemD3D11* driver) noexcept
 	{
 		if (driver)
 			m_pDriver = driver;
 	}
 
-	void D3D11RenderComponent::push(D3D11ShaderSystem* system) noexcept
+	void RenderComponentD3D11::push(ShaderSystemD3D11* shaderSystem) noexcept
 	{
-		if (system)
-			m_pShader.push_back(system);
+		if (shaderSystem)
+			m_pShader.push_back(shaderSystem);
 	}
 	
-	void D3D11RenderComponent::update() 
+	void RenderComponentD3D11::update() 
 	{
 		if (m_pShader.empty() ||
 			!m_pDriver ||
@@ -437,7 +433,7 @@ namespace Xplicit::Renderer::DX11
 		m_pDriver->get().pCtx->DrawIndexed(m_iVertexCnt, 0, 0);
 	}
 
-	size_t D3D11RenderComponent::size() noexcept
+	size_t RenderComponentD3D11::size() noexcept
 	{
 		return m_iVertexCnt;
 	}

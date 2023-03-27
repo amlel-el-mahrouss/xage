@@ -14,7 +14,6 @@
  @file
  */
 
-#include "ApplicationContext.h"
 #include "MonoComponent.h"
 #include "MonoInterop.h"
 

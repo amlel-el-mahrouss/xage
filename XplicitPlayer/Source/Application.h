@@ -13,7 +13,6 @@
 #pragma once
 
 #include <Uri.h>
-#include <ApplicationContext.h>
 
 #include "CameraComponent.h"
 #include "LoadingComponent.h"

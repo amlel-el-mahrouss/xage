@@ -19,66 +19,59 @@
 
 namespace Xplicit::Network
 {
-	StreamFile::StreamFile(const char* bytes, size_t len)
+	FileStream::FileStream(const char* bytes, size_t len)
 	{
 		this->set(bytes, len);
 	}
 
-	StreamFile::~StreamFile() {}
+	FileStream::~FileStream() {}
 
-	int StreamFile::set(const char* bytes, size_t len)
+	int FileStream::set(const char* bytes, size_t len)
 	{
 		if (!bytes ||
 			len < 1)
 			return 1;
 
-		m_bytes.clear();
-		m_bytes.reserve(len);
+		m_byteList.clear();
+		m_byteList.reserve(len);
 
-		for (size_t i = 0; i < m_bytes.size(); ++i)
+		for (size_t i = 0; i < m_byteList.size(); ++i)
 		{
-			m_bytes[i] = bytes[i];
+			m_byteList[i] = bytes[i];
 		}
 
 		return 0;
 	}
 
-	const char* StreamFile::get() noexcept
+	const char* FileStream::get() noexcept
 	{
-		if (m_bytes.empty())
+		if (m_byteList.empty())
 			return "(null)";
 
-		return m_bytes.data();
+		return m_byteList.data();
 	}
 
-	size_t StreamFile::size() noexcept { return m_bytes.size(); }
+	size_t FileStream::size() noexcept { return m_byteList.size(); }
 
-	DownloadTask::DownloadTask()
-		: m_bReady(false), m_files()
-	{
-	
-	}
+	TaskStream::TaskStream() : m_bReady(false), m_fileList() {}
 
-	DownloadTask::~DownloadTask()
-	{
+	TaskStream::~TaskStream() {}
 
-	}
-
-	void DownloadTask::add(StreamFile* file)
+	void TaskStream::add(FileStream* file)
 	{
 		if (file)
-			m_files.push_back(file);
+			m_fileList.push_back(file);
 	}
 
-	bool DownloadTask::remove(StreamFile* file)
+	bool TaskStream::remove(FileStream* file)
 	{
 		if (file)
 		{
-			auto it = std::find(m_files.cbegin(), m_files.cend(), file);
+			auto it = std::find(m_fileList.cbegin(), m_fileList.cend(), file);
 
-			if (it != m_files.cend())
+			if (it != m_fileList.cend())
 			{
-				m_files.erase(it);
+				m_fileList.erase(it);
 				return true;
 			}
 		}
@@ -86,28 +79,31 @@ namespace Xplicit::Network
 		return false;
 	}
 
-	void DownloadTask::operator()(Socket& socket, const bool compressed)
+	void TaskStream::operator()(Socket& socket, const bool isCompressed)
 	{
-		if (socket != SOCKET_ERROR)
+		if (!m_bReady) 
+			return;
+
+		if (socket != XPLICIT_SOCKET_ERROR)
 		{
 			std::vector<int> data, data_tmp;
 
-			data.push_back(XPLICIT_PROTO_MAG_0);
-			data.push_back(XPLICIT_PROTO_MAG_1);
-			data.push_back(XPLICIT_PROTO_MAG_2);
-			data.push_back(compressed);
-			data.push_back(XPLICIT_PROTO_VERSION);
+			data.push_back(XPLICIT_STREAM_MAG_0);
+			data.push_back(XPLICIT_STREAM_MAG_1);
+			data.push_back(XPLICIT_STREAM_MAG_2);
+			data.push_back(isCompressed);
+			data.push_back(XPLICIT_STREAM_VERSION);
 
 			data.push_back('\r');
 			data.push_back('\n');
 
 			Thread worker([&]() -> void
 				{
-					for (size_t file_index = 0; file_index < m_files.size(); ++file_index)
+					for (size_t file_index = 0; file_index < m_fileList.size(); ++file_index)
 					{
-						for (size_t data_index = 0; data_index < m_files[file_index]->size(); ++data_index)
+						for (size_t data_index = 0; data_index < m_fileList[file_index]->size(); ++data_index)
 						{
-							data_tmp.push_back(m_files[file_index]->get()[data_index]);
+							data_tmp.push_back(m_fileList[file_index]->get()[data_index]);
 						}
 
 						data.push_back('\r');
@@ -131,14 +127,14 @@ namespace Xplicit::Network
 
 			socket.send<int*>(data_tmp.data(), data.size());
 
-			/* Set status as non-ready. */
+			/* Clear status */
 			m_bReady = false;
 		}
 	}
 
-	bool DownloadTask::is_ready() noexcept { return m_bReady; }
+	bool TaskStream::is_ready() noexcept { return m_bReady; }
 
-	DownloadTask::operator bool() noexcept { return this->is_ready(); }
+	TaskStream::operator bool() noexcept { return this->is_ready(); }
 
-	void DownloadTask::set(const bool ready) noexcept { m_bReady = true; }
+	void TaskStream::set(const bool ready) noexcept { m_bReady = true; }
 }

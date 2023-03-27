@@ -13,7 +13,7 @@
 namespace Xplicit::Renderer::DX11
 {
 	template <typename StructSz>
-	HRESULT D3D11ShaderSystem::ShaderTraits::create_matrix_buffer(ID3D11Device* device)
+	HRESULT ShaderSystemD3D11::ShaderTraits::create_matrix_buffer(ID3D11Device* device)
 	{
 		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 		matrixBufferDesc.ByteWidth = sizeof(StructSz);

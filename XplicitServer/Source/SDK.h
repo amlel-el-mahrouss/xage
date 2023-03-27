@@ -12,7 +12,6 @@
 
 #pragma once
 
-// ECS
 #include <Event.h>
 #include <Component.h>
 #include <Uri.h>
@@ -22,6 +21,7 @@
 #include <MonoComponent.h>
 #include <Common.h>
 #include <SocketWrapper.h>
+#include <HelperMacros.h>
 #include <NetworkServerComponent.h>
 
 #ifdef XPLICIT_WINDOWS

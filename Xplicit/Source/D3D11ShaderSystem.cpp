@@ -21,7 +21,7 @@
 
 namespace Xplicit::Renderer::DX11
 {
-	D3D11ShaderSystem::~D3D11ShaderSystem()
+	ShaderSystemD3D11::~ShaderSystemD3D11()
 	{
 		if (m_data.pBlob)
 			m_data.pBlob->Release();
@@ -30,7 +30,7 @@ namespace Xplicit::Renderer::DX11
 			m_data.pErrorBlob->Release();
 	}
 
-	int D3D11ShaderSystem::compile() noexcept
+	int ShaderSystemD3D11::compile() noexcept
 	{
 		HRESULT hr = D3DCompileFromFile(m_shader.c_str(), nullptr, nullptr, m_data.entrypoint.c_str(), m_data.shader_type.c_str(),
 			m_data.iFlags1,
@@ -41,9 +41,9 @@ namespace Xplicit::Renderer::DX11
 		return SUCCEEDED(hr) ? 0 : 1;
 	}
 
-	D3D11ShaderSystem::ShaderTraits& D3D11ShaderSystem::get() { return m_data; }
+	ShaderSystemD3D11::ShaderTraits& ShaderSystemD3D11::get() { return m_data; }
 
-	void D3D11ShaderSystem::update(D3D11RenderComponent* component)
+	void ShaderSystemD3D11::update(RenderComponentD3D11* component)
 	{
 		if (!component)
 			return;
@@ -61,7 +61,7 @@ namespace Xplicit::Renderer::DX11
 			component->m_pDriver->get().pCtx->HSSetShader(this->m_data.pHull.Get(), nullptr, 0);
 	}
 
-	HRESULT D3D11ShaderSystem::ShaderTraits::create_input_layout(ID3D11Device* device)
+	HRESULT ShaderSystemD3D11::ShaderTraits::create_input_layout(ID3D11Device* device)
 	{
 		HRESULT hr = S_OK;
 
