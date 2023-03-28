@@ -27,8 +27,8 @@ XPLICIT_CONFIG = {
 	  "d2d1",
 	  "d3dcompiler",
 	  "opengl32",
-	  "Vendor/glfw/build/src/glfw3dll",
-      "Library/bgfx"
+      "Library/glfw3dll",
+      "Library/Irrlicht"
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -37,6 +37,7 @@ XPLICIT_CONFIG = {
     	"Nplicit/Source/",
 	    "Vendor/irr/include",
 	    "Vendor/libzip/lib",
+	    "Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -67,6 +68,7 @@ XPLICIT_SERVER_CONFIG = {
         "Vendor/nuklear/",
     	"Vendor/yaml/include",
     	"Nplicit/Source/",
+	    "Vendor/irr/include",
 	    "Vendor/libzip/lib",
         "C:/Program Files/Mono/include/mono-2.0",
     }
@@ -92,7 +94,8 @@ XPLICIT_CLIENT_CONFIG = {
         "d3d11",
         "dxgi",
         "d2d1",
-        "opengl32"
+        "opengl32",
+      "Library/Irrlicht"
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -131,7 +134,6 @@ XPLICIT_STUDIO_CONFIG = {
         "d3d11",
         "dxgi",
         "d2d1",
-        "Vendor/glfw/build/src/glfw3dll",
         "opengl32",
     },
     ["_INCDIR"] = {
@@ -182,6 +184,7 @@ NPLICIT_CONFIG = {
         "Vendor/yaml/include",
 	    "Vendor/glfw/include/GLFW/",
         "Vendor/nuklear/",
+	    "Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };

@@ -107,7 +107,20 @@ KLASS(const KLASS&) = default;\
 
 
 
-
 #ifndef XPLICIT_SLEEP
-#define XPLICIT_SLEEP Sleep
+#ifdef XPLICIT_WINDOWS
+#   define XPLICIT_SLEEP Sleep
+#else
+#   error You need a sleep function
 #endif
+#endif
+
+#include <irrlicht.h>
+
+using namespace irr;
+
+using namespace core;
+using namespace scene;
+using namespace video;
+using namespace io;
+using namespace gui;

@@ -13,6 +13,7 @@
 #pragma once
 
 #include <Xplicit.h>
+#include <ApplicationContext.h>
 
 namespace Xplicit::Client
 {
