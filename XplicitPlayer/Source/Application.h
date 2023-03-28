@@ -13,12 +13,7 @@
 #pragma once
 
 #include <Uri.h>
-#include <Bites.h>
-#include <bgfx/bgfx.h>
-#include <HelperMacros.h>
-
-#include <rapidxml/rapidxml.hpp>
-#include <rapidxml/rapidxml_utils.hpp>
+#include <ApplicationContext.h>
 
 #include "CameraComponent.h"
 #include "LoadingComponent.h"
@@ -27,10 +22,14 @@
 #define XPLICIT_DEFAULT_WIDTH (1280)
 #define XPLICIT_DEFAULT_HEIGHT (720)
 
+namespace Xplicit::Client
+{
+	extern dimension2du XPLICIT_DIM;
+}
+
 namespace Xplicit::Bites
 {
-	constexpr const char* XPLICIT_APP_NAME = "XplicitNgine - www.play-xplicit.com";
-	constexpr const char* XPLICIT_CLASS_NAME = "XplicitWnd";
+	constexpr const PChar* XPLICIT_APP_NAME = L"XplicitNgine - www.play-xplicit.com";
 
 	class Application final
 	{
@@ -38,7 +37,7 @@ namespace Xplicit::Bites
 		Application() = delete;
 
 	public:
-		Application(const char* dns, HINSTANCE hInst);
+		Application(const char* dns);
 		~Application();
 
 		Application& operator=(const Application&) = delete;
@@ -63,6 +62,8 @@ namespace Xplicit::Bites
 
 		private:
 			String m_szSettingsPath;
+			irr::io::IXMLReaderUTF8* m_pXmlReader;
+			irr::io::IXMLWriterUTF8* m_pXmlWriter;
 
 		};
 
@@ -71,10 +72,12 @@ namespace Xplicit::Bites
 
 	private:
 		std::unique_ptr<Settings> m_pSettings;
-		wi::Application m_applicationWindow;
-		Win32Window m_win32Window;
 		String m_szDataPath;
+
+#ifdef XPLICIT_WINDOWS
+		// WinSock data
 		WSADATA m_wsa;
+#endif
 
 	};
 }

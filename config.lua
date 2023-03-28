@@ -35,7 +35,7 @@ XPLICIT_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
     	"Vendor/yaml/include",
     	"Nplicit/Source/",
-	    "Vendor/bgfx/include",
+	    "Vendor/irr/include",
 	    "Vendor/libzip/lib",
         "C:/Program Files/Mono/include/mono-2.0",
     }
@@ -98,7 +98,7 @@ XPLICIT_CLIENT_CONFIG = {
         "Vendor/",
     	"Xplicit/Source/",
     	"Xplicit/Vendor/include/",
-    	"Vendor/irr/include",
+    	"Vendor/irr/includeinclude",
         "Vendor/lua/",
         "Vendor/stb/",
     	"Vendor/yaml/include",
@@ -106,7 +106,7 @@ XPLICIT_CLIENT_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
     	"Nplicit/Source/",
 	    "Vendor/libzip/lib",
-	    "Vendor/bgfx/include",
+	    "Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -138,7 +138,7 @@ XPLICIT_STUDIO_CONFIG = {
         "Vendor/",
     	"Xplicit/Source/",
     	"Xplicit/Vendor/include/",
-    	"Vendor/irr/include",
+    	"Vendor/irr/includeinclude",
         "Vendor/lua/",
         "Vendor/stb/",
     	"Vendor/yaml/include",
@@ -146,7 +146,7 @@ XPLICIT_STUDIO_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
 	    "Vendor/libzip/lib",
     	"Nplicit/Source/",
-	    "Vendor/bgfx/include",
+	    "Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -175,7 +175,7 @@ NPLICIT_CONFIG = {
         "Vendor/",
     	"Xplicit/Source/",
     	"Xplicit/Vendor/include/",
-    	"Vendor/irr/include",
+    	"Vendor/irr/includeinclude",
         "Vendor/lua/",
         "Vendor/stb/",
 	    "Vendor/libzip/lib",
