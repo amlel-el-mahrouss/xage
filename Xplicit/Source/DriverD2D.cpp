@@ -12,6 +12,8 @@
 
 #include "DriverD2D.h"
 
+#ifdef XPLICIT_WINDOWS
+
 namespace Xplicit::Renderer
 {
 	DriverSystemD2D::DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv)
@@ -33,7 +35,7 @@ namespace Xplicit::Renderer
 			D2D1_RENDER_TARGET_PROPERTIES renderProp =
 				D2D1::RenderTargetProperties(
 					D2D1_RENDER_TARGET_TYPE_DEFAULT,
-					D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+					D2D1::PixelFormat(DXGI_FORMAT_R32G32B32_UINT, D2D1_ALPHA_MODE_PREMULTIPLIED),
 					0,
 					0);
 
@@ -145,3 +147,5 @@ namespace Xplicit::Renderer
 
 	void DriverSystemD2D::queue(View* view) { m_pViews.push_back(view); }
 }
+
+#endif

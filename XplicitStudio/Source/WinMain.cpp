@@ -87,7 +87,7 @@ namespace Xplicit::Studio
 			component->set(drv.get());
 			component->create();
 
-			ExitCode = win->run(drv, Xplicit::Color<float>(40, 40, 40));
+			ExitCode = win->run(drv, Xplicit::Color<float>(40, 40, 40, 255));
 		}
 
 		int ExitCode{ 0 };

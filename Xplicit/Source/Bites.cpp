@@ -12,9 +12,10 @@
 
 #include "Bites.h"
 
+#ifdef XPLICIT_WINDOWS
+
 namespace Xplicit::Bites
 {
-#ifdef XPLICIT_WINDOWS
 	Win32Window::Win32Window(const char* wndName, const char* wndClass,
 		HINSTANCE hInstance)
 		: m_traits()

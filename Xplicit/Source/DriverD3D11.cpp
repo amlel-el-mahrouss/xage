@@ -54,21 +54,22 @@ namespace Xplicit::Renderer::DX11
 	{
 		RtlZeroMemory(&swapDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-		swapDesc.BufferCount = 2;
+		swapDesc.BufferCount = 1;
 		swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swapDesc.BufferDesc.Width = XPLICIT_DEFAULT_WIDTH;
 		swapDesc.BufferDesc.Height = XPLICIT_DEFAULT_HEIGHT;
+
 		swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 		swapDesc.BufferDesc.RefreshRate.Denominator = 1;
 		swapDesc.BufferDesc.RefreshRate.Numerator = 0;
 
-		swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapDesc.SampleDesc.Count = 1;
 		swapDesc.SampleDesc.Quality = 0;
 
-		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		
 		swapDesc.Flags = 0;
 
