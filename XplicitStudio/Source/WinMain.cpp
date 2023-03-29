@@ -45,9 +45,9 @@ namespace Xplicit::Studio
 
 			auto* component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::RenderComponentD3D11>();
 
-			component->push(Xplicit::Nplicit::Vector<float>(-1.f, -1.f, 0));
-			component->push(Xplicit::Nplicit::Vector<float>(0.f, -1.f, 0));
-			component->push(Xplicit::Nplicit::Vector<float>(1.f, -1.f, 0));
+			component->push(Xplicit::Vector<float>(-1.f, -1.f, 0));
+			component->push(Xplicit::Vector<float>(0.f, -1.f, 0));
+			component->push(Xplicit::Vector<float>(1.f, -1.f, 0));
 
 			auto* vertex = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader<Xplicit::Renderer::DX11::XPLICIT_SHADER_TYPE::Vertex>(
 				L"XplicitStudio/Source/Vertex.hlsl",
@@ -87,7 +87,7 @@ namespace Xplicit::Studio
 			component->set(drv.get());
 			component->create();
 
-			ExitCode = win->run(drv, Xplicit::Nplicit::Color<float>(40, 40, 40));
+			ExitCode = win->run(drv, Xplicit::Color<float>(40, 40, 40));
 		}
 
 		int ExitCode{ 0 };

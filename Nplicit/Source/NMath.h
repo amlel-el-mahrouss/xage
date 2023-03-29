@@ -90,7 +90,7 @@ static inline constexpr auto nplicit_cricle_shortdist(
 	return std::min(a, b);
 }
 
-namespace Xplicit::Nplicit
+namespace Xplicit
 {
 	template <typename TypeFloat = float>
 	class NPLICIT_API Vector final

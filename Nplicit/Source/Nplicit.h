@@ -15,7 +15,7 @@
 #include "Config.h"
 #include "NMath.h" /* Nplicit Math Library */
 
-namespace Xplicit::Nplicit
+namespace Xplicit
 {
 	template <typename TypeFloat = float>
 	class NPLICIT_API PhysicsComponent
@@ -31,7 +31,6 @@ namespace Xplicit::Nplicit
 		Vector<TypeFloat> Position;
 		Vector<TypeFloat> Velocity;
 		Vector<TypeFloat> Force;
-
 		TypeFloat Mass;
 
 	};

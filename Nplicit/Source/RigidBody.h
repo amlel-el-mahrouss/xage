@@ -14,7 +14,7 @@
 
 #include "Nplicit.h"
 
-namespace Xplicit::Nplicit
+namespace Xplicit
 {
 	template <typename TypeFloat = float>
 	class NPLICIT_API RigidBodyComponent final : public virtual PhysicsComponent<TypeFloat>

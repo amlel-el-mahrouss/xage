@@ -14,7 +14,7 @@
 
 #include "Nplicit.h"
 
-namespace Xplicit::Nplicit
+namespace Xplicit
 {
 
 }

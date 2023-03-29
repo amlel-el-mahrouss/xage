@@ -213,7 +213,7 @@ namespace Xplicit::Renderer::DX11
 		RenderComponentD3D11& operator=(const RenderComponentD3D11&) = default;
 		RenderComponentD3D11(const RenderComponentD3D11&) = default;
 		
-		void push(const Nplicit::Vector<float>& vert);
+		void push(const Vector<float>& vert);
 		void push(ShaderSystemD3D11* system) noexcept;
 
 		void set(DriverSystemD3D11* dx11) noexcept;
@@ -232,7 +232,7 @@ namespace Xplicit::Renderer::DX11
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;
-		std::vector<Nplicit::Vector<float>> m_arrayVerts;
+		std::vector<Vector<float>> m_arrayVerts;
 
 		D3D11_SUBRESOURCE_DATA m_vertexData;
 		D3D11_SUBRESOURCE_DATA m_indexData;

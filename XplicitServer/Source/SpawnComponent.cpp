@@ -19,11 +19,11 @@
 
 namespace Xplicit
 {
-	SpawnComponent::SpawnComponent(Nplicit::Quaternion<float>& vec) : Component(), m_origin(vec) {}
+	SpawnComponent::SpawnComponent(Quaternion<float>& vec) : Component(), m_origin(vec) {}
 
 	SpawnComponent::~SpawnComponent() {}
 
-	Nplicit::Quaternion<float>& SpawnComponent::get() noexcept
+	Quaternion<float>& SpawnComponent::get() noexcept
 	{
 		return m_origin;
 	}

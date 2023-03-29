@@ -40,7 +40,7 @@ namespace Xplicit
 		virtual bool has_physics() noexcept override;
 
 	public:
-		Nplicit::Vector<float>& pos() noexcept;
+		Vector<float>& pos() noexcept;
 
 		void health(const int32_t& health) noexcept;
 		const int64_t health() noexcept;
@@ -49,7 +49,7 @@ namespace Xplicit
 		bool is_frozen() noexcept;
 
 	private:
-		Nplicit::Vector<float> m_position;
+		Vector<float> m_position;
 		int64_t m_freeze_cooldown;
 		int64_t m_death_timeout;
 		NetworkPeer* m_peer;

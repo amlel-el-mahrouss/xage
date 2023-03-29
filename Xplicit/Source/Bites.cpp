@@ -96,7 +96,7 @@ namespace Xplicit::Bites
 
 	Win32Window::Traits& Win32Window::get() noexcept { return m_traits; }
 
-	int Win32Window::run(std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver, const Nplicit::Color<float>& clr) noexcept
+	int Win32Window::run(std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver, const Color<float>& clr) noexcept
 	{
 		MSG msg;
 		RtlZeroMemory(&msg, sizeof(MSG));
@@ -165,7 +165,7 @@ namespace Xplicit::Bites
 	}
 
 	int GLFWWindow::run(std::unique_ptr<Xplicit::Renderer::OpenGL::DriverSystemOpenGL>& driver,
-		const Nplicit::Color<float>& clr) noexcept
+		const Color<float>& clr) noexcept
 	{
 		while (!glfwWindowShouldClose(m_pWindow))
 		{

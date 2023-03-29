@@ -16,7 +16,7 @@
 
 #include "RigidBody.h"
 
-namespace Xplicit::Nplicit
+namespace Xplicit
 {
 
 }

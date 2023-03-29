@@ -310,7 +310,7 @@ namespace Xplicit::Renderer::DX11
 			delete[] m_pVertex;
 	}
 
-	void RenderComponentD3D11::push(const Nplicit::Vector<float>& vert)
+	void RenderComponentD3D11::push(const Vector<float>& vert)
 	{
 		this->m_arrayVerts.push_back(vert);
 	}

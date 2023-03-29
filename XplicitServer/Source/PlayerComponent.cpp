@@ -113,7 +113,7 @@ namespace Xplicit
 		m_freeze_cooldown = cooldown;
 	}
 
-	Nplicit::Vector<float>& PlayerComponent::pos() noexcept
+	Vector<float>& PlayerComponent::pos() noexcept
 	{
 		return m_position;
 	}

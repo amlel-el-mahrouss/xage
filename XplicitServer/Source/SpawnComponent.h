@@ -22,14 +22,14 @@ namespace Xplicit
 		SpawnComponent() = delete;
 
 	public:
-		SpawnComponent(Nplicit::Quaternion<float>& spawn);
+		SpawnComponent(Quaternion<float>& spawn);
 
 		virtual ~SpawnComponent();
 
 		SpawnComponent& operator=(const SpawnComponent&) = default;
 		SpawnComponent(const SpawnComponent&) = default;
 
-		Nplicit::Quaternion<float>& get() noexcept;
+		Quaternion<float>& get() noexcept;
 
 		virtual INSTANCE_TYPE type() noexcept override { return (INSTANCE_LOGIC); }
 		virtual const char* name() noexcept override { return ("SpawnComponent"); }
@@ -38,7 +38,7 @@ namespace Xplicit
 		virtual void update() override;
 
 	private:
-		Nplicit::Quaternion<float> m_origin;
+		Quaternion<float> m_origin;
 
 	};
 }

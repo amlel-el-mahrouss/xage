@@ -34,20 +34,7 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(PositionComponent);
 
 	public:
-		Nplicit::Vector<float> Position;
-
-	};
-
-	class XPLICIT_API PhysicsComponent final : public Component
-	{
-	public:
-		PhysicsComponent() = default;
-		virtual ~PhysicsComponent() = default;
-
-		XPLICIT_COPY_DEFAULT(PhysicsComponent);
-
-	public:
-		Nplicit::PhysicsComponent<float> Physics;
+		Vector<float> Position;
 
 	};
 }
