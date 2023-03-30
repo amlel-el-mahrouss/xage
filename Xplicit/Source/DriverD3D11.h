@@ -14,9 +14,10 @@
 
 #include "DriverSystem.h"
 #include "Component.h"
-
 #include "Xplicit.h"
 #include "Avx.h"
+
+#include <Nplicit.h>
 
 #ifdef XPLICIT_WINDOWS
 
