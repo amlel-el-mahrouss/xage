@@ -25,7 +25,6 @@
 #include <dxgi.h>
 #include <d3d11.h>
 #include <d3dcommon.h>
-
 #include <DirectXMath.h>
 
 #ifdef XPLICIT_DEBUG

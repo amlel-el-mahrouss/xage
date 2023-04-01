@@ -21,7 +21,6 @@
 #ifdef XPLICIT_WINDOWS
 
 #define XPLICIT_APP_NAME_ASCII "XplicitEd"
-#define XPLICIT_APP_NAME_UNICODE L"XplicitEd"
 
 namespace Xplicit::Studio
 {
@@ -30,16 +29,6 @@ namespace Xplicit::Studio
 	public:
 		Runner(HINSTANCE hInst)
 		{
-			// Search and exit if another Xplicit app is open.
-			if (Xplicit::Win32Helpers::find_wnd(XPLICIT_APP_NAME_UNICODE))
-			{
-				Xplicit::Dialog::message_box(XPLICIT_APP_NAME_UNICODE,
-					L"Cannot open more than one instance of the XplicitNgin!",
-					MB_OK);
-
-				throw EngineError();
-			}
-
 			Xplicit::Bites::Win32Window* win = new Xplicit::Bites::Win32Window(XPLICIT_APP_NAME_ASCII, XPLICIT_APP_NAME_ASCII, hInst);
 			std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11> drv = std::make_unique<Xplicit::Renderer::DX11::DriverSystemD3D11>(win->get().WindowHandle);
 

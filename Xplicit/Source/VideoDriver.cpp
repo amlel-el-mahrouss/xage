@@ -66,7 +66,6 @@ namespace Xplicit::Renderer
 			return buf;
 	
 		delete buf;
-
 		return nullptr;
 	}
 }
