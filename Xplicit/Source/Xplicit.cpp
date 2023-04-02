@@ -36,9 +36,7 @@ size_t fstrlen(const char* buffer)
 
 time_t xplicit_get_epoch() 
 {
-	static time_t curtime{};
-	curtime = time(&curtime);
-	
+	time_t curtime = time(nullptr);
 	return curtime;
 }
 
