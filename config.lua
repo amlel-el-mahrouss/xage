@@ -147,6 +147,7 @@ XPLICIT_STUDIO_CONFIG = {
         "Vendor/nuklear/",
 	    "Vendor/glfw/include/GLFW/",
 	    "Vendor/libzip/lib",
+	    "Vendor/wtl/",
     	"Nplicit/Source/",
 	    "Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0",

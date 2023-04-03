@@ -421,7 +421,7 @@ namespace Xplicit::Renderer::DX11
 		static const uint32_t stride[] = { sizeof(Details::VERTEX) };
 		static const uint32_t offset = 0;
 
-		m_pDriver->get().pCtx->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), stride, &offset);
+		m_pDriver->get().pCtx->IASetVertexBuffers(1, 1, m_pVertexBuffer.GetAddressOf(), stride, &offset);
 		m_pDriver->get().pCtx->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		m_pDriver->get().pCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
