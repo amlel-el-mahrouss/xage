@@ -9,6 +9,8 @@
 
 Docs/html/
 
+.idea/
+
 *.ini
 
 *.Interpreter.xml
