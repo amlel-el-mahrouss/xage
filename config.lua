@@ -27,8 +27,8 @@ XPLICIT_CONFIG = {
 	  "d2d1",
 	  "d3dcompiler",
 	  "opengl32",
-      "Library/glfw3dll",
-      "Library/Irrlicht"
+
+        "Library/glfw3",
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -95,6 +95,7 @@ XPLICIT_CLIENT_CONFIG = {
         "dxgi",
         "d2d1",
         "opengl32",
+
       "Library/Irrlicht"
     },
     ["_INCDIR"] = {
@@ -133,6 +134,7 @@ XPLICIT_STUDIO_CONFIG = {
     	"bin/Debug/Xplicit",
         "d3d11",
         "dxgi",
+
         "d2d1",
         "opengl32",
     },
@@ -149,6 +151,7 @@ XPLICIT_STUDIO_CONFIG = {
 	    "Vendor/libzip/lib",
 	    "Vendor/wtl/",
     	"Nplicit/Source/",
+
 	    "Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0",
     }

@@ -141,19 +141,18 @@ namespace Xplicit::Bites
 	{
 		glfwInit();
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwSetErrorCallback([](int id, const char* err) { XPLICIT_CRITICAL("ID: " + std::to_string(id) + " What: " + err); throw EngineError(err); });
+
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+
 
 		m_pWindow = glfwCreateWindow(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT, windowName, nullptr, nullptr);
-
-		if (!m_pWindow)
-			throw EngineError();
-
 		glfwMakeContextCurrent(m_pWindow);
 
-		if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
-			throw EngineError();
+		gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+			
 
 		glViewport(0, 0, XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
 
@@ -170,6 +169,8 @@ namespace Xplicit::Bites
 	{
 		while (!glfwWindowShouldClose(m_pWindow))
 		{
+			XPLICIT_INFO("Hello");
+
 			glClearColor(clr.R / 255, clr.G / 255, clr.B / 255, 1.0f);
 
 			glClear(GL_COLOR_BUFFER_BIT);

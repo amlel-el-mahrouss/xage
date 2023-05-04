@@ -38,25 +38,29 @@ namespace Xplicit::Studio
 
 		bool found = false;
 
-		while (!found)
-		{
-			if (swap_ptr)
+		Thread thrd = Thread([&]() -> void {
+			while (!found)
 			{
-				if (swap_ptr == pBlueprint)
+				if (swap_ptr)
 				{
-					swap_ptr->m_pNext->m_pPrev = swap_ptr->m_pPrev;
-					swap_ptr->m_pPrev->m_pNext = swap_ptr->m_pNext;
+					if (swap_ptr == pBlueprint)
+					{
+						swap_ptr->m_pNext->m_pPrev = swap_ptr->m_pPrev;
+						swap_ptr->m_pPrev->m_pNext = swap_ptr->m_pNext;
 
-					found = true;
+						found = true;
+					}
+
+					swap_ptr = swap_ptr->m_pPrev;
+
+					continue;
 				}
 
-				swap_ptr = swap_ptr->m_pPrev;
-
-				continue;
+				break;
 			}
+		});
 
-			break;
-		}
+		thrd.detach();
 	}
 
 	void BlueprintNode::attach(BlueprintNode* pBlueprint)
