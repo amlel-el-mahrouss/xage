@@ -43,7 +43,7 @@ namespace Xplicit::Renderer
 		DriverSystem(const DriverSystem&) = default;
 
 		virtual const char* name() noexcept;
-		virtual RENDER_SYSTEM api();
+		virtual RENDER_SYSTEM api() noexcept;
 
 	};
 
@@ -101,4 +101,4 @@ namespace Xplicit::Renderer
 
 #define XPLICIT_DRIVER_SYSTEM_OVERRIDE()\
 		virtual const char* name() noexcept override;\
-		virtual RENDER_SYSTEM api() override;
+		virtual RENDER_SYSTEM api() noexcept override;

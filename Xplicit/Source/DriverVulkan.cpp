@@ -172,12 +172,12 @@ namespace Xplicit::Renderer::Vk
 		:)
 	*/
 
-	DriverSystemVulkan::DriverSystemVulkan(const VkInstanceCreateInfo& inf, std::unique_ptr<Xplicit::Bites::GLFWWindow> window)
-		: m_Info(inf)
+	DriverSystemVulkan::DriverSystemVulkan(Xplicit::Bites::GLFWWindow* window)
+		: m_Info(Details::create_simple_vulkan())
 	{
-		for (size_t i = 0; i < inf.enabledExtensionCount; ++i)
+		for (size_t i = 0; i < m_Info.enabledExtensionCount; ++i)
 		{
-			m_Ext.push_back(inf.ppEnabledExtensionNames[i]);
+			m_Ext.push_back(m_Info.ppEnabledExtensionNames[i]);
 		}
 
 		m_Ext.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
@@ -296,6 +296,9 @@ namespace Xplicit::Renderer::Vk
 
 		if (m_Surface)
 			vkDestroySurfaceKHR(m_Instance, m_Surface, nullptr);
+
+		if (m_SwapChain)
+			vkDestroySwapchainKHR(m_Device, m_SwapChain, nullptr);
 	}
 
 	void DriverSystemVulkan::vkInitSpawnChainCls(GLFWwindow* window)
@@ -305,5 +308,51 @@ namespace Xplicit::Renderer::Vk
 		VkSurfaceFormatKHR surfaceFormat = Details::vulkan_choose_chain_format(m_SwapChainSupport.formats);
 		VkPresentModeKHR presentMode = Details::vulkan_choose_chain_present_mode(m_SwapChainSupport.presentModes);
 		VkExtent2D extent = Details::vulkan_choose_chain_extent(window, m_SwapChainSupport.capabilities);
+
+		VkSwapchainCreateInfoKHR createInfo{};
+
+		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+		createInfo.surface = m_Surface;
+
+		uint32_t imageCount = m_SwapChainSupport.capabilities.minImageCount + 1;
+
+		if (m_SwapChainSupport.capabilities.maxImageCount > 0 && imageCount > m_SwapChainSupport.capabilities.maxImageCount) {
+			imageCount = m_SwapChainSupport.capabilities.maxImageCount;
+		}
+
+		createInfo.minImageCount = imageCount;
+		createInfo.imageFormat = surfaceFormat.format;
+		createInfo.imageColorSpace = surfaceFormat.colorSpace;
+		createInfo.imageExtent = extent;
+		createInfo.imageArrayLayers = 1;
+		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+		Details::VulkanFamilyIndices indices = Details::vulkan_find_queue_families(m_PhysCurrent, m_Surface);
+		uint32_t queueFamilyIndices[] = { indices.graphics_family, indices.graphics_family };
+
+		if (indices.graphics_family != indices.graphics_family) {
+			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+			createInfo.queueFamilyIndexCount = 2;
+			createInfo.pQueueFamilyIndices = queueFamilyIndices;
+		}
+		else {
+			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			createInfo.queueFamilyIndexCount = 0; // Optional
+			createInfo.pQueueFamilyIndices = nullptr; // Optional
+		}
+
+		createInfo.preTransform = m_SwapChainSupport.capabilities.currentTransform;
+		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+		
+		createInfo.presentMode = presentMode;
+		createInfo.clipped = VK_TRUE;
+
+		createInfo.oldSwapchain = VK_NULL_HANDLE;
+
+		if (vkCreateSwapchainKHR(m_Device, &createInfo, nullptr, &m_SwapChain) != VK_SUCCESS)
+			throw EngineError("vkCreateSwapChainKHR: Something bad happened!");
 	}
+
+	const char* DriverSystemVulkan::name() noexcept { return ("DriverSystemVulkan"); }
+	RENDER_SYSTEM DriverSystemVulkan::api() noexcept { return RENDER_SYSTEM::VULKAN; }
 }

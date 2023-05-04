@@ -27,7 +27,7 @@ XPLICIT_CONFIG = {
 	  "d2d1",
 	  "d3dcompiler",
 	  "opengl32",
-		"C:/VulkanSDK/1.3.243.0/Lib",
+		"C:/VulkanSDK/1.3.243.0/Lib/vulkan-1",
         "Library/glfw3",
     },
     ["_INCDIR"] = {
@@ -95,6 +95,7 @@ XPLICIT_CLIENT_CONFIG = {
     	"bin/Debug/Xplicit",
         "d3d11",
         "dxgi",
+        "Library/glfw3",
         "d2d1",
         "opengl32",
 
@@ -135,9 +136,10 @@ XPLICIT_STUDIO_CONFIG = {
     },
     ["_LIBDIR"] = {
     	"bin/Debug/Xplicit",
+        "Library/glfw3",
         "d3d11",
         "dxgi",
-
+		"C:/VulkanSDK/1.3.243.0/Lib/vulkan-1",
         "d2d1",
         "opengl32",
     },
@@ -176,6 +178,7 @@ NPLICIT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
+		"C:/VulkanSDK/1.3.243.0/Lib/vulkan-1",
     	"bin/Debug/Xplicit",
         "d3d11",
         "dxgi",

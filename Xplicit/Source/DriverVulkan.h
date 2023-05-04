@@ -47,10 +47,10 @@ namespace Xplicit::Renderer::Vk
 		VkInstanceCreateInfo create_simple_vulkan();
 	}
 
-	class DriverSystemVulkan : public DriverSystem
+	class XPLICIT_API DriverSystemVulkan : public DriverSystem
 	{
 	public:
-		explicit DriverSystemVulkan(const VkInstanceCreateInfo& inf, std::unique_ptr<Xplicit::Bites::GLFWWindow> window);
+		DriverSystemVulkan(Xplicit::Bites::GLFWWindow* window);
 		virtual ~DriverSystemVulkan();
 
 	public:
@@ -71,6 +71,7 @@ namespace Xplicit::Renderer::Vk
 		Details::VulkanFamilyIndices m_GraphicsFamily;
 		VkWin32SurfaceCreateInfoKHR m_WindowCreateInfo;
 		VkPhysicalDevice m_PhysCurrent;
+		VkSwapchainKHR m_SwapChain;
 		VkInstanceCreateInfo m_Info;
 		VkInstance m_Instance;
 		VkSurfaceKHR m_Surface;

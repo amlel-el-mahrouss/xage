@@ -86,7 +86,7 @@ namespace Xplicit::Renderer::DX11
 		DriverSystemD3D11(const DriverSystemD3D11&) = default;
 
 		virtual const char* name() noexcept override;
-		virtual RENDER_SYSTEM api() override;
+		virtual RENDER_SYSTEM api() noexcept override;
 
 		class XPLICIT_API DriverTraits
 		{

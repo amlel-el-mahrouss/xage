@@ -56,7 +56,7 @@ namespace Xplicit::Renderer::OpenGL
 
 	const char* DriverSystemOpenGL::name() noexcept { return ("DriverSystemOpenGL"); }
 
-	RENDER_SYSTEM DriverSystemOpenGL::api() { return RENDER_SYSTEM::OPENGL; }
+	RENDER_SYSTEM DriverSystemOpenGL::api() noexcept { return RENDER_SYSTEM::OPENGL; }
 
 	const bool& DriverSystemOpenGL::is_closed() noexcept { return m_bClose;  }
 	void DriverSystemOpenGL::close() noexcept { m_bClose = true; }

@@ -20,5 +20,5 @@ namespace Xplicit::Renderer
 {
 	const char* DriverSystem::name() noexcept { return ("DriverSystem"); }
 
-	RENDER_SYSTEM DriverSystem::api() { return RENDER_SYSTEM::INVALID; }
+	RENDER_SYSTEM DriverSystem::api() noexcept { return RENDER_SYSTEM::INVALID; }
 }

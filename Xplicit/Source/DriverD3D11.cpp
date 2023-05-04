@@ -234,7 +234,7 @@ namespace Xplicit::Renderer::DX11
 
 	const char* DriverSystemD3D11::name() noexcept { return ("DriverSystemD3D11"); }
 
-	RENDER_SYSTEM DriverSystemD3D11::api() { return RENDER_SYSTEM::DIRECT3D11; }
+	RENDER_SYSTEM DriverSystemD3D11::api() noexcept { return RENDER_SYSTEM::DIRECT3D11; }
 
 	DriverSystemD3D11::DriverTraits& DriverSystemD3D11::get() noexcept { return m_private; }
 
