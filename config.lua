@@ -27,14 +27,15 @@ XPLICIT_CONFIG = {
 	  "d2d1",
 	  "d3dcompiler",
 	  "opengl32",
-
+		"C:/VulkanSDK/1.3.243.0/Lib",
         "Library/glfw3",
     },
     ["_INCDIR"] = {
         "Vendor/",
 	    "Vendor/glfw/include/GLFW/",
-    	"Vendor/yaml/include",
-    	"Nplicit/Source/",
+    		"Vendor/yaml/include",
+    		"Nplicit/Source/",
+		"C:/VulkanSDK/1.3.243.0/Include",
 	    "Vendor/irr/include",
 	    "Vendor/libzip/lib",
 	    "Vendor/irr/include",
@@ -70,6 +71,7 @@ XPLICIT_SERVER_CONFIG = {
     	"Nplicit/Source/",
 	    "Vendor/irr/include",
 	    "Vendor/libzip/lib",
+		"C:/VulkanSDK/1.3.243.0/Include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
 };
@@ -110,6 +112,7 @@ XPLICIT_CLIENT_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
     	"Nplicit/Source/",
 	    "Vendor/libzip/lib",
+		"C:/VulkanSDK/1.3.243.0/Include",
 	    "Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0",
     }
@@ -151,7 +154,7 @@ XPLICIT_STUDIO_CONFIG = {
 	    "Vendor/libzip/lib",
 	    "Vendor/wtl/",
     	"Nplicit/Source/",
-
+		"C:/VulkanSDK/1.3.243.0/Include",
 	    "Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0",
     }

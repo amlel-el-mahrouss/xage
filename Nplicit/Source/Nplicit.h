@@ -45,16 +45,12 @@ namespace Xplicit
 		SolverSystem& operator=(const SolverSystem&) = delete;
 		SolverSystem(const SolverSystem&) = delete;
 
-		void step(const int32_t& dt) noexcept
+		void step(const int32_t& dt /*delta time*/) noexcept
 		{
 			for (auto* component : m_components)
 			{
 				component->Force.add(m_gravity.X * component->Mass, m_gravity.Y * component->Mass, m_gravity.Z * component->Mass);
-
-				component->Velocity.add(component->Force.X / component->Mass * dt,
-					component->Force.Y / component->Mass * dt,
-					component->Force.Z / component->Mass * dt);
-
+				component->Velocity.add(component->Force.X / component->Mass * dt, component->Force.Y / component->Mass * dt, component->Force.Z / component->Mass * dt);
 				component->Position.add(component->Velocity.X * dt, component->Velocity.Y * dt, component->Velocity.Z * dt);
 
 				component->Force = Vector<TypeFloat>(0, 0, 0);

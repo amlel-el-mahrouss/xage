@@ -73,6 +73,9 @@ namespace Xplicit::Bites
 		XPLICIT_COPY_DELETE(GLFWWindow);
 
 	public:
+		GLFWwindow* get() noexcept;
+
+	public:
 		int run(std::unique_ptr<Xplicit::Renderer::OpenGL::DriverSystemOpenGL>& driver,
 			const Color<float>& clr) noexcept;
 

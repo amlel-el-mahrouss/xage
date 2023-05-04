@@ -188,6 +188,11 @@ namespace Xplicit::Bites
 
 		return 0;
 	}
+
+	GLFWwindow* GLFWWindow::get() noexcept
+	{
+		return m_pWindow;
+	}
 }
 
 #endif // XPLICIT_WINDOWS

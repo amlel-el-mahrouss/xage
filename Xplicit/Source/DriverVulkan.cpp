@@ -1,0 +1,309 @@
+/*
+ * =====================================================================
+ *
+ *			XplicitNgin
+ *			Copyright XPX, all rights reserved.
+ *
+ *			File: VulkanDriver.cpp
+ *			Purpose: Xplicit's Vulkan driver
+ *
+ * =====================================================================
+ */
+
+#include "DriverVulkan.h"
+#include <set>
+
+namespace Xplicit::Renderer::Vk
+{
+	namespace Details
+	{
+		VkInstanceCreateInfo create_simple_vulkan()
+		{
+			VkApplicationInfo appInfo{};
+
+			appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+
+			appInfo.pApplicationName = "XplicitEngine";
+			appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+			appInfo.pEngineName = "XplicitEngine";
+			appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+			appInfo.apiVersion = VK_API_VERSION_1_0;
+
+			VkInstanceCreateInfo createInfo{};
+
+			createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+			createInfo.pApplicationInfo = &appInfo;
+
+			uint32_t glfwExtensionCount = 0;
+			const char** glfwExtensions;
+
+			glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+			createInfo.enabledExtensionCount = glfwExtensionCount;
+			createInfo.ppEnabledExtensionNames = glfwExtensions;
+
+			return createInfo;
+		}
+
+		bool vulkan_check_dev_ext_support(VkPhysicalDevice device, std::vector<const char*>& deviceExtensions) 
+		{
+			uint32_t extensionCount;
+			vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+			std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+			vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+
+			std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+			for (const auto& extension : availableExtensions) {
+				requiredExtensions.erase(extension.extensionName);
+			}
+
+			return requiredExtensions.empty();
+		}
+
+		VkPhysicalDevice vulkan_find_best_device(std::vector<VkPhysicalDevice>& devs, std::vector<const char*>& deviceExtensions)
+		{
+			for (auto& dev : devs)
+			{
+				VkPhysicalDeviceProperties deviceProperties;
+				VkPhysicalDeviceFeatures deviceFeatures;
+
+				vkGetPhysicalDeviceProperties(dev, &deviceProperties);
+				vkGetPhysicalDeviceFeatures(dev, &deviceFeatures);
+
+
+				bool extensionsSupported = vulkan_check_dev_ext_support(dev, deviceExtensions);
+
+				if (deviceProperties.apiVersion >= VK_API_VERSION_1_0)
+					return (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && deviceFeatures.geometryShader && extensionsSupported) ? dev : VK_NULL_HANDLE;
+			}
+
+			return VK_NULL_HANDLE;
+		}
+
+		VulkanFamilyIndices vulkan_find_queue_families(VkPhysicalDevice dev, VkSurfaceKHR surface)
+		{
+			XPLICIT_ASSERT(dev != VK_NULL_HANDLE);
+
+			VulkanFamilyIndices indices{};
+
+			uint32_t queueFamilyCount = 0U;
+			vkGetPhysicalDeviceQueueFamilyProperties(dev, &queueFamilyCount, nullptr);
+
+			std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+
+			vkGetPhysicalDeviceQueueFamilyProperties(dev, &queueFamilyCount, queueFamilies.data());
+
+			int i = 0;
+			for (const auto& queueFamily : queueFamilies) {
+				VkBool32 presentSupport = false;
+
+				vkGetPhysicalDeviceSurfaceSupportKHR(dev, i, surface, &presentSupport);
+
+				if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT && presentSupport) {
+					indices.graphics_family = i;
+				}
+
+				i++;
+			}
+
+			return indices;
+		}
+
+		VulkanSwapChainSupportDetails vulkan_query_chain_support(VkPhysicalDevice device)
+		{
+			VulkanSwapChainSupportDetails details;
+			return details;
+		}
+
+		VkSurfaceFormatKHR vulkan_choose_chain_format(const std::vector<VkSurfaceFormatKHR>& availableFormats) 
+		{
+			for (const auto& availableFormat : availableFormats) 
+			{
+				if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+				{
+					return availableFormat;
+				}
+			}
+
+			return {};
+		}
+
+		VkPresentModeKHR vulkan_choose_chain_present_mode(const std::vector<VkPresentModeKHR>& availablePresentModes)
+		{
+			for (const auto& availablePresentMode : availablePresentModes)
+			{
+				if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+				{
+					return availablePresentMode;
+				}
+			}
+
+			return VK_PRESENT_MODE_FIFO_KHR;
+		}
+
+		VkExtent2D vulkan_choose_chain_extent(GLFWwindow* window, const VkSurfaceCapabilitiesKHR& capabilities)
+		{
+			if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) 
+			{
+				return capabilities.currentExtent;
+			}
+			else 
+			{
+				int width, height;
+				glfwGetFramebufferSize(window, &width, &height);
+
+				VkExtent2D actualExtent = {
+					static_cast<uint32_t>(width),
+					static_cast<uint32_t>(height)
+				};
+
+				actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+				actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+				return actualExtent;
+			}
+		}
+	}
+
+	/*
+		Man you're going to read lots of code here
+		:)
+	*/
+
+	DriverSystemVulkan::DriverSystemVulkan(const VkInstanceCreateInfo& inf, std::unique_ptr<Xplicit::Bites::GLFWWindow> window)
+		: m_Info(inf)
+	{
+		for (size_t i = 0; i < inf.enabledExtensionCount; ++i)
+		{
+			m_Ext.push_back(inf.ppEnabledExtensionNames[i]);
+		}
+
+		m_Ext.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+		m_Ext.emplace_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+
+		m_Info.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+
+		m_Info.enabledExtensionCount = (uint32_t)m_Ext.size();
+		m_Info.ppEnabledExtensionNames = m_Ext.data();
+
+		if (vkCreateInstance(&m_Info, nullptr, &m_Instance) != VK_SUCCESS)
+			throw EngineError("DriverSystemVulkan: This driver wasn't successfully initialized.");
+
+		uint32_t cnt = 0U;
+
+		vkEnumeratePhysicalDevices(m_Instance, &cnt, nullptr);
+		
+		if (cnt < 1)
+			throw EngineError("DriverSystemVulkan: No Physical devices were given to the engine.");
+
+		m_PhysVec = std::vector<VkPhysicalDevice>(cnt);
+		
+		vkEnumeratePhysicalDevices(m_Instance, &cnt, m_PhysVec.data());
+		
+		m_PhysCurrent = Details::vulkan_find_best_device(m_PhysVec, m_Ext);
+
+		if (m_PhysCurrent == VK_NULL_HANDLE)
+			throw EngineError("DriverSystemVulkan: No Such Device.");
+
+		m_GraphicsFamily = Details::vulkan_find_queue_families(m_PhysCurrent, m_Surface);
+
+		VkDeviceQueueCreateInfo queueCreateInfo{};
+		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+		queueCreateInfo.queueFamilyIndex = m_GraphicsFamily.graphics_family;
+		queueCreateInfo.queueCount = 1;
+
+		float queuePriority = 1.0f;
+
+		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+		std::set<uint32_t> uniqueQueueFamilies = { m_GraphicsFamily.graphics_family, m_GraphicsFamily.graphics_family };
+
+		for (uint32_t queueFamily : uniqueQueueFamilies) {
+			VkDeviceQueueCreateInfo queueCreateInfo{};
+			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+			queueCreateInfo.queueFamilyIndex = queueFamily;
+			queueCreateInfo.queueCount = 1;
+			queueCreateInfo.pQueuePriorities = &queuePriority;
+			queueCreateInfos.push_back(queueCreateInfo);
+		}
+
+		queueCreateInfo.pQueuePriorities = &queuePriority;
+
+		VkPhysicalDeviceFeatures deviceFeatures{};
+
+		VkDeviceCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+
+		createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+		createInfo.pQueueCreateInfos = queueCreateInfos.data();
+
+		createInfo.pEnabledFeatures = &deviceFeatures;
+
+		createInfo.enabledExtensionCount = static_cast<uint32_t>(m_Ext.size());
+		createInfo.ppEnabledExtensionNames = m_Ext.data();
+
+		if (vkCreateDevice(m_PhysCurrent, &createInfo, nullptr, &m_Device) != VK_SUCCESS) {
+			throw EngineError("VulkanDriver: failed to create logical device! This is due to a invalid feature set for this Card.");
+		}
+
+		vkGetDeviceQueue(m_Device, m_GraphicsFamily.graphics_family, 0, &m_Queue);
+
+		m_WindowCreateInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+		m_WindowCreateInfo.hwnd = glfwGetWin32Window(window->get());
+		m_WindowCreateInfo.hinstance = GetModuleHandle(nullptr);
+
+		if (vkCreateWin32SurfaceKHR(m_Instance, &m_WindowCreateInfo, nullptr, &m_Surface) != VK_SUCCESS)
+			throw EngineError("failed to create window surface!");
+
+		bool extensionsSupported = m_Ext.size() != 0;
+		bool swapChainAdequate = false;
+
+		if (extensionsSupported) {
+			auto details = Details::vulkan_query_chain_support(m_PhysCurrent);
+			swapChainAdequate = !details.formats.empty() && !details.presentModes.empty();
+
+			vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_PhysCurrent, m_Surface, &details.capabilities);
+
+			uint32_t formatCount = 0UL;
+			vkGetPhysicalDeviceSurfaceFormatsKHR(m_PhysCurrent, m_Surface, &formatCount, nullptr);
+
+			if (formatCount != 0)
+			{
+				details.formats.resize(formatCount);
+				vkGetPhysicalDeviceSurfaceFormatsKHR(m_PhysCurrent, m_Surface, &formatCount, details.formats.data());
+			}
+
+			uint32_t presentModeCount;
+			vkGetPhysicalDeviceSurfacePresentModesKHR(m_PhysCurrent, m_Surface, &presentModeCount, nullptr);
+
+			if (presentModeCount != 0) {
+				details.presentModes.resize(presentModeCount);
+				vkGetPhysicalDeviceSurfacePresentModesKHR(m_PhysCurrent, m_Surface, &presentModeCount, details.presentModes.data());
+			}
+		}
+
+		this->vkInitSpawnChainCls(window->get());
+	}
+
+	DriverSystemVulkan::~DriverSystemVulkan()
+	{
+		if (m_Instance)
+			vkDestroyInstance(m_Instance, nullptr);
+
+		if (m_Device)
+			vkDestroyDevice(m_Device, nullptr);
+
+		if (m_Surface)
+			vkDestroySurfaceKHR(m_Instance, m_Surface, nullptr);
+	}
+
+	void DriverSystemVulkan::vkInitSpawnChainCls(GLFWwindow* window)
+	{
+		m_SwapChainSupport = Details::vulkan_query_chain_support(m_PhysCurrent);
+
+		VkSurfaceFormatKHR surfaceFormat = Details::vulkan_choose_chain_format(m_SwapChainSupport.formats);
+		VkPresentModeKHR presentMode = Details::vulkan_choose_chain_present_mode(m_SwapChainSupport.presentModes);
+		VkExtent2D extent = Details::vulkan_choose_chain_extent(window, m_SwapChainSupport.capabilities);
+	}
+}
