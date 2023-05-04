@@ -44,7 +44,7 @@ static void xplicit_read_xml()
 	auto mono = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::MonoEngineComponent>("MonoEngineComponent");
 
 	const int argc = 2;
-	const char* argv[] = { "XplicitNgin", "1.0.0" };
+	const char* argv[] = { "XplicitNgin", "1.0.1" };
 
 	rapidxml::xml_document<> doc{};
 	doc.parse<0>(xml.data());
@@ -100,6 +100,7 @@ static void xplicit_print_help()
 {
 	XPLICIT_INFO("\a-------------- Xplicit Game Server Manual --------------");
 	XPLICIT_INFO("exit: Exits the current server.");
+	XPLICIT_INFO("netstat: Get Network status.");
 	XPLICIT_INFO("-------------- Xplicit Game Server Manual --------------");
 }
 
@@ -137,6 +138,18 @@ static void xplicit_load_sh()
 
 				if (strcmp(cmd_buf, "man") == 0)
 					xplicit_print_help();
+
+				if (strcmp(cmd_buf, "netstat") == 0)
+				{
+
+					const char* ip_address = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
+
+					if (!ip_address)
+						XPLICIT_CRITICAL("CLI: Ip Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
+
+					XPLICIT_INFO(Xplicit::String("IP: ") + (ip_address ? ip_address : "?"));
+					XPLICIT_INFO(Xplicit::String("XDP: ") + std::to_string(XPLICIT_NETWORK_VERSION));
+				}
 			}
 		}
 	);
