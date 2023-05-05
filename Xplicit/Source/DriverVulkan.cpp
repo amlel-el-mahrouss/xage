@@ -23,7 +23,7 @@ namespace Xplicit::Renderer::Vk
 
 			appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 
-			appInfo.pApplicationName = "XplicitEngine";
+			appInfo.pApplicationName = "XPXVkClient";
 			appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 			appInfo.pEngineName = "XplicitEngine";
 			appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -111,6 +111,38 @@ namespace Xplicit::Renderer::Vk
 			return indices;
 		}
 
+		VkBool32 vulkan_debug_callback(
+			VkDebugUtilsMessageSeverityFlagBitsEXT           messageSeverity,
+			VkDebugUtilsMessageTypeFlagsEXT                  messageTypes,
+			const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+			void* pUserData)
+		{
+			XPLICIT_CRITICAL("Validation Layer [VK]", pCallbackData->pMessage);
+			return 0;
+		}
+
+		VkResult vulkan_create_debug_utils_messenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback) {
+			auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+			if (func != nullptr) {
+				return func(instance, pCreateInfo, pAllocator, pCallback);
+			}
+			else {
+				return VK_ERROR_EXTENSION_NOT_PRESENT;
+			}
+		}
+
+		bool vulkan_init_validation_layers(VkInstance instance)
+		{
+			VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+			createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+			createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+			createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+			createInfo.pfnUserCallback = (PFN_vkDebugUtilsMessengerCallbackEXT)vulkan_debug_callback;
+			createInfo.pUserData = nullptr;
+
+			return vulkan_create_debug_utils_messenger(instance, &createInfo, nullptr, nullptr) == VK_SUCCESS;
+		}
+
 		VulkanSwapChainSupportDetails vulkan_query_chain_support(VkPhysicalDevice device)
 		{
 			VulkanSwapChainSupportDetails details;
@@ -192,11 +224,16 @@ namespace Xplicit::Renderer::Vk
 
 		m_Info.enabledExtensionCount = (uint32_t)m_Ext.size();
 		m_Info.ppEnabledExtensionNames = m_Ext.data();
+		m_Info.enabledLayerCount = 0U;
 
 		if (vkCreateInstance(&m_Info, nullptr, &m_Instance) != VK_SUCCESS)
 			throw EngineError("DriverSystemVulkan: This driver wasn't successfully initialized.");
 
 		uint32_t cnt = 0U;
+
+#ifdef XPLICIT_DEBUG
+		XPLICIT_ASSERT(Details::vulkan_init_validation_layers(m_Instance));
+#endif
 
 		vkEnumeratePhysicalDevices(m_Instance, &cnt, nullptr);
 		
