@@ -38,6 +38,7 @@ namespace Xplicit::Client
 		void attach(CameraComponent* cam) noexcept;
 
 	private:
+		IAnimatedMeshSceneNode* m_cam_node;
 		NetworkComponent* m_network;
 		CameraComponent* m_camera;
 		NetworkPacket m_packet;

@@ -29,8 +29,8 @@ namespace Xplicit::Client
 		MeshComponent(const MeshComponent&) = default;
 
 	protected:
-		IAnimatedMesh* m_pModel; // Model Data pointer, generic
-		IAnimatedMeshSceneNode* m_pNode; // Model Data pointer, generic
+		IAnimatedMesh* m_model; // Model Data pointer, generic
+		IAnimatedMeshSceneNode* m_node; // Model Data pointer, generic
 
 	};
 }

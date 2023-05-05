@@ -33,8 +33,8 @@ namespace Xplicit::Studio
 	public:
 		explicit Runner(HINSTANCE hInst)
 		{
-			auto wnd = new Xplicit::Bites::GLFWWindow("XplicitEd");
-			auto drv = std::make_unique<Xplicit::Renderer::Vk::DriverSystemVulkan>(wnd);
+			auto wnd = new Xplicit::Bites::Win32Window("XplicitEd", "EditorWindowClassXPX", hInst);
+			auto drv = std::make_unique<Xplicit::Renderer::Vk::DriverSystemVulkan>(wnd->get().WindowHandle);
 			while (getchar());
 		}
 

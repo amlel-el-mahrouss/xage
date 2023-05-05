@@ -24,20 +24,20 @@ namespace Xplicit::Client
 		_path += "/Data/Studio/";
 		_path += path;
 
-		m_pModel = IRR->getSceneManager()->getMesh(_path.c_str());
-		XPLICIT_ASSERT(m_pModel);
+		m_model = IRR->getSceneManager()->getMesh(_path.c_str());
+		XPLICIT_ASSERT(m_model);
 
-		m_pNode = IRR->getSceneManager()->addAnimatedMeshSceneNode(m_pModel);
-		XPLICIT_ASSERT(m_pNode);
+		m_node = IRR->getSceneManager()->addAnimatedMeshSceneNode(m_model);
+		XPLICIT_ASSERT(m_node);
 	
-		if (m_pModel)
-			m_pModel->setMaterialFlag(EMF_LIGHTING, false);
+		if (m_model)
+			m_model->setMaterialFlag(EMF_LIGHTING, false);
 	}
 
 	MeshComponent::~MeshComponent()
 	{
-		if (m_pNode)
-			m_pNode->drop();
+		if (m_node)
+			m_node->drop();
 	}
 
 }

@@ -23,7 +23,7 @@ namespace Xplicit::Client
 	CameraComponent::CameraComponent()
 		: Component(), m_camera(nullptr)
 	{
-		m_camera = IRR->getSceneManager()->addCameraSceneNodeFPS(nullptr);
+		m_camera = IRR->getSceneManager()->addCameraSceneNodeFPS();
 
 		XPLICIT_ASSERT(m_camera);
 
@@ -52,14 +52,12 @@ namespace Xplicit::Client
 		if (!m_cursor)
 			return;
 
-		IRR->getVideoDriver()->draw2DImage(m_cursor, 
-			IRR->getCursorControl()->getPosition(), 
-			rect<s32>(0, 0, 38, 38), 
-			nullptr, 
-			SColor(255, 255, 255, 255), 
+		IRR->getVideoDriver()->draw2DImage(m_cursor,
+			IRR->getCursorControl()->getPosition(),
+			rect<s32>(0, 0, 38, 38),
+			nullptr,
+			SColor(255, 255, 255, 255),
 			true);
-
-
 	}
 
 	irr::scene::ICameraSceneNode* CameraComponent::get() noexcept { return m_camera; }

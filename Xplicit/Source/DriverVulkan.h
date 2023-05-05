@@ -50,20 +50,21 @@ namespace Xplicit::Renderer::Vk
 	class XPLICIT_API DriverSystemVulkan : public DriverSystem
 	{
 	public:
-		DriverSystemVulkan(Xplicit::Bites::GLFWWindow* window);
+		DriverSystemVulkan(HWND window);
 		virtual ~DriverSystemVulkan();
 
 	public:
 		XPLICIT_DRIVER_SYSTEM_OVERRIDE();
 
 	private:
-		void vkInitSpawnChainCls(GLFWwindow* window);
+		void vkInitSpawnChainCls(HWND window);
 
 	public:
 		XPLICIT_COPY_DELETE(DriverSystemVulkan);
 
 	private:
 		std::vector<VkPhysicalDevice> m_PhysVec;
+		std::vector<VkImage> m_VkImages;
 		std::vector<const char*> m_Ext;
 
 	private:

@@ -58,7 +58,8 @@ namespace Xplicit::Client
 	void LocalPlayerComponent::update()
 	{
 		if (!m_network ||
-			m_public_hash == -1)
+			m_public_hash == -1 ||
+			!m_camera)
 			return;
 
 		m_packet = m_network->get();
@@ -77,7 +78,7 @@ namespace Xplicit::Client
 
 				f32 delta = (IRR->getTimer()->getTime() - m_then) / XPLICIT_DELTA_TIME;
 
-				auto pos = m_pNode->getAbsolutePosition();
+				auto pos = m_node->getAbsolutePosition();
 
 				if (m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 					pos.Z -= z_speed * delta;
@@ -101,12 +102,16 @@ namespace Xplicit::Client
 				XPLICIT_INFO("NETWORK_CMD_FORWARD:" + std::to_string(m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD]));
 #endif // XPLICIT_DEBUG
 
-				m_pNode->setPosition(pos);
+				m_node->setPosition(pos);
 			}
 		}
 	}
 
-	void LocalPlayerComponent::attach(CameraComponent* cam) noexcept { m_camera = cam; }
+	void LocalPlayerComponent::attach(CameraComponent* cam) noexcept 
+	{ 
+		m_camera = cam; 
+		m_cam_node = IRR->getSceneManager()->addAnimatedMeshSceneNode(this->m_model, m_camera->get());
+	}
 
 	LocalMoveEvent::LocalMoveEvent(const int64_t& public_hash)
 		: m_packet(), m_network(nullptr), m_public_hash(public_hash)

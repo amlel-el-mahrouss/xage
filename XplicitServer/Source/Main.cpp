@@ -148,7 +148,7 @@ static void xplicit_load_sh()
 						XPLICIT_CRITICAL("CLI: Ip Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
 					XPLICIT_INFO(Xplicit::String("IP: ") + (ip_address ? ip_address : "?"));
-					XPLICIT_INFO(Xplicit::String("XDP: ") + std::to_string(XPLICIT_NETWORK_VERSION));
+					XPLICIT_INFO(Xplicit::String("Network Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
 				}
 			}
 		}

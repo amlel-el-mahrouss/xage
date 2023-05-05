@@ -143,7 +143,7 @@ namespace Xplicit::Renderer::Vk
 			return VK_PRESENT_MODE_FIFO_KHR;
 		}
 
-		VkExtent2D vulkan_choose_chain_extent(GLFWwindow* window, const VkSurfaceCapabilitiesKHR& capabilities)
+		VkExtent2D vulkan_choose_chain_extent(HWND window, const VkSurfaceCapabilitiesKHR& capabilities)
 		{
 			if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) 
 			{
@@ -151,8 +151,13 @@ namespace Xplicit::Renderer::Vk
 			}
 			else 
 			{
-				int width, height;
-				glfwGetFramebufferSize(window, &width, &height);
+
+				RECT rect{};
+
+				GetWindowRect(window, &rect);
+
+				int width = rect.right - rect.left;
+				int height = rect.bottom - rect.top;
 
 				VkExtent2D actualExtent = {
 					static_cast<uint32_t>(width),
@@ -172,7 +177,7 @@ namespace Xplicit::Renderer::Vk
 		:)
 	*/
 
-	DriverSystemVulkan::DriverSystemVulkan(Xplicit::Bites::GLFWWindow* window)
+	DriverSystemVulkan::DriverSystemVulkan(HWND window)
 		: m_Info(Details::create_simple_vulkan())
 	{
 		for (size_t i = 0; i < m_Info.enabledExtensionCount; ++i)
@@ -250,7 +255,7 @@ namespace Xplicit::Renderer::Vk
 		vkGetDeviceQueue(m_Device, m_GraphicsFamily.graphics_family, 0, &m_Queue);
 
 		m_WindowCreateInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-		m_WindowCreateInfo.hwnd = glfwGetWin32Window(window->get());
+		m_WindowCreateInfo.hwnd = window;
 		m_WindowCreateInfo.hinstance = GetModuleHandle(nullptr);
 
 		if (vkCreateWin32SurfaceKHR(m_Instance, &m_WindowCreateInfo, nullptr, &m_Surface) != VK_SUCCESS)
@@ -283,7 +288,7 @@ namespace Xplicit::Renderer::Vk
 			}
 		}
 
-		this->vkInitSpawnChainCls(window->get());
+		this->vkInitSpawnChainCls(window);
 	}
 
 	DriverSystemVulkan::~DriverSystemVulkan()
@@ -301,7 +306,7 @@ namespace Xplicit::Renderer::Vk
 			vkDestroySwapchainKHR(m_Device, m_SwapChain, nullptr);
 	}
 
-	void DriverSystemVulkan::vkInitSpawnChainCls(GLFWwindow* window)
+	void DriverSystemVulkan::vkInitSpawnChainCls(HWND window)
 	{
 		m_SwapChainSupport = Details::vulkan_query_chain_support(m_PhysCurrent);
 
@@ -350,7 +355,12 @@ namespace Xplicit::Renderer::Vk
 		createInfo.oldSwapchain = VK_NULL_HANDLE;
 
 		if (vkCreateSwapchainKHR(m_Device, &createInfo, nullptr, &m_SwapChain) != VK_SUCCESS)
-			throw EngineError("vkCreateSwapChainKHR: Something bad happened!");
+			throw EngineError("vkCreateSwapChainKHR: Something bad happened! Swapchain couldn't be created!");
+	
+	
+		vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &imageCount, nullptr);
+		m_VkImages.resize(imageCount);
+		vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &imageCount, m_VkImages.data());
 	}
 
 	const char* DriverSystemVulkan::name() noexcept { return ("DriverSystemVulkan"); }
