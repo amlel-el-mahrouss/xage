@@ -6,7 +6,8 @@
 
 ## User settings
 xcuserdata/
-
+*.xcworkspace
+*.xcodeproj
 ## Xcode 8 and earlier
 *.xcscmblueprint
 *.xccheckout
