@@ -167,8 +167,6 @@ namespace Xplicit::Bites
 	{
 		while (!glfwWindowShouldClose(m_pWindow))
 		{
-			XPLICIT_INFO("Hello");
-
 			glClearColor(clr.R / 255, clr.G / 255, clr.B / 255, 1.0f);
 
 			glClear(GL_COLOR_BUFFER_BIT);

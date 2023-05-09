@@ -14,7 +14,6 @@
 * @file
 */
 
-#include <VideoDriver.h>
 #include <DriverVulkan.h>
 #include <DriverD2D.h>
 #include <Bites.h>
@@ -34,8 +33,8 @@ namespace Xplicit::Studio
 		explicit Runner(HINSTANCE hInst)
 		{
 			auto wnd = new Xplicit::Bites::GLFWWindow("XplicitEd");
-			auto drv = std::make_unique<Xplicit::Renderer::Vk::DriverSystemVulkan>(glfwGetWin32Window(wnd->get()));
-			while (getchar());
+			auto drv = std::make_unique<Xplicit::Renderer::OpenGL::DriverSystemOpenGL>();
+			ExitCode = wnd->run(drv, Color<float>(255, 255, 255, 255));
 		}
 
 	};
