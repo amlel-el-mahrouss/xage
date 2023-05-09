@@ -32,8 +32,9 @@ namespace Xplicit::Studio
 	public:
 		explicit Runner(HINSTANCE hInst)
 		{
-		
-			ExitCode = 0;
+			auto wnd = new Xplicit::Bites::GLFWWindow("XplicitEd");
+			std::unique_ptr<Xplicit::Renderer::Vk::DriverSystemVulkan> drv = std::make_unique<Xplicit::Renderer::Vk::DriverSystemVulkan>(glfwGetWin32Window(wnd->get()));
+			// ExitCode = wnd->run(drv, Xplicit::Color<float>(255, 255, 255, 15));
 		}
 
 	};
