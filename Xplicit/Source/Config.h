@@ -114,13 +114,3 @@ KLASS(const KLASS&) = default;\
 #   error You need a sleep function
 #endif
 #endif
-
-#include <irrlicht.h>
-
-using namespace irr;
-
-using namespace core;
-using namespace scene;
-using namespace video;
-using namespace io;
-using namespace gui;
