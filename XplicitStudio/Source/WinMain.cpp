@@ -32,9 +32,32 @@ namespace Xplicit::Studio
 	public:
 		explicit Runner(HINSTANCE hInst)
 		{
-			auto wnd = new Xplicit::Bites::GLFWWindow("XplicitEd");
-			auto drv = std::make_unique<Xplicit::Renderer::OpenGL::DriverSystemOpenGL>();
-			ExitCode = wnd->run(drv, Color<float>(255, 255, 255, 255));
+			std::unique_ptr<Xplicit::Bites::Win32Window> wnd = std::make_unique<Xplicit::Bites::Win32Window>("XplicitEd", "XplicitEd", hInst);
+			auto drv = std::make_unique<Xplicit::Renderer::DX11::DriverSystemD3D11>(wnd->get().WindowHandle);
+
+			auto* component = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Renderer::DX11::RenderComponentD3D11>();
+
+			component->push(Xplicit::Vector<float>(-1.f, -1.f, 0));
+			component->push(Xplicit::Vector<float>(0.f, -1.f, 0));
+			component->push(Xplicit::Vector<float>(1.f, -1.f, 0));
+
+			auto* vertex = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader<Xplicit::Renderer::DX11::XPLICIT_SHADER_TYPE::Vertex>(
+				L"XplicitStudio/Source/Vertex.hlsl",
+				"VS",
+				drv);
+
+			auto* color = Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader<Xplicit::Renderer::DX11::XPLICIT_SHADER_TYPE::Pixel>(
+				L"XplicitStudio/Source/Color.hlsl",
+				"PS",
+				drv);
+
+			component->push(color);
+			component->push(vertex);
+
+			component->set(drv.get());
+			component->create();
+
+			ExitCode = wnd->run(drv, Color<float>(40, 57, 22, 255));
 		}
 
 	};
