@@ -16,8 +16,8 @@
 #include "DriverSystem.h"
 
 #ifndef __gl_h_
-#include "GLad.h"
-#include <glfw3.h>
+#	include "GLad.h"
+#	include <glfw3.h>
 #endif
 
 namespace Xplicit::Renderer::OpenGL

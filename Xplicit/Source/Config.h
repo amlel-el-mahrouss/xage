@@ -21,10 +21,11 @@
 #include <cstdint>
 
 #include <uuid/uuid.h>
+#include <irrlicht.h>
 
 #ifdef _WIN32
-#define SPDLOG_WCHAR_TO_UTF8_SUPPORT
-#endif
+#   define SPDLOG_WCHAR_TO_UTF8_SUPPORT
+#endif // ifdef _WIN32
 
 #include <spdlog/spdlog.h>
 
@@ -59,40 +60,40 @@
 #endif // ifdef _MSC_VER
 
 #ifdef __XPLICIT_DLL__
-#ifdef __EXPORT_XPLICIT__
-#define XPLICIT_API __declspec(dllexport)
-#else
-#define XPLICIT_API __declspec(dllimport)
+#   ifdef __EXPORT_XPLICIT__
+#   define XPLICIT_API __declspec(dllexport)
+#   else
+#   define XPLICIT_API __declspec(dllimport)
 #endif
 #else
-#define XPLICIT_API
+#   define XPLICIT_API
 #endif // ifdef __XPLICIT_DLL__
 
 #define XPLICIT_MSVC (1)
 #define XPLICIT_GCC (2)
 
 #ifdef _MSC_VER
-#define XPLICIT_CXX_COMPILER "Visual C++"
-#define XPLICIT_CXX (1)
+#   define XPLICIT_CXX_COMPILER "Visual C++"
+#   define XPLICIT_CXX (1)
 #endif // ifdef _MSC_VER
 
 #ifndef _NDEBUG
-#define XPLICIT_DEBUG (1)
+#   define XPLICIT_DEBUG (1)
 #else
-#define XPLICIT_RELEASE (2)
+#   define XPLICIT_RELEASE (2)
 #endif
 
 #ifdef XPLICIT_DEBUG
-#define XPLICIT_ASSERT(expression) (void)(                                                       \
+#   define XPLICIT_ASSERT(expression) (void)(                                                       \
             (!!(expression)) ||                                                              \
             (_wassert(_CRT_WIDE(#expression), _CRT_WIDE(__FILE__), (unsigned)(__LINE__)), 0) \
         )
 #else
-#define XPLICIT_ASSERT(expression)
+#   define XPLICIT_ASSERT(expression)
 #endif
 
 #ifndef XPLICIT_ENV
-#define XPLICIT_ENV getenv
+#   define XPLICIT_ENV getenv
 #endif // XPLICIT_ENV
 
 #define XPLICIT_COPY_DELETE(KLASS)\

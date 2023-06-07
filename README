@@ -6,11 +6,17 @@ REQUIREMENTS:
 
 - Git.
 - Lua.
-- GLFW
+- GLFW.
 - Mono.
-- Windows 11.
+- Windows 7/8/10/11.
 - DirectXMath.
-- Visual Studio 2022.
+- Vulkan SDK 1.3.250.0
+- Visual Studio 2019.
+
+INSTALLING:
+===========
+
+- Put the C# assemblies into %appdata%/Data
 
 ===================================
 Copyright XPX, all rights reserved.

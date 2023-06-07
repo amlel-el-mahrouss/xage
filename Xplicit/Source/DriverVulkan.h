@@ -17,12 +17,14 @@
 
 #ifdef XPLICIT_WINDOWS
 
-#define VK_USE_PLATFORM_WIN32_KHR
-#define GLFW_INCLUDE_VULKAN
-#include <glfw3.h>
+#	define VK_USE_PLATFORM_WIN32_KHR
+#	define GLFW_INCLUDE_VULKAN
 
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <glfw3native.h>
+#	include <glfw3.h>
+
+#	define GLFW_EXPOSE_NATIVE_WIN32
+
+#	include <glfw3native.h>
 
 #endif
 

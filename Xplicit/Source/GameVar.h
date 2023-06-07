@@ -71,6 +71,8 @@ namespace Xplicit
 	public:
 		GameVarViewPtr get(const char* name);
 		GameVarViewPtr create(const char* name, const char* default_value, int flags);
+		
+	public:
 		void remove(GameVarView* ptr);
 
 	private:
