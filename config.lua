@@ -40,7 +40,8 @@ XPLICIT_CONFIG = {
 	    "Vendor/irr/include",
 	    "Vendor/libzip/lib",
 	    "Vendor/irr/include",
-        "C:/Program Files/Mono/include/mono-2.0",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/mono",
     }
 };
 
@@ -59,7 +60,7 @@ XPLICIT_SERVER_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-        "C:/Program Files/Mono/lib/mono-2.0-sgen",
+        "C:/Program Files (x86)/Mono/lib/mono-2.0-sgen",
     	"bin/Debug/Xplicit",
     },
     ["_INCDIR"] = {
@@ -73,7 +74,8 @@ XPLICIT_SERVER_CONFIG = {
 	    "Vendor/irr/include",
 	    "Vendor/libzip/lib",
 		"C:/VulkanSDK/1.3.250.0/Include",
-        "C:/Program Files/Mono/include/mono-2.0",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/mono",
     }
 };
 
@@ -116,7 +118,8 @@ XPLICIT_CLIENT_CONFIG = {
 	    "Vendor/libzip/lib",
 		"C:/VulkanSDK/1.3.250.0/Include",
 	    "Vendor/irr/include",
-        "C:/Program Files/Mono/include/mono-2.0",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/mono",
     }
 };
 
@@ -159,7 +162,8 @@ XPLICIT_STUDIO_CONFIG = {
     	"Nplicit/Source/",
 		"C:/VulkanSDK/1.3.250.0/Include",
 	    "Vendor/irr/include",
-        "C:/Program Files/Mono/include/mono-2.0",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/",
+        "C:/Program Files/Mono/include/mono-2.0/mono",
     }
 };
 
@@ -196,7 +200,8 @@ NPLICIT_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
         "Vendor/nuklear/",
 	    "Vendor/irr/include",
-        "C:/Program Files/Mono/include/mono-2.0",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/mono",
     }
 };
 
