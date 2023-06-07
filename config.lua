@@ -21,7 +21,7 @@ XPLICIT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-          "C:/Program Files/Mono/lib/mono-2.0-sgen",
+          "C:/Program Files (x86)/Mono/lib/mono-2.0-sgen",
 	  "dxgi",
 	  "d3d11",
 	  "d2d1",
@@ -163,7 +163,7 @@ XPLICIT_STUDIO_CONFIG = {
 		"C:/VulkanSDK/1.3.250.0/Include",
 	    "Vendor/irr/include",
         "C:/Program Files (x86)/Mono/include/mono-2.0/",
-        "C:/Program Files/Mono/include/mono-2.0/mono",
+        "C:/Program Files (x86)/Mono/include/mono-2.0/mono",
     }
 };
 
