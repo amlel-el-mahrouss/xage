@@ -43,6 +43,7 @@ namespace Xplicit::Bites
 
 		~Win32Window();
 
+	public:
 		XPLICIT_COPY_DELETE(Win32Window);
 
 	public:

@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: NetworkProtocol.h
- *			Purpose: XDP Network Protocol
+ *			Purpose: Game Network Protocol implementation
  *
  * =====================================================================
  */

@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: NetworkServerComponent.h
- *			Purpose: XDP Protocol Server
+ *			Purpose: XDP Server
  *
  * =====================================================================
  */
