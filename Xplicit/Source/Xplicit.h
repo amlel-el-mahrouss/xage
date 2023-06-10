@@ -537,7 +537,7 @@ namespace Xplicit
 			return std::filesystem::create_directory(path);
 		}
 
-		std::path get_temp() noexcept
+		std::filesystem::path get_temp() noexcept
 		{
 			return std::filesystem::temp_directory_path();
 		}
