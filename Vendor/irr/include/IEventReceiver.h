@@ -258,9 +258,9 @@ namespace irr
 	} // end namespace gui
 
 
-//! SEvents hold information about an event. See irr::IEventReceiver for details on event handling.
-struct SEvent
-{
+	//! SEvents hold information about an event. See irr::IEventReceiver for details on event handling.
+	struct SEvent
+	{
 	//! Any kind of GUI event.
 	struct SGUIEvent
 	{

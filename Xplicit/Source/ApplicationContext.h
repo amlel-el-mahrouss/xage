@@ -14,6 +14,8 @@
 
 #include "Xplicit.h"
 
+#include <IEventReceiver.h>
+
 namespace Xplicit
 {
 	namespace Details
@@ -182,34 +184,34 @@ namespace Xplicit
 	class XPLICIT_API InputReceiver final : public irr::IEventReceiver
 	{
 	public:
-		virtual bool OnEvent(const SEvent & event) override
+		virtual bool OnEvent(const irr::SEvent & env) override
 		{
-			if (event.EventType == irr::EET_KEY_INPUT_EVENT)
-				m_keys[event.KeyInput.Key] = event.KeyInput.PressedDown;
+			if (env.EventType == irr::EET_KEY_INPUT_EVENT)
+				m_keys[env.KeyInput.Key] = env.KeyInput.PressedDown;
 
-			if (event.EventType == irr::EET_MOUSE_INPUT_EVENT)
+			if (env.EventType == irr::EET_MOUSE_INPUT_EVENT)
 			{
-				switch (event.MouseInput.Event)
+				switch (env.MouseInput.Event)
 				{
-				case EMIE_LMOUSE_PRESSED_DOWN:
+				case irr::EMIE_LMOUSE_PRESSED_DOWN:
 					m_mouse_left.Down = true;
 					break;
 
-				case EMIE_LMOUSE_LEFT_UP:
+				case irr::EMIE_LMOUSE_LEFT_UP:
 					m_mouse_left.Down = false;
 					break;
 
-				case EMIE_RMOUSE_PRESSED_DOWN:
+				case irr::EMIE_RMOUSE_PRESSED_DOWN:
 					m_mouse_right.Down = true;
 					break;
 
-				case EMIE_RMOUSE_LEFT_UP:
+				case irr::EMIE_RMOUSE_LEFT_UP:
 					m_mouse_right.Down = false;
 					break;
 
-				case EMIE_MOUSE_MOVED:
-					m_mouse_pos.X = event.MouseInput.X;
-					m_mouse_pos.Y = event.MouseInput.Y;
+				case irr::EMIE_MOUSE_MOVED:
+					m_mouse_pos.X = env.MouseInput.X;
+					m_mouse_pos.Y = env.MouseInput.Y;
 					break;
 
 				default:
@@ -232,9 +234,11 @@ namespace Xplicit
 
 	public:
 		InputReceiver()
-			: m_mouse_left(), m_mouse_right(), m_mouse_pos()
+			: m_mouse_left(), 
+			m_mouse_right(), 
+			m_mouse_pos()
 		{
-			for (u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
+			for (irr::u32 i = 0; i < irr::KEY_KEY_CODES_COUNT; ++i)
 				m_keys[i] = 0;
 		}
 

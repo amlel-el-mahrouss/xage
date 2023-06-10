@@ -13,6 +13,7 @@
 #pragma once
 
 #include <Uri.h>
+#include <IXMLWriter.h>
 #include <ApplicationContext.h>
 
 #include "CameraComponent.h"
@@ -63,7 +64,7 @@ namespace Xplicit::Bites
 		private:
 			String m_szSettingsPath;
 			irr::io::IXMLReaderUTF8* m_pXmlReader;
-			irr::io::IXMLWriterUTF8* m_pXmlWriter;
+			irr::io::IXMLWriter* m_pXmlWriter;
 
 		};
 

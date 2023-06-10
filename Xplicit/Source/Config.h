@@ -23,6 +23,12 @@
 #include <uuid/uuid.h>
 #include <irrlicht.h>
 
+using namespace irr;
+using namespace video;
+using namespace gui;
+using namespace scene;
+using namespace core;
+
 #ifdef _WIN32
 #   define SPDLOG_WCHAR_TO_UTF8_SUPPORT
 #endif // ifdef _WIN32

@@ -98,10 +98,10 @@ static void xplicit_attach_mono()
 
 static void xplicit_print_help()
 {
-	XPLICIT_INFO("\a-------------- Xplicit Game Server Manual --------------");
+	XPLICIT_INFO("\a+-------------- Xplicit Game Server Manual --------------+");
 	XPLICIT_INFO("exit: Exits the current server.");
 	XPLICIT_INFO("netstat: Get Network status.");
-	XPLICIT_INFO("-------------- Xplicit Game Server Manual --------------");
+	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
 }
 
 static void xplicit_load_sh()
@@ -148,7 +148,7 @@ static void xplicit_load_sh()
 						XPLICIT_CRITICAL("CLI: Ip Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
 					XPLICIT_INFO(Xplicit::String("IP: ") + (ip_address ? ip_address : "?"));
-					XPLICIT_INFO(Xplicit::String("Network Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
+					XPLICIT_INFO(Xplicit::String("Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
 				}
 			}
 		}
@@ -192,7 +192,7 @@ int main(int argc, char** argv)
 
 		if (!ip_address)
 		{
-			XPLICIT_INFO("[XPLICIT_SERVER_ADDR] Is undefined! please set this in the env.");
+			XPLICIT_INFO("XPLICIT_SERVER_ADDR is undefined!please set this in the env.");
 			return 1;
 		}
 
