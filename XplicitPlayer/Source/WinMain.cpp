@@ -15,7 +15,9 @@
  */
 
 #include "Application.h"
+
 #include <Bites.h>
+#include <codecvt>
 
 #ifdef XPLICIT_WINDOWS
 
@@ -69,9 +71,16 @@ XPLICIT_MAIN()
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO(err.what());
 #endif
+		std::wstring exit;
 
-		Xplicit::Dialog::message_box(L"XplicitNgin", L"Something bad happen.. exiting!", MB_ICONASTERISK | MB_OK);
-		return -1;
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+		exit += L"What: ";
+		exit += converter.from_bytes(err.what());
+		exit += L"\n";
+
+		// message_box(LPCWSTR title, LPCWSTR header, LPCWSTR message, PCWSTR icon, _TASKDIALOG_COMMON_BUTTON_FLAGS buttonFlags)
+		Xplicit::Dialog::message_box(L"Xplicit Engine", L"Program Exited (C++ Exception)", exit.c_str(), TD_INFORMATION_ICON, _TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
 	}
 }
 

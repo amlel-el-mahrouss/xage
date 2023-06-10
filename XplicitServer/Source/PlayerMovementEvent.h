@@ -23,6 +23,7 @@ namespace Xplicit
 	///		- Player is dead
 	///		- Player is inactive
 	/// </summary>
+	/// 
 	class PlayerMovementEvent : public Event
 	{
 	public:

@@ -104,7 +104,7 @@ namespace Xplicit::Client
 	}
 
 	LocalMoveEvent::LocalMoveEvent(const int64_t& public_hash)
-		: m_packet(), m_network(nullptr), m_public_hash(public_hash)
+		: m_packet(), m_network(nullptr), m_public_hash(public_hash), m_cooldown(0)
 	{
 		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(m_network);
@@ -114,10 +114,24 @@ namespace Xplicit::Client
 
 	const char* LocalMoveEvent::name() noexcept { return ("LocalMoveEvent"); }
 
+	/* main movement logic */
 	void LocalMoveEvent::operator()()
 	{
+		if (m_cooldown > 1)
+		{
+			--m_cooldown;
+			return;
+		}
+
 		if (!m_network || m_public_hash == -1)
 			return;
+
+		m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
+		m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
+		m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
+		m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
+
+		m_cooldown = 100;
 
 		if (KB->key_down(Details::KEY_KEY_W))
 		{
@@ -142,11 +156,6 @@ namespace Xplicit::Client
 			XPLICIT_SEND_POS_CMD(XPLICIT_NETWORK_CMD_LEFT, NETWORK_CMD_LEFT);
 			return;
 		}
-
-		m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
-		m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
-		m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
-		m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
 	}
 }
 

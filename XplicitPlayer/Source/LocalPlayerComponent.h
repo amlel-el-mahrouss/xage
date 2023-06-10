@@ -65,7 +65,10 @@ namespace Xplicit::Client
 	private:
 		NetworkComponent* m_network;
 		NetworkPacket m_packet;
+
+	private:
 		int64_t m_public_hash;
+		std::size_t m_cooldown;
 
 	};
 }

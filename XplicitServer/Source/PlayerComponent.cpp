@@ -53,7 +53,7 @@ namespace Xplicit
 			return;
 
 		if (m_peer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] == NETWORK_CMD_DEAD)
-			m_death_timeout = XPLICIT_PLAYER_DEATH_COOLDOWN;
+			m_death_timeout = XPLICIT_PLAYER_COOLDOWN;
 		
 		if (m_death_timeout > 0)
 		{

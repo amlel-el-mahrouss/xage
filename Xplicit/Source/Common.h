@@ -17,11 +17,11 @@
 
 #include <Nplicit.h>
 
-#define XPLICIT_DEFAULT_VEL (0.1f)
+#define XPLICIT_DEFAULT_VEL (1.f)
 #define XPLICIT_MOVEMENT_RATE (50U)
 #define XPLICIT_DEFAULT_HEALTH (100U)
-#define XPLICIT_DELTA_TIME (100.f)
-#define XPLICIT_PLAYER_DEATH_COOLDOWN (1000)
+#define XPLICIT_DELTA_TIME (2U)
+#define XPLICIT_PLAYER_COOLDOWN (1000)
 
 namespace Xplicit
 {

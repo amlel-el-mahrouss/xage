@@ -14,8 +14,9 @@
  @file
  */
 
-#include "SDK.h"
+#include <codecvt>
 
+#include "SDK.h"
 #include "SpawnComponent.h"
 #include "PlayerComponent.h"
 #include "PlayerMovementEvent.h"
@@ -172,26 +173,6 @@ static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
 	}
 }
 
-static void xplicit_load_logic(Xplicit::NetworkServerComponent* server)
-{
-	std::thread logic(
-		[&]() -> void
-		{
-			do
-			{
-				Xplicit::NetworkServerTraits::recv(server);
-
-				Xplicit::EventDispatcher::get_singleton_ptr()->update();
-				Xplicit::ComponentManager::get_singleton_ptr()->update();
-
-				Xplicit::NetworkServerTraits::send(server);
-			} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr());
-		}
-	);
-
-	logic.detach();
-}
-
 // our main entrypoint.
 int main(int argc, char** argv)
 {
@@ -230,13 +211,19 @@ int main(int argc, char** argv)
 		xplicit_attach_mono();
 		xplicit_read_xml();
 		xplicit_load_sh();
-		xplicit_load_logic(server);
 
 		do
 		{
 			if (g_ShouldExit)
 				break;
-		} while (!g_ShouldExit);
+
+			Xplicit::NetworkServerTraits::recv(server);
+
+			Xplicit::EventDispatcher::get_singleton_ptr()->update();
+			Xplicit::ComponentManager::get_singleton_ptr()->update();
+
+			Xplicit::NetworkServerTraits::send(server);
+		} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr());
 
 		return 0;
 	}
@@ -246,7 +233,16 @@ int main(int argc, char** argv)
 		XPLICIT_CRITICAL(err.what());
 
 #ifdef XPLICIT_WINDOWS
-		Xplicit::Dialog::message_box(L"XplicitNgin", L"Something bad happened... exiting!", MB_ICONASTERISK | MB_OK);
+		std::wstring exit;
+
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+		exit += L"What: ";
+		exit += converter.from_bytes(err.what());
+		exit += L"\n";
+
+		// message_box(LPCWSTR title, LPCWSTR header, LPCWSTR message, PCWSTR icon, _TASKDIALOG_COMMON_BUTTON_FLAGS buttonFlags)
+		Xplicit::Dialog::message_box(L"Xplicit Engine", L"Program Exited (C++ Exception)", exit.c_str(), TD_INFORMATION_ICON, _TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
 #endif
 #endif
 
