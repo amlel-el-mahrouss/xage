@@ -28,22 +28,13 @@ namespace Xplicit
 	/// <returns></returns>
 	static void xplicit_handle_spawn(SpawnComponent* spawner, PlayerComponent* actor) noexcept
 	{
-		if (spawner && actor)
+		if (actor)
 		{
 			auto& pos = spawner->get();
 
 			actor->pos().X = pos.X;
 			actor->pos().Y = pos.Y;
 			actor->pos().Z = pos.Z;
-		}
-		else
-		{
-			if (actor)
-			{
-				actor->pos().X = 0;
-				actor->pos().Y = 0;
-				actor->pos().Z = 0;
-			}
 		}
 	}
 
@@ -53,11 +44,10 @@ namespace Xplicit
 
 		for (PlayerComponent* actor : actors)
 		{
-			if (!actor ||
-				!actor->get())
+			if (!actor)
 				continue;
 
-			if (actor->health() <= 0)
+			if (!actor->alive())
 			{
 				// tell everyone that we're dead.
 				actor->health(0);

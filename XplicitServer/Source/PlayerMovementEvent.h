@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "SDK.h"
+#include "ServerSDK.h"
 #include "PlayerComponent.h"
 
 namespace Xplicit

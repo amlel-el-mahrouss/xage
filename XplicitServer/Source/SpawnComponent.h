@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "SDK.h"
+#include "ServerSDK.h"
 
 namespace Xplicit
 {
@@ -22,7 +22,7 @@ namespace Xplicit
 		SpawnComponent() = delete;
 
 	public:
-		SpawnComponent(Quaternion<float>& spawn);
+		SpawnComponent(const Quaternion<float>& spawn);
 
 		virtual ~SpawnComponent();
 

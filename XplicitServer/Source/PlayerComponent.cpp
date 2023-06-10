@@ -126,4 +126,9 @@ namespace Xplicit
 	{
 		m_frozen = true;
 	}
+
+	bool PlayerComponent::alive() noexcept
+	{
+		return m_health > 0;
+	}
 }

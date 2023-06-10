@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: SDK.h
- *			Purpose: Xplicit and Nplicit SDK
+ *			Purpose: Server include
  *
  * =====================================================================
  */

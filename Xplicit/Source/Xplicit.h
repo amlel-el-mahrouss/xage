@@ -508,6 +508,41 @@ namespace Xplicit
 		}
 
 	};
+
+	class XPLICIT_API FilesystemWrapper final
+	{
+	public:
+		FilesystemWrapper() = default;
+		~FilesystemWrapper() = default;
+
+	public:
+		std::ofstream write(const char* outPath) noexcept
+		{
+			if (std::filesystem::exists(outPath))
+				return std::ofstream(outPath, std::ios::app);
+
+			return std::ofstream(outPath);
+		}
+
+		std::ofstream open(const char* outPath)
+		{
+			if (!std::filesystem::exists(outPath))
+				throw std::runtime_error("Bad File-system path!");
+
+			return std::ofstream(outPath);
+		}
+
+		bool create_directory(const char* path)
+		{
+			return std::filesystem::create_directory(path);
+		}
+
+		std::path get_temp() noexcept
+		{
+			return std::filesystem::temp_directory_path();
+		}
+
+	};
 }
 
 #define XPLICIT_INIT_COM XPLICIT_ASSERT(SUCCEEDED(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE)))

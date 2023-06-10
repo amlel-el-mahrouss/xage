@@ -25,7 +25,7 @@ namespace Xplicit
 			  m_spawner(ComponentManager::get_singleton_ptr()->get<SpawnComponent>("SpawnComponent"))
 		{
 			XPLICIT_ASSERT(m_network);
-
+			XPLICIT_ASSERT(m_spawner);
 		}
 
 		virtual ~PlayerSpawnDeathEvent() = default;

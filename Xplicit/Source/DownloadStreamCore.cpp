@@ -113,9 +113,6 @@ namespace Xplicit::Network
 					}
 			});
 
-			// wait for the worker thread to finish.
-			worker.join();
-
 			int crc = xplicit_crc32(reinterpret_cast<char*>(data_tmp.data()), data_tmp.size());
 
 			data.push_back(crc);
@@ -124,6 +121,10 @@ namespace Xplicit::Network
 			{
 				data.push_back(data_tmp[i]);
 			}
+
+			// wait for the worker thread to finish.
+			if (worker.joinable())
+				worker.join();
 
 			socket.send<int*>(data_tmp.data(), data.size());
 

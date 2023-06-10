@@ -27,7 +27,7 @@ bool avx_strequals(const char* str1, const char* str2)
 
 	uint32_t bitmask = _mm256_movemask_epi8(pcmp);
 
-	return (bitmask == 0xffffffffU);
+	return (bitmask == 0xffffffff);
 }
 
 #endif

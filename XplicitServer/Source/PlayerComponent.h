@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "SDK.h"
+#include "ServerSDK.h"
 
 namespace Xplicit
 {
@@ -42,12 +42,16 @@ namespace Xplicit
 	public:
 		Vector<float>& pos() noexcept;
 
+	public:
 		void health(const int32_t& health) noexcept;
 		const int64_t health() noexcept;
 
+	public:
 		void freeze_for(const int64_t& cooldown) noexcept;
 		void freeze(const bool enable) noexcept;
 
+	public:
+		bool alive() noexcept;
 		bool is_frozen() noexcept;
 
 	private:

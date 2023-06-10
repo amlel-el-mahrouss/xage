@@ -16,7 +16,7 @@
 
 #include <codecvt>
 
-#include "SDK.h"
+#include "ServerSDK.h"
 #include "SpawnComponent.h"
 #include "PlayerComponent.h"
 #include "PlayerMovementEvent.h"
@@ -205,6 +205,7 @@ int main(int argc, char** argv)
 			return 1;
 
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
+		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion<float>(0.f, 0.f, 0.f));
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 
