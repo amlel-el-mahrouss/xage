@@ -12,8 +12,14 @@
 
 #pragma once
 
+#include <ApplicationContext.h>
 #include <NetworkComponent.h>
 #include <Component.h>
+
+namespace Xplicit::Client
+{
+	extern dimension2du XPLICIT_DIM;
+}
 
 namespace Xplicit::CoreUI
 {
@@ -47,6 +53,8 @@ namespace Xplicit::CoreUI
 	private:
 		std::function<void()> m_onClick;
 		ITexture* m_pTexture;
+
+	private:
 		String m_strPopupId;
 		vector2di m_vecPos;
 
@@ -73,4 +81,61 @@ namespace Xplicit::CoreUI
 		std::int64_t m_health;
 
 	};
+
+	class CoreUIDialog : public Component
+	{
+	public:
+		CoreUIDialog(const char* name, const char* texture) 
+			:
+			mName(name), 
+			mTexture(IRR->getVideoDriver()->getTexture(texture)),
+			mFontUrbanist(nullptr)
+		{
+			String fnt = XPLICIT_ENV("APPDATA");
+			fnt += "/Data/Urbanist.xml";
+
+			mFontUrbanist = IRR->getGUIEnvironment()->getFont(fnt.c_str());
+		}
+
+		~CoreUIDialog()
+		{
+			if (mTexture)
+				mTexture->drop();
+		}
+
+	public:
+		XPLICIT_COPY_DELETE(CoreUIDialog);
+
+	public:
+		virtual const char* name() noexcept override { XPLICIT_ASSERT(!mName.empty()); return mName.c_str(); }
+		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_GUI; }
+
+		virtual void update() override 
+		{
+			static float tween_start = 8;
+
+			if (tween_start > 1.5)
+				tween_start -= 0.01f;
+
+			static const float final_pos = 2.8;
+
+			if (tween_start < 8)
+			{
+				IRR->getVideoDriver()->draw2DImage(mTexture, vector2di(
+					Xplicit::Client::XPLICIT_DIM.Width / 1.5,
+					Xplicit::Client::XPLICIT_DIM.Height / tween_start));
+			}
+		}
+
+	protected:
+		IGUIFont* mFontUrbanist;
+		ITexture* mTexture;
+
+	private:
+		String mName;
+		String mText;
+
+	};
+
+	bool alert(const char* message);
 }

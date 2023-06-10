@@ -82,6 +82,8 @@ namespace Xplicit::Client
 		}
 		else /* download root records ... */
 		{
+			Xplicit::CoreUI::alert("Downloading assets...");
+
 			--m_timeout;
 
 			// peek after the ++timeout, or retry

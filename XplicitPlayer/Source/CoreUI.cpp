@@ -19,6 +19,12 @@
 
 namespace Xplicit::CoreUI
 {
+	/*
+	 * This is a popup class
+	 * used to create popups according to a state.
+	 */
+
+	// constructor
 	Popup::Popup(const std::function<void()>& onClick, const vector2di pos, const POPUP_TYPE popupType, const char* id) noexcept
 		: m_onClick(onClick), m_vecPos(pos), m_strPopupId(id)
 	{
@@ -51,12 +57,14 @@ namespace Xplicit::CoreUI
 			throw EngineError();
 	}
 
+	// c++ destructor
 	Popup::~Popup()
 	{
 		if (m_pTexture)
 			m_pTexture->drop();
 	}
 
+	// update function
 	void Popup::update()
 	{
 		IRR->getVideoDriver()->draw2DImage(m_pTexture, m_vecPos);
@@ -66,7 +74,6 @@ namespace Xplicit::CoreUI
 			m_onClick();
 		}
 	}
-
 
 	const char* Popup::name() noexcept
 	{
@@ -78,21 +85,20 @@ namespace Xplicit::CoreUI
 		return Popup::INSTANCE_GUI;
 	}
 	
+	/* Heads up display */
 	HUD::HUD()
-		: m_health(50), m_network(nullptr)
+		: m_health(0), 
+		  m_network(nullptr)
 	{
 		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(m_network);
 	}
 
-	HUD::~HUD()
-	{
-	}
+	HUD::~HUD() = default;
 
 	void HUD::update()
 	{
-		if (!m_network ||
-			!m_texture)
+		if (!m_network)
 			return;
 
 		auto packet = m_network->get();
@@ -104,4 +110,26 @@ namespace Xplicit::CoreUI
 		}
 	}
 
+	bool alert(const char* message)
+	{
+		if (!message ||
+			*message == 0)
+			return false;
+
+		auto component = ComponentManager::get_singleton_ptr()->add<CoreUIDialog>(message, "Alert.png");
+		
+		std::thread jthrd(
+			[&]()-> void 
+			{
+				XPLICIT_SLEEP(1000);
+
+				if (component)
+					ComponentManager::get_singleton_ptr()->remove<CoreUIDialog>(component);
+			}
+		);
+
+		jthrd.detach();
+
+		return true;
+	}
 }
