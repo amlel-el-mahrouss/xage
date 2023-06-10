@@ -31,7 +31,6 @@ namespace Xplicit::Client
 		: m_run(true), m_network(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
 	{
 		m_texture = IRR->getVideoDriver()->getTexture("xpx.png");
-		m_popup = std::make_unique<CoreUI::Popup>([]() {}, vector2di(0, 0), CoreUI::POPUP_TYPE::WAITING_ACK, "WaitingAck");
 	}
 
 	LoadingComponent::~LoadingComponent() 

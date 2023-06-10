@@ -65,9 +65,6 @@ namespace Xplicit
 				// for a period of time.
 				actor->freeze_for(XPLICIT_MOVEMENT_RATE);
 			}
-
-			/* divide by 4 so we walk 5 times. */
-			XPLICIT_SLEEP(XPLICIT_MOVEMENT_RATE / 4);
 		}
 	}
 }
