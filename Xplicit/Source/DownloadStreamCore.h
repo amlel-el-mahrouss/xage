@@ -29,6 +29,8 @@
 #define XPLICIT_STREAM_MAG_COUNT (3U)
 #define XPLICIT_STREAM_VERSION (3U)
 
+/* this file handles resource streaming for xplicit game engine */
+
 namespace Xplicit::Network
 {
 	using ByteArray = std::vector<char>;

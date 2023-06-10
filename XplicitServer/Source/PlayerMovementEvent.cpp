@@ -63,8 +63,11 @@ namespace Xplicit
 
 				// not the 'freeze' as you think of, this freezes position commands from being sent to a player, see the previous condition.
 				// for a period of time.
-				actor->freeze(XPLICIT_MOVEMENT_RATE);
+				actor->freeze_for(XPLICIT_MOVEMENT_RATE);
 			}
+
+			/* divide by 4 so we walk 5 times. */
+			XPLICIT_SLEEP(XPLICIT_MOVEMENT_RATE / 4);
 		}
 	}
 }

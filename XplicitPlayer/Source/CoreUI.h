@@ -20,6 +20,7 @@ namespace Xplicit::CoreUI
 	enum class POPUP_TYPE
 	{
 		NETWORK_ERROR,
+		WAITING_ACK,
 		SHUTDOWN,
 		KICK,
 	};
@@ -35,11 +36,11 @@ namespace Xplicit::CoreUI
 
 		virtual ~Popup();
 
-		Popup& operator=(const Popup&) = delete;
-		Popup(const Popup&) = delete;
+		Popup& operator=(const Popup&) = default;
+		Popup(const Popup&) = default;
 
+	public:
 		virtual void update() override;
-
 		virtual const char* name() noexcept override;
 		virtual INSTANCE_TYPE type() noexcept override;
 

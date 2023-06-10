@@ -32,9 +32,8 @@ namespace Xplicit
 	static void xplicit_set_ioctl(SOCKET sock)
 	{
 #ifdef XPLICIT_WINDOWS
-		u_long ul = 1;
+		auto ul = 1UL;
 		auto err = ioctlsocket(sock, FIONBIO, &ul);
-
 		XPLICIT_ASSERT(err == NO_ERROR);
 #else
 #pragma error("ServerComponent.cpp")
@@ -53,7 +52,7 @@ namespace Xplicit
 #endif
 
 #ifdef XPLICIT_WINDOWS
-		// create ipv4 udp socket.
+		// create ipv4 U.D.P socket.
 		m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 		if (m_socket == SOCKET_ERROR)
@@ -153,7 +152,7 @@ namespace Xplicit
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &from_len);
 
 				if (res == SOCKET_ERROR)
-					break;
+					continue;
 
 				if (server->get(i)->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
 					server->get(i)->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
@@ -161,7 +160,7 @@ namespace Xplicit
 					server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
 				{
 					server->get(i)->packet = packet;
-					return;
+					continue;
 				}
 
 				if (sz < 0 || from_len < 0)

@@ -14,14 +14,14 @@
  @file
  */
 
+#include "LoadingComponent.h"
+
 #include "LocalPlayerComponent.h"
 #include "LocalWatchdogEvent.h"
-#include "LoadingComponent.h"
 #include "LocalResetEvent.h"
 #include "CameraComponent.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
-#include "CoreUI.h"
 
 namespace Xplicit::Client
 {
@@ -31,6 +31,7 @@ namespace Xplicit::Client
 		: m_run(true), m_network(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
 	{
 		m_texture = IRR->getVideoDriver()->getTexture("xpx.png");
+		m_popup = std::make_unique<CoreUI::Popup>([]() {}, vector2di(0, 0), CoreUI::POPUP_TYPE::WAITING_ACK, "WaitingAck");
 	}
 
 	LoadingComponent::~LoadingComponent() 
@@ -47,6 +48,7 @@ namespace Xplicit::Client
 		NetworkPacket packet{};
 		m_network->read(packet);
 
+		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
 			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Client::LocalPlayerComponent>(packet.public_hash);	
@@ -79,7 +81,7 @@ namespace Xplicit::Client
 				m_run = false;
 			}
 		}
-		else
+		else /* download root records ... */
 		{
 			--m_timeout;
 
@@ -96,7 +98,6 @@ namespace Xplicit::Client
 					}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR, "TimeoutPopup");
 
 				m_run = false;
-
 			}
 			else
 			{

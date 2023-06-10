@@ -14,8 +14,8 @@
  @file
  */
 
-#include "Application.h"
 #include "CoreUI.h"
+#include "Application.h"
 
 namespace Xplicit::CoreUI
 {
@@ -30,14 +30,16 @@ namespace Xplicit::CoreUI
 		switch (popupType)
 		{
 		case POPUP_TYPE::KICK:
-			path += "network_kicked.png";
+			path += "Kicked.png";
 			break;
 		case POPUP_TYPE::NETWORK_ERROR:
-			path += "network_error.png";
+			path += "NetworkError.png";
 			break;
 		case POPUP_TYPE::SHUTDOWN:
-			path += "network_shutdown.png";
-
+			path += "NetworkError.png";
+			break;
+		case POPUP_TYPE::WAITING_ACK:
+			path += "Download.png";
 			break;
 		}
 

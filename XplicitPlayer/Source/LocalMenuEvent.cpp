@@ -18,7 +18,7 @@
 #include "Application.h"
 
 #define LOCAL_MENU_TWEEN_START (8)
-#define LOCAL_MENU_TWEEN_END (4)
+#define LOCAL_MENU_TWEEN_END (2)
 #define LOCAL_MENU_TWEENING (0.1f)
 
 namespace Xplicit::Client
@@ -31,7 +31,7 @@ namespace Xplicit::Client
 
 		XPLICIT_GET_DATA_DIR(data_dir);
 		std::string frame_path = data_dir;
-		frame_path += "\\Textures\\leave_menu.png";
+		frame_path += "\\Textures\\Leave.png";
 
 		m_menu = IRR->getVideoDriver()->getTexture(frame_path.c_str());
 	}
@@ -72,7 +72,7 @@ namespace Xplicit::Client
 			if (tween_start > LOCAL_MENU_TWEEN_END)
 				tween_start -= LOCAL_MENU_TWEENING;
 
-			if (KB->key_down(KEY_KEY_L))
+			if (KB->key_down(KEY_KEY_Y))
 			{
 				NetworkPacket stop_packet{};
 
@@ -81,9 +81,9 @@ namespace Xplicit::Client
 				stop_packet.size = sizeof(NetworkPacket);
 
 				m_network->send(stop_packet);
-
 				m_enabled = false;
 
+				XPLICIT_SLEEP(200);
 				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))
@@ -99,7 +99,7 @@ namespace Xplicit::Client
 
 		if (tween_start < LOCAL_MENU_TWEEN_START)
 		{
-			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45,
+			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 2.8,
 				Xplicit::Client::XPLICIT_DIM.Height / tween_start));
 		}
 

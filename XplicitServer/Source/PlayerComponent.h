@@ -45,15 +45,20 @@ namespace Xplicit
 		void health(const int32_t& health) noexcept;
 		const int64_t health() noexcept;
 
-		void freeze(const int64_t& cooldown) noexcept;
+		void freeze_for(const int64_t& cooldown) noexcept;
+		void freeze(const bool enable) noexcept;
+
 		bool is_frozen() noexcept;
 
 	private:
 		Vector<float> m_position;
+		NetworkPeer* m_peer;
+
+	private:
 		int64_t m_freeze_cooldown;
 		int64_t m_death_timeout;
-		NetworkPeer* m_peer;
 		int64_t m_health;
+		bool m_frozen;
 
 	};
 

@@ -22,7 +22,8 @@ namespace Xplicit
 		: Component(), m_peer(nullptr), m_health(XPLICIT_DEFAULT_HEALTH), 
 		m_death_timeout(0), 
 		m_position(0, 0, 0), 
-		m_freeze_cooldown(0)
+		m_freeze_cooldown(0),
+		m_frozen(false)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("PlayerComponent::PlayerComponent");
@@ -105,10 +106,13 @@ namespace Xplicit
 
 	bool PlayerComponent::is_frozen() noexcept
 	{
+		if (m_frozen)
+			return true;
+
 		return m_freeze_cooldown > 0;
 	}
 
-	void PlayerComponent::freeze(const int64_t& cooldown) noexcept
+	void PlayerComponent::freeze_for(const int64_t& cooldown) noexcept
 	{
 		m_freeze_cooldown = cooldown;
 	}
@@ -116,5 +120,10 @@ namespace Xplicit
 	Vector<float>& PlayerComponent::pos() noexcept
 	{
 		return m_position;
+	}
+
+	void PlayerComponent::freeze(const bool enable) noexcept
+	{
+		m_frozen = true;
 	}
 }

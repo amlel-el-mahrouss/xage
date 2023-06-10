@@ -109,6 +109,7 @@ static void xplicit_load_sh()
 	std::thread shell(
 		[]() -> void
 		{
+
 			char cmd_buf[1024];
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
@@ -171,6 +172,24 @@ static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
 	}
 }
 
+static void xplicit_load_logic(Xplicit::NetworkServerComponent* server)
+{
+	std::thread logic(
+		[&]() -> void
+		{
+			do
+			{
+				Xplicit::NetworkServerTraits::recv(server);
+				Xplicit::EventDispatcher::get_singleton_ptr()->update();
+				Xplicit::ComponentManager::get_singleton_ptr()->update();
+				Xplicit::NetworkServerTraits::send(server);
+			} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr());
+		}
+	);
+
+	logic.detach();
+}
+
 // our main entrypoint.
 int main(int argc, char** argv)
 {
@@ -209,19 +228,13 @@ int main(int argc, char** argv)
 		xplicit_attach_mono();
 		xplicit_read_xml();
 		xplicit_load_sh();
+		xplicit_load_logic(server);
 
-		while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
+		do
 		{
 			if (g_ShouldExit)
 				break;
-
-			Xplicit::NetworkServerTraits::recv(server);
-
-			Xplicit::EventDispatcher::get_singleton_ptr()->update();
-			Xplicit::ComponentManager::get_singleton_ptr()->update();
-
-			Xplicit::NetworkServerTraits::send(server);
-		}
+		} while (!g_ShouldExit);
 
 		return 0;
 	}
@@ -231,7 +244,7 @@ int main(int argc, char** argv)
 		XPLICIT_CRITICAL(err.what());
 
 #ifdef XPLICIT_WINDOWS
-		Xplicit::Dialog::message_box(L"XplicitNgin", L"Something bad happen.. exiting!", MB_ICONASTERISK | MB_OK);
+		Xplicit::Dialog::message_box(L"XplicitNgin", L"Something bad happened... exiting!", MB_ICONASTERISK | MB_OK);
 #endif
 #endif
 

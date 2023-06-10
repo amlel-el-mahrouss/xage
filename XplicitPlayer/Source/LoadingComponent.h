@@ -13,6 +13,7 @@
 #pragma once
 
 #include <NetworkComponent.h>
+#include "CoreUI.h"
 
 namespace Xplicit::Client
 {
@@ -34,6 +35,7 @@ namespace Xplicit::Client
 		void reset() noexcept;
 
 	private:
+		std::unique_ptr<CoreUI::Popup> m_popup;
 		irr::video::ITexture* m_texture; /* Texture to show when loading the game.. */
 		NetworkComponent* m_network; /* Network instance */
 		int64_t m_timeout; /* Network Timeout. */
