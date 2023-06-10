@@ -68,8 +68,9 @@ namespace Xplicit::CoreUI
 
 	private:
 		NetworkComponent* m_network;
-		ITexture* m_texture;
-		int64_t m_health;
+
+	private:
+		std::int64_t m_health;
 
 	};
 }

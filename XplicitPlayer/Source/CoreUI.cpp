@@ -79,19 +79,14 @@ namespace Xplicit::CoreUI
 	}
 	
 	HUD::HUD()
-		: m_health(50), m_network(nullptr), m_texture(nullptr)
+		: m_health(50), m_network(nullptr)
 	{
 		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(m_network);
-
-		m_texture = IRR->getVideoDriver()->getTexture("health.png");
-		XPLICIT_ASSERT(m_texture);
 	}
 
 	HUD::~HUD()
 	{
-		if (m_texture)
-			m_texture->drop();
 	}
 
 	void HUD::update()
@@ -107,8 +102,6 @@ namespace Xplicit::CoreUI
 			if (packet.cmd[network_cmd] == NETWORK_CMD_DAMAGE)
 				m_health = packet.health;
 		}
-
-		IRR->getVideoDriver()->draw2DImage(m_texture, vector2di(30, 30), recti(0, 0, 326, 28), nullptr, SColor(255, 255, 255, 255), true);
 	}
 
 }
