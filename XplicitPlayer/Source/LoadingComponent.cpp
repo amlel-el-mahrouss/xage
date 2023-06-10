@@ -73,7 +73,9 @@ namespace Xplicit::Client
 				
 				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 					IRR->closeDevice();
-				}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR);
+				}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45,
+					Xplicit::Client::XPLICIT_DIM.Height / 4),
+					CoreUI::POPUP_TYPE::NETWORK_ERROR);
 
 				m_run = false;
 			}

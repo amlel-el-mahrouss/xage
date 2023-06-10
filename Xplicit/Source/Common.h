@@ -17,7 +17,7 @@
 
 #include <Nplicit.h>
 
-#define XPLICIT_DEFAULT_VEL (1.f)
+#define XPLICIT_DEFAULT_VEL (0.006f)
 #define XPLICIT_MOVEMENT_RATE (50U)
 #define XPLICIT_DEFAULT_HEALTH (100U)
 #define XPLICIT_DELTA_TIME (2U)

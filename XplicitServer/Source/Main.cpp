@@ -201,7 +201,7 @@ int main(int argc, char** argv)
 		auto server = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip_address);
 		XPLICIT_ASSERT(server);
 
-		if (!server)
+		if (server == nullptr)
 			return 1;
 
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();

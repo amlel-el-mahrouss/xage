@@ -143,8 +143,10 @@ namespace Xplicit
         NetworkPeer();
         ~NetworkPeer();
 
+    public:
         XPLICIT_COPY_DEFAULT(NetworkPeer);
 
+    public:
         bool operator==(const NetworkPeer& cl);
         bool operator!=(const NetworkPeer& cl);
 

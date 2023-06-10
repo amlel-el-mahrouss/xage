@@ -72,9 +72,11 @@ namespace Xplicit::Client
 				auto x_speed = m_packet.speed[XPLICIT_NETWORK_X];
 				auto z_speed = m_packet.speed[XPLICIT_NETWORK_Z];
 
-				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
+				if (x_speed == 0UL ||
+					z_speed == 0UL)
+					return;
 
-				m_network->send(m_packet);
+				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
 
 				f32 delta = (IRR->getTimer()->getTime() - m_then) / XPLICIT_DELTA_TIME;
 
@@ -100,11 +102,13 @@ namespace Xplicit::Client
 	void LocalPlayerComponent::attach(CameraComponent* cam) noexcept 
 	{ 
 		m_camera = cam; 
-		m_cam_node = IRR->getSceneManager()->addAnimatedMeshSceneNode(this->m_model, m_camera->get());
 	}
 
 	LocalMoveEvent::LocalMoveEvent(const int64_t& public_hash)
-		: m_packet(), m_network(nullptr), m_public_hash(public_hash), m_cooldown(0)
+		: m_packet(), 
+		m_network(nullptr),
+		m_public_hash(public_hash),
+		m_cooldown(0)
 	{
 		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(m_network);
@@ -113,6 +117,8 @@ namespace Xplicit::Client
 	LocalMoveEvent::~LocalMoveEvent() {}
 
 	const char* LocalMoveEvent::name() noexcept { return ("LocalMoveEvent"); }
+
+	constexpr const short gCooldown = 50;
 
 	/* main movement logic */
 	void LocalMoveEvent::operator()()
@@ -123,7 +129,8 @@ namespace Xplicit::Client
 			return;
 		}
 
-		if (!m_network || m_public_hash == -1)
+		if (m_network == nullptr || 
+			m_public_hash == -1)
 			return;
 
 		m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
@@ -131,7 +138,7 @@ namespace Xplicit::Client
 		m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
 		m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
 
-		m_cooldown = 100;
+		m_cooldown = gCooldown;
 
 		if (KB->key_down(Details::KEY_KEY_W))
 		{

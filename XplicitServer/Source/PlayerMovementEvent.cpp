@@ -65,8 +65,13 @@ namespace Xplicit
 				// for a period of time.
 				actor->freeze_for(XPLICIT_MOVEMENT_RATE);
 			}
+			else
+			{
+				peer->packet.speed[XPLICIT_NETWORK_X] = 0UL;
+				peer->packet.speed[XPLICIT_NETWORK_Y] = 0UL;
+				peer->packet.speed[XPLICIT_NETWORK_Z] = 0UL;
+
+			}
 		}
 	}
 }
-
-#undef XPLICIT_DEFAULT_VEL
