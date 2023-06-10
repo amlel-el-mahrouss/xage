@@ -17,16 +17,16 @@
 
 namespace Xplicit::Client
 {
-	class MeshComponent
+	class MeshComponentHelper
 	{
 	public:
-		MeshComponent() = delete;
+		MeshComponentHelper() = delete;
 
-		MeshComponent(const char* path);
-		virtual ~MeshComponent();
+		MeshComponentHelper(const char* path);
+		virtual ~MeshComponentHelper();
 
-		MeshComponent& operator=(const MeshComponent&) = default;
-		MeshComponent(const MeshComponent&) = default;
+		MeshComponentHelper& operator=(const MeshComponentHelper&) = default;
+		MeshComponentHelper(const MeshComponentHelper&) = default;
 
 	protected:
 		IAnimatedMesh* m_model; // Model Data pointer, generic

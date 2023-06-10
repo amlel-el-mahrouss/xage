@@ -180,8 +180,10 @@ static void xplicit_load_logic(Xplicit::NetworkServerComponent* server)
 			do
 			{
 				Xplicit::NetworkServerTraits::recv(server);
+
 				Xplicit::EventDispatcher::get_singleton_ptr()->update();
 				Xplicit::ComponentManager::get_singleton_ptr()->update();
+
 				Xplicit::NetworkServerTraits::send(server);
 			} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr());
 		}

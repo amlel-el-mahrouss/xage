@@ -17,7 +17,6 @@
 #include "LoadingComponent.h"
 
 #include "LocalPlayerComponent.h"
-#include "LocalWatchdogEvent.h"
 #include "LocalResetEvent.h"
 #include "CameraComponent.h"
 #include "LocalMenuEvent.h"
@@ -61,7 +60,6 @@ namespace Xplicit::Client
 
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalResetEvent>(packet.hash);
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
-				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalWatchdogEvent>(packet.hash);
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.public_hash);
 
 				m_run = false;

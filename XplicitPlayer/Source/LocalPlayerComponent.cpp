@@ -30,7 +30,7 @@
 namespace Xplicit::Client
 {
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
-		: Component(), MeshComponent("Character.dae"), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
+		: Component(), MeshComponentHelper("Character.dae"), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
 	{
 		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -91,16 +91,6 @@ namespace Xplicit::Client
 				
 				if (m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					pos.X += x_speed * delta;
-
-#ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("Z:" + std::to_string(pos.Z));
-				XPLICIT_INFO("X:" + std::to_string(pos.X));
-
-				XPLICIT_INFO("NETWORK_CMD_RIGHT:" + std::to_string(m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT]));
-				XPLICIT_INFO("NETWORK_CMD_LEFT:" + std::to_string(m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT]));
-				XPLICIT_INFO("NETWORK_CMD_BACKWARD:" + std::to_string(m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD]));
-				XPLICIT_INFO("NETWORK_CMD_FORWARD:" + std::to_string(m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD]));
-#endif // XPLICIT_DEBUG
 
 				m_node->setPosition(pos);
 			}

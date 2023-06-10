@@ -18,7 +18,7 @@
 
 namespace Xplicit::Client
 {
-	MeshComponent::MeshComponent(const char* path)
+	MeshComponentHelper::MeshComponentHelper(const char* path)
 	{
 		String _path = XPLICIT_ENV("APPDATA");
 		_path += "/Data/Studio/";
@@ -34,7 +34,7 @@ namespace Xplicit::Client
 			m_model->setMaterialFlag(EMF_LIGHTING, false);
 	}
 
-	MeshComponent::~MeshComponent()
+	MeshComponentHelper::~MeshComponentHelper()
 	{
 		if (m_node)
 			m_node->drop();
