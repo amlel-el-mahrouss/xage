@@ -28,13 +28,15 @@ namespace Xplicit
 		peer->stat = NETWORK_STAT_DISCONNECTED;
 	}
 
-
 	static void xplicit_set_ioctl(SOCKET sock)
 	{
 #ifdef XPLICIT_WINDOWS
 		auto ul = 1UL;
+
 		auto err = ioctlsocket(sock, FIONBIO, &ul);
 		XPLICIT_ASSERT(err == NO_ERROR);
+
+		err = ioctlsocket(sock, FIOASYNC, &ul);
 #else
 #pragma error("ServerComponent.cpp")
 #endif
@@ -192,7 +194,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerTraits::correct(NetworkServerComponent* server)
+	void NetworkServerTraits::find_and_correct(NetworkServerComponent* server)
 	{
 		if (server)
 		{

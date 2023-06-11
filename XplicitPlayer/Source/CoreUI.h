@@ -82,29 +82,25 @@ namespace Xplicit::CoreUI
 
 	};
 
-	class CoreUIDialog : public Component
+	class Notification : public Component
 	{
 	public:
-		CoreUIDialog(const char* name, const char* texture) 
+		Notification(const char* name, const char* texture) 
 			:
 			mName(name), 
 			mTexture(IRR->getVideoDriver()->getTexture(texture)),
-			mFontUrbanist(nullptr)
-		{
-			String fnt = XPLICIT_ENV("APPDATA");
-			fnt += "/Data/Urbanist.xml";
+			mStart(true),
+			mCountdown(3000)
+		{}
 
-			mFontUrbanist = IRR->getGUIEnvironment()->getFont(fnt.c_str());
-		}
-
-		~CoreUIDialog()
+		virtual ~Notification()
 		{
 			if (mTexture)
 				mTexture->drop();
 		}
 
 	public:
-		XPLICIT_COPY_DELETE(CoreUIDialog);
+		XPLICIT_COPY_DELETE(Notification);
 
 	public:
 		virtual const char* name() noexcept override { XPLICIT_ASSERT(!mName.empty()); return mName.c_str(); }
@@ -112,30 +108,50 @@ namespace Xplicit::CoreUI
 
 		virtual void update() override 
 		{
-			static float tween_start = 8;
+			static float tweenStart = 8;
 
-			if (tween_start > 1.5)
-				tween_start -= 0.01f;
+			if (mStart)
+			{
+				if (tweenStart > 1.5)
+					tweenStart -= 0.01f;
+			}
+			else
+			{
+				if (tweenStart > 1.5)
+					tweenStart += 0.01f;
+
+				if (tweenStart >= 8)
+				{
+					ComponentManager::get_singleton_ptr()->remove(this);
+					return;
+				}
+			}
 
 			static const float final_pos = 2.8;
 
-			if (tween_start < 8)
+			if (tweenStart < 8)
 			{
 				IRR->getVideoDriver()->draw2DImage(mTexture, vector2di(
 					Xplicit::Client::XPLICIT_DIM.Width / 1.5,
-					Xplicit::Client::XPLICIT_DIM.Height / tween_start));
+					Xplicit::Client::XPLICIT_DIM.Height / tweenStart)
+				);
 			}
+
+			--mCountdown;
+
+			if (mCountdown < 1)
+				this->dispatch();
 		}
 
-	protected:
-		IGUIFont* mFontUrbanist;
+		void dispatch() noexcept { mStart = false; }
+
+	private:
 		ITexture* mTexture;
 
 	private:
+		std::int64_t mCountdown;
 		String mName;
-		String mText;
+		bool mStart;
 
 	};
-
-	bool alert(const char* message);
 }

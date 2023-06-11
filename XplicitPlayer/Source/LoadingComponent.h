@@ -36,7 +36,7 @@ namespace Xplicit::Client
 
 	private:
 		irr::video::ITexture* m_texture; /* Texture to show when loading the game.. */
-		NetworkComponent* m_network; /* Network instance */
+		NetworkComponent* mNetwork; /* Network instance */
 
 	private:
 		int64_t m_timeout; /* Network Timeout. */

@@ -56,7 +56,7 @@ namespace Xplicit
 	public:
 		static void send(NetworkServerComponent* server, const size_t sz = sizeof(NetworkPacket));
 		static void recv(NetworkServerComponent* server, const size_t sz = sizeof(NetworkPacket));
-		static void correct(NetworkServerComponent* server);
+		static void find_and_correct(NetworkServerComponent* server);
 
 	};
 }

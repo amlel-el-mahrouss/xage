@@ -20,6 +20,7 @@
 namespace Xplicit::Network
 {
 	FileStream::FileStream(const char* bytes, size_t len)
+		: mByteList()
 	{
 		this->set(bytes, len);
 	}
@@ -32,12 +33,12 @@ namespace Xplicit::Network
 			len < 1)
 			return 1;
 
-		m_byteList.clear();
-		m_byteList.reserve(len);
+		mByteList.clear();
+		mByteList.reserve(len);
 
-		for (size_t i = 0; i < m_byteList.size(); ++i)
+		for (size_t i = 0; i < mByteList.size(); ++i)
 		{
-			m_byteList[i] = bytes[i];
+			mByteList[i] = bytes[i];
 		}
 
 		return 0;
@@ -45,33 +46,37 @@ namespace Xplicit::Network
 
 	const char* FileStream::get() noexcept
 	{
-		if (m_byteList.empty())
+		if (mByteList.empty())
 			return "(null)";
 
-		return m_byteList.data();
+		return mByteList.data();
 	}
 
-	size_t FileStream::size() noexcept { return m_byteList.size(); }
+	size_t FileStream::size() noexcept { return mByteList.size(); }
 
-	TaskStream::TaskStream() : m_bReady(false), m_fileList() {}
+	/* Task stream class */
 
-	TaskStream::~TaskStream() {}
+	TaskStream::TaskStream() 
+		: mReady(false), mFileList() 
+	{}
+
+	TaskStream::~TaskStream() = default;
 
 	void TaskStream::add(FileStream* file)
 	{
 		if (file)
-			m_fileList.push_back(file);
+			mFileList.push_back(file);
 	}
 
 	bool TaskStream::remove(FileStream* file)
 	{
 		if (file)
 		{
-			auto it = std::find(m_fileList.cbegin(), m_fileList.cend(), file);
+			auto it = std::find(mFileList.cbegin(), mFileList.cend(), file);
 
-			if (it != m_fileList.cend())
+			if (it != mFileList.cend())
 			{
-				m_fileList.erase(it);
+				mFileList.erase(it);
 				return true;
 			}
 		}
@@ -81,12 +86,12 @@ namespace Xplicit::Network
 
 	void TaskStream::operator()(Socket& socket, const bool isCompressed)
 	{
-		if (!m_bReady) 
+		if (!mReady) 
 			return;
 
 		if (socket != XPLICIT_SOCKET_ERROR)
 		{
-			std::vector<int> data, data_tmp;
+			std::vector<std::int32_t> data, data_tmp;
 
 			data.push_back(XPLICIT_STREAM_MAG_0);
 			data.push_back(XPLICIT_STREAM_MAG_1);
@@ -99,11 +104,11 @@ namespace Xplicit::Network
 
 			Thread worker([&]() -> void
 				{
-					for (size_t file_index = 0; file_index < m_fileList.size(); ++file_index)
+					for (size_t file_index = 0; file_index < mFileList.size(); ++file_index)
 					{
-						for (size_t data_index = 0; data_index < m_fileList[file_index]->size(); ++data_index)
+						for (size_t data_index = 0; data_index < mFileList[file_index]->size(); ++data_index)
 						{
-							data_tmp.push_back(m_fileList[file_index]->get()[data_index]);
+							data_tmp.push_back(mFileList[file_index]->get()[data_index]);
 						}
 
 						data.push_back('\r');
@@ -126,16 +131,16 @@ namespace Xplicit::Network
 			if (worker.joinable())
 				worker.join();
 
-			socket.send<int*>(data_tmp.data(), data.size());
+			socket.send<std::int32_t*>(data_tmp.data(), data.size());
 
 			/* Clear status */
-			m_bReady = false;
+			mReady = false;
 		}
 	}
 
-	bool TaskStream::is_ready() noexcept { return m_bReady; }
+	bool TaskStream::is_ready() noexcept { return mReady; }
 
 	TaskStream::operator bool() noexcept { return this->is_ready(); }
 
-	void TaskStream::set(const bool ready) noexcept { m_bReady = true; }
+	void TaskStream::set(const bool ready) noexcept { mReady = true; }
 }

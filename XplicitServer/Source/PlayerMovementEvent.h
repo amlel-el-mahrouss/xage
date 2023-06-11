@@ -23,7 +23,7 @@ namespace Xplicit
 	///		- Player is dead
 	///		- Player is inactive
 	/// </summary>
-	/// 
+	
 	class PlayerMovementEvent : public Event
 	{
 	public:
@@ -33,7 +33,8 @@ namespace Xplicit
 		PlayerMovementEvent& operator=(const PlayerMovementEvent&) = default;
 		PlayerMovementEvent(const PlayerMovementEvent&) = default;
 
-		virtual const char* name() noexcept override { return ("PlayerMovementEvent"); }
+	public:
+		virtual const char* name() noexcept override;
 		virtual void operator()() override;
 
 	};

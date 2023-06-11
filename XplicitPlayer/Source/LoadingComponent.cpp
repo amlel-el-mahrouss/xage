@@ -27,9 +27,10 @@ namespace Xplicit::Client
 	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 60 * 60); // connection timeout
 
 	LoadingComponent::LoadingComponent() 
-		: m_run(true), m_network(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
+		: m_run(true), mNetwork(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
 	{
 		m_texture = IRR->getVideoDriver()->getTexture("xpx.png");
+		ComponentManager::get_singleton_ptr()->add<CoreUI::Notification>("Downloading", "Download.png");
 	}
 
 	LoadingComponent::~LoadingComponent() 
@@ -40,15 +41,18 @@ namespace Xplicit::Client
 
 	void LoadingComponent::update()
 	{
-		if (!m_network)
+		if (!mNetwork)
 			return;
 
 		NetworkPacket packet{};
-		m_network->read(packet);
+		mNetwork->read(packet);
 
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
+			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = Xplicit::NETWORK_CMD_ACK;
+			mNetwork->send(packet);
+
 			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Client::LocalPlayerComponent>(packet.public_hash);	
 			XPLICIT_ASSERT(ply);
 
@@ -59,6 +63,7 @@ namespace Xplicit::Client
 				ComponentManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
 
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalResetEvent>(packet.hash);
+
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.public_hash);
 
@@ -69,7 +74,7 @@ namespace Xplicit::Client
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 				packet.size = sizeof(NetworkPacket);
 
-				m_network->send(packet);
+				mNetwork->send(packet);
 				
 				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 					IRR->closeDevice();
@@ -80,10 +85,8 @@ namespace Xplicit::Client
 				m_run = false;
 			}
 		}
-		else /* download root records ... */
+		else /* download files ... */
 		{
-			Xplicit::CoreUI::alert("Downloading assets...");
-
 			--m_timeout;
 
 			// peek after the ++timeout, or retry
@@ -92,7 +95,7 @@ namespace Xplicit::Client
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 				packet.size = sizeof(NetworkPacket);
 
-				m_network->send(packet);
+				mNetwork->send(packet);
 
 				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 					IRR->closeDevice();
@@ -106,9 +109,10 @@ namespace Xplicit::Client
 				packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 				packet.size = sizeof(NetworkPacket);
 
-				m_network->send(packet);
+				mNetwork->send(packet);
 
-				IRR->getVideoDriver()->draw2DImage(m_texture, vector2di(Xplicit::Client::XPLICIT_DIM.Width * 0.02, Xplicit::Client::XPLICIT_DIM.Height * 0.625),
+				IRR->getVideoDriver()->draw2DImage(m_texture, 
+					vector2di(Xplicit::Client::XPLICIT_DIM.Width * 0.02, Xplicit::Client::XPLICIT_DIM.Height * 0.625),
 					core::rect<s32>(0, 0, 255, 255), 0,
 					video::SColor(255, 255, 255, 255), true);
 			}
@@ -119,15 +123,15 @@ namespace Xplicit::Client
 
 	void LoadingComponent::connect(const char* ip)
 	{
-		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
-		if (!m_network)
+		if (!mNetwork)
 		{
-			m_network = ComponentManager::get_singleton_ptr()->add<NetworkComponent>();
-			assert(m_network);
+			mNetwork = ComponentManager::get_singleton_ptr()->add<NetworkComponent>();
+			assert(mNetwork);
 		}
 
-		if (m_network->connect(ip))
+		if (mNetwork->connect(ip))
 		{
 			NetworkPacket spawn{};
 
@@ -135,7 +139,7 @@ namespace Xplicit::Client
 			spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 			spawn.size = sizeof(NetworkPacket);
 		
-			m_network->send(spawn);
+			mNetwork->send(spawn);
 		}
 	}
 
@@ -143,7 +147,9 @@ namespace Xplicit::Client
 	{
 		ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 			IRR->closeDevice();
-			}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR);
+			}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, 
+				Xplicit::Client::XPLICIT_DIM.Height / 4), 
+				CoreUI::POPUP_TYPE::NETWORK_ERROR);
 
 	}
 }

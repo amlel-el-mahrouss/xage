@@ -39,10 +39,10 @@ namespace Xplicit::Client
 
 	private:
 		IAnimatedMeshSceneNode* m_cam_node;
-		NetworkComponent* m_network;
-		CameraComponent* m_camera;
+		NetworkComponent* mNetwork;
+		CameraComponent* mCam;
 		NetworkPacket m_packet;
-		int64_t m_public_hash;
+		int64_t mPublicHash;
 		int64_t m_then;
 
 	};

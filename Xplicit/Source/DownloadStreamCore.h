@@ -22,14 +22,17 @@
 #define XPLICIT_STREAM_PORT (60002)
 #endif // ifndef XPLICIT_STREAM_PORT
 
-#define XPLICIT_STREAM_MAG_0 ('S')
-#define XPLICIT_STREAM_MAG_1 ('T')
-#define XPLICIT_STREAM_MAG_2 ('R')
+#define XPLICIT_STREAM_MAG_0 ('D')
+#define XPLICIT_STREAM_MAG_1 ('S')
+#define XPLICIT_STREAM_MAG_2 ('C')
 
 #define XPLICIT_STREAM_MAG_COUNT (3U)
-#define XPLICIT_STREAM_VERSION (3U)
+#define XPLICIT_STREAM_VERSION (4U)
 
-/* this file handles resource streaming for xplicit game engine */
+/* 
+ * This file handles resource streaming 
+ * for the xplicit game engine.
+ */
 
 namespace Xplicit::Network
 {
@@ -54,7 +57,7 @@ namespace Xplicit::Network
 		int set(const char* bytes, size_t len);
 
 	private:
-		ByteArray m_byteList;
+		ByteArray mByteList;
 
 	};
 
@@ -74,16 +77,15 @@ namespace Xplicit::Network
 
 	public:
 		operator bool() noexcept;
+		void operator()(Socket& socket, const bool isCompressed);
 		
+	public:
 		bool is_ready() noexcept;
-
 		void set(const bool ready) noexcept;
 		
-		void operator()(Socket& socket, const bool isCompressed);
-
 	private:
-		std::vector<FileStream*> m_fileList;
-		bool m_bReady;
+		std::vector<FileStream*> mFileList;
+		bool mReady;
 
 	};
 }

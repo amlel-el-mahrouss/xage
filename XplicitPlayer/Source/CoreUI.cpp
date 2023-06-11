@@ -109,27 +109,4 @@ namespace Xplicit::CoreUI
 				m_health = packet.health;
 		}
 	}
-
-	bool alert(const char* message)
-	{
-		if (!message ||
-			*message == 0)
-			return false;
-
-		auto component = ComponentManager::get_singleton_ptr()->add<CoreUIDialog>(message, "Alert.png");
-		
-		std::thread jthrd(
-			[&]()-> void 
-			{
-				XPLICIT_SLEEP(1000);
-
-				if (component)
-					ComponentManager::get_singleton_ptr()->remove<CoreUIDialog>(component);
-			}
-		);
-
-		jthrd.detach();
-
-		return true;
-	}
 }

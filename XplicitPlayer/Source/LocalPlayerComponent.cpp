@@ -30,11 +30,11 @@
 namespace Xplicit::Client
 {
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
-		: Component(), MeshComponentHelper("Character.dae"), m_packet(), m_camera(nullptr), m_public_hash(public_hash)
+		: Component(), MeshComponentHelper("Character.dae"), m_packet(), mCam(nullptr), mPublicHash(public_hash)
 	{
-		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
-		XPLICIT_ASSERT(m_network);
+		XPLICIT_ASSERT(mNetwork);
 
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("LocalActor::LocalActor");
@@ -57,14 +57,16 @@ namespace Xplicit::Client
 
 	void LocalPlayerComponent::update()
 	{
-		if (!m_network ||
-			m_public_hash == -1 ||
-			!m_camera)
+		if (!mNetwork ||
+			!mCam)
 			return;
 
-		m_packet = m_network->get();
+		if (mPublicHash == -1)
+			return;
 
-		if (m_packet.public_hash == m_public_hash)
+		m_packet = mNetwork->get();
+
+		if (m_packet.public_hash == mPublicHash)
 		{
 			if (m_packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
 				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
@@ -101,7 +103,7 @@ namespace Xplicit::Client
 
 	void LocalPlayerComponent::attach(CameraComponent* cam) noexcept 
 	{ 
-		m_camera = cam; 
+		mCam = cam; 
 	}
 
 	LocalMoveEvent::LocalMoveEvent(const int64_t& public_hash)

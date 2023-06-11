@@ -204,14 +204,25 @@ int main(int argc, char** argv)
 		if (server == nullptr)
 			return 1;
 
-		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
+		/* Add C++ spawn component */
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion<float>(0.f, 0.f, 0.f));
+
+		/* add C++ events */
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
+		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 
 		xplicit_attach_mono();
 		xplicit_read_xml();
 		xplicit_load_sh();
+
+		std::atexit([]() -> void
+			{
+				auto comp = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+
+				if (comp)
+					xplicit_send_stop_packet(comp);
+			});
 
 		do
 		{

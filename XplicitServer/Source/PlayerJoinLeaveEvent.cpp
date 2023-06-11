@@ -91,16 +91,30 @@ namespace Xplicit
 	}
 
 	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() : m_player_size(0) {}
-	PlayerJoinLeaveEvent::~PlayerJoinLeaveEvent() {}
+	PlayerJoinLeaveEvent::~PlayerJoinLeaveEvent() = default;
 
 	void PlayerJoinLeaveEvent::operator()()
 	{
 		auto server = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+		XPLICIT_ASSERT(server);
 
-		if (!server)
-			return;
+		NetworkServerTraits::find_and_correct(server);
 
-		NetworkServerTraits::correct(server);
+		for (std::size_t index = 0UL; index < server->size(); ++index)
+		{
+			if (server->get(index)->stat == NETWORK_STAT_DISCONNECTED)
+				continue;
+
+			if (server->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != Xplicit::NETWORK_CMD_ACK &&
+				server->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] != Xplicit::NETWORK_CMD_BEGIN)
+			{
+				server->get(index)->bad = true;
+			}
+
+			if (server->get(index)->bad)
+				server->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = Xplicit::NETWORK_CMD_KICK;
+		}
+
 
 		this->on_join(server);
 		this->on_leave(server);

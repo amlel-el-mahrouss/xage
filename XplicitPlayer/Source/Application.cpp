@@ -72,7 +72,7 @@ namespace Xplicit::Bites
 
 		Xplicit::ApplicationContext::get_singleton_ptr()->set(
 			irr::createDevice(
-				irr::video::EDT_DIRECT3D9,
+				irr::video::EDT_OPENGL,
 				Xplicit::Client::XPLICIT_DIM,
 				32U,
 				false,
@@ -81,11 +81,6 @@ namespace Xplicit::Bites
 				KB
 			)
 		);
-
-#ifdef XPLICIT_WINDOWS
-		HMENU hMenu = GetSystemMenu((HWND)IRR->getVideoDriver()->getExposedVideoData().D3D9.HWnd, false);
-		EnableMenuItem(hMenu, SC_CLOSE, MF_GRAYED);
-#endif
 
 		open_prebuilt_dialogs();
 
