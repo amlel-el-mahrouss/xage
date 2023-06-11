@@ -74,6 +74,8 @@ namespace Xplicit::Client
 				auto x_speed = m_packet.speed[XPLICIT_NETWORK_X];
 				auto z_speed = m_packet.speed[XPLICIT_NETWORK_Z];
 
+				m_packet.cmd[XPLICIT_NETWORK_CMD_ACK] = Xplicit::NETWORK_CMD_ACK;
+
 				if (x_speed == 0UL ||
 					z_speed == 0UL)
 					return;

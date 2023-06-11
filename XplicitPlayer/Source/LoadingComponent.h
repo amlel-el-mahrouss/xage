@@ -26,7 +26,7 @@ namespace Xplicit::Client
 		LoadingComponent& operator=(const LoadingComponent&) = default;
 		LoadingComponent(const LoadingComponent&) = default;
 
-		virtual bool should_update() noexcept override { return m_run; }
+		virtual bool should_update() noexcept override { return mEnable; }
 		virtual void update() override;
 		void connect(const char* ip);
 
@@ -40,7 +40,7 @@ namespace Xplicit::Client
 
 	private:
 		int64_t m_timeout; /* Network Timeout. */
-		bool m_run; /* Should we seek for a connection? */
+		bool mEnable; /* Should we seek for a connection? */
 
 	};
 }

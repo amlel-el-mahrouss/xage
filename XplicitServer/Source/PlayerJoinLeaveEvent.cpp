@@ -100,22 +100,6 @@ namespace Xplicit
 
 		NetworkServerTraits::find_and_correct(server);
 
-		for (std::size_t index = 0UL; index < server->size(); ++index)
-		{
-			if (server->get(index)->stat == NETWORK_STAT_DISCONNECTED)
-				continue;
-
-			if (server->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != Xplicit::NETWORK_CMD_ACK &&
-				server->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] != Xplicit::NETWORK_CMD_BEGIN)
-			{
-				server->get(index)->bad = true;
-			}
-
-			if (server->get(index)->bad)
-				server->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = Xplicit::NETWORK_CMD_KICK;
-		}
-
-
 		this->on_join(server);
 		this->on_leave(server);
 	}
@@ -146,6 +130,10 @@ namespace Xplicit
 
 				if (xplicit_join_event(server->get(peer_idx), player, server))
 				{
+					// cancel any connection termination.
+					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = Xplicit::NETWORK_CMD_ACK;
+					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = Xplicit::NETWORK_CMD_INVALID;
+
 					XPLICIT_INFO("[CONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					++m_player_size;
 
@@ -177,6 +165,9 @@ namespace Xplicit
 				{
 					XPLICIT_INFO("[DISCONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					--m_player_size;
+
+					server->get(peer_idx)->stat = NETWORK_STAT_DISCONNECTED;
+					memset(server->get(peer_idx)->packet.cmd, Xplicit::NETWORK_CMD_INVALID, 30);
 
 					return true;
 				}

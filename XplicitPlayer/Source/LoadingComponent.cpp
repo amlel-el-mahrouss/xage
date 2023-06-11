@@ -27,7 +27,7 @@ namespace Xplicit::Client
 	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 60 * 60); // connection timeout
 
 	LoadingComponent::LoadingComponent() 
-		: m_run(true), mNetwork(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
+		: mEnable(true), mNetwork(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
 	{
 		m_texture = IRR->getVideoDriver()->getTexture("xpx.png");
 		ComponentManager::get_singleton_ptr()->add<CoreUI::Notification>("Downloading", "Download.png");
@@ -50,10 +50,7 @@ namespace Xplicit::Client
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
-			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = Xplicit::NETWORK_CMD_ACK;
-			mNetwork->send(packet);
-
-			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Client::LocalPlayerComponent>(packet.public_hash);	
+			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Client::LocalPlayerComponent>(packet.public_hash);
 			XPLICIT_ASSERT(ply);
 
 			if (ply)
@@ -67,7 +64,7 @@ namespace Xplicit::Client
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.public_hash);
 
-				m_run = false;
+				mEnable = false;
 			}
 			else
 			{
@@ -82,7 +79,7 @@ namespace Xplicit::Client
 					Xplicit::Client::XPLICIT_DIM.Height / 4),
 					CoreUI::POPUP_TYPE::NETWORK_ERROR);
 
-				m_run = false;
+				mEnable = false;
 			}
 		}
 		else /* download files ... */
@@ -101,12 +98,13 @@ namespace Xplicit::Client
 					IRR->closeDevice();
 					}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR, "TimeoutPopup");
 
-				m_run = false;
+				mEnable = false;
 			}
 			else
 			{
 				packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
 				packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
 				packet.size = sizeof(NetworkPacket);
 
 				mNetwork->send(packet);
@@ -137,6 +135,7 @@ namespace Xplicit::Client
 
 			spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
 			spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
 			spawn.size = sizeof(NetworkPacket);
 		
 			mNetwork->send(spawn);
