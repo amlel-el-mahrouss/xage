@@ -5,26 +5,32 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: PlayerMovementEvent.h
- *			Purpose: Player Movement Event
+ *			Purpose: Player Movement Event handler.
  *
  * =====================================================================
  */
+
+// bug count = 1
 
  /**
  * @file
  */
 
+#include <ApplicationContext.h>
 #include "PlayerMovementEvent.h"
 
 namespace Xplicit
 {
-	PlayerMovementEvent::PlayerMovementEvent() = default;
+	PlayerMovementEvent::PlayerMovementEvent() : mNetwork(nullptr), mThen(IRR->getTimer()->getTime()) {}
 	PlayerMovementEvent::~PlayerMovementEvent() = default;
 
 	const char* PlayerMovementEvent::name() noexcept { return ("PlayerMovementEvent"); }
 
 	void PlayerMovementEvent::operator()()
 	{
+		if (!mNetwork)
+			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+
 		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
 
 		for (size_t i = 0; i < players.size(); ++i)
@@ -32,8 +38,7 @@ namespace Xplicit
 			PlayerComponent* ply = players[i];
 
 			if (ply == nullptr ||
-				ply->health() <= 0 ||
-				ply->is_frozen())
+				ply->health() <= 0)
 				continue;
 
 			NetworkPeer* peer = ply->get();
@@ -41,8 +46,7 @@ namespace Xplicit
 			if (peer->public_hash != peer->packet.public_hash)
 				continue;
 
-			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] != NETWORK_CMD_ACCEPT) // here
+			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here
 			{
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
@@ -61,14 +65,9 @@ namespace Xplicit
 				peer->packet.speed[XPLICIT_NETWORK_X] = XPLICIT_DEFAULT_VEL;
 				peer->packet.speed[XPLICIT_NETWORK_Y] = XPLICIT_DEFAULT_VEL;
 				peer->packet.speed[XPLICIT_NETWORK_Z] = XPLICIT_DEFAULT_VEL;
+				peer->packet.speed[XPLICIT_NETWORK_DELTA] = (IRR->getTimer()->getTime() - mThen) / XPLICIT_DELTA_TIME;
 
 				ply->freeze_for(XPLICIT_MOVEMENT_RATE);
-			}
-			else
-			{
-				peer->packet.speed[XPLICIT_NETWORK_X] = 0UL;
-				peer->packet.speed[XPLICIT_NETWORK_Y] = 0UL;
-				peer->packet.speed[XPLICIT_NETWORK_Z] = 0UL;
 			}
 		}
 	}

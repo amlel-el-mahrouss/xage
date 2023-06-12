@@ -15,6 +15,7 @@
  */
 
 #include <codecvt>
+#include <ApplicationContext.h>
 
 #include "ServerSDK.h"
 #include "SpawnComponent.h"
@@ -29,7 +30,7 @@ static void xplicit_load_sh();
 static void xplicit_read_xml();
 
 static constexpr const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
-static bool g_ShouldExit = false;
+static bool gShouldExit = false;
 
 static void xplicit_read_xml()
 {
@@ -115,7 +116,7 @@ static void xplicit_load_sh()
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
 			{
-				if (!g_ShouldExit)
+				if (!gShouldExit)
 					std::cout << "$ ";
 
 				std::cin.getline(cmd_buf, 1024);
@@ -135,7 +136,7 @@ static void xplicit_load_sh()
 						XPLICIT_ERROR("ERROR: server is not connected to the internet.");
 					}
 
-					g_ShouldExit = true;
+					gShouldExit = true;
 				}
 
 				if (strcmp(cmd_buf, "man") == 0)
@@ -144,12 +145,12 @@ static void xplicit_load_sh()
 				if (strcmp(cmd_buf, "netstat") == 0)
 				{
 
-					const char* ip_address = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
+					const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
-					if (!ip_address)
+					if (!ip4)
 						XPLICIT_CRITICAL("CLI: Ip Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
-					XPLICIT_INFO(Xplicit::String("IP: ") + (ip_address ? ip_address : "?"));
+					XPLICIT_INFO(Xplicit::String("IP: ") + (ip4 ? ip4 : "?"));
 					XPLICIT_INFO(Xplicit::String("Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
 				}
 			}
@@ -178,6 +179,8 @@ int main(int argc, char** argv)
 {
 	try
 	{
+		Xplicit::ApplicationContext::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_NULL));
+
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
 		RtlZeroMemory(&wsa, sizeof(WSADATA));
@@ -190,15 +193,15 @@ int main(int argc, char** argv)
 			is located in the XPLICIT_SERVER_ADDR
 		*/
 
-		const char* ip_address = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
+		const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
-		if (!ip_address)
+		if (!ip4)
 		{
-			XPLICIT_INFO("XPLICIT_SERVER_ADDR is undefined!please set this in the env.");
+			XPLICIT_INFO("XPLICIT_SERVER_ADDR is undefined! please set this in the envpath.");
 			return 1;
 		}
 
-		auto server = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip_address);
+		auto server = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
 		XPLICIT_ASSERT(server);
 
 		if (server == nullptr)
@@ -208,25 +211,24 @@ int main(int argc, char** argv)
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion<float>(0.f, 0.f, 0.f));
 
 		/* add C++ events */
-		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
+		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 
 		xplicit_attach_mono();
 		xplicit_read_xml();
 		xplicit_load_sh();
 
-		std::atexit([]() -> void
-			{
-				auto comp = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+		std::atexit([]() -> void {
+			auto comp = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
-				if (comp)
-					xplicit_send_stop_packet(comp);
-			});
+			if (comp)
+				xplicit_send_stop_packet(comp);
+		});
 
 		do
 		{
-			if (g_ShouldExit)
+			if (gShouldExit)
 				break;
 
 			Xplicit::NetworkServerTraits::recv(server);
@@ -253,8 +255,11 @@ int main(int argc, char** argv)
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		// message_box(LPCWSTR title, LPCWSTR header, LPCWSTR message, PCWSTR icon, _TASKDIALOG_COMMON_BUTTON_FLAGS buttonFlags)
-		Xplicit::Dialog::message_box(L"Xplicit Engine", L"Program Exited (C++ Exception)", exit.c_str(), TD_INFORMATION_ICON, _TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
+		Xplicit::Dialog::message_box(L"Xplicit Engine", 
+			L"Program Exited (C++ Exception)", 
+			exit.c_str(), 
+			TD_INFORMATION_ICON, 
+			_TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
 #endif
 #endif
 

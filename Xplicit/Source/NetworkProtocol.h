@@ -44,6 +44,7 @@
 #define XPLICIT_NETWORK_X (0)
 #define XPLICIT_NETWORK_Y (1)
 #define XPLICIT_NETWORK_Z (2)
+#define XPLICIT_NETWORK_DELTA (3)
 
 #define XPLICIT_SOCKET_ERROR (-1)
 
@@ -103,7 +104,7 @@ namespace Xplicit
 
 	public:
 		int64_t health; /* Player's Health 0-100 */
-        nfloat speed[3]; /* Player's speed (X, Y, Z) */
+        nfloat speed[4]; /* Player's speed (X, Y, Z, Delta) */
 
 	};
 
@@ -181,5 +182,5 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_DAMAGE (13)
 #define XPLICIT_NETWORK_CMD_JUMP (14)
 
-// bascially the last command reserved.
+// basically the last command reserved.
 #define XPLICIT_LAST_RESERVED_CMD XPLICIT_NETWORK_CMD_JUMP

@@ -30,7 +30,7 @@ namespace Xplicit::Client
 
 	protected:
 		IAnimatedMesh* m_model; // Model Data pointer, generic
-		IAnimatedMeshSceneNode* m_node; // Model Data pointer, generic
+		IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic
 
 	};
 }

@@ -19,11 +19,11 @@
 namespace Xplicit
 {
 	PlayerComponent::PlayerComponent() 
-		: Component(), m_peer(nullptr), m_health(XPLICIT_DEFAULT_HEALTH), 
-		m_death_timeout(0), 
+		: Component(), mPeer(nullptr), mHealth(XPLICIT_DEFAULT_HEALTH), 
+		mDeathTimeout(0), 
 		m_position(0, 0, 0), 
-		m_freeze_cooldown(0),
-		m_frozen(false)
+		mCooldown(0),
+		mFrozen(false)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("PlayerComponent::PlayerComponent");
@@ -49,34 +49,34 @@ namespace Xplicit
 
 	void PlayerComponent::update()
 	{
-		if (!m_peer)
+		if (!mPeer)
 			return;
 
-		if (m_peer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] == NETWORK_CMD_DEAD)
-			m_death_timeout = XPLICIT_COOLDOWN;
+		if (mPeer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] == NETWORK_CMD_DEAD)
+			mDeathTimeout = XPLICIT_COOLDOWN;
 		
-		if (m_death_timeout > 0)
+		if (mDeathTimeout > 0)
 		{
-			--m_death_timeout;
+			--mDeathTimeout;
 
-			if (m_death_timeout <= 0)
+			if (mDeathTimeout <= 0)
 			{
-				m_death_timeout = 0;
+				mDeathTimeout = 0;
 				this->health(XPLICIT_DEFAULT_HEALTH);
 			}
 		}
 
-		--m_freeze_cooldown;
+		--mCooldown;
 	}
 
 	void PlayerComponent::health(const int32_t& health) noexcept 
 	{ 
-		this->m_health = health; 
+		this->mHealth = health; 
 	}
 
 	const int64_t PlayerComponent::health() noexcept 
 	{ 
-		return this->m_health; 
+		return this->mHealth; 
 	}
 
 	bool PlayerComponent::can_collide() noexcept 
@@ -95,26 +95,26 @@ namespace Xplicit
 
 	NetworkPeer* PlayerComponent::get() noexcept 
 	{ 
-		return m_peer; 
+		return mPeer; 
 	}
 
 	void PlayerComponent::set(NetworkPeer* peer) noexcept 
 	{
 		XPLICIT_ASSERT(peer);
-		m_peer = peer;
+		mPeer = peer;
 	}
 
 	bool PlayerComponent::is_frozen() noexcept
 	{
-		if (m_frozen)
+		if (mFrozen)
 			return true;
 
-		return m_freeze_cooldown > 0;
+		return mCooldown > 0;
 	}
 
 	void PlayerComponent::freeze_for(const int64_t& cooldown) noexcept
 	{
-		m_freeze_cooldown = cooldown;
+		mCooldown = cooldown;
 	}
 
 	Vector<float>& PlayerComponent::pos() noexcept
@@ -124,11 +124,11 @@ namespace Xplicit
 
 	void PlayerComponent::freeze(const bool enable) noexcept
 	{
-		m_frozen = true;
+		mFrozen = true;
 	}
 
 	bool PlayerComponent::alive() noexcept
 	{
-		return m_health > 0;
+		return mHealth > 0;
 	}
 }

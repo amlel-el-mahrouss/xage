@@ -37,5 +37,9 @@ namespace Xplicit
 		virtual const char* name() noexcept override;
 		virtual void operator()() override;
 
+	private:
+		NetworkServerComponent* mNetwork;
+		float mThen;
+
 	};
 }

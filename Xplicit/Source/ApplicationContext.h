@@ -16,6 +16,10 @@
 
 #include <IEventReceiver.h>
 
+#define XML Xplicit::ApplicationContext::get_singleton_ptr()->Reader
+#define IRR  Xplicit::ApplicationContext::get_singleton_ptr()->Dev
+#define KB  Xplicit::ApplicationContext::get_singleton_ptr()->Keyboard
+
 namespace Xplicit
 {
 	namespace Details
@@ -242,7 +246,7 @@ namespace Xplicit
 				m_keys[i] = 0;
 		}
 
-		virtual ~InputReceiver() {}
+		virtual ~InputReceiver() = default;
 
 		InputReceiver& operator=(const InputReceiver&) = default;
 		InputReceiver(const InputReceiver&) = default;
@@ -332,10 +336,6 @@ namespace Xplicit
 
 	};
 }
-
-#define XML Xplicit::ApplicationContext::get_singleton_ptr()->Reader
-#define IRR  Xplicit::ApplicationContext::get_singleton_ptr()->Dev
-#define KB  Xplicit::ApplicationContext::get_singleton_ptr()->Keyboard
 
 #ifndef XPLICIT_GET_DATA_DIR
 #define XPLICIT_GET_DATA_DIR(DIR)\

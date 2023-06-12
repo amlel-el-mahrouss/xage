@@ -20,17 +20,16 @@
 
 #include <Common.h>
 
-#define XPLICIT_SEND_POS_CMD(SLOT, CMD)\
-	m_packet.public_hash = m_public_hash;\
-	m_packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;\
-	m_packet.cmd[SLOT] = CMD;\
-	m_network->send(m_packet);\
-
-
 namespace Xplicit::Client
 {
+	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
+
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
-		: Component(), MeshComponentHelper("Character.dae"), m_packet(), mCam(nullptr), mPublicHash(public_hash)
+		: Component(), 
+		MeshComponentHelper("Character.dae"), 
+		mPacket(), 
+		mCam(nullptr), 
+		mPublicHash(public_hash)
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -39,8 +38,6 @@ namespace Xplicit::Client
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("LocalActor::LocalActor");
 #endif
-
-		m_then = IRR->getTimer()->getTime();
 	}
 
 	LocalPlayerComponent::~LocalPlayerComponent()
@@ -58,116 +55,129 @@ namespace Xplicit::Client
 	void LocalPlayerComponent::update()
 	{
 		if (!mNetwork ||
-			!mCam)
+			!mNode)
 			return;
 
 		if (mPublicHash == -1)
 			return;
 
-		m_packet = mNetwork->get();
+		mPacket = mNetwork->get();
 
-		if (m_packet.public_hash == mPublicHash)
+		if (mPacket.public_hash == mPublicHash)
 		{
-			if (m_packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
-				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS)
+			if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
+				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{
-				auto x_speed = m_packet.speed[XPLICIT_NETWORK_X];
-				auto z_speed = m_packet.speed[XPLICIT_NETWORK_Z];
+				auto pos = mNode->getAbsolutePosition();
 
-				m_packet.cmd[XPLICIT_NETWORK_CMD_ACK] = Xplicit::NETWORK_CMD_ACK;
+				f32 delta = mPacket.speed[XPLICIT_NETWORK_DELTA];
 
-				if (x_speed == 0UL ||
-					z_speed == 0UL)
+				//			   XPLICIT_DEFAULT_VEL
+				auto x_speed = mPacket.speed[XPLICIT_NETWORK_X] * delta;
+				auto z_speed = mPacket.speed[XPLICIT_NETWORK_Z] * delta;
+
+				if (pos.X == x_speed ||
+					pos.Z == z_speed)
 					return;
 
-				m_packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
+				if (pos.X > x_speed ||
+					pos.X < x_speed)
+					pos.X = x_speed;
 
-				f32 delta = (IRR->getTimer()->getTime() - m_then) / XPLICIT_DELTA_TIME;
+				if (pos.Z > z_speed ||
+					pos.Z < z_speed)
+					pos.Z = z_speed;
 
-				auto pos = m_node->getAbsolutePosition();
-
-				if (m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					pos.Z -= z_speed * delta;
-				
-				if (m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					pos.Z += z_speed * delta;
-				
-				if (m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					pos.X -= x_speed * delta;
-				
-				if (m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					pos.X += x_speed * delta;
-
-				m_node->setPosition(pos);
+				mNode->setPosition(pos);
 			}
 		}
 	}
 
-	void LocalPlayerComponent::attach(CameraComponent* cam) noexcept 
-	{ 
-		mCam = cam; 
-	}
+	void LocalPlayerComponent::attach(CameraComponent* cam) noexcept { mCam = cam; }
 
-	LocalMoveEvent::LocalMoveEvent(const int64_t& public_hash)
-		: m_packet(), 
-		m_network(nullptr),
-		m_public_hash(public_hash),
-		m_cooldown(0)
+	void LocalPlayerComponent::set_pos(const vector3df& newPos) noexcept { mNode->setPosition(newPos); }
+	vector3df LocalPlayerComponent::get_pos() noexcept { return mNode->getAbsolutePosition(); }
+
+	LocalMoveEvent::LocalMoveEvent(const std::int64_t& public_hash)
+		: 
+		mPacket(), 
+		mNetwork(nullptr),
+		mPublicHash(public_hash),
+		mCooldown(0)
 	{
-		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
-		XPLICIT_ASSERT(m_network);
+		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		XPLICIT_ASSERT(mNetwork);
 	}
 
 	LocalMoveEvent::~LocalMoveEvent() {}
 
 	const char* LocalMoveEvent::name() noexcept { return ("LocalMoveEvent"); }
 
-	constexpr const short gCooldown = 50;
-
 	/* main movement logic */
 	void LocalMoveEvent::operator()()
 	{
-		if (m_cooldown > 1)
-		{
-			--m_cooldown;
-			return;
-		}
-
-		if (m_network == nullptr || 
-			m_public_hash == -1)
+		if (mNetwork == nullptr || 
+			mPublicHash == -1)
 			return;
 
-		m_packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
-		m_packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
-		m_packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
-		m_packet.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
+		static auto node = ComponentManager::get_singleton_ptr()->get<LocalPlayerComponent>("LocalPlayerComponent");
+		if (!node) return;
 
-		m_cooldown = gCooldown;
+		mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
+		mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
+		mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
+		mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
+
+		auto speed = XPLICIT_DEFAULT_VEL;
+		auto pos = node->get_pos();
+
+		static f32 then = IRR->getTimer()->getTime();
+		f32 delta = (IRR->getTimer()->getTime() - then) / XPLICIT_DELTA_TIME;
 
 		if (KB->key_down(Details::KEY_KEY_W))
 		{
-			XPLICIT_SEND_POS_CMD(XPLICIT_NETWORK_CMD_FORWARD, NETWORK_CMD_FORWARD);
-			return;
+			mPacket.public_hash = mPublicHash;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_FORWARD;
+
+			pos.Z -= speed * then;
+
+			mNetwork->send(mPacket);
 		}
 
 		if (KB->key_down(Details::KEY_KEY_S))
 		{
-			XPLICIT_SEND_POS_CMD(XPLICIT_NETWORK_CMD_BACKWARD, NETWORK_CMD_BACKWARD);
-			return;
+			mPacket.public_hash = mPublicHash;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_BACKWARD;
+
+			pos.Z += speed * then;
+
+			mNetwork->send(mPacket);
 		}
 
 		if (KB->key_down(Details::KEY_KEY_D))
 		{
-			XPLICIT_SEND_POS_CMD(XPLICIT_NETWORK_CMD_RIGHT, NETWORK_CMD_RIGHT);
-			return;
+			mPacket.public_hash = mPublicHash;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_RIGHT;
+
+			pos.X -= speed * then;
+			
+			mNetwork->send(mPacket);
 		}
 
 		if (KB->key_down(Details::KEY_KEY_A))
 		{
-			XPLICIT_SEND_POS_CMD(XPLICIT_NETWORK_CMD_LEFT, NETWORK_CMD_LEFT);
-			return;
+			mPacket.public_hash = mPublicHash;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_LEFT;
+
+			pos.X += speed * then;
+
+			mNetwork->send(mPacket);
 		}
+
+		node->set_pos(pos);
 	}
 }
-
-#undef XPLICIT_SEND_POS_CMD

@@ -60,7 +60,6 @@ namespace Xplicit::Client
 				ComponentManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
 
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalResetEvent>(packet.hash);
-
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
 				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.public_hash);
 

@@ -27,8 +27,8 @@ namespace Xplicit::Client
 		m_model = IRR->getSceneManager()->getMesh(_path.c_str());
 		XPLICIT_ASSERT(m_model);
 
-		m_node = IRR->getSceneManager()->addAnimatedMeshSceneNode(m_model);
-		XPLICIT_ASSERT(m_node);
+		mNode = IRR->getSceneManager()->addAnimatedMeshSceneNode(m_model);
+		XPLICIT_ASSERT(mNode);
 	
 		if (m_model)
 			m_model->setMaterialFlag(EMF_LIGHTING, false);
@@ -36,8 +36,8 @@ namespace Xplicit::Client
 
 	MeshComponentHelper::~MeshComponentHelper()
 	{
-		if (m_node)
-			m_node->drop();
+		if (mNode)
+			mNode->drop();
 	}
 
 }

@@ -32,18 +32,24 @@ namespace Xplicit::Client
 		virtual INSTANCE_TYPE type() noexcept override;
 		virtual const char* name() noexcept override;
 
+	public:
 		virtual void update() override;
 
 	public:
 		void attach(CameraComponent* cam) noexcept;
 
+	public:
+		void set_pos(const vector3df& newPos) noexcept;
+		vector3df get_pos() noexcept;
+
 	private:
-		IAnimatedMeshSceneNode* m_cam_node;
+		IAnimatedMeshSceneNode* mCameraNode;
 		NetworkComponent* mNetwork;
 		CameraComponent* mCam;
-		NetworkPacket m_packet;
-		int64_t mPublicHash;
-		int64_t m_then;
+		NetworkPacket mPacket;
+
+	private:
+		std::int64_t mPublicHash;
 
 	};
 
@@ -53,7 +59,7 @@ namespace Xplicit::Client
 		LocalMoveEvent() = delete;
 
 	public:
-		explicit LocalMoveEvent(const int64_t& public_hash);
+		explicit LocalMoveEvent(const std::int64_t& public_hash);
 		virtual ~LocalMoveEvent();
 
 		LocalMoveEvent& operator=(const LocalMoveEvent&) = default;
@@ -63,12 +69,12 @@ namespace Xplicit::Client
 		const char* name() noexcept;
 
 	private:
-		NetworkComponent* m_network;
-		NetworkPacket m_packet;
+		NetworkComponent* mNetwork;
+		NetworkPacket mPacket;
 
 	private:
-		int64_t m_public_hash;
-		std::size_t m_cooldown;
+		std::int64_t mPublicHash;
+		std::size_t mCooldown;
 
 	};
 }

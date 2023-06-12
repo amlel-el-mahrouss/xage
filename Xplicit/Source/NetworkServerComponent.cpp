@@ -35,8 +35,6 @@ namespace Xplicit
 
 		auto err = ioctlsocket(sock, FIONBIO, &ul);
 		XPLICIT_ASSERT(err == NO_ERROR);
-
-		err = ioctlsocket(sock, FIOASYNC, &ul);
 #else
 #pragma error("ServerComponent.cpp")
 #endif
@@ -110,10 +108,7 @@ namespace Xplicit
 
 	NetworkServerComponent::INSTANCE_TYPE NetworkServerComponent::type() noexcept { return INSTANCE_NETWORK; }
 
-	void NetworkServerComponent::update() 
-	{
-
-	}
+	void NetworkServerComponent::update() {}
 
 	bool NetworkServerComponent::should_update() noexcept { return false; }
 
@@ -144,17 +139,27 @@ namespace Xplicit
 	{
 		if (server)
 		{
-			for (size_t i = 0; i < server->size(); ++i)
+			struct sockaddr_in tmp{};
+
+			for (std::size_t i = 0; i < server->size(); ++i)
 			{
 				int from_len = sizeof(PrivateAddressData);
+				static NetworkPacket packet{};
 
-				static NetworkPacket packet;
 				int res = ::recvfrom(server->m_socket, reinterpret_cast<char*>(&packet),
 					sz, 0,
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &from_len);
 
+				/* check for any fatal socket error */
 				if (res == SOCKET_ERROR)
+					break;
+
+				/* check if we have a collision */
+				if (tmp.sin_addr.S_un.S_addr == server->get(i)->addr.sin_addr.S_un.S_addr)
 					continue;
+
+				tmp = server->get(i)->addr;
+				
 
 				if (server->get(i)->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
 					server->get(i)->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
@@ -162,11 +167,12 @@ namespace Xplicit
 					server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
 				{
 					server->get(i)->packet = packet;
-					continue;
 				}
-
-				if (sz < 0 || from_len < 0)
-					xplicit_invalidate_peer(server->get(i));
+				else
+				{
+					if (sz < 0 || from_len < 0)
+						xplicit_invalidate_peer(server->get(i));
+				}
 			}
 		}
 	}

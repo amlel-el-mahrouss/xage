@@ -56,13 +56,13 @@ namespace Xplicit
 
 	private:
 		Vector<float> m_position;
-		NetworkPeer* m_peer;
+		NetworkPeer* mPeer;
 
 	private:
-		int64_t m_freeze_cooldown;
-		int64_t m_death_timeout;
-		int64_t m_health;
-		bool m_frozen;
+		int64_t mCooldown;
+		int64_t mDeathTimeout;
+		int64_t mHealth;
+		bool mFrozen;
 
 	};
 
