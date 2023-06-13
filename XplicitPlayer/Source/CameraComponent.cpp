@@ -18,7 +18,7 @@
 #include "Application.h"
 #include "CoreUI.h"
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	CameraComponent::CameraComponent()
 		: Component(), m_camera(nullptr)

@@ -5,7 +5,7 @@
  *			Copyright XPX, all rights reserved.
  *
  *			File: LocalActor.cpp
- *			Purpose: Client-side Player
+ *			Purpose: Client-side Player Components
  *
  * =====================================================================
  */
@@ -20,13 +20,13 @@
 
 #include <Common.h>
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
 
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
 		: Component(), 
-		MeshComponentHelper("Character.dae"), 
+		MeshComponent("Character.dae"), 
 		mPacket(), 
 		mCam(nullptr), 
 		mPublicHash(public_hash)
@@ -80,12 +80,10 @@ namespace Xplicit::Client
 					pos.Z == z_speed)
 					return;
 
-				if (pos.X > x_speed ||
-					pos.X < x_speed)
+				if (pos.X > x_speed)
 					pos.X = x_speed;
 
-				if (pos.Z > z_speed ||
-					pos.Z < z_speed)
+				if (pos.Z > z_speed)
 					pos.Z = z_speed;
 
 				mNode->setPosition(pos);

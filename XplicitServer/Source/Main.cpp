@@ -256,7 +256,7 @@ int main(int argc, char** argv)
 		exit += L"\n";
 
 		Xplicit::Dialog::message_box(L"Xplicit Engine", 
-			L"Program Exited (C++ Exception)", 
+			L"Program Exited", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 
 			_TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);

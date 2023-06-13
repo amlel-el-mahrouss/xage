@@ -16,25 +16,25 @@
 
 #include "MeshComponent.h"
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
-	MeshComponentHelper::MeshComponentHelper(const char* path)
+	MeshComponent::MeshComponent(const char* path)
 	{
 		String _path = XPLICIT_ENV("APPDATA");
 		_path += "/Data/Studio/";
 		_path += path;
 
-		m_model = IRR->getSceneManager()->getMesh(_path.c_str());
-		XPLICIT_ASSERT(m_model);
+		mMdl = IRR->getSceneManager()->getMesh(_path.c_str());
+		XPLICIT_ASSERT(mMdl);
 
-		mNode = IRR->getSceneManager()->addAnimatedMeshSceneNode(m_model);
+		mNode = IRR->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
 		XPLICIT_ASSERT(mNode);
 	
-		if (m_model)
-			m_model->setMaterialFlag(EMF_LIGHTING, false);
+		if (mMdl)
+			mMdl->setMaterialFlag(EMF_LIGHTING, false);
 	}
 
-	MeshComponentHelper::~MeshComponentHelper()
+	MeshComponent::~MeshComponent()
 	{
 		if (mNode)
 			mNode->drop();

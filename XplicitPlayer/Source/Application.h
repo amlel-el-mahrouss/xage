@@ -12,10 +12,12 @@
 
 #pragma once
 
+/* engine classes */
 #include <Uri.h>
 #include <IXMLWriter.h>
 #include <ApplicationContext.h>
 
+/* client classes */
 #include "CameraComponent.h"
 #include "LoadingComponent.h"
 #include "LocalPlayerComponent.h"
@@ -23,7 +25,7 @@
 #define XPLICIT_DEFAULT_WIDTH (1280)
 #define XPLICIT_DEFAULT_HEIGHT (720)
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	extern dimension2du XPLICIT_DIM;
 }

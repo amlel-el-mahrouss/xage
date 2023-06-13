@@ -21,7 +21,7 @@
 #define LOCAL_MENU_TWEEN_END (2)
 #define LOCAL_MENU_TWEENING (0.1f)
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	LocalMenuEvent::LocalMenuEvent(const int64_t& hash)
 		: m_network(nullptr), m_enabled(false), m_menu(nullptr), m_timeout(0), m_hash(hash)
@@ -99,8 +99,8 @@ namespace Xplicit::Client
 
 		if (tween_start < LOCAL_MENU_TWEEN_START)
 		{
-			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 2.8,
-				Xplicit::Client::XPLICIT_DIM.Height / tween_start));
+			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
+				Xplicit::Player::XPLICIT_DIM.Height / tween_start));
 		}
 
 		--m_timeout;

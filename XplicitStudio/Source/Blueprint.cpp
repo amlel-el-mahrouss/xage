@@ -14,44 +14,40 @@
 
 namespace Xplicit::Studio
 {
-	BlueprintNode::BlueprintNode() 
-		: m_pPrev(nullptr), m_pNext(nullptr) 
+	Blueprint::Blueprint() : mPrev(nullptr), mNext(nullptr) {}
+
+	Blueprint::~Blueprint()
 	{
-	
+		if (mNext)
+			mNext->detach(this);
+
+		if (mPrev)
+			mPrev->detach(this);
 	}
 
-	BlueprintNode::~BlueprintNode()
-	{
-		if (m_pNext)
-			m_pNext->detach(this);
-
-		if (m_pPrev)
-			m_pPrev->detach(this);
-	}
-
-	void BlueprintNode::detach(BlueprintNode* pBlueprint)
+	void Blueprint::detach(Blueprint* pBlueprint)
 	{
 		if (!pBlueprint)
 			return;
 
-		BlueprintNode* swap_ptr = m_pNext;
+		Blueprint* curBlueprint = mNext;
 
 		bool found = false;
 
 		Thread thrd = Thread([&]() -> void {
 			while (!found)
 			{
-				if (swap_ptr)
+				if (curBlueprint)
 				{
-					if (swap_ptr == pBlueprint)
+					if (curBlueprint == pBlueprint)
 					{
-						swap_ptr->m_pNext->m_pPrev = swap_ptr->m_pPrev;
-						swap_ptr->m_pPrev->m_pNext = swap_ptr->m_pNext;
+						curBlueprint->mNext->mPrev = curBlueprint->mPrev;
+						curBlueprint->mPrev->mNext = curBlueprint->mNext;
 
 						found = true;
 					}
 
-					swap_ptr = swap_ptr->m_pPrev;
+					curBlueprint = curBlueprint->mPrev;
 
 					continue;
 				}
@@ -63,13 +59,13 @@ namespace Xplicit::Studio
 		thrd.detach();
 	}
 
-	void BlueprintNode::attach(BlueprintNode* pBlueprint)
+	void Blueprint::attach(Blueprint* pBlueprint)
 	{
-		auto* prev = m_pNext;
+		auto* prev = mNext;
 		
-		m_pNext = pBlueprint;
+		mNext = pBlueprint;
 
-		m_pNext->m_pPrev = prev;
-		m_pNext->m_pNext = nullptr;
+		mNext->mPrev = prev;
+		mNext->mNext = nullptr;
 	}
 }

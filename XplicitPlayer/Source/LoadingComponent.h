@@ -15,7 +15,7 @@
 #include <NetworkComponent.h>
 #include "CoreUI.h"
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	class LoadingComponent final : public Component
 	{

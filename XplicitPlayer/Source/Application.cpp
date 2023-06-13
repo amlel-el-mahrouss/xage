@@ -16,7 +16,7 @@
 
 #include "Application.h"
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	dimension2du XPLICIT_DIM = dimension2du(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
 }
@@ -54,7 +54,7 @@ namespace Xplicit::Bites
 
 		this->setup();
 
-		auto loadingComponent = ComponentManager::get_singleton_ptr()->add<Client::LoadingComponent>();
+		auto loadingComponent = ComponentManager::get_singleton_ptr()->add<Player::LoadingComponent>();
 		XPLICIT_ASSERT(loadingComponent);
 
 		if (loadingComponent)
@@ -73,7 +73,7 @@ namespace Xplicit::Bites
 		Xplicit::ApplicationContext::get_singleton_ptr()->set(
 			irr::createDevice(
 				irr::video::EDT_OPENGL,
-				Xplicit::Client::XPLICIT_DIM,
+				Xplicit::Player::XPLICIT_DIM,
 				32U,
 				false,
 				false,

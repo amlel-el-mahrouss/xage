@@ -22,7 +22,7 @@
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 60 * 60); // connection timeout
 
@@ -50,18 +50,18 @@ namespace Xplicit::Client
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
-			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Client::LocalPlayerComponent>(packet.public_hash);
+			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
 			XPLICIT_ASSERT(ply);
 
 			if (ply)
 			{
-				ply->attach(ComponentManager::get_singleton_ptr()->add<Xplicit::Client::CameraComponent>());
+				ply->attach(ComponentManager::get_singleton_ptr()->add<Xplicit::Player::CameraComponent>());
 
 				ComponentManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
 
-				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalResetEvent>(packet.hash);
-				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMenuEvent>(packet.hash);
-				EventDispatcher::get_singleton_ptr()->add<Xplicit::Client::LocalMoveEvent>(packet.public_hash);
+				EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(packet.hash);
+				EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(packet.hash);
+				EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalMoveEvent>(packet.public_hash);
 
 				mEnable = false;
 			}
@@ -74,8 +74,8 @@ namespace Xplicit::Client
 				
 				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 					IRR->closeDevice();
-				}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45,
-					Xplicit::Client::XPLICIT_DIM.Height / 4),
+				}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45,
+					Xplicit::Player::XPLICIT_DIM.Height / 4),
 					CoreUI::POPUP_TYPE::NETWORK_ERROR);
 
 				mEnable = false;
@@ -95,7 +95,7 @@ namespace Xplicit::Client
 
 				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 					IRR->closeDevice();
-					}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR, "TimeoutPopup");
+					}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, Xplicit::Player::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR, "TimeoutPopup");
 
 				mEnable = false;
 			}
@@ -109,7 +109,7 @@ namespace Xplicit::Client
 				mNetwork->send(packet);
 
 				IRR->getVideoDriver()->draw2DImage(m_texture, 
-					vector2di(Xplicit::Client::XPLICIT_DIM.Width * 0.02, Xplicit::Client::XPLICIT_DIM.Height * 0.625),
+					vector2di(Xplicit::Player::XPLICIT_DIM.Width * 0.02, Xplicit::Player::XPLICIT_DIM.Height * 0.625),
 					core::rect<s32>(0, 0, 255, 255), 0,
 					video::SColor(255, 255, 255, 255), true);
 			}
@@ -145,8 +145,8 @@ namespace Xplicit::Client
 	{
 		ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 			IRR->closeDevice();
-			}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, 
-				Xplicit::Client::XPLICIT_DIM.Height / 4), 
+			}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, 
+				Xplicit::Player::XPLICIT_DIM.Height / 4), 
 				CoreUI::POPUP_TYPE::NETWORK_ERROR);
 
 	}

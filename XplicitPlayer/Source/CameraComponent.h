@@ -14,7 +14,7 @@
 
 #include <Component.h>
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	// The player view in-person.
 	class CameraComponent : public Component

@@ -15,7 +15,7 @@
 #include <NetworkComponent.h>
 #include <Event.h>
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	class XPLICIT_API LocalMenuEvent final : public Event
 	{

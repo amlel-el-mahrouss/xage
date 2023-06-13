@@ -15,27 +15,30 @@
 #include <NetworkComponent.h>
 #include <Event.h>
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
-	class XPLICIT_API LocalResetEvent final : public Event
+	class XPLICIT_API LocalNetworkMonitorEvent final : public Event
 	{
 	public:
-		LocalResetEvent() = delete;
+		LocalNetworkMonitorEvent() = delete;
 
 	public:
-		LocalResetEvent(int64_t hash);
-		virtual ~LocalResetEvent();
+		LocalNetworkMonitorEvent(int64_t hash);
+		virtual ~LocalNetworkMonitorEvent();
 
-		LocalResetEvent& operator=(const LocalResetEvent&) = default;
-		LocalResetEvent(const LocalResetEvent&) = default;
+		LocalNetworkMonitorEvent& operator=(const LocalNetworkMonitorEvent&) = default;
+		LocalNetworkMonitorEvent(const LocalNetworkMonitorEvent&) = default;
 
+	public:
 		virtual void operator()() override;
 		const char* name() noexcept;
 
 	private:
-		NetworkComponent* m_network;
-		int32_t m_resets;
-		int64_t m_hash;
+		NetworkComponent* mNetwork;
+		
+	private:
+		std::int32_t mResetCnt;
+		std::int64_t mHash;
 
 	};
 }

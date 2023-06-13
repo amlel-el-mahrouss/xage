@@ -29,7 +29,7 @@ XPLICIT_MAIN()
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
 			Xplicit::Dialog::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
-				L"Cannot open more than one instance of the XplicitNgin!", 
+				L"Cannot open more than one instance of the Xplicit Engine!", 
 				MB_OK);
 
 			return 1;
@@ -61,7 +61,7 @@ XPLICIT_MAIN()
 		});
 
 		auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkComponent>("NetworkComponent");
-		Xplicit::NetworkPacket packet;
+		Xplicit::NetworkPacket packet = { };
 
 		// and run.
 		while (IRR->run() && 
@@ -95,8 +95,11 @@ XPLICIT_MAIN()
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		// message_box(LPCWSTR title, LPCWSTR header, LPCWSTR message, PCWSTR icon, _TASKDIALOG_COMMON_BUTTON_FLAGS buttonFlags)
-		Xplicit::Dialog::message_box(L"Xplicit Engine", L"Program Exited (C++ Exception)", exit.c_str(), TD_INFORMATION_ICON, _TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
+		Xplicit::Dialog::message_box(L"Xplicit Engine", 
+			L"Program Exited", 
+			exit.c_str(), 
+			TD_INFORMATION_ICON, 
+			_TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
 	}
 
 	return 0;

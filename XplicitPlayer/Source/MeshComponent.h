@@ -15,22 +15,24 @@
 #include <Xplicit.h>
 #include <ApplicationContext.h>
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
-	class MeshComponentHelper
+	/* this classes gives an component a model. */
+	class MeshComponent
 	{
 	public:
-		MeshComponentHelper() = delete;
+		MeshComponent() = delete;
 
-		MeshComponentHelper(const char* path);
-		virtual ~MeshComponentHelper();
+		MeshComponent(const char* path);
+		virtual ~MeshComponent();
 
-		MeshComponentHelper& operator=(const MeshComponentHelper&) = default;
-		MeshComponentHelper(const MeshComponentHelper&) = default;
+	public:
+		MeshComponent& operator=(const MeshComponent&) = default;
+		MeshComponent(const MeshComponent&) = default;
 
 	protected:
-		IAnimatedMesh* m_model; // Model Data pointer, generic
 		IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic
+		IAnimatedMesh* mMdl; // Model Data pointer, generic
 
 	};
 }

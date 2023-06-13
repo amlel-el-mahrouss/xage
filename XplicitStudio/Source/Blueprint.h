@@ -18,20 +18,23 @@
 
 namespace Xplicit::Studio
 {
-	class BlueprintNode final
+	class Blueprint final
 	{
 	public:
-		BlueprintNode();
-		~BlueprintNode();
+		Blueprint();
+		~Blueprint();
 
-		XPLICIT_COPY_DEFAULT(BlueprintNode);
+	public:
+		XPLICIT_COPY_DEFAULT(Blueprint);
 
-		void detach(BlueprintNode* pBlueprint);
-		void attach(BlueprintNode* pBlueprint);
+	public:
+		/* warning! this file uses a detached thread. assume parallels cases. */
+		void detach(Blueprint* pBlueprint);
+		void attach(Blueprint* pBlueprint);
 
 	private:
-		BlueprintNode* m_pPrev;
-		BlueprintNode* m_pNext;
+		Blueprint* mPrev;
+		Blueprint* mNext;
 
 	};
 }

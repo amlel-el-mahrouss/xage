@@ -16,7 +16,7 @@
 #include <NetworkComponent.h>
 #include <Component.h>
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	extern dimension2du XPLICIT_DIM;
 }
@@ -132,8 +132,8 @@ namespace Xplicit::CoreUI
 			if (tweenStart < 8)
 			{
 				IRR->getVideoDriver()->draw2DImage(mTexture, vector2di(
-					Xplicit::Client::XPLICIT_DIM.Width / 1.5,
-					Xplicit::Client::XPLICIT_DIM.Height / tweenStart)
+					Xplicit::Player::XPLICIT_DIM.Width / 1.5,
+					Xplicit::Player::XPLICIT_DIM.Height / tweenStart)
 				);
 			}
 

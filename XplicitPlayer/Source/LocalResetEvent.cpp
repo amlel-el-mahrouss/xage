@@ -18,52 +18,58 @@
 #include "Application.h"
 #include "CoreUI.h"
 
-namespace Xplicit::Client
+namespace Xplicit::Player
 {
 	constexpr const int XPLICIT_MAX_RESETS = 10000; // Max RST
 
-	LocalResetEvent::LocalResetEvent(int64_t hash)
-		: m_network(nullptr), m_resets(0), m_hash(hash)
+	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(int64_t hash)
+		: mNetwork(nullptr), mResetCnt(0), mHash(hash)
 	{
-		m_network = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
-		assert(m_network);
+		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		assert(mNetwork);
 	}
 
-	LocalResetEvent::~LocalResetEvent() {}
+	LocalNetworkMonitorEvent::~LocalNetworkMonitorEvent() {}
 
-	const char* LocalResetEvent::name() noexcept { return ("LocalResetEvent"); }
+	const char* LocalNetworkMonitorEvent::name() noexcept { return ("LocalResetEvent"); }
 
-	void LocalResetEvent::operator()()
+	void LocalNetworkMonitorEvent::operator()()
 	{
-		if (!m_network)
+		if (!mNetwork)
 			return;
 
-		auto& packet = m_network->get();
+		auto& packet = mNetwork->get();
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP &&
-			m_hash == packet.hash)
+			mHash == packet.hash)
 		{
 			if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("StopPopup"))
 			{
+				/* connection closed by peer. */
 				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
+					// close on click
 					IRR->closeDevice();
-					}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 2.8, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::SHUTDOWN, "ResetConnPopup");
+					}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8, 
+						Xplicit::Player::XPLICIT_DIM.Height / 4), 
+						CoreUI::POPUP_TYPE::SHUTDOWN, 
+						"ResetConnPopup");
 
 				return;
 			}
 		}
 
-		if (m_network->is_reset())
+		/* lost connection to peer. */
+		if (mNetwork->is_reset())
 		{
-			++m_resets;
+			++mResetCnt;
 
-			if (m_resets > XPLICIT_MAX_RESETS)
+			if (mResetCnt > XPLICIT_MAX_RESETS)
 			{
 				if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("ResetPopup"))
 				{
 					ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
 						IRR->closeDevice();
-						}, vector2di(Xplicit::Client::XPLICIT_DIM.Width / 3.45, Xplicit::Client::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
+						}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, Xplicit::Player::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
 
 				}
 			}
