@@ -14,7 +14,7 @@
  @file
  */
 
-#include "LocalResetEvent.h"
+#include "LocalNetworkMonitorEvent.h"
 #include "Application.h"
 #include "CoreUI.h"
 

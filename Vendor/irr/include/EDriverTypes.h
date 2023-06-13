@@ -42,11 +42,6 @@ namespace video
 		primitives. */
 		EDT_DIRECT3D8,
 
-		//! Direct3D 9 device, only available on Win32 platforms.
-		/** Performs hardware accelerated rendering of 3D and 2D
-		primitives. */
-		EDT_DIRECT3D9,
-
 		//! OpenGL device, available on most platforms.
 		/** Performs hardware accelerated rendering of 3D and 2D
 		primitives. */

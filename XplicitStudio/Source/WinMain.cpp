@@ -34,7 +34,8 @@ namespace Xplicit::Studio
 		{
 			auto wnd = new Xplicit::Bites::GLFWWindow("XplicitEd");
 			std::unique_ptr<Xplicit::Renderer::Vk::DriverSystemVulkan> drv = std::make_unique<Xplicit::Renderer::Vk::DriverSystemVulkan>(glfwGetWin32Window(wnd->get()));
-			// ExitCode = wnd->run(drv, Xplicit::Color<float>(255, 255, 255, 15));
+			
+			ExitCode = 0;
 		}
 
 	};
@@ -61,8 +62,11 @@ XPLICIT_MAIN()
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		// message_box(LPCWSTR title, LPCWSTR header, LPCWSTR message, PCWSTR icon, _TASKDIALOG_COMMON_BUTTON_FLAGS buttonFlags)
-		Xplicit::Dialog::message_box(L"XplicitEd", L"Program Exited (C++ Exception)", exit.c_str(), TD_INFORMATION_ICON, _TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
+		Xplicit::Dialog::message_box(L"XplicitEd", 
+			L"Program Exited",
+			exit.c_str(), 
+			TD_INFORMATION_ICON,
+			_TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
 
 	}
 

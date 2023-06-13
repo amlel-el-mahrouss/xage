@@ -89,13 +89,20 @@ static void xplicit_read_xml()
 
 static void xplicit_attach_mono()
 {
-	XPLICIT_GET_DATA_DIR(data);
+	try
+	{
+		XPLICIT_GET_DATA_DIR(data);
 
-	Xplicit::String dll_path = data;
-	dll_path += "Lib/ScriptNgine.dll";
+		Xplicit::String dll_path = data;
+		dll_path += "Lib/ScriptNgine.dll";
 
-	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoEngineComponent>();
-	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(dll_path.c_str(), false);
+		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoEngineComponent>();
+		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(dll_path.c_str(), false);
+	}
+	catch (...)
+	{
+		XPLICIT_CRITICAL("ScriptNgine.dll not found, to load a C# DLL use Manifest.xml.");
+	}
 }
 
 static void xplicit_print_help()

@@ -64,9 +64,7 @@ namespace Xplicit::Bites
 			void read(Traits& traits);
 
 		private:
-			String m_szSettingsPath;
-			irr::io::IXMLReaderUTF8* m_pXmlReader;
-			irr::io::IXMLWriter* m_pXmlWriter;
+			String mSettings;
 
 		};
 
@@ -74,12 +72,12 @@ namespace Xplicit::Bites
 		void setup();
 
 	private:
-		std::unique_ptr<Settings> m_pSettings;
-		String m_szDataPath;
+		std::unique_ptr<Settings> mSettings;
+		String mPath;
 
 #ifdef XPLICIT_WINDOWS
 		// WinSock data
-		WSADATA m_wsa;
+		WSADATA mWsa;
 #endif
 
 	};

@@ -16,8 +16,8 @@
 
 #include "LoadingComponent.h"
 
+#include "LocalNetworkMonitorEvent.h"
 #include "LocalPlayerComponent.h"
-#include "LocalResetEvent.h"
 #include "CameraComponent.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
