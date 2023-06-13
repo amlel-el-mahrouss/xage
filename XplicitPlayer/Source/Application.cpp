@@ -27,7 +27,7 @@ namespace Xplicit::Bites
 	{
 		XPLICIT_GET_DATA_DIR(dir);
 
-		std::string prebuilt = dir;
+		String prebuilt = dir;
 		prebuilt += "\\Textures\\PreBuiltDialogs.zip";
 
 		auto res = IRR->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true);
@@ -69,9 +69,6 @@ namespace Xplicit::Bites
 	{
 		Xplicit::ApplicationContext::get_singleton_ptr()->set(new Xplicit::InputReceiver());
 
-		if (!KB)
-			throw EngineError();
-
 		Xplicit::ApplicationContext::get_singleton_ptr()->set(
 			irr::createDevice(
 				irr::video::EDT_OPENGL,
@@ -86,36 +83,33 @@ namespace Xplicit::Bites
 
 		open_prebuilt_dialogs();
 
-		mSettings = std::make_unique<Settings>();
-
+		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
-
-		if (!mSettings)
-			throw EngineError();
-
-		Settings::Traits traits{};
-		mSettings->read(traits);
 
 		IRR->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
 	}
 
-	Application::Settings::Settings()
+	Application::SettingsManager::SettingsManager()
 		: mSettings()
 	{
+		/*
+			%appdata%/Data/ClientSettings.dat
+		*/
+
 		XPLICIT_GET_DATA_DIR(dat);
 
 		mSettings = dat;
-		mSettings += "ClientSettings.xml";
+		mSettings += "ClientSettings.dat";
 	}
 
-	Application::Settings::~Settings() = default;
+	Application::SettingsManager::~SettingsManager() = default;
 
-	void Application::Settings::write(Application::Settings::Traits& traits)
+	void Application::SettingsManager::write(Application::SettingsManager::Traits& traits)
 	{
 		
 	}
 
-	void Application::Settings::read(Application::Settings::Traits& traits)
+	void Application::SettingsManager::read(Application::SettingsManager::Traits& traits)
 	{
 		
 	}

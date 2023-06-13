@@ -46,7 +46,7 @@ namespace Xplicit::Bites
 		Application& operator=(const Application&) = delete;
 		Application(const Application&) = delete;
 
-		class Settings final
+		class SettingsManager final
 		{
 		public:
 			struct Traits
@@ -57,8 +57,8 @@ namespace Xplicit::Bites
 			};
 
 		public:
-			Settings();
-			~Settings();
+			SettingsManager();
+			~SettingsManager();
 
 			void write(Traits& traits);
 			void read(Traits& traits);
@@ -72,7 +72,7 @@ namespace Xplicit::Bites
 		void setup();
 
 	private:
-		std::unique_ptr<Settings> mSettings;
+		std::unique_ptr<SettingsManager> mSettings;
 		String mPath;
 
 #ifdef XPLICIT_WINDOWS

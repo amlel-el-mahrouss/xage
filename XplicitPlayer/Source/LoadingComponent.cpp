@@ -24,7 +24,7 @@
 
 namespace Xplicit::Player
 {
-	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 60 * 60); // connection timeout
+	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 2); // connection timeout
 
 	LoadingComponent::LoadingComponent() 
 		: mEnable(true), mNetwork(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
