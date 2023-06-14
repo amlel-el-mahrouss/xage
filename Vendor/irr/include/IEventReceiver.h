@@ -59,7 +59,7 @@ namespace irr
 			UserData1 and UserData2 members of the SUserEvent.
 		Linux: send a ClientMessage via XSendEvent to the Irrlicht
 			Window; the data.l[0] and data.l[1] members will be
-			casted to s32 and used as UserData1 and UserData2.
+			cast to s32 and used as UserData1 and UserData2.
 		MacOS: Not yet implemented
 		*/
 		EET_USER_EVENT,
@@ -169,7 +169,7 @@ namespace irr
 
 			//! An element would like to close.
 			/** Windows and context menus use this event when they would like to close,
-			this can be cancelled by absorbing the event. */
+			this can be canceled by absorbing the event. */
 			EGET_ELEMENT_CLOSED,
 
 			//! A button was clicked.
@@ -216,7 +216,7 @@ namespace irr
 			//! The text in an editbox was changed. This does not include automatic changes in text-breaking.
 			EGET_EDITBOX_CHANGED,
 
-            //! The marked area in an editbox was changed.
+			//! The marked area in an editbox was changed.
 			EGET_EDITBOX_MARKING_CHANGED,
 
 			//! The tab was changed in an tab control
@@ -258,9 +258,9 @@ namespace irr
 	} // end namespace gui
 
 
-	//! SEvents hold information about an event. See irr::IEventReceiver for details on event handling.
-	struct SEvent
-	{
+//! SEvents hold information about an event. See irr::IEventReceiver for details on event handling.
+struct SEvent
+{
 	//! Any kind of GUI event.
 	struct SGUIEvent
 	{
@@ -315,7 +315,7 @@ namespace irr
 	//! Any kind of keyboard event.
 	struct SKeyInput
 	{
-		//! Character corresponding to the key (0, if not a character)
+		//! Character corresponding to the key (0, if not a character, value undefined in key releases)
 		wchar_t Char;
 
 		//! Key which has been pressed or released
@@ -345,13 +345,13 @@ namespace irr
 		{
 			NUMBER_OF_BUTTONS = 32,
 
-			AXIS_X = 0, // e.g. analog stick 1 left to right
+			AXIS_X = 0,	// e.g. analog stick 1 left to right
 			AXIS_Y,		// e.g. analog stick 1 top to bottom
 			AXIS_Z,		// e.g. throttle, or analog 2 stick 2 left to right
 			AXIS_R,		// e.g. rudder, or analog 2 stick 2 top to bottom
 			AXIS_U,
 			AXIS_V,
-			NUMBER_OF_AXES
+			NUMBER_OF_AXES=18	// (please tell Irrlicht maintainers if you absolutely need more axes)
 		};
 
 		/** A bitmap of button states.  You can use IsButtonPressed() to
@@ -405,10 +405,10 @@ namespace irr
 	struct SUserEvent
 	{
 		//! Some user specified data as int
-		s32 UserData1;
+		size_t UserData1;
 
 		//! Another user specified data as int
-		s32 UserData2;
+		size_t UserData2;
 	};
 
 	EEVENT_TYPE EventType;
@@ -454,22 +454,22 @@ struct SJoystickInfo
 	/** This is an internal Irrlicht index; it does not map directly
 	 * to any particular hardware joystick. It corresponds to the
 	 * irr::SJoystickEvent Joystick ID. */
-	u8				Joystick;
+	u8 Joystick;
 
 	//! The name that the joystick uses to identify itself.
-	core::stringc	Name;
+	core::stringc Name;
 
 	//! The number of buttons that the joystick has.
-	u32				Buttons;
+	u32 Buttons;
 
 	//! The number of axes that the joystick has, i.e. X, Y, Z, R, U, V.
 	/** Note: with a Linux device, the POV hat (if any) will use two axes. These
 	 *  will be included in this count. */
-	u32				Axes;
+	u32 Axes;
 
 	//! An indication of whether the joystick has a POV hat.
-	/** A Windows device will identify the presence or absence or the POV hat.  A
-	 *  Linux device cannot, and will always return POV_HAT_UNKNOWN. */
+	/** A Windows device will identify the presence or absence of the POV hat.
+	 *  A Linux device cannot, and will always return POV_HAT_UNKNOWN. */
 	enum
 	{
 		//! A hat is definitely present.

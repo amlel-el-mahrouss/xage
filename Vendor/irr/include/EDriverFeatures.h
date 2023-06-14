@@ -16,7 +16,7 @@ namespace video
 		//! Is driver able to render to a surface?
 		EVDF_RENDER_TO_TARGET = 0,
 
-		//! Is hardeware transform and lighting supported?
+		//! Is hardware transform and lighting supported?
 		EVDF_HARDWARE_TL,
 
 		//! Are multiple textures per material possible?
@@ -115,11 +115,32 @@ namespace video
 		//! Support for different blend functions. Without, only ADD is available
 		EVDF_BLEND_OPERATIONS,
 
+		//! Support for separate blending for RGB and Alpha.
+		EVDF_BLEND_SEPARATE,
+
 		//! Support for texture coord transformation via texture matrix
 		EVDF_TEXTURE_MATRIX,
 
-		//! Support for NVidia's CG shader language
-		EVDF_CG,
+		//! Support for DXTn compressed textures.
+		EVDF_TEXTURE_COMPRESSED_DXT,
+
+		//! Support for PVRTC compressed textures.
+		EVDF_TEXTURE_COMPRESSED_PVRTC,
+
+		//! Support for PVRTC2 compressed textures.
+		EVDF_TEXTURE_COMPRESSED_PVRTC2,
+
+		//! Support for ETC1 compressed textures.
+		EVDF_TEXTURE_COMPRESSED_ETC1,
+
+		//! Support for ETC2 compressed textures.
+		EVDF_TEXTURE_COMPRESSED_ETC2,
+
+		//! Support for cube map textures.
+		EVDF_TEXTURE_CUBEMAP,
+
+		//! Support for filtering across different faces of the cubemap
+		EVDF_TEXTURE_CUBEMAP_SEAMLESS,
 
 		//! Only used for counting the elements of this enum
 		EVDF_COUNT

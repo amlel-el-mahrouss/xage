@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: DriverSystem.h
  *			Purpose: C++ Rendering Driver API

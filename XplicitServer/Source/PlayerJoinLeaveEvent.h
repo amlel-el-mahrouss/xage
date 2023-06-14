@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: PlayerJoinLeaveEvent.h
  *			Purpose: Player Join and Leave Event

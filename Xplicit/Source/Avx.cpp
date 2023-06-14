@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *				XplicitNgin C++ Game Engine
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: Avx.cpp
  *			Purpose: Intel AVX C Library

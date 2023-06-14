@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: Actor.h
  *			Purpose: Server-Side Actors (players)

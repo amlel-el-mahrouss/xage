@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: LocalActor.cpp
  *			Purpose: Client-side Player Components
@@ -25,11 +25,13 @@ namespace Xplicit::Player
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
 
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
-		: Component(), 
+		: 
+		Component(), 
 		MeshComponent("Character.dae"), 
 		mPacket(), 
 		mCam(nullptr), 
-		mPublicHash(public_hash)
+		mPublicHash(public_hash),
+		mEvent(EventDispatcher::get_singleton_ptr()->add<LocalMoveEvent>(public_hash))
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -46,6 +48,8 @@ namespace Xplicit::Player
 		XPLICIT_INFO("LocalActor::~LocalActor");
 #endif
 
+		if (mEvent)
+			EventDispatcher::get_singleton_ptr()->remove(mEvent);
 	}
 
 	LocalPlayerComponent::INSTANCE_TYPE LocalPlayerComponent::type() noexcept { return INSTANCE_ACTOR; }
@@ -111,7 +115,9 @@ namespace Xplicit::Player
 
 	const char* LocalMoveEvent::name() noexcept { return ("LocalMoveEvent"); }
 
-	/* main movement logic */
+	const int64_t& LocalPlayerComponent::id() noexcept { return mPublicHash; }
+
+	/* LocalPlayer movement logic */
 	void LocalMoveEvent::operator()()
 	{
 		if (mNetwork == nullptr || 
@@ -135,6 +141,7 @@ namespace Xplicit::Player
 		if (KB->key_down(Details::KEY_KEY_W))
 		{
 			mPacket.public_hash = mPublicHash;
+
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_FORWARD;
 
@@ -146,6 +153,7 @@ namespace Xplicit::Player
 		if (KB->key_down(Details::KEY_KEY_S))
 		{
 			mPacket.public_hash = mPublicHash;
+
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_BACKWARD;
 
@@ -157,6 +165,7 @@ namespace Xplicit::Player
 		if (KB->key_down(Details::KEY_KEY_D))
 		{
 			mPacket.public_hash = mPublicHash;
+
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_RIGHT;
 
@@ -168,6 +177,7 @@ namespace Xplicit::Player
 		if (KB->key_down(Details::KEY_KEY_A))
 		{
 			mPacket.public_hash = mPublicHash;
+
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_LEFT;
 

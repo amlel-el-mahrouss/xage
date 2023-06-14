@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: LocalActor.h
  *			Purpose: Client-side Player
@@ -13,11 +13,14 @@
 #pragma once
 
 #include <NetworkComponent.h>
+
 #include "CameraComponent.h"
 #include "MeshComponent.h"
 
 namespace Xplicit::Player
 {
+	class LocalMoveEvent;
+
 	constexpr const int XPLICIT_NETWORK_DELAY = 100;
 
 	class LocalPlayerComponent : public Component, public MeshComponent
@@ -31,6 +34,8 @@ namespace Xplicit::Player
 
 		virtual INSTANCE_TYPE type() noexcept override;
 		virtual const char* name() noexcept override;
+
+		const int64_t& id() noexcept;
 
 	public:
 		virtual void update() override;
@@ -47,6 +52,7 @@ namespace Xplicit::Player
 		NetworkComponent* mNetwork;
 		CameraComponent* mCam;
 		NetworkPacket mPacket;
+		LocalMoveEvent* mEvent;
 
 	private:
 		std::int64_t mPublicHash;

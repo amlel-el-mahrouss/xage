@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin (XplicitRenderer)
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: Bites.h
  *			Purpose: The C++ Windowing library for DirectX

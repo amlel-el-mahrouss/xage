@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin (XplicitRenderer)
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: DriverOpenGL.h
  *			Purpose: C++ Rendering Driver for OpenGL

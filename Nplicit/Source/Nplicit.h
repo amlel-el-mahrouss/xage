@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			NplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: Nplicit.h
  *			Purpose: Nplicit Physics Engine

@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: Application.cpp
  *			Purpose: Application Framework
@@ -67,15 +67,17 @@ namespace Xplicit::Bites
 
 	void Application::setup()
 	{
+		auto singleton = Xplicit::ApplicationContext::get_singleton_ptr();
+
 		Xplicit::ApplicationContext::get_singleton_ptr()->set(new Xplicit::InputReceiver());
 
-		Xplicit::ApplicationContext::get_singleton_ptr()->set(
+		singleton->set(
 			irr::createDevice(
-				irr::video::EDT_OPENGL,
+				irr::video::EDT_DIRECT3D9,
 				Xplicit::Player::XPLICIT_DIM,
 				32U,
 				false,
-				false,
+				true,
 				false,
 				KB
 			)

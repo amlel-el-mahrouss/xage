@@ -20,6 +20,7 @@ namespace scene
 	public:
 		//! constructor
 		CDynamicMeshBuffer(video::E_VERTEX_TYPE vertexType, video::E_INDEX_TYPE indexType)
+		: PrimitiveType(EPT_TRIANGLES)
 		{
 			VertexBuffer=new CVertexBuffer(vertexType);
 			IndexBuffer=new CIndexBuffer(indexType);
@@ -34,17 +35,17 @@ namespace scene
 				IndexBuffer->drop();
 		}
 
-		virtual IVertexBuffer& getVertexBuffer() const
+		virtual IVertexBuffer& getVertexBuffer() const _IRR_OVERRIDE_
 		{
 			return *VertexBuffer;
 		}
 
-		virtual IIndexBuffer& getIndexBuffer() const
+		virtual IIndexBuffer& getIndexBuffer() const _IRR_OVERRIDE_
 		{
 			return *IndexBuffer;
 		}
 
-		virtual void setVertexBuffer(IVertexBuffer *newVertexBuffer)
+		virtual void setVertexBuffer(IVertexBuffer *newVertexBuffer) _IRR_OVERRIDE_
 		{
 			if (newVertexBuffer)
 				newVertexBuffer->grab();
@@ -54,7 +55,7 @@ namespace scene
 			VertexBuffer=newVertexBuffer;
 		}
 
-		virtual void setIndexBuffer(IIndexBuffer *newIndexBuffer)
+		virtual void setIndexBuffer(IIndexBuffer *newIndexBuffer) _IRR_OVERRIDE_
 		{
 			if (newIndexBuffer)
 				newIndexBuffer->grab();
@@ -65,31 +66,31 @@ namespace scene
 		}
 
 		//! Get Material of this buffer.
-		virtual const video::SMaterial& getMaterial() const
+		virtual const video::SMaterial& getMaterial() const _IRR_OVERRIDE_
 		{
 			return Material;
 		}
 
 		//! Get Material of this buffer.
-		virtual video::SMaterial& getMaterial()
+		virtual video::SMaterial& getMaterial() _IRR_OVERRIDE_
 		{
 			return Material;
 		}
 
 		//! Get bounding box
-		virtual const core::aabbox3d<f32>& getBoundingBox() const
+		virtual const core::aabbox3d<f32>& getBoundingBox() const _IRR_OVERRIDE_
 		{
 			return BoundingBox;
 		}
 
 		//! Set bounding box
-		virtual void setBoundingBox( const core::aabbox3df& box)
+		virtual void setBoundingBox( const core::aabbox3df& box) _IRR_OVERRIDE_
 		{
 			BoundingBox = box;
 		}
 
 		//! Recalculate bounding box
-		virtual void recalculateBoundingBox()
+		virtual void recalculateBoundingBox() _IRR_OVERRIDE_
 		{
 			if (!getVertexBuffer().size())
 				BoundingBox.reset(0,0,0);
@@ -101,9 +102,25 @@ namespace scene
 			}
 		}
 
+		//! Describe what kind of primitive geometry is used by the meshbuffer
+		virtual void setPrimitiveType(E_PRIMITIVE_TYPE type) _IRR_OVERRIDE_
+		{
+			PrimitiveType = type;
+		}
+
+		//! Get the kind of primitive geometry which is used by the meshbuffer
+		virtual E_PRIMITIVE_TYPE getPrimitiveType() const _IRR_OVERRIDE_
+		{
+			return PrimitiveType;
+		}
+
 		video::SMaterial Material;
 		core::aabbox3d<f32> BoundingBox;
+		//! Primitive type used for rendering (triangles, lines, ...)
+		E_PRIMITIVE_TYPE PrimitiveType;
 	private:
+		CDynamicMeshBuffer(const CDynamicMeshBuffer&); // = delete in c++11, prevent copying
+
 		IVertexBuffer *VertexBuffer;
 		IIndexBuffer *IndexBuffer;
 	};

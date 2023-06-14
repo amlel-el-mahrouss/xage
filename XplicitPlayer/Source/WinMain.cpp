@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: Main.cpp
  *			Purpose: Main App unit.
@@ -69,7 +69,7 @@ XPLICIT_MAIN()
 			Xplicit::EventDispatcher::get_singleton_ptr())
 		{
 			IRR->getVideoDriver()->beginScene(true, true, 
-				irr::video::SColor(255, 40, 40, 40));
+				irr::video::SColor(255, 40, 40, 40), IRR->getVideoDriver()->getExposedVideoData());
 
 			IRR->getSceneManager()->drawAll();
 
@@ -77,9 +77,6 @@ XPLICIT_MAIN()
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			IRR->getVideoDriver()->endScene();
-
-			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = Xplicit::NETWORK_CMD_ACK;
-			net->send(packet);
 		}
 	}
 	catch (Xplicit::EngineError& err)

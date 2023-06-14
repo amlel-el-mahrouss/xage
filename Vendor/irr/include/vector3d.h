@@ -57,10 +57,24 @@ namespace core
 		vector3d<T> operator/(const T v) const { T i=(T)1.0/v; return vector3d<T>(X * i, Y * i, Z * i); }
 		vector3d<T>& operator/=(const T v) { T i=(T)1.0/v; X*=i; Y*=i; Z*=i; return *this; }
 
+		T& operator [](u32 index)
+		{
+			_IRR_DEBUG_BREAK_IF(index>2) // access violation
+
+			return *(&X+index);
+		}
+
+		const T& operator [](u32 index) const
+		{
+			_IRR_DEBUG_BREAK_IF(index>2) // access violation
+
+			return *(&X+index);
+		}
+
 		//! sort in order X, Y, Z. Equality with rounding tolerance.
 		bool operator<=(const vector3d<T>&other) const
 		{
-			return 	(X<other.X || core::equals(X, other.X)) ||
+			return (X<other.X || core::equals(X, other.X)) ||
 					(core::equals(X, other.X) && (Y<other.Y || core::equals(Y, other.Y))) ||
 					(core::equals(X, other.X) && core::equals(Y, other.Y) && (Z<other.Z || core::equals(Z, other.Z)));
 		}
@@ -68,7 +82,7 @@ namespace core
 		//! sort in order X, Y, Z. Equality with rounding tolerance.
 		bool operator>=(const vector3d<T>&other) const
 		{
-			return 	(X>other.X || core::equals(X, other.X)) ||
+			return (X>other.X || core::equals(X, other.X)) ||
 					(core::equals(X, other.X) && (Y>other.Y || core::equals(Y, other.Y))) ||
 					(core::equals(X, other.X) && core::equals(Y, other.Y) && (Z>other.Z || core::equals(Z, other.Z)));
 		}
@@ -76,7 +90,7 @@ namespace core
 		//! sort in order X, Y, Z. Difference must be above rounding tolerance.
 		bool operator<(const vector3d<T>&other) const
 		{
-			return 	(X<other.X && !core::equals(X, other.X)) ||
+			return (X<other.X && !core::equals(X, other.X)) ||
 					(core::equals(X, other.X) && Y<other.Y && !core::equals(Y, other.Y)) ||
 					(core::equals(X, other.X) && core::equals(Y, other.Y) && Z<other.Z && !core::equals(Z, other.Z));
 		}
@@ -84,7 +98,7 @@ namespace core
 		//! sort in order X, Y, Z. Difference must be above rounding tolerance.
 		bool operator>(const vector3d<T>&other) const
 		{
-			return 	(X>other.X && !core::equals(X, other.X)) ||
+			return (X>other.X && !core::equals(X, other.X)) ||
 					(core::equals(X, other.X) && Y>other.Y && !core::equals(Y, other.Y)) ||
 					(core::equals(X, other.X) && core::equals(Y, other.Y) && Z>other.Z && !core::equals(Z, other.Z));
 		}
@@ -302,7 +316,8 @@ namespace core
 		{
 			vector3d<T> angle;
 
-			const f64 tmp = (atan2((f64)X, (f64)Z) * RADTODEG64);
+			// tmp avoids some precision troubles on some compilers when working with T=s32
+			f64 tmp = (atan2((f64)X, (f64)Z) * RADTODEG64);
 			angle.Y = (T)tmp;
 
 			if (angle.Y < 0)
@@ -312,7 +327,8 @@ namespace core
 
 			const f64 z1 = core::squareroot(X*X + Z*Z);
 
-			angle.X = (T)(atan2((f64)z1, (f64)Y) * RADTODEG64 - 90.0);
+			tmp = (atan2((f64)z1, (f64)Y) * RADTODEG64 - 90.0);
+			angle.X = (T)tmp;
 
 			if (angle.X < 0)
 				angle.X += 360;
@@ -415,7 +431,7 @@ namespace core
 	};
 
 	//! partial specialization for integer vectors
-	// Implementor note: inline keyword needed due to template specialization for s32. Otherwise put specialization into a .cpp
+	// Implementer note: inline keyword needed due to template specialization for s32. Otherwise put specialization into a .cpp
 	template <>
 	inline vector3d<s32> vector3d<s32>::operator /(s32 val) const {return core::vector3d<s32>(X/val,Y/val,Z/val);}
 	template <>

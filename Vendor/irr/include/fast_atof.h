@@ -13,8 +13,8 @@ namespace irr
 namespace core
 {
 	//! Selection of characters which count as decimal point in fast_atof
-	// TODO: This should probably also be used in irr::core::string, but the float-to-string code
-	//		used there has to be rewritten first.
+	// TODO: This should probably also be used in irr::core::string, but
+	// the float-to-string code used there has to be rewritten first.
 	IRRLICHT_API extern irr::core::stringc LOCALE_DECIMAL_POINTS;
 
 #define IRR_ATOF_TABLE_SIZE 17
@@ -324,8 +324,8 @@ inline const char* fast_atof_move(const char* in, f32& result)
 	if ( LOCALE_DECIMAL_POINTS.findFirst(*in) >= 0 )
 	{
 		const char* afterDecimal = ++in;
-		f32 decimal = strtof10(in, &afterDecimal);
-		size_t numDecimals = afterDecimal - in;
+		const f32 decimal = strtof10(in, &afterDecimal);
+		const size_t numDecimals = afterDecimal - in;
 		if (numDecimals < IRR_ATOF_TABLE_SIZE)
 		{
 			value += decimal * fast_atof_table[numDecimals];

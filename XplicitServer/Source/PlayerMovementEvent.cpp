@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: PlayerMovementEvent.h
  *			Purpose: Player Movement Event handler.
@@ -65,6 +65,8 @@ namespace Xplicit
 				peer->packet.speed[XPLICIT_NETWORK_X] = XPLICIT_DEFAULT_VEL;
 				peer->packet.speed[XPLICIT_NETWORK_Y] = XPLICIT_DEFAULT_VEL;
 				peer->packet.speed[XPLICIT_NETWORK_Z] = XPLICIT_DEFAULT_VEL;
+
+				/* send server delta to player, so that he is not out of touch. */
 				peer->packet.speed[XPLICIT_NETWORK_DELTA] = (IRR->getTimer()->getTime() - mThen) / XPLICIT_DELTA_TIME;
 
 				ply->freeze_for(XPLICIT_MOVEMENT_RATE);

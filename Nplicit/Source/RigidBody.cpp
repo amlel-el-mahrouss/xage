@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			NplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: RigidBody.cpp
  *			Purpose: RigidBody Class

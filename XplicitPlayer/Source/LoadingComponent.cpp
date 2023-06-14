@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: LoadingComponent.cpp
  *			Purpose: Loading Component
@@ -30,7 +30,6 @@ namespace Xplicit::Player
 		: mEnable(true), mNetwork(nullptr), m_texture(nullptr), m_timeout(XPLICIT_TIMEOUT)
 	{
 		m_texture = IRR->getVideoDriver()->getTexture("xpx.png");
-		ComponentManager::get_singleton_ptr()->add<CoreUI::Notification>("Downloading", "Download.png");
 	}
 
 	LoadingComponent::~LoadingComponent() 
@@ -50,38 +49,14 @@ namespace Xplicit::Player
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
-			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
-			XPLICIT_ASSERT(ply);
+			ComponentManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
 
-			if (ply)
-			{
-				ply->attach(ComponentManager::get_singleton_ptr()->add<Xplicit::Player::CameraComponent>());
+			EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(packet.hash);
+			EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(packet.hash);
 
-				ComponentManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
-
-				EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(packet.hash);
-				EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(packet.hash);
-				EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalMoveEvent>(packet.public_hash);
-
-				mEnable = false;
-			}
-			else
-			{
-				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-				packet.size = sizeof(NetworkPacket);
-
-				mNetwork->send(packet);
-				
-				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
-					IRR->closeDevice();
-				}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45,
-					Xplicit::Player::XPLICIT_DIM.Height / 4),
-					CoreUI::POPUP_TYPE::NETWORK_ERROR);
-
-				mEnable = false;
-			}
+			mEnable = false;
 		}
-		else /* download files ... */
+		else
 		{
 			--m_timeout;
 

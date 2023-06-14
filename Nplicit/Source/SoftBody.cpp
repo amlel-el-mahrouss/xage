@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			NplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: SoftBody.cpp
  *			Purpose: 

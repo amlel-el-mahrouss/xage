@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright XPX, all rights reserved.
+ *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: CoreUI.h
  *			Purpose: Client UI
@@ -15,6 +15,8 @@
 #include <ApplicationContext.h>
 #include <NetworkComponent.h>
 #include <Component.h>
+
+/* Xplicit Engine Prebuilt dialogs engine */
 
 namespace Xplicit::Player
 {
