@@ -23,7 +23,7 @@ namespace Xplicit::Player
 	extern dimension2du XPLICIT_DIM;
 }
 
-namespace Xplicit::CoreUI
+namespace Xplicit::Player
 {
 	enum class POPUP_TYPE
 	{
@@ -33,19 +33,19 @@ namespace Xplicit::CoreUI
 		KICK,
 	};
 
-	class Popup final : public Component
+	class PopupComponent final : public Component
 	{
 	public:
-		Popup() = delete;
+		PopupComponent() = delete;
 
 	public:
-		Popup(const std::function<void()>& on_click, const vector2di pos = vector2di(0, 0), 
+		PopupComponent(const std::function<void()>& on_click, const vector2di pos = vector2di(0, 0), 
 			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK_ERROR, const char* id = "Popup") noexcept;
 
-		virtual ~Popup();
+		virtual ~PopupComponent();
 
-		Popup& operator=(const Popup&) = default;
-		Popup(const Popup&) = default;
+		PopupComponent& operator=(const PopupComponent&) = default;
+		PopupComponent(const PopupComponent&) = default;
 
 	public:
 		virtual INSTANCE_TYPE type() noexcept override;
@@ -62,14 +62,14 @@ namespace Xplicit::CoreUI
 
 	};
 
-	class HUD final : public Component
+	class HUDComponent final : public Component
 	{
 	public:
-		HUD();
-		virtual ~HUD();
+		HUDComponent();
+		virtual ~HUDComponent();
 
-		HUD& operator=(const HUD&) = delete;
-		HUD(const HUD&) = delete;
+		HUDComponent& operator=(const HUDComponent&) = delete;
+		HUDComponent(const HUDComponent&) = delete;
 
 		virtual const char* name() noexcept override { return "HUD"; }
 		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_GUI; }
@@ -84,10 +84,10 @@ namespace Xplicit::CoreUI
 
 	};
 
-	class Notification : public Component
+	class NotificationComponent : public Component
 	{
 	public:
-		Notification(const char* name, const char* texture) 
+		NotificationComponent(const char* name, const char* texture) 
 			:
 			mName(name), 
 			mTexture(IRR->getVideoDriver()->getTexture(texture)),
@@ -95,14 +95,14 @@ namespace Xplicit::CoreUI
 			mCountdown(3000)
 		{}
 
-		virtual ~Notification()
+		virtual ~NotificationComponent()
 		{
 			if (mTexture)
 				mTexture->drop();
 		}
 
 	public:
-		XPLICIT_COPY_DELETE(Notification);
+		XPLICIT_COPY_DELETE(NotificationComponent);
 
 	public:
 		virtual const char* name() noexcept override { XPLICIT_ASSERT(!mName.empty()); return mName.c_str(); }

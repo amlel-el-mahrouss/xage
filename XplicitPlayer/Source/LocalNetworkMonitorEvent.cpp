@@ -49,16 +49,14 @@ namespace Xplicit::Player
 		{
 			if (mHash == packet.hash)
 			{
-				if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("StopPopup"))
+				if (!ComponentManager::get_singleton_ptr()->get<Player::PopupComponent>("StopPopup"))
 				{
-					/* connection closed by peer. */
-					ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
-						// close on click
+					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 						IRR->closeDevice();
 						}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
-							Xplicit::Player::XPLICIT_DIM.Height / 4),
-							CoreUI::POPUP_TYPE::SHUTDOWN,
-							"ResetConnPopup");
+							Xplicit::Player::XPLICIT_DIM.Height / 2.8),
+							Player::POPUP_TYPE::SHUTDOWN, 
+							"ConnShutdown");
 
 					return;
 				}
@@ -82,11 +80,11 @@ namespace Xplicit::Player
 
 			if (mResetCnt > XPLICIT_MAX_RESETS)
 			{
-				if (!ComponentManager::get_singleton_ptr()->get<CoreUI::Popup>("ResetPopup"))
+				if (!ComponentManager::get_singleton_ptr()->get<Player::PopupComponent>("ResetPopup"))
 				{
-					ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
+					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 						IRR->closeDevice();
-						}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, Xplicit::Player::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
+						}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, Xplicit::Player::XPLICIT_DIM.Height / 4), Player::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
 
 				}
 			}

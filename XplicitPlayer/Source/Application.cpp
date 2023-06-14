@@ -31,11 +31,18 @@ namespace Xplicit::Bites
 		prebuilt += "\\Textures\\PreBuiltDialogs.zip";
 
 		auto res = IRR->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true);
-
 		XPLICIT_ASSERT(res);
+
+		if (!res)
+			throw std::runtime_error("Missing dialogs! This pack are needed for XplicitPlayer to work.");
+
+		String prebuiltExt = dir;
+
+		prebuiltExt += "\\Textures\\PreBuiltDialogsExtended.zip";
+		res = IRR->getFileSystem()->addZipFileArchive(prebuiltExt.c_str(), true, true);
 		
-		if (!res) 
-			std::exit(3);
+		if (!res)
+			throw std::runtime_error("Missing dialogs! This pack are needed for XplicitPlayer to work.");
 	}
 
 	Application::Application(const char* dns)

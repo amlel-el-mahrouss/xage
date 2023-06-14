@@ -17,15 +17,15 @@
 #include "CoreUI.h"
 #include "Application.h"
 
-namespace Xplicit::CoreUI
+namespace Xplicit::Player
 {
 	/*
 	 * This is a popup class
-	 * used to create popups according to a state.
+	 * used to create pop-up according to a state.
 	 */
 
 	// constructor
-	Popup::Popup(const std::function<void()>& onClick, const vector2di pos, const POPUP_TYPE popupType, const char* id) noexcept
+	PopupComponent::PopupComponent(const std::function<void()>& onClick, const vector2di pos, const POPUP_TYPE popupType, const char* id) noexcept
 		: m_onClick(onClick), m_vecPos(pos), m_strPopupId(id)
 	{
 		XPLICIT_ASSERT(onClick);
@@ -42,7 +42,7 @@ namespace Xplicit::CoreUI
 			path += "NetworkError.png";
 			break;
 		case POPUP_TYPE::SHUTDOWN:
-			path += "NetworkError.png";
+			path += "Shutdown.png";
 			break;
 		case POPUP_TYPE::WAITING_ACK:
 			path += "Download.png";
@@ -58,14 +58,14 @@ namespace Xplicit::CoreUI
 	}
 
 	// c++ destructor
-	Popup::~Popup()
+	PopupComponent::~PopupComponent()
 	{
 		if (m_pTexture)
 			m_pTexture->drop();
 	}
 
 	// update function
-	void Popup::update()
+	void PopupComponent::update()
 	{
 		IRR->getVideoDriver()->draw2DImage(m_pTexture, m_vecPos);
 
@@ -75,18 +75,18 @@ namespace Xplicit::CoreUI
 		}
 	}
 
-	const char* Popup::name() noexcept
+	const char* PopupComponent::name() noexcept
 	{
 		return m_strPopupId.c_str();
 	}
 
-	Popup::INSTANCE_TYPE Popup::type() noexcept
+	PopupComponent::INSTANCE_TYPE PopupComponent::type() noexcept
 	{
-		return Popup::INSTANCE_GUI;
+		return PopupComponent::INSTANCE_GUI;
 	}
 	
 	/* Heads up display */
-	HUD::HUD()
+	HUDComponent::HUDComponent()
 		: m_health(0), 
 		  m_network(nullptr)
 	{
@@ -94,9 +94,9 @@ namespace Xplicit::CoreUI
 		XPLICIT_ASSERT(m_network);
 	}
 
-	HUD::~HUD() = default;
+	HUDComponent::~HUDComponent() = default;
 
-	void HUD::update()
+	void HUDComponent::update()
 	{
 		if (!m_network)
 			return;

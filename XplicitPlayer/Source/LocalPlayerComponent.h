@@ -15,7 +15,7 @@
 #include <NetworkComponent.h>
 
 #include "CameraComponent.h"
-#include "MeshComponent.h"
+#include "IMeshable.h"
 
 namespace Xplicit::Player
 {
@@ -23,7 +23,7 @@ namespace Xplicit::Player
 
 	constexpr const int XPLICIT_NETWORK_DELAY = 100;
 
-	class LocalPlayerComponent : public Component, public MeshComponent
+	class LocalPlayerComponent : public Component, public IMeshable
 	{
 	public:
 		LocalPlayerComponent(const int64_t& public_hash);

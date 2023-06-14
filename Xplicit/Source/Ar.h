@@ -103,21 +103,27 @@ namespace Xplicit
         ArchiveManager(const char* path, const char* rest);
         ~ArchiveManager();
 
+    public:
+        XPLICIT_COPY_DELETE(ArchiveManager);
+
+    public:
         ArchiveManager& operator<<(const unsigned char* bytes);
         ArchiveManager& operator>>(unsigned char* bytes);
 
-    public:
+	public:
+		void seek(const size_t seek = 0) noexcept;
+		void set(const std::size_t& sz) noexcept;
+		bool good() const noexcept;
+		size_t tell() noexcept;
         long size() noexcept;
-        void seek(const size_t seek = 0) noexcept;
-        size_t tell() noexcept;
-        bool good() const noexcept;
 
         static const size_t npos = 0xFFFFFF;
 
     private:
-        ar_context* m_ar;
-        size_t m_off;
-        bool m_good;
+        std::size_t mSz;
+        ar_context* mAr;
+        size_t mOff;
+        bool mGood;
 
     };
 

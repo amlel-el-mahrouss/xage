@@ -27,7 +27,7 @@ namespace Xplicit::Player
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
 		: 
 		Component(), 
-		MeshComponent("Character.dae"), 
+		IMeshable("Character.dae"), 
 		mPacket(), 
 		mCam(nullptr), 
 		mPublicHash(public_hash),
@@ -76,21 +76,13 @@ namespace Xplicit::Player
 
 				f32 delta = mPacket.speed[XPLICIT_NETWORK_DELTA];
 
-				//			   XPLICIT_DEFAULT_VEL
 				auto x_speed = mPacket.speed[XPLICIT_NETWORK_X] * delta;
 				auto z_speed = mPacket.speed[XPLICIT_NETWORK_Z] * delta;
 
-				if (pos.X == x_speed ||
-					pos.Z == z_speed)
-					return;
 
-				if (pos.X > x_speed)
-					pos.X = x_speed;
-
-				if (pos.Z > z_speed)
-					pos.Z = z_speed;
 
 				mNode->setPosition(pos);
+				mNetwork->send(mPacket);
 			}
 		}
 	}
@@ -124,17 +116,6 @@ namespace Xplicit::Player
 			mPublicHash == -1)
 			return;
 
-		static auto node = ComponentManager::get_singleton_ptr()->get<LocalPlayerComponent>("LocalPlayerComponent");
-		if (!node) return;
-
-		mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
-		mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
-		mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
-		mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
-
-		auto speed = XPLICIT_DEFAULT_VEL;
-		auto pos = node->get_pos();
-
 		static f32 then = IRR->getTimer()->getTime();
 		f32 delta = (IRR->getTimer()->getTime() - then) / XPLICIT_DELTA_TIME;
 
@@ -144,8 +125,6 @@ namespace Xplicit::Player
 
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_FORWARD;
-
-			pos.Z -= speed * then;
 
 			mNetwork->send(mPacket);
 		}
@@ -157,8 +136,6 @@ namespace Xplicit::Player
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_BACKWARD;
 
-			pos.Z += speed * then;
-
 			mNetwork->send(mPacket);
 		}
 
@@ -169,8 +146,6 @@ namespace Xplicit::Player
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_RIGHT;
 
-			pos.X -= speed * then;
-			
 			mNetwork->send(mPacket);
 		}
 
@@ -181,11 +156,7 @@ namespace Xplicit::Player
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_LEFT;
 
-			pos.X += speed * then;
-
 			mNetwork->send(mPacket);
 		}
-
-		node->set_pos(pos);
 	}
 }

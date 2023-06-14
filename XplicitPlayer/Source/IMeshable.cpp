@@ -14,11 +14,11 @@
  @file
  */
 
-#include "MeshComponent.h"
+#include "IMeshable.h"
 
 namespace Xplicit::Player
 {
-	MeshComponent::MeshComponent(const char* path)
+	IMeshable::IMeshable(const char* path)
 	{
 		String _path = XPLICIT_ENV("APPDATA");
 		_path += "/Data/Studio/";
@@ -31,10 +31,13 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mNode);
 	
 		if (mMdl)
+		{
 			mMdl->setMaterialFlag(EMF_LIGHTING, false);
+			mMdl->setAnimationSpeed(240.f);
+		}
 	}
 
-	MeshComponent::~MeshComponent()
+	IMeshable::~IMeshable()
 	{
 		if (mNode)
 			mNode->drop();

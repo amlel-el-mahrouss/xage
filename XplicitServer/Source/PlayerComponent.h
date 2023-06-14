@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "ServerSDK.h"
+#include "CommonInc.h"
 
 namespace Xplicit
 {

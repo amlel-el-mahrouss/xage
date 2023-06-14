@@ -49,7 +49,8 @@ namespace Xplicit::Player
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
-			ComponentManager::get_singleton_ptr()->add<Xplicit::CoreUI::HUD>();
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HUDComponent>();
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::CameraComponent>();
 
 			EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(packet.hash);
 			EventDispatcher::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(packet.hash);
@@ -68,9 +69,11 @@ namespace Xplicit::Player
 
 				mNetwork->send(packet);
 
-				ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
-					IRR->closeDevice();
-					}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, Xplicit::Player::XPLICIT_DIM.Height / 4), CoreUI::POPUP_TYPE::NETWORK_ERROR, "TimeoutPopup");
+				ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>(
+					[]() { IRR->closeDevice(); }, 
+						vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
+						Xplicit::Player::XPLICIT_DIM.Height / 2.8),
+						Player::POPUP_TYPE::NETWORK_ERROR, "StopPopup");
 
 				mEnable = false;
 			}
@@ -118,11 +121,10 @@ namespace Xplicit::Player
 
 	void LoadingComponent::reset() noexcept
 	{
-		ComponentManager::get_singleton_ptr()->add<CoreUI::Popup>([]()-> void {
+		ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 			IRR->closeDevice();
-			}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, 
-				Xplicit::Player::XPLICIT_DIM.Height / 4), 
-				CoreUI::POPUP_TYPE::NETWORK_ERROR);
-
+			}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45,
+				Xplicit::Player::XPLICIT_DIM.Height / 4),
+				Player::POPUP_TYPE::NETWORK_ERROR);
 	}
 }

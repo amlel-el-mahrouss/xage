@@ -18,17 +18,17 @@
 namespace Xplicit::Player
 {
 	/* this classes gives an component a model. */
-	class MeshComponent
+	class IMeshable
 	{
 	public:
-		MeshComponent() = delete;
+		IMeshable() = delete;
 
-		MeshComponent(const char* path);
-		virtual ~MeshComponent();
+		IMeshable(const char* path);
+		virtual ~IMeshable();
 
 	public:
-		MeshComponent& operator=(const MeshComponent&) = default;
-		MeshComponent(const MeshComponent&) = default;
+		IMeshable& operator=(const IMeshable&) = default;
+		IMeshable(const IMeshable&) = default;
 
 	protected:
 		IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic

@@ -237,7 +237,7 @@ ar_close(struct ar_context* ctx) {
 namespace Xplicit
 {
     ArchiveManager::ArchiveManager(const char* path, const char* rest)
-        : m_ar(ar_new(path, rest)), m_good(true), m_off(0)
+        : mAr(ar_new(path, rest)), mGood(true), mOff(0)
     {
 #ifdef XPLICIT_DEBUG
         std::string message;
@@ -250,8 +250,8 @@ namespace Xplicit
 
     ArchiveManager::~ArchiveManager()
     {
-        if (m_ar)
-            ar_close(m_ar);
+        if (mAr)
+            ar_close(mAr);
 
 #ifdef XPLICIT_DEBUG
         std::string message;
@@ -264,10 +264,10 @@ namespace Xplicit
 
     long ArchiveManager::size() noexcept
     {
-        if (!m_ar)
+        if (!mAr)
             return -1;
 
-        auto fp = m_ar->fp;
+        auto fp = mAr->fp;
         XPLICIT_ASSERT(fp);
 
         fseek(fp, 0, SEEK_END);
@@ -276,32 +276,31 @@ namespace Xplicit
 
     void ArchiveManager::seek(const size_t seek) noexcept
     {
-        m_off = seek;
+        mOff = seek;
     }
 
     size_t ArchiveManager::tell() noexcept
     {
-        if (!m_ar)
+        if (!mAr)
             return ArchiveManager::npos;
 
-        return ftell(m_ar->fp);
+        return ftell(mAr->fp);
     }
 
-    bool ArchiveManager::good() const noexcept { return m_good; }
+    bool ArchiveManager::good() const noexcept { return mGood; }
 
     ArchiveManager& ArchiveManager::operator<<(const unsigned char* bytes)
     {
         if (!bytes)
             return *this;
 
-        auto len = ar_len(bytes, 1024);
+        auto len = ar_len(bytes, mSz);
 
-        ar_write(m_ar, bytes, m_off, len);
+        ar_write(mAr, bytes, mOff, len);
 
-        ++m_off;
+        ++mOff;
 
-        m_good = (ferror(m_ar->fp) == 0);
-
+        mGood = (ferror(mAr->fp) == 0);
         return *this;
     }
 
@@ -310,13 +309,18 @@ namespace Xplicit
         if (!bytes)
             return *this;
 
-        auto len = ar_len(bytes, 1024);
+        auto len = ar_len(bytes, mSz);
 
-        ar_read(m_ar, bytes, m_off, len);
-        ++m_off;
+        ar_read(mAr, bytes, mOff, len);
+        ++mOff;
 
-        m_good = (ferror(m_ar->fp) == 0);
-
+        mGood = (ferror(mAr->fp) == 0);
         return *this;
+    }
+
+    void ArchiveManager::set(const std::size_t& sz) noexcept
+    {
+        XPLICIT_ASSERT(sz > 0);
+        mSz = sz;
     }
 }

@@ -17,7 +17,7 @@
 #include <codecvt>
 #include <ApplicationContext.h>
 
-#include "ServerSDK.h"
+#include "CommonInc.h"
 #include "SpawnComponent.h"
 #include "PlayerComponent.h"
 #include "PlayerMovementEvent.h"
