@@ -56,8 +56,6 @@ namespace Xplicit::Utils
                 return { .t_name = "JPEG", .t_mime = "Content-Type: image/jpeg" };
             else if (!strcmp(extension.c_str(), ".ar"))
                 return { .t_name = "Xplicit Package", .t_mime = "Content-Type: application/ar" };
-            else if (!strcmp(extension.c_str(), ".exe") || !strcmp(extension.c_str(), ".dll"))
-                return { .t_name = "PE+", .t_mime = "Content-Type: application/vnd.microsoft.portable-executable" };
 
             return { .t_name = "Not allowed", .t_mime = "Content-Type: */not-allowed" };
         }

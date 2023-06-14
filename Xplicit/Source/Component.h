@@ -16,8 +16,8 @@
 
 namespace Xplicit 
 {
-	class Component;
 	class ComponentManager;
+	class Component;
 
 	class XPLICIT_API ComponentManager final 
 	{
@@ -27,9 +27,11 @@ namespace Xplicit
 	public:
 		~ComponentManager() = default;
 
+	public:
 		ComponentManager& operator=(const ComponentManager&) = delete;
 		ComponentManager(const ComponentManager&) = delete;
 
+	public:
 		template <typename T>
 		std::vector<T*> all_of(const char* name);
 
@@ -90,13 +92,13 @@ namespace Xplicit
 		virtual void update();
 
 	public:
-		virtual const char* name() noexcept;
 		virtual INSTANCE_TYPE type() noexcept;
+		virtual const char* name() noexcept;
 
 	public:
+		virtual PHYSICS_TYPE physics() noexcept;
 		virtual bool can_collide() noexcept;
 		virtual bool has_physics() noexcept;
-		virtual PHYSICS_TYPE physics() noexcept;
 
 	};
 }

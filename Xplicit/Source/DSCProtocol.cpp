@@ -14,7 +14,7 @@
  @file
  */
 
-#include "DownloadStreamCore.h"
+#include "DSCProtocol.h"
 #include "Crc32.h"
 
 namespace Xplicit::Network
@@ -56,19 +56,19 @@ namespace Xplicit::Network
 
 	/* Task stream class */
 
-	TaskStream::TaskStream() 
+	FileTaskStream::FileTaskStream() 
 		: mReady(false), mFileList() 
 	{}
 
-	TaskStream::~TaskStream() = default;
+	FileTaskStream::~FileTaskStream() = default;
 
-	void TaskStream::add(FileStream* file)
+	void FileTaskStream::add(FileStream* file)
 	{
 		if (file)
 			mFileList.push_back(file);
 	}
 
-	bool TaskStream::remove(FileStream* file)
+	bool FileTaskStream::remove(FileStream* file)
 	{
 		if (file)
 		{
@@ -84,7 +84,7 @@ namespace Xplicit::Network
 		return false;
 	}
 
-	void TaskStream::operator()(Socket& socket, const bool isCompressed)
+	void FileTaskStream::operator()(Socket& socket, const bool isCompressed)
 	{
 		if (!mReady) 
 			return;
@@ -138,9 +138,9 @@ namespace Xplicit::Network
 		}
 	}
 
-	bool TaskStream::is_ready() noexcept { return mReady; }
+	bool FileTaskStream::ready() noexcept { return mReady; }
 
-	TaskStream::operator bool() noexcept { return this->is_ready(); }
+	FileTaskStream::operator bool() noexcept { return this->ready(); }
 
-	void TaskStream::set(const bool ready) noexcept { mReady = true; }
+	void FileTaskStream::set(const bool ready) noexcept { mReady = true; }
 }

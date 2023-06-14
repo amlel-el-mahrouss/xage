@@ -30,8 +30,7 @@ T* Xplicit::ComponentManager::add(Args&&... args)
 template <typename T>
 T* Xplicit::ComponentManager::get(const char* name)
 {
-	if (!name ||
-		*name == 0)
+	if (!name || *name == 0)
 		return nullptr;
 
 	for (size_t i = 0; i < m_instances.size(); ++i)

@@ -69,12 +69,10 @@ namespace Xplicit
 		static GameVarSingleton* get_singleton_ptr() noexcept;
 
 	public:
-		GameVarViewPtr get(const char* name);
 		GameVarViewPtr create(const char* name, const char* default_value, int flags);
-		
-	public:
+		GameVarViewPtr get(const char* name);
 		void remove(GameVarView* ptr);
-
+		
 	private:
 		std::vector<GameVarView*> m_cvars;
 

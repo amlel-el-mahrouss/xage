@@ -28,13 +28,58 @@ namespace Xplicit
 	class XPLICIT_API PositionComponent final : public Component
 	{
 	public:
-		PositionComponent() : Position(0.f, 0.f, 0.f) {}
+		explicit PositionComponent() : Position(0.f, 0.f, 0.f) {}
 		virtual ~PositionComponent() = default;
 
 		XPLICIT_COPY_DEFAULT(PositionComponent);
 
 	public:
-		Vector<float> Position;
+		String serialize() noexcept
+		{
+			String serialized;
+			serialized = "<Pos X=\"" + std::to_string(Position.X) + "\" Y=\"" + std::to_string(Position.Y) + "\" Z=\"" + std::to_string(Position.Z) + "\" />";
+
+			return serialized;
+		}
+
+	public:
+		Quaternion<float> Position;
+
+	};
+
+	class XPLICIT_API SizeComponent final : public Component
+	{
+	public:
+		explicit SizeComponent() : Size(0.f, 0.f, 0.f) {}
+		virtual ~SizeComponent() = default;
+
+		XPLICIT_COPY_DEFAULT(SizeComponent);
+
+	public:
+		String serialize() noexcept
+		{
+			String serialized;
+			serialized = "<Size Width=\"" + std::to_string(Size.X) + "\" Height=\"" + std::to_string(Size.Y) + "\" />";
+
+			return serialized;
+		}
+
+	public:
+		Vector<float> Size;
+
+	};
+
+	class XPLICIT_API BrickComponent
+	{
+	public:
+		BrickComponent() = default;
+		virtual ~BrickComponent() = default;
+
+		XPLICIT_COPY_DEFAULT(BrickComponent);
+
+	public:
+		PositionComponent Position;
+		SizeComponent Size;
 
 	};
 }

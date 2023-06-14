@@ -20,10 +20,10 @@ namespace Xplicit
 {
 	void EventDispatcher::update()
 	{
-		for (size_t i = 0; i < m_events.size(); i++)
+		for (size_t i = 0; i < mEvents.size(); i++)
 		{
-			XPLICIT_ASSERT(m_events[i]);
-			m_events[i]->update();
+			XPLICIT_ASSERT(mEvents[i]);
+			mEvents[i]->update();
 		}
 	}
 

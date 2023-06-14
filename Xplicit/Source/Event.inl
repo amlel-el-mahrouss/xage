@@ -20,7 +20,7 @@ T* Xplicit::EventDispatcher::add(Args&&... args)
 
 	if (ptr)
 	{
-		m_events.push_back(reinterpret_cast<Event*>(ptr));
+		mEvents.push_back(reinterpret_cast<Event*>(ptr));
 		return ptr;
 	}
 
@@ -30,17 +30,17 @@ T* Xplicit::EventDispatcher::add(Args&&... args)
 template <typename T>
 T* Xplicit::EventDispatcher::get(const char* name)
 {
-	for (size_t i = 0; i < m_events.size(); i++)
+	for (size_t i = 0; i < mEvents.size(); i++)
 	{
-		if (!m_events[i])
+		if (!mEvents[i])
 			continue;
 
 #ifdef XPLICIT_USE_VECTOR
-		if (avx_strequals(name, m_events[i]->name()))
+		if (avx_strequals(name, mEvents[i]->name()))
 #else
-		if (strcmp(name, m_events[i]->name()) == 0)
+		if (strcmp(name, mEvents[i]->name()) == 0)
 #endif
-			return static_cast<T*>(m_events[i]);
+			return static_cast<T*>(mEvents[i]);
 	}
 
 	return nullptr;
@@ -52,11 +52,11 @@ bool Xplicit::EventDispatcher::remove(T* ptr)
 	if (!ptr)
 		return false;
 
-	auto iterator = std::find(m_events.cbegin(), m_events.cend(), ptr);
+	auto iterator = std::find(mEvents.cbegin(), mEvents.cend(), ptr);
 
-	if (iterator != m_events.cend())
+	if (iterator != mEvents.cend())
 	{
-		m_events.erase(iterator);
+		mEvents.erase(iterator);
 		delete ptr;
 
 		return true;

@@ -63,25 +63,25 @@ namespace Xplicit::Network
 
 	using FileStreamPtr = std::unique_ptr<FileStream>;
 
-	class XPLICIT_API TaskStream final
+	class XPLICIT_API FileTaskStream final
 	{
 	public:
-		TaskStream();
-		~TaskStream();
+		FileTaskStream();
+		~FileTaskStream();
 
-		XPLICIT_COPY_DELETE(TaskStream);
+		XPLICIT_COPY_DELETE(FileTaskStream);
 
 	public:
 		void add(FileStream* file);
 		bool remove(FileStream* file);
 
 	public:
-		operator bool() noexcept;
 		void operator()(Socket& socket, const bool isCompressed);
+		operator bool() noexcept;
 		
 	public:
-		bool is_ready() noexcept;
 		void set(const bool ready) noexcept;
+		bool ready() noexcept;
 		
 	private:
 		std::vector<FileStream*> mFileList;

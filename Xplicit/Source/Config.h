@@ -38,8 +38,6 @@ using namespace core;
 #include <WinSock2.h>
 #include <ws2tcpip.h>
 
-#pragma comment(lib, "Ws2_32.lib")
-
 #include <tuple>
 #include <array>
 #include <thread>
@@ -54,11 +52,14 @@ using namespace core;
 
 #include <Windows.h>
 #include <tlhelp32.h>
+
 #include <shellapi.h>
 
 #include <CommCtrl.h>
 
 #pragma comment(lib,"comctl32.lib")
+#pragma comment(lib, "Ws2_32.lib")
+
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 #ifdef _WIN32
@@ -70,7 +71,7 @@ using namespace core;
 #   define XPLICIT_API __declspec(dllexport)
 #   else
 #   define XPLICIT_API __declspec(dllimport)
-#endif
+#   endif
 #else
 #   define XPLICIT_API
 #endif // ifdef __XPLICIT_DLL__
@@ -90,7 +91,7 @@ using namespace core;
 #endif
 
 #ifdef XPLICIT_DEBUG
-#   define XPLICIT_ASSERT(expression) (void)(                                                       \
+#   define XPLICIT_ASSERT(expression) (void)(                                                \
             (!!(expression)) ||                                                              \
             (_wassert(_CRT_WIDE(#expression), _CRT_WIDE(__FILE__), (unsigned)(__LINE__)), 0) \
         )
@@ -115,9 +116,9 @@ KLASS(const KLASS&) = default;\
 
 
 #ifndef XPLICIT_SLEEP
-#ifdef XPLICIT_WINDOWS
+#   ifdef XPLICIT_WINDOWS
 #   define XPLICIT_SLEEP Sleep
-#else
+#   else
 #   error You need a sleep function
-#endif
-#endif
+#   endif
+#endif /* ifndef */

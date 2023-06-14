@@ -16,10 +16,10 @@
 
 namespace Xplicit 
 {
-	class Event;
-	class EventListener;
 	class EventDispatcher;
-
+	class EventListener;
+	class Event;
+	
 	class XPLICIT_API EventDispatcher final 
 	{
 	private:
@@ -28,9 +28,11 @@ namespace Xplicit
 	public:
 		~EventDispatcher() = default;
 
+	public:
 		EventDispatcher& operator=(const EventDispatcher&) = delete;
 		EventDispatcher(const EventDispatcher&) = delete;
 
+	public:
 		template <typename T, typename... Args>
 		T* add(Args&&... args);
 
@@ -47,7 +49,7 @@ namespace Xplicit
 		static EventDispatcher* get_singleton_ptr();
 
 	private:
-		std::vector<Event*> m_events;
+		std::vector<Event*> mEvents;
 
 	};
 
@@ -81,6 +83,7 @@ namespace Xplicit
 	/// It listens to a specific event.
 	/// For example, PlayerJoinEvent or whatever.
 	/// </summary>
+	
 	class XPLICIT_API EventListener
 	{
 	public:
@@ -90,13 +93,16 @@ namespace Xplicit
 		EventListener() = default;
 		virtual ~EventListener() = default;
 
+	public:
 		EventListener& operator=(const EventListener&) = default;
 		EventListener(const EventListener&) = default;
 
+	public:
 		/// <summary>
 		/// Update function
 		/// </summary>
 		/// <param name="pEvent">The Event* class</param>
+		 
 		virtual void update(EventPtr ptr_event) {}
 		virtual const char* name() noexcept { return ("EventListener"); }
 

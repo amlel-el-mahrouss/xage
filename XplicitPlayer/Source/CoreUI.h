@@ -46,10 +46,10 @@ namespace Xplicit::CoreUI
 		Popup(const Popup&) = default;
 
 	public:
-		virtual void update() override;
-		virtual const char* name() noexcept override;
 		virtual INSTANCE_TYPE type() noexcept override;
-
+		virtual const char* name() noexcept override;
+		virtual void update() override;
+		
 	private:
 		std::function<void()> m_onClick;
 		ITexture* m_pTexture;
@@ -132,8 +132,8 @@ namespace Xplicit::CoreUI
 			if (tweenStart < 8)
 			{
 				IRR->getVideoDriver()->draw2DImage(mTexture, vector2di(
-					Xplicit::Player::XPLICIT_DIM.Width / 1.5,
-					Xplicit::Player::XPLICIT_DIM.Height / tweenStart)
+					Xplicit::Player::XPLICIT_DIM.Width / tweenStart,
+					Xplicit::Player::XPLICIT_DIM.Height / 1.5)
 				);
 			}
 

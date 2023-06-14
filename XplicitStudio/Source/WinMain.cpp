@@ -32,10 +32,14 @@ namespace Xplicit::Studio
 	public:
 		explicit Runner(HINSTANCE hInst)
 		{
-			auto wnd = new Xplicit::Bites::GLFWWindow("XplicitEd");
-			std::unique_ptr<Xplicit::Renderer::Vk::DriverSystemVulkan> drv = std::make_unique<Xplicit::Renderer::Vk::DriverSystemVulkan>(glfwGetWin32Window(wnd->get()));
+			auto wnd = new Xplicit::Bites::Win32Window("XplicitEd", "XplicitEditor", hInst);
+			if (!wnd) throw std::runtime_error("not enough memory to continue!");
 			
-			ExitCode = 0;
+			std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11> drv = std::make_unique<Xplicit::Renderer::DX11::DriverSystemD3D11>(wnd->get().WindowHandle);
+		
+			ExitCode = wnd->run(drv, Xplicit::Color<float>(255, 255, 255, 255));
+
+			delete wnd;
 		}
 
 	};
