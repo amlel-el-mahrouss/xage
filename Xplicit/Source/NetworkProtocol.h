@@ -37,7 +37,7 @@
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
-#define XPLICIT_NETWORK_VERSION (5U)
+#define XPLICIT_NETWORK_VERSION (6U)
 
 /* Used by the protocol to tell the velocity. */
 
@@ -80,6 +80,18 @@ namespace Xplicit
         NETWORK_CMD_COUNT = 15,
     };
 
+    /* replication network commands. */
+    enum NETWORK_REPL_CMD : int16_t
+    {
+        NETWORK_REPL_CMD_CREATE = NETWORK_CMD_INVALID + 1,
+        NETWORK_REPL_CMD_DESTROY,
+        NETWORK_REPL_CMD_UPDATE,
+        NETWORK_REPL_CMD_TOUCH,
+        NETWORK_REPL_CMD_CLICK,
+        NETWORK_REPL_CMD_DBL_CLICK,
+        NETWORK_REPL_CMD_COUNT = 7,
+    };
+
     enum NETWORK_STAT : int16_t
     {
 		NETWORK_STAT_CONNECTED = 7,
@@ -87,13 +99,14 @@ namespace Xplicit
         NETWORK_STAT_COUNT = 2,
     };
 
+    /* network float type */
     using nfloat = float;
 
 	class XPLICIT_API NetworkPacket
 	{
 	public:
         char8_t magic[XPLICIT_NETWORK_MAG_COUNT];
-		NETWORK_CMD cmd[XPLICIT_NETWORK_CMD_MAX];
+		std::int16_t cmd[XPLICIT_NETWORK_CMD_MAX];
 		int32_t version;
 
 	public:
@@ -101,6 +114,7 @@ namespace Xplicit
         int64_t delta; /* delta time from the server. */
 		int64_t hash; /* the private hash (CLIENT to SERVER) */
 		size_t size; /* size of currently sent packet. */
+		int32_t id; /* entity id */
 
 	public:
 		int64_t health; /* Player's Health 0-100 */
@@ -117,8 +131,10 @@ namespace Xplicit
             UniqueAddress();
             ~UniqueAddress();
 
+        public:
 			XPLICIT_COPY_DEFAULT(UniqueAddress);
 
+        public:
             const uuids::uuid& get() noexcept { return uuid; }
 
         private:
@@ -184,3 +200,10 @@ typedef int socklen_t;
 
 // basically the last command reserved.
 #define XPLICIT_LAST_RESERVED_CMD XPLICIT_NETWORK_CMD_JUMP
+
+#define XPLICIT_REPL_CREATE (16)
+#define XPLICIT_REPL_DESTROY (17)
+#define XPLICIT_REPL_UPDATE (18)
+#define XPLICIT_REPL_TOUCH (19)
+#define XPLICIT_REPL_CLICK (20)
+#define XPLICIT_REPL_DBL_CLICK (21)
