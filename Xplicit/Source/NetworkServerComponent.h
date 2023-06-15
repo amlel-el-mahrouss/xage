@@ -47,16 +47,16 @@ namespace Xplicit
 		std::string m_dns;
 		Socket m_socket;
 
-		friend class NetworkServerTraits;
+		friend class NetworkServerHelper;
 
 	};
 
-	class XPLICIT_API NetworkServerTraits final
+	class XPLICIT_API NetworkServerHelper final
 	{
 	public:
 		static void send(NetworkServerComponent* server, const size_t sz = sizeof(NetworkPacket));
 		static void recv(NetworkServerComponent* server, const size_t sz = sizeof(NetworkPacket));
-		static void find_and_correct(NetworkServerComponent* server);
+		static void correct(NetworkServerComponent* server);
 
 	};
 }

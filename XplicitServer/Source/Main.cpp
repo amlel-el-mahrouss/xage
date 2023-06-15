@@ -136,7 +136,7 @@ static void xplicit_load_sh()
 					if (server)
 					{
 						xplicit_send_stop_packet(server);
-						Xplicit::NetworkServerTraits::send(server);
+						Xplicit::NetworkServerHelper::send(server);
 					}
 					else
 					{
@@ -233,17 +233,42 @@ int main(int argc, char** argv)
 				xplicit_send_stop_packet(comp);
 		});
 
+		std::mutex mutex;
+		bool done = false; /* to know when the mutex is done. */
+
+		Xplicit::Thread worker([&]() {
+			while (!gShouldExit)
+			{
+				if (done)
+					continue;
+
+				mutex.lock();
+
+				Xplicit::EventManager::get_singleton_ptr()->update();
+				Xplicit::ComponentManager::get_singleton_ptr()->update();
+
+				Xplicit::NetworkServerHelper::send(server);
+
+				mutex.unlock();
+				done = true;
+			}
+		});
+
+		worker.detach();
+
 		do
 		{
 			if (gShouldExit)
 				break;
 
-			Xplicit::NetworkServerTraits::recv(server);
+			if (done)
+			{
+				Xplicit::NetworkServerHelper::recv(server);
+				done = false;
+			}
 
-			Xplicit::EventManager::get_singleton_ptr()->update();
-			Xplicit::ComponentManager::get_singleton_ptr()->update();
-
-			Xplicit::NetworkServerTraits::send(server);
+			// 16ms sleep.
+			XPLICIT_SLEEP(XPLICIT_DELTA_TIME / 60);
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr());
 
@@ -256,7 +281,6 @@ int main(int argc, char** argv)
 
 #ifdef XPLICIT_WINDOWS
 		std::wstring exit;
-
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
 		exit += L"What: ";

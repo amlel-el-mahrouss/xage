@@ -58,12 +58,11 @@ namespace Xplicit::Player
 
 	void LocalPlayerComponent::update()
 	{
-		if (!mNetwork ||
-			!mNode)
-			return;
+		if (!mNetwork || !mNode || mPublicHash == -1) return;
 
-		if (mPublicHash == -1)
-			return;
+		std::mutex mutex;
+
+		mutex.lock();
 
 		mPacket = mNetwork->get();
 
@@ -103,9 +102,15 @@ namespace Xplicit::Player
 				mNetwork->send(mPacket);
 			}
 		}
+
+		mutex.unlock();
 	}
 
-	void LocalPlayerComponent::attach(CameraComponent* cam) noexcept { mCam = cam; }
+	void LocalPlayerComponent::attach(CameraComponent* cam) noexcept
+	{ 
+		if (cam)
+			mCam = cam; 
+	}
 
 	void LocalPlayerComponent::set_pos(const vector3df& newPos) noexcept { mNode->setPosition(newPos); }
 	vector3df LocalPlayerComponent::get_pos() noexcept { return mNode->getAbsolutePosition(); }

@@ -78,7 +78,7 @@ namespace Xplicit
 
 				ply->freeze_for(XPLICIT_MOVEMENT_RATE);
 
-				NetworkServerTraits::send(mNetwork);
+				NetworkServerHelper::send(mNetwork);
 
 				/* we're done for this one. */
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_INVALID;

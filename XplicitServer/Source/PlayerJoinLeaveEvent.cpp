@@ -58,7 +58,7 @@ namespace Xplicit
 		peer->packet.size = sizeof(NetworkPacket);
 		peer->stat = NETWORK_STAT_CONNECTED;
 
-		NetworkServerTraits::send(server);
+		NetworkServerHelper::send(server);
 
 		return true;
 	}
@@ -98,7 +98,7 @@ namespace Xplicit
 		auto server = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 		XPLICIT_ASSERT(server);
 
-		NetworkServerTraits::find_and_correct(server);
+		NetworkServerHelper::correct(server);
 
 		this->on_join(server);
 		this->on_leave(server);

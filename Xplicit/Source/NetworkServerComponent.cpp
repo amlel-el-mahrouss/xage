@@ -135,7 +135,7 @@ namespace Xplicit
 
 	const char* NetworkServerComponent::dns() noexcept { return m_dns.c_str(); }
 
-	void NetworkServerTraits::recv(NetworkServerComponent* server, const size_t sz)
+	void NetworkServerHelper::recv(NetworkServerComponent* server, const size_t sz)
 	{
 		if (server)
 		{
@@ -177,7 +177,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerTraits::send(NetworkServerComponent* server, const size_t sz)
+	void NetworkServerHelper::send(NetworkServerComponent* server, const size_t sz)
 	{
 		if (server)
 		{
@@ -200,7 +200,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerTraits::find_and_correct(NetworkServerComponent* server)
+	void NetworkServerHelper::correct(NetworkServerComponent* server)
 	{
 		if (server)
 		{

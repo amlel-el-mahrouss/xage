@@ -60,14 +60,13 @@ XPLICIT_MAIN()
 			}
 		});
 
-		auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkComponent>("NetworkComponent");
-		Xplicit::NetworkPacket packet = { };
-
-		// and run.
+		/* main game loop */
 		while (IRR->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr())
 		{
+			IRR->getVideoDriver()->beginScene(true, true, SColor(40, 40, 40, 40));
+
 			IRR->getGUIEnvironment()->drawAll();
 			IRR->getSceneManager()->drawAll();
 
