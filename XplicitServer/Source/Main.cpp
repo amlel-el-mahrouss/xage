@@ -109,7 +109,7 @@ static void xplicit_print_help()
 {
 	XPLICIT_INFO("\a+-------------- Xplicit Game Server Manual --------------+");
 	XPLICIT_INFO("exit: Exits the current server.");
-	XPLICIT_INFO("netstat: Get Network status.");
+	XPLICIT_INFO("xdp: Get XDP network status.");
 	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
 }
 
