@@ -33,6 +33,9 @@ namespace Xplicit::Player
 		mPublicHash(public_hash),
 		mEvent(EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(public_hash))
 	{
+		mCameraPositionZVar = GameVarManager::get_singleton_ptr()->get("Camera-ZPos");
+		mCameraPositionYVar = GameVarManager::get_singleton_ptr()->get("Camera-YPos");
+
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);
@@ -100,6 +103,16 @@ namespace Xplicit::Player
 				mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
 
 				mNetwork->send(mPacket);
+
+				if (mCam)
+				{
+					auto newPos = pos;
+
+					newPos.Z -= mCameraPositionZVar->as_float();
+					newPos.Y += mCameraPositionYVar->as_float();
+
+					mCam->get()->setPosition(newPos);
+				}
 			}
 		}
 

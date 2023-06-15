@@ -26,7 +26,7 @@ namespace Xplicit
 
 	GameVarView::~GameVarView()
 	{
-		GameVarSingleton::get_singleton_ptr()->remove(this);
+		GameVarManager::get_singleton_ptr()->remove(this);
 	}
 
 	int32_t GameVarView::flags() noexcept { return m_flags; }
@@ -39,17 +39,17 @@ namespace Xplicit
 
 	const char* GameVarView::name() noexcept { return m_name.c_str(); }
 
-	GameVarSingleton* GameVarSingleton::get_singleton_ptr() noexcept 
+	GameVarManager* GameVarManager::get_singleton_ptr() noexcept 
 	{
-		static GameVarSingleton* singleton = nullptr;
+		static GameVarManager* singleton = nullptr;
 
 		if (!singleton)
-			singleton = new GameVarSingleton();
+			singleton = new GameVarManager();
 
 		return singleton;
 	}
 
-	GameVarViewPtr GameVarSingleton::get(const char* name) 
+	GameVarViewPtr GameVarManager::get(const char* name) 
 	{
 		if (!name ||
 			*name == 0)
@@ -66,7 +66,7 @@ namespace Xplicit
 		return {};
 	}
 
-	GameVarViewPtr GameVarSingleton::create(const char* name, const char* default_value, int flags)
+	GameVarViewPtr GameVarManager::create(const char* name, const char* default_value, int flags)
 	{
 		GameVarView* cvar = new GameVarView(name, default_value, flags);
 		XPLICIT_ASSERT(cvar);
@@ -80,7 +80,7 @@ namespace Xplicit
 		return {};
 	}
 
-	void GameVarSingleton::remove(GameVarView* ptr)
+	void GameVarManager::remove(GameVarView* ptr)
 	{
 		if (!ptr)
 			return;

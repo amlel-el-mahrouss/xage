@@ -22,8 +22,10 @@ namespace Xplicit
 	
 	class XPLICIT_API EventManager final 
 	{
-	public:
+	private:
 		EventManager() = default;
+
+	public:
 		~EventManager() = default;
 
 	public:
@@ -40,6 +42,7 @@ namespace Xplicit
 		template <typename T>
 		bool remove(T* ptr);
 
+	public:
 		void update();
 
 	public:

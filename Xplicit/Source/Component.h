@@ -21,8 +21,10 @@ namespace Xplicit
 
 	class XPLICIT_API ComponentManager final 
 	{
-	public:
+	private:
 		ComponentManager() = default;
+
+	public:
 		~ComponentManager() = default;
 
 	public:

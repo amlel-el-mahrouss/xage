@@ -13,6 +13,7 @@
 #pragma once
 
 #include <NetworkComponent.h>
+#include <GameVar.h>
 
 #include "LocalCameraComponent.h"
 #include "IMeshable.h"
@@ -49,10 +50,12 @@ namespace Xplicit::Player
 
 	private:
 		IAnimatedMeshSceneNode* mCameraNode;
+		GameVarViewPtr mCameraPositionYVar;
+		GameVarViewPtr mCameraPositionZVar;
+		LocalPlayerMoveEvent* mEvent;
 		NetworkComponent* mNetwork;
 		LocalCameraComponent* mCam;
 		NetworkPacket mPacket;
-		LocalPlayerMoveEvent* mEvent;
 
 	private:
 		std::int64_t mPublicHash;
@@ -68,18 +71,20 @@ namespace Xplicit::Player
 		explicit LocalPlayerMoveEvent(const std::int64_t& public_hash);
 		virtual ~LocalPlayerMoveEvent();
 
+	public:
 		LocalPlayerMoveEvent& operator=(const LocalPlayerMoveEvent&) = default;
 		LocalPlayerMoveEvent(const LocalPlayerMoveEvent&) = default;
 
+	public:
 		virtual void operator()() override;
 		const char* name() noexcept;
 
 	private:
-		NetworkComponent* mNetwork;
-		NetworkPacket mPacket;
+		std::int64_t mPublicHash;
 
 	private:
-		std::int64_t mPublicHash;
+		NetworkComponent* mNetwork;
+		NetworkPacket mPacket;
 
 	};
 }

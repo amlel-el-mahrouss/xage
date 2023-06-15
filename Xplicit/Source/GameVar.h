@@ -51,22 +51,22 @@ namespace Xplicit
 
 		int32_t m_flags;
 
-		friend class GameVarSingleton;
+		friend class GameVarManager;
 
 	};
 
 	using GameVarViewPtr = std::shared_ptr<GameVarView>;
 
-	class XPLICIT_API GameVarSingleton final
+	class XPLICIT_API GameVarManager final
 	{
 	private:
-		GameVarSingleton() = default;
+		GameVarManager() = default;
 
 	public:
-		~GameVarSingleton() = default;
+		~GameVarManager() = default;
 
 	public:
-		static GameVarSingleton* get_singleton_ptr() noexcept;
+		static GameVarManager* get_singleton_ptr() noexcept;
 
 	public:
 		GameVarViewPtr create(const char* name, const char* default_value, int flags);

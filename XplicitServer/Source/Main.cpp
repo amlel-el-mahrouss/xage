@@ -25,7 +25,7 @@
 #include "PlayerSpawnDeathEvent.h"
 
 static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server);
-static void xplicit_attach_mono();
+static void xplicit_load_mono();
 static void xplicit_load_sh();
 static void xplicit_read_xml();
 
@@ -87,7 +87,7 @@ static void xplicit_read_xml()
 	}
 }
 
-static void xplicit_attach_mono()
+static void xplicit_load_mono()
 {
 	try
 	{
@@ -221,8 +221,12 @@ int main(int argc, char** argv)
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
+		
+		Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DefaultVelocity",
+			"0.035f",
+			Xplicit::GameVarView::FLAG_SERVER_ONLY | Xplicit::GameVarView::FLAG_CHEAT);
 
-		xplicit_attach_mono();
+		xplicit_load_mono();
 		xplicit_read_xml();
 		xplicit_load_sh();
 
@@ -233,40 +237,17 @@ int main(int argc, char** argv)
 				xplicit_send_stop_packet(comp);
 		});
 
-		std::mutex mutex;
-		bool done = false; /* to know when the mutex is done. */
-
-		Xplicit::Thread worker([&]() {
-			while (!gShouldExit)
-			{
-				if (done)
-					continue;
-
-				mutex.lock();
-
-				Xplicit::EventManager::get_singleton_ptr()->update();
-				Xplicit::ComponentManager::get_singleton_ptr()->update();
-
-				Xplicit::NetworkServerHelper::send(server);
-
-				mutex.unlock();
-
-				done = true;
-			}
-		});
-
-		worker.detach();
-
 		do
 		{
 			if (gShouldExit)
 				break;
 
-			if (done)
-			{
-				Xplicit::NetworkServerHelper::recv(server);
-				done = false;
-			}
+			Xplicit::NetworkServerHelper::recv(server);
+
+			Xplicit::EventManager::get_singleton_ptr()->update();
+			Xplicit::ComponentManager::get_singleton_ptr()->update();
+
+			Xplicit::NetworkServerHelper::send(server);
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr());
 
