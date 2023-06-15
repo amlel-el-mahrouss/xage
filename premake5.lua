@@ -60,13 +60,3 @@ architecture "x64"
 
 kind ("SharedLib")
 
-configurations { XPLICIT_STUDIO_CONFIG["_CONFIGS"] }
-project(XPLICIT_STUDIO_PROJ)
-defines { XPLICIT_STUDIO_CONFIG["_MACROS"] }
-lang = XPLICIT_STUDIO_CONFIG["_DIALECT"]
-files { XPLICIT_STUDIO_CONFIG["_FILES"]["_INC"], XPLICIT_STUDIO_CONFIG["_FILES"]["_SRC"] }
-includedirs { XPLICIT_STUDIO_CONFIG["_INCDIR"] } 
-links{ XPLICIT_STUDIO_CONFIG["_LIBDIR"] } 
-architecture "x64"
-
-kind ("WindowedApp")

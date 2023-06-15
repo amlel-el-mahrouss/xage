@@ -60,14 +60,6 @@ XPLICIT_MAIN()
 			}
 		});
 
-		Xplicit::GameVarManager::get_singleton_ptr()->create("Camera-ZPos",
-			"128.5",
-			Xplicit::GameVarView::FLAG_CHEAT | Xplicit::GameVarView::FLAG_CLIENT_ONLY);
-
-		Xplicit::GameVarManager::get_singleton_ptr()->create("Camera-YPos",
-			"128.5",
-			Xplicit::GameVarView::FLAG_CHEAT | Xplicit::GameVarView::FLAG_CLIENT_ONLY);
-
 		/* main game loop */
 		while (IRR->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 

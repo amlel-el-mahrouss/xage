@@ -25,6 +25,14 @@ namespace Xplicit
 		: mNetwork(nullptr), mThen(IRR->getTimer()->getTime()) 
 	{
 		mGameVar = GameVarManager::get_singleton_ptr()->get("Server-DefaultVelocity");
+		
+		if (!mGameVar)
+		{
+			mGameVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DefaultVelocity",
+				"0.035f",
+				Xplicit::GameVarView::FLAG_SERVER_ONLY | Xplicit::GameVarView::FLAG_CHEAT);
+
+		}
 	}
 
 	PlayerMovementEvent::~PlayerMovementEvent() = default;

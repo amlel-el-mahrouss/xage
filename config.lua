@@ -1,7 +1,8 @@
 XPLICIT_PROJ = "Xplicit"
+
 XPLICIT_SERVER_PROJ = "XplicitServer"
 XPLICIT_CLIENT_PROJ = "XplicitPlayer"
-XPLICIT_STUDIO_PROJ = "XplicitStudio"
+
 XPLICIT_SCRIPT_PROJ = "XplicitScript"
 XPLICIT_WORKSPACE = "XplicitNgine"
 NPLICIT_PROJ = "Nplicit"
@@ -116,50 +117,6 @@ XPLICIT_CLIENT_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
     	"Nplicit/Source/",
 	    "Vendor/libzip/lib",
-		"C:/VulkanSDK/1.3.250.0/Include",
-	    "Vendor/irr/include",
-        "C:/Program Files/Mono/include/mono-2.0/",
-        "C:/Program Files/Mono/include/mono-2.0/mono",
-    }
-};
-
-XPLICIT_STUDIO_CONFIG = {
-    ["_CXXDIALECT"] = 2022,
-    ["_CONFIGS"] = { "Debug", "Release" },
-    ["_MACROS"] = { "__XPLICIT__", "_CRT_SECURE_NO_WARNINGS", "_WINSOCK_DEPRECATED_NO_WARNINGS" },
-    ["_DIALECT"] = "C++",
-    ["_FILES"] = {
-        ["_INC"] = {
-            "XplicitStudio/Source/**.h",
-            "XplicitStudio/Source/**.inl",
-        },
-        ["_SRC"] = {
-            "XplicitStudio/Source/**.cpp",
-            "XplicitStudio/Source/**.c"
-        },
-    },
-    ["_LIBDIR"] = {
-    	"bin/Debug/Xplicit",
-        "Library/glfw3",
-        "d3d11",
-        "dxgi",
-	"C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
-        "d2d1",
-        "opengl32",
-    },
-    ["_INCDIR"] = {
-        "Vendor/",
-    	"Xplicit/Source/",
-    	"Xplicit/Vendor/include/",
-    	"Vendor/irr/includeinclude",
-        "Vendor/lua/",
-        "Vendor/stb/",
-    	"Vendor/yaml/include",
-        "Vendor/nuklear/",
-	    "Vendor/glfw/include/GLFW/",
-	    "Vendor/libzip/lib",
-	    "Vendor/wtl/",
-    	"Nplicit/Source/",
 		"C:/VulkanSDK/1.3.250.0/Include",
 	    "Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0/",

@@ -36,6 +36,17 @@ namespace Xplicit::Player
 		mCameraPositionZVar = GameVarManager::get_singleton_ptr()->get("Camera-ZPos");
 		mCameraPositionYVar = GameVarManager::get_singleton_ptr()->get("Camera-YPos");
 
+		if (!mCameraPositionZVar)
+			mCameraPositionZVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Camera-ZPos",
+			"128.5",
+			Xplicit::GameVarView::FLAG_CHEAT | Xplicit::GameVarView::FLAG_CLIENT_ONLY);
+
+		if (!mCameraPositionYVar)
+			mCameraPositionYVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Camera-YPos",
+			"128.5",
+			Xplicit::GameVarView::FLAG_CHEAT | Xplicit::GameVarView::FLAG_CLIENT_ONLY);
+
+
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);

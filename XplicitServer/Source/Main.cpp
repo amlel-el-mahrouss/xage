@@ -30,7 +30,7 @@ static void xplicit_load_sh();
 static void xplicit_read_xml();
 
 static constexpr const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
-static bool gShouldExit = false;
+static bool XPLICIT_SHOULD_EXIT = false;
 
 static void xplicit_read_xml()
 {
@@ -123,8 +123,8 @@ static void xplicit_load_sh()
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
 			{
-				if (!gShouldExit)
-					std::cout << "$ ";
+				if (!XPLICIT_SHOULD_EXIT)
+					std::cout << "> ";
 
 				std::cin.getline(cmd_buf, 1024);
 
@@ -143,13 +143,13 @@ static void xplicit_load_sh()
 						XPLICIT_ERROR("ERROR: server is not connected to the internet.");
 					}
 
-					gShouldExit = true;
+					XPLICIT_SHOULD_EXIT = true;
 				}
-
-				if (strcmp(cmd_buf, "man") == 0)
+				
+				if (strcmp(cmd_buf, "help") == 0)
 					xplicit_print_help();
 
-				if (strcmp(cmd_buf, "netstat") == 0)
+				if (strcmp(cmd_buf, "xdp") == 0)
 				{
 
 					const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
@@ -209,6 +209,7 @@ int main(int argc, char** argv)
 		}
 
 		auto server = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
+		
 		XPLICIT_ASSERT(server);
 
 		if (server == nullptr)
@@ -222,10 +223,6 @@ int main(int argc, char** argv)
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		
-		Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DefaultVelocity",
-			"0.035f",
-			Xplicit::GameVarView::FLAG_SERVER_ONLY | Xplicit::GameVarView::FLAG_CHEAT);
-
 		xplicit_load_mono();
 		xplicit_read_xml();
 		xplicit_load_sh();
@@ -239,7 +236,7 @@ int main(int argc, char** argv)
 
 		do
 		{
-			if (gShouldExit)
+			if (XPLICIT_SHOULD_EXIT)
 				break;
 
 			Xplicit::NetworkServerHelper::recv(server);
