@@ -84,6 +84,15 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_INVALID;
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_INVALID;
 			}
+			else
+			{
+				peer->packet.speed[XPLICIT_NETWORK_X] = 0;
+				peer->packet.speed[XPLICIT_NETWORK_Y] = 0;
+				peer->packet.speed[XPLICIT_NETWORK_Z] = 0;
+
+				/* send server delta to player, so that he is not out of touch. */
+				peer->packet.speed[XPLICIT_NETWORK_DELTA] = 0;
+			}
 		}
 	}
 }

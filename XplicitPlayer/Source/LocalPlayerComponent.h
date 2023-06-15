@@ -80,7 +80,6 @@ namespace Xplicit::Player
 
 	private:
 		std::int64_t mPublicHash;
-		std::size_t mCooldown;
 
 	};
 }

@@ -94,6 +94,12 @@ namespace Xplicit::Player
 
 				mNode->setPosition(pos);
 
+				mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
+				mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
+				mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
+				mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
+				mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
+
 				mNetwork->send(mPacket);
 			}
 		}
@@ -108,8 +114,7 @@ namespace Xplicit::Player
 		: 
 		mPacket(), 
 		mNetwork(nullptr),
-		mPublicHash(public_hash),
-		mCooldown(0)
+		mPublicHash(public_hash)
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
@@ -133,9 +138,17 @@ namespace Xplicit::Player
 			mPacket.public_hash = mPublicHash;
 
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_FORWARD;
 
+			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
+
+			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
+
 			mNetwork->send(mPacket);
+
+			return;
 		}
 
 		if (KB->key_down(Details::KEY_KEY_S))
@@ -143,29 +156,49 @@ namespace Xplicit::Player
 			mPacket.public_hash = mPublicHash;
 
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+
+			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
+			
+			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
+
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_BACKWARD;
 
 			mNetwork->send(mPacket);
+
+			return;
 		}
 
 		if (KB->key_down(Details::KEY_KEY_D))
 		{
 			mPacket.public_hash = mPublicHash;
 
+			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
+
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_RIGHT;
 
 			mNetwork->send(mPacket);
+
+			return;
 		}
 
 		if (KB->key_down(Details::KEY_KEY_A))
 		{
 			mPacket.public_hash = mPublicHash;
 
+			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
+			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
+
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_LEFT;
 
 			mNetwork->send(mPacket);
+
+			return;
 		}
 	}
 }
