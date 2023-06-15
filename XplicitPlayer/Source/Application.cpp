@@ -40,6 +40,10 @@ namespace Xplicit::Bites
 	Application::Application(const char* dns)
 		: mSettings(), mWsa(), mPath("")
 	{
+		this->setup();
+
+		ApplicationContext::get_singleton_ptr()->Keyboard->get_layout();
+
 		XPLICIT_GET_DATA_DIR(tmp);
 		mPath += tmp;
 
@@ -52,8 +56,6 @@ namespace Xplicit::Bites
 #ifdef XPLICIT_DEBUG
 		Xplicit::open_terminal();
 #endif
-
-		this->setup();
 
 		auto loadingComponent = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();
 		XPLICIT_ASSERT(loadingComponent);
@@ -93,10 +95,6 @@ namespace Xplicit::Bites
 	Application::SettingsManager::SettingsManager()
 		: mSettings()
 	{
-		/*
-			%appdata%/Data/ClientSettings.dat
-		*/
-
 		XPLICIT_GET_DATA_DIR(dat);
 
 		mSettings = dat;

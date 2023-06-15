@@ -35,14 +35,21 @@ namespace Xplicit::Player
 
 	void LocalNetworkMonitorEvent::operator()()
 	{
-		if (!mNetwork)
-			return;
-
-		auto& packet = mNetwork->get();
+		if (!mNetwork) return;
+		static auto packet = mNetwork->get();
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
 		{
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
+			static auto plyers = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
+
+			for (std::size_t index = 0UL; index < plyers.size(); ++index)
+			{
+				if (plyers[index]->id() == packet.public_hash)
+					break;
+
+				ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
+				break;
+			}
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
@@ -73,18 +80,21 @@ namespace Xplicit::Player
 			}
 		}
 
-		/* lost connection to peer. */
+		/* did we lost connection to peer? */
 		if (mNetwork->is_reset())
 		{
 			++mResetCnt;
 
+			/* count down */
 			if (mResetCnt > XPLICIT_MAX_RESETS)
 			{
 				if (!ComponentManager::get_singleton_ptr()->get<Player::PopupComponent>("ResetPopup"))
 				{
 					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 						IRR->closeDevice();
-						}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, Xplicit::Player::XPLICIT_DIM.Height / 4), Player::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
+						}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, 
+							Xplicit::Player::XPLICIT_DIM.Height / 4), 
+							Player::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
 
 				}
 			}

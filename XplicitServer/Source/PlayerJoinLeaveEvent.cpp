@@ -136,13 +136,11 @@ namespace Xplicit
 
 					XPLICIT_INFO("[CONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					++m_player_size;
-
-					return true;
 				}
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 	bool PlayerJoinLeaveEvent::on_leave(NetworkServerComponent* server) noexcept
@@ -167,14 +165,12 @@ namespace Xplicit
 					--m_player_size;
 
 					server->get(peer_idx)->stat = NETWORK_STAT_DISCONNECTED;
-					memset(server->get(peer_idx)->packet.cmd, Xplicit::NETWORK_CMD_INVALID, 30);
-
-					return true;
+					memset(server->get(peer_idx)->packet.cmd, Xplicit::NETWORK_CMD_INVALID, XPLICIT_NETWORK_CMD_MAX);
 				}
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 	const char* PlayerJoinLeaveEvent::name() noexcept { return ("PlayerJoinLeaveEvent"); }

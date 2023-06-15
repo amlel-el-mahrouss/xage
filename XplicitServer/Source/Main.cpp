@@ -244,7 +244,8 @@ int main(int argc, char** argv)
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerTraits::send(server);
-		} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr());
+		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
+			Xplicit::EventManager::get_singleton_ptr());
 
 		return 0;
 	}

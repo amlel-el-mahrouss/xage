@@ -81,16 +81,16 @@ namespace Xplicit::Player
 				auto zSpeed = mPacket.speed[XPLICIT_NETWORK_Z] * delta;
 
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					pos.Z += zSpeed;
-
-				if (mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
 					pos.Z -= zSpeed;
 
+				if (mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
+					pos.Z += zSpeed;
+
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					pos.X -= xSpeed;
+					pos.X += xSpeed;
 
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					pos.X += xSpeed;
+					pos.X -= xSpeed;
 
 				mNode->setPosition(pos);
 
@@ -133,7 +133,9 @@ namespace Xplicit::Player
 			mPublicHash == -1)
 			return;
 
-		if (KB->key_down(Details::KEY_KEY_W))
+		auto traits = ApplicationContext::get_singleton_ptr()->Keyboard->get_layout();
+
+		if (KB->key_down(traits.mForward))
 		{
 			mPacket.public_hash = mPublicHash;
 
@@ -151,7 +153,7 @@ namespace Xplicit::Player
 			return;
 		}
 
-		if (KB->key_down(Details::KEY_KEY_S))
+		if (KB->key_down(traits.mBackward))
 		{
 			mPacket.public_hash = mPublicHash;
 
@@ -169,7 +171,7 @@ namespace Xplicit::Player
 			return;
 		}
 
-		if (KB->key_down(Details::KEY_KEY_D))
+		if (KB->key_down(traits.mRight))
 		{
 			mPacket.public_hash = mPublicHash;
 
@@ -185,7 +187,7 @@ namespace Xplicit::Player
 			return;
 		}
 
-		if (KB->key_down(Details::KEY_KEY_A))
+		if (KB->key_down(traits.mLeft))
 		{
 			mPacket.public_hash = mPublicHash;
 

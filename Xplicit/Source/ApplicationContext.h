@@ -191,31 +191,31 @@ namespace Xplicit
 		virtual bool OnEvent(const irr::SEvent & env) override
 		{
 			if (env.EventType == irr::EET_KEY_INPUT_EVENT)
-				m_keys[env.KeyInput.Key] = env.KeyInput.PressedDown;
+				mKeys[env.KeyInput.Key] = env.KeyInput.PressedDown;
 
 			if (env.EventType == irr::EET_MOUSE_INPUT_EVENT)
 			{
 				switch (env.MouseInput.Event)
 				{
 				case irr::EMIE_LMOUSE_PRESSED_DOWN:
-					m_mouse_left.Down = true;
+					mMouseLeft.Down = true;
 					break;
 
 				case irr::EMIE_LMOUSE_LEFT_UP:
-					m_mouse_left.Down = false;
+					mMouseLeft.Down = false;
 					break;
 
 				case irr::EMIE_RMOUSE_PRESSED_DOWN:
-					m_mouse_right.Down = true;
+					mMouseRight.Down = true;
 					break;
 
 				case irr::EMIE_RMOUSE_LEFT_UP:
-					m_mouse_right.Down = false;
+					mMouseRight.Down = false;
 					break;
 
 				case irr::EMIE_MOUSE_MOVED:
-					m_mouse_pos.X = env.MouseInput.X;
-					m_mouse_pos.Y = env.MouseInput.Y;
+					mMousePos.X = env.MouseInput.X;
+					mMousePos.Y = env.MouseInput.Y;
 					break;
 
 				default:
@@ -238,12 +238,12 @@ namespace Xplicit
 
 	public:
 		InputReceiver()
-			: m_mouse_left(), 
-			m_mouse_right(), 
-			m_mouse_pos()
+			: mMouseLeft(), 
+			mMouseRight(), 
+			mMousePos()
 		{
 			for (irr::u32 i = 0; i < irr::KEY_KEY_CODES_COUNT; ++i)
-				m_keys[i] = 0;
+				mKeys[i] = 0;
 		}
 
 		virtual ~InputReceiver() = default;
@@ -251,33 +251,73 @@ namespace Xplicit
 		InputReceiver& operator=(const InputReceiver&) = default;
 		InputReceiver(const InputReceiver&) = default;
 
-		bool right_down() noexcept { return m_mouse_right.Down; }
-		bool left_down() noexcept { return m_mouse_left.Down; }
+		bool right_down() noexcept { return mMouseRight.Down; }
+		bool left_down() noexcept { return mMouseLeft.Down; }
 
 		bool key_down(const char key) const
 		{
-			return m_keys[key];
+			return mKeys[key];
 		}
 
 		bool key_down() const
 		{
 			for (u32 i = 0; i < Details::KEY_KEY_CODES_COUNT; ++i)
 			{
-				if (m_keys[i])
+				if (mKeys[i])
 					return true;
 			}
 
 			return false;
 		}
 
-		MouseEventTraits& get_pos() noexcept { return m_mouse_pos; }
+		MouseEventTraits& get_pos() noexcept { return mMousePos; }
+		
+	public:
+		struct MovementTraits
+		{
+			char mBackward;
+			char mForward;
+			char mRight;
+			char mLeft;
+		};
+
+		MovementTraits& get_layout() noexcept
+		{
+			CHAR layout[KL_NAMELENGTH];
+			GetKeyboardLayoutNameA(layout);
+
+			String enUs = "00000409";
+			String frFr = "0000040C";
+
+			auto str = String(layout);
+			
+			if (str == enUs)
+			{
+				mLayout.mForward = KEY_KEY_W;
+				mLayout.mRight = KEY_KEY_D;
+				mLayout.mLeft = KEY_KEY_A;
+				mLayout.mBackward = KEY_KEY_S;
+			}
+
+			if (str == frFr)
+			{
+				mLayout.mForward = KEY_KEY_Z;
+				mLayout.mRight = KEY_KEY_D;
+				mLayout.mLeft = KEY_KEY_Q;
+				mLayout.mBackward = KEY_KEY_S;
+			}
+
+			return mLayout;
+		}
 
 	private:
-		bool m_keys[Details::KEY_KEY_CODES_COUNT];
+		MovementTraits mLayout;
+		bool mKeys[Details::KEY_KEY_CODES_COUNT];
 
-		MouseEventTraits m_mouse_right;
-		MouseEventTraits m_mouse_left;
-		MouseEventTraits m_mouse_pos;
+	private:
+		MouseEventTraits mMouseRight;
+		MouseEventTraits mMouseLeft;
+		MouseEventTraits mMousePos;
 
 	};
 
@@ -285,7 +325,12 @@ namespace Xplicit
 	{
 	private:
 		ApplicationContext()
-			: Keyboard(nullptr), Dev(nullptr), Reader(nullptr), Writer(nullptr), ShouldExit(false)
+			: 
+			Keyboard(nullptr), 
+			Dev(nullptr), 
+			Reader(nullptr), 
+			Writer(nullptr), 
+			ShouldExit(false)
 		{}
 
 		~ApplicationContext()
