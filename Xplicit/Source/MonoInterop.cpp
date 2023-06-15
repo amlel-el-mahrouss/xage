@@ -24,7 +24,7 @@ namespace Xplicit
 
 		if (name)
 		{
-			EventDispatcher::get_singleton_ptr()->add<MonoEvent>(name);
+			EventManager::get_singleton_ptr()->add<MonoEvent>(name);
 			return true;
 		}
 

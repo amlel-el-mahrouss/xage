@@ -118,7 +118,7 @@ namespace Xplicit::Bites
 			driver->begin_scene(clr.A / 255, clr.R / 255, clr.G / 255, clr.B / 255);
 
 			ComponentManager::get_singleton_ptr()->update();
-			EventDispatcher::get_singleton_ptr()->update();
+			EventManager::get_singleton_ptr()->update();
 
 			if (!driver->end_scene())
 				throw EngineError();
@@ -172,7 +172,7 @@ namespace Xplicit::Bites
 			glClear(GL_DEPTH_BUFFER_BIT);
 
 			ComponentManager::get_singleton_ptr()->update();
-			EventDispatcher::get_singleton_ptr()->update();
+			EventManager::get_singleton_ptr()->update();
 
 			glfwSwapBuffers(m_pWindow);
 			glfwPollEvents();

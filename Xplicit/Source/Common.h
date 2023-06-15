@@ -5,7 +5,7 @@
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: Common.h
- *			Purpose: Common Engine Macros/Components
+ *			Purpose: Common Engine Macros/Components/Properties
  *
  * =====================================================================
  */
@@ -17,11 +17,10 @@
 
 #include <Nplicit.h>
 
-#define XPLICIT_DEFAULT_VEL (0.035f)
-#define XPLICIT_MOVEMENT_RATE (50U)
-#define XPLICIT_DEFAULT_HEALTH (100U)
-#define XPLICIT_DELTA_TIME (500.f)
-#define XPLICIT_COOLDOWN (1000)
+#define XPLICIT_MOVEMENT_RATE	(50U)
+#define XPLICIT_DEFAULT_HEALTH	(100U)
+#define XPLICIT_DELTA_TIME		(1000.f)
+#define XPLICIT_COOLDOWN		(1000)
 
 namespace Xplicit
 {
@@ -69,17 +68,37 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API BrickComponent
+	class XPLICIT_API RenderableComponent : public Component
 	{
 	public:
-		BrickComponent() = default;
-		virtual ~BrickComponent() = default;
+		RenderableComponent() = default;
+		virtual ~RenderableComponent() = default;
 
-		XPLICIT_COPY_DEFAULT(BrickComponent);
+		XPLICIT_COPY_DEFAULT(RenderableComponent);
 
 	public:
 		PositionComponent Position;
 		SizeComponent Size;
+
+	};
+
+	/* Base Service Class */
+	/* Used that to make UIService, NetworkService, DownloadService */
+	class XPLICIT_API ServiceComponent : public Component
+	{
+	public:
+		ServiceComponent(const String& name) : mName(name) {}
+		virtual ~ServiceComponent() = default;
+
+	public:
+		XPLICIT_COPY_DEFAULT(ServiceComponent);
+
+	public:
+		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_SERVICE; }
+		virtual const char* name() noexcept override { return mName.c_str(); }
+
+	private:
+		String mName;
 
 	};
 }

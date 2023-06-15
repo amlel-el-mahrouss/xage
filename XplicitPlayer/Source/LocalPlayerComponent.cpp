@@ -31,7 +31,7 @@ namespace Xplicit::Player
 		mPacket(), 
 		mCam(nullptr), 
 		mPublicHash(public_hash),
-		mEvent(EventDispatcher::get_singleton_ptr()->add<LocalMoveEvent>(public_hash))
+		mEvent(EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(public_hash))
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -49,7 +49,7 @@ namespace Xplicit::Player
 #endif
 
 		if (mEvent)
-			EventDispatcher::get_singleton_ptr()->remove(mEvent);
+			EventManager::get_singleton_ptr()->remove(mEvent);
 	}
 
 	LocalPlayerComponent::INSTANCE_TYPE LocalPlayerComponent::type() noexcept { return INSTANCE_ACTOR; }
@@ -74,14 +74,26 @@ namespace Xplicit::Player
 			{
 				auto pos = mNode->getAbsolutePosition();
 
-				f32 delta = mPacket.speed[XPLICIT_NETWORK_DELTA];
+				static f32 then = IRR->getTimer()->getTime();
+				f32 delta = (IRR->getTimer()->getTime() - then) / XPLICIT_DELTA_TIME;
 
-				auto x_speed = mPacket.speed[XPLICIT_NETWORK_X] * delta;
-				auto z_speed = mPacket.speed[XPLICIT_NETWORK_Z] * delta;
+				auto xSpeed = mPacket.speed[XPLICIT_NETWORK_X] * delta;
+				auto zSpeed = mPacket.speed[XPLICIT_NETWORK_Z] * delta;
 
+				if (mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
+					pos.Z += zSpeed;
 
+				if (mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
+					pos.Z -= zSpeed;
+
+				if (mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
+					pos.X -= xSpeed;
+
+				if (mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
+					pos.X += xSpeed;
 
 				mNode->setPosition(pos);
+
 				mNetwork->send(mPacket);
 			}
 		}
@@ -92,7 +104,7 @@ namespace Xplicit::Player
 	void LocalPlayerComponent::set_pos(const vector3df& newPos) noexcept { mNode->setPosition(newPos); }
 	vector3df LocalPlayerComponent::get_pos() noexcept { return mNode->getAbsolutePosition(); }
 
-	LocalMoveEvent::LocalMoveEvent(const std::int64_t& public_hash)
+	LocalPlayerMoveEvent::LocalPlayerMoveEvent(const std::int64_t& public_hash)
 		: 
 		mPacket(), 
 		mNetwork(nullptr),
@@ -103,21 +115,18 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mNetwork);
 	}
 
-	LocalMoveEvent::~LocalMoveEvent() {}
+	LocalPlayerMoveEvent::~LocalPlayerMoveEvent() {}
 
-	const char* LocalMoveEvent::name() noexcept { return ("LocalMoveEvent"); }
+	const char* LocalPlayerMoveEvent::name() noexcept { return ("LocalMoveEvent"); }
 
 	const int64_t& LocalPlayerComponent::id() noexcept { return mPublicHash; }
 
 	/* LocalPlayer movement logic */
-	void LocalMoveEvent::operator()()
+	void LocalPlayerMoveEvent::operator()()
 	{
 		if (mNetwork == nullptr || 
 			mPublicHash == -1)
 			return;
-
-		static f32 then = IRR->getTimer()->getTime();
-		f32 delta = (IRR->getTimer()->getTime() - then) / XPLICIT_DELTA_TIME;
 
 		if (KB->key_down(Details::KEY_KEY_W))
 		{

@@ -13,7 +13,7 @@
 #include "Avx.h"
 
 template <typename T, typename... Args>
-T* Xplicit::EventDispatcher::add(Args&&... args)
+T* Xplicit::EventManager::add(Args&&... args)
 {
 	T* ptr = new T{ args... };
 	XPLICIT_ASSERT(ptr);
@@ -28,7 +28,7 @@ T* Xplicit::EventDispatcher::add(Args&&... args)
 }
 
 template <typename T>
-T* Xplicit::EventDispatcher::get(const char* name)
+T* Xplicit::EventManager::get(const char* name)
 {
 	for (size_t i = 0; i < mEvents.size(); i++)
 	{
@@ -47,7 +47,7 @@ T* Xplicit::EventDispatcher::get(const char* name)
 }
 
 template <typename T>
-bool Xplicit::EventDispatcher::remove(T* ptr)
+bool Xplicit::EventManager::remove(T* ptr)
 {
 	if (!ptr)
 		return false;

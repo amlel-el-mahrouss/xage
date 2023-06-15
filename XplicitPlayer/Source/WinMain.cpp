@@ -66,14 +66,14 @@ XPLICIT_MAIN()
 		// and run.
 		while (IRR->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 
-			Xplicit::EventDispatcher::get_singleton_ptr())
+			Xplicit::EventManager::get_singleton_ptr())
 		{
 			IRR->getVideoDriver()->beginScene(true, true, 
 				irr::video::SColor(255, 40, 40, 40), IRR->getVideoDriver()->getExposedVideoData());
 
 			IRR->getSceneManager()->drawAll();
 
-			Xplicit::EventDispatcher::get_singleton_ptr()->update();
+			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			IRR->getVideoDriver()->endScene();

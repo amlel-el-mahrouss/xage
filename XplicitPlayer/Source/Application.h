@@ -19,7 +19,7 @@
 
 /* client classes */
 #include "CameraComponent.h"
-#include "LoadingComponent.h"
+#include "SplashScreenComponent.h"
 #include "LocalPlayerComponent.h"
 
 #define XPLICIT_DEFAULT_WIDTH (1280)

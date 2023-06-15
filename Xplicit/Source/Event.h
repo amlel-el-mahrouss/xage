@@ -16,37 +16,34 @@
 
 namespace Xplicit 
 {
-	class EventDispatcher;
+	class EventManager;
 	class EventListener;
 	class Event;
 	
-	class XPLICIT_API EventDispatcher final 
+	class XPLICIT_API EventManager final 
 	{
-	private:
-		EventDispatcher() = default;
+	public:
+		EventManager() = default;
+		~EventManager() = default;
 
 	public:
-		~EventDispatcher() = default;
-
-	public:
-		EventDispatcher& operator=(const EventDispatcher&) = delete;
-		EventDispatcher(const EventDispatcher&) = delete;
+		EventManager& operator=(const EventManager&) = delete;
+		EventManager(const EventManager&) = delete;
 
 	public:
 		template <typename T, typename... Args>
-		T* add(Args&&... args);
+		T* add(Args&&...   args);
 
 		template <typename T>
 		T* get(const char* name);
 
 		template <typename T>
-		bool remove(T* name);
+		bool remove(T* ptr);
 
-	public:
 		void update();
 
 	public:
-		static EventDispatcher* get_singleton_ptr();
+		static EventManager* get_singleton_ptr();
 
 	private:
 		std::vector<Event*> mEvents;
@@ -73,9 +70,9 @@ namespace Xplicit
 		virtual const char* name() noexcept;
 
 	protected:
-		std::vector<EventListener*> m_listeners;
+		std::vector<EventListener*> mListeners;
 
-		friend EventDispatcher;
+		friend EventManager;
 
 	};
 

@@ -13,18 +13,19 @@
 #pragma once
 
 #include <NetworkComponent.h>
+
 #include "CoreUI.h"
 
 namespace Xplicit::Player
 {
-	class LoadingComponent final : public Component
+	class SplashScreenComponent final : public Component
 	{
 	public:
-		LoadingComponent();
-		virtual ~LoadingComponent();
+		SplashScreenComponent();
+		virtual ~SplashScreenComponent();
 
-		LoadingComponent& operator=(const LoadingComponent&) = default;
-		LoadingComponent(const LoadingComponent&) = default;
+		SplashScreenComponent& operator=(const SplashScreenComponent&) = default;
+		SplashScreenComponent(const SplashScreenComponent&) = default;
 
 		virtual bool should_update() noexcept override { return mEnable; }
 		virtual void update() override;
@@ -35,11 +36,11 @@ namespace Xplicit::Player
 		void reset() noexcept;
 
 	private:
-		irr::video::ITexture* m_texture; /* Texture to show when loading the game.. */
+		irr::video::ITexture* mTexture; /* Texture to show when loading the game.. */
 		NetworkComponent* mNetwork; /* Network instance */
 
 	private:
-		int64_t m_timeout; /* Network Timeout. */
+		int64_t mTimeout; /* Network Timeout. */
 		bool mEnable; /* Should we seek for a connection? */
 
 	};

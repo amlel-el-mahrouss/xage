@@ -19,7 +19,7 @@
 
 namespace Xplicit::Player
 {
-	class LocalMoveEvent;
+	class LocalPlayerMoveEvent;
 
 	constexpr const int XPLICIT_NETWORK_DELAY = 100;
 
@@ -52,24 +52,24 @@ namespace Xplicit::Player
 		NetworkComponent* mNetwork;
 		CameraComponent* mCam;
 		NetworkPacket mPacket;
-		LocalMoveEvent* mEvent;
+		LocalPlayerMoveEvent* mEvent;
 
 	private:
 		std::int64_t mPublicHash;
 
 	};
 
-	class XPLICIT_API LocalMoveEvent : public Event
+	class XPLICIT_API LocalPlayerMoveEvent : public Event
 	{
 	public:
-		LocalMoveEvent() = delete;
+		LocalPlayerMoveEvent() = delete;
 
 	public:
-		explicit LocalMoveEvent(const std::int64_t& public_hash);
-		virtual ~LocalMoveEvent();
+		explicit LocalPlayerMoveEvent(const std::int64_t& public_hash);
+		virtual ~LocalPlayerMoveEvent();
 
-		LocalMoveEvent& operator=(const LocalMoveEvent&) = default;
-		LocalMoveEvent(const LocalMoveEvent&) = default;
+		LocalPlayerMoveEvent& operator=(const LocalPlayerMoveEvent&) = default;
+		LocalPlayerMoveEvent(const LocalPlayerMoveEvent&) = default;
 
 		virtual void operator()() override;
 		const char* name() noexcept;

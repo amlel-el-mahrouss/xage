@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: MeshComponent.h
- *			Purpose: Custom Mesh Component (.dae or .xm)
+ *			File: IMeshable.h
+ *			Purpose: Mesh Property
  *
  * =====================================================================
  */

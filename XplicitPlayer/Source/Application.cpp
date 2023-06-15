@@ -35,14 +35,6 @@ namespace Xplicit::Bites
 
 		if (!res)
 			throw std::runtime_error("Missing dialogs! This pack are needed for XplicitPlayer to work.");
-
-		String prebuiltExt = dir;
-
-		prebuiltExt += "\\Textures\\PreBuiltDialogsExtended.zip";
-		res = IRR->getFileSystem()->addZipFileArchive(prebuiltExt.c_str(), true, true);
-		
-		if (!res)
-			throw std::runtime_error("Missing dialogs! This pack are needed for XplicitPlayer to work.");
 	}
 
 	Application::Application(const char* dns)
@@ -63,7 +55,7 @@ namespace Xplicit::Bites
 
 		this->setup();
 
-		auto loadingComponent = ComponentManager::get_singleton_ptr()->add<Player::LoadingComponent>();
+		auto loadingComponent = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();
 		XPLICIT_ASSERT(loadingComponent);
 
 		if (loadingComponent)

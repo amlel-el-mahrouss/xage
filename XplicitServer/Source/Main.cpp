@@ -121,7 +121,7 @@ static void xplicit_load_sh()
 
 			char cmd_buf[1024];
 
-			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr())
+			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
 			{
 				if (!gShouldExit)
 					std::cout << "$ ";
@@ -218,9 +218,9 @@ int main(int argc, char** argv)
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion<float>(0.f, 0.f, 0.f));
 
 		/* add C++ events */
-		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
-		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
-		Xplicit::EventDispatcher::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 
 		xplicit_attach_mono();
 		xplicit_read_xml();
@@ -240,11 +240,11 @@ int main(int argc, char** argv)
 
 			Xplicit::NetworkServerTraits::recv(server);
 
-			Xplicit::EventDispatcher::get_singleton_ptr()->update();
+			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerTraits::send(server);
-		} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventDispatcher::get_singleton_ptr());
+		} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr());
 
 		return 0;
 	}

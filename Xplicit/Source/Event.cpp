@@ -18,7 +18,7 @@
 
 namespace Xplicit
 {
-	void EventDispatcher::update()
+	void EventManager::update()
 	{
 		for (size_t i = 0; i < mEvents.size(); i++)
 		{
@@ -27,12 +27,12 @@ namespace Xplicit
 		}
 	}
 
-	EventDispatcher* EventDispatcher::get_singleton_ptr()
+	EventManager* EventManager::get_singleton_ptr()
 	{
-		static EventDispatcher* ptr = nullptr;
+		static EventManager* ptr = nullptr;
 
 		if (!ptr)
-			ptr = new EventDispatcher();
+			ptr = new EventManager();
 
 		return ptr;
 	}
@@ -41,10 +41,10 @@ namespace Xplicit
 
 	void Event::update() noexcept
 	{
-		for (size_t i = 0; i < m_listeners.size(); i++)
+		for (size_t i = 0; i < mListeners.size(); i++)
 		{
-			XPLICIT_ASSERT(m_listeners[i]);
-			m_listeners[i]->update(this);
+			XPLICIT_ASSERT(mListeners[i]);
+			mListeners[i]->update(this);
 		}
 
 		this->operator()();
@@ -55,18 +55,18 @@ namespace Xplicit
 	void Event::add(EventListener* listener) 
 	{
 		if (listener)
-			m_listeners.push_back(listener);
+			mListeners.push_back(listener);
 	}
 
 	bool Event::remove(EventListener* listener) 
 	{
 		if (listener)
 		{
-			auto it = std::find(m_listeners.cbegin(), m_listeners.cend(), listener);
+			auto it = std::find(mListeners.cbegin(), mListeners.cend(), listener);
 
-			if (it != m_listeners.cend())
+			if (it != mListeners.cend())
 			{
-				m_listeners.erase(it);
+				mListeners.erase(it);
 				return true;
 			}
 		}

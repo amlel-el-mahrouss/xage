@@ -21,10 +21,8 @@ namespace Xplicit
 
 	class XPLICIT_API ComponentManager final 
 	{
-	private:
-		ComponentManager() = default;
-
 	public:
+		ComponentManager() = default;
 		~ComponentManager() = default;
 
 	public:
@@ -76,6 +74,7 @@ namespace Xplicit
 			INSTANCE_NETWORK, // Network instance
 			INSTANCE_PHYSICS, // Physics instance
 			INSTANCE_GUI, // GUI instance
+			INSTANCE_SERVICE, // Service instance
 			INSTANCE_COUNT // the number of Instances type we have here!
 		};
 
