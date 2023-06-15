@@ -68,9 +68,7 @@ XPLICIT_MAIN()
 			Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr())
 		{
-			IRR->getVideoDriver()->beginScene(true, true, 
-				irr::video::SColor(255, 40, 40, 40), IRR->getVideoDriver()->getExposedVideoData());
-
+			IRR->getGUIEnvironment()->drawAll();
 			IRR->getSceneManager()->drawAll();
 
 			Xplicit::EventManager::get_singleton_ptr()->update();

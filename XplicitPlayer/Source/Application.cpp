@@ -42,8 +42,6 @@ namespace Xplicit::Bites
 	{
 		this->setup();
 
-		ApplicationContext::get_singleton_ptr()->Keyboard->get_layout();
-
 		XPLICIT_GET_DATA_DIR(tmp);
 		mPath += tmp;
 
