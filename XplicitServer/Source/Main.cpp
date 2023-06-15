@@ -15,7 +15,7 @@
  */
 
 #include <codecvt>
-#include <ApplicationContext.h>
+#include <Root.h>
 
 #include "CommonInc.h"
 #include "SpawnComponent.h"
@@ -186,7 +186,7 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		Xplicit::ApplicationContext::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_NULL));
+		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_NULL));
 
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
@@ -250,6 +250,7 @@ int main(int argc, char** argv)
 				Xplicit::NetworkServerHelper::send(server);
 
 				mutex.unlock();
+
 				done = true;
 			}
 		});
@@ -266,9 +267,6 @@ int main(int argc, char** argv)
 				Xplicit::NetworkServerHelper::recv(server);
 				done = false;
 			}
-
-			// 16ms sleep.
-			XPLICIT_SLEEP(XPLICIT_DELTA_TIME / 60);
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr());
 

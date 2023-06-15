@@ -30,8 +30,9 @@
 #define XPLICIT_STREAM_VERSION (4U)
 
 /* 
- * This file handles resource streaming 
- * for the xplicit game engine.
+ * This file handles resource streaming for the xplicit game engine.
+ * When a user asks for an item (mesh, sound, material...)
+ * DSC downloads it.
  */
 
 namespace Xplicit::Network

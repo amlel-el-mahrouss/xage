@@ -13,7 +13,7 @@
 #pragma once
 
 #include <Xplicit.h>
-#include <ApplicationContext.h>
+#include <Root.h>
 
 namespace Xplicit::Player
 {

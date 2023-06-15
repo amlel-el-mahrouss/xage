@@ -82,9 +82,9 @@ namespace Xplicit
 
     enum NETWORK_STAT : int16_t
     {
-		NETWORK_STAT_CONNECTED,
-        NETWORK_STAT_DISCONNECTED,
-        NETWORK_STAT_COUNT,
+		NETWORK_STAT_CONNECTED = 7,
+        NETWORK_STAT_DISCONNECTED = 8,
+        NETWORK_STAT_COUNT = 2,
     };
 
     using nfloat = float;

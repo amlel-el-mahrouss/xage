@@ -16,7 +16,7 @@
 
 #include "LocalNetworkMonitorEvent.h"
 #include "Application.h"
-#include "CoreUI.h"
+#include "GameMenuUI.h"
 
 namespace Xplicit::Player
 {

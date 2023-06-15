@@ -13,8 +13,7 @@
 #pragma once
 
 #include <NetworkComponent.h>
-
-#include "CoreUI.h"
+#include "GameMenuUI.h"
 
 namespace Xplicit::Player
 {

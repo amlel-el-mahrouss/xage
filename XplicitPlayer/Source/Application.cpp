@@ -66,9 +66,9 @@ namespace Xplicit::Bites
 
 	void Application::setup()
 	{
-		auto singleton = Xplicit::ApplicationContext::get_singleton_ptr();
+		auto singleton = Xplicit::Root::get_singleton_ptr();
 
-		Xplicit::ApplicationContext::get_singleton_ptr()->set(new Xplicit::InputReceiver());
+		Xplicit::Root::get_singleton_ptr()->set(new Xplicit::InputReceiver());
 
 		singleton->set(
 			irr::createDevice(

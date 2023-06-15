@@ -14,7 +14,7 @@
 
 #include <NetworkComponent.h>
 
-#include "CameraComponent.h"
+#include "LocalCameraComponent.h"
 #include "IMeshable.h"
 
 namespace Xplicit::Player
@@ -41,7 +41,7 @@ namespace Xplicit::Player
 		virtual void update() override;
 
 	public:
-		void attach(CameraComponent* cam) noexcept;
+		void attach(LocalCameraComponent* cam) noexcept;
 
 	public:
 		void set_pos(const vector3df& newPos) noexcept;
@@ -50,7 +50,7 @@ namespace Xplicit::Player
 	private:
 		IAnimatedMeshSceneNode* mCameraNode;
 		NetworkComponent* mNetwork;
-		CameraComponent* mCam;
+		LocalCameraComponent* mCam;
 		NetworkPacket mPacket;
 		LocalPlayerMoveEvent* mEvent;
 

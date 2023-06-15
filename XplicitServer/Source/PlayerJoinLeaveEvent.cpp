@@ -58,6 +58,17 @@ namespace Xplicit
 		peer->packet.size = sizeof(NetworkPacket);
 		peer->stat = NETWORK_STAT_CONNECTED;
 
+		for (std::size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
+		{
+			if (server->get(peer_idx)->hash != hash)
+			{
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+
+				peer->packet.public_hash = peer->public_hash;
+			}
+		}
+
 		NetworkServerHelper::send(server);
 
 		return true;
@@ -90,7 +101,7 @@ namespace Xplicit
 		return false;
 	}
 
-	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() : m_player_size(0) {}
+	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() : mPlayerCount(0) {}
 	PlayerJoinLeaveEvent::~PlayerJoinLeaveEvent() = default;
 
 	void PlayerJoinLeaveEvent::operator()()
@@ -98,19 +109,17 @@ namespace Xplicit
 		auto server = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 		XPLICIT_ASSERT(server);
 
+		/* server correction */
 		NetworkServerHelper::correct(server);
 
-		this->on_join(server);
-		this->on_leave(server);
+		this->handle_join_events(server);
+		this->handle_leave_events(server);
 	}
 
-	const size_t& PlayerJoinLeaveEvent::size() noexcept { return m_player_size; }
+	const size_t& PlayerJoinLeaveEvent::size() noexcept { return mPlayerCount; }
 
-	bool PlayerJoinLeaveEvent::on_join(NetworkServerComponent* server) noexcept
+	bool PlayerJoinLeaveEvent::handle_join_events(NetworkServerComponent* server) noexcept
 	{
-		if (this->size() > XPLICIT_MAX_CONNECTIONS)
-			return false;
-
 		if (!server)
 			return false;
 
@@ -125,17 +134,22 @@ namespace Xplicit
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
+				if (this->size() > XPLICIT_MAX_CONNECTIONS)
+				{
+					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+					return false;
+				}
+
 				PlayerComponent* player = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
 				XPLICIT_ASSERT(player);
 
 				if (xplicit_join_event(server->get(peer_idx), player, server))
 				{
-					// cancel any connection termination.
 					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = Xplicit::NETWORK_CMD_ACK;
 					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = Xplicit::NETWORK_CMD_INVALID;
 
 					XPLICIT_INFO("[CONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
-					++m_player_size;
+					++mPlayerCount;
 				}
 			}
 		}
@@ -143,7 +157,7 @@ namespace Xplicit
 		return true;
 	}
 
-	bool PlayerJoinLeaveEvent::on_leave(NetworkServerComponent* server) noexcept
+	bool PlayerJoinLeaveEvent::handle_leave_events(NetworkServerComponent* server) noexcept
 	{
 		if (this->size() <= 0)
 			return false;
@@ -162,7 +176,7 @@ namespace Xplicit
 				if (xplicit_leave_event(server->get(peer_idx), server))
 				{
 					XPLICIT_INFO("[DISCONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
-					--m_player_size;
+					--mPlayerCount;
 
 					server->get(peer_idx)->stat = NETWORK_STAT_DISCONNECTED;
 					memset(server->get(peer_idx)->packet.cmd, Xplicit::NETWORK_CMD_INVALID, XPLICIT_NETWORK_CMD_MAX);

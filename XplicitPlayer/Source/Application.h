@@ -15,10 +15,10 @@
 /* engine classes */
 #include <Uri.h>
 #include <IXMLWriter.h>
-#include <ApplicationContext.h>
+#include <Root.h>
 
 /* client classes */
-#include "CameraComponent.h"
+#include "LocalCameraComponent.h"
 #include "SplashScreenComponent.h"
 #include "LocalPlayerComponent.h"
 

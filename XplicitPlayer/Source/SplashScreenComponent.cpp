@@ -18,7 +18,7 @@
 
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalPlayerComponent.h"
-#include "CameraComponent.h"
+#include "LocalCameraComponent.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
@@ -50,7 +50,7 @@ namespace Xplicit::Player
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HUDComponent>();
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::CameraComponent>();
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
 
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
 

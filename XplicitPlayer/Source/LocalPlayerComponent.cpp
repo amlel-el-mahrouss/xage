@@ -16,7 +16,7 @@
 
 #include "LocalPlayerComponent.h"
 #include "Application.h"
-#include "CoreUI.h"
+#include "GameMenuUI.h"
 
 #include <Common.h>
 
@@ -27,7 +27,7 @@ namespace Xplicit::Player
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
 		: 
 		Component(), 
-		IMeshable("Character.dae"), 
+		IMeshable("xplicit-player.dae"), 
 		mPacket(), 
 		mCam(nullptr), 
 		mPublicHash(public_hash),
@@ -106,7 +106,7 @@ namespace Xplicit::Player
 		mutex.unlock();
 	}
 
-	void LocalPlayerComponent::attach(CameraComponent* cam) noexcept
+	void LocalPlayerComponent::attach(LocalCameraComponent* cam) noexcept
 	{ 
 		if (cam)
 			mCam = cam; 
@@ -138,7 +138,7 @@ namespace Xplicit::Player
 			mPublicHash == -1)
 			return;
 
-		auto traits = ApplicationContext::get_singleton_ptr()->Keyboard->get_layout();
+		auto traits = Root::get_singleton_ptr()->Keyboard->get_layout();
 
 		if (KB->key_down(traits.mForward))
 		{
@@ -150,7 +150,6 @@ namespace Xplicit::Player
 
 			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
-
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
 
 			mNetwork->send(mPacket);
@@ -168,7 +167,6 @@ namespace Xplicit::Player
 			
 			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
-
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_BACKWARD;
 
 			mNetwork->send(mPacket);
