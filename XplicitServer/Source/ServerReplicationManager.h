@@ -13,6 +13,7 @@
 #pragma once
 
 #include "CommonInc.h"
+#include <Common.h>
 
 namespace Xplicit
 {
@@ -45,15 +46,6 @@ namespace Xplicit
 	private:
 		NetworkServerComponent* mNetwork{ nullptr };
 
-	};
-
-	enum class COMPONENT_BASE_LIST : std::int32_t
-	{
-		COMPONENT_SCRIPT = 100,
-		COMPONENT_MODEL,
-		COMPONENT_SOUND,
-		COMPONENT_TEXTURE,
-		COMPONENT_INVALID = 0xFFF,
 	};
 
 	class ServerReplicationHash final

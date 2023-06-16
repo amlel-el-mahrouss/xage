@@ -13,9 +13,9 @@
 #pragma once
 
 #include "Xplicit.h"
-#include "Component.h"
-
 #include <Nplicit.h>
+
+#include "Component.h"
 
 #define XPLICIT_MOVEMENT_RATE	(50U)
 #define XPLICIT_DEFAULT_HEALTH	(100U)
@@ -100,5 +100,14 @@ namespace Xplicit
 	private:
 		String mName;
 
+	};
+
+	enum class COMPONENT_BASE_LIST : std::int32_t
+	{
+		COMPONENT_SCRIPT = 100,
+		COMPONENT_MODEL,
+		COMPONENT_SOUND,
+		COMPONENT_TEXTURE,
+		COMPONENT_INVALID = 0xFFF,
 	};
 }
