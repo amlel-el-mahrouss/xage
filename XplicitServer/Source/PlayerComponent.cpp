@@ -19,9 +19,11 @@
 namespace Xplicit
 {
 	PlayerComponent::PlayerComponent() 
-		: Component(), mPeer(nullptr), mHealth(XPLICIT_DEFAULT_HEALTH), 
+		: Component(), 
+		mPeer(nullptr), 
+		mHealth(XPLICIT_DEFAULT_HEALTH), 
 		mDeathTimeout(0), 
-		m_position(0, 0, 0), 
+		mPosition(0, 0, 0), 
 		mCooldown(0),
 		mFrozen(false)
 	{
@@ -119,7 +121,7 @@ namespace Xplicit
 
 	Vector<float>& PlayerComponent::pos() noexcept
 	{
-		return m_position;
+		return mPosition;
 	}
 
 	void PlayerComponent::freeze(const bool enable) noexcept

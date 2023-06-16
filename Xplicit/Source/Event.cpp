@@ -18,16 +18,16 @@
 
 namespace Xplicit
 {
-	void EventManager::update()
+	void EventManager::update() noexcept
 	{
-		for (size_t i = 0; i < mEvents.size(); i++)
+		for (std::size_t i = 0; i < mEvents.size(); i++)
 		{
 			XPLICIT_ASSERT(mEvents[i]);
 			mEvents[i]->update();
 		}
 	}
 
-	EventManager* EventManager::get_singleton_ptr()
+	EventManager* EventManager::get_singleton_ptr() noexcept
 	{
 		static EventManager* ptr = nullptr;
 

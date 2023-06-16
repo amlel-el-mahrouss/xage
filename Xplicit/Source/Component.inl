@@ -27,7 +27,7 @@ T* Xplicit::ComponentManager::add(Args&&... args)
 }
 
 template <typename T>
-T* Xplicit::ComponentManager::get(const char* name)
+T* Xplicit::ComponentManager::get(const char* name) noexcept
 {
 	if (!name || *name == 0)
 		return nullptr;
@@ -43,6 +43,21 @@ T* Xplicit::ComponentManager::get(const char* name)
 		if (strcmp(name, mInstances[i]->name()) == 0)
 #endif
 			return static_cast<T*>(mInstances[i]);
+	}
+
+	return nullptr;
+}
+
+template <typename T>
+T* Xplicit::ComponentManager::get_first() noexcept
+{
+	for (size_t i = 0; i < mInstances.size(); ++i)
+	{
+		if (!mInstances[i])
+			continue;
+
+		if (T* casted = dynamic_cast<T*>(mInstances[i]))
+			return casted;
 	}
 
 	return nullptr;

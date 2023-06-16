@@ -546,14 +546,14 @@ namespace Xplicit
 
 #define XPLICIT_MAX_POOL (1000)
 
-	template <typename PtrType>
+	template <typename PtrType, std::size_t Size = XPLICIT_MAX_POOL>
 	struct Pool final
 	{
 	public:
 		explicit Pool()
 		{
-			this->mPointer = (char*)malloc(sizeof(char) * (sizeof(PtrType) * XPLICIT_MAX_POOL));
-			ZeroMemory(this->mPointer, (sizeof(PtrType) * XPLICIT_MAX_POOL));
+			this->mPointer = (char*)malloc(sizeof(char) * (sizeof(PtrType) * Size));
+			ZeroMemory(this->mPointer, (sizeof(PtrType) * Size));
 		}
 
 		~Pool()

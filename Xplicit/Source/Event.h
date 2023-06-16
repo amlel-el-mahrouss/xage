@@ -37,16 +37,17 @@ namespace Xplicit
 		T* add(Args&&...   args);
 
 		template <typename T>
-		T* get(const char* name);
-
-		template <typename T>
 		bool remove(T* ptr);
 
 	public:
-		void update();
+		template <typename T>
+		T* get(const char* name);
 
 	public:
-		static EventManager* get_singleton_ptr();
+		void update() noexcept;
+
+	public:
+		static EventManager* get_singleton_ptr() noexcept;
 
 	private:
 		std::vector<Event*> mEvents;
@@ -62,12 +63,13 @@ namespace Xplicit
 		Event& operator=(const Event&) = default;
 		Event(const Event&) = default;
 
+	public:
 		virtual void operator()();
 		void update() noexcept;
 
 	public:
-		void add(EventListener* listener);
 		bool remove(EventListener* listener);
+		void add(EventListener* listener);
 
 	public:
 		virtual const char* name() noexcept;

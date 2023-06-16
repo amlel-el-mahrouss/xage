@@ -18,7 +18,7 @@
 
 namespace Xplicit 
 {
-	void ComponentManager::update()
+	void ComponentManager::update() noexcept
 	{
 		for (size_t i = 0; i < mInstances.size(); i++)
 		{
@@ -29,7 +29,7 @@ namespace Xplicit
 		}
 	}
 
-	ComponentManager* ComponentManager::get_singleton_ptr()
+	ComponentManager* ComponentManager::get_singleton_ptr() noexcept
 	{
 		static ComponentManager* ptr = nullptr;
 

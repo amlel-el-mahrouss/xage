@@ -49,7 +49,7 @@ namespace Xplicit
 		bool alive() noexcept;
 
 	private:
-		Vector<float> m_position;
+		Vector<float> mPosition;
 		NetworkPeer* mPeer;
 
 	private:

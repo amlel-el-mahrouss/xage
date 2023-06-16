@@ -16,9 +16,7 @@
 
 #include "Application.h"
 
-#include <DSCProtocol.h>
 #include <Bites.h>
-
 #include <codecvt>
 
 #ifdef XPLICIT_WINDOWS
@@ -61,6 +59,8 @@ XPLICIT_MAIN()
 				net->send(packet);
 			}
 		});
+
+		IRR->getGUIEnvironment()->addWindow(recti(dimension2di(300, 300)), true, L"Changelog", nullptr);
 
 		/* main game loop */
 		while (IRR->run() && 

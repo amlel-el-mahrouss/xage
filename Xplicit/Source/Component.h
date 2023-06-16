@@ -34,20 +34,25 @@ namespace Xplicit
 		template <typename T>
 		std::vector<T*> all_of(const char* name);
 
+	public:
 		template <typename T, typename... Args>
 		T* add(Args&&... args);
-
-		template <typename T>
-		T* get(const char* name);
 
 		template <typename T>
 		bool remove(T* ptr);
 
 	public:
-		void update();
+		template <typename T>
+		T* get(const char* name) noexcept;
+
+		template <typename T>
+		T* get_first() noexcept;
 
 	public:
-		static ComponentManager* get_singleton_ptr();
+		void update() noexcept;
+
+	public:
+		static ComponentManager* get_singleton_ptr() noexcept;
 
 	private:
 		std::vector<Component*> mInstances;
@@ -75,7 +80,7 @@ namespace Xplicit
 			INSTANCE_NETWORK, // Network instance
 			INSTANCE_PHYSICS, // Physics instance
 			INSTANCE_GUI, // GUI instance
-			INSTANCE_SERVICE, // Service instance
+			INSTANCE_REPLICATION, // Replicated instance
 			INSTANCE_COUNT // the number of Instances type we have here!
 		};
 

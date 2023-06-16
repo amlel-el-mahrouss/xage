@@ -83,26 +83,6 @@ namespace Xplicit
 
 	};
 
-	/* Base Service Class */
-	/* Used that to make UIService, NetworkService, DownloadService */
-	class XPLICIT_API ServiceComponent : public Component
-	{
-	public:
-		ServiceComponent(const String& name) : mName(name) {}
-		virtual ~ServiceComponent() = default;
-
-	public:
-		XPLICIT_COPY_DEFAULT(ServiceComponent);
-
-	public:
-		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_SERVICE; }
-		virtual const char* name() noexcept override { return mName.c_str(); }
-
-	private:
-		String mName;
-
-	};
-
 	enum class COMPONENT_BASE_LIST : std::int32_t
 	{
 		COMPONENT_SCRIPT = 100,
