@@ -22,15 +22,15 @@
 #define XPLICIT_STREAM_PORT (60002)
 #endif // ifndef XPLICIT_STREAM_PORT
 
-#define XPLICIT_STREAM_MAG_0 ('D')
+#define XPLICIT_STREAM_MAG_0 ('X')
 #define XPLICIT_STREAM_MAG_1 ('S')
-#define XPLICIT_STREAM_MAG_2 ('C')
+#define XPLICIT_STREAM_MAG_2 ('P')
 
 #define XPLICIT_STREAM_MAG_COUNT (3U)
-#define XPLICIT_STREAM_VERSION (4U)
+#define XPLICIT_STREAM_VERSION   (5U)
 
 /* 
- * This file handles resource streaming for the xplicit game engine.
+ * This file handles resource streaming for the Xplicit game engine.
  * When a user asks for an item (mesh, sound, material...)
  * DSC downloads it.
  */
@@ -39,30 +39,30 @@ namespace Xplicit::Network
 {
 	using ByteArray = std::vector<char>;
 
-	class XPLICIT_API FileStream final
+	class XPLICIT_API FileStreamWriter final
 	{
 	public:
-		FileStream() = delete;
+		FileStreamWriter() = delete;
 
 	public:
-		FileStream(const char* bytes, size_t len);
-		~FileStream();
+		FileStreamWriter(const char* bytes, size_t len);
+		~FileStreamWriter();
 
-		XPLICIT_COPY_DELETE(FileStream);
+		XPLICIT_COPY_DELETE(FileStreamWriter);
 
 	public:
 		const char* get() noexcept;
 		size_t size() noexcept;
 
 	private:
-		int set(const char* bytes, size_t len);
+		int write(const char* bytes, size_t len);
 
 	private:
 		ByteArray mByteList;
 
 	};
 
-	using FileStreamPtr = std::unique_ptr<FileStream>;
+	using FileStreamPtr = std::unique_ptr<FileStreamWriter>;
 
 	class XPLICIT_API FileTaskStream final
 	{
@@ -70,11 +70,12 @@ namespace Xplicit::Network
 		FileTaskStream();
 		~FileTaskStream();
 
+	public:
 		XPLICIT_COPY_DELETE(FileTaskStream);
 
 	public:
-		void add(FileStream* file);
-		bool remove(FileStream* file);
+		bool remove(FileStreamWriter* fsw);
+		void add(FileStreamWriter* fsw);
 
 	public:
 		void operator()(Socket& socket, const bool isCompressed);
@@ -85,7 +86,7 @@ namespace Xplicit::Network
 		bool ready() noexcept;
 		
 	private:
-		std::vector<FileStream*> mFileList;
+		std::vector<FileStreamWriter*> mFileList;
 		bool mReady;
 
 	};

@@ -16,21 +16,21 @@ namespace Xplicit::Network
 {
 	Socket::Socket(const SOCKET_TYPE type)
 	{
-		this->m_iSocket = XPLICIT_SOCKET(AF_INET,
+		this->PublicSocket = XPLICIT_SOCKET(AF_INET,
 			type == SOCKET_TYPE::TCP ? SOCK_STREAM : SOCK_DGRAM,
 			type == SOCKET_TYPE::TCP ? IPPROTO_TCP : IPPROTO_UDP);
 
-		XPLICIT_ASSERT(m_iSocket != SOCKET_ERROR);
+		XPLICIT_ASSERT(this->PublicSocket != SOCKET_ERROR);
 	}
 
 	Socket::~Socket()
 	{
-		if (XPLICIT_SHUTDOWN(m_iSocket, SD_BOTH))
-			XPLICIT_CLOSE(m_iSocket);
+		if (XPLICIT_SHUTDOWN(this->PublicSocket, SD_BOTH))
+			XPLICIT_CLOSE(this->PublicSocket);
 	}
 
 	Socket::operator bool() noexcept
 	{
-		return m_iSocket != -1;
+		return this->PublicSocket != -1;
 	}
 }

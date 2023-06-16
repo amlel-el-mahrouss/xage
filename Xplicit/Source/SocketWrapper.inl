@@ -18,7 +18,7 @@
 template <typename Data, size_t Size>
 void Xplicit::Network::Socket::send(Data ptr, size_t sz)
 {
-	::send(m_iSocket, (const char*)ptr, sz < 1 ? Size : sz, 0);
+	::send(this->PublicSocket, (const char*)ptr, sz < 1 ? Size : sz, 0);
 }
 
 /// <summary>
@@ -29,5 +29,5 @@ void Xplicit::Network::Socket::send(Data ptr, size_t sz)
 template <typename Data, size_t Size>
 void Xplicit::Network::Socket::recv(Data ptr, size_t sz)
 {
-	::recv(m_iSocket, (char*)ptr, sz < 1 ? Size : sz, 0);
+	::recv(Socket, (char*)ptr, sz < 1 ? Size : sz, 0);
 }

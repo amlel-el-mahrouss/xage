@@ -366,7 +366,7 @@ namespace Xplicit
 	}
 #endif
 
-	class Dialog
+	class DialogHelper
 	{
 	public:
 		static int32_t message_box(LPCWSTR title, LPCWSTR message, int flags = MB_OK)

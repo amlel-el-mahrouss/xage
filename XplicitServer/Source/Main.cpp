@@ -263,7 +263,7 @@ int main(int argc, char** argv)
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::Dialog::message_box(L"Xplicit Engine", 
+		Xplicit::DialogHelper::message_box(L"Xplicit Engine", 
 			L"Program Exited", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 

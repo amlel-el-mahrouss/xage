@@ -19,15 +19,15 @@
 
 namespace Xplicit::Network
 {
-	FileStream::FileStream(const char* bytes, size_t len)
+	FileStreamWriter::FileStreamWriter(const char* bytes, size_t len)
 		: mByteList()
 	{
-		this->set(bytes, len);
+		this->write(bytes, len);
 	}
 
-	FileStream::~FileStream() {}
+	FileStreamWriter::~FileStreamWriter() {}
 
-	int FileStream::set(const char* bytes, size_t len)
+	int FileStreamWriter::write(const char* bytes, size_t len)
 	{
 		if (!bytes ||
 			len < 1)
@@ -44,7 +44,7 @@ namespace Xplicit::Network
 		return 0;
 	}
 
-	const char* FileStream::get() noexcept
+	const char* FileStreamWriter::get() noexcept
 	{
 		if (mByteList.empty())
 			return "(null)";
@@ -52,7 +52,7 @@ namespace Xplicit::Network
 		return mByteList.data();
 	}
 
-	size_t FileStream::size() noexcept { return mByteList.size(); }
+	size_t FileStreamWriter::size() noexcept { return mByteList.size(); }
 
 	/* Task stream class */
 
@@ -62,17 +62,17 @@ namespace Xplicit::Network
 
 	FileTaskStream::~FileTaskStream() = default;
 
-	void FileTaskStream::add(FileStream* file)
+	void FileTaskStream::add(FileStreamWriter* fsw)
 	{
-		if (file)
-			mFileList.push_back(file);
+		if (fsw)
+			mFileList.push_back(fsw);
 	}
 
-	bool FileTaskStream::remove(FileStream* file)
+	bool FileTaskStream::remove(FileStreamWriter* fsw)
 	{
-		if (file)
+		if (fsw)
 		{
-			auto it = std::find(mFileList.cbegin(), mFileList.cend(), file);
+			auto it = std::find(mFileList.cbegin(), mFileList.cend(), fsw);
 
 			if (it != mFileList.cend())
 			{
@@ -89,6 +89,14 @@ namespace Xplicit::Network
 		if (!mReady) 
 			return;
 
+#define XPLICIT_PACKET_PAD()\
+			data.push_back(0);\
+		data.push_back(0);\
+		data.push_back(0);\
+		data.push_back(0)\
+
+
+
 		if (socket != XPLICIT_SOCKET_ERROR)
 		{
 			std::vector<std::int32_t> data, data_tmp;
@@ -96,11 +104,22 @@ namespace Xplicit::Network
 			data.push_back(XPLICIT_STREAM_MAG_0);
 			data.push_back(XPLICIT_STREAM_MAG_1);
 			data.push_back(XPLICIT_STREAM_MAG_2);
+
+			XPLICIT_PACKET_PAD();
+
 			data.push_back(isCompressed);
+
+			XPLICIT_PACKET_PAD();
+
 			data.push_back(XPLICIT_STREAM_VERSION);
+
+			XPLICIT_PACKET_PAD();
+
 
 			data.push_back('\r');
 			data.push_back('\n');
+
+			XPLICIT_PACKET_PAD();
 
 			Thread worker([&]() -> void
 				{
@@ -111,10 +130,15 @@ namespace Xplicit::Network
 							data_tmp.push_back(mFileList[file_index]->get()[data_index]);
 						}
 
+
+						XPLICIT_PACKET_PAD();
+
 						data.push_back('\r');
 						data.push_back('\n');
 						data.push_back('\r');
 						data.push_back('\n');
+
+						XPLICIT_PACKET_PAD();
 					}
 			});
 
@@ -122,10 +146,14 @@ namespace Xplicit::Network
 
 			data.push_back(crc);
 
+			XPLICIT_PACKET_PAD();
+
 			for (size_t i = 0; i < data_tmp.size(); ++i)
 			{
 				data.push_back(data_tmp[i]);
 			}
+
+			XPLICIT_PACKET_PAD();
 
 			// wait for the worker thread to finish.
 			if (worker.joinable())

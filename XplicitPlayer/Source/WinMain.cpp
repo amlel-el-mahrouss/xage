@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Main.cpp
- *			Purpose: Main App unit.
+ *			File: WinMain.cpp
+ *			Purpose: Main Application entrypoint.
  *
  * =====================================================================
  */
@@ -16,7 +16,9 @@
 
 #include "Application.h"
 
+#include <DSCProtocol.h>
 #include <Bites.h>
+
 #include <codecvt>
 
 #ifdef XPLICIT_WINDOWS
@@ -28,7 +30,7 @@ XPLICIT_MAIN()
 		// Search and exit if another Xplicit app is open.
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
-			Xplicit::Dialog::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
+			Xplicit::DialogHelper::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
 				L"Cannot open more than one instance of the Xplicit Engine!", 
 				MB_OK);
 
@@ -47,7 +49,7 @@ XPLICIT_MAIN()
 
 		if (!app)
 			throw Xplicit::EngineError();
-		
+
 		std::atexit([]() -> void {
 			auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkComponent>("NetworkComponent");
 
@@ -89,7 +91,7 @@ XPLICIT_MAIN()
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::Dialog::message_box(L"Xplicit Engine", 
+		Xplicit::DialogHelper::message_box(L"Xplicit Engine", 
 			L"Program Exited", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 

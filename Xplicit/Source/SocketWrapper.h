@@ -19,6 +19,8 @@
 #define XPLICIT_SOCKET socket
 #define XPLICIT_CLOSE closesocket
 #define XPLICIT_SHUTDOWN shutdown
+#define XPLICIT_ACCEPT accept
+#define XPLICIT_CONNECT connect
 
 #else
 
@@ -52,13 +54,13 @@ namespace Xplicit::Network
 		operator bool() noexcept;
 
 		template <typename Data, size_t Size = sizeof(Data)>
-		void send(Data ptr, size_t sz = 0);
+		void send(Data ptr, std::size_t sz = 0);
 
 		template <typename Data, size_t Size = sizeof(Data)>
-		void recv(Data ptr, size_t sz = 0);
+		void recv(Data ptr, std::size_t sz = 0);
 
 	public:
-		CSocket m_iSocket;
+		CSocket PublicSocket;
 
 
 	};
