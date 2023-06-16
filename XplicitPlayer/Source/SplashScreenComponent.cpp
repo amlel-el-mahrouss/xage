@@ -49,7 +49,8 @@ namespace Xplicit::Player
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HUDComponent>();
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HUDComponent>(packet.public_hash);
+			
 			auto cam = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
 
 			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);

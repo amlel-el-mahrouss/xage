@@ -386,6 +386,6 @@ namespace Xplicit
 #ifndef XPLICIT_GET_DATA_DIR
 #define XPLICIT_GET_DATA_DIR(DIR)\
 std::string DIR = getenv("APPDATA");\
-DIR += "/Data/";
+DIR += "/XplicitNgin/";
 
 #endif

@@ -89,18 +89,24 @@ namespace Xplicit::Network
 		if (!mReady) 
 			return;
 
+		/* dsc is nrz encoded. */
+		/* 4 bytes alignement */
+
 #define XPLICIT_PACKET_PAD()\
 			data.push_back(0);\
-		data.push_back(0);\
-		data.push_back(0);\
-		data.push_back(0)\
+			data.push_back(0);\
+			data.push_back(0);\
+			data.push_back(0)\
 
 
 
+		/* check socket */
 		if (socket != XPLICIT_SOCKET_ERROR)
 		{
+			/* prepare buffers */
 			std::vector<std::int32_t> data, data_tmp;
 
+			/* push magic numbers*/
 			data.push_back(XPLICIT_STREAM_MAG_0);
 			data.push_back(XPLICIT_STREAM_MAG_1);
 			data.push_back(XPLICIT_STREAM_MAG_2);
@@ -114,7 +120,6 @@ namespace Xplicit::Network
 			data.push_back(XPLICIT_STREAM_VERSION);
 
 			XPLICIT_PACKET_PAD();
-
 
 			data.push_back('\r');
 			data.push_back('\n');

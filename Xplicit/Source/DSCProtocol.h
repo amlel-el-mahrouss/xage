@@ -87,6 +87,8 @@ namespace Xplicit::Network
 		
 	private:
 		std::vector<FileStreamWriter*> mFileList;
+
+	private:
 		bool mReady;
 
 	};

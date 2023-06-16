@@ -21,7 +21,7 @@ namespace Xplicit::Player
 	IMeshable::IMeshable(const char* path)
 	{
 		String _path = XPLICIT_ENV("APPDATA");
-		_path += "/Data/Studio/";
+		_path += "/XplicitNgin/Studio/";
 		_path += path;
 
 		mMdl = IRR->getSceneManager()->getMesh(_path.c_str());

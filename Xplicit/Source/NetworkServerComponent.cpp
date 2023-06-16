@@ -139,27 +139,19 @@ namespace Xplicit
 	{
 		if (server)
 		{
-			struct sockaddr_in tmp{};
-
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
 				int from_len = sizeof(PrivateAddressData);
 				static NetworkPacket packet{};
 
-				int res = ::recvfrom(server->m_socket, reinterpret_cast<char*>(&packet),
+				std::int32_t res = ::recvfrom(server->m_socket, 
+					reinterpret_cast<char*>(&packet),
 					sz, 0,
-					reinterpret_cast<sockaddr*>(&server->get(i)->addr), &from_len);
+					reinterpret_cast<sockaddr*>(&server->get(i)->addr), 
+					&from_len);
 
-				/* check for any fatal socket error */
-				if (res == SOCKET_ERROR)
-					break;
-
-				/* check if we have a collision */
-				if (tmp.sin_addr.S_un.S_addr == server->get(i)->addr.sin_addr.S_un.S_addr)
-					continue;
-
-				tmp = server->get(i)->addr;
-				
+				/* check for any socket error, if yes continue... */
+				if (res == SOCKET_ERROR) continue;
 
 				if (server->get(i)->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
 					server->get(i)->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&

@@ -53,7 +53,7 @@ namespace Xplicit::Player
 		virtual void update() override;
 		
 	private:
-		std::function<void()> m_onClick;
+		std::function<void()> mClicked;
 		ITexture* m_pTexture;
 
 	private:
@@ -65,7 +65,10 @@ namespace Xplicit::Player
 	class HUDComponent final : public Component
 	{
 	public:
-		HUDComponent();
+		HUDComponent() = delete;
+
+	public:
+		explicit HUDComponent(const std::int64_t& publicHash);
 		virtual ~HUDComponent();
 
 		HUDComponent& operator=(const HUDComponent&) = delete;
@@ -74,84 +77,41 @@ namespace Xplicit::Player
 		virtual const char* name() noexcept override { return "HUD"; }
 		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_GUI; }
 
+	public:
 		virtual void update() override;
 
 	private:
-		NetworkComponent* m_network;
+		NetworkComponent* mNetwork;
 
 	private:
-		std::int64_t m_health;
+		std::int64_t mPublicHash;
+		std::int64_t mHealth;
 
 	};
 
 	class NotificationComponent : public Component
 	{
 	public:
-		NotificationComponent(const char* name, const char* texture) 
-			:
-			mName(name), 
-			mTexture(IRR->getVideoDriver()->getTexture(texture)),
-			mStart(true),
-			mCountdown(3000)
-		{}
-
-		virtual ~NotificationComponent()
-		{
-			if (mTexture)
-				mTexture->drop();
-		}
+		NotificationComponent(const char* caption, const char* text);
+		virtual ~NotificationComponent();
 
 	public:
 		XPLICIT_COPY_DELETE(NotificationComponent);
 
 	public:
-		virtual const char* name() noexcept override { XPLICIT_ASSERT(!mName.empty()); return mName.c_str(); }
-		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_GUI; }
+		virtual const char* name() noexcept override;
+		virtual INSTANCE_TYPE type() noexcept override;
 
-		virtual void update() override 
-		{
-			static float tweenStart = 8;
-
-			if (mStart)
-			{
-				if (tweenStart > 1.5)
-					tweenStart -= 0.01f;
-			}
-			else
-			{
-				if (tweenStart > 1.5)
-					tweenStart += 0.01f;
-
-				if (tweenStart >= 8)
-				{
-					ComponentManager::get_singleton_ptr()->remove(this);
-					return;
-				}
-			}
-
-			static const float final_pos = 2.8;
-
-			if (tweenStart < 8)
-			{
-				IRR->getVideoDriver()->draw2DImage(mTexture, vector2di(
-					Xplicit::Player::XPLICIT_DIM.Width / tweenStart,
-					Xplicit::Player::XPLICIT_DIM.Height / 1.5)
-				);
-			}
-
-			--mCountdown;
-
-			if (mCountdown < 1)
-				this->dispatch();
-		}
-
-		void dispatch() noexcept { mStart = false; }
+	public:
+		virtual void update() override;
+		void dispatch() noexcept;
 
 	private:
 		ITexture* mTexture;
 
 	private:
 		std::int64_t mCountdown;
+		gui::IGUIFont* mFnt;
 		String mName;
 		bool mStart;
 
