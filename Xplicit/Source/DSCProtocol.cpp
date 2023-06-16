@@ -138,6 +138,7 @@ namespace Xplicit::Network
 
 						XPLICIT_PACKET_PAD();
 
+						/* end of file section */
 						data.push_back('\r');
 						data.push_back('\n');
 						data.push_back('\r');
@@ -147,7 +148,7 @@ namespace Xplicit::Network
 					}
 			});
 
-			int crc = xplicit_crc32(reinterpret_cast<char*>(data_tmp.data()), data_tmp.size());
+			std::int32_t crc = xplicit_crc32(reinterpret_cast<char*>(data_tmp.data()), data_tmp.size());
 
 			data.push_back(crc);
 

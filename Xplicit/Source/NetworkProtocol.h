@@ -135,12 +135,16 @@ namespace Xplicit
 			XPLICIT_COPY_DEFAULT(UniqueAddress);
 
         public:
-            const uuids::uuid& get() noexcept { return uuid; }
+			const uuids::uuid& get() noexcept { return uuid; }
+
+			const uuids::uuid& get_public_uuid() noexcept { return this->get(); }
+			const uuids::uuid& get_private_uuid() noexcept { return uuid; }
 
         private:
-            uuids::uuid public_uuid;
-            uuids::uuid uuid;
+            uuids::uuid public_uuid; /* for public hash */
+            uuids::uuid uuid; /* private hash */
 
+        private:
             std::string name;
 
             friend NetworkPeer;

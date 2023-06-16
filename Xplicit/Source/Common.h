@@ -74,6 +74,7 @@ namespace Xplicit
 		RenderableComponent() = default;
 		virtual ~RenderableComponent() = default;
 
+	public:
 		XPLICIT_COPY_DEFAULT(RenderableComponent);
 
 	public:

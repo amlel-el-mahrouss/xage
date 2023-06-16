@@ -135,36 +135,45 @@ namespace Xplicit
 
 	const char* NetworkServerComponent::dns() noexcept { return m_dns.c_str(); }
 
+	static bool xplicit_recv_packet(NetworkServerComponent* server,
+		const std::size_t& i,
+		NetworkPacket& packet)
+	{
+		if (server->get(i)->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
+			server->get(i)->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+			server->get(i)->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
+			server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
+		{
+			server->get(i)->packet = std::move(packet);
+
+			return true;
+		}
+
+		return false;
+	}
+
 	void NetworkServerHelper::recv(NetworkServerComponent* server, const size_t sz)
 	{
 		if (server)
 		{
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
-				int from_len = sizeof(PrivateAddressData);
+				std::int32_t fromLen = sizeof(PrivateAddressData);
 				static NetworkPacket packet{};
+
+				struct sockaddr addrLhs { 0 };
 
 				std::int32_t res = ::recvfrom(server->m_socket, 
 					reinterpret_cast<char*>(&packet),
-					sz, 0,
-					reinterpret_cast<sockaddr*>(&server->get(i)->addr), 
-					&from_len);
+					sz, 
+					0,
+					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
+					&fromLen);
 
-				/* check for any socket error, if yes continue... */
 				if (res == SOCKET_ERROR) continue;
 
-				if (server->get(i)->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
-					server->get(i)->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-					server->get(i)->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
-					server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
-				{
-					server->get(i)->packet = packet;
-				}
-				else
-				{
-					if (sz < 0 || from_len < 0)
-						xplicit_invalidate_peer(server->get(i));
-				}
+				if (!xplicit_recv_packet(server, i, packet))
+					xplicit_invalidate_peer(server->get(i));
 			}
 		}
 	}

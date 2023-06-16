@@ -5,7 +5,7 @@
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: Component.h
- *			Purpose: Xplicit's Component System
+ *			Purpose: Xplicit Component System
  *
  * =====================================================================
  */
@@ -28,8 +28,7 @@ namespace Xplicit
 		~ComponentManager() = default;
 
 	public:
-		ComponentManager& operator=(const ComponentManager&) = delete;
-		ComponentManager(const ComponentManager&) = delete;
+		XPLICIT_COPY_DEFAULT(ComponentManager);
 
 	public:
 		template <typename T>
@@ -51,7 +50,7 @@ namespace Xplicit
 		static ComponentManager* get_singleton_ptr();
 
 	private:
-		std::vector<Component*> m_instances;
+		std::vector<Component*> mInstances;
 
 	};
 
@@ -61,8 +60,8 @@ namespace Xplicit
 		Component() = default;
 		virtual ~Component() = default;
 
-		Component& operator=(const Component&) = default;
-		Component(const Component&) = default;
+	public:
+		XPLICIT_COPY_DEFAULT(Component);
 
 	public:
 		enum INSTANCE_TYPE : uint8_t 

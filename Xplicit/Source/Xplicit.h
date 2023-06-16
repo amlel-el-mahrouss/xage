@@ -543,6 +543,77 @@ namespace Xplicit
 		}
 
 	};
+
+#define XPLICIT_MAX_POOL (1000)
+
+	template <typename PtrType>
+	struct Pool final
+	{
+	public:
+		explicit Pool()
+		{
+			this->mPointer = (char*)malloc(sizeof(char) * (sizeof(PtrType) * XPLICIT_MAX_POOL));
+			ZeroMemory(this->mPointer, (sizeof(PtrType) * XPLICIT_MAX_POOL));
+		}
+
+		~Pool()
+		{
+			if (this->mPointer)
+			{
+				free(this->mPointer);
+			}
+		}
+
+	private:
+		char* mPointer;
+
+	public:
+		template <typename... Args>
+		PtrType* allocate(Args&&... args)
+		{
+			auto sz = sizeof(PtrType) * XPLICIT_MAX_POOL;
+			auto idx = 0UL;
+
+			bool good = true;
+
+			while (idx < sz)
+			{
+				good = true;
+
+				for (size_t i = 0; i < sz; i++)
+				{
+					if (mPointer[i + idx] != 0)
+					{
+						good = false;
+						break;
+					}
+
+				}
+
+				if (good)
+				{
+					PtrType* ptr = reinterpret_cast<PtrType*>(&mPointer[idx]);
+					memset(ptr, 0, sizeof(PtrType));
+
+					*ptr = PtrType(std::forward<Args>(args)...);
+
+					return ptr;
+				}
+
+				idx += sizeof(PtrType);
+			}
+
+			return nullptr;
+		}
+
+		template <typename T>
+		void deallocate(T* ptr)
+		{
+			ptr->~T();
+			memset(ptr, 0, sizeof(T));
+		}
+
+	};
 }
 
 #define XPLICIT_INIT_COM XPLICIT_ASSERT(SUCCEEDED(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE)))

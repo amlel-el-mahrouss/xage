@@ -15,7 +15,6 @@
  */
 
 #include "GameMenuUI.h"
-
 /* Application framework. */
 #include "Application.h"
 
@@ -28,10 +27,10 @@ namespace Xplicit::Player
 
 	// constructor
 	PopupComponent::PopupComponent(const std::function<void()>& onClick, const vector2di pos, const POPUP_TYPE popupType, const char* id) noexcept
-		: mClicked(onClick), m_vecPos(pos), m_strPopupId(id)
+		: mClicked(onClick), mPos(pos), mPopupId(id)
 	{
 		XPLICIT_ASSERT(onClick);
-		XPLICIT_ASSERT(!m_strPopupId.empty());
+		XPLICIT_ASSERT(!mPopupId.empty());
 
 		String path;
 
@@ -51,35 +50,33 @@ namespace Xplicit::Player
 			break;
 		}
 
-		m_pTexture = IRR->getVideoDriver()->getTexture(path.c_str());
+		mTex = IRR->getVideoDriver()->getTexture(path.c_str());
 
-		XPLICIT_ASSERT(m_pTexture);
+		XPLICIT_ASSERT(mTex);
 
-		if (!m_pTexture)
+		if (!mTex)
 			throw EngineError();
 	}
 
 	// c++ destructor
 	PopupComponent::~PopupComponent()
 	{
-		if (m_pTexture)
-			m_pTexture->drop();
+		if (mTex)
+			mTex->drop();
 	}
 
 	// update function
 	void PopupComponent::update()
 	{
-		IRR->getVideoDriver()->draw2DImage(m_pTexture, m_vecPos);
+		IRR->getVideoDriver()->draw2DImage(mTex, mPos);
 
-		if (KB->key_down(KEY_END))
-		{
+		if (KB->key_down(KEY_RETURN))
 			mClicked();
-		}
 	}
 
 	const char* PopupComponent::name() noexcept
 	{
-		return m_strPopupId.c_str();
+		return mPopupId.c_str();
 	}
 
 	PopupComponent::INSTANCE_TYPE PopupComponent::type() noexcept
@@ -88,7 +85,7 @@ namespace Xplicit::Player
 	}
 	
 	/* Heads up display */
-	HUDComponent::HUDComponent(const std::int64_t& publicHash)
+	HudComponent::HudComponent(const std::int64_t& publicHash)
 		: mHealth(0),
 		  mPublicHash(publicHash),
 		  mNetwork(nullptr)
@@ -99,88 +96,35 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mNetwork);
 	}
 
-	HUDComponent::~HUDComponent() = default;
+	HudComponent::~HudComponent() = default;
 
-	void HUDComponent::update()
+	void HudComponent::update()
 	{
 		if (!mNetwork)
 			return;
 
-		auto packet = mNetwork->get();
+		const auto& packet = mNetwork->get();
 	
 		if (packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
 			mHealth = packet.health;
 	}
 
-	NotificationComponent::NotificationComponent(const char* caption, const char* text)
-		:
-		mName(caption),
-		mTexture(IRR->getVideoDriver()->getTexture("Notification.png")),
-		mStart(true),
-		mCountdown(3000)
+
+	std::tuple<std::vector<Color<float>>, 
+		std::vector<Vector<float>>> UIThemeSchemeManager::set_white_scheme() noexcept
 	{
-		XPLICIT_GET_DATA_DIR(dir);
+		std::tuple<std::vector<Color<float>>, std::vector<Vector<float>>> scheme;
 
-		String path = dir;
-		path += "\\Urbanist.xml";
-
-		mFnt = IRR->getGUIEnvironment()->getFont(path.c_str());
+		/* return scheme */
+		return scheme;
 	}
 
-	NotificationComponent::~NotificationComponent()
+	std::tuple<std::vector<Color<float>>, 
+		std::vector<Vector<float>>> UIThemeSchemeManager::set_dark_scheme() noexcept
 	{
-		if (mTexture)
-			mTexture->drop();
+		std::tuple<std::vector<Color<float>>, std::vector<Vector<float>>> scheme;
+
+		/* return scheme */
+		return scheme;
 	}
-
-	void NotificationComponent::update()
-	{
-		static float tweenStart = 8;
-
-		if (mStart)
-		{
-			if (tweenStart > 1.5)
-				tweenStart -= 0.01f;
-		}
-		else
-		{
-			if (tweenStart > 1.5)
-				tweenStart += 0.01f;
-
-			if (tweenStart >= 8)
-			{
-				ComponentManager::get_singleton_ptr()->remove(this);
-				return;
-			}
-		}
-
-		static const float final_pos = 2.8;
-
-		if (tweenStart < 8)
-		{
-			IRR->getVideoDriver()->draw2DImage(mTexture, vector2di(
-				Xplicit::Player::XPLICIT_DIM.Width / tweenStart,
-				Xplicit::Player::XPLICIT_DIM.Height / 1.5)
-			);
-		}
-
-		if (tweenStart == final_pos)
-		{
-			mFnt->draw("Test Notification", recti(vector2di(
-				Xplicit::Player::XPLICIT_DIM.Width / tweenStart,
-				Xplicit::Player::XPLICIT_DIM.Height / 1.5), dimension2di(0, 0)), SColor(0xFFB800), true, true);
-		}
-
-		--mCountdown;
-
-		if (mCountdown < 1)
-			this->dispatch();
-	}
-
-	void NotificationComponent::dispatch() noexcept { mStart = false; }
-
-
-	const char* NotificationComponent::name() noexcept { XPLICIT_ASSERT(!mName.empty()); return mName.c_str(); }
-
-	NotificationComponent::INSTANCE_TYPE NotificationComponent::type() noexcept { return INSTANCE_GUI; }
 }

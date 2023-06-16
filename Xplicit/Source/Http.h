@@ -14,7 +14,7 @@
 
 #include "Xplicit.h"
 
-namespace Xplicit::Utils
+namespace Xplicit::HTTP
 {
     constexpr int16_t XPLICIT_HTTP_PORT = 80;
 
@@ -55,7 +55,7 @@ namespace Xplicit::Utils
             else if (!strcmp(extension.c_str(), ".jpg"))
                 return { .t_name = "JPEG", .t_mime = "Content-Type: image/jpeg" };
             else if (!strcmp(extension.c_str(), ".ar"))
-                return { .t_name = "Xplicit Package", .t_mime = "Content-Type: application/ar" };
+                return { .t_name = "Xplicit Package Format", .t_mime = "Content-Type: archive/ar" };
 
             return { .t_name = "Not allowed", .t_mime = "Content-Type: */not-allowed" };
         }
@@ -71,7 +71,7 @@ namespace Xplicit::Utils
             std::string m_Dns;
             SOCKET m_Socket;
 
-            friend Xplicit::Utils::HTTPWriter;
+            friend Xplicit::HTTP::HTTPWriter;
 
         public:
             HTTPSocket() : m_Socket(~0), m_Addr() {}

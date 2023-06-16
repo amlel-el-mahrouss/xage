@@ -13,8 +13,11 @@
 #pragma once
 
 #include <Root.h>
-#include <NetworkComponent.h>
+ /* Nplicit math framework */
+#include <NMath.h>
+
 #include <Component.h>
+#include <NetworkComponent.h>
 
 /* Xplicit Engine Prebuilt dialogs engine */
 
@@ -44,6 +47,7 @@ namespace Xplicit::Player
 
 		virtual ~PopupComponent();
 
+	public:
 		PopupComponent& operator=(const PopupComponent&) = default;
 		PopupComponent(const PopupComponent&) = default;
 
@@ -53,27 +57,30 @@ namespace Xplicit::Player
 		virtual void update() override;
 		
 	private:
-		std::function<void()> mClicked;
-		ITexture* m_pTexture;
+		using FunctionPopup = std::function<void()>;
 
 	private:
-		String m_strPopupId;
-		vector2di m_vecPos;
+		FunctionPopup mClicked;
+		String mPopupId;
+		ITexture* mTex;
+		vector2di mPos;
 
 	};
 
-	class HUDComponent final : public Component
+	class HudComponent final : public Component
 	{
 	public:
-		HUDComponent() = delete;
+		HudComponent() = delete;
 
 	public:
-		explicit HUDComponent(const std::int64_t& publicHash);
-		virtual ~HUDComponent();
+		explicit HudComponent(const std::int64_t& publicHash);
+		virtual ~HudComponent();
 
-		HUDComponent& operator=(const HUDComponent&) = delete;
-		HUDComponent(const HUDComponent&) = delete;
+	public:
+		HudComponent& operator=(const HudComponent&) = default;
+		HudComponent(const HudComponent&) = default;
 
+	public:
 		virtual const char* name() noexcept override { return "HUD"; }
 		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_GUI; }
 
@@ -82,38 +89,26 @@ namespace Xplicit::Player
 
 	private:
 		NetworkComponent* mNetwork;
-
-	private:
 		std::int64_t mPublicHash;
 		std::int64_t mHealth;
 
 	};
 
-	class NotificationComponent : public Component
+	class UIThemeSchemeManager final
 	{
 	public:
-		NotificationComponent(const char* caption, const char* text);
-		virtual ~NotificationComponent();
+		UIThemeSchemeManager() = default;
+		~UIThemeSchemeManager() = default;
 
 	public:
-		XPLICIT_COPY_DELETE(NotificationComponent);
+		XPLICIT_COPY_DEFAULT(UIThemeSchemeManager);
 
 	public:
-		virtual const char* name() noexcept override;
-		virtual INSTANCE_TYPE type() noexcept override;
+		std::tuple<std::vector<Color<float>>, 
+			std::vector<Vector<float>>> set_white_scheme() noexcept;
 
-	public:
-		virtual void update() override;
-		void dispatch() noexcept;
-
-	private:
-		ITexture* mTexture;
-
-	private:
-		std::int64_t mCountdown;
-		gui::IGUIFont* mFnt;
-		String mName;
-		bool mStart;
+		std::tuple<std::vector<Color<float>>, 
+			std::vector<Vector<float>>> set_dark_scheme() noexcept;
 
 	};
 }

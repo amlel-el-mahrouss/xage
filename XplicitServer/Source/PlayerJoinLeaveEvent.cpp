@@ -145,9 +145,6 @@ namespace Xplicit
 
 				if (xplicit_join_event(server->get(peer_idx), player, server))
 				{
-					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = Xplicit::NETWORK_CMD_ACK;
-					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = Xplicit::NETWORK_CMD_INVALID;
-
 					XPLICIT_INFO("[CONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					++mPlayerCount;
 				}

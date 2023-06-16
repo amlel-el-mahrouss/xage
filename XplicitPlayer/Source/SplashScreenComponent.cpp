@@ -24,7 +24,7 @@
 
 namespace Xplicit::Player
 {
-	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 10); // connection timeout
+	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 3000); // connection timeout
 
 	SplashScreenComponent::SplashScreenComponent() 
 		: mEnable(true), mNetwork(nullptr), mTexture(nullptr), mTimeout(XPLICIT_TIMEOUT)
@@ -49,7 +49,7 @@ namespace Xplicit::Player
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HUDComponent>(packet.public_hash);
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(packet.public_hash);
 			
 			auto cam = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
 

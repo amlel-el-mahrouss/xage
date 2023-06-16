@@ -51,7 +51,7 @@ namespace Xplicit::Renderer::OpenGL
 
 	DriverSystemOpenGL::~DriverSystemOpenGL()
 	{
-		
+			
 	}
 
 	const char* DriverSystemOpenGL::name() noexcept { return ("DriverSystemOpenGL"); }

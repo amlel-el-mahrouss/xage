@@ -5,7 +5,7 @@
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: Component.h
- *			Purpose: Xplicit's Component System
+ *			Purpose: Xplicit Component System and memory pools
  *
  * =====================================================================
  */
@@ -15,12 +15,11 @@
 template <typename T, typename... Args>
 T* Xplicit::ComponentManager::add(Args&&... args)
 {
-	T* ptr = new T{ args... };
-	XPLICIT_ASSERT(ptr);
+	T* ptr = new T(std::forward<Args>(args)...);
 
 	if (ptr)
 	{
-		m_instances.push_back(reinterpret_cast<Component*>(ptr));
+		mInstances.push_back(reinterpret_cast<Component*>(ptr));
 		return ptr;
 	}
 
@@ -33,17 +32,17 @@ T* Xplicit::ComponentManager::get(const char* name)
 	if (!name || *name == 0)
 		return nullptr;
 
-	for (size_t i = 0; i < m_instances.size(); ++i)
+	for (size_t i = 0; i < mInstances.size(); ++i)
 	{
-		if (!m_instances[i])
+		if (!mInstances[i])
 			continue;
 
 #ifdef XPLICIT_USE_VECTOR
-		if (avx_strequals(name, m_instances[i]->name()))
+		if (avx_strequals(name, mInstances[i]->name()))
 #else
-		if (strcmp(name, m_instances[i]->name()) == 0)
+		if (strcmp(name, mInstances[i]->name()) == 0)
 #endif
-			return static_cast<T*>(m_instances[i]);
+			return static_cast<T*>(mInstances[i]);
 	}
 
 	return nullptr;
@@ -57,17 +56,19 @@ std::vector<T*> Xplicit::ComponentManager::all_of(const char* name)
 	if (!name || *name == 0)
 		return list;
 
-	for (size_t i = 0; i < m_instances.size(); ++i)
+	for (size_t i = 0; i < mInstances.size(); ++i)
 	{
-		if (!m_instances[i])
+		if (!mInstances[i])
 			continue;
 
 #ifdef XPLICIT_USE_VECTOR
-		if (avx_strequals(name, m_instances[i]->name()))
+		if (avx_strequals(name, mInstances[i]->name()))
 #else
-		if (strcmp(name, m_instances[i]->name()) == 0)
+		if (strcmp(name, mInstances[i]->name()) == 0)
 #endif
-			list.push_back(static_cast<T*>(m_instances[i]));
+		{
+			list.push_back(static_cast<T*>(mInstances[i]));
+		}
 	}
 
 	return list;
@@ -79,11 +80,11 @@ bool Xplicit::ComponentManager::remove(T* ptr)
 	if (!ptr)
 		return false;
 
-	auto iterator = std::find(m_instances.cbegin(), m_instances.cend(), ptr);
+	auto iterator = std::find(mInstances.cbegin(), mInstances.cend(), ptr);
 
-	if (iterator != m_instances.cend())
+	if (iterator != mInstances.cend())
 	{
-		m_instances.erase(iterator);
+		mInstances.erase(iterator);
 		delete ptr;
 
 		return true;

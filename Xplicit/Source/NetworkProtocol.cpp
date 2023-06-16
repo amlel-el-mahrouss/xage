@@ -18,7 +18,18 @@
 
 namespace Xplicit
 {
-    NetworkPeer::NetworkPeer() : packet(), addr(), stat(NETWORK_STAT_COUNT), unique_addr(), bad(false) {}
+    NetworkPeer::NetworkPeer() : 
+        packet(), 
+        addr(), 
+        unique_addr(), 
+        bad(false),
+		hash(-1),
+		public_hash(-1),
+        stat(NETWORK_STAT_DISCONNECTED)
+    {
+    
+    }
+
     NetworkPeer::~NetworkPeer() {}
     
     bool NetworkPeer::operator==(const NetworkPeer& cl)
@@ -32,7 +43,8 @@ namespace Xplicit
     }
 
     NetworkPeer::UniqueAddress::UniqueAddress()
-		: uuid(UUIDFactory::version<4>()), name("Peer")
+		: uuid(UUIDFactory::version<4>()), 
+        name("XplicitClient")
 	{
         
     }
