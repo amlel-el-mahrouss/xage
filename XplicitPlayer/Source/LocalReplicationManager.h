@@ -20,17 +20,17 @@
 
 namespace Xplicit
 {
-	class LocalReplicationComponent final : public Component
+	class LocalReplicationManager final
 	{
 	public:
-		LocalReplicationComponent()
+		LocalReplicationManager()
 			: mNetwork(ComponentManager::get_singleton_ptr()->get_first<NetworkComponent>())
 		{}
 
-		~LocalReplicationComponent() {}
+		~LocalReplicationManager() {}
 
 	public:
-		XPLICIT_COPY_DEFAULT(LocalReplicationComponent);
+		XPLICIT_COPY_DEFAULT(LocalReplicationManager);
 
 	private:
 		NetworkComponent* mNetwork;
