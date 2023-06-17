@@ -79,6 +79,8 @@ namespace Xplicit
 
 						peer_ptr->packet.public_hash = actor->get()->public_hash;
 						peer_ptr->packet.health = actor->health();
+
+						Xplicit::NetworkServerHelper::send(m_network);
 					}
 
 					xplicit_handle_spawn(m_spawner, actor);

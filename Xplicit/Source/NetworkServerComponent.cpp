@@ -172,6 +172,10 @@ namespace Xplicit
 				if (res == SOCKET_ERROR) 
 					continue;
 
+				if (server->get(i)->stat == NETWORK_STAT_CONNECTED && 
+					packet.hash != server->get(i)->hash)
+					continue;
+
 				if (!xplicit_recv_packet(server, i, packet))
 					xplicit_invalidate_peer(server->get(i));
 			}
@@ -208,8 +212,10 @@ namespace Xplicit
 			{
 				for (size_t second_peer_idx = 0; second_peer_idx < server->size(); ++second_peer_idx)
 				{
-					if (equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr) &&
-						server->get(second_peer_idx)->packet.version != XPLICIT_NETWORK_VERSION)
+					if (server->get(second_peer_idx) == server->get(peer_idx))
+						continue;
+
+					if (equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr))
 						server->get(second_peer_idx)->reset();
 				}
 			}

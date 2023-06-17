@@ -66,10 +66,15 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
 				peer->packet.public_hash = peer->public_hash;
+
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+
+				peer->packet.speed[XPLICIT_NETWORK_X] = 0.f;
+				peer->packet.speed[XPLICIT_NETWORK_Y] = 0.f;
+				peer->packet.speed[XPLICIT_NETWORK_Z] = 0.f;
+				peer->packet.speed[XPLICIT_NETWORK_DELTA] = 0.f;
 			}
 		}
-
-		NetworkServerHelper::send(server);
 
 		return true;
 	}
@@ -109,16 +114,15 @@ namespace Xplicit
 		auto server = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 		XPLICIT_ASSERT(server);
 
-		/* server correction */
 		NetworkServerHelper::correct(server);
 
-		this->handle_join_events(server);
-		this->handle_leave_events(server);
+		this->handle_join_event(server);
+		this->handle_leave_event(server);
 	}
 
 	const size_t& PlayerJoinLeaveEvent::size() noexcept { return mPlayerCount; }
 
-	bool PlayerJoinLeaveEvent::handle_join_events(NetworkServerComponent* server) noexcept
+	bool PlayerJoinLeaveEvent::handle_join_event(NetworkServerComponent* server) noexcept
 	{
 		if (!server)
 			return false;
@@ -134,13 +138,13 @@ namespace Xplicit
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				Xplicit::NetworkServerHelper::correct(server);
-
 				if (this->size() > XPLICIT_MAX_CONNECTIONS)
 				{
 					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 					return false;
 				}
+
+				NetworkServerHelper::correct(server);
 
 				PlayerComponent* player = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
 				XPLICIT_ASSERT(player);
@@ -149,6 +153,8 @@ namespace Xplicit
 				{
 					XPLICIT_INFO("[CONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					++mPlayerCount;
+
+					return true;
 				}
 			}
 		}
@@ -156,7 +162,7 @@ namespace Xplicit
 		return true;
 	}
 
-	bool PlayerJoinLeaveEvent::handle_leave_events(NetworkServerComponent* server) noexcept
+	bool PlayerJoinLeaveEvent::handle_leave_event(NetworkServerComponent* server) noexcept
 	{
 		if (this->size() <= 0)
 			return false;
@@ -177,8 +183,7 @@ namespace Xplicit
 					XPLICIT_INFO("[DISCONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 					--mPlayerCount;
 
-					server->get(peer_idx)->stat = NETWORK_STAT_DISCONNECTED;
-					memset(server->get(peer_idx)->packet.cmd, Xplicit::NETWORK_CMD_INVALID, XPLICIT_NETWORK_CMD_MAX);
+					server->get(peer_idx)->reset();
 				}
 			}
 		}

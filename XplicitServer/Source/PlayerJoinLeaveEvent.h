@@ -33,8 +33,8 @@ namespace Xplicit
 		const size_t& size() noexcept;
 
 	private:
-		bool handle_leave_events(NetworkServerComponent* server) noexcept;
-		bool handle_join_events(NetworkServerComponent* server) noexcept;
+		bool handle_leave_event(NetworkServerComponent* server) noexcept;
+		bool handle_join_event(NetworkServerComponent* server) noexcept;
 
 	private:
 		size_t mPlayerCount;

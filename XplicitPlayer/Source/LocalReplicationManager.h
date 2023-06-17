@@ -20,7 +20,7 @@
 
 namespace Xplicit
 {
-	class LocalReplicationManager final
+	class LocalReplicationManager final : public Component
 	{
 	public:
 		LocalReplicationManager()
@@ -28,6 +28,14 @@ namespace Xplicit
 		{}
 
 		~LocalReplicationManager() {}
+
+	public:
+		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_LOGIC; }
+		virtual const char* name() noexcept { return "LocalReplicationManager"; }
+
+		virtual bool should_update() noexcept override { return true; }
+
+		virtual void update() { }
 
 	public:
 		XPLICIT_COPY_DEFAULT(LocalReplicationManager);
