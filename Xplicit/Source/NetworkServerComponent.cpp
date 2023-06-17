@@ -22,6 +22,7 @@ namespace Xplicit
 	/// Utility function which removes the peer and actor from the server.
 	/// </summary>
 	/// <param name="peer">The NetworkPeer being targeted.</param>
+	
 	static void xplicit_invalidate_peer(NetworkPeer* peer)
 	{
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
@@ -41,7 +42,11 @@ namespace Xplicit
 	}
 
 	NetworkServerComponent::NetworkServerComponent(const char* ip)
-		: m_socket(INVALID_SOCKET), m_dns(ip), m_server()
+		:
+		mSocket(INVALID_SOCKET), 
+		mAddress(ip),
+		mPrivate(),
+		mPeers(std::make_unique<std::vector<NetworkPeer*>>())
 	{
 #ifndef _NDEBUG
 		std::string message;
@@ -53,20 +58,22 @@ namespace Xplicit
 
 #ifdef XPLICIT_WINDOWS
 		// create ipv4 U.D.P socket.
-		m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+		mSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-		if (m_socket == SOCKET_ERROR)
+		if (mSocket == SOCKET_ERROR)
 			throw NetworkError(NETERR_INTERNAL_ERROR);
 
-		xplicit_set_ioctl(m_socket);
+		xplicit_set_ioctl(mSocket);
 
-		memset(&m_server, 0, sizeof(struct sockaddr_in));
+		memset(&mPrivate, 0, sizeof(struct sockaddr_in));
 
-		m_server.sin_family = AF_INET;
-		inet_pton(AF_INET, ip, &m_server.sin_addr.S_un.S_addr);
-		m_server.sin_port = htons(XPLICIT_UDP_PORT);
+		/* internet packet */
+		mPrivate.sin_family = AF_INET;
 
-		auto ret_bind = bind(m_socket, reinterpret_cast<SOCKADDR*>(&m_server), sizeof(m_server));
+		inet_pton(AF_INET, ip, &mPrivate.sin_addr.S_un.S_addr);
+		mPrivate.sin_port = htons(XPLICIT_UDP_PORT);
+
+		auto ret_bind = bind(mSocket, reinterpret_cast<SOCKADDR*>(&mPrivate), sizeof(mPrivate));
 #else
 #pragma error("ServerComponent.cpp")
 #endif
@@ -74,34 +81,28 @@ namespace Xplicit
 		if (ret_bind == SOCKET_ERROR)
 			throw NetworkError(NETERR_INTERNAL_ERROR);
 		
-		// Let's pre-allocate the clients.
+		// Let's preallocate the clients.
 		// So we don't have to allocate them.
+
 		for (size_t i = 0; i < XPLICIT_MAX_CONNECTIONS; i++)
 		{
-			NetworkPeer* cl = new NetworkPeer();
-			XPLICIT_ASSERT(cl);
-
-			cl->stat = NETWORK_STAT_DISCONNECTED;
-			cl->bad = false;
-			cl->hash = 0;
-
-			m_peers.push_back(std::shared_ptr<NetworkPeer>(cl));
+			NetworkPeer* cl = mPeersPool.allocate();
+			mPeers->push_back(cl);
 		}
 
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[SERVER] IP: " + m_dns);
+		XPLICIT_INFO("[SERVER] IP: " + mAddress);
 #endif
 	}
 
 	size_t NetworkServerComponent::size() noexcept 
 	{ 
-		return m_peers.size(); 
+		return mPeers->size(); 
 	}
 
-	NetworkPeer* NetworkServerComponent::get(size_t idx) noexcept 
+	NetworkPeer* NetworkServerComponent::get(const std::size_t& idx) noexcept 
 	{
-		XPLICIT_ASSERT(m_peers[idx]);
-		return m_peers[idx].get(); 
+		return mPeers->at(idx); 
 	}
 
 	const char* NetworkServerComponent::name() noexcept { return ("NetworkServerComponent"); }
@@ -124,8 +125,8 @@ namespace Xplicit
 #endif
 
 #ifdef XPLICIT_WINDOWS
-		if (shutdown(m_socket, SD_BOTH) == SOCKET_ERROR)
-			closesocket(m_socket);
+		if (shutdown(mSocket, SD_BOTH) == SOCKET_ERROR)
+			closesocket(mSocket);
 #else
 #pragma error("ServerComponent.cpp")
 #endif
@@ -133,7 +134,7 @@ namespace Xplicit
 		WSACleanup();
 	}
 
-	const char* NetworkServerComponent::dns() noexcept { return m_dns.c_str(); }
+	const char* NetworkServerComponent::dns() noexcept { return mAddress.c_str(); }
 
 	static bool xplicit_recv_packet(NetworkServerComponent* server,
 		const std::size_t& i,
@@ -156,16 +157,18 @@ namespace Xplicit
 	{
 		if (server)
 		{
+#ifdef XPLICIT_DEBUG
+			XPLICIT_INFO("[SERVER] Receiving packets.");
+#endif
+
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
 				std::int32_t fromLen = sizeof(PrivateAddressData);
 				static NetworkPacket packet{};
 
-				struct sockaddr addrLhs { 0 };
-
-				std::int32_t res = ::recvfrom(server->m_socket, 
+				std::int32_t res = ::recvfrom(server->mSocket,
 					reinterpret_cast<char*>(&packet),
-					sz, 
+					sz,
 					0,
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
 					&fromLen);
@@ -182,21 +185,24 @@ namespace Xplicit
 	{
 		if (server)
 		{
+#ifdef XPLICIT_DEBUG
+			XPLICIT_INFO("[SERVER] Sending packets.");
+#endif
+
 			for (size_t i = 0; i < server->size(); i++)
 			{
-				auto peer = server->get(i);
+				server->get(i)->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
+				server->get(i)->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
+				server->get(i)->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
-				peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
-				peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
-				peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+				server->get(i)->packet.version = XPLICIT_NETWORK_VERSION;
 
-				peer->packet.version = XPLICIT_NETWORK_VERSION;
-
-				::sendto(server->m_socket, reinterpret_cast<const char*>(&peer->packet),
+				::sendto(server->mSocket, reinterpret_cast<const char*>(&server->get(i)->packet),
 					sz, 
 					0, 
-					reinterpret_cast<sockaddr*>(&peer->addr), 
+					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
 					sizeof(PrivateAddressData));
+
 			}
 		}
 	}

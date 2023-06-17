@@ -19,7 +19,7 @@ T* Xplicit::ComponentManager::add(Args&&... args)
 
 	if (ptr)
 	{
-		mInstances.push_back(reinterpret_cast<Component*>(ptr));
+		mComponents.push_back(reinterpret_cast<Component*>(ptr));
 		return ptr;
 	}
 
@@ -32,17 +32,17 @@ T* Xplicit::ComponentManager::get(const char* name) noexcept
 	if (!name || *name == 0)
 		return nullptr;
 
-	for (size_t i = 0; i < mInstances.size(); ++i)
+	for (size_t i = 0; i < mComponents.size(); ++i)
 	{
-		if (!mInstances[i])
+		if (!mComponents[i])
 			continue;
 
 #ifdef XPLICIT_USE_VECTOR
-		if (avx_strequals(name, mInstances[i]->name()))
+		if (avx_strequals(name, mComponents[i]->name()))
 #else
-		if (strcmp(name, mInstances[i]->name()) == 0)
+		if (strcmp(name, mComponents[i]->name()) == 0)
 #endif
-			return static_cast<T*>(mInstances[i]);
+			return static_cast<T*>(mComponents[i]);
 	}
 
 	return nullptr;
@@ -51,12 +51,12 @@ T* Xplicit::ComponentManager::get(const char* name) noexcept
 template <typename T>
 T* Xplicit::ComponentManager::get_first() noexcept
 {
-	for (size_t i = 0; i < mInstances.size(); ++i)
+	for (size_t i = 0; i < mComponents.size(); ++i)
 	{
-		if (!mInstances[i])
+		if (!mComponents[i])
 			continue;
 
-		if (T* casted = dynamic_cast<T*>(mInstances[i]))
+		if (T* casted = dynamic_cast<T*>(mComponents[i]))
 			return casted;
 	}
 
@@ -71,18 +71,18 @@ std::vector<T*> Xplicit::ComponentManager::all_of(const char* name)
 	if (!name || *name == 0)
 		return list;
 
-	for (size_t i = 0; i < mInstances.size(); ++i)
+	for (size_t i = 0; i < mComponents.size(); ++i)
 	{
-		if (!mInstances[i])
+		if (!mComponents[i])
 			continue;
 
 #ifdef XPLICIT_USE_VECTOR
-		if (avx_strequals(name, mInstances[i]->name()))
+		if (avx_strequals(name, mComponents[i]->name()))
 #else
-		if (strcmp(name, mInstances[i]->name()) == 0)
+		if (strcmp(name, mComponents[i]->name()) == 0)
 #endif
 		{
-			list.push_back(static_cast<T*>(mInstances[i]));
+			list.push_back(static_cast<T*>(mComponents[i]));
 		}
 	}
 
@@ -95,11 +95,11 @@ bool Xplicit::ComponentManager::remove(T* ptr)
 	if (!ptr)
 		return false;
 
-	auto iterator = std::find(mInstances.cbegin(), mInstances.cend(), ptr);
+	auto iterator = std::find(mComponents.cbegin(), mComponents.cend(), ptr);
 
-	if (iterator != mInstances.cend())
+	if (iterator != mComponents.cend())
 	{
-		mInstances.erase(iterator);
+		mComponents.erase(iterator);
 		delete ptr;
 
 		return true;

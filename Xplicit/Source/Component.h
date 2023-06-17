@@ -19,6 +19,9 @@ namespace Xplicit
 	class ComponentManager;
 	class Component;
 
+	/* max components */
+	inline constexpr std::size_t XPLICIT_MAX_COMPONENTS = 1000000;
+
 	class XPLICIT_API ComponentManager final 
 	{
 	private:
@@ -55,7 +58,7 @@ namespace Xplicit
 		static ComponentManager* get_singleton_ptr() noexcept;
 
 	private:
-		std::vector<Component*> mInstances;
+		std::vector<Component*> mComponents;
 
 	};
 

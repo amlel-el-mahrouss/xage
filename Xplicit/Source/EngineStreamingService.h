@@ -19,7 +19,7 @@
 #include "NetworkProtocol.h"
 
 #ifndef XPLICIT_STREAM_PORT
-#define XPLICIT_STREAM_PORT (60002)
+#define XPLICIT_STREAM_PORT (2305)
 #endif // ifndef XPLICIT_STREAM_PORT
 
 #define XPLICIT_STREAM_MAG_0 ('X')
@@ -39,16 +39,17 @@ namespace Xplicit::Network
 {
 	using ByteArray = std::vector<char>;
 
-	class XPLICIT_API FileStreamWriter final
+	class XPLICIT_API EngineStreamWriter final
 	{
 	public:
-		FileStreamWriter() = delete;
+		EngineStreamWriter() = delete;
 
 	public:
-		FileStreamWriter(const char* bytes, size_t len);
-		~FileStreamWriter();
+		EngineStreamWriter(const char* bytes, size_t len);
+		~EngineStreamWriter();
 
-		XPLICIT_COPY_DELETE(FileStreamWriter);
+	public:
+		XPLICIT_COPY_DELETE(EngineStreamWriter);
 
 	public:
 		const char* get() noexcept;
@@ -62,20 +63,20 @@ namespace Xplicit::Network
 
 	};
 
-	using FileStreamPtr = std::unique_ptr<FileStreamWriter>;
+	using FileStreamPtr = std::unique_ptr<EngineStreamWriter>;
 
-	class XPLICIT_API FileTaskStream final
+	class XPLICIT_API EngineNetworkStream final
 	{
 	public:
-		FileTaskStream();
-		~FileTaskStream();
+		EngineNetworkStream();
+		~EngineNetworkStream();
 
 	public:
-		XPLICIT_COPY_DELETE(FileTaskStream);
+		XPLICIT_COPY_DELETE(EngineNetworkStream);
 
 	public:
-		bool remove(FileStreamWriter* fsw);
-		void add(FileStreamWriter* fsw);
+		bool remove(EngineStreamWriter* fsw);
+		void add(EngineStreamWriter* fsw);
 
 	public:
 		void operator()(Socket& socket, const bool isCompressed);
@@ -86,7 +87,7 @@ namespace Xplicit::Network
 		bool ready() noexcept;
 		
 	private:
-		std::vector<FileStreamWriter*> mFileList;
+		std::vector<EngineStreamWriter*> mFileList;
 
 	private:
 		bool mReady;

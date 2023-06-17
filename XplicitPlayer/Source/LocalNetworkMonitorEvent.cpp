@@ -20,7 +20,7 @@
 
 namespace Xplicit::Player
 {
-	constexpr const int XPLICIT_MAX_RESETS = 10000; // Max RST
+	constexpr const int XPLICIT_MAX_RESETS = 9700; // Max resets allowed before connection drop
 
 	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(int64_t hash)
 		: mNetwork(nullptr), mResetCnt(0), mHash(hash)

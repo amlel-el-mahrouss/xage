@@ -551,9 +551,11 @@ namespace Xplicit
 	{
 	public:
 		explicit Pool()
+			: mPointer(nullptr),
+			  mIndex(0UL)
 		{
-			/* allocate these shits */
-			this->mPointer = (char*)malloc(sizeof(char) * (sizeof(PtrType) * Size));
+			/* allocate these shits */                    
+			this->mPointer = (char*)malloc(sizeof(char) * (sizeof(PtrType) * Size * 8));
 
 			/* zero memory that shit */
 			ZeroMemory(this->mPointer, (sizeof(PtrType) * Size));
@@ -568,52 +570,41 @@ namespace Xplicit
 		}
 
 	private:
+		std::size_t mIndex;
 		char* mPointer;
 
 	public:
+		std::size_t size() noexcept { return sizeof(PtrType) * Size; }
+		char* data() noexcept { return mPointer; }
+
+	public:
 		template <typename... Args>
-		PtrType* allocate(Args&&... args)
+		PtrType* allocate(Args&&... args) noexcept
 		{
-			auto sz = sizeof(PtrType) * XPLICIT_MAX_POOL;
-			auto idx = 0UL;
+			if (mIndex > Size)
+				return nullptr;
 
-			bool good = true;
+			PtrType* ptr = reinterpret_cast<PtrType*>(&mPointer[mIndex]);
+			memset(ptr, 0, sizeof(PtrType));
 
-			while (idx < sz)
-			{
-				good = true;
+			auto tmp = PtrType(std::forward<Args>(args)...);
+			*ptr = std::move(tmp);
 
-				for (size_t i = 0; i < sz; i++)
-				{
-					if (mPointer[i + idx] != 0)
-					{
-						good = false;
-						break;
-					}
+			mIndex += sizeof(PtrType);
 
-				}
-
-				if (good)
-				{
-					PtrType* ptr = reinterpret_cast<PtrType*>(&mPointer[idx]);
-					memset(ptr, 0, sizeof(PtrType));
-
-					*ptr = PtrType(std::forward<Args>(args)...);
-
-					return ptr;
-				}
-
-				idx += sizeof(PtrType);
-			}
-
-			return nullptr;
+			return ptr;
 		}
 
 		template <typename T>
-		void deallocate(T* ptr)
+		void deallocate(T* ptr) noexcept
 		{
+			if (!ptr)
+				return;
+
 			ptr->~T();
 			memset(ptr, 0, sizeof(T));
+
+			mIndex -= sizeof(PtrType);
 		}
 
 	};

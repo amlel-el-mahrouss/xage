@@ -21,15 +21,15 @@
 
 namespace Xplicit::Network
 {
-	FileStreamWriter::FileStreamWriter(const char* bytes, size_t len)
+	EngineStreamWriter::EngineStreamWriter(const char* bytes, size_t len)
 		: mByteList()
 	{
 		this->write(bytes, len);
 	}
 
-	FileStreamWriter::~FileStreamWriter() {}
+	EngineStreamWriter::~EngineStreamWriter() {}
 
-	int FileStreamWriter::write(const char* bytes, size_t len)
+	int EngineStreamWriter::write(const char* bytes, size_t len)
 	{
 		if (!bytes ||
 			len < 1)
@@ -46,7 +46,7 @@ namespace Xplicit::Network
 		return 0;
 	}
 
-	const char* FileStreamWriter::get() noexcept
+	const char* EngineStreamWriter::get() noexcept
 	{
 		if (mByteList.empty())
 			return "(null)";
@@ -54,23 +54,23 @@ namespace Xplicit::Network
 		return mByteList.data();
 	}
 
-	size_t FileStreamWriter::size() noexcept { return mByteList.size(); }
+	size_t EngineStreamWriter::size() noexcept { return mByteList.size(); }
 
 	/* Task stream class */
 
-	FileTaskStream::FileTaskStream() 
+	EngineNetworkStream::EngineNetworkStream() 
 		: mReady(false), mFileList() 
 	{}
 
-	FileTaskStream::~FileTaskStream() = default;
+	EngineNetworkStream::~EngineNetworkStream() = default;
 
-	void FileTaskStream::add(FileStreamWriter* fsw)
+	void EngineNetworkStream::add(EngineStreamWriter* fsw)
 	{
 		if (fsw)
 			mFileList.push_back(fsw);
 	}
 
-	bool FileTaskStream::remove(FileStreamWriter* fsw)
+	bool EngineNetworkStream::remove(EngineStreamWriter* fsw)
 	{
 		if (fsw)
 		{
@@ -86,7 +86,7 @@ namespace Xplicit::Network
 		return false;
 	}
 
-	void FileTaskStream::operator()(Socket& socket, const bool isCompressed)
+	void EngineNetworkStream::operator()(Socket& socket, const bool isCompressed)
 	{
 		if (!mReady) 
 			return;
@@ -174,9 +174,9 @@ namespace Xplicit::Network
 		}
 	}
 
-	bool FileTaskStream::ready() noexcept { return mReady; }
+	bool EngineNetworkStream::ready() noexcept { return mReady; }
 
-	FileTaskStream::operator bool() noexcept { return this->ready(); }
+	EngineNetworkStream::operator bool() noexcept { return this->ready(); }
 
-	void FileTaskStream::set(const bool ready) noexcept { mReady = true; }
+	void EngineNetworkStream::set(const bool ready) noexcept { mReady = true; }
 }

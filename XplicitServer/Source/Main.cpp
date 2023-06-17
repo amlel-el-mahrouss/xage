@@ -241,8 +241,8 @@ int main(int argc, char** argv)
 
 			Xplicit::NetworkServerHelper::recv(server);
 
-			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
+			Xplicit::EventManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerHelper::send(server);
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
@@ -250,7 +250,7 @@ int main(int argc, char** argv)
 
 		return 0;
 	}
-	catch (std::runtime_error& err)
+	catch (std::exception& err)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_CRITICAL(err.what());

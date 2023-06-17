@@ -20,12 +20,12 @@ namespace Xplicit
 {
 	void ComponentManager::update() noexcept
 	{
-		for (size_t i = 0; i < mInstances.size(); i++)
+		for (size_t i = 0; i < mComponents.size(); i++)
 		{
-			XPLICIT_ASSERT(mInstances[i]);
+			XPLICIT_ASSERT(mComponents[i]);
 
-			if (mInstances[i]->should_update())
-				mInstances[i]->update();
+			if (mComponents[i]->should_update())
+				mComponents[i]->update();
 		}
 	}
 

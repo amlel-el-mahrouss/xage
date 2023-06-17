@@ -15,7 +15,7 @@
 #include "Xplicit.h"
 
 #ifndef XPLICIT_UDP_PORT
-#define XPLICIT_UDP_PORT (60001)
+#define XPLICIT_UDP_PORT (2303)
 #endif // ifndef XPLICIT_UDP_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY

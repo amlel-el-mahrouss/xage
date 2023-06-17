@@ -22,7 +22,8 @@ namespace Xplicit
 		PlayerComponent();
 		virtual ~PlayerComponent();
 
-		XPLICIT_COPY_DELETE(PlayerComponent);
+	public:
+		XPLICIT_COPY_DEFAULT(PlayerComponent);
 
 	public:
 		void set(NetworkPeer* peer) noexcept;
