@@ -130,20 +130,12 @@ static void xplicit_load_sh()
 
 				if (strcmp(cmd_buf, "exit") == 0)
 				{
+					XPLICIT_SHOULD_EXIT = true;
+
 					auto server = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 					XPLICIT_ASSERT(server != nullptr);
 
-					if (server)
-					{
-						xplicit_send_stop_packet(server);
-						Xplicit::NetworkServerHelper::send(server);
-					}
-					else
-					{
-						XPLICIT_ERROR("ERROR: server is not connected to the internet.");
-					}
-
-					XPLICIT_SHOULD_EXIT = true;
+					xplicit_send_stop_packet(server);
 				}
 				
 				if (strcmp(cmd_buf, "help") == 0)
@@ -174,11 +166,15 @@ static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
 	if (!server)
 		return;
 
+	std::cout << server->size() << std::endl;
+
 	for (size_t i = 0; i < server->size(); i++)
 	{
-		server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = Xplicit::NETWORK_CMD_STOP;
+		server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
 		server->get(i)->packet.hash = server->get(i)->hash;
 	}
+
+	Xplicit::NetworkServerHelper::send(server);
 }
 
 // our main entrypoint.

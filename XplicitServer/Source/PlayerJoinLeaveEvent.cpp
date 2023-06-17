@@ -97,6 +97,7 @@ namespace Xplicit
 				}
 
 				ComponentManager::get_singleton_ptr()->remove<PlayerComponent>(actors[at]);
+
 				peer->reset();
 
 				return true;
@@ -141,6 +142,7 @@ namespace Xplicit
 				if (this->size() > XPLICIT_MAX_CONNECTIONS)
 				{
 					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+
 					return false;
 				}
 
@@ -184,6 +186,8 @@ namespace Xplicit
 					--mPlayerCount;
 
 					server->get(peer_idx)->reset();
+
+					return true;
 				}
 			}
 		}

@@ -37,7 +37,7 @@
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
-#define XPLICIT_NETWORK_VERSION (6U)
+#define XPLICIT_NETWORK_VERSION (7U)
 
 /* Used by the protocol to tell the velocity. */
 
@@ -70,7 +70,7 @@ namespace Xplicit
         NETWORK_CMD_BACKWARD,
         NETWORK_CMD_LEFT,
         NETWORK_CMD_RIGHT,
-        NETWORK_CMD_JUMP,
+        NETWORK_CMD_SHUTDOWN,
         NETWORK_CMD_POS,
         NETWORK_CMD_ACCEPT, // handshake has been accepted.
         NETWORK_CMD_BAN,
@@ -197,7 +197,7 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_DEAD (11)
 #define XPLICIT_NETWORK_CMD_SPAWN (12)
 #define XPLICIT_NETWORK_CMD_DAMAGE (13)
-#define XPLICIT_NETWORK_CMD_JUMP (14)
+#define XPLICIT_NETWORK_CMD_SHUTDOWN (14)
 
 // basically the last command reserved.
 #define XPLICIT_LAST_RESERVED_CMD (XPLICIT_NETWORK_CMD_JUMP + 1)

@@ -46,8 +46,6 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 
-		XPLICIT_SLEEP(50);
-
 		NetworkPacket& packet = mNetwork->get();
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
@@ -66,8 +64,8 @@ namespace Xplicit::Player
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(packet.public_hash);
 			
 			auto cam = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
-
 			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
+			
 			ply->attach(cam);
 
 			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(packet.hash);

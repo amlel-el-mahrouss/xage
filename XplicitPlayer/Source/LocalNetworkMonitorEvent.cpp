@@ -36,7 +36,18 @@ namespace Xplicit::Player
 	void LocalNetworkMonitorEvent::operator()()
 	{
 		if (!mNetwork) return;
-		static auto packet = mNetwork->get();
+
+		NetworkPacket packet;
+		mNetwork->read(packet);
+
+		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
+		{
+			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
+				IRR->closeDevice();
+				}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45,
+					Xplicit::Player::XPLICIT_DIM.Height / 4),
+					Player::POPUP_TYPE::BANNED, "BanPopup");
+		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
 		{
@@ -45,30 +56,36 @@ namespace Xplicit::Player
 			for (std::size_t index = 0UL; index < plyers.size(); ++index)
 			{
 				if (plyers[index]->id() == packet.public_hash)
-					break;
+					continue;
 
 				ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
+
 				break;
 			}
 		}
 
-		if (packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
+		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||
+			packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 		{
-			if (mHash == packet.hash)
+			if (packet.hash == mHash)
 			{
-				if (!ComponentManager::get_singleton_ptr()->get<Player::PopupComponent>("StopPopup"))
+				if (!ComponentManager::get_singleton_ptr()->get<Player::PopupComponent>("ConnShutdown"))
 				{
 					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 						IRR->closeDevice();
 						}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
 							Xplicit::Player::XPLICIT_DIM.Height / 2.8),
-							Player::POPUP_TYPE::SHUTDOWN, 
+							Player::POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
 
 					return;
 				}
 			}
-			
+		}
+
+		if (packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
+		{
+
 			auto plyers = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
 
 			for (int ply = 0; ply < plyers.size(); ++ply)
