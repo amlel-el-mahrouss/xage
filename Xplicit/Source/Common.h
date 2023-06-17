@@ -13,14 +13,14 @@
 #pragma once
 
 #include "Xplicit.h"
-#include <Nplicit.h>
-
 #include "Component.h"
 
-#define XPLICIT_MOVEMENT_RATE	(50U)
-#define XPLICIT_DEFAULT_HEALTH	(100U)
+#include <Nplicit.h>
+
 #define XPLICIT_DELTA_TIME		(1000.f)
-#define XPLICIT_COOLDOWN		(1000)
+#define XPLICIT_COOLDOWN		(1000U)
+#define XPLICIT_DEFAULT_HEALTH	(100U)
+#define XPLICIT_MOVEMENT_RATE	(50U)
 
 namespace Xplicit
 {

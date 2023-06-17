@@ -46,10 +46,10 @@ namespace Xplicit
 		const char* name() noexcept;
 
 	private:
-		std::string m_value;
-		std::string m_name;
+		std::string mValue;
+		std::string mName;
 
-		int32_t m_flags;
+		int32_t mFlags;
 
 		friend class GameVarManager;
 

@@ -60,8 +60,6 @@ XPLICIT_MAIN()
 			}
 		});
 
-		IRR->getGUIEnvironment()->addWindow(recti(dimension2di(300, 300)), true, L"Changelog", nullptr);
-
 		/* main game loop */
 		while (IRR->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 
@@ -69,8 +67,8 @@ XPLICIT_MAIN()
 		{
 			IRR->getVideoDriver()->beginScene(true, true, SColor(40, 40, 40, 40));
 
-			IRR->getGUIEnvironment()->drawAll();
 			IRR->getSceneManager()->drawAll();
+			IRR->getGUIEnvironment()->drawAll();
 
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();

@@ -39,7 +39,7 @@ namespace Xplicit
 	class NPLICIT_API SolverSystem final
 	{
 	public:
-		SolverSystem() : m_components(), m_gravity(0, -9.81f, 0) {}
+		SolverSystem() : mComponents(), mGravity(0, -9.81f, 0) {}
 		virtual ~SolverSystem() = default;
 
 		SolverSystem& operator=(const SolverSystem&) = delete;
@@ -47,9 +47,9 @@ namespace Xplicit
 
 		void step(const int32_t& dt /*delta time*/) noexcept
 		{
-			for (auto* component : m_components)
+			for (auto* component : mComponents)
 			{
-				component->Force.add(m_gravity.X * component->Mass, m_gravity.Y * component->Mass, m_gravity.Z * component->Mass);
+				component->Force.add(mGravity.X * component->Mass, mGravity.Y * component->Mass, mGravity.Z * component->Mass);
 				component->Velocity.add(component->Force.X / component->Mass * dt, component->Force.Y / component->Mass * dt, component->Force.Z / component->Mass * dt);
 				component->Position.add(component->Velocity.X * dt, component->Velocity.Y * dt, component->Velocity.Z * dt);
 
@@ -58,16 +58,16 @@ namespace Xplicit
 		}
 
 	public:
-		void set(const Vector<float>& gravity) noexcept { m_gravity.add(gravity.X, gravity.Y, gravity.Z); }
+		void set(const Vector<float>& gravity) noexcept { mGravity.add(gravity.X, gravity.Y, gravity.Z); }
 
-		Vector<float>& get() noexcept { return m_gravity; }
+		Vector<float>& get() noexcept { return mGravity; }
 
 		void add(PhysicsComponent<TypeFloat>* rigid)
 		{
 			if (!rigid)
 				return;
 
-			m_components.push_back(rigid);
+			mComponents.push_back(rigid);
 		}
 
 		bool remove(PhysicsComponent<TypeFloat>* rigid)
@@ -75,11 +75,11 @@ namespace Xplicit
 			if (!rigid)
 				return false;
 
-			auto it = std::find(m_components.cbegin(), m_components.cend(), rigid);
+			auto it = std::find(mComponents.cbegin(), mComponents.cend(), rigid);
 
-			if (it != m_components.cend())
+			if (it != mComponents.cend())
 			{
-				m_components.erase(it);
+				mComponents.erase(it);
 				return true;
 			}
 
@@ -87,8 +87,8 @@ namespace Xplicit
 		}
 
 	private:
-		std::vector<PhysicsComponent<TypeFloat>*> m_components;
-		Vector<float> m_gravity;
+		std::vector<PhysicsComponent<TypeFloat>*> mComponents;
+		Vector<float> mGravity;
 
 	};
 
