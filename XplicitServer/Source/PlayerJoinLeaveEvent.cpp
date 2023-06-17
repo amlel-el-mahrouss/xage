@@ -76,6 +76,8 @@ namespace Xplicit
 			}
 		}
 
+		NetworkServerHelper::send(server);
+
 		return true;
 	}
 
