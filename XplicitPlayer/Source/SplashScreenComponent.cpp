@@ -46,7 +46,11 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 
-		NetworkPacket& packet = mNetwork->get();
+		if (!mEnable)
+			return;
+
+		NetworkPacket packet;
+		mNetwork->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
@@ -99,6 +103,8 @@ namespace Xplicit::Player
 				packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 				packet.size = sizeof(NetworkPacket);
+
+				mNetwork->send(packet);
 
 				IRR->getVideoDriver()->draw2DImage(mTexture, 
 					vector2di(0, 0),

@@ -166,8 +166,6 @@ static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
 	if (!server)
 		return;
 
-	std::cout << server->size() << std::endl;
-
 	for (size_t i = 0; i < server->size(); i++)
 	{
 		server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;

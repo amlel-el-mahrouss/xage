@@ -20,7 +20,7 @@
 
 namespace Xplicit::Player
 {
-	constexpr const int XPLICIT_MAX_RESETS = 9700; // Max resets allowed before connection drop
+	constexpr const int XPLICIT_MAX_RESETS = 250; // Max resets allowed before connection drop
 
 	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(int64_t hash)
 		: mNetwork(nullptr), mResetCnt(0), mHash(hash)
@@ -109,9 +109,10 @@ namespace Xplicit::Player
 				{
 					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 						IRR->closeDevice();
-						}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45, 
-							Xplicit::Player::XPLICIT_DIM.Height / 4), 
-							Player::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
+						},
+						vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
+							Xplicit::Player::XPLICIT_DIM.Height / 2.8),
+						Player::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
 
 				}
 			}
