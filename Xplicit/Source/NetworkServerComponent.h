@@ -47,10 +47,7 @@ namespace Xplicit
 		size_t size() noexcept;
 
 	private:
-		Pool<NetworkPeer, XPLICIT_MAX_CONNECTIONS> mPeersPool;
-		std::unique_ptr<std::vector<NetworkPeer*>> mPeers;
-
-	private:
+		std::vector<NetworkPeer*> mPeers;
 		PrivateAddressData mPrivate;
 		std::string mAddress;
 		Socket mSocket;

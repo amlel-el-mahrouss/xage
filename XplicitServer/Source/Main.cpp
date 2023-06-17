@@ -14,6 +14,7 @@
  @file
  */
 
+#include <XplicitID.h>
 #include <codecvt>
 #include <Root.h>
 
@@ -118,7 +119,6 @@ static void xplicit_load_sh()
 	std::thread shell(
 		[]() -> void
 		{
-
 			char cmd_buf[1024];
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())

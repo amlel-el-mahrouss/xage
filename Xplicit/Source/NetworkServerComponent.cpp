@@ -45,8 +45,7 @@ namespace Xplicit
 		:
 		mSocket(INVALID_SOCKET), 
 		mAddress(ip),
-		mPrivate(),
-		mPeers(std::make_unique<std::vector<NetworkPeer*>>())
+		mPrivate()
 	{
 #ifndef _NDEBUG
 		std::string message;
@@ -61,7 +60,7 @@ namespace Xplicit
 		mSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 		if (mSocket == SOCKET_ERROR)
-			throw NetworkError(NETERR_INTERNAL_ERROR);
+			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
 		xplicit_set_ioctl(mSocket);
 
@@ -79,30 +78,30 @@ namespace Xplicit
 #endif
 
 		if (ret_bind == SOCKET_ERROR)
-			throw NetworkError(NETERR_INTERNAL_ERROR);
+			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 		
 		// Let's preallocate the clients.
 		// So we don't have to allocate them.
 
 		for (size_t i = 0; i < XPLICIT_MAX_CONNECTIONS; i++)
 		{
-			NetworkPeer* cl = mPeersPool.allocate();
-			mPeers->push_back(cl);
+			NetworkPeer* cl = new NetworkPeer();
+			mPeers.push_back(cl);
 		}
 
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[SERVER] IP: " + mAddress);
+		XPLICIT_INFO("[SERVER] IP Address Version 4: " + mAddress);
 #endif
 	}
 
 	size_t NetworkServerComponent::size() noexcept 
 	{ 
-		return mPeers->size(); 
+		return mPeers.size(); 
 	}
 
 	NetworkPeer* NetworkServerComponent::get(const std::size_t& idx) noexcept 
 	{
-		return mPeers->at(idx); 
+		return mPeers.at(idx); 
 	}
 
 	const char* NetworkServerComponent::name() noexcept { return ("NetworkServerComponent"); }
@@ -136,7 +135,8 @@ namespace Xplicit
 
 	const char* NetworkServerComponent::dns() noexcept { return mAddress.c_str(); }
 
-	static bool xplicit_recv_packet(NetworkServerComponent* server,
+	static bool xplicit_recv_packet(
+		NetworkServerComponent* server,
 		const std::size_t& i,
 		NetworkPacket& packet)
 	{
@@ -157,10 +157,6 @@ namespace Xplicit
 	{
 		if (server)
 		{
-#ifdef XPLICIT_DEBUG
-			XPLICIT_INFO("[SERVER] Receiving packets.");
-#endif
-
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
 				std::int32_t fromLen = sizeof(PrivateAddressData);
@@ -173,7 +169,8 @@ namespace Xplicit
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
 					&fromLen);
 
-				if (res == SOCKET_ERROR) continue;
+				if (res == SOCKET_ERROR) 
+					continue;
 
 				if (!xplicit_recv_packet(server, i, packet))
 					xplicit_invalidate_peer(server->get(i));
@@ -185,10 +182,6 @@ namespace Xplicit
 	{
 		if (server)
 		{
-#ifdef XPLICIT_DEBUG
-			XPLICIT_INFO("[SERVER] Sending packets.");
-#endif
-
 			for (size_t i = 0; i < server->size(); i++)
 			{
 				server->get(i)->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
@@ -215,10 +208,8 @@ namespace Xplicit
 			{
 				for (size_t second_peer_idx = 0; second_peer_idx < server->size(); ++second_peer_idx)
 				{
-					if (server->get(second_peer_idx) == server->get(peer_idx))
-						continue;
-
-					if (equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr))
+					if (equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr) &&
+						server->get(second_peer_idx)->packet.version != XPLICIT_NETWORK_VERSION)
 						server->get(second_peer_idx)->reset();
 				}
 			}

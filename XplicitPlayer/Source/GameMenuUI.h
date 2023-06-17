@@ -32,6 +32,7 @@ namespace Xplicit::Player
 	{
 		NETWORK_ERROR,
 		WAITING_ACK,
+		BANNED,
 		SHUTDOWN,
 		KICK,
 	};

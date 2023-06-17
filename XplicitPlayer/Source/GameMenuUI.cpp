@@ -48,6 +48,10 @@ namespace Xplicit::Player
 		case POPUP_TYPE::WAITING_ACK:
 			path += "Download.png";
 			break;
+		case POPUP_TYPE::BANNED:
+			path += "Banned.png";
+			break;
+			break;
 		}
 
 		mTex = IRR->getVideoDriver()->getTexture(path.c_str());

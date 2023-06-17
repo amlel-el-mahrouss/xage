@@ -51,7 +51,7 @@ namespace Xplicit
 		m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 		if (m_socket == SOCKET_ERROR)
-			throw NetworkError(NETERR_INTERNAL_ERROR);
+			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
 		xplicit_set_ioctl(m_socket);
 #else
@@ -101,7 +101,7 @@ namespace Xplicit
 			sizeof(PrivateAddressData));
 
 		if (result == SOCKET_ERROR)
-			throw NetworkError(NETERR_INTERNAL_ERROR);
+			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 #else
 #pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
@@ -125,7 +125,7 @@ namespace Xplicit
 			reinterpret_cast<SOCKADDR*>(&m_addr), sizeof(m_addr));
 
 		if (res == SOCKET_ERROR)
-			throw NetworkError(NETERR_INTERNAL_ERROR);
+			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 #else
 #pragma error("DEFINE ME NetworkComponent.cpp")
 #endif

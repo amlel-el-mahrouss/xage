@@ -27,9 +27,12 @@ namespace Xplicit::Player
 	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 3000); // connection timeout
 
 	SplashScreenComponent::SplashScreenComponent() 
-		: mEnable(true), mNetwork(nullptr), mTexture(nullptr), mTimeout(XPLICIT_TIMEOUT)
+		: mEnable(true), 
+		mNetwork(nullptr), 
+		mTexture(nullptr), 
+		mTimeout(XPLICIT_TIMEOUT)
 	{
-		mTexture = IRR->getVideoDriver()->getTexture("NgineLogo.png");
+		mTexture = IRR->getVideoDriver()->getTexture("Background.png");
 	}
 
 	SplashScreenComponent::~SplashScreenComponent() 
@@ -43,8 +46,17 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 
-		NetworkPacket packet{};
-		mNetwork->read(packet);
+		NetworkPacket& packet = mNetwork->get();
+
+		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
+		{
+			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>(
+				[]() { IRR->closeDevice(); },
+				vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
+					Xplicit::Player::XPLICIT_DIM.Height / 2.8),
+				Player::POPUP_TYPE::BANNED, "StopPopup");
+
+		}
 
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
@@ -91,8 +103,8 @@ namespace Xplicit::Player
 				mNetwork->send(packet);
 
 				IRR->getVideoDriver()->draw2DImage(mTexture, 
-					vector2di(Xplicit::Player::XPLICIT_DIM.Width * 0.02, Xplicit::Player::XPLICIT_DIM.Height * 0.625),
-					core::rect<s32>(0, 0, 255, 255), 0,
+					vector2di(0, 0),
+					core::rect<s32>(0, 0, 1280, 720), 0,
 					video::SColor(255, 255, 255, 255), true);
 			}
 

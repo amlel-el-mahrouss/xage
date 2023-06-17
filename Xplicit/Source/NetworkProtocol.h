@@ -73,7 +73,7 @@ namespace Xplicit
         NETWORK_CMD_JUMP,
         NETWORK_CMD_POS,
         NETWORK_CMD_ACCEPT, // handshake has been accepted.
-        NETWORK_CMD_WATCHDOG,
+        NETWORK_CMD_BAN,
         NETWORK_CMD_ACK, // acknowledge
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
@@ -107,18 +107,18 @@ namespace Xplicit
 	public:
         char8_t magic[XPLICIT_NETWORK_MAG_COUNT];
 		std::int16_t cmd[XPLICIT_NETWORK_CMD_MAX];
-		int32_t version;
+		std::int32_t version;
 
 	public:
-		int64_t public_hash; /* Public hash being sent (SHARED) */
-        int64_t delta; /* delta time from the server. */
-		int64_t hash; /* the private hash (CLIENT to SERVER) */
-		size_t size; /* size of currently sent packet. */
-		int32_t id; /* entity id */
+        std::int64_t public_hash; /* Public hash being sent (SHARED) */
+        std::int64_t delta; /* delta time from the server. */
+        std::int64_t hash; /* the private hash (CLIENT to SERVER) */
+        std::size_t size; /* size of currently sent packet. */
+        std::int32_t id; /* entity id */
 
 	public:
-		int64_t health; /* Player's Health 0-100 */
-        nfloat speed[4]; /* Player's speed (X, Y, Z, Delta) */
+        std::int64_t health; /* Player's Health 0-100 */
+        Xplicit::nfloat speed[4]; /* Player's speed (X, Y, Z, Delta) */
 
 	};
 
@@ -135,17 +135,17 @@ namespace Xplicit
 			XPLICIT_COPY_DEFAULT(UniqueAddress);
 
         public:
-			const uuids::uuid& get() noexcept { return uuid; }
+			const uuids::uuid& get() noexcept { return mUuid; }
 
 			const uuids::uuid& get_public_uuid() noexcept { return this->get(); }
-			const uuids::uuid& get_private_uuid() noexcept { return uuid; }
+			const uuids::uuid& get_private_uuid() noexcept { return mUuid; }
 
         private:
-            uuids::uuid public_uuid; /* for public hash */
-            uuids::uuid uuid; /* private hash */
+            uuids::uuid mPublicUuid; /* for public hash */
+            uuids::uuid mUuid; /* private hash */
 
         private:
-            std::string name;
+            std::string mName;
 
             friend NetworkPeer;
 
@@ -158,9 +158,7 @@ namespace Xplicit
         int64_t public_hash; /* Public hash, for other clients */
         NETWORK_STAT stat; /* current network status */
         int64_t hash; /* connection hash. */
-
-        bool bad; /* is the current peer invalid? */
-
+ 
     public:
         NetworkPeer();
         ~NetworkPeer();
@@ -172,7 +170,6 @@ namespace Xplicit
         bool operator==(const NetworkPeer& cl);
         bool operator!=(const NetworkPeer& cl);
 
-    public:
         void reset() noexcept;
 
     };
@@ -193,7 +190,7 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_BEGIN (4)
 #define XPLICIT_NETWORK_CMD_STOP (5)
 #define XPLICIT_NETWORK_CMD_ACK (6)
-#define XPLICIT_NETWORK_CMD_WATCHDOG (7)
+#define XPLICIT_NETWORK_CMD_BAN (7)
 #define XPLICIT_NETWORK_CMD_KICK (8)
 #define XPLICIT_NETWORK_CMD_ACCEPT (9)
 #define XPLICIT_NETWORK_CMD_POS (10)
@@ -203,7 +200,7 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_JUMP (14)
 
 // basically the last command reserved.
-#define XPLICIT_LAST_RESERVED_CMD XPLICIT_NETWORK_CMD_JUMP
+#define XPLICIT_LAST_RESERVED_CMD (XPLICIT_NETWORK_CMD_JUMP + 1)
 
 #define XPLICIT_REPL_CREATE (16)
 #define XPLICIT_REPL_DESTROY (17)

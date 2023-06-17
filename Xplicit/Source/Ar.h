@@ -117,7 +117,7 @@ namespace Xplicit
 		size_t tell() noexcept;
         long size() noexcept;
 
-        static const size_t npos = 0xFFFFFF;
+        static constexpr const std::size_t npos = ~0UL;
 
     private:
         std::size_t mSz;

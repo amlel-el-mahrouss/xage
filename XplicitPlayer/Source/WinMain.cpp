@@ -36,7 +36,7 @@ XPLICIT_MAIN()
 		}
 
 		// parse the connection uri.
-		Xplicit::Utils::UriParser uri{ XPLICIT_XDP_PROTOCOL };
+		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
 		uri /= pCmdLine;
 
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)

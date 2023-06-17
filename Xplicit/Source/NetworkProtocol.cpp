@@ -22,7 +22,6 @@ namespace Xplicit
         packet(), 
         addr(), 
         unique_addr(), 
-        bad(false),
 		hash(-1),
 		public_hash(-1),
         stat(NETWORK_STAT_DISCONNECTED)
@@ -43,8 +42,8 @@ namespace Xplicit
     }
 
     NetworkPeer::UniqueAddress::UniqueAddress()
-		: uuid(UUIDFactory::version<4>()), 
-        name("XplicitClient")
+		: mUuid(UUIDFactory::version<4>()), 
+        mName("XplicitClient")
 	{
         
     }

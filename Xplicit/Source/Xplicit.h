@@ -550,18 +550,19 @@ namespace Xplicit
 	class Pool final
 	{
 	public:
-		explicit Pool()
+		explicit Pool() noexcept
 			: mPointer(nullptr),
 			  mIndex(0UL)
 		{
 			/* allocate these shits */                    
 			this->mPointer = (char*)malloc(sizeof(char) * (sizeof(PtrType) * Size * 8));
+			XPLICIT_ASSERT(mPointer);
 
 			/* zero memory that shit */
 			ZeroMemory(this->mPointer, (sizeof(PtrType) * Size));
 		}
 
-		~Pool()
+		~Pool() noexcept
 		{
 			if (this->mPointer)
 			{
@@ -585,10 +586,8 @@ namespace Xplicit
 				return nullptr;
 
 			PtrType* ptr = reinterpret_cast<PtrType*>(&mPointer[mIndex]);
-			memset(ptr, 0, sizeof(PtrType));
 
-			auto tmp = PtrType(std::forward<Args>(args)...);
-			*ptr = std::move(tmp);
+			*ptr = PtrType(std::forward<Args>(args)...);
 
 			mIndex += sizeof(PtrType);
 
