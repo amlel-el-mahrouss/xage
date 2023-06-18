@@ -23,5 +23,10 @@ namespace Xplicit::Player
 	void LocalReplicationComponent::update()
 	{
 		XPLICIT_ASSERT(mNetwork);
+
+		auto packet = mNetwork->get();
+
+		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
 	}
 }

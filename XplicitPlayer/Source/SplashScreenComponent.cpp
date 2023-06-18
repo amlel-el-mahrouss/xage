@@ -26,7 +26,6 @@
 namespace Xplicit::Player
 {
 	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 3000); // connection timeout
-	constexpr const int XPLICIT_RETRY_TIMEOUT = ((1 * 60) * 30); // connection timeout
 
 	SplashScreenComponent::SplashScreenComponent() 
 		: 
@@ -65,6 +64,8 @@ namespace Xplicit::Player
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
+			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalReplicationComponent>(packet.hash);
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(packet.public_hash);
 			
@@ -100,24 +101,17 @@ namespace Xplicit::Player
 			}
 			else
 			{
+				packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
+				packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
+				packet.size = sizeof(NetworkPacket);
+
+				mNetwork->send(packet);
+
 				IRR->getVideoDriver()->draw2DImage(mTexture, 
 					vector2di(0, 0),
 					core::rect<s32>(0, 0, 1280, 720), 0,
 					video::SColor(255, 255, 255, 255), true);
-			}
-
-			if (mRetryTimeout < 1)
-			{
-				NetworkPacket spawn{};
-
-				spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
-				spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
-				spawn.size = sizeof(NetworkPacket);
-
-				mNetwork->send(spawn);
-
-				mRetryTimeout = XPLICIT_RETRY_TIMEOUT;
 			}
 		}
 	}
@@ -142,8 +136,6 @@ namespace Xplicit::Player
 			spawn.size = sizeof(NetworkPacket);
 		
 			mNetwork->send(spawn);
-
-			mRetryTimeout = XPLICIT_RETRY_TIMEOUT;
 		}
 	}
 

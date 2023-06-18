@@ -52,7 +52,7 @@ namespace Xplicit
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_UPDATE] = NETWORK_REPL_CMD_UPDATE;
 
 			mNetwork->get(i)->packet.id = id; /* store entity id in packet. */
-			mNetwork->get(i)->packet.public_hash = component_hash;
+			mNetwork->get(i)->packet.public_hash = component_hash; /* see COMPONENT_ID_ENUM */
 		}
 	}
 

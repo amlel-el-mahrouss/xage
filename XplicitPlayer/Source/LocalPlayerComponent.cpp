@@ -22,6 +22,7 @@
 
 namespace Xplicit::Player
 {
+	constexpr const short XPLICIT_NETWORK_DELAY = 100;
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
 
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
@@ -74,14 +75,12 @@ namespace Xplicit::Player
 	{
 		if (!mNetwork || !mNode || mPublicHash == -1) return;
 
-		std::mutex mutex;
-
-		mutex.lock();
-
 		mPacket = mNetwork->get();
 
 		if (mPacket.public_hash == mPublicHash)
 		{
+			mPacket.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
 			if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
 				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{
@@ -107,14 +106,6 @@ namespace Xplicit::Player
 
 				mNode->setPosition(pos);
 
-				mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
-				mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
-				mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
-				mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
-				mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
-
-				mNetwork->send(mPacket);
-
 				if (mCam)
 				{
 					auto newPos = pos;
@@ -127,7 +118,13 @@ namespace Xplicit::Player
 			}
 		}
 
-		mutex.unlock();
+		mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
+		mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
+		mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
+		mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
+		mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
+
+		mNetwork->send(mPacket);
 	}
 
 	void LocalPlayerComponent::attach(LocalCameraComponent* cam) noexcept

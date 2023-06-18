@@ -21,6 +21,7 @@
 #include "CommonInc.h"
 #include "SpawnComponent.h"
 #include "PlayerComponent.h"
+#include "PlayerTimeoutEvent.h"
 #include "PlayerMovementEvent.h"
 #include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
@@ -141,7 +142,7 @@ static void xplicit_load_sh()
 				if (strcmp(cmd_buf, "help") == 0)
 					xplicit_print_help();
 
-				if (strcmp(cmd_buf, "xdp") == 0)
+				if (strcmp(cmd_buf, "xconnect") == 0)
 				{
 
 					const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
@@ -149,8 +150,8 @@ static void xplicit_load_sh()
 					if (!ip4)
 						XPLICIT_CRITICAL("CLI: Ip Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
-					XPLICIT_INFO(Xplicit::String("IP: ") + (ip4 ? ip4 : "?"));
-					XPLICIT_INFO(Xplicit::String("Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
+					XPLICIT_INFO(Xplicit::String("address: ") + (ip4 ? ip4 : "?"));
+					XPLICIT_INFO(Xplicit::String("xconnect version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
 				}
 			}
 		}
@@ -212,10 +213,11 @@ int main(int argc, char** argv)
 		/* Add C++ spawn component */
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion<float>(0.f, 0.f, 0.f));
 
-		/* add C++ events */
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
+		/* Add C++ events */
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		
 		xplicit_load_mono();
 		xplicit_read_xml();

@@ -34,8 +34,6 @@ namespace Xplicit
 
 	static void xplicit_join_event(NetworkPeer* peer, PlayerComponent* player, NetworkServerComponent* server)
 	{
-		peer->stat = NETWORK_STAT_CONNECTED;
-
 		auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
 
 		// I use version 4, to avoid collisions.
@@ -54,22 +52,7 @@ namespace Xplicit
 
 		peer->packet.size = sizeof(NetworkPacket);
 
-		for (std::size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
-		{
-			if (server->get(peer_idx) != peer)
-			{
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
-
-				peer->packet.public_hash = peer->public_hash;
-
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
-
-				peer->packet.speed[XPLICIT_NETWORK_X] = 0.f;
-				peer->packet.speed[XPLICIT_NETWORK_Y] = 0.f;
-				peer->packet.speed[XPLICIT_NETWORK_Z] = 0.f;
-				peer->packet.speed[XPLICIT_NETWORK_DELTA] = 0.f;
-			}
-		}
+		peer->stat = NETWORK_STAT_CONNECTED;
 
 		NetworkServerHelper::send(server);
 	}
@@ -136,8 +119,7 @@ namespace Xplicit
 				if (this->size() > XPLICIT_MAX_CONNECTIONS)
 				{
 					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-
-					return false;
+					continue;
 				}
 
 				NetworkServerHelper::correct(server);
@@ -148,10 +130,10 @@ namespace Xplicit
 				if (player)
 				{
 					xplicit_join_event(server->get(peer_idx), player, server);
-					XPLICIT_INFO("[CONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
-					++mPlayerCount;
 
-					return true;
+					XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+
+					++mPlayerCount;
 				}
 				else
 				{
@@ -179,13 +161,16 @@ namespace Xplicit
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				xplicit_leave_event(server->get(peer_idx), server);
-				XPLICIT_INFO("[DISCONNECT] Player ID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+				if (server->get(peer_idx)->hash == server->get(peer_idx)->packet.hash)
+				{
+					xplicit_leave_event(server->get(peer_idx), server);
 
-				--mPlayerCount;
-				server->get(peer_idx)->reset();
+					XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 
-				return true;
+					--mPlayerCount;
+
+					server->get(peer_idx)->reset();
+				}
 			}
 		}
 

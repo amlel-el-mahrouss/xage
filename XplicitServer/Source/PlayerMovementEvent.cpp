@@ -44,10 +44,10 @@ namespace Xplicit
 		if (!mNetwork)
 			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
-		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
+		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
 		float speed = mGameVar->as_float();
 
-		for (size_t i = 0; i < players.size(); ++i)
+		for (std::size_t i = 0; i < players.size(); ++i)
 		{
 			PlayerComponent* ply = players[i];
 

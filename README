@@ -16,9 +16,9 @@ REQUIREMENTS:
 INSTALLING:
 ===========
 
-- Put the C# assemblies into %appdata%/Data
+- Put the C# assemblies into %appdata%/Data.
+- Install lua via NuGet for XplicitServer and XplicitClient and Xplicit.dll.
 
-=======================================
-Copyright Xplicit, all rights reserved.
-=======================================
-
+===================================================
+Copyright Xplicit Corporation, all rights reserved.
+===================================================

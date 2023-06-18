@@ -33,11 +33,11 @@ namespace Xplicit::Player
 		const char* name() noexcept;
 
 	private:
-		NetworkComponent* m_network;
+		NetworkComponent* mNetwork;
 		int64_t m_timeout;
 		ITexture* m_menu;
-		bool m_enabled;
-		int64_t m_hash;
+		bool mEnabled;
+		int64_t mHash;
 
 	};
 }

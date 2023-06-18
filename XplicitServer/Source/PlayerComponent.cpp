@@ -86,9 +86,15 @@ namespace Xplicit
 		return true; 
 	}
 
-	PlayerComponent::INSTANCE_TYPE PlayerComponent::type() noexcept { return INSTANCE_PLAYER; }
+	PlayerComponent::INSTANCE_TYPE PlayerComponent::type() noexcept
+	{ 
+		return INSTANCE_PLAYER; 
+	}
 
-	const char* PlayerComponent::name() noexcept { return "Player"; }
+	const char* PlayerComponent::name() noexcept 
+	{ 
+		return "PlayerComponent"; 
+	}
 
 	bool PlayerComponent::should_update() noexcept 
 	{ 

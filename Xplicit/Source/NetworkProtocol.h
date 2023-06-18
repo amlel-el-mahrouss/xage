@@ -27,8 +27,8 @@
 #endif
 
 #define XPLICIT_NETWORK_MAG_0 ('X')
-#define XPLICIT_NETWORK_MAG_1 ('P')
-#define XPLICIT_NETWORK_MAG_2 ('X')
+#define XPLICIT_NETWORK_MAG_1 ('C')
+#define XPLICIT_NETWORK_MAG_2 ('N')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
 #define XPLICIT_NETWORK_CMD_MAX (30U)
@@ -41,12 +41,12 @@
 
 /* Used by the protocol to tell the velocity. */
 
-#define XPLICIT_NETWORK_X (0)
-#define XPLICIT_NETWORK_Y (1)
-#define XPLICIT_NETWORK_Z (2)
+#define XPLICIT_NETWORK_X     (0)
+#define XPLICIT_NETWORK_Y     (1)
+#define XPLICIT_NETWORK_Z     (2)
 #define XPLICIT_NETWORK_DELTA (3)
 
-#define XPLICIT_SOCKET_ERROR (-1)
+#define XPLICIT_SOCKET_ERROR  (-1)
 
 namespace Xplicit
 {

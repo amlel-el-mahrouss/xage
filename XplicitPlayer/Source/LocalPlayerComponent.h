@@ -12,17 +12,14 @@
 
 #pragma once
 
-#include <NetworkComponent.h>
-#include <GameVar.h>
-
 #include "LocalCameraComponent.h"
+#include <NetworkComponent.h>
 #include "IMeshable.h"
+#include <GameVar.h>
 
 namespace Xplicit::Player
 {
 	class LocalPlayerMoveEvent;
-
-	constexpr const int XPLICIT_NETWORK_DELAY = 100;
 
 	class LocalPlayerComponent : public Component, public IMeshable
 	{

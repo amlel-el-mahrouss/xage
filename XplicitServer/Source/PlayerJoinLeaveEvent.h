@@ -23,11 +23,13 @@ namespace Xplicit
 		PlayerJoinLeaveEvent();
 		virtual ~PlayerJoinLeaveEvent();
 
+	public:
 		PlayerJoinLeaveEvent& operator=(const PlayerJoinLeaveEvent&) = default;
 		PlayerJoinLeaveEvent(const PlayerJoinLeaveEvent&) = default;
 
-		virtual void operator()() override;
+	public:
 		virtual const char* name() noexcept override;
+		virtual void operator()() override;
 
 	public:
 		const size_t& size() noexcept;

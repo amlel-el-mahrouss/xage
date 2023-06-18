@@ -38,7 +38,13 @@ namespace Xplicit::Player
 		if (!mNetwork) return;
 
 		NetworkPacket packet;
+
 		mNetwork->read(packet);
+
+		/* try send the acknowledge packet for the server. */
+		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
+		mNetwork->send(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
