@@ -38,7 +38,7 @@ namespace Xplicit
 		virtual void update() override;
 
 	private:
-		Quaternion<float> m_origin;
+		Quaternion<float> mOrigin;
 
 	};
 }

@@ -40,18 +40,18 @@ namespace Xplicit
 
 	void PlayerSpawnDeathEvent::operator()()
 	{
-		auto actors = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
+		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
 
-		for (PlayerComponent* actor : actors)
+		for (PlayerComponent* player : players)
 		{
-			if (!actor)
+			if (!player)
 				continue;
 
-			if (!actor->alive())
+			if (!player->alive())
 			{
 				// tell everyone that we're dead.
-				actor->health(0);
-				m_dead_actors.push_back(actor);
+				player->health(0);
+				mDeadActors.push_back(player);
 
 				for (size_t peer = 0; peer < m_network->size(); ++peer)
 				{
@@ -59,16 +59,16 @@ namespace Xplicit
 					XPLICIT_ASSERT(peer_ptr);
 
 					peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
-					peer_ptr->packet.public_hash = actor->get()->public_hash;
+					peer_ptr->packet.public_hash = player->get()->public_hash;
 				}
 			}
 			else
 			{
-				auto it = std::find(m_dead_actors.cbegin(), m_dead_actors.cend(), actor);
+				auto it = std::find(mDeadActors.cbegin(), mDeadActors.cend(), player);
 
-				if (it != m_dead_actors.cend())
+				if (it != mDeadActors.cend())
 				{
-					m_dead_actors.erase(it);
+					mDeadActors.erase(it);
 					
 					for (size_t peer = 0; peer < m_network->size(); ++peer)
 					{
@@ -77,13 +77,13 @@ namespace Xplicit
 
 						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
-						peer_ptr->packet.public_hash = actor->get()->public_hash;
-						peer_ptr->packet.health = actor->health();
+						peer_ptr->packet.public_hash = player->get()->public_hash;
+						peer_ptr->packet.health = player->health();
 
 						Xplicit::NetworkServerHelper::send(m_network);
 					}
 
-					xplicit_handle_spawn(m_spawner, actor);
+					xplicit_handle_spawn(m_spawner, player);
 				}
 			}
 		}

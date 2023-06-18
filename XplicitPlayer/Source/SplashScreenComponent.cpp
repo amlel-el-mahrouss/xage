@@ -14,9 +14,10 @@
  @file
  */
 
-#include "SplashScreenComponent.h"
 
+#include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
+#include "SplashScreenComponent.h"
 #include "LocalPlayerComponent.h"
 #include "LocalCameraComponent.h"
 #include "LocalMenuEvent.h"
@@ -27,12 +28,13 @@ namespace Xplicit::Player
 	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 3000); // connection timeout
 
 	SplashScreenComponent::SplashScreenComponent() 
-		: mEnable(true), 
+		: 
+		mEnable(true), 
 		mNetwork(nullptr), 
 		mTexture(nullptr), 
 		mTimeout(XPLICIT_TIMEOUT)
 	{
-		mTexture = IRR->getVideoDriver()->getTexture("Background.png");
+		mTexture = IRR->getVideoDriver()->getTexture("DownloadSplash.png");
 	}
 
 	SplashScreenComponent::~SplashScreenComponent() 
@@ -65,6 +67,7 @@ namespace Xplicit::Player
 		/* command accepted, let's download files... */
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalReplicationComponent>(packet.hash);
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(packet.public_hash);
 			
 			auto cam = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
