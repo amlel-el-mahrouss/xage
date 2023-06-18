@@ -39,7 +39,8 @@ namespace Xplicit::Player
 		NetworkComponent* mNetwork; /* Network instance */
 
 	private:
-		int64_t mTimeout; /* Network Timeout. */
+		std::int64_t mRetryTimeout;
+		std::int64_t mTimeout; /* Network Timeout. */
 		bool mEnable; /* Should we seek for a connection? */
 
 	};

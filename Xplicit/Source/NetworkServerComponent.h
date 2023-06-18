@@ -5,7 +5,7 @@
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: NetworkServerComponent.h
- *			Purpose: XDP Server
+ *			Purpose: xconnect server protocol
  *
  * =====================================================================
  */

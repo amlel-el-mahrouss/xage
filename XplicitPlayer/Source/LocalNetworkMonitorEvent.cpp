@@ -112,7 +112,7 @@ namespace Xplicit::Player
 						},
 						vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
 							Xplicit::Player::XPLICIT_DIM.Height / 2.8),
-						Player::POPUP_TYPE::NETWORK_ERROR, "ResetPopup");
+						Player::POPUP_TYPE::SHUTDOWN, "ResetPopup");
 
 				}
 			}

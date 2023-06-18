@@ -5,7 +5,7 @@
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: NetworkServerComponent.cpp
- *			Purpose: XDP Server
+ *			Purpose: xconnect server protocol
  * 
  * =====================================================================
  */
@@ -168,6 +168,10 @@ namespace Xplicit
 					0,
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
 					&fromLen);
+
+				if (server->get(i)->stat == NETWORK_STAT_CONNECTED && 
+					packet.hash != server->get(i)->hash)
+					continue;
 
 				if (res == SOCKET_ERROR) 
 					continue;

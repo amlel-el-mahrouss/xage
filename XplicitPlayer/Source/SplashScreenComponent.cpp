@@ -26,6 +26,7 @@
 namespace Xplicit::Player
 {
 	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 3000); // connection timeout
+	constexpr const int XPLICIT_RETRY_TIMEOUT = ((1 * 60) * 30); // connection timeout
 
 	SplashScreenComponent::SplashScreenComponent() 
 		: 
@@ -45,11 +46,8 @@ namespace Xplicit::Player
 
 	void SplashScreenComponent::update()
 	{
-		if (!mNetwork)
-			return;
-
-		if (!mEnable)
-			return;
+		if (!mNetwork) return;
+		if (!mEnable) return;
 
 		NetworkPacket packet;
 		mNetwork->read(packet);
@@ -102,21 +100,26 @@ namespace Xplicit::Player
 			}
 			else
 			{
-				packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
-				packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
-				packet.size = sizeof(NetworkPacket);
-
-				mNetwork->send(packet);
-
 				IRR->getVideoDriver()->draw2DImage(mTexture, 
 					vector2di(0, 0),
 					core::rect<s32>(0, 0, 1280, 720), 0,
 					video::SColor(255, 255, 255, 255), true);
 			}
 
-		}
+			if (mRetryTimeout < 1)
+			{
+				NetworkPacket spawn{};
 
+				spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
+				spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
+				spawn.size = sizeof(NetworkPacket);
+
+				mNetwork->send(spawn);
+
+				mRetryTimeout = XPLICIT_RETRY_TIMEOUT;
+			}
+		}
 	}
 
 	void SplashScreenComponent::connect(const char* ip)
@@ -135,10 +138,12 @@ namespace Xplicit::Player
 
 			spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
 			spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
+			
 			spawn.size = sizeof(NetworkPacket);
 		
 			mNetwork->send(spawn);
+
+			mRetryTimeout = XPLICIT_RETRY_TIMEOUT;
 		}
 	}
 
