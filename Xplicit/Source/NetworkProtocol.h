@@ -58,7 +58,7 @@ namespace Xplicit
     // network commands.
     enum NETWORK_CMD : int16_t
     {
-        NETWORK_CMD_BEGIN = 100, // start network, handshake
+        NETWORK_CMD_BEGIN = 500, // start network, handshake
         NETWORK_CMD_STOP, // abort connection
         NETWORK_CMD_DEAD,
         NETWORK_CMD_DAMAGE,

@@ -65,13 +65,6 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
 				peer->packet.public_hash = peer->public_hash;
-
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
-
-				peer->packet.speed[XPLICIT_NETWORK_X] = 0.f;
-				peer->packet.speed[XPLICIT_NETWORK_Y] = 0.f;
-				peer->packet.speed[XPLICIT_NETWORK_Z] = 0.f;
-				peer->packet.speed[XPLICIT_NETWORK_DELTA] = 0.f;
 			}
 		}
 

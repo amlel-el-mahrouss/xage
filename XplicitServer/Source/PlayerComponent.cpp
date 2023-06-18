@@ -124,7 +124,7 @@ namespace Xplicit
 		return mCooldown > 0;
 	}
 
-	void PlayerComponent::freeze_for(const int64_t& cooldown) noexcept
+	void PlayerComponent::idle_for(const int64_t& cooldown) noexcept
 	{
 		mCooldown = cooldown;
 	}

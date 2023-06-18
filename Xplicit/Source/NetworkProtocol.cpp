@@ -25,8 +25,8 @@ namespace Xplicit
 		hash(-1),
 		public_hash(-1),
         stat(NETWORK_STAT_DISCONNECTED)
-    {
-    
+	{
+		this->reset();
     }
 
     NetworkPeer::~NetworkPeer() {}
@@ -44,14 +44,9 @@ namespace Xplicit
     NetworkPeer::UniqueAddress::UniqueAddress()
 		: mUuid(UUIDFactory::version<4>()), 
         mName("XplicitClient")
-	{
-        
-    }
+	{}
 
-    NetworkPeer::UniqueAddress::~UniqueAddress()
-    {
-
-    }
+    NetworkPeer::UniqueAddress::~UniqueAddress() = default;
 
     void NetworkPeer::reset() noexcept
     {

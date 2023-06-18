@@ -46,7 +46,7 @@ namespace Xplicit
 		Vector<float>& pos() noexcept;
 
 	public:
-		void freeze_for(const int64_t& cooldown) noexcept;
+		void idle_for(const int64_t& cooldown) noexcept;
 		void health(const int32_t& health) noexcept;
 		void freeze(const bool enable) noexcept;
 		const int64_t health() noexcept;

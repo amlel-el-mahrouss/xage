@@ -88,7 +88,7 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
-				ply->freeze_for(XPLICIT_MOVEMENT_RATE);
+				ply->idle_for(XPLICIT_MOVEMENT_RATE);
 			}
 		}
 	}

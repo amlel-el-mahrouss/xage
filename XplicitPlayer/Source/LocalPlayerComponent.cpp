@@ -80,7 +80,8 @@ namespace Xplicit::Player
 		if (mPacket.public_hash == mPublicHash)
 		{
 			if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
-				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
+				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT && 
+				mPacket.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
 				auto pos = mNode->getAbsolutePosition();
 
@@ -102,17 +103,10 @@ namespace Xplicit::Player
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					pos.X -= xSpeed;
 
+				XPLICIT_INFO(std::to_string(pos.X));
+				XPLICIT_INFO(std::to_string(pos.Z));
+
 				mNode->setPosition(pos);
-
-				if (mCam)
-				{
-					auto newPos = pos;
-
-					newPos.Z -= mCameraPositionZVar->as_float();
-					newPos.Y += mCameraPositionYVar->as_float();
-
-					mCam->get()->setPosition(newPos);
-				}
 			}
 		}
 
