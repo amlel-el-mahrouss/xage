@@ -13,13 +13,12 @@
 #pragma once
 
 #include <Root.h>
- /* Nplicit math framework */
 #include <NMath.h>
 
 #include <Component.h>
 #include <NetworkComponent.h>
 
-/* Xplicit Engine Prebuilt dialogs engine */
+/* Xplicit Engine default skin */
 
 namespace Xplicit::Player
 {
@@ -31,7 +30,7 @@ namespace Xplicit::Player
 	enum class POPUP_TYPE
 	{
 		NETWORK_ERROR,
-		WAITING_ACK,
+		DOWNLOADING,
 		BANNED,
 		SHUTDOWN,
 		KICK,

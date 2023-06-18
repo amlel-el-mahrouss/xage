@@ -28,19 +28,16 @@ namespace Xplicit::Bites
 		XPLICIT_GET_DATA_DIR(dir);
 
 		String prebuilt = dir;
-		prebuilt += "\\Textures\\PreBuiltDialogs.zip";
+		prebuilt += "\\Textures\\DefaultSkin.zip";
 
-		auto res = IRR->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true);
-		XPLICIT_ASSERT(res);
-
-		if (!res)
+		if (!IRR->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
 			throw std::runtime_error("Missing dialogs! This pack are needed for XplicitPlayer to work.");
 	}
 
 	Application::Application(const char* dns)
 		: mSettings(), mWsa(), mPath("")
 	{
-		this->setup();
+		this->create_context();
 
 		XPLICIT_GET_DATA_DIR(tmp);
 		mPath += tmp;
@@ -55,16 +52,16 @@ namespace Xplicit::Bites
 		Xplicit::open_terminal();
 #endif
 
-		auto loadingComponent = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();
-		XPLICIT_ASSERT(loadingComponent);
+		auto splashScreen = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();
+		XPLICIT_ASSERT(splashScreen);
 
-		if (loadingComponent)
-			loadingComponent->connect(dns);
+		if (splashScreen)
+			splashScreen->connect(dns);
 	}
 
 	Application::~Application() {}
 
-	void Application::setup()
+	void Application::create_context()
 	{
 		auto singleton = Xplicit::Root::get_singleton_ptr();
 
@@ -91,23 +88,56 @@ namespace Xplicit::Bites
 	}
 
 	Application::SettingsManager::SettingsManager()
-		: mSettings()
+		: mSettingsPath()
 	{
 		XPLICIT_GET_DATA_DIR(dat);
 
-		mSettings = dat;
-		mSettings += "ClientSettings.dat";
+		mSettingsPath = dat;
+		mSettingsPath += "ClientSettings.dat";
+
+		mIni = std::make_unique<mINI::INIFile>(mSettingsPath);
 	}
 
 	Application::SettingsManager::~SettingsManager() = default;
 
 	void Application::SettingsManager::write(Application::SettingsManager::Traits& traits)
 	{
-		
+		mINI::INIStructure struc;
+
+		struc["Window"]["Width"] = std::to_string(traits.window_width);
+		struc["Window"]["Height"] = std::to_string(traits.window_height);
+
+		mIni->write(struc, true);
 	}
 
+	/* reads the clientsettings.dat INI file */
 	void Application::SettingsManager::read(Application::SettingsManager::Traits& traits)
 	{
-		
+		mINI::INIStructure struc;
+		mIni->read(struc);
+
+		try
+		{
+			auto width = struc["Window"]["Width"];
+			auto widthInt = std::atoi(width.c_str());
+
+			auto height = struc["Window"]["Height"];
+			auto heightInt = std::atoi(width.c_str());
+
+			traits.window_width = widthInt;
+			traits.window_height = heightInt;
+
+			if (traits.window_width > 1280 ||
+				traits.window_height > 720)
+			{
+				traits.window_width = 1280;
+				traits.window_height = 720;
+			}
+		}
+		catch (...)
+		{
+			traits.window_height = 720;
+			traits.window_width = 1280;
+		}
 	}
 }

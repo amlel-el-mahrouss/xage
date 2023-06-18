@@ -12,10 +12,10 @@
 
 #pragma once
 
-/* engine classes */
-#include <Uri.h>
 #include <IXMLWriter.h>
 #include <Root.h>
+#include <Uri.h>
+#include <ini.h>
 
 /* client classes */
 #include "LocalCameraComponent.h"
@@ -32,7 +32,7 @@ namespace Xplicit::Player
 
 namespace Xplicit::Bites
 {
-	constexpr const PChar* XPLICIT_APP_NAME = L"XplicitNgine - www.play-xplicit.com";
+	constexpr const PChar* XPLICIT_APP_NAME = L"Xplicit - www.play-xplicit.com";
 
 	class Application final
 	{
@@ -40,12 +40,10 @@ namespace Xplicit::Bites
 		Application() = delete;
 
 	public:
-		Application(const char* dns);
+		Application(const char* xconnectTo);
 		~Application();
 
-		Application& operator=(const Application&) = delete;
-		Application(const Application&) = delete;
-
+	public:
 		class SettingsManager final
 		{
 		public:
@@ -64,12 +62,13 @@ namespace Xplicit::Bites
 			void read(Traits& traits);
 
 		private:
-			String mSettings;
+			std::unique_ptr<mINI::INIFile> mIni;
+			String mSettingsPath;
 
 		};
 
 	private:
-		void setup();
+		void create_context();
 
 	private:
 		std::unique_ptr<SettingsManager> mSettings;

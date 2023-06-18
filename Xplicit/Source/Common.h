@@ -35,8 +35,10 @@ namespace Xplicit
 	public:
 		String serialize() noexcept
 		{
-			String serialized;
-			serialized = "<Pos X=\"" + std::to_string(Position.X) + "\" Y=\"" + std::to_string(Position.Y) + "\" Z=\"" + std::to_string(Position.Z) + "\" />";
+			String serialized = "<Pos X=\"" 
+				+ std::to_string(Position.X) 
+				+ "\" Y=\"" + std::to_string(Position.Y) 
+				+ "\" Z=\"" + std::to_string(Position.Z) + "\" />";
 
 			return serialized;
 		}
@@ -57,8 +59,8 @@ namespace Xplicit
 	public:
 		String serialize() noexcept
 		{
-			String serialized;
-			serialized = "<Size Width=\"" + std::to_string(Size.X) + "\" Height=\"" + std::to_string(Size.Y) + "\" />";
+			String serialized = "<Size Width=\"" + std::to_string(Size.X) 
+				+ "\" Height=\"" + std::to_string(Size.Y) + "\" />";
 
 			return serialized;
 		}

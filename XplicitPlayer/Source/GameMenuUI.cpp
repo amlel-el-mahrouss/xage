@@ -45,7 +45,7 @@ namespace Xplicit::Player
 		case POPUP_TYPE::SHUTDOWN:
 			path += "Shutdown.png";
 			break;
-		case POPUP_TYPE::WAITING_ACK:
+		case POPUP_TYPE::DOWNLOADING:
 			path += "Download.png";
 			break;
 		case POPUP_TYPE::BANNED:
