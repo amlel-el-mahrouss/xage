@@ -45,7 +45,7 @@ namespace Xplicit
 
 	// NetworkComponent Constructor
 	NetworkComponent::NetworkComponent()
-		: Component(), mPacket(), mAddr(), mReset(false)
+		: Component(),  mAddr(), mReset(false)
 	{
 #ifdef XPLICIT_WINDOWS
 		mSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -113,7 +113,7 @@ namespace Xplicit
 		return true;
 	}
 
-	bool NetworkComponent::send(NetworkPacket& packet, const size_t sz)
+	bool NetworkComponent::send(NetworkPacket& packet, const std::size_t sz)
 	{
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
@@ -135,10 +135,10 @@ namespace Xplicit
 
 	void NetworkComponent::update() 
 	{
-		this->read(mPacket);
+
 	}
 
-	bool NetworkComponent::read(NetworkPacket& packet, const size_t sz)
+	bool NetworkComponent::read(NetworkPacket& packet, const std::size_t sz)
 	{
 		mReset = false; // we gotta clear this one, we don't know if RST was sent.
 
@@ -168,14 +168,16 @@ namespace Xplicit
 
 				return false;
 			}
-			else
-			{
-				mPacket = packet;
-			}
 		}
 
-		return packet.magic[0] == XPLICIT_NETWORK_MAG_0 && packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-				packet.magic[2] == XPLICIT_NETWORK_MAG_2 && packet.version == XPLICIT_NETWORK_VERSION;
+		if (packet.magic[0] == XPLICIT_NETWORK_MAG_0 && packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+			packet.magic[2] == XPLICIT_NETWORK_MAG_2 && packet.version == XPLICIT_NETWORK_VERSION)
+		{
+			mPacket = packet;
+			return true;
+		}
+
+		return false;
 	}
 
 	bool NetworkComponent::is_reset() noexcept { return mReset; }

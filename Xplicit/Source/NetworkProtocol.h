@@ -15,7 +15,7 @@
 #include "Xplicit.h"
 
 #ifndef XPLICIT_UDP_PORT
-#define XPLICIT_UDP_PORT (2303)
+#define XPLICIT_UDP_PORT (60001)
 #endif // ifndef XPLICIT_UDP_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY
@@ -102,6 +102,11 @@ namespace Xplicit
     /* network float type */
     using nfloat = float;
 
+    /*
+        hash = player communication id
+        id = replication id.
+        size = size of current packet
+    */
 	class XPLICIT_API NetworkPacket
 	{
 	public:
@@ -113,8 +118,8 @@ namespace Xplicit
         std::int64_t public_hash; /* Public hash being sent (SHARED) */
         std::int64_t delta; /* delta time from the server. */
         std::int64_t hash; /* the private hash (CLIENT to SERVER) */
-        std::size_t size; /* size of currently sent packet. */
-        std::int32_t id; /* entity id */
+        std::size_t size; /* size of current packet. */
+        std::int32_t id; /* component id */
 
 	public:
         std::int64_t health; /* Player's Health 0-100 */

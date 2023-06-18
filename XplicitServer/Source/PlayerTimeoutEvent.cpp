@@ -25,9 +25,6 @@ namespace Xplicit
 	
 	void PlayerTimeoutEvent::operator()()
 	{
-		NetworkServerHelper::recv(mNetwork);
-		NetworkServerHelper::correct(mNetwork);
-
 		for (std::size_t index = 0; index < mNetwork->size(); ++index)
 		{
 			if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)

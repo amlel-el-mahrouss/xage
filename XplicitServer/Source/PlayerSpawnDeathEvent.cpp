@@ -46,9 +46,6 @@ namespace Xplicit
 		if (!network)
 			return;
 
-		NetworkServerHelper::recv(network);
-		NetworkServerHelper::correct(network);
-
 		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
 
 		for (PlayerComponent* player : players)

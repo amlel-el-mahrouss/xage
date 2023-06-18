@@ -24,7 +24,7 @@
 namespace Xplicit::Player
 {
 	LocalMenuEvent::LocalMenuEvent(const int64_t& hash)
-		: mNetwork(nullptr), mEnabled(false), m_menu(nullptr), m_timeout(0), mHash(hash)
+		: mNetwork(nullptr), mEnabled(false), mMenu(nullptr), mTimeout(0), mHash(hash)
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
@@ -33,13 +33,13 @@ namespace Xplicit::Player
 		std::string frame_path = data_dir;
 		frame_path += "\\Textures\\Leave.png";
 
-		m_menu = IRR->getVideoDriver()->getTexture(frame_path.c_str());
+		mMenu = IRR->getVideoDriver()->getTexture(frame_path.c_str());
 	}
 
 	LocalMenuEvent::~LocalMenuEvent() 
 	{
-		if (m_menu)
-			m_menu->drop();
+		if (mMenu)
+			mMenu->drop();
 	}
 
 	const char* LocalMenuEvent::name() noexcept { return ("LocalMenuEvent"); }
@@ -58,29 +58,31 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 
-		static float tween_start = LOCAL_MENU_TWEEN_START;
+		static float tweenStart = LOCAL_MENU_TWEEN_START;
 
-		if (KB->key_down(KEY_ESCAPE) && m_timeout < 0)
+		if (KB->key_down(KEY_ESCAPE) && mTimeout < 0)
 		{
-			tween_start = LOCAL_MENU_TWEEN_START;
+			tweenStart = LOCAL_MENU_TWEEN_START;
+
 			mEnabled = !mEnabled;
-			m_timeout = XPLICIT_TIMEOUT_MENU;
+			mTimeout = XPLICIT_TIMEOUT_MENU;
 		}
 
 		if (mEnabled)
 		{
-			if (tween_start > LOCAL_MENU_TWEEN_END)
-				tween_start -= LOCAL_MENU_TWEENING;
+			if (tweenStart > LOCAL_MENU_TWEEN_END)
+				tweenStart -= LOCAL_MENU_TWEENING;
 
 			if (KB->key_down(KEY_KEY_Y))
 			{
-				NetworkPacket stop_packet{};
+				NetworkPacket stopPacket{};
 
-				stop_packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-				stop_packet.hash = mHash;
-				stop_packet.size = sizeof(NetworkPacket);
+				stopPacket.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+				stopPacket.hash = mHash;
 
-				mNetwork->send(stop_packet);
+				stopPacket.size = sizeof(NetworkPacket);
+
+				mNetwork->send(stopPacket);
 
 				mEnabled = false;
 
@@ -93,16 +95,16 @@ namespace Xplicit::Player
 		}
 		else
 		{
-			if (tween_start < LOCAL_MENU_TWEEN_START)
-				tween_start += LOCAL_MENU_TWEENING;
+			if (tweenStart < LOCAL_MENU_TWEEN_START)
+				tweenStart += LOCAL_MENU_TWEENING;
 		}
 
-		if (tween_start < LOCAL_MENU_TWEEN_START)
+		if (tweenStart < LOCAL_MENU_TWEEN_START)
 		{
-			IRR->getVideoDriver()->draw2DImage(m_menu, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
-				Xplicit::Player::XPLICIT_DIM.Height / tween_start));
+			IRR->getVideoDriver()->draw2DImage(mMenu, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
+				Xplicit::Player::XPLICIT_DIM.Height / tweenStart));
 		}
 
-		--m_timeout;
+		--mTimeout;
 	}
 }

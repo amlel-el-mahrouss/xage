@@ -234,6 +234,7 @@ int main(int argc, char** argv)
 				break;
 
 			Xplicit::NetworkServerHelper::recv(server);
+			Xplicit::NetworkServerHelper::correct(server);
 
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();

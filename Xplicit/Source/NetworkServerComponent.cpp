@@ -153,7 +153,7 @@ namespace Xplicit
 		return false;
 	}
 
-	void NetworkServerHelper::recv(NetworkServerComponent* server, const size_t sz)
+	void NetworkServerHelper::recv(NetworkServerComponent* server, const std::size_t sz)
 	{
 		if (server)
 		{
@@ -186,7 +186,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerHelper::send(NetworkServerComponent* server, const size_t sz)
+	void NetworkServerHelper::send(NetworkServerComponent* server, const std::size_t sz)
 	{
 		if (server)
 		{
@@ -199,7 +199,7 @@ namespace Xplicit
 				server->get(i)->packet.version = XPLICIT_NETWORK_VERSION;
 
 				::sendto(server->mSocket, reinterpret_cast<const char*>(&server->get(i)->packet),
-					sz, 
+					sz,
 					0, 
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
 					sizeof(PrivateAddressData));

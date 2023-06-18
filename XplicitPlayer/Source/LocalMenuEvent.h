@@ -34,8 +34,8 @@ namespace Xplicit::Player
 
 	private:
 		NetworkComponent* mNetwork;
-		int64_t m_timeout;
-		ITexture* m_menu;
+		int64_t mTimeout;
+		ITexture* mMenu;
 		bool mEnabled;
 		int64_t mHash;
 

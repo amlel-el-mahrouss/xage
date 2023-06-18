@@ -73,9 +73,12 @@ namespace Xplicit
 
         virtual void update() override;
 
+    public:
         bool connect(const char* ip);
-        bool send(NetworkPacket& packet, const size_t sz = sizeof(NetworkPacket));
-        bool read(NetworkPacket& packet, const size_t sz = sizeof(NetworkPacket));
+
+    public:
+        bool send(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
+        bool read(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
 
         NetworkPacket& get() noexcept;
         bool is_reset() noexcept;
@@ -84,8 +87,8 @@ namespace Xplicit
         bool reset() noexcept;
 
     private:
-        PrivateAddressData mAddr;
-        NetworkPacket mPacket;
+		PrivateAddressData mAddr;
+		NetworkPacket mPacket;
         Socket mSocket;
         bool mReset;
 

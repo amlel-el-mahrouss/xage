@@ -57,17 +57,25 @@ namespace Xplicit::Player
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
 		{
-			static auto plyers = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
+			Thread thrd([]() -> void {
+				NetworkPacket packet;
 
-			for (std::size_t index = 0UL; index < plyers.size(); ++index)
-			{
-				if (plyers[index]->id() == packet.public_hash)
-					continue;
+				auto net = ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkComponent>("NetworkComponent");
+				packet = net->get();
 
-				ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
+				auto plyers = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
 
-				break;
-			}
+				for (std::size_t index = 0UL; index < plyers.size(); ++index)
+				{
+					if (plyers[index]->id() == packet.public_hash)
+						continue;
+
+					ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
+
+					packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_INVALID;
+					break;
+				}
+			});
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||

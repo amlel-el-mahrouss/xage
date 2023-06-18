@@ -41,9 +41,6 @@ namespace Xplicit
 
 	void PlayerMovementEvent::operator()()
 	{
-		NetworkServerHelper::recv(mNetwork);
-		NetworkServerHelper::correct(mNetwork);
-
 		if (!mNetwork)
 			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
@@ -93,8 +90,6 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
 				ply->freeze_for(XPLICIT_MOVEMENT_RATE);
-
-				NetworkServerHelper::send(mNetwork);
 
 				/* we're done for this one. */
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_INVALID;

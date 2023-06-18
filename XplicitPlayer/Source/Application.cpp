@@ -69,7 +69,7 @@ namespace Xplicit::Bites
 
 		singleton->set(
 			irr::createDevice(
-				irr::video::EDT_DIRECT3D9,
+				irr::video::EDT_OPENGL,
 				Xplicit::Player::XPLICIT_DIM,
 				32U,
 				false,

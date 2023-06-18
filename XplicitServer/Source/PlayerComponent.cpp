@@ -64,7 +64,11 @@ namespace Xplicit
 			if (mDeathTimeout <= 0)
 			{
 				mDeathTimeout = 0;
+
 				this->health(XPLICIT_DEFAULT_HEALTH);
+				mPeer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
+
+				return;
 			}
 		}
 
