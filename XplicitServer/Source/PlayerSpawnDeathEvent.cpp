@@ -26,6 +26,7 @@ namespace Xplicit
 	/// <param name="spawner">The spawn component</param>
 	/// <param name="actor">The targeted actor</param>
 	/// <returns></returns>
+	
 	static void xplicit_handle_spawn(SpawnComponent* spawner, PlayerComponent* actor) noexcept
 	{
 		if (actor)
@@ -40,11 +41,22 @@ namespace Xplicit
 
 	void PlayerSpawnDeathEvent::operator()()
 	{
+		auto network = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+
+		if (!network)
+			return;
+
+		NetworkServerHelper::recv(network);
+		NetworkServerHelper::correct(network);
+
 		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
 
 		for (PlayerComponent* player : players)
 		{
-			if (!player)
+			if (player == nullptr)
+				continue;
+
+			if (player->get()->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
 				continue;
 
 			if (!player->alive())

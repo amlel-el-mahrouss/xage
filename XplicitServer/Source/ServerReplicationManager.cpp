@@ -26,6 +26,8 @@ namespace Xplicit
 			mNetwork->get(i)->packet.id = id; /* store entity id in packet. */
 			mNetwork->get(i)->packet.public_hash = component_hash;
 		}
+
+		NetworkServerHelper::send(mNetwork);
 	}
 
 	void ServerReplicationManager::destroy(const std::int32_t& id, const std::int64_t& component_hash) noexcept
@@ -40,6 +42,8 @@ namespace Xplicit
 			mNetwork->get(i)->packet.id = id; /* store entity id in packet. */
 			mNetwork->get(i)->packet.public_hash = component_hash;
 		}
+
+		NetworkServerHelper::send(mNetwork);
 	}
 
 	void ServerReplicationManager::update(const std::int32_t& id, const std::int64_t& component_hash) noexcept
@@ -54,13 +58,12 @@ namespace Xplicit
 			mNetwork->get(i)->packet.id = id; /* store entity id in packet. */
 			mNetwork->get(i)->packet.public_hash = component_hash; /* see COMPONENT_ID_ENUM */
 		}
+
+		NetworkServerHelper::send(mNetwork);
 	}
 
-	std::int64_t ServerReplicationHash::operator()(const String& name)
+	std::int64_t ServerReplicationHash::operator()()
 	{
-		if (name.empty())
-			return XPLICIT_INVALID_REPL;
-
 		std::string uuid_str = uuids::to_string(UUIDFactory::version<4>());
 		auto hash = std::hash<std::string>();
 		auto res = hash(uuid_str);

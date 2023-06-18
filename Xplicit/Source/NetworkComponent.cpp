@@ -45,15 +45,15 @@ namespace Xplicit
 
 	// NetworkComponent Constructor
 	NetworkComponent::NetworkComponent()
-		: Component(), m_packet(), m_addr(), m_reset(false)
+		: Component(), mPacket(), mAddr(), mReset(false)
 	{
 #ifdef XPLICIT_WINDOWS
-		m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+		mSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-		if (m_socket == SOCKET_ERROR)
+		if (mSocket == SOCKET_ERROR)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
-		xplicit_set_ioctl(m_socket);
+		xplicit_set_ioctl(mSocket);
 #else
 #pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
@@ -67,7 +67,7 @@ namespace Xplicit
 	NetworkComponent::~NetworkComponent()
 	{
 		if (reset())
-			closesocket(m_socket);
+			closesocket(mSocket);
 
 #ifndef _NDEBUG
 		XPLICIT_INFO("~NetworkComponent, Epoch: " + std::to_string(xplicit_get_epoch()));
@@ -79,7 +79,7 @@ namespace Xplicit
 	bool NetworkComponent::reset() noexcept
 	{
 #ifdef XPLICIT_WINDOWS
-		return shutdown(m_socket, SD_BOTH) != SOCKET_ERROR;
+		return shutdown(mSocket, SD_BOTH) != SOCKET_ERROR;
 #else
 #pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
@@ -87,17 +87,17 @@ namespace Xplicit
 
 	bool NetworkComponent::connect(const char* ip)
 	{
-		if (m_socket == SOCKET_ERROR)
+		if (mSocket == SOCKET_ERROR)
 			return false;
 
 #ifdef XPLICIT_WINDOWS
-		memset(&m_addr, 0, sizeof(SOCKADDR_IN));
+		memset(&mAddr, 0, sizeof(SOCKADDR_IN));
 
-		m_addr.sin_family = AF_INET;
-		inet_pton(AF_INET, ip, &m_addr.sin_addr);
-		m_addr.sin_port = htons(XPLICIT_UDP_PORT);
+		mAddr.sin_family = AF_INET;
+		inet_pton(AF_INET, ip, &mAddr.sin_addr);
+		mAddr.sin_port = htons(XPLICIT_UDP_PORT);
 
-		int result = ::connect(m_socket, reinterpret_cast<SOCKADDR*>(&m_addr), 
+		int result = ::connect(mSocket, reinterpret_cast<SOCKADDR*>(&mAddr), 
 			sizeof(PrivateAddressData));
 
 		if (result == SOCKET_ERROR)
@@ -121,8 +121,8 @@ namespace Xplicit
 		packet.version = XPLICIT_NETWORK_VERSION;
 
 #ifdef XPLICIT_WINDOWS
-		int res = ::sendto(m_socket, reinterpret_cast<const char*>(&packet), sz, 0,
-			reinterpret_cast<SOCKADDR*>(&m_addr), sizeof(m_addr));
+		int res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
+			reinterpret_cast<SOCKADDR*>(&mAddr), sizeof(mAddr));
 
 		if (res == SOCKET_ERROR)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
@@ -135,26 +135,24 @@ namespace Xplicit
 
 	void NetworkComponent::update() 
 	{
-		this->read(m_packet);
+		this->read(mPacket);
 	}
 
 	bool NetworkComponent::read(NetworkPacket& packet, const size_t sz)
 	{
-		m_reset = false; // we gotta clear this one, we don't know if RST was sent.
+		mReset = false; // we gotta clear this one, we don't know if RST was sent.
 
 		int length{ sizeof(struct sockaddr_in) };
 
 #ifdef XPLICIT_WINDOWS
-		int res = ::recvfrom(m_socket, reinterpret_cast<char*>(&packet), sz, 0,
-			(struct sockaddr*)&m_addr, &length);
+		int res = ::recvfrom(mSocket, reinterpret_cast<char*>(&packet), sz, 0,
+			(struct sockaddr*)&mAddr, &length);
 #else
 #pragma error("DEFINE ME NetworkComponent.cpp")
 #endif
 
 		if (length > 0)
 		{
-			m_packet = packet;
-
 			if (res == SOCKET_ERROR)
 			{
 				int err = WSAGetLastError();
@@ -163,21 +161,24 @@ namespace Xplicit
 				{
 				case WSAECONNRESET:
 				{
-					m_reset = true;
+					mReset = true;
 					break;
 				}
 				}
 
 				return false;
 			}
-
+			else
+			{
+				mPacket = packet;
+			}
 		}
 
 		return packet.magic[0] == XPLICIT_NETWORK_MAG_0 && packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
 				packet.magic[2] == XPLICIT_NETWORK_MAG_2 && packet.version == XPLICIT_NETWORK_VERSION;
 	}
 
-	bool NetworkComponent::is_reset() noexcept { return m_reset; }
+	bool NetworkComponent::is_reset() noexcept { return mReset; }
 
-	NetworkPacket& NetworkComponent::get() noexcept { return m_packet; }
+	NetworkPacket& NetworkComponent::get() noexcept { return mPacket; }
 }

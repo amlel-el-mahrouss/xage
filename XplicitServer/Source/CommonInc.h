@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: SDK.h
+ *			File: CommonInc.h
  *			Purpose: Server include
  *
  * =====================================================================
@@ -12,16 +12,16 @@
 
 #pragma once
 
-#include <Event.h>
-#include <Component.h>
 #include <Uri.h>
+#include <Event.h>
+#include <Common.h>
 #include <Xplicit.h>
 #include <GameVar.h>
+#include <Component.h>
 #include <MonoInterop.h>
-#include <MonoComponent.h>
-#include <Common.h>
-#include <SocketWrapper.h>
 #include <HelperMacros.h>
+#include <MonoComponent.h>
+#include <SocketWrapper.h>
 #include <NetworkServerComponent.h>
 
 #ifdef XPLICIT_WINDOWS

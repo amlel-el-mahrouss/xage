@@ -41,6 +41,9 @@ namespace Xplicit
 
 	void PlayerMovementEvent::operator()()
 	{
+		NetworkServerHelper::recv(mNetwork);
+		NetworkServerHelper::correct(mNetwork);
+
 		if (!mNetwork)
 			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
@@ -56,6 +59,9 @@ namespace Xplicit
 				continue;
 
 			NetworkPeer* peer = ply->get();
+
+			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
+				continue;
 
 			if (peer->public_hash != peer->packet.public_hash)
 				continue;

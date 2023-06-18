@@ -75,7 +75,7 @@ namespace Xplicit::Player
 	{
 		if (!mNetwork || !mNode || mPublicHash == -1) return;
 
-		mPacket = mNetwork->get();
+		mNetwork->read(mPacket);
 
 		if (mPacket.public_hash == mPublicHash)
 		{

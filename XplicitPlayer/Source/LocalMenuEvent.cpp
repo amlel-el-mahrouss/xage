@@ -81,6 +81,7 @@ namespace Xplicit::Player
 				stop_packet.size = sizeof(NetworkPacket);
 
 				mNetwork->send(stop_packet);
+
 				mEnabled = false;
 
 				IRR->closeDevice();

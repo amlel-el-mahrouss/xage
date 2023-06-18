@@ -210,10 +210,8 @@ int main(int argc, char** argv)
 		if (server == nullptr)
 			return 1;
 
-		/* Add C++ spawn component */
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion<float>(0.f, 0.f, 0.f));
 
-		/* Add C++ events */
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
@@ -236,13 +234,13 @@ int main(int argc, char** argv)
 				break;
 
 			Xplicit::NetworkServerHelper::recv(server);
-			Xplicit::NetworkServerHelper::correct(server);
 
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerHelper::send(server);
-		} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr());
+		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
+			Xplicit::EventManager::get_singleton_ptr());
 
 		return 0;
 	}

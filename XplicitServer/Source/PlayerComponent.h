@@ -32,11 +32,15 @@ namespace Xplicit
 	public:
 		virtual PHYSICS_TYPE physics() noexcept override;
 		virtual INSTANCE_TYPE type() noexcept override;
-		virtual bool should_update() noexcept override;
 		virtual const char* name() noexcept override;
+
+	private:
+		virtual bool should_update() noexcept override;
+		virtual void update() override;
+
+	private:
 		virtual bool can_collide() noexcept override;
 		virtual bool has_physics() noexcept override;
-		virtual void update() override;
 
 	public:
 		Vector<float>& pos() noexcept;

@@ -84,10 +84,10 @@ namespace Xplicit
         bool reset() noexcept;
 
     private:
-        PrivateAddressData m_addr;
-        NetworkPacket m_packet;
-        Socket m_socket;
-        bool m_reset;
+        PrivateAddressData mAddr;
+        NetworkPacket mPacket;
+        Socket mSocket;
+        bool mReset;
 
         friend class NetworkEvent;
 

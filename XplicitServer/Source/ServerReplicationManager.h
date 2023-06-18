@@ -54,7 +54,11 @@ namespace Xplicit
 		ServerReplicationHash() = default;
 		~ServerReplicationHash() = default;
 
-		std::int64_t operator()(const String& name);
+	public:
+		XPLICIT_COPY_DEFAULT(ServerReplicationHash);
+
+	public:
+		std::int64_t operator()();
 
 	};
 }
