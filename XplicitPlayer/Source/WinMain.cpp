@@ -72,7 +72,7 @@ XPLICIT_MAIN()
 
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
-
+			
 			IRR->getVideoDriver()->endScene();
 		}
 	}

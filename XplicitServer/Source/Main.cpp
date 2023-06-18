@@ -111,7 +111,7 @@ static void xplicit_print_help()
 {
 	XPLICIT_INFO("\a+-------------- Xplicit Game Server Manual --------------+");
 	XPLICIT_INFO("exit: Exits the current server.");
-	XPLICIT_INFO("xdp: Get XDP network status.");
+	XPLICIT_INFO("xconnect: Get XDP network status.");
 	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
 }
 
@@ -148,7 +148,7 @@ static void xplicit_load_sh()
 					const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
 					if (!ip4)
-						XPLICIT_CRITICAL("CLI: Ip Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
+						XPLICIT_CRITICAL("Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
 					XPLICIT_INFO(Xplicit::String("address: ") + (ip4 ? ip4 : "?"));
 					XPLICIT_INFO(Xplicit::String("xconnect version: ") + std::to_string(XPLICIT_NETWORK_VERSION));

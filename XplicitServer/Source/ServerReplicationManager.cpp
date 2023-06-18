@@ -14,6 +14,16 @@
 
 namespace Xplicit
 {
+	ServerReplicationManager* ServerReplicationManager::get_singleton_ptr() noexcept
+	{
+		static ServerReplicationManager* manager = nullptr;
+
+		if (manager == nullptr)
+			manager = new ServerReplicationManager();
+
+		return manager;
+	}
+
 	void ServerReplicationManager::create(const std::int32_t& id, const std::int64_t& component_hash) noexcept
 	{
 		if (!mNetwork)
@@ -28,7 +38,7 @@ namespace Xplicit
 		}
 	}
 
-	void ServerReplicationManager::destroy(const std::int32_t& id, const std::int64_t& component_hash) noexcept
+	void ServerReplicationManager::remove(const std::int32_t& id, const std::int64_t& component_hash) noexcept
 	{
 		if (!mNetwork)
 			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");

@@ -39,7 +39,6 @@ namespace Xplicit
 
 	const char* PlayerMovementEvent::name() noexcept { return ("PlayerMovementEvent"); }
 
-	/* movement main loop */
 	void PlayerMovementEvent::operator()()
 	{
 		if (!mNetwork)
@@ -89,6 +88,8 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 				ply->idle_for(XPLICIT_MOVEMENT_RATE);
+
+				NetworkServerHelper::send(mNetwork);
 			}
 		}
 	}

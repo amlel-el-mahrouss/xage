@@ -29,7 +29,7 @@ namespace Xplicit::Player
 {
 	enum class POPUP_TYPE
 	{
-		NETWORK_ERROR,
+		NETWORK,
 		DOWNLOADING,
 		BANNED,
 		SHUTDOWN,
@@ -43,7 +43,7 @@ namespace Xplicit::Player
 
 	public:
 		PopupComponent(const std::function<void()>& on_click, const vector2di pos = vector2di(0, 0), 
-			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK_ERROR, const char* id = "Popup") noexcept;
+			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, const char* id = "Popup") noexcept;
 
 		virtual ~PopupComponent();
 

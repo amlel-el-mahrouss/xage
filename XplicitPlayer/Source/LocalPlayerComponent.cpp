@@ -103,9 +103,6 @@ namespace Xplicit::Player
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					pos.X -= xSpeed;
 
-				XPLICIT_INFO(std::to_string(pos.X));
-				XPLICIT_INFO(std::to_string(pos.Z));
-
 				mNode->setPosition(pos);
 			}
 		}
@@ -138,9 +135,9 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mNetwork);
 	}
 
-	LocalPlayerMoveEvent::~LocalPlayerMoveEvent() {}
+	LocalPlayerMoveEvent::~LocalPlayerMoveEvent() = default;
 
-	const char* LocalPlayerMoveEvent::name() noexcept { return ("LocalMoveEvent"); }
+	const char* LocalPlayerMoveEvent::name() noexcept { return ("LocalPlayerMoveEvent"); }
 
 	const int64_t& LocalPlayerComponent::id() noexcept { return mPublicHash; }
 

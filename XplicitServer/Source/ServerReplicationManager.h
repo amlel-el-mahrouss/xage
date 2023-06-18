@@ -25,22 +25,15 @@ namespace Xplicit
 	public:
 		~ServerReplicationManager() = default;
 
+	public:
 		XPLICIT_COPY_DEFAULT(ServerReplicationManager);
 
 	public:
-		static ServerReplicationManager* get_singleton_ptr() noexcept
-		{
-			static ServerReplicationManager* manager = nullptr;
-			
-			if (manager == nullptr)
-				manager = new ServerReplicationManager();
-
-			return manager;
-		}
+		static ServerReplicationManager* get_singleton_ptr() noexcept;
 
 	public:
+		void remove(const std::int32_t& id, const std::int64_t& component_hash) noexcept;
 		void create(const std::int32_t& id, const std::int64_t& component_hash) noexcept;
-		void destroy(const std::int32_t& id, const std::int64_t& component_hash) noexcept;
 		void update(const std::int32_t& id, const std::int64_t& component_hash) noexcept;
 
 	private:

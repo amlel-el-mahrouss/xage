@@ -1,6 +1,7 @@
 <!-- Scene Manifest -->
 <!-- Generated from XplicitStudio -->
 
-<GameVars>
-	<Var Name="Server-PartyName" Type="String" Value="Xplicit's test server"/>
-</GameVars>
+<GameVar>
+	<ServerName Value="Xplicit Server"/>
+	<Description Value="Come play on our official servers!"/>
+</GameVar>

@@ -66,6 +66,17 @@ namespace Xplicit::Player
 		{
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
+			IRR->getSceneManager()->addSkyBoxSceneNode(
+				IRR->getVideoDriver()->getTexture("skybox_up.png"),
+				IRR->getVideoDriver()->getTexture("skybox_down.png"),
+				IRR->getVideoDriver()->getTexture("skybox_left.png"),
+				IRR->getVideoDriver()->getTexture("skybox_right.png"),
+				IRR->getVideoDriver()->getTexture("skybox_front.png"),
+				IRR->getVideoDriver()->getTexture("skybox_back.png"));
+
+			IRR->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
+			IRR->getVideoDriver()->setTextureCreationFlag(video::ETCF_OPTIMIZED_FOR_SPEED, true);
+
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalReplicationComponent>(packet.hash);
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(packet.public_hash);
 			
@@ -77,7 +88,6 @@ namespace Xplicit::Player
 			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(packet.hash);
 			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(packet.hash);
 
-			mEnable = false;
 			ComponentManager::get_singleton_ptr()->remove(this);
 		}
 		else
@@ -96,7 +106,7 @@ namespace Xplicit::Player
 					[]() { IRR->closeDevice(); }, 
 						vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
 						Xplicit::Player::XPLICIT_DIM.Height / 2.8),
-						Player::POPUP_TYPE::NETWORK_ERROR, "StopPopup");
+						Player::POPUP_TYPE::NETWORK, "StopPopup");
 
 				mEnable = false;
 			}
@@ -139,6 +149,6 @@ namespace Xplicit::Player
 			IRR->closeDevice();
 			}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45,
 				Xplicit::Player::XPLICIT_DIM.Height / 4),
-				Player::POPUP_TYPE::NETWORK_ERROR);
+				Player::POPUP_TYPE::NETWORK);
 	}
 }

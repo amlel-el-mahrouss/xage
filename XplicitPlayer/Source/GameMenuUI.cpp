@@ -38,7 +38,7 @@ namespace Xplicit::Player
 		case POPUP_TYPE::KICK:
 			path += "Kicked.png";
 			break;
-		case POPUP_TYPE::NETWORK_ERROR:
+		case POPUP_TYPE::NETWORK:
 			path += "NetworkError.png";
 			break;
 		case POPUP_TYPE::SHUTDOWN:
