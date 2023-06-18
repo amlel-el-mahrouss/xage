@@ -108,7 +108,7 @@ namespace Xplicit
 	class XPLICIT_API NetworkPacket final
 	{
 	public:
-        char         magic[XPLICIT_NETWORK_MAG_COUNT];
+        char magic[XPLICIT_NETWORK_MAG_COUNT];
 		std::int16_t cmd[XPLICIT_NETWORK_CMD_MAX];
 		std::int32_t version;
 
@@ -120,8 +120,11 @@ namespace Xplicit
         std::int32_t id; /* component id */
 
 	public:
-        std::int64_t    health; /* Player's Health 0-100 */
+        std::int64_t health; /* Player's Health 0-100 */
         Xplicit::NetworkFloat speed[4]; /* Player's speed (X, Y, Z, Delta) */
+
+    public:
+        char buffer[256];
 
 	};
 

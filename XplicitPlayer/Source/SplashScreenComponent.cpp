@@ -66,17 +66,6 @@ namespace Xplicit::Player
 		{
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
-			IRR->getSceneManager()->addSkyBoxSceneNode(
-				IRR->getVideoDriver()->getTexture("skybox_up.png"),
-				IRR->getVideoDriver()->getTexture("skybox_down.png"),
-				IRR->getVideoDriver()->getTexture("skybox_left.png"),
-				IRR->getVideoDriver()->getTexture("skybox_right.png"),
-				IRR->getVideoDriver()->getTexture("skybox_front.png"),
-				IRR->getVideoDriver()->getTexture("skybox_back.png"));
-
-			IRR->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
-			IRR->getVideoDriver()->setTextureCreationFlag(video::ETCF_OPTIMIZED_FOR_SPEED, true);
-
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalReplicationComponent>(packet.hash);
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(packet.public_hash);
 			

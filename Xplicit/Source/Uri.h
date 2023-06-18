@@ -14,9 +14,13 @@
 
 #include "Xplicit.h"
 
+#ifndef XPLICIT_XASSET_PROTOCOL
+#define XPLICIT_XASSET_PROTOCOL ("xasset://")
+#endif // XPLICIT_XASSET_PROTOCOL
+
 #ifndef XPLICIT_XCONNECT_PROTOCOL
 #define XPLICIT_XCONNECT_PROTOCOL ("xconnect://")
-#endif // XPLICIT_XDP_PROTOCOL
+#endif // XPLICIT_XCONNECT_PROTOCOL
 
 namespace Xplicit::Utils
 {
