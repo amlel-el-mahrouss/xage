@@ -28,7 +28,7 @@ namespace Xplicit::Player
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
 		: 
 		Component(), 
-		IMeshable("xplicit-player.dae"), 
+		StaticMesh("xplicit-player.dae"), 
 		mPacket(), 
 		mCam(nullptr), 
 		mPublicHash(public_hash),

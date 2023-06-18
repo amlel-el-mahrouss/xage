@@ -14,14 +14,14 @@
 
 #include "LocalCameraComponent.h"
 #include <NetworkComponent.h>
-#include "IMeshable.h"
+#include "Mesh.h"
 #include <GameVar.h>
 
 namespace Xplicit::Player
 {
 	class LocalPlayerMoveEvent;
 
-	class LocalPlayerComponent : public Component, public IMeshable
+	class LocalPlayerComponent : public Component, public StaticMesh
 	{
 	public:
 		LocalPlayerComponent(const int64_t& public_hash);

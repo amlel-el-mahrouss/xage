@@ -14,11 +14,11 @@
  @file
  */
 
-#include "IMeshable.h"
+#include "Mesh.h"
 
 namespace Xplicit::Player
 {
-	IMeshable::IMeshable(const char* path)
+	StaticMesh::StaticMesh(const char* path)
 	{
 		String _path = XPLICIT_ENV("APPDATA");
 		_path += "/XplicitNgin/Studio/";
@@ -37,7 +37,7 @@ namespace Xplicit::Player
 		}
 	}
 
-	IMeshable::~IMeshable()
+	StaticMesh::~StaticMesh()
 	{
 		if (mNode)
 			mNode->drop();
