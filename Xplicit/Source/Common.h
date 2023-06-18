@@ -35,7 +35,7 @@ namespace Xplicit
 	public:
 		String serialize() noexcept
 		{
-			String serialized = "<Pos X=\"" 
+			String serialized = "<Vector3 X=\"" 
 				+ std::to_string(Position.X) 
 				+ "\" Y=\"" + std::to_string(Position.Y) 
 				+ "\" Z=\"" + std::to_string(Position.Z) + "\" />";
@@ -59,7 +59,7 @@ namespace Xplicit
 	public:
 		String serialize() noexcept
 		{
-			String serialized = "<Size Width=\"" + std::to_string(Size.X) 
+			String serialized = "<Dimension Width=\"" + std::to_string(Size.X) 
 				+ "\" Height=\"" + std::to_string(Size.Y) + "\" />";
 
 			return serialized;
@@ -81,17 +81,47 @@ namespace Xplicit
 
 	public:
 		PositionComponent Position;
+		scene::ISceneNode* Node;
 		SizeComponent Size;
+
+	};
+
+	class XPLICIT_API ToolComponent final : public Component
+	{
+	public:
+		explicit ToolComponent() = default;
+		virtual ~ToolComponent() = default;
+
+	public:
+		std::int32_t OwnerHash;
+		std::int32_t Slot;
+		bool Droppable;
+		String Name;
+
+	};
+
+	class XPLICIT_API SoundComponent final : public Component
+	{
+	public:
+		explicit SoundComponent() = default;
+		virtual ~SoundComponent() = default;
+
+	public:
+		PositionComponent Position;
+		String Filename;
+		bool Looped;
 
 	};
 
 	enum class COMPONENT_ID_ENUM : std::int32_t
 	{
 		COMPONENT_ID_SCRIPT = 0xc307,
-		COMPONENT_ID_TEXTURE = 0x687e,
-		COMPONENT_ID_MODEL = 0x0408,
+		COMPONENT_ID_TEX = 0x687e,
+		COMPONENT_ID_PART = 0x0408,
+		COMPONENT_ID_TOOL = 0x5b2f,
 		COMPONENT_ID_SOUND = 0xa8cf,
-		COMPONENT_ID_UI = 0x0d7f,
+		COMPONENT_ID_START = 0x0d7f, /* start of custom components */
+		/* custom components here. */
 		COMPONENT_ID_INVALID = 0xffff,
 	};
 }

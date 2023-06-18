@@ -51,7 +51,7 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(ServerReplicationHash);
 
 	public:
-		std::int64_t operator()();
+		std::int64_t operator()() noexcept;
 
 	};
 }

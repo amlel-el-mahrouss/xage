@@ -28,13 +28,13 @@
 #define XPLICIT_NETWORK_MAG_2 ('P')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
-#define XPLICIT_NETWORK_CMD_MAX (22U)
+#define XPLICIT_NETWORK_CMD_MAX (30U)
 
 #ifndef XPLICIT_INVALID_ADDR
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
-#define XPLICIT_NETWORK_VERSION (8U)
+#define XPLICIT_NETWORK_VERSION (9U)
 
 /* Used by the protocol to tell the velocity. */
 
@@ -73,6 +73,7 @@ namespace Xplicit
         NETWORK_CMD_BAN,
         NETWORK_CMD_ACK, // acknowledge
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
+        NETWORK_CMD_REPL, // replication call done
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 15,
     };
@@ -97,17 +98,17 @@ namespace Xplicit
     };
 
     /* network float type */
-    using nfloat = float;
+    using NetworkFloat = float;
 
     /*
         hash = player communication id
         id = replication id.
         size = size of current packet
     */
-	class XPLICIT_API NetworkPacket
+	class XPLICIT_API NetworkPacket final
 	{
 	public:
-        char8_t magic[XPLICIT_NETWORK_MAG_COUNT];
+        char         magic[XPLICIT_NETWORK_MAG_COUNT];
 		std::int16_t cmd[XPLICIT_NETWORK_CMD_MAX];
 		std::int32_t version;
 
@@ -115,12 +116,12 @@ namespace Xplicit
         std::int64_t public_hash; /* Public hash being sent (SHARED) */
         std::int64_t delta; /* delta time from the server. */
         std::int64_t hash; /* the private hash (CLIENT to SERVER) */
-        std::size_t size; /* size of current packet. */
+        std::size_t  size; /* size of current packet. */
         std::int32_t id; /* component id */
 
 	public:
-        std::int64_t health; /* Player's Health 0-100 */
-        Xplicit::nfloat speed[4]; /* Player's speed (X, Y, Z, Delta) */
+        std::int64_t    health; /* Player's Health 0-100 */
+        Xplicit::NetworkFloat speed[4]; /* Player's speed (X, Y, Z, Delta) */
 
 	};
 
@@ -172,6 +173,7 @@ namespace Xplicit
         bool operator==(const NetworkPeer& cl);
         bool operator!=(const NetworkPeer& cl);
 
+    public:
         void reset() noexcept;
 
     };
@@ -182,8 +184,6 @@ namespace Xplicit
 #ifdef XPLICIT_WINDOWS
 typedef int socklen_t;
 #endif // XPLICIT_WINDOWS
-
-// reserved network command slots
 
 #define XPLICIT_NETWORK_CMD_FORWARD (0)
 #define XPLICIT_NETWORK_CMD_BACKWARD (1)
@@ -200,13 +200,14 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_SPAWN (12)
 #define XPLICIT_NETWORK_CMD_DAMAGE (13)
 #define XPLICIT_NETWORK_CMD_SHUTDOWN (14)
+#define XPLICIT_NETWORK_CMD_REPL (15)
 
 // basically the last command reserved.
-#define XPLICIT_LAST_RESERVED_CMD (XPLICIT_NETWORK_CMD_JUMP + 1)
+#define XPLICIT_LAST_RESERVED_CMD (XPLICIT_NETWORK_CMD_REPL + 1)
 
-#define XPLICIT_REPL_CREATE (16)
-#define XPLICIT_REPL_DESTROY (17)
-#define XPLICIT_REPL_UPDATE (18)
-#define XPLICIT_REPL_TOUCH (19)
-#define XPLICIT_REPL_CLICK (20)
-#define XPLICIT_REPL_DBL_CLICK (21)
+#define XPLICIT_REPL_CREATE (17)
+#define XPLICIT_REPL_DESTROY (18)
+#define XPLICIT_REPL_UPDATE (19)
+#define XPLICIT_REPL_TOUCH (20)
+#define XPLICIT_REPL_CLICK (21)
+#define XPLICIT_REPL_DBL_CLICK (22)

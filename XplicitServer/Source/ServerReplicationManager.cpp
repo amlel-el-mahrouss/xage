@@ -66,7 +66,7 @@ namespace Xplicit
 		}
 	}
 
-	std::int64_t ServerReplicationHash::operator()()
+	std::int64_t ServerReplicationHash::operator()() noexcept
 	{
 		std::string uuid_str = uuids::to_string(UUIDFactory::version<4>());
 		auto hash = std::hash<std::string>();
