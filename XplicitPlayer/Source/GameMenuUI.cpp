@@ -15,7 +15,6 @@
  */
 
 #include "GameMenuUI.h"
-/* Application framework. */
 #include "Application.h"
 
 namespace Xplicit::Player

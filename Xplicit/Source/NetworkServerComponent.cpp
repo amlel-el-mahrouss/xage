@@ -25,6 +25,8 @@ namespace Xplicit
 	
 	static void xplicit_invalidate_peer(NetworkPeer* peer)
 	{
+		XPLICIT_INFO("[INVALIDATE] UUID: " + uuids::to_string(peer->unique_addr.get()));
+
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 		peer->stat = NETWORK_STAT_DISCONNECTED;
 	}
@@ -169,11 +171,24 @@ namespace Xplicit
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
 					&fromLen);
 
-				if (res == SOCKET_ERROR) 
-					break;
-
 				if (!xplicit_recv_packet(server, i, packet))
 					xplicit_invalidate_peer(server->get(i));
+
+				if (res == SOCKET_ERROR)
+				{
+					std::int32_t reason = WSAGetLastError();
+
+					switch (reason)
+					{
+					case WSAECONNABORTED:
+						xplicit_invalidate_peer(server->get(i));
+						break;
+					case WSAECONNRESET:
+						break;
+					}
+
+					break;
+				}
 			}
 		}
 	}

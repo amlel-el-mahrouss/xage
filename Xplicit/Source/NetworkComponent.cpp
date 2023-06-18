@@ -118,6 +118,7 @@ namespace Xplicit
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+
 		packet.version = XPLICIT_NETWORK_VERSION;
 
 #ifdef XPLICIT_WINDOWS
@@ -159,6 +160,7 @@ namespace Xplicit
 
 				switch (err)
 				{
+				case ECONNABORTED:
 				case WSAECONNRESET:
 				{
 					mReset = true;

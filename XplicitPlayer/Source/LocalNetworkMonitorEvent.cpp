@@ -37,9 +37,7 @@ namespace Xplicit::Player
 	{
 		if (!mNetwork) return;
 
-		NetworkPacket packet;
-
-		mNetwork->read(packet);
+		NetworkPacket& packet = mNetwork->get();
 
 		/* try send the acknowledge packet for the server. */
 		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;

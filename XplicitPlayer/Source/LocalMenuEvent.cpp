@@ -75,7 +75,7 @@ namespace Xplicit::Player
 
 			if (KB->key_down(KEY_KEY_Y))
 			{
-				NetworkPacket stopPacket{};
+				static NetworkPacket stopPacket{};
 
 				stopPacket.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 				stopPacket.hash = mHash;
@@ -87,7 +87,6 @@ namespace Xplicit::Player
 				mEnabled = false;
 
 				ComponentManager::get_singleton_ptr()->remove(mNetwork);
-
 				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))
