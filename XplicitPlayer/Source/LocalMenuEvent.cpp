@@ -83,8 +83,10 @@ namespace Xplicit::Player
 				stopPacket.size = sizeof(NetworkPacket);
 
 				mNetwork->send(stopPacket);
-
+				
 				mEnabled = false;
+
+				ComponentManager::get_singleton_ptr()->remove(mNetwork);
 
 				IRR->closeDevice();
 			}

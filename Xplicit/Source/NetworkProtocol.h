@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: NetworkProtocol.h
- *			Purpose: Game Network Protocol implementation
- *
  * =====================================================================
  */
 
@@ -28,16 +25,16 @@
 
 #define XPLICIT_NETWORK_MAG_0 ('X')
 #define XPLICIT_NETWORK_MAG_1 ('C')
-#define XPLICIT_NETWORK_MAG_2 ('N')
+#define XPLICIT_NETWORK_MAG_2 ('P')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
-#define XPLICIT_NETWORK_CMD_MAX (30U)
+#define XPLICIT_NETWORK_CMD_MAX (22U)
 
 #ifndef XPLICIT_INVALID_ADDR
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
-#define XPLICIT_NETWORK_VERSION (7U)
+#define XPLICIT_NETWORK_VERSION (8U)
 
 /* Used by the protocol to tell the velocity. */
 

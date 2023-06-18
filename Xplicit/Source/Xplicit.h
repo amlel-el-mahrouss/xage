@@ -66,16 +66,16 @@ namespace Xplicit
 	class Win32Error : public std::runtime_error 
 	{
 	public:
-		Win32Error(const std::string& what) : std::runtime_error(what) { m_hr = GetLastError(); }
+		Win32Error(const std::string& what) : std::runtime_error(what) { mHr = GetLastError(); }
 		~Win32Error() = default; // let the ABI define that.
 
 		Win32Error& operator=(const Win32Error&) = default;
 		Win32Error(const Win32Error&) = default;
 
-		HRESULT hr() { return m_hr; }
+		const HRESULT& hr() { return mHr; }
 
 	private:
-		HRESULT m_hr;
+		HRESULT mHr;
 
 	};
 

@@ -169,16 +169,8 @@ namespace Xplicit
 					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
 					&fromLen);
 
-				if (server->get(i)->stat == NETWORK_STAT_CONNECTED && 
-					packet.hash != server->get(i)->hash)
-					continue;
-
 				if (res == SOCKET_ERROR) 
-					continue;
-
-				if (server->get(i)->stat == NETWORK_STAT_CONNECTED && 
-					packet.hash != server->get(i)->hash)
-					continue;
+					break;
 
 				if (!xplicit_recv_packet(server, i, packet))
 					xplicit_invalidate_peer(server->get(i));

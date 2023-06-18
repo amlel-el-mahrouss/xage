@@ -25,10 +25,23 @@ namespace Xplicit
 	
 	void PlayerTimeoutEvent::operator()()
 	{
+		if (mCounter < PlayerTimeoutEvent::cycles)
+		{
+			++mCounter;
+			return;
+		}
+		else
+		{
+			mCounter = 0UL;
+		}
+
 		for (std::size_t index = 0; index < mNetwork->size(); ++index)
 		{
+			if (mNetwork->get(index)->stat == NETWORK_STAT_DISCONNECTED)
+				continue;
+
 			if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
-				mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+				mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 		}
 	}
 }

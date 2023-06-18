@@ -14,7 +14,6 @@
 #pragma once
 
 #include "CommonInc.h"
-#include <Event.h>
 
 namespace Xplicit
 {
@@ -32,7 +31,12 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(PlayerTimeoutEvent);
 
 	private:
+		std::vector<NetworkPeer*> mNetworkPeers;
 		NetworkServerComponent* mNetwork;
+		std::int32_t mCounter;
+
+	private:
+		static const int32_t cycles = 10000;
 
 	};
 }

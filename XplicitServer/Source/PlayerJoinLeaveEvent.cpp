@@ -97,6 +97,10 @@ namespace Xplicit
 
 				ComponentManager::get_singleton_ptr()->remove<PlayerComponent>(actors[at]);
 
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = NETWORK_CMD_SHUTDOWN;
+
+				NetworkServerHelper::send(server);
+
 				break;
 			}
 		}
@@ -109,8 +113,8 @@ namespace Xplicit
 
 	void PlayerJoinLeaveEvent::operator()()
 	{
-		this->handle_leave_event(mNetwork);
 		this->handle_join_event(mNetwork);
+		this->handle_leave_event(mNetwork);
 	}
 
 	const size_t& PlayerJoinLeaveEvent::size() noexcept { return mPlayerCount; }
@@ -168,7 +172,6 @@ namespace Xplicit
 					XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 
 					xplicit_on_leave(server->get(peer_idx), server);
-					server->get(peer_idx)->reset();
 
 					--mPlayerCount;
 				}

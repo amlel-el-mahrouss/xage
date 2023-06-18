@@ -79,8 +79,6 @@ namespace Xplicit::Player
 
 		if (mPacket.public_hash == mPublicHash)
 		{
-			mPacket.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
 			if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
 				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{

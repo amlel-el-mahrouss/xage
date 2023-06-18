@@ -48,7 +48,7 @@ static void xplicit_read_xml()
 	auto mono = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::MonoEngineComponent>("MonoEngineComponent");
 
 	const int argc = 2;
-	const char* argv[] = { "XplicitNgin", "1.0.1" };
+	const char* argv[] = { "XplicitNgine", "1.1.1" };
 
 	rapidxml::xml_document<> doc{};
 	doc.parse<0>(xml.data());
@@ -57,7 +57,7 @@ static void xplicit_read_xml()
 
 	while (node)
 	{
-		if (strcmp(node->name(), "Plugin") == 0)
+		if (strcmp(node->name(), "Dll") == 0)
 		{
 			auto dll = node->value();
 

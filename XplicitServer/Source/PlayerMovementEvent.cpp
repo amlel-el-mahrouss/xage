@@ -39,6 +39,7 @@ namespace Xplicit
 
 	const char* PlayerMovementEvent::name() noexcept { return ("PlayerMovementEvent"); }
 
+	/* movement main loop */
 	void PlayerMovementEvent::operator()()
 	{
 		if (!mNetwork)
@@ -56,9 +57,6 @@ namespace Xplicit
 				continue;
 
 			NetworkPeer* peer = ply->get();
-
-			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
-				continue;
 
 			if (peer->public_hash != peer->packet.public_hash)
 				continue;
@@ -88,12 +86,9 @@ namespace Xplicit
 
 				/* finally accept request */
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 				ply->freeze_for(XPLICIT_MOVEMENT_RATE);
-
-				/* we're done for this one. */
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_INVALID;
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_INVALID;
 			}
 		}
 	}
