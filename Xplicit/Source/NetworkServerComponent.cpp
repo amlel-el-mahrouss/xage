@@ -25,9 +25,13 @@ namespace Xplicit
 	
 	static void xplicit_invalidate_peer(NetworkPeer* peer)
 	{
+#ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("[INVALIDATE] UUID: " + uuids::to_string(peer->unique_addr.get()));
+#endif // ifdef XPLICIT_DEBUG
 
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+		peer->unique_addr.invalidate();
+
 		peer->stat = NETWORK_STAT_DISCONNECTED;
 	}
 
@@ -181,7 +185,6 @@ namespace Xplicit
 					switch (reason)
 					{
 					case WSAECONNABORTED:
-						xplicit_invalidate_peer(server->get(i));
 						break;
 					case WSAECONNRESET:
 						break;

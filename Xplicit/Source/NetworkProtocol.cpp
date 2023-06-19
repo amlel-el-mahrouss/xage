@@ -25,9 +25,7 @@ namespace Xplicit
 		hash(-1),
 		public_hash(-1),
         stat(NETWORK_STAT_INVALID)
-	{
-		this->reset();
-    }
+	{}
 
     NetworkPeer::~NetworkPeer() {}
     
@@ -58,8 +56,6 @@ namespace Xplicit
         stat = NETWORK_STAT_DISCONNECTED;
 
         memset(&addr, 0, sizeof(PrivateAddressData));
-
-        unique_addr.reset();
     }
 
     bool equals(PrivateAddressData& lhs, PrivateAddressData& rhs)

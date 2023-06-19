@@ -112,7 +112,10 @@ namespace Xplicit
 
 				xplicit_on_join(server->get(peer_idx), player, server);
 
+#ifdef XPLICIT_DEBUG
 				XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+#endif
+
 			}
 		}
 
@@ -135,7 +138,9 @@ namespace Xplicit
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
+#ifdef XPLICIT_DEBUG
 				XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+#endif
 
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 				server->get(peer_idx)->stat = NETWORK_STAT_DISCONNECTED;

@@ -126,7 +126,7 @@ namespace Xplicit::Player
 			Thread thrd([&]() {
 				while (mEnable)
 				{
-					XPLICIT_INFO("Trying connecting again...");
+					XPLICIT_INFO("Trying to connect again...");
 
 					NetworkPacket spawn{};
 
@@ -139,8 +139,6 @@ namespace Xplicit::Player
 
 					std::this_thread::sleep_for(std::chrono::seconds(3));
 				}
-
-				std::exit(0);
 			});
 
 			thrd.detach();

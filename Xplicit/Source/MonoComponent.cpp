@@ -93,10 +93,10 @@ namespace Xplicit
 	{
 		XPLICIT_GET_DATA_DIR(data_dir);
 		std::string path = data_dir;
-		path += "\\Lib\\";
+		path += "\\Library\\";
 
 		mono_set_assemblies_path(path.c_str());
-		m_domain = mono_jit_init_version("XplicitJIT", "v4.0.30319");
+		m_domain = mono_jit_init_version("XplicitNgine", "v4.0.30319");
 
 		if (m_domain)
 		{

@@ -16,7 +16,9 @@
 namespace Xplicit
 {
 	PlayerTimeoutEvent::PlayerTimeoutEvent()
-		: mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
+		:
+		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
+		mCounter(0UL)
 	{}
 
 	PlayerTimeoutEvent::~PlayerTimeoutEvent() = default;
@@ -41,7 +43,10 @@ namespace Xplicit
 				continue;
 
 			if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
+			{
+				mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_INVALID;
 				mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+			}
 		}
 	}
 }

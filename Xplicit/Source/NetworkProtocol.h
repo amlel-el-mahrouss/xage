@@ -163,11 +163,9 @@ namespace Xplicit
         public:
 			const uuids::uuid& get() noexcept { return mUuid; }
 
-        private:
-			void reset() noexcept 
+        public:
+			void invalidate() noexcept
             {
-                XPLICIT_INFO("Refreshing UUID...");
-
                 mUuid = UUIDFactory::version<4>(); 
                 mPublicUuid = UUIDFactory::version<4>(); 
             }
@@ -217,7 +215,6 @@ namespace Xplicit
         bool operator==(const NetworkPeer& cl);
         bool operator!=(const NetworkPeer& cl);
 
-    public:
         void reset() noexcept;
 
     };
