@@ -14,24 +14,29 @@
 
 #include "Xplicit.h"
 
+#define XPLICIT_UNIVERSE_ID (1U)
+
 namespace Xplicit::Auth
 {
 	class XPLICIT_API XplicitID final
 	{
 	public:
-		explicit XplicitID() noexcept;
+		XplicitID() = delete;
 
+	public:
+		explicit XplicitID(const int32_t& universe, const int32_t& playerId, const int64_t& hash) noexcept;
 		~XplicitID() = default;
 
 	public:
 		XPLICIT_COPY_DEFAULT(XplicitID);
 
 	public:
-		operator bool() noexcept;
-		bool verify() noexcept;
+		const std::int64_t get() noexcept;
+		const String as_string() noexcept;
 
 	private:
-		String mId;
+		std::int64_t mConnectionHash;
+		std::int64_t mRegionId;
 
 	};
 }
