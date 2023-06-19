@@ -24,7 +24,7 @@ namespace Xplicit
         unique_addr(), 
 		hash(-1),
 		public_hash(-1),
-        stat(NETWORK_STAT_DISCONNECTED)
+        stat(NETWORK_STAT_INVALID)
 	{
 		this->reset();
     }

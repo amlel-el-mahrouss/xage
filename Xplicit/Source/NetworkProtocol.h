@@ -96,6 +96,7 @@ namespace Xplicit
 
     enum NETWORK_STAT : int16_t
     {
+        NETWORK_STAT_INVALID = 255, // 0xFF
 		NETWORK_STAT_CONNECTED = 400,
         NETWORK_STAT_DISCONNECTED = 800,
         NETWORK_STAT_COUNT = 2,
