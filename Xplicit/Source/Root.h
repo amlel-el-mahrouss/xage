@@ -287,8 +287,9 @@ namespace Xplicit
 			CHAR layout[KL_NAMELENGTH];
 			GetKeyboardLayoutNameA(layout);
 
-			String enUs = "00000409";
-			String frFr = "0000040C";
+			// TODO: retarded.
+			String enUs = "00000409"; // en-US
+			String frFr = "0000040C"; // fr-FR
 
 			auto str = String(layout);
 			

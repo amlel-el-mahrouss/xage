@@ -86,8 +86,7 @@ namespace Xplicit::Player
 				
 				mEnabled = false;
 
-				ComponentManager::get_singleton_ptr()->remove(mNetwork);
-				IRR->closeDevice();
+				std::exit(0);
 			}
 			else if (KB->key_down(KEY_KEY_N))
 			{
@@ -102,7 +101,8 @@ namespace Xplicit::Player
 
 		if (tweenStart < LOCAL_MENU_TWEEN_START)
 		{
-			IRR->getVideoDriver()->draw2DImage(mMenu, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
+			IRR->getVideoDriver()->draw2DImage(mMenu, 
+				vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
 				Xplicit::Player::XPLICIT_DIM.Height / tweenStart));
 		}
 

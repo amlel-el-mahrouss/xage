@@ -80,11 +80,9 @@ namespace Xplicit::Player
 			{
 				if (!ComponentManager::get_singleton_ptr()->get<Player::PopupComponent>("ConnShutdown"))
 				{
-					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([&]()-> void {
-						IRR->closeDevice();
-						ComponentManager::get_singleton_ptr()->remove(mNetwork);
-
-						}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
+					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
+						std::exit(0);
+					}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
 							Xplicit::Player::XPLICIT_DIM.Height / 2.8),
 							Player::POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
@@ -118,10 +116,9 @@ namespace Xplicit::Player
 			{
 				if (!ComponentManager::get_singleton_ptr()->get<Player::PopupComponent>("ResetPopup"))
 				{
-					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([&]()-> void {
-						IRR->closeDevice();
-						ComponentManager::get_singleton_ptr()->remove(mNetwork);
-						},
+					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
+						std::exit(0);
+					},
 						vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
 							Xplicit::Player::XPLICIT_DIM.Height / 2.8),
 						Player::POPUP_TYPE::SHUTDOWN, "ResetPopup");
