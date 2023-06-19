@@ -262,7 +262,6 @@ namespace Xplicit::Renderer::DX11
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
 			this->handle_device_removed();
-
 			return true;
 		}
 		else

@@ -14,7 +14,7 @@
 
 #include "Xplicit.h"
 
-namespace Xplicit::ID
+namespace Xplicit::Auth
 {
 	class XPLICIT_API XplicitID final
 	{
@@ -27,7 +27,7 @@ namespace Xplicit::ID
 		XPLICIT_COPY_DEFAULT(XplicitID);
 
 	public:
-		operator bool();
+		operator bool() noexcept;
 		bool verify() noexcept;
 
 	private:

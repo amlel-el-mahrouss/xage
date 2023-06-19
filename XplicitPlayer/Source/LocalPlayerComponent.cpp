@@ -26,34 +26,18 @@ namespace Xplicit::Player
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
 
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
-		: 
-		Component(), 
-		StaticMesh("xplicit-player.dae"), 
-		mPacket(), 
-		mCam(nullptr), 
+		:
 		mPublicHash(public_hash),
-		mEvent(EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(public_hash))
+		mCam(nullptr), 
+		mPacket(),
+		mPos(0.f, 0.f, 0.f)
 	{
-		mCameraPositionZVar = GameVarManager::get_singleton_ptr()->get("Camera-ZPos");
-		mCameraPositionYVar = GameVarManager::get_singleton_ptr()->get("Camera-YPos");
-
-		if (!mCameraPositionZVar)
-			mCameraPositionZVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Camera-ZPos",
-			"128.5",
-			Xplicit::GameVarView::FLAG_CHEAT | Xplicit::GameVarView::FLAG_CLIENT_ONLY);
-
-		if (!mCameraPositionYVar)
-			mCameraPositionYVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Camera-YPos",
-			"128.5",
-			Xplicit::GameVarView::FLAG_CHEAT | Xplicit::GameVarView::FLAG_CLIENT_ONLY);
-
-
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);
 
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("LocalActor::LocalActor");
+		XPLICIT_INFO("LocalPlayerComponent::LocalPlayerComponent");
 #endif
 	}
 
@@ -62,9 +46,6 @@ namespace Xplicit::Player
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("LocalActor::~LocalActor");
 #endif
-
-		if (mEvent)
-			EventManager::get_singleton_ptr()->remove(mEvent);
 	}
 
 	LocalPlayerComponent::INSTANCE_TYPE LocalPlayerComponent::type() noexcept { return INSTANCE_ACTOR; }
@@ -73,7 +54,7 @@ namespace Xplicit::Player
 
 	void LocalPlayerComponent::update()
 	{
-		if (!mNetwork || !mNode || mPublicHash == -1) return;
+		if (!mNetwork || mPublicHash == -1) return;
 
 		mPacket = mNetwork->get();
 
@@ -83,8 +64,6 @@ namespace Xplicit::Player
 				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT && 
 				mPacket.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				auto pos = mNode->getAbsolutePosition();
-
 				static f32 then = IRR->getTimer()->getTime();
 				f32 delta = (IRR->getTimer()->getTime() - then) / XPLICIT_DELTA_TIME;
 
@@ -92,18 +71,17 @@ namespace Xplicit::Player
 				auto zSpeed = mPacket.speed[XPLICIT_NETWORK_Z] * delta;
 
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					pos.Z -= zSpeed;
+					mPos.Z -= zSpeed;
 
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					pos.Z += zSpeed;
+					mPos.Z += zSpeed;
 
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					pos.X += xSpeed;
+					mPos.X += xSpeed;
 
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					pos.X -= xSpeed;
+					mPos.X -= xSpeed;
 
-				mNode->setPosition(pos);
 			}
 		}
 
@@ -122,8 +100,7 @@ namespace Xplicit::Player
 			mCam = cam; 
 	}
 
-	void LocalPlayerComponent::set_pos(const vector3df& newPos) noexcept { mNode->setPosition(newPos); }
-	vector3df LocalPlayerComponent::get_pos() noexcept { return mNode->getAbsolutePosition(); }
+	vector3df LocalPlayerComponent::get_pos() noexcept { return mPos; }
 
 	LocalPlayerMoveEvent::LocalPlayerMoveEvent(const std::int64_t& public_hash)
 		: 

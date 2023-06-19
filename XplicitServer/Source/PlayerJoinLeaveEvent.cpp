@@ -89,12 +89,9 @@ namespace Xplicit
 				}
 
 				ComponentManager::get_singleton_ptr()->remove<PlayerComponent>(actors[at]);
-
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = NETWORK_CMD_SHUTDOWN;
-
 				NetworkServerHelper::send(server);
 
-				break;
+				return;
 			}
 		}
 
@@ -147,6 +144,9 @@ namespace Xplicit
 		return true;
 	}
 
+	//! Decreases and free player resources.
+	/** Used by server to hook join and leave events. */
+
 	bool PlayerJoinLeaveEvent::handle_leave_event(NetworkServerComponent* server) noexcept
 	{
 		if (this->size() < 1) return false;
@@ -163,7 +163,6 @@ namespace Xplicit
 				if (server->get(peer_idx)->hash == server->get(peer_idx)->packet.hash)
 				{
 					XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
-
 					xplicit_on_leave(server->get(peer_idx), server);
 
 					--mPlayerCount;

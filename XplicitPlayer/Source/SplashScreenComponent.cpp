@@ -70,14 +70,16 @@ namespace Xplicit::Player
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(packet.public_hash);
 			
 			auto cam = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
-			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
 			
+			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
+			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(packet.public_hash);
+
 			ply->attach(cam);
 
 			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(packet.hash);
 			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(packet.hash);
 
-			ComponentManager::get_singleton_ptr()->remove(this);
+			mEnable = false;
 		}
 		else
 		{

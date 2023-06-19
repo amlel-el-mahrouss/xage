@@ -18,26 +18,26 @@
 
 namespace Xplicit
 {
-	GameVarView::GameVarView(const char* name, const char* default_value, int flags)
+	GameVar::GameVar(const char* name, const char* default_value, int flags)
 		: mName(name), mValue(default_value), mFlags(flags)
 	{
 
 	}
 
-	GameVarView::~GameVarView()
+	GameVar::~GameVar()
 	{
 		GameVarManager::get_singleton_ptr()->remove(this);
 	}
 
-	int32_t GameVarView::flags() noexcept { return mFlags; }
+	int32_t GameVar::flags() noexcept { return mFlags; }
 
-	int32_t GameVarView::as_int() noexcept { return std::stoi(mValue); }
+	int32_t GameVar::as_int() noexcept { return std::stoi(mValue); }
 
-	float GameVarView::as_float() noexcept { return std::stof(mValue); }
+	float GameVar::as_float() noexcept { return std::stof(mValue); }
 
-	std::string& GameVarView::as_str() noexcept { return mValue; }
+	std::string& GameVar::as_str() noexcept { return mValue; }
 
-	const char* GameVarView::name() noexcept { return mName.c_str(); }
+	const char* GameVar::name() noexcept { return mName.c_str(); }
 
 	GameVarManager* GameVarManager::get_singleton_ptr() noexcept 
 	{
@@ -49,7 +49,7 @@ namespace Xplicit
 		return singleton;
 	}
 
-	GameVarViewPtr GameVarManager::get(const char* name) 
+	GameVarPtr GameVarManager::get(const char* name) 
 	{
 		if (!name ||
 			*name == 0)
@@ -59,28 +59,28 @@ namespace Xplicit
 		{
 			if (cvar && strcmp(cvar->name(), name) == 0)
 			{
-				return GameVarViewPtr(cvar);
+				return GameVarPtr(cvar);
 			}
 		}
 
 		return {};
 	}
 
-	GameVarViewPtr GameVarManager::create(const char* name, const char* default_value, int flags)
+	GameVarPtr GameVarManager::create(const char* name, const char* default_value, int flags)
 	{
-		GameVarView* cvar = new GameVarView(name, default_value, flags);
+		GameVar* cvar = new GameVar(name, default_value, flags);
 		XPLICIT_ASSERT(cvar);
 
 		if (cvar)
 		{
 			m_cvars.push_back(cvar);
-			return GameVarViewPtr(cvar);
+			return GameVarPtr(cvar);
 		}
 
 		return {};
 	}
 
-	void GameVarManager::remove(GameVarView* ptr)
+	void GameVarManager::remove(GameVar* ptr)
 	{
 		if (!ptr)
 			return;

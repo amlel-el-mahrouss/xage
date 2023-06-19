@@ -21,7 +21,7 @@ namespace Xplicit::Player
 	StaticMesh::StaticMesh(const char* path)
 	{
 		String _path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Studio/";
+		_path += "/XplicitNgin/Contents/";
 		_path += path;
 
 		mMdl = IRR->getSceneManager()->getMesh(_path.c_str());
@@ -31,10 +31,7 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mNode);
 	
 		if (mMdl)
-		{
-			mMdl->setMaterialFlag(EMF_LIGHTING, false);
-			mMdl->setAnimationSpeed(240.f);
-		}
+			mMdl->setMaterialFlag(EMF_LIGHTING, true);
 	}
 
 	StaticMesh::~StaticMesh()

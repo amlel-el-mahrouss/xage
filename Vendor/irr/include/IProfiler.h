@@ -68,7 +68,7 @@ struct SProfileData
 private:
 
 	// just to be used for searching as it does no initialization besides id
-	SProfileData(u32 id) : Id(id) {}
+	SProfileData(u32 id) : Id(id), TimeSum(0) {}
 
 	void reset()
 	{

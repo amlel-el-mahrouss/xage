@@ -39,7 +39,7 @@ namespace Xplicit
 
 	private:
 		NetworkServerComponent* mNetwork;
-		GameVarViewPtr mGameVar;
+		GameVarPtr mGameVar;
 		float mThen;
 
 	};

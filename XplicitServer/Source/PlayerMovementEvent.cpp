@@ -30,7 +30,7 @@ namespace Xplicit
 		{
 			mGameVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DefaultVelocity",
 				"0.035f",
-				Xplicit::GameVarView::FLAG_SERVER_ONLY | Xplicit::GameVarView::FLAG_CHEAT);
+				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
 
 		}
 	}
@@ -42,7 +42,7 @@ namespace Xplicit
 	void PlayerMovementEvent::operator()()
 	{
 		if (!mNetwork)
-			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+			return;
 
 		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
 		float speed = mGameVar->as_float();
@@ -56,9 +56,6 @@ namespace Xplicit
 				continue;
 
 			NetworkPeer* peer = ply->get();
-
-			if (peer->public_hash != peer->packet.public_hash)
-				continue;
 
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here
 			{

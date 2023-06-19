@@ -16,16 +16,16 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API GameVarView final
+	class XPLICIT_API GameVar final
 	{
 	private:
-		GameVarView(const char* name, const char* default_value, int flags);
+		GameVar(const char* name, const char* default_value, int flags);
 
 	public:
-		~GameVarView();
+		~GameVar();
 
-		GameVarView& operator=(const GameVarView&) = default;
-		GameVarView(const GameVarView&) = default;
+		GameVar& operator=(const GameVar&) = default;
+		GameVar(const GameVar&) = default;
 
 		enum FLAGS : int32_t
 		{
@@ -55,7 +55,7 @@ namespace Xplicit
 
 	};
 
-	using GameVarViewPtr = std::shared_ptr<GameVarView>;
+	using GameVarPtr = std::shared_ptr<GameVar>;
 
 	class XPLICIT_API GameVarManager final
 	{
@@ -71,12 +71,12 @@ namespace Xplicit
 		static GameVarManager* get_singleton_ptr() noexcept;
 
 	public:
-		GameVarViewPtr create(const char* name, const char* default_value, int flags);
-		GameVarViewPtr get(const char* name);
-		void remove(GameVarView* ptr);
+		GameVarPtr create(const char* name, const char* default_value, int flags);
+		GameVarPtr get(const char* name);
+		void remove(GameVar* ptr);
 		
 	private:
-		std::vector<GameVarView*> m_cvars;
+		std::vector<GameVar*> m_cvars;
 
 	};
 }

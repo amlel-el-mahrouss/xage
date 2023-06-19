@@ -2,7 +2,7 @@
 #define __glad_h_
 
 //
-//  Do not include this anywhere, im working on it, to work with dlls.
+//  Do not include this anywhere, im working on it to work with dlls.
 //  GLad = dogshit.
 //
 

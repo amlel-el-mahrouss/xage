@@ -21,7 +21,9 @@ namespace Xplicit::Player
 {
 	class LocalPlayerMoveEvent;
 
-	class LocalPlayerComponent : public Component, public StaticMesh
+	//! Replicated player component
+	/** LocalPlayerComponent is the player's logic */
+	class LocalPlayerComponent : public Component
 	{
 	public:
 		LocalPlayerComponent(const int64_t& public_hash);
@@ -40,19 +42,14 @@ namespace Xplicit::Player
 
 	public:
 		void attach(LocalCameraComponent* cam) noexcept;
-
-	public:
-		void set_pos(const vector3df& newPos) noexcept;
 		vector3df get_pos() noexcept;
 
 	private:
 		IAnimatedMeshSceneNode* mCameraNode;
-		GameVarViewPtr mCameraPositionYVar;
-		GameVarViewPtr mCameraPositionZVar;
-		LocalPlayerMoveEvent* mEvent;
 		NetworkComponent* mNetwork;
 		LocalCameraComponent* mCam;
 		NetworkPacket mPacket;
+		vector3df mPos;
 
 	private:
 		std::int64_t mPublicHash;

@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: LocalResetEvent.cpp
- *			Purpose: RST timeout event.
+ *			File: LocalNetworkMonitorEvent.cpp
+ *			Purpose: Network Monitor event.
  *
  * =====================================================================
  */
@@ -15,12 +15,13 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
+
 #include "Application.h"
 #include "GameMenuUI.h"
 
 namespace Xplicit::Player
 {
-	constexpr const int XPLICIT_MAX_RESETS = 250; // Max resets allowed before connection drop
+	constexpr const int XPLICIT_MAX_RESETS = 150; // Max resets allowed before connection drop
 
 	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(int64_t hash)
 		: mNetwork(nullptr), mResetCnt(0), mHash(hash)
@@ -55,25 +56,21 @@ namespace Xplicit::Player
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
 		{
-			Thread thrd([]() -> void {
-				NetworkPacket packet;
+			static NetworkPacket packet{};
+			packet = mNetwork->get();
 
-				auto net = ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkComponent>("NetworkComponent");
-				packet = net->get();
+			auto plyers = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
 
-				auto plyers = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
+			for (std::size_t index = 0UL; index < plyers.size(); ++index)
+			{
+				if (plyers[index]->id() == packet.public_hash)
+					return;
+			}
 
-				for (std::size_t index = 0UL; index < plyers.size(); ++index)
-				{
-					if (plyers[index]->id() == packet.public_hash)
-						continue;
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
 
-					ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
-
-					packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_INVALID;
-					break;
-				}
-			});
+			/*! invalidate command right there. */
+			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_INVALID;
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||

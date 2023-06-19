@@ -34,7 +34,7 @@
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
-#define XPLICIT_NETWORK_VERSION (9U)
+#define XPLICIT_NETWORK_VERSION (10U)
 
 /* Used by the protocol to tell the velocity. */
 
@@ -42,6 +42,9 @@
 #define XPLICIT_NETWORK_Y     (1)
 #define XPLICIT_NETWORK_Z     (2)
 #define XPLICIT_NETWORK_DELTA (3)
+
+/*! max data inside speed field. */
+#define XPLICIT_NETWORK_SPEED_MAX (4)
 
 #define XPLICIT_SOCKET_ERROR  (-1)
 
@@ -74,6 +77,7 @@ namespace Xplicit
         NETWORK_CMD_ACK, // acknowledge
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
         NETWORK_CMD_REPL, // replication call done
+        NETWORK_CMD_MSG, // chat message
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 15,
     };
@@ -108,20 +112,35 @@ namespace Xplicit
 	class XPLICIT_API NetworkPacket final
 	{
 	public:
+        /*! magic number */
         char magic[XPLICIT_NETWORK_MAG_COUNT];
+
+        /*! commands list. */
 		std::int16_t cmd[XPLICIT_NETWORK_CMD_MAX];
+
+    public:
+        /*! xconnect version */
 		std::int32_t version;
 
 	public:
-        std::int64_t public_hash; /* Public hash being sent (SHARED) */
-        std::int64_t delta; /* delta time from the server. */
-        std::int64_t hash; /* the private hash (CLIENT to SERVER) */
-        std::size_t  size; /* size of current packet. */
-        std::int32_t id; /* component id */
+        /*! Public hash being sent (SHARED) */
+        std::int64_t public_hash;
+
+        /*! The private hash (CLIENT to SERVER) */
+        std::int64_t hash; 
+
+        /*! Size of current packet. */
+        std::size_t size;
+
+        /*! Component ID (if valid, passed to LocalReplicationComponent */
+        std::int32_t id; 
 
 	public:
-        std::int64_t health; /* Player's Health 0-100 */
-        Xplicit::NetworkFloat speed[4]; /* Player's speed (X, Y, Z, Delta) */
+        /*! Player health, between 0-100 */
+        std::int64_t health;
+
+        /*! Player speed (X, Y, Z, Delta (or CLK)) */
+        Xplicit::NetworkFloat speed[XPLICIT_NETWORK_SPEED_MAX];
 
     public:
         char buffer[256];
@@ -158,12 +177,23 @@ namespace Xplicit
         };
 
     public:
-        UniqueAddress unique_addr; /* unique network address of this peer */
-        PrivateAddressData addr; /* current socket address. */
-        NetworkPacket packet; /* current network packet. */
-        int64_t public_hash; /* Public hash, for other clients */
-        NETWORK_STAT stat; /* current network status */
-        int64_t hash; /* connection hash. */
+        /*! unique network address of this peer */
+        UniqueAddress unique_addr;
+
+        /*! current socket address. */
+        PrivateAddressData addr;
+
+        /*! current network packet. */
+        NetworkPacket packet;
+
+        /*! Public hash, as said before this is a public id for the player. */
+        int64_t public_hash; 
+
+        /*! connection status. */
+        NETWORK_STAT stat;
+
+        /*! connection private hash. */
+        int64_t hash;
  
     public:
         NetworkPeer();
@@ -204,13 +234,18 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_DAMAGE (13)
 #define XPLICIT_NETWORK_CMD_SHUTDOWN (14)
 #define XPLICIT_NETWORK_CMD_REPL (15)
+#define XPLICIT_NETWORK_CMD_CHAT (16)
 
-// basically the last command reserved.
-#define XPLICIT_LAST_RESERVED_CMD (XPLICIT_NETWORK_CMD_REPL + 1)
+/*! this is a command reserved by the engine, 
+  ! to separate the network and replication commands 
+  !*/
 
-#define XPLICIT_REPL_CREATE (17)
-#define XPLICIT_REPL_DESTROY (18)
-#define XPLICIT_REPL_UPDATE (19)
-#define XPLICIT_REPL_TOUCH (20)
-#define XPLICIT_REPL_CLICK (21)
-#define XPLICIT_REPL_DBL_CLICK (22)
+#define XPLICIT_LAST_RESERVED_CMD (XPLICIT_NETWORK_CMD_CHAT + 1)
+
+#define XPLICIT_REPL_CREATE (18)
+#define XPLICIT_REPL_DESTROY (19)
+#define XPLICIT_REPL_UPDATE (20)
+#define XPLICIT_REPL_TOUCH (21)
+#define XPLICIT_REPL_CLICK (22)
+#define XPLICIT_REPL_DBL_CLICK (23)
+

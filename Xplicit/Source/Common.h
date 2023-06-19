@@ -24,7 +24,7 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API PositionComponent final : public Component
+	class XPLICIT_API PositionComponent final
 	{
 	public:
 		explicit PositionComponent() : Position(0.f, 0.f, 0.f) {}
@@ -48,7 +48,7 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API SizeComponent final : public Component
+	class XPLICIT_API SizeComponent final
 	{
 	public:
 		explicit SizeComponent() : Size(0.f, 0.f, 0.f) {}
@@ -70,7 +70,7 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API RenderableComponent : public Component
+	class XPLICIT_API RenderableComponent
 	{
 	public:
 		RenderableComponent() = default;
@@ -86,7 +86,7 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API ToolComponent final : public Component
+	class XPLICIT_API ToolComponent final
 	{
 	public:
 		explicit ToolComponent() = default;
@@ -100,7 +100,7 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API SoundComponent final : public Component
+	class XPLICIT_API SoundComponent final
 	{
 	public:
 		explicit SoundComponent() = default;
@@ -121,6 +121,7 @@ namespace Xplicit
 		COMPONENT_ID_TOOL = 0x5b2f,
 		COMPONENT_ID_SOUND = 0xa8cf,
 		COMPONENT_ID_START = 0x0d7f, /* start of custom components */
+
 		/* custom components here. */
 		COMPONENT_ID_INVALID = 0xffff,
 	};

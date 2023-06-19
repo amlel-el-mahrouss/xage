@@ -12,7 +12,7 @@
 
 #include "XplicitID.h"
 
-namespace Xplicit::ID
+namespace Xplicit::Auth
 {
 	constexpr const char XPLICIT_DELIM = ':';
 
@@ -24,7 +24,7 @@ namespace Xplicit::ID
 		mId = creationTime + XPLICIT_DELIM + creationId;
 	}
 
-	XplicitID::operator bool() { return this->verify(); }
+	XplicitID::operator bool() noexcept { return this->verify(); }
 
 	bool XplicitID::verify() noexcept
 	{
@@ -35,13 +35,13 @@ namespace Xplicit::ID
 
 		String substr = mId.substr(0, epochEnd);
 
+		//! if it fails
+		//! time is not valid
 		try
 		{
 			auto tim = std::atoi(substr.c_str());
-
 			auto now = std::chrono::system_clock::now().time_since_epoch();
 
-			// Use the correct time duration below. Milliseconds could be wrong, see 1)
 			auto diff = now - std::chrono::milliseconds(now.count());
 			bool is_old = diff > std::chrono::seconds{ 120 };
 
