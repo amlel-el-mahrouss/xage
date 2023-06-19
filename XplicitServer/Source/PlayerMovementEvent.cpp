@@ -81,12 +81,9 @@ namespace Xplicit
 				peer->packet.speed[XPLICIT_NETWORK_DELTA] = (IRR->getTimer()->getTime() - mThen) / XPLICIT_DELTA_TIME;
 
 				/* finally accept request */
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
 				ply->idle_for(XPLICIT_MOVEMENT_DELAY);
-
-				NetworkServerHelper::send(mNetwork);
 			}
 		}
 	}

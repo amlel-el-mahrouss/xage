@@ -287,25 +287,22 @@ namespace Xplicit
 			CHAR layout[KL_NAMELENGTH];
 			GetKeyboardLayoutNameA(layout);
 
-			// TODO: retarded.
-			String enUs = "00000409"; // en-US
 			String frFr = "0000040C"; // fr-FR
 
 			auto str = String(layout);
 			
-			if (str == enUs)
-			{
-				mLayout.mForward = KEY_KEY_W;
-				mLayout.mRight = KEY_KEY_D;
-				mLayout.mLeft = KEY_KEY_A;
-				mLayout.mBackward = KEY_KEY_S;
-			}
-
 			if (str == frFr)
 			{
 				mLayout.mForward = KEY_KEY_Z;
 				mLayout.mRight = KEY_KEY_D;
 				mLayout.mLeft = KEY_KEY_Q;
+				mLayout.mBackward = KEY_KEY_S;
+			}
+			else
+			{
+				mLayout.mForward = KEY_KEY_W;
+				mLayout.mRight = KEY_KEY_D;
+				mLayout.mLeft = KEY_KEY_A;
 				mLayout.mBackward = KEY_KEY_S;
 			}
 

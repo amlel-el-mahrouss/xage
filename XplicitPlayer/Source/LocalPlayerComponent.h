@@ -24,7 +24,7 @@ namespace Xplicit::Player
 
 	//! Replicated player component
 	/** LocalPlayerComponent is the player's logic */
-	class LocalPlayerComponent : public Component
+	class LocalPlayerComponent : public Component, public StaticMesh
 	{
 	public:
 		LocalPlayerComponent(const int64_t& public_hash);
@@ -45,7 +45,6 @@ namespace Xplicit::Player
 		const int64_t& id() noexcept;
 
 	private:
-		IAnimatedMeshSceneNode* mCameraNode;
 		NetworkComponent* mNetwork;
 		LocalCameraComponent* mCam;
 		NetworkPacket mPacket;

@@ -27,6 +27,7 @@ namespace Xplicit::Player
 
 	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
 		:
+		StaticMesh("xplicit-player.dae"),
 		mPublicHash(public_hash),
 		mCam(nullptr), 
 		mPacket(),
@@ -54,10 +55,9 @@ namespace Xplicit::Player
 
 	void LocalPlayerComponent::update()
 	{
-		if (mNetwork == nullptr ||
-			mPublicHash == -1) return;
+		if (mNetwork == nullptr) return;
 
-		mPacket = mNetwork->get();
+		mNetwork->read(mPacket);
 
 		if (mPacket.public_hash == mPublicHash)
 		{
@@ -82,15 +82,7 @@ namespace Xplicit::Player
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					mPos.X -= xSpeed;
 
-				mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_INVALID;
-				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_INVALID;
-
 				mNetwork->send(mPacket);
-
-				std::stringstream str;
-				str << mPos.X << " " << mPos.Y << " " << mPos.Z << std::endl;
-
-				XPLICIT_INFO(str.str());
 
 				return;
 			}
@@ -124,16 +116,13 @@ namespace Xplicit::Player
 	/* LocalPlayer movement logic */
 	void LocalPlayerMoveEvent::operator()()
 	{
-		if (mNetwork == nullptr || 
-			mPublicHash == -1)
+		if (mNetwork == nullptr)
 			return;
 
 		auto traits = Root::get_singleton_ptr()->Keyboard->get_layout();
 
 		if (KB->key_down(traits.mForward))
 		{
-			mPacket.public_hash = mPublicHash;
-
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_FORWARD;
@@ -149,8 +138,6 @@ namespace Xplicit::Player
 
 		if (KB->key_down(traits.mBackward))
 		{
-			mPacket.public_hash = mPublicHash;
-
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
@@ -166,8 +153,6 @@ namespace Xplicit::Player
 
 		if (KB->key_down(traits.mRight))
 		{
-			mPacket.public_hash = mPublicHash;
-
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
@@ -182,8 +167,6 @@ namespace Xplicit::Player
 
 		if (KB->key_down(traits.mLeft))
 		{
-			mPacket.public_hash = mPublicHash;
-
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;

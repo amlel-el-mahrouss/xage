@@ -158,6 +158,46 @@ namespace Xplicit
 
 		return false;
 	}
+	void NetworkServerHelper::recv_from(
+		NetworkServerComponent* server,
+		NetworkPeer* peer,
+		const std::size_t sz)
+	{
+		std::int32_t fromLen = sizeof(PrivateAddressData);
+		static NetworkPacket packet{};
+
+		std::int32_t res = ::recvfrom(server->mSocket,
+			reinterpret_cast<char*>(&packet),
+			sz,
+			0,
+			reinterpret_cast<sockaddr*>(&peer->addr),
+			&fromLen);
+
+		if (peer->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
+			peer->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+			peer->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
+			peer->packet.version == XPLICIT_NETWORK_VERSION)
+		{
+			peer->packet = std::move(packet);
+		}
+		else
+		{
+			xplicit_invalidate_peer(peer);
+		}
+
+		if (res == SOCKET_ERROR)
+		{
+			std::int32_t reason = WSAGetLastError();
+
+			switch (reason)
+			{
+			case WSAECONNABORTED:
+				break;
+			case WSAECONNRESET:
+				break;
+			}
+		}
+	}
 
 	void NetworkServerHelper::recv(NetworkServerComponent* server, const std::size_t sz)
 	{
@@ -189,8 +229,6 @@ namespace Xplicit
 					case WSAECONNRESET:
 						break;
 					}
-
-					break;
 				}
 			}
 		}
@@ -215,6 +253,27 @@ namespace Xplicit
 					sizeof(PrivateAddressData));
 
 			}
+		}
+	}
+
+	void NetworkServerHelper::send_to(
+		NetworkServerComponent* server, 
+		NetworkPeer* peer,
+		const std::size_t sz)
+	{
+		if (peer && server)
+		{
+			peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
+			peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
+			peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+
+			peer->packet.version = XPLICIT_NETWORK_VERSION;
+
+			::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
+				sz,
+				0,
+				reinterpret_cast<sockaddr*>(&peer->addr),
+				sizeof(PrivateAddressData));
 		}
 	}
 
