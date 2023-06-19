@@ -93,9 +93,19 @@ namespace Xplicit
 		virtual ~ToolComponent() = default;
 
 	public:
-		std::int32_t OwnerHash;
+		typedef std::int64_t ToolOwner;
+
+	public:
+		//! Owner public hash
+		ToolOwner Owner;
+
+		//! The slot to place this on.
 		std::int32_t Slot;
+
+		//! can drop?
 		bool Droppable;
+
+		//! It's name
 		String Name;
 
 	};

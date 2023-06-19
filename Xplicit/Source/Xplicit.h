@@ -575,6 +575,7 @@ namespace Xplicit
 		char* mPointer;
 
 	public:
+		const std::size_t& nalloc() noexcept { return mIndex; }
 		std::size_t size() noexcept { return sizeof(PtrType) * Size; }
 		char* data() noexcept { return mPointer; }
 

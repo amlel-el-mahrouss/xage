@@ -58,6 +58,8 @@ namespace Xplicit
         stat = NETWORK_STAT_DISCONNECTED;
 
         memset(&addr, 0, sizeof(PrivateAddressData));
+
+        unique_addr.reset();
     }
 
     bool equals(PrivateAddressData& lhs, PrivateAddressData& rhs)

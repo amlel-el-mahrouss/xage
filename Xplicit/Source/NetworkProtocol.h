@@ -162,6 +162,16 @@ namespace Xplicit
         public:
 			const uuids::uuid& get() noexcept { return mUuid; }
 
+        private:
+			void reset() noexcept 
+            {
+                XPLICIT_INFO("Refreshing UUID...");
+
+                mUuid = UUIDFactory::version<4>(); 
+                mPublicUuid = UUIDFactory::version<4>(); 
+            }
+
+        public:
 			const uuids::uuid& get_public_uuid() noexcept { return this->get(); }
 			const uuids::uuid& get_private_uuid() noexcept { return mUuid; }
 

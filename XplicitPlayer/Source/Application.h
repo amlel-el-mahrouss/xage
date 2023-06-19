@@ -12,10 +12,9 @@
 
 #pragma once
 
-#include <CEGUI/RendererModules/Irrlicht/Renderer.h>
-#include <CEGUI/CEGUI.h>
-
+/*! irrlicht XML class */
 #include <IXMLWriter.h>
+
 #include <Root.h>
 #include <Uri.h>
 #include <ini.h>

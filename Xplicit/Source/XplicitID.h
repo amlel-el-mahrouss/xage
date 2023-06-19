@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: NetworkComponent.h
- *			Purpose: XDP Protocol Client
- *
  * =====================================================================
  */
 
@@ -14,7 +11,10 @@
 
 #include "Xplicit.h"
 
+/* XplicitNgin first universe */
 #define XPLICIT_UNIVERSE_ID (1U)
+#define XPLICIT_UNIVERSE_DELIM ":"
+#define XPLICIT_UNIVERSE_PREFIX "XPLICIT_"
 
 namespace Xplicit::Auth
 {
@@ -24,18 +24,25 @@ namespace Xplicit::Auth
 		XplicitID() = delete;
 
 	public:
-		explicit XplicitID(const int32_t& universe, const int32_t& playerId, const int64_t& hash) noexcept;
+		explicit XplicitID(
+			const int32_t& universe, 
+			const int32_t& connectionPublicHash) noexcept;
+
 		~XplicitID() = default;
 
 	public:
 		XPLICIT_COPY_DEFAULT(XplicitID);
 
 	public:
-		const std::int64_t get() noexcept;
-		const String as_string() noexcept;
+		const std::int64_t& get() noexcept;
+		const String& as_string() noexcept;
+
+		const bool contains(std::int32_t bytes) noexcept;
 
 	private:
-		String mXplicitId;
+		Xplicit::String mXplicitId;
+
+	private:
 		std::int64_t mConnectionHash;
 		std::int64_t mRegionId;
 
