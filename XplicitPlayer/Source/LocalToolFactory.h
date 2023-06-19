@@ -15,16 +15,16 @@
 
 namespace Xplicit::Player
 {
-	class LocalToolInventory final
+	class LocalToolFactory final
 	{
 	public:
-		LocalToolInventory() = default;
-		~LocalToolInventory() = default;
+		LocalToolFactory() = default;
+		~LocalToolFactory() = default;
 
 		static constexpr const std::size_t max = 72;
 
 	public:
-		XPLICIT_COPY_DEFAULT(LocalToolInventory);
+		XPLICIT_COPY_DEFAULT(LocalToolFactory);
 
 	public:
 		ToolComponent* create(const char* name)
@@ -77,10 +77,10 @@ namespace Xplicit::Player
 		}
 
 	public:
-		ToolComponent* Tools[LocalToolInventory::max];
+		ToolComponent* Tools[LocalToolFactory::max];
 
 	private:
-		Pool<ToolComponent, LocalToolInventory::max> mPool;
+		Pool<ToolComponent, LocalToolFactory::max> mPool;
 
 	};
 }
