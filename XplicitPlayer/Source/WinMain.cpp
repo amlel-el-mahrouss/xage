@@ -14,6 +14,7 @@
  @file
  */
 
+#include "LocalToolInventory.h"
 #include "Application.h"
 
 #include <Bites.h>

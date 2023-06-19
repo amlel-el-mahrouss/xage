@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Common.h
+ *			File: CommonEngine.h
  *			Purpose: Common Engine Macros/Components/Properties
  *
  * =====================================================================
@@ -123,14 +123,13 @@ namespace Xplicit
 
 	};
 
-	enum class COMPONENT_ID_ENUM : std::int32_t
+	enum COMPONENT_ID_ENUM : std::int32_t
 	{
 		COMPONENT_ID_SCRIPT = 0xc307,
-		COMPONENT_ID_TEX = 0x687e,
-		COMPONENT_ID_PART = 0x0408,
+		COMPONENT_ID_TEXTURE = 0x687e,
+		COMPONENT_ID_SHAPE = 0x0408,
 		COMPONENT_ID_TOOL = 0x5b2f,
 		COMPONENT_ID_SOUND = 0xa8cf,
-		COMPONENT_ID_START = 0x0d7f, /* start of custom components */
 
 		/* custom components here. */
 		COMPONENT_ID_INVALID = 0xffff,

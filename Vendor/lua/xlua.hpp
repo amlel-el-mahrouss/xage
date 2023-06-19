@@ -9,7 +9,7 @@
 
 #pragma once
 
-/* writer: Amlal El Mahrouss */
+/* Author: Amlal El Mahrouss */
 /* XLua for C++ classes. */
 
 extern "C" {
@@ -37,7 +37,7 @@ namespace Xplicit::Lua
 			luaL_newmetatable(StateManager::get_singleton_ptr(), name.c_str());
 			lua_pushstring(StateManager::get_singleton_ptr(), "_index");
 
-			methods(this);
+			methods<StateManager, T>(this);
 
 			lua_setglobal(StateManager::get_singleton_ptr()->state(), name.c_str());
 		}

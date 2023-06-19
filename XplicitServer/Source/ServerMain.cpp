@@ -18,7 +18,7 @@
 #include <codecvt>
 #include <Root.h>
 
-#include "CommonInc.h"
+#include "CommonInclude.h"
 #include "SpawnComponent.h"
 #include "PlayerComponent.h"
 #include "PlayerTimeoutEvent.h"

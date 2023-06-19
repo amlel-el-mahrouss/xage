@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "CommonInc.h"
-#include <Common.h>
+#include "CommonInclude.h"
+#include <CommonEngine.h>
 
 namespace Xplicit
 {

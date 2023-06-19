@@ -13,8 +13,9 @@
 #pragma once
 
 #include "LocalCameraComponent.h"
-#include <NetworkComponent.h>
 #include "Mesh.h"
+
+#include <NetworkComponent.h>
 #include <GameVar.h>
 
 namespace Xplicit::Player
@@ -35,14 +36,13 @@ namespace Xplicit::Player
 		virtual INSTANCE_TYPE type() noexcept override;
 		virtual const char* name() noexcept override;
 
-		const int64_t& id() noexcept;
-
 	public:
 		virtual void update() override;
 
 	public:
 		void attach(LocalCameraComponent* cam) noexcept;
 		vector3df get_pos() noexcept;
+		const int64_t& id() noexcept;
 
 	private:
 		IAnimatedMeshSceneNode* mCameraNode;

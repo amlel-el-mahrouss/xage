@@ -4,7 +4,7 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: CommonInc.h
+ *			File: CommonInclude.h
  *			Purpose: Server include
  *
  * =====================================================================
@@ -14,7 +14,7 @@
 
 #include <Uri.h>
 #include <Event.h>
-#include <Common.h>
+#include <CommonEngine.h>
 #include <Xplicit.h>
 #include <GameVar.h>
 #include <Component.h>

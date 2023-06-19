@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "CommonInc.h"
+#include "CommonInclude.h"
 
 namespace Xplicit
 {
@@ -33,6 +33,7 @@ namespace Xplicit
 	private:
 		NetworkServerComponent* mNetwork;
 		std::int32_t mCounter;
+		std::mutex mMutex;
 
 	private:
 		static const int32_t cycles = 1000;

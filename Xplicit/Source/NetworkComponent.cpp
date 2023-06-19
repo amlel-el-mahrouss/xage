@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: NetworkComponent.cpp
- *			Purpose: XDP client
- *
  * =====================================================================
  */
 
@@ -136,12 +133,13 @@ namespace Xplicit
 
 	void NetworkComponent::update() 
 	{
-
+		this->read(mPacket);
 	}
 
 	bool NetworkComponent::read(NetworkPacket& packet, const std::size_t sz)
 	{
-		mReset = false; // we gotta clear this one, we don't know if RST was sent.
+		//! we gotta clear this one as we don't know if RST was sent.
+		mReset = false;
 
 		int length{ sizeof(struct sockaddr_in) };
 
@@ -149,33 +147,32 @@ namespace Xplicit
 		int res = ::recvfrom(mSocket, reinterpret_cast<char*>(&packet), sz, 0,
 			(struct sockaddr*)&mAddr, &length);
 #else
-#pragma error("DEFINE ME NetworkComponent.cpp")
+#pragma error("Define me NetworkComponent.cpp, NetworkComponent::read")
 #endif
 
-		if (length > 0)
+		if (res == SOCKET_ERROR)
 		{
-			if (res == SOCKET_ERROR)
+			int err = WSAGetLastError();
+
+			switch (err)
 			{
-				int err = WSAGetLastError();
-
-				switch (err)
-				{
-				case ECONNABORTED:
-				case WSAECONNRESET:
-				{
-					mReset = true;
-					break;
-				}
-				}
-
-				return false;
+			case ECONNABORTED:
+			case WSAECONNRESET:
+			{
+				mReset = true;
+				break;
 			}
+			}
+
+			return false;
 		}
 
 		if (packet.magic[0] == XPLICIT_NETWORK_MAG_0 && packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
 			packet.magic[2] == XPLICIT_NETWORK_MAG_2 && packet.version == XPLICIT_NETWORK_VERSION)
 		{
 			mPacket = packet;
+
+			//! return true here, the packet is valid!
 			return true;
 		}
 

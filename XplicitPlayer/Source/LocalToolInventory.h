@@ -10,7 +10,7 @@
 #pragma once
 
 #include "Application.h"
-#include <Common.h>
+#include <CommonEngine.h>
 #include "Mesh.h"
 
 namespace Xplicit::Player
@@ -66,7 +66,10 @@ namespace Xplicit::Player
 				}
 				catch (...)
 				{
-					std::exit(3);
+#ifdef XPLICIT_DEBUG
+					if (component)
+						XPLICIT_INFO("Failed to deallocate: " + component->Name);
+#endif // ifdef XPLICIT_DEBUG
 				}
 			});
 
