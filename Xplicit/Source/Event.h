@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Event.h
- *			Purpose: Xplicit Event Dispatcher and listeners
- *
  * =====================================================================
  */
 
@@ -16,8 +13,8 @@
 
 namespace Xplicit 
 {
-	class EventManager;
 	class EventListener;
+	class EventManager;
 	class Event;
 	
 	class XPLICIT_API EventManager final 

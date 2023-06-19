@@ -40,20 +40,4 @@ namespace Xplicit
 		NetworkServerComponent* mNetwork{ nullptr };
 
 	};
-
-	class ServerReplicationHash final
-	{
-	public:
-		ServerReplicationHash() = default;
-		~ServerReplicationHash() = default;
-
-	public:
-		XPLICIT_COPY_DEFAULT(ServerReplicationHash);
-
-	public:
-		std::int64_t operator()() noexcept;
-
-	};
 }
-
-#define XPLICIT_INVALID_REPL (~0x0)

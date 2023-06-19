@@ -27,7 +27,8 @@ namespace Xplicit
 		GameVar& operator=(const GameVar&) = default;
 		GameVar(const GameVar&) = default;
 
-		enum FLAGS : int32_t
+	public:
+		enum GAMEVAR_FLAG : int32_t
 		{
 			FLAG_SERVER_ONLY,
 			FLAG_CLIENT_ONLY,
