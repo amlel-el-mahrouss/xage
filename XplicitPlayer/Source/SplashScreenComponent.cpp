@@ -64,20 +64,23 @@ namespace Xplicit::Player
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
 			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
 		{
+			auto publicHash = packet.public_hash;
+			auto hash = packet.hash;
+
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalReplicationComponent>(packet.hash);
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(packet.public_hash);
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalReplicationComponent>(hash);
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(publicHash);
 			
 			auto cam = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
 			
-			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
-			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(packet.public_hash);
+			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(publicHash);
+			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(publicHash);
 
 			ply->attach(cam);
 
-			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(packet.hash);
-			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(packet.hash);
+			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(hash);
+			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(hash);
 
 			mEnable = false;
 		}

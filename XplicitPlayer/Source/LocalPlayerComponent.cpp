@@ -44,7 +44,7 @@ namespace Xplicit::Player
 	LocalPlayerComponent::~LocalPlayerComponent()
 	{
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("LocalActor::~LocalActor");
+		XPLICIT_INFO("LocalPlayerComponent::~LocalPlayerComponent");
 #endif
 	}
 
@@ -54,15 +54,15 @@ namespace Xplicit::Player
 
 	void LocalPlayerComponent::update()
 	{
-		if (!mNetwork || mPublicHash == -1) return;
+		if (mNetwork == nullptr ||
+			mPublicHash == -1) return;
 
 		mPacket = mNetwork->get();
 
 		if (mPacket.public_hash == mPublicHash)
 		{
 			if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
-				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT && 
-				mPacket.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
+				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{
 				static f32 then = IRR->getTimer()->getTime();
 				f32 delta = (IRR->getTimer()->getTime() - then) / XPLICIT_DELTA_TIME;
@@ -82,16 +82,19 @@ namespace Xplicit::Player
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					mPos.X -= xSpeed;
 
+				mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_INVALID;
+				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_INVALID;
+
+				mNetwork->send(mPacket);
+
+				std::stringstream str;
+				str << mPos.X << " " << mPos.Y << " " << mPos.Z << std::endl;
+
+				XPLICIT_INFO(str.str());
+
+				return;
 			}
 		}
-
-		mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
-		mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
-		mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
-		mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
-		mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_INVALID;
-
-		mNetwork->send(mPacket);
 	}
 
 	void LocalPlayerComponent::attach(LocalCameraComponent* cam) noexcept

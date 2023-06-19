@@ -28,9 +28,6 @@ namespace Xplicit::Player
 		auto& packet = mNetwork->get();
 		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
-		// this is going to appear multiple times, precache it.
-		String name = packet.buffer;
-
 		if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
 		{
 			switch (packet.id)
