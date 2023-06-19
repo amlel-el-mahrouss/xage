@@ -53,12 +53,12 @@ namespace Xplicit
 		bool is_frozen() noexcept;
 		bool alive() noexcept;
 
-	private:
-		Vector<float> mPosition;
-		NetworkPeer* mPeer;
+	public:
+		PositionComponent Position;
 
 	private:
 		int64_t mDeathTimeout;
+		NetworkPeer* mPeer;
 		int64_t mCooldown;
 		int64_t mHealth;
 		bool mFrozen;

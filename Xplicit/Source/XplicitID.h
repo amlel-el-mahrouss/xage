@@ -35,6 +35,7 @@ namespace Xplicit::Auth
 		const String as_string() noexcept;
 
 	private:
+		String mXplicitId;
 		std::int64_t mConnectionHash;
 		std::int64_t mRegionId;
 

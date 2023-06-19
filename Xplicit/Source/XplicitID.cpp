@@ -17,18 +17,20 @@ namespace Xplicit::Auth
 	constexpr const char XPLICIT_DELIM = ':';
 
 	XplicitID::XplicitID(const int32_t& universe, const int32_t& playerId, const int64_t& hash) noexcept
-		: mRegionId(0), mConnectionHash(hash)
+		: mRegionId(0), mConnectionHash(hash), mXplicitId("")
 	{
-		mRegionId |= region;
-		mRegionId |= id;
+		mRegionId |= universe;
+		mRegionId |= playerId;
+
+		mXplicitId = "XPLICITNGIN_";
+		mXplicitId += std::move(std::to_string(mRegionId));
+		mXplicitId += ":";
+		mXplicitId += std::move(std::to_string(mConnectionHash));
 	}
 
 	const String XplicitID::as_string() noexcept
 	{
-		String id = "XPLICIT_";
-		id += std::to_string(mRegionId);
-		id += ":";
-		id += std::to_string(mConnectionHash);
+		return mXplicitId;
 	}
 
 	const std::int64_t XplicitID::get() noexcept

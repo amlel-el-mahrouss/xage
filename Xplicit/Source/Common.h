@@ -44,7 +44,7 @@ namespace Xplicit
 		}
 
 	public:
-		Quaternion<float> Position;
+		Vector<float> Position;
 
 	};
 

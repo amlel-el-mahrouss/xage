@@ -39,6 +39,7 @@ namespace Xplicit
 		bool handle_join_event(NetworkServerComponent* server) noexcept;
 
 	private:
+		std::vector<PlayerComponent*> mPlayers;
 		NetworkServerComponent* mNetwork;
 		std::size_t mPlayerCount;
 
