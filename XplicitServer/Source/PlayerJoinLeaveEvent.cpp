@@ -108,12 +108,11 @@ namespace Xplicit
 				}
 
 				PlayerComponent* player = mPlayers[mPlayerCount];
+				++mPlayerCount;
 
 				xplicit_on_join(server->get(peer_idx), player, server);
-				
-				XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 
-				++mPlayerCount;
+				XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 			}
 		}
 
@@ -136,15 +135,12 @@ namespace Xplicit
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				if (server->get(peer_idx)->hash == server->get(peer_idx)->packet.hash)
-				{
-					XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+				XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
 
-					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-					server->get(peer_idx)->stat = NETWORK_STAT_DISCONNECTED;
+				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+				server->get(peer_idx)->stat = NETWORK_STAT_DISCONNECTED;
 
-					--mPlayerCount;
-				}
+				--mPlayerCount;
 			}
 		}
 
