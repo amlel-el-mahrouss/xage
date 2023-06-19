@@ -64,7 +64,7 @@ namespace Xplicit
         NETWORK_CMD_BEGIN = 500, // start network, handshake
         NETWORK_CMD_STOP, // abort connection
         NETWORK_CMD_DEAD,
-        NETWORK_CMD_DAMAGE,
+        NETWORK_CMD_DAMAGE, // server to client, reports damage to the player.
         NETWORK_CMD_SPAWN,
         NETWORK_CMD_FORWARD,
         NETWORK_CMD_BACKWARD,

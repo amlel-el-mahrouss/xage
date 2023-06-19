@@ -84,15 +84,22 @@ namespace Xplicit
 						auto* peer_ptr = m_network->get(peer);
 						XPLICIT_ASSERT(peer_ptr);
 
-						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
 
 						peer_ptr->packet.public_hash = player->get()->public_hash;
 						peer_ptr->packet.health = player->health();
 
+						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+
+						xplicit_handle_spawn(mSpawner, player);
+
+						peer_ptr->packet.speed[XPLICIT_NETWORK_X] = player->pos().X;
+						peer_ptr->packet.speed[XPLICIT_NETWORK_Y] = player->pos().Y;
+						peer_ptr->packet.speed[XPLICIT_NETWORK_Z] = player->pos().Z;
+
 						Xplicit::NetworkServerHelper::send(m_network);
 					}
 
-					xplicit_handle_spawn(m_spawner, player);
 				}
 			}
 		}

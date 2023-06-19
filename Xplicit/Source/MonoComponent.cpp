@@ -37,10 +37,19 @@ namespace Xplicit
 		return false;
 	}
 
+	/* defined by host application */
+	extern std::intptr_t xplicit_add_component(MonoString* klass);
+	extern std::intptr_t xplicit_get_component(MonoString* klass);
+	extern void xplicit_remove_component(std::intptr_t klass);
+
 	static void xplicit_register_events() noexcept
 	{
-		mono_add_internal_call("ScriptNgine.ScriptNgineManager::RegisterEvent", xplicit_register_event);
-		mono_add_internal_call("ScriptNgine.ScriptNgineManager::RegisterClass", xplicit_register_class);
+		mono_add_internal_call("XplicitNgine.Engine::RegisterEvent", xplicit_register_event);
+		mono_add_internal_call("XplicitNgine.Engine::RegisterClass", xplicit_register_class);
+
+		mono_add_internal_call("XplicitNgine.Engine::AddComponent", xplicit_add_component);
+		mono_add_internal_call("XplicitNgine.Engine::GetComponent", xplicit_get_component);
+		mono_add_internal_call("XplicitNgine.Engine::RemoveComponent", xplicit_remove_component);
 	}
 
 	static std::string mono_to_cxx(MonoString* str)
