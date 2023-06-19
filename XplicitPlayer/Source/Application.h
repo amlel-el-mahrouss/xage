@@ -12,6 +12,9 @@
 
 #pragma once
 
+#include <CEGUI/RendererModules/Irrlicht/Renderer.h>
+#include <CEGUI/CEGUI.h>
+
 #include <IXMLWriter.h>
 #include <Root.h>
 #include <Uri.h>
@@ -72,6 +75,8 @@ namespace Xplicit::Bites
 
 	private:
 		std::unique_ptr<SettingsManager> mSettings;
+		
+	private:
 		String mPath;
 
 #ifdef XPLICIT_WINDOWS
