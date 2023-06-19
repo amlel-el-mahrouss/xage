@@ -31,7 +31,6 @@ namespace Xplicit
 			mGameVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DefaultVelocity",
 				"0.035f",
 				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
-
 		}
 	}
 
@@ -45,7 +44,7 @@ namespace Xplicit
 			return;
 
 		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
-		float speed = mGameVar->as_float();
+		NetworkFloat speed = mGameVar->as_float();
 
 		for (std::size_t i = 0; i < players.size(); ++i)
 		{
@@ -74,8 +73,6 @@ namespace Xplicit
 				peer->packet.speed[XPLICIT_NETWORK_X] = speed;
 				peer->packet.speed[XPLICIT_NETWORK_Y] = speed;
 				peer->packet.speed[XPLICIT_NETWORK_Z] = speed;
-
-				peer->packet.public_hash = ply->get()->public_hash;
 
 				/* send server delta to player, so that he is not out of touch. */
 				peer->packet.speed[XPLICIT_NETWORK_DELTA] = (IRR->getTimer()->getTime() - mThen) / XPLICIT_DELTA_TIME;

@@ -55,20 +55,23 @@ namespace Xplicit
 			return;
 
 		if (mPeer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] == NETWORK_CMD_DEAD)
+		{
 			mDeathTimeout = XPLICIT_COOLDOWN;
+			this->health(0);
+		}
 		
+		//! ??wtf is this
+		//! Checks for death timeout, and respawns player if deathTimeout is reached.
 		if (mDeathTimeout > 0)
 		{
 			--mDeathTimeout;
 
-			if (mDeathTimeout <= 0)
+			if (mDeathTimeout < 1)
 			{
-				mDeathTimeout = 0;
+				mDeathTimeout = 0UL;
 
 				this->health(XPLICIT_DEFAULT_HEALTH);
 				mPeer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
-
-				return;
 			}
 		}
 

@@ -15,6 +15,10 @@
 
 namespace Xplicit::Player
 {
+	//!
+	//! This class helps create tools for a specific context (player)
+	//! returns 'ToolComponent' when pool is successfully allocating bytes.
+	//! 
 	class LocalToolFactory final
 	{
 	public:

@@ -84,6 +84,9 @@ namespace Xplicit::Player
 
 				mNetwork->send(mPacket);
 
+				this->node()->setPosition(mPos);
+				this->mCam->get()->setPosition(mPos);
+
 				return;
 			}
 		}
