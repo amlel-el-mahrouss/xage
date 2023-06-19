@@ -47,7 +47,6 @@ namespace Xplicit
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
 		peer->packet.size = sizeof(NetworkPacket);
-		peer->stat = NETWORK_STAT_CONNECTED;
 
 		for (std::size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 		{
@@ -77,8 +76,8 @@ namespace Xplicit
 
 	void PlayerJoinLeaveEvent::operator()()
 	{
-		this->handle_join_event(mNetwork);
 		this->handle_leave_event(mNetwork);
+		this->handle_join_event(mNetwork);
 	}
 
 	const size_t& PlayerJoinLeaveEvent::size() noexcept { return mPlayerCount; }
@@ -89,37 +88,38 @@ namespace Xplicit
 
 		for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 		{
-			if (server->get(peer_idx)->stat == NETWORK_STAT_CONNECTED)
-				continue;
-
-			if (server->get(peer_idx)->packet.size < 1)
+			if (server->get(peer_idx)->stat == NETWORK_STAT_CONNECTED ||
+				server->get(peer_idx)->packet.size < 1)
 				continue;
 
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_INVALID;
-
 				if (this->size() > XPLICIT_MAX_CONNECTIONS)
 				{
 					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 				}
 				else
 				{
-					XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
-
 					for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
 					{
 						PlayerComponent* player = mPlayers[index];
 
 						if (player->get() != nullptr &&
 							equals(player->get()->addr, server->get(peer_idx)->addr))
-							continue;
+							break;
 
-						xplicit_on_join(server->get(peer_idx), player, server);
+						server->get(peer_idx)->stat = NETWORK_STAT_CONNECTED;
+
 						player->set(server->get(peer_idx));
 
 						++mPlayerCount;
+
+						xplicit_on_join(server->get(peer_idx), player, server);
+
+						XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+
+						break;
 					}
 				}
 			}
@@ -144,10 +144,18 @@ namespace Xplicit
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
-				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
-
 				XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+
+				auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
+
+				for (std::size_t index = 0; index < players.size(); index++)
+				{
+					if (equals(players[index]->get()->addr, server->get(peer_idx)->addr))
+					{
+						players[index]->reset();
+						break;
+					}
+				}
 
 				server->get(peer_idx)->stat = NETWORK_STAT_DISCONNECTED;
 				server->get(peer_idx)->reset();

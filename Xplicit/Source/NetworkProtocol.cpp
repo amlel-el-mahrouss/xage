@@ -22,8 +22,8 @@ namespace Xplicit
         packet(), 
         addr(), 
         unique_addr(), 
-		hash(-1),
-		public_hash(-1),
+		hash(0L),
+		public_hash(0L),
         stat(NETWORK_STAT_INVALID)
 	{}
 

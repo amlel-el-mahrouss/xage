@@ -146,4 +146,11 @@ namespace Xplicit
 	{
 		return mHealth > 0;
 	}
+
+	//! performs a network reset of the server-side player.
+	void PlayerComponent::reset() noexcept
+	{
+		if (this->mPeer)
+			this->mPeer = nullptr;
+	}
 }

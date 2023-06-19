@@ -4,16 +4,12 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: LoadingComponent.cpp
- *			Purpose: Loading Component
- *
  * =====================================================================
  */
 
  /**
  @file
  */
-
 
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"

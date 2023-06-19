@@ -151,13 +151,13 @@ namespace Xplicit
 			server->get(i)->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
 			server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
 		{
-			server->get(i)->packet = std::move(packet);
-
+			server->get(i)->packet = packet;
 			return true;
 		}
 
 		return false;
 	}
+
 	void NetworkServerHelper::recv_from(
 		NetworkServerComponent* server,
 		NetworkPeer* peer,
@@ -178,7 +178,8 @@ namespace Xplicit
 			peer->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
 			peer->packet.version == XPLICIT_NETWORK_VERSION)
 		{
-			peer->packet = std::move(packet);
+			if (peer->hash == packet.hash)
+				peer->packet = std::move(packet);
 		}
 		else
 		{
@@ -203,7 +204,7 @@ namespace Xplicit
 	{
 		if (server)
 		{
-			for (std::size_t i = 0; i < server->size(); ++i)
+			for (std::size_t index = 0; index < server->size(); ++index)
 			{
 				std::int32_t fromLen = sizeof(PrivateAddressData);
 				static NetworkPacket packet{};
@@ -212,23 +213,12 @@ namespace Xplicit
 					reinterpret_cast<char*>(&packet),
 					sz,
 					0,
-					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
+					reinterpret_cast<sockaddr*>(&server->get(index)->addr),
 					&fromLen);
 
-				if (!xplicit_recv_packet(server, i, packet))
-					xplicit_invalidate_peer(server->get(i));
-
-				if (res == SOCKET_ERROR)
+				if (!xplicit_recv_packet(server, index, packet))
 				{
-					std::int32_t reason = WSAGetLastError();
-
-					switch (reason)
-					{
-					case WSAECONNABORTED:
-						break;
-					case WSAECONNRESET:
-						break;
-					}
+					xplicit_invalidate_peer(server->get(index));
 				}
 			}
 		}
@@ -238,11 +228,13 @@ namespace Xplicit
 	{
 		if (server)
 		{
-			for (size_t i = 0; i < server->size(); i++)
+			for (std::size_t i = 0; i < server->size(); i++)
 			{
 				server->get(i)->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 				server->get(i)->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 				server->get(i)->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+
+				server->get(i)->packet.hash = server->get(i)->hash;
 
 				server->get(i)->packet.version = XPLICIT_NETWORK_VERSION;
 
