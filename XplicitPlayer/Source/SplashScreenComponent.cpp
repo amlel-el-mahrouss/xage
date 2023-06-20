@@ -142,7 +142,7 @@ namespace Xplicit::Player
 
 					mNetwork->send(spawn);
 
-					std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_TICKRATE / 12));
+					std::this_thread::sleep_for(std::chrono::seconds(1));
 				}
 			});
 
