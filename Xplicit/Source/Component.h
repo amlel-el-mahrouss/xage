@@ -59,6 +59,29 @@ namespace Xplicit
 
 	};
 
+	enum COMPONENT_TYPE : uint8_t
+	{
+		COMPONENT_ACTOR, // Engine Actor (According to which side you're on (client or server))
+		COMPONENT_PLAYER, // Player
+		COMPONENT_LOGIC, // Generic Component
+		COMPONENT_CAMERA, // Camera instance
+		COMPONENT_SCRIPT, // Script instance
+		COMPONENT_RENDER, // An instance which can be rendered
+		COMPONENT_NETWORK, // Network instance
+		COMPONENT_PHYSICS, // Physics instance
+		COMPONENT_GUI, // GUI instance
+		COMPONENT_REPLICATION, // Replicated instance
+		COMPONENT_COUNT // the number of Instances type we have here!
+	};
+
+	enum PHYSICS_TYPE : uint8_t
+	{
+		PHYSICS_SIMPLE, /* Rigid-body */
+		PHYSICS_COMPLEX, /* Complex Physics, Soft-body */
+		PHYSICS_NONE,
+		PHYSICS_COUNT,
+	};
+
 	class XPLICIT_API Component 
 	{
 	public:
@@ -67,30 +90,6 @@ namespace Xplicit
 
 	public:
 		XPLICIT_COPY_DEFAULT(Component);
-
-	public:
-		enum COMPONENT_TYPE : uint8_t 
-		{
-			COMPONENT_ACTOR, // Engine Actor (According to which side you're on (client or server))
-			COMPONENT_PLAYER, // Player
-			COMPONENT_LOGIC, // Generic Component
-			COMPONENT_CAMERA, // Camera instance
-			COMPONENT_SCRIPT, // Script instance
-			COMPONENT_RENDER, // An instance which can be rendered
-			COMPONENT_NETWORK, // Network instance
-			COMPONENT_PHYSICS, // Physics instance
-			COMPONENT_GUI, // GUI instance
-			COMPONENT_REPLICATION, // Replicated instance
-			COMPONENT_COUNT // the number of Instances type we have here!
-		};
-
-		enum PHYSICS_TYPE : uint8_t
-		{
-			PHYSICS_SIMPLE, /* Rigid-body */
-			PHYSICS_COMPLEX, /* Complex Physics, Soft-body */
-			PHYSICS_NONE,
-			PHYSICS_COUNT,
-		};
 
 	public:
 		virtual bool should_update() noexcept;

@@ -47,6 +47,6 @@ namespace Xplicit
 
 	const char* Component::name() noexcept { return ("Component"); }
 
-	Component::PHYSICS_TYPE Component::physics() noexcept { return PHYSICS_SIMPLE; }
-	Component::COMPONENT_TYPE Component::type() noexcept { return COMPONENT_LOGIC; }
+	PHYSICS_TYPE Component::physics() noexcept { return PHYSICS_SIMPLE; }
+	COMPONENT_TYPE Component::type() noexcept { return COMPONENT_LOGIC; }
 }

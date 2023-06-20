@@ -24,7 +24,6 @@ namespace Xplicit
         unique_addr(), 
 		hash(-1),
 		public_hash(-1),
-        taken(false),
         status(NETWORK_STAT_DISCONNECTED)
 	{}
 

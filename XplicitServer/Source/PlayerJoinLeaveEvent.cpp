@@ -96,9 +96,6 @@ namespace Xplicit
 			if (server->get(peer_idx)->packet.size < 1)
 				continue;
 
-			if (server->get(peer_idx)->taken)
-				continue;
-
 			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
@@ -122,8 +119,6 @@ namespace Xplicit
 
 						++mPlayerCount;
 
-						server->get(peer_idx)->taken = true;
-
 						break;
 					}
 				}
@@ -143,9 +138,6 @@ namespace Xplicit
 
 		for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 		{
-			if (!server->get(peer_idx)->taken)
-				continue;
-
 			if (server->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED ||
 				server->get(peer_idx)->status == NETWORK_STAT_INVALID)
 				continue;
@@ -161,8 +153,6 @@ namespace Xplicit
 
 					server->get(peer_idx)->unique_addr.invalidate();
 					server->get(peer_idx)->reset();
-
-					server->get(peer_idx)->taken = false;
 
 					for (std::size_t index = 0; index < server->size(); ++index)
 					{

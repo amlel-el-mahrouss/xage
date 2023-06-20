@@ -40,7 +40,7 @@ namespace Xplicit::Player
 
 	}
 
-	LocalCameraComponent::COMPONENT_TYPE LocalCameraComponent::type() noexcept { return COMPONENT_CAMERA; }
+	COMPONENT_TYPE LocalCameraComponent::type() noexcept { return COMPONENT_CAMERA; }
 
 	const char* LocalCameraComponent::name() noexcept { return ("CameraComponent"); }
 

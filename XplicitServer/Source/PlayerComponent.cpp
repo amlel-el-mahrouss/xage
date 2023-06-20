@@ -39,7 +39,7 @@ namespace Xplicit
 #endif
 	}
 
-	PlayerComponent::PHYSICS_TYPE PlayerComponent::physics() noexcept 
+	PHYSICS_TYPE PlayerComponent::physics() noexcept 
 	{
 		return PHYSICS_NONE; 
 	}
@@ -93,7 +93,7 @@ namespace Xplicit
 		return true; 
 	}
 
-	PlayerComponent::COMPONENT_TYPE PlayerComponent::type() noexcept
+	COMPONENT_TYPE PlayerComponent::type() noexcept
 	{ 
 		return COMPONENT_PLAYER; 
 	}

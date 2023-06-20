@@ -12,7 +12,7 @@
 #include "Xplicit.h"
 
 #ifndef XPLICIT_UDP_PORT
-#define XPLICIT_NETWORK_PORT (3305)
+#define XPLICIT_NETWORK_PORT (55305)
 #endif // ifndef XPLICIT_UDP_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY
@@ -173,7 +173,6 @@ namespace Xplicit
 		NETWORK_STAT status;
 		std::uint32_t port;
         int64_t hash;
-        bool taken;
  
     public:
         explicit NetworkInstance();

@@ -31,7 +31,7 @@ namespace Xplicit::Player
 
 	SplashScreenComponent::SplashScreenComponent() 
 		: 
-		mEnable(true), 
+		mEnabled(true), 
 		mNetwork(nullptr), 
 		mTexture(nullptr), 
 		mTimeout(XPLICIT_TIMEOUT)
@@ -48,7 +48,7 @@ namespace Xplicit::Player
 	void SplashScreenComponent::update()
 	{
 		if (!mNetwork) return;
-		if (!mEnable) return;
+		if (!mEnabled) return;
 
 		NetworkPacket packet;
 		mNetwork->read(packet);
@@ -84,7 +84,7 @@ namespace Xplicit::Player
 			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(hash);
 			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(hash);
 
-			mEnable = false;
+			mEnabled = false;
 		}
 		else
 		{
@@ -104,7 +104,7 @@ namespace Xplicit::Player
 						Xplicit::Player::XPLICIT_DIM.Height / 2.8),
 						Player::POPUP_TYPE::NETWORK, "StopPopup");
 
-				mEnable = false;
+				mEnabled = false;
 			}
 			else
 			{
@@ -120,18 +120,23 @@ namespace Xplicit::Player
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
-		if (!mNetwork)
+		if (mNetwork == nullptr)
 		{
 			mNetwork = ComponentManager::get_singleton_ptr()->add<NetworkComponent>();
-			assert(mNetwork);
+			XPLICIT_ASSERT(mNetwork);
+
+#ifndef XPLICIT_DEBUG
+			if (mNetwork == nullptr)
+				throw std::runtime_error("There was an error during connection, we're sorry!");
+#endif // ifndef XPLICIT_DEBUG
 		}
 
 		if (mNetwork->connect(ip))
 		{
 			Thread thrd([&]() {
-				while (mEnable)
+				while (mEnabled)
 				{
-					XPLICIT_INFO("Trying to connect again...");
+					XPLICIT_INFO("Trying to connect to peer...");
 
 					NetworkPacket spawn{};
 

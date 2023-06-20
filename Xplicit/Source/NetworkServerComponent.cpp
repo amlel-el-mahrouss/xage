@@ -80,11 +80,12 @@ namespace Xplicit
 
 	const char* NetworkServerComponent::name() noexcept { return ("NetworkServerComponent"); }
 
-	NetworkServerComponent::COMPONENT_TYPE NetworkServerComponent::type() noexcept { return COMPONENT_NETWORK; }
+	COMPONENT_TYPE NetworkServerComponent::type() noexcept { return COMPONENT_NETWORK; }
 
 	void NetworkServerComponent::update() 
 	{
 		ENetEvent event;
+
 		/* Wait up to 1000 milliseconds for an event. */
 		while (enet_host_service(mXnetServer, &event, XPLICIT_WAIT_TIME) > 0)
 		{
@@ -98,6 +99,9 @@ namespace Xplicit
 					{
 						mPeers[index].second->address = event.peer->address.host;
 						mPeers[index].second->port = event.peer->address.port;
+						
+						mPeers[index].second->packet = *(NetworkPacket*)event.packet->data;
+						
 						event.peer->data = (void*)mPeers[index].first.as_string().c_str();
 					
 						break;
@@ -113,6 +117,7 @@ namespace Xplicit
 						mPeers[index].second->port == event.peer->address.port)
 					{
 						mPeers[index].second->packet = *(NetworkPacket*)event.packet->data;
+						
 						mPeers[index].second->channel = event.channelID;
 
 						break;
@@ -124,21 +129,24 @@ namespace Xplicit
 				break;
 
 			case ENET_EVENT_TYPE_DISCONNECT:
-				printf("%s disconnected.\n", event.peer->data);
-
 				for (std::size_t index = 0; index < mPeers.size(); index++)
 				{
 					if (mPeers[index].second->address == event.peer->address.host &&
 						mPeers[index].second->port == event.peer->address.port)
 					{
 						mPeers[index].second->status = NETWORK_STAT_DISCONNECTED;
+						mPeers[index].second->packet = *(NetworkPacket*)event.packet->data;
+
 						mPeers[index].second->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 
 						break;
 					}
 				}
 
-				/* Reset the peer's client information. */
+				/*!
+				   Reset the peer's client information. 
+				   It removes the XplicitID associated with the player.
+				   */
 				event.peer->data = nullptr;
 			}
 		}

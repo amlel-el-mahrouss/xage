@@ -22,7 +22,9 @@
 namespace Xplicit
 {
 	PlayerMovementEvent::PlayerMovementEvent() 
-		: mNetwork(nullptr), mThen(IRR->getTimer()->getTime()) 
+		: 
+		mNetwork(nullptr), 
+		mThen(IRR->getTimer()->getTime()) 
 	{
 		mGameVar = GameVarManager::get_singleton_ptr()->get("Server-DefaultVelocity");
 		

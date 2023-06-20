@@ -26,7 +26,7 @@ namespace Xplicit::Player
 		SplashScreenComponent& operator=(const SplashScreenComponent&) = default;
 		SplashScreenComponent(const SplashScreenComponent&) = default;
 
-		virtual bool should_update() noexcept override { return mEnable; }
+		virtual bool should_update() noexcept override { return mEnabled; }
 		virtual void update() override;
 		void connect(const char* ip);
 
@@ -40,7 +40,7 @@ namespace Xplicit::Player
 
 	private:
 		std::int64_t mTimeout; /* Network Timeout. */
-		bool mEnable; /* Should we seek for a connection? */
+		bool mEnabled; /* Should we seek for a connection? */
 
 	};
 }

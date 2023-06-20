@@ -90,7 +90,9 @@ namespace Xplicit
 
 		packet.version = XPLICIT_NETWORK_VERSION;
 
-		ENetPacket* pckt = enet_packet_create((const void*)&packet, sizeof(NetworkPacket), 0);
+		ENetPacket* pckt = enet_packet_create((const void*)&packet, 
+			sizeof(NetworkPacket), 
+			ENET_PACKET_FLAG_RELIABLE);
 
 		if (enet_peer_send(mXnetHost, mChannelID, pckt) == 0)
 			enet_packet_destroy(pckt);
