@@ -126,8 +126,6 @@ static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
 		server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
 		server->get(i)->packet.hash = server->get(i)->hash;
 	}
-
-	Xplicit::NetworkServerHelper::send(server);
 }
 
 // our main entrypoint.
@@ -189,9 +187,6 @@ int main(int argc, char** argv)
 
 		do
 		{
-			if (XPLICIT_SHOULD_EXIT)
-				break;
-
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 

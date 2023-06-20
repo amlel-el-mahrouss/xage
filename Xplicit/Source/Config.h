@@ -20,6 +20,9 @@
 #include <cstdlib>
 #include <cstdint>
 
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+
 #include <enet/enet.h>
 #include <uuid/uuid.h>
 #include <irrlicht.h>

@@ -4,13 +4,13 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: VulkanDriver.cpp
- *			Purpose: Xplicit's Vulkan driver
- *
  * =====================================================================
  */
 
 #include "DriverVulkan.h"
+
+// hash set data structure.
+
 #include <set>
 
 namespace Xplicit::Renderer::Vk

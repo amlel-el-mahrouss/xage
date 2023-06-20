@@ -62,9 +62,10 @@ XPLICIT_SERVER_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
+	"Library/enet_static64",
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
     	"bin/Debug/Xplicit",
-      "Library/Irrlicht"
+        "Library/Irrlicht"
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -99,6 +100,7 @@ XPLICIT_CLIENT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
+	"Library/enet_static64",
     	"bin/Debug/Xplicit",
         "d3d11",
         "dxgi",
@@ -118,11 +120,11 @@ XPLICIT_CLIENT_CONFIG = {
 	"Vendor/luajit/src",
     	"Vendor/yaml/include",
         "Vendor/nuklear/",
-	    "Vendor/glfw/include/GLFW/",
+	"Vendor/glfw/include/GLFW/",
     	"Nplicit/Source/",
-	    "Vendor/libzip/lib",
-		"C:/VulkanSDK/1.3.250.0/Include",
-	    "Vendor/irr/include",
+	"Vendor/libzip/lib",
+	"C:/VulkanSDK/1.3.250.0/Include",
+	"Vendor/irr/include",
         "C:/Program Files/Mono/include/mono-2.0/",
         "C:/Program Files/Mono/include/mono-2.0/mono",
     }
@@ -144,7 +146,7 @@ NPLICIT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-		"C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
+	"C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
     	"bin/Debug/Xplicit",
         "d3d11",
         "dxgi",
