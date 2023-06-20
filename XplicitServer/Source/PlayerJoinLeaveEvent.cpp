@@ -20,7 +20,7 @@
 
 namespace Xplicit
 {
-	static void xplicit_on_join(NetworkPeer* peer, PlayerComponent* player, NetworkServerComponent* server);
+	static void xplicit_create_notify_join(NetworkPeer* peer, PlayerComponent* player, NetworkServerComponent* server);
 
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid);
 
@@ -33,7 +33,7 @@ namespace Xplicit
 		return res;
 	}
 
-	static void xplicit_on_join(NetworkPeer* peer, PlayerComponent* player, NetworkServerComponent* server)
+	static void xplicit_create_notify_join(NetworkPeer* peer, PlayerComponent* player, NetworkServerComponent* server)
 	{
 		auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
 
@@ -84,15 +84,20 @@ namespace Xplicit
 				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
 				{
 					PlayerComponent* player = mPlayers[index];
-					xplicit_on_join(mNetwork->get(index), player, mNetwork);
+					xplicit_create_notify_join(mNetwork->get(index), player, mNetwork);
 
 					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_INVALID;
+
+					XPLICIT_INFO("Connected");
+
+					mNetwork->get(index)->stat = NETWORK_STAT_CONNECTED;
 				}
 			}
 			//! leaving
 			else if (mNetwork->get(index)->stat == NETWORK_STAT_CONNECTED)
 			{
-				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
+				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
+					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 				{
 					PlayerComponent* player = mPlayers[index];
 
@@ -100,9 +105,17 @@ namespace Xplicit
 
 					mNetwork->get(index)->reset();
 					mNetwork->get(index)->unique_addr.invalidate();
-				}
 
-				mNetwork->get(index)->stat = NETWORK_STAT_INVALID;
+					mNetwork->get(index)->stat = NETWORK_STAT_INVALID;
+
+					XPLICIT_INFO("Disconnected");
+
+					if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
+						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
+
+					if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
+				}
 			}
 			else if (mNetwork->get(index)->stat == NETWORK_STAT_INVALID)
 			{
