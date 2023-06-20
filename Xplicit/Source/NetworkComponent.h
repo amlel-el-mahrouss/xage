@@ -51,7 +51,7 @@ namespace Xplicit
         int error() const noexcept;
 
     private:
-        int m_iErr{ 200 };
+        int mErr{ 200 };
 
     };
 

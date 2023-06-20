@@ -14,18 +14,18 @@ namespace Xplicit
 	NetworkError::NetworkError(const int what) 
 		: std::runtime_error("Xplicit Network Error")
 #ifdef XPLICIT_WINDOWS
-		, m_iErr(WSAGetLastError())
+		, mErr(WSAGetLastError())
 #endif
 	{
 #ifdef XPLICIT_DEBUG
 		std::string err = "NetworkError, error code: ";
-		err += std::to_string(m_iErr);
+		err += std::to_string(mErr);
 
 		XPLICIT_CRITICAL(err);
 #endif
 	}
 
-	int NetworkError::error() const noexcept { return m_iErr; }
+	int NetworkError::error() const noexcept { return mErr; }
 
 	// common operations for NetworkComponent.
 	static void xplicit_set_ioctl(SOCKET sock)
@@ -45,7 +45,7 @@ namespace Xplicit
 		: Component(),  mAddr(), mReset(false)
 	{
 #ifdef XPLICIT_WINDOWS
-		mSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+		mSocket = socket(PF_INET, SOCK_DGRAM, 0);
 
 		if (mSocket == SOCKET_ERROR)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
@@ -92,7 +92,7 @@ namespace Xplicit
 
 		mAddr.sin_family = AF_INET;
 		inet_pton(AF_INET, ip, &mAddr.sin_addr);
-		mAddr.sin_port = htons(XPLICIT_UDP_PORT);
+		mAddr.sin_port = htons(XPLICIT_NETWORK_PORT);
 
 		int result = ::connect(mSocket, reinterpret_cast<SOCKADDR*>(&mAddr), 
 			sizeof(PrivateAddressData));

@@ -37,7 +37,7 @@ namespace Xplicit
 
 			for (std::size_t index = 0; index < mNetwork->size(); ++index)
 			{
-				if (mNetwork->get(index)->stat == NETWORK_STAT_DISCONNECTED)
+				if (mNetwork->get(index)->status == NETWORK_STAT_DISCONNECTED)
 					continue;
 
 				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)

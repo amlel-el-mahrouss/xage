@@ -19,7 +19,7 @@ namespace Xplicit
 	class PlayerComponent final : public Component
 	{
 	public:
-		PlayerComponent();
+		explicit PlayerComponent();
 		virtual ~PlayerComponent();
 
 	public:

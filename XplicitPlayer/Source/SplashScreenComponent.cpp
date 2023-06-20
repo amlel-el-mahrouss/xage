@@ -23,6 +23,8 @@
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
+#include <CommonEngine.h>
+
 namespace Xplicit::Player
 {
 	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 300); // connection timeout
@@ -140,7 +142,7 @@ namespace Xplicit::Player
 
 					mNetwork->send(spawn);
 
-					std::this_thread::sleep_for(std::chrono::seconds(3));
+					std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_TICKRATE / 12));
 				}
 			});
 

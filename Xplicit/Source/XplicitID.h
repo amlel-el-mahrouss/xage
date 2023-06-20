@@ -24,20 +24,15 @@ namespace Xplicit::Auth
 		XplicitID() = delete;
 
 	public:
-		explicit XplicitID(
-			const int32_t& universe, 
-			const int32_t& connectionPublicHash) noexcept;
-
+		explicit XplicitID(const int32_t& universe, const int32_t& connectionPublicHash) noexcept;
 		~XplicitID() = default;
 
 	public:
 		XPLICIT_COPY_DEFAULT(XplicitID);
 
 	public:
-		const std::int64_t& get() noexcept;
+		const std::int64_t& as_int() noexcept;
 		const String& as_string() noexcept;
-
-		const bool contains(std::int32_t bytes) noexcept;
 
 	private:
 		Xplicit::String mXplicitId;

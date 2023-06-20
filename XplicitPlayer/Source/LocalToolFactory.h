@@ -50,34 +50,30 @@ namespace Xplicit::Player
 
 		void destroy(ToolComponent* component) 
 		{
-			Thread job([&]() {
-				try
+			try
+			{
+				const std::size_t sz = mPool.size();
+
+				for (std::size_t toolIndex = 0; toolIndex < sz; ++toolIndex)
 				{
-					const std::size_t sz = mPool.size();
-
-					for (std::size_t toolIndex = 0; toolIndex < sz; ++toolIndex)
+					if (Tools[toolIndex] == component)
 					{
-						if (Tools[toolIndex] == component)
-						{
-							Tools[toolIndex] == nullptr;
+						Tools[toolIndex] == nullptr;
 
-							if (component)
-								mPool.deallocate(component);
+						if (component)
+							mPool.deallocate(component);
 
-							return;
-						}
+						return;
 					}
 				}
-				catch (...)
-				{
+			}
+			catch (...)
+			{
 #ifdef XPLICIT_DEBUG
-					if (component)
-						XPLICIT_INFO("Failed to deallocate: " + component->Name);
+				if (component)
+					XPLICIT_INFO("Failed to deallocate: " + component->Name);
 #endif // ifdef XPLICIT_DEBUG
-				}
-			});
-
-			job.detach();
+			}
 		}
 
 	public:

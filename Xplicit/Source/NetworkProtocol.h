@@ -12,7 +12,7 @@
 #include "Xplicit.h"
 
 #ifndef XPLICIT_UDP_PORT
-#define XPLICIT_UDP_PORT (60001)
+#define XPLICIT_NETWORK_PORT (56001)
 #endif // ifndef XPLICIT_UDP_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY
@@ -34,6 +34,7 @@
 #define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif
 
+#define XPLICIT_NETWORK_BUF_SZ (128U)
 #define XPLICIT_NETWORK_VERSION (10U)
 
 /* Used by the protocol to tell the velocity. */
@@ -102,49 +103,23 @@ namespace Xplicit
         NETWORK_STAT_COUNT = 2,
     };
 
-    /* network float type */
     using NetworkFloat = float;
 
-    /*
-        hash = player communication id
-        id = replication id.
-        size = size of current packet
-    */
 	class XPLICIT_API NetworkPacket final
 	{
 	public:
-        /*! magic number */
-        char magic[XPLICIT_NETWORK_MAG_COUNT];
-
-        /*! commands list. */
-		std::int16_t cmd[XPLICIT_NETWORK_CMD_MAX];
-
-    public:
-        /*! xconnect version */
-		std::int32_t version;
-
-	public:
-        /*! Public hash being sent (SHARED) */
-        std::int64_t public_hash;
-
-        /*! The private hash (CLIENT to SERVER) */
-        std::int64_t hash; 
-
-        /*! Size of current packet. */
-        std::size_t size;
-
-        /*! Component ID (if valid, passed to LocalReplicationComponent */
-        std::int32_t id; 
-
-	public:
-        /*! Player health, between 0-100 */
-        std::int64_t health;
-
-        /*! Player speed (X, Y, Z, Delta (or CLK)) */
-        Xplicit::NetworkFloat speed[XPLICIT_NETWORK_SPEED_MAX];
+		char                  magic[XPLICIT_NETWORK_MAG_COUNT];
+		Xplicit::NetworkFloat speed[XPLICIT_NETWORK_SPEED_MAX];
+		std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
+		std::int64_t          public_hash;
+		std::int32_t          version;
+		std::int64_t          health;
+		std::int64_t          hash;
+		std::size_t           size;
+		std::int32_t          id;
 
     public:
-        char buffer[256];
+        char buffer[XPLICIT_NETWORK_BUF_SZ];
 
 	};
 
@@ -171,55 +146,39 @@ namespace Xplicit
             }
 
         public:
-			const uuids::uuid& get_public_uuid() noexcept { return this->get(); }
-			const uuids::uuid& get_private_uuid() noexcept { return mUuid; }
+			const UUID& get_public_uuid() noexcept { return this->get(); }
+			const UUID& get_private_uuid() noexcept { return mUuid; }
 
         private:
-            uuids::uuid mPublicUuid; /* for public hash */
-            uuids::uuid mUuid; /* private hash */
-
-        private:
-            std::string mName;
+			UUID mPublicUuid; /* public peer uuid */
+            UUID mUuid; /* private peer uuid */
 
             friend NetworkPeer;
 
         };
 
     public:
-        /*! unique network address of this peer */
+        //! resilent and moving address data.
+		PrivateAddressData resilent_address_data;
+		PrivateAddressData address_data;
         UniqueAddress unique_addr;
-
-        /*! current socket address. */
-        PrivateAddressData addr;
-
-        /*! current network packet. */
         NetworkPacket packet;
-
-        /*! Public hash, as said before this is a public id for the player. */
         int64_t public_hash; 
-
-        /*! connection status. */
-        NETWORK_STAT stat;
-
-        /*! connection private hash. */
+        NETWORK_STAT status;
         int64_t hash;
+        bool taken;
  
     public:
-        NetworkPeer();
+        explicit NetworkPeer();
         ~NetworkPeer();
 
     public:
         XPLICIT_COPY_DEFAULT(NetworkPeer);
 
     public:
-        bool operator==(const NetworkPeer& cl);
-        bool operator!=(const NetworkPeer& cl);
-
         void reset() noexcept;
 
     };
-
-    XPLICIT_API bool equals(PrivateAddressData& lhs, PrivateAddressData& rhs);
 }
 
 #ifdef XPLICIT_WINDOWS

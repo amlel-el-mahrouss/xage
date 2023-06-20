@@ -75,8 +75,5 @@ namespace Xplicit
 
 		static void recv(NetworkServerComponent* server, const std::size_t sz = sizeof(NetworkPacket));
 
-	public:
-		static void correct(NetworkServerComponent* server);
-
 	};
 }

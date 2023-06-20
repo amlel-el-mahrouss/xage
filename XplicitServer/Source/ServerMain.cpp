@@ -28,7 +28,6 @@
 
 static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server);
 static void xplicit_load_mono();
-static void xplicit_load_sh();
 static void xplicit_read_xml();
 
 static constexpr const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
@@ -115,51 +114,6 @@ static void xplicit_print_help()
 	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
 }
 
-static void xplicit_load_sh()
-{
-	std::thread shell(
-		[]() -> void
-		{
-			char cmd_buf[1024];
-
-			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
-			{
-				if (!XPLICIT_SHOULD_EXIT)
-					std::cout << "> ";
-
-				std::cin.getline(cmd_buf, 1024);
-
-				if (strcmp(cmd_buf, "exit") == 0)
-				{
-					XPLICIT_SHOULD_EXIT = true;
-
-					auto server = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
-					XPLICIT_ASSERT(server != nullptr);
-
-					xplicit_send_stop_packet(server);
-				}
-				
-				if (strcmp(cmd_buf, "help") == 0)
-					xplicit_print_help();
-
-				if (strcmp(cmd_buf, "xconnect") == 0)
-				{
-
-					const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
-
-					if (!ip4)
-						XPLICIT_CRITICAL("Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
-
-					XPLICIT_INFO(Xplicit::String("address: ") + (ip4 ? ip4 : "?"));
-					XPLICIT_INFO(Xplicit::String("xconnect version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
-				}
-			}
-		}
-	);
-
-	shell.detach();
-}
-
 static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
 {
 	XPLICIT_ASSERT(server != nullptr);
@@ -181,6 +135,12 @@ int main(int argc, char** argv)
 {
 	try
 	{
+		Xplicit::String title = "XplicitNgine (xconnect v";
+		title += std::to_string(XPLICIT_NETWORK_VERSION);
+		title += ")";
+
+		SetConsoleTitleA(title.c_str());
+
 		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_NULL));
 
 #ifdef XPLICIT_WINDOWS
@@ -219,7 +179,6 @@ int main(int argc, char** argv)
 		
 		xplicit_load_mono();
 		xplicit_read_xml();
-		xplicit_load_sh();
 
 		std::atexit([]() -> void {
 			auto comp = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
@@ -234,14 +193,11 @@ int main(int argc, char** argv)
 				break;
 
 			Xplicit::NetworkServerHelper::recv(server);
-			Xplicit::NetworkServerHelper::correct(server);
 
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerHelper::send(server);
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(XPLICIT_TICKRATE));
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr());
 

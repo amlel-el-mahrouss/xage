@@ -32,7 +32,7 @@ namespace Xplicit
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 		peer->unique_addr.invalidate();
 
-		peer->stat = NETWORK_STAT_DISCONNECTED;
+		peer->status = NETWORK_STAT_DISCONNECTED;
 	}
 
 	static void xplicit_set_ioctl(SOCKET sock)
@@ -76,7 +76,8 @@ namespace Xplicit
 		mPrivate.sin_family = AF_INET;
 
 		inet_pton(AF_INET, ip, &mPrivate.sin_addr.S_un.S_addr);
-		mPrivate.sin_port = htons(XPLICIT_UDP_PORT);
+
+		mPrivate.sin_port = htons(XPLICIT_NETWORK_PORT);
 
 		auto ret_bind = bind(mSocket, reinterpret_cast<SOCKADDR*>(&mPrivate), sizeof(mPrivate));
 #else
@@ -170,7 +171,7 @@ namespace Xplicit
 			reinterpret_cast<char*>(&packet),
 			sz,
 			0,
-			reinterpret_cast<sockaddr*>(&peer->addr),
+			reinterpret_cast<sockaddr*>(&peer->address_data),
 			&fromLen);
 
 		if (peer->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
@@ -205,18 +206,15 @@ namespace Xplicit
 		{
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
-				std::int32_t fromLen = sizeof(PrivateAddressData);
+				std::int32_t fromLen = sizeof(sockaddr);
 				static NetworkPacket packet{};
 
 				std::int32_t res = ::recvfrom(server->mSocket,
-					reinterpret_cast<char*>(&packet),
-					sz,
+					reinterpret_cast<char*>(&packet), 
+					sz, 
 					0,
-					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
+					reinterpret_cast<sockaddr*>(&server->get(i)->address_data),
 					&fromLen);
-
-				if (!xplicit_recv_packet(server, i, packet))
-					xplicit_invalidate_peer(server->get(i));
 
 				if (res == SOCKET_ERROR)
 				{
@@ -230,6 +228,9 @@ namespace Xplicit
 						break;
 					}
 				}
+
+				if (!xplicit_recv_packet(server, i, packet))
+					xplicit_invalidate_peer(server->get(i));
 			}
 		}
 	}
@@ -246,12 +247,13 @@ namespace Xplicit
 
 				server->get(i)->packet.version = XPLICIT_NETWORK_VERSION;
 
+				std::int32_t sendLen = sizeof(sockaddr);
+
 				::sendto(server->mSocket, reinterpret_cast<const char*>(&server->get(i)->packet),
 					sz,
-					0, 
-					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
-					sizeof(PrivateAddressData));
-
+					0,
+					reinterpret_cast<sockaddr*>(&server->get(i)->address_data),
+					sendLen);
 			}
 		}
 	}
@@ -269,29 +271,13 @@ namespace Xplicit
 
 			peer->packet.version = XPLICIT_NETWORK_VERSION;
 
+			std::int32_t sendLen = sizeof(sockaddr);
+
 			::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
 				sz,
 				0,
-				reinterpret_cast<sockaddr*>(&peer->addr),
-				sizeof(PrivateAddressData));
-		}
-	}
-
-	void NetworkServerHelper::correct(NetworkServerComponent* server)
-	{
-		if (server)
-		{
-			for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
-			{
-				for (size_t second_peer_idx = 0; second_peer_idx < server->size(); ++second_peer_idx)
-				{
-					if (server->get(second_peer_idx) == server->get(peer_idx))
-						continue;
-
-					if (equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr))
-						server->get(second_peer_idx)->reset();
-				}
-			}
+				reinterpret_cast<sockaddr*>(&peer->address_data),
+				sendLen);
 		}
 	}
 }
