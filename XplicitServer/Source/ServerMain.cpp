@@ -240,6 +240,8 @@ int main(int argc, char** argv)
 			Xplicit::EventManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerHelper::send(server);
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(XPLICIT_TICKRATE));
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr());
 

@@ -37,7 +37,6 @@ namespace Xplicit
 	{
 		auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
 
-		// I use version 4, to avoid collisions.
 		auto public_hash_uuid = UUIDFactory::version<4>();
 
 		peer->public_hash = xplicit_hash_from_uuid(public_hash_uuid);
