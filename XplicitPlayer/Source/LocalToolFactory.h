@@ -9,8 +9,9 @@
 
 #pragma once
 
-#include "Application.h"
 #include <CommonEngine.h>
+
+#include "Application.h"
 #include "Mesh.h"
 
 namespace Xplicit::Player
@@ -25,56 +26,15 @@ namespace Xplicit::Player
 		LocalToolFactory() = default;
 		~LocalToolFactory() = default;
 
+	public:
 		static constexpr const std::size_t max = 72;
 
 	public:
 		XPLICIT_COPY_DEFAULT(LocalToolFactory);
 
 	public:
-		ToolComponent* create(const char* name)
-		{
-			ToolComponent* tool = mPool.allocate();
-
-			if (tool == nullptr)
-				throw EngineError("Inventory is full!");
-
-			tool->Name = name;
-			tool->Owner = -1;
-			tool->Slot = -1;
-			tool->Droppable = false;
-
-			Tools[mPool.nalloc() - 1] = tool;
-
-			return tool;
-		}
-
-		void destroy(ToolComponent* component) 
-		{
-			try
-			{
-				const std::size_t sz = mPool.size();
-
-				for (std::size_t toolIndex = 0; toolIndex < sz; ++toolIndex)
-				{
-					if (Tools[toolIndex] == component)
-					{
-						Tools[toolIndex] == nullptr;
-
-						if (component)
-							mPool.deallocate(component);
-
-						return;
-					}
-				}
-			}
-			catch (...)
-			{
-#ifdef XPLICIT_DEBUG
-				if (component)
-					XPLICIT_INFO("Failed to deallocate: " + component->Name);
-#endif // ifdef XPLICIT_DEBUG
-			}
-		}
+		ToolComponent* create(const char* name);
+		void destroy(ToolComponent* component);
 
 	public:
 		ToolComponent* Tools[LocalToolFactory::max];

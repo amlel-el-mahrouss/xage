@@ -14,9 +14,9 @@
  @file
  */
 
-#include <XplicitID.h>
-#include <codecvt>
 #include <Root.h>
+#include <codecvt>
+#include <XplicitID.h>
 
 #include "CommonInclude.h"
 #include "SpawnComponent.h"
@@ -30,7 +30,7 @@ static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server);
 static void xplicit_load_mono();
 static void xplicit_read_xml();
 
-static constexpr const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
+static const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
 static bool XPLICIT_SHOULD_EXIT = false;
 
 static void xplicit_read_xml()
@@ -104,14 +104,6 @@ static void xplicit_load_mono()
 	{
 		XPLICIT_CRITICAL("ScriptNgine.dll not found, to load a C# DLL use Manifest.xml.");
 	}
-}
-
-static void xplicit_print_help()
-{
-	XPLICIT_INFO("\a+-------------- Xplicit Game Server Manual --------------+");
-	XPLICIT_INFO("exit: Exits the current server.");
-	XPLICIT_INFO("xconnect: Get XDP network status.");
-	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
 }
 
 static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)

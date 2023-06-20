@@ -226,7 +226,7 @@ namespace Xplicit::Renderer::DX11
 
 	public:
 		virtual bool should_update() noexcept override;
-		virtual INSTANCE_TYPE type() noexcept override;
+		virtual COMPONENT_TYPE type() noexcept override;
 		virtual const char* name() noexcept override;
 
 	private:

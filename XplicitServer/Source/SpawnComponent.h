@@ -31,7 +31,7 @@ namespace Xplicit
 
 		Quaternion<float>& get() noexcept;
 
-		virtual INSTANCE_TYPE type() noexcept override { return (INSTANCE_LOGIC); }
+		virtual COMPONENT_TYPE type() noexcept override { return (COMPONENT_LOGIC); }
 		virtual const char* name() noexcept override { return ("SpawnComponent"); }
 
 		virtual bool should_update() noexcept override;

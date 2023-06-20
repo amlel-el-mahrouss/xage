@@ -66,7 +66,7 @@ namespace Xplicit
         NetworkComponent(const NetworkComponent& ctx) = default;
 
         virtual const char* name() noexcept override { return ("NetworkComponent"); }
-        virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_NETWORK; }
+        virtual COMPONENT_TYPE type() noexcept override { return COMPONENT_NETWORK; }
 
         virtual bool should_update() noexcept override { return true; }
 

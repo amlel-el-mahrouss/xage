@@ -32,7 +32,7 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(NetworkServerComponent);
 
 	public:
-		virtual INSTANCE_TYPE type() noexcept;
+		virtual COMPONENT_TYPE type() noexcept;
 		virtual const char* name() noexcept;
 		virtual void update() override;
 		const char* dns() noexcept;

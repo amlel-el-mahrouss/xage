@@ -8,9 +8,6 @@
  */
 
 #include "DriverVulkan.h"
-
-// hash set data structure.
-
 #include <set>
 
 namespace Xplicit::Renderer::Vk

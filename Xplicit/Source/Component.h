@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Component.h
- *			Purpose: Xplicit Component System
- *
  * =====================================================================
  */
 
@@ -72,19 +69,19 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(Component);
 
 	public:
-		enum INSTANCE_TYPE : uint8_t 
+		enum COMPONENT_TYPE : uint8_t 
 		{
-			INSTANCE_ACTOR, // Engine Actor (According to which side you're on (client or server))
-			INSTANCE_PLAYER, // Player
-			INSTANCE_LOGIC, // Generic Component
-			INSTANCE_CAMERA, // Camera instance
-			INSTANCE_SCRIPT, // Script instance
-			INSTANCE_RENDER, // An instance which can be rendered
-			INSTANCE_NETWORK, // Network instance
-			INSTANCE_PHYSICS, // Physics instance
-			INSTANCE_GUI, // GUI instance
-			INSTANCE_REPLICATION, // Replicated instance
-			INSTANCE_COUNT // the number of Instances type we have here!
+			COMPONENT_ACTOR, // Engine Actor (According to which side you're on (client or server))
+			COMPONENT_PLAYER, // Player
+			COMPONENT_LOGIC, // Generic Component
+			COMPONENT_CAMERA, // Camera instance
+			COMPONENT_SCRIPT, // Script instance
+			COMPONENT_RENDER, // An instance which can be rendered
+			COMPONENT_NETWORK, // Network instance
+			COMPONENT_PHYSICS, // Physics instance
+			COMPONENT_GUI, // GUI instance
+			COMPONENT_REPLICATION, // Replicated instance
+			COMPONENT_COUNT // the number of Instances type we have here!
 		};
 
 		enum PHYSICS_TYPE : uint8_t
@@ -100,7 +97,7 @@ namespace Xplicit
 		virtual void update();
 
 	public:
-		virtual INSTANCE_TYPE type() noexcept;
+		virtual COMPONENT_TYPE type() noexcept;
 		virtual const char* name() noexcept;
 
 	public:

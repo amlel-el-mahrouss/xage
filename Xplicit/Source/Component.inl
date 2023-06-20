@@ -4,9 +4,6 @@
  *			XplicitNgin C++ Game Engine
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Component.h
- *			Purpose: Xplicit Component System and memory pools
- *
  * =====================================================================
  */
 

@@ -28,7 +28,7 @@ namespace Xplicit::Player
 		LocalCameraComponent(const LocalCameraComponent&) = default;
 
 	public:
-		virtual INSTANCE_TYPE type() noexcept override;
+		virtual COMPONENT_TYPE type() noexcept override;
 		virtual const char* name() noexcept override;
 
 		virtual void update() override;

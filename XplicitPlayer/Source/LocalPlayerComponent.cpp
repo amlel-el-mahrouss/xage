@@ -49,7 +49,7 @@ namespace Xplicit::Player
 #endif
 	}
 
-	LocalPlayerComponent::INSTANCE_TYPE LocalPlayerComponent::type() noexcept { return INSTANCE_ACTOR; }
+	LocalPlayerComponent::COMPONENT_TYPE LocalPlayerComponent::type() noexcept { return COMPONENT_ACTOR; }
 
 	const char* LocalPlayerComponent::name() noexcept { return ("LocalPlayerComponent"); }
 

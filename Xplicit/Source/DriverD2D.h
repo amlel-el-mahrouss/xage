@@ -37,7 +37,7 @@ namespace Xplicit
 
 #ifdef XPLICIT_WINDOWS
 
-namespace Xplicit::Renderer
+namespace Xplicit::Renderer::D2D
 {
 	class View;
 	class DriverSystemD2D;

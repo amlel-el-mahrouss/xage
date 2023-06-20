@@ -4,9 +4,6 @@
  *			NplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: RigidBody.h
- *			Purpose: RigidBodyComponent Class
- *
  * =====================================================================
  */
 

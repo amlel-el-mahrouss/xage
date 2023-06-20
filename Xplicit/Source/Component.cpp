@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Component.h
- *			Purpose: Xplicit's Component System
- *
  * =====================================================================
  */
 
@@ -20,7 +17,9 @@ namespace Xplicit
 {
 	void ComponentManager::update() noexcept
 	{
-		for (size_t i = 0; i < mComponents.size(); i++)
+		const std::size_t sz = mComponents.size();
+
+		for (std::size_t i = 0; i < sz; i++)
 		{
 			XPLICIT_ASSERT(mComponents[i]);
 
@@ -49,5 +48,5 @@ namespace Xplicit
 	const char* Component::name() noexcept { return ("Component"); }
 
 	Component::PHYSICS_TYPE Component::physics() noexcept { return PHYSICS_SIMPLE; }
-	Component::INSTANCE_TYPE Component::type() noexcept { return INSTANCE_LOGIC; }
+	Component::COMPONENT_TYPE Component::type() noexcept { return COMPONENT_LOGIC; }
 }

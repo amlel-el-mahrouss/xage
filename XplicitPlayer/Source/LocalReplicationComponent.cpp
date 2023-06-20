@@ -13,7 +13,7 @@
 
 namespace Xplicit::Player
 {
-	LocalReplicationComponent::INSTANCE_TYPE LocalReplicationComponent::type() noexcept { return INSTANCE_LOGIC; }
+	LocalReplicationComponent::COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_LOGIC; }
 
 	const char* LocalReplicationComponent::name() noexcept { return "LocalReplicationManager"; }
 

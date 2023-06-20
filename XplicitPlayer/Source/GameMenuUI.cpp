@@ -82,9 +82,9 @@ namespace Xplicit::Player
 		return mPopupId.c_str();
 	}
 
-	PopupComponent::INSTANCE_TYPE PopupComponent::type() noexcept
+	PopupComponent::COMPONENT_TYPE PopupComponent::type() noexcept
 	{
-		return PopupComponent::INSTANCE_GUI;
+		return PopupComponent::COMPONENT_GUI;
 	}
 	
 	/* Heads up display */

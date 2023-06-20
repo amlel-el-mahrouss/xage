@@ -33,7 +33,7 @@ namespace Xplicit::Player
 		LocalPlayerComponent& operator=(const LocalPlayerComponent&) = default;
 		LocalPlayerComponent(const LocalPlayerComponent&) = default;
 
-		virtual INSTANCE_TYPE type() noexcept override;
+		virtual COMPONENT_TYPE type() noexcept override;
 		virtual const char* name() noexcept override;
 
 	public:

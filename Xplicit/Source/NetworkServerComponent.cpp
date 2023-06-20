@@ -80,7 +80,7 @@ namespace Xplicit
 
 	const char* NetworkServerComponent::name() noexcept { return ("NetworkServerComponent"); }
 
-	NetworkServerComponent::INSTANCE_TYPE NetworkServerComponent::type() noexcept { return INSTANCE_NETWORK; }
+	NetworkServerComponent::COMPONENT_TYPE NetworkServerComponent::type() noexcept { return COMPONENT_NETWORK; }
 
 	void NetworkServerComponent::update() 
 	{

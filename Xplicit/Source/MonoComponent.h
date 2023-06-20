@@ -56,7 +56,7 @@ namespace Xplicit
 		int run(MonoAssembly* in, int argc, const char** argv);
 
 		virtual const char* name() noexcept override;
-		virtual INSTANCE_TYPE type() noexcept override;
+		virtual COMPONENT_TYPE type() noexcept override;
 		virtual void update() override;
 
 		MonoClass* make(Ref<MonoScriptComponent*>& assembly, const char* namespase, const char* klass);
@@ -82,7 +82,7 @@ namespace Xplicit
 		virtual void update() override;
 
 		virtual const char* name() noexcept override;
-		virtual INSTANCE_TYPE type() noexcept override;
+		virtual COMPONENT_TYPE type() noexcept override;
 		virtual bool should_update() noexcept override;
 
 		Ref<MonoEngineComponent*>& get();

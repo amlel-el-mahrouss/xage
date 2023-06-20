@@ -4,9 +4,6 @@
  *				XplicitNgin C++ Game Engine
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Camera.cpp
- *			Purpose: Client-side Camera
- *
  * =====================================================================
  */
 
@@ -43,7 +40,7 @@ namespace Xplicit::Player
 
 	}
 
-	LocalCameraComponent::INSTANCE_TYPE LocalCameraComponent::type() noexcept { return INSTANCE_CAMERA; }
+	LocalCameraComponent::COMPONENT_TYPE LocalCameraComponent::type() noexcept { return COMPONENT_CAMERA; }
 
 	const char* LocalCameraComponent::name() noexcept { return ("CameraComponent"); }
 

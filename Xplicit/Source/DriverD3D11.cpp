@@ -396,7 +396,7 @@ namespace Xplicit::Renderer::DX11
 
 	const char* RenderComponentD3D11::name() noexcept { return ("D3D11RenderComponent"); }
 
-	RenderComponentD3D11::INSTANCE_TYPE RenderComponentD3D11::type() noexcept { return INSTANCE_RENDER; }
+	RenderComponentD3D11::COMPONENT_TYPE RenderComponentD3D11::type() noexcept { return COMPONENT_RENDER; }
 
 	void RenderComponentD3D11::set(DriverSystemD3D11* driver) noexcept
 	{

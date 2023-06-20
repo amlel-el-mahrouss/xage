@@ -130,7 +130,7 @@ namespace Xplicit
 
 	const char* MonoEngineComponent::name() noexcept { return ("MonoEngineComponent"); }
 
-	MonoEngineComponent::INSTANCE_TYPE MonoEngineComponent::type() noexcept { return INSTANCE_LOGIC; }
+	MonoEngineComponent::COMPONENT_TYPE MonoEngineComponent::type() noexcept { return COMPONENT_LOGIC; }
 
 	void MonoEngineComponent::update() {}
 
@@ -280,9 +280,9 @@ namespace Xplicit
 	}
 
 
-	MonoScriptComponent::INSTANCE_TYPE MonoScriptComponent::type() noexcept
+	MonoScriptComponent::COMPONENT_TYPE MonoScriptComponent::type() noexcept
 	{
-		return INSTANCE_SCRIPT;
+		return COMPONENT_SCRIPT;
 	}
 
 	const char* MonoScriptComponent::name() noexcept

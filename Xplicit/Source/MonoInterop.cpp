@@ -88,9 +88,9 @@ namespace Xplicit
 		// use smart pointers if you can.
 	}
 
-	MonoClassComponent::INSTANCE_TYPE MonoClassComponent::type() noexcept
+	MonoClassComponent::COMPONENT_TYPE MonoClassComponent::type() noexcept
 	{
-		return INSTANCE_SCRIPT;
+		return COMPONENT_SCRIPT;
 	}
 
 	const char* MonoClassComponent::name() noexcept

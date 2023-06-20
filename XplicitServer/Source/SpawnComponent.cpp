@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: SpawnComponent.cpp
- *			Purpose: Actor spawn component
- *
  * =====================================================================
  */
 

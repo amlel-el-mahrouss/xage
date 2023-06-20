@@ -52,7 +52,7 @@ namespace Xplicit::Player
 		PopupComponent(const PopupComponent&) = default;
 
 	public:
-		virtual INSTANCE_TYPE type() noexcept override;
+		virtual COMPONENT_TYPE type() noexcept override;
 		virtual const char* name() noexcept override;
 		virtual void update() override;
 		
@@ -82,7 +82,7 @@ namespace Xplicit::Player
 
 	public:
 		virtual const char* name() noexcept override { return "HUD"; }
-		virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_GUI; }
+		virtual COMPONENT_TYPE type() noexcept override { return COMPONENT_GUI; }
 
 	public:
 		virtual void update() override;
