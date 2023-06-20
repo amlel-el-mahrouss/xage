@@ -78,17 +78,21 @@ namespace Xplicit
 	{
 		for (std::size_t index = 0; index < mNetwork->size(); ++index)
 		{
-			//! joining
+			//! join event
 			if (mNetwork->get(index)->stat == NETWORK_STAT_DISCONNECTED)
 			{
-				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
+				//! we begin the communication
+				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN ||
+					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == XPLICIT_XCONNECT_WATCHDOG_BYTE)
 				{
 					PlayerComponent* player = mPlayers[index];
 					xplicit_create_notify_join(mNetwork->get(index), player, mNetwork);
 
-					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_INVALID;
+					//! place LUA handler here
 
-					XPLICIT_INFO("Connected");
+					//! end of place LUA handler here
+
+					XPLICIT_INFO("PlayerComponent:OnConnect");
 
 					mNetwork->get(index)->stat = NETWORK_STAT_CONNECTED;
 
@@ -96,13 +100,30 @@ namespace Xplicit
 				}
 			}
 
-			//! leaving
+			//! leave event
 			if (mNetwork->get(index)->stat == NETWORK_STAT_CONNECTED)
 			{
 				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 				{
+					//! place LUA handler here
+
+					//! end of place LUA handler here
+
+					XPLICIT_INFO("PlayerComponent:OnLeave");
+
 					PlayerComponent* player = mPlayers[index];
+
+					if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
+						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
+
+					if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+					{
+						NetworkServerHelper::send(mNetwork);
+						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
+					}
+
+					//! finally invalidate the context
 
 					player->reset();
 
@@ -111,17 +132,6 @@ namespace Xplicit
 
 					mNetwork->get(index)->stat = NETWORK_STAT_INVALID;
 
-					XPLICIT_INFO("Disconnected");
-
-					if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
-						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
-
-					if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
-					{
-						NetworkServerHelper::send_to(mNetwork, mNetwork->get(index));
-						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
-					}
-				
 					continue;
 				}
 			}
