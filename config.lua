@@ -68,7 +68,7 @@ XPLICIT_SERVER_CONFIG = {
 	"Library/enet_static64",
 	"Library/enet64",
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
-    	"bin/Debug/Xplicit",
+    	"Library/Xplicit",
         "Library/Irrlicht",
 	  "ws2_32",
 	  "winmm",
@@ -108,7 +108,7 @@ XPLICIT_CLIENT_CONFIG = {
     ["_LIBDIR"] = {
 	"Library/enet_static64",
 	"Library/enet64",
-    	"bin/Debug/Xplicit",
+    	"Library/Xplicit",
         "d3d11",
         "dxgi",
         "Library/glfw3",
@@ -155,7 +155,7 @@ NPLICIT_CONFIG = {
     },
     ["_LIBDIR"] = {
 	"C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
-    	"bin/Debug/Xplicit",
+    	"Library/Xplicit",
         "d3d11",
         "dxgi",
     },
