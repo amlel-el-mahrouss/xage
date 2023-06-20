@@ -117,7 +117,10 @@ namespace Xplicit
 						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
 
 					if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+					{
+						NetworkServerHelper::send_to(mNetwork, mNetwork->get(index));
 						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
+					}
 				
 					continue;
 				}

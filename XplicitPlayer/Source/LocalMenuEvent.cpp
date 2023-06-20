@@ -75,7 +75,18 @@ namespace Xplicit::Player
 
 			if (KB->key_down(KEY_KEY_Y))
 			{
-				std::exit(0);
+				NetworkPacket stopPacket{};
+
+				stopPacket.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+				stopPacket.hash = mHash;
+
+				stopPacket.size = sizeof(NetworkPacket);
+
+				mNetwork->send(stopPacket);
+				
+				mEnabled = false;
+
+				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))
 			{

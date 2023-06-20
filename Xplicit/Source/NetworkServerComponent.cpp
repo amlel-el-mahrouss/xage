@@ -32,6 +32,18 @@ namespace Xplicit
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 	}
 
+	static void xplicit_set_ioctl(SOCKET sock)
+	{
+#ifdef XPLICIT_WINDOWS
+		auto ul = 1UL;
+
+		auto err = ioctlsocket(sock, FIONBIO, &ul);
+		XPLICIT_ASSERT(err == NO_ERROR);
+#else
+#pragma error("ServerComponent.cpp")
+#endif
+	}
+
 	NetworkServerComponent::NetworkServerComponent(const char* ip)
 		:
 		mSocket(INVALID_SOCKET), 
@@ -53,6 +65,8 @@ namespace Xplicit
 
 		if (mSocket == SOCKET_ERROR)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
+
+		xplicit_set_ioctl(mSocket);
 
 		memset(&mPrivate, 0, sizeof(struct sockaddr_in));
 

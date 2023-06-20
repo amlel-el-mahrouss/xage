@@ -19,6 +19,8 @@
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
+#include <CommonEngine.h>
+
 namespace Xplicit::Player
 {
 	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 300); // connection timeout
@@ -130,7 +132,7 @@ namespace Xplicit::Player
 					NetworkPacket spawn{};
 
 					spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
-					spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+					spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = XPLICIT_XCONNECT_WATCHDOG_BYTE;
 
 					spawn.size = sizeof(NetworkPacket);
 

@@ -55,6 +55,15 @@ namespace Xplicit::Player
 					Player::POPUP_TYPE::BANNED, "BanPopup");
 		}
 
+		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+		{
+			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
+				IRR->closeDevice();
+				}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45,
+					Xplicit::Player::XPLICIT_DIM.Height / 4),
+					Player::POPUP_TYPE::KICK, "KickPopup");
+		}
+
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
 		{
 			static NetworkPacket packet{};
@@ -74,8 +83,7 @@ namespace Xplicit::Player
 			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_INVALID;
 		}
 
-		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||
-			packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN)
 		{
 			if (packet.hash == mHash)
 			{

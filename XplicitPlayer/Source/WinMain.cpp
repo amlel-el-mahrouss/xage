@@ -49,6 +49,18 @@ XPLICIT_MAIN()
 		if (!app)
 			throw Xplicit::EngineError();
 
+		std::atexit([]() -> void {
+			auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkComponent>("NetworkComponent");
+
+			if (net)
+			{
+				Xplicit::NetworkPacket packet;
+
+				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = Xplicit::NETWORK_CMD_STOP;
+				net->send(packet);
+			}
+			});
+
 		/* main game loop */
 		while (IRR->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 
