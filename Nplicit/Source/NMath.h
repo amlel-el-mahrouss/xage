@@ -87,7 +87,7 @@ static inline constexpr auto nplicit_cricle_shortdist(
 	auto a = nplicit_circle_sub(rhs, lhs, rmin, rmax);
 	auto b = nplicit_circle_sub(lhs, rhs, rmin, rmax);
 
-	return std::min(a, b);
+	return min(a, b);
 }
 
 namespace Xplicit

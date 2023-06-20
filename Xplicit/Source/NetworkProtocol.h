@@ -12,7 +12,7 @@
 #include "Xplicit.h"
 
 #ifndef XPLICIT_UDP_PORT
-#define XPLICIT_NETWORK_PORT (56001)
+#define XPLICIT_NETWORK_PORT (3305)
 #endif // ifndef XPLICIT_UDP_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY
@@ -37,6 +37,11 @@
 #define XPLICIT_NETWORK_BUF_SZ (128U)
 #define XPLICIT_NETWORK_VERSION (10U)
 
+#define XPLICIT_NUM_CHANNELS (2)
+
+#define XPLICIT_CHANNEL_DATA (0)
+#define XPLICIT_CHANNEL_CHAT (1)
+
 /* Used by the protocol to tell the velocity. */
 
 #define XPLICIT_NETWORK_X     (0)
@@ -48,6 +53,8 @@
 #define XPLICIT_NETWORK_SPEED_MAX (4)
 
 #define XPLICIT_SOCKET_ERROR  (-1)
+
+#define XPLICIT_BAD_ADDRESS (0xFFFFFF)
 
 namespace Xplicit
 {
@@ -123,7 +130,7 @@ namespace Xplicit
 
 	};
 
-    class XPLICIT_API NetworkPeer final
+    class XPLICIT_API NetworkInstance final
     {
     public:
         class XPLICIT_API UniqueAddress final
@@ -153,27 +160,27 @@ namespace Xplicit
 			UUID mPublicUuid; /* public peer uuid */
             UUID mUuid; /* private peer uuid */
 
-            friend NetworkPeer;
+            friend NetworkInstance;
 
         };
 
     public:
-        //! resilent and moving address data.
-		PrivateAddressData resilent_address_data;
-		PrivateAddressData address_data;
-        UniqueAddress unique_addr;
+		UniqueAddress unique_addr;
+		std::uint32_t address;
+        std::uint32_t channel;
         NetworkPacket packet;
         int64_t public_hash; 
-        NETWORK_STAT status;
+		NETWORK_STAT status;
+		std::uint32_t port;
         int64_t hash;
         bool taken;
  
     public:
-        explicit NetworkPeer();
-        ~NetworkPeer();
+        explicit NetworkInstance();
+        ~NetworkInstance();
 
     public:
-        XPLICIT_COPY_DEFAULT(NetworkPeer);
+        XPLICIT_COPY_DEFAULT(NetworkInstance);
 
     public:
         void reset() noexcept;

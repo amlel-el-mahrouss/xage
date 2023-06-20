@@ -26,8 +26,8 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(PlayerComponent);
 
 	public:
-		void set(NetworkPeer* peer) noexcept;
-		NetworkPeer* get() noexcept;
+		void set(NetworkInstance* peer) noexcept;
+		NetworkInstance* get() noexcept;
 
 	public:
 		virtual PHYSICS_TYPE physics() noexcept override;
@@ -58,7 +58,7 @@ namespace Xplicit
 
 	private:
 		int64_t mDeathTimeout;
-		NetworkPeer* mPeer;
+		NetworkInstance* mPeer;
 		int64_t mCooldown;
 		int64_t mHealth;
 		bool mFrozen;

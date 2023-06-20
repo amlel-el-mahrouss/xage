@@ -60,8 +60,8 @@ namespace Xplicit
 			this->health(0);
 		}
 		
-		//! ??wtf is this
-		//! Checks for death timeout, and respawns player if deathTimeout is reached.
+		//! nvm i got it
+		//! Checks for death timeout, and respawn player if deathTimeout is reached.
 		if (mDeathTimeout > 0)
 		{
 			--mDeathTimeout;
@@ -108,12 +108,12 @@ namespace Xplicit
 		return true; 
 	}
 
-	NetworkPeer* PlayerComponent::get() noexcept 
+	NetworkInstance* PlayerComponent::get() noexcept 
 	{ 
 		return mPeer; 
 	}
 
-	void PlayerComponent::set(NetworkPeer* peer) noexcept 
+	void PlayerComponent::set(NetworkInstance* peer) noexcept 
 	{
 		XPLICIT_ASSERT(peer);
 		mPeer = peer;

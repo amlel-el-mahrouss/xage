@@ -20,7 +20,7 @@
 
 namespace Xplicit
 {
-	static void xplicit_on_join(NetworkPeer* peer, PlayerComponent* player, NetworkServerComponent* server);
+	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, NetworkServerComponent* server);
 
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid);
 
@@ -33,7 +33,7 @@ namespace Xplicit
 		return res;
 	}
 
-	static void xplicit_on_join(NetworkPeer* peer, PlayerComponent* player, NetworkServerComponent* server)
+	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, NetworkServerComponent* server)
 	{
 		auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
 

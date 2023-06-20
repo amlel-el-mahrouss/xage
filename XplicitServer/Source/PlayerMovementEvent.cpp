@@ -54,7 +54,7 @@ namespace Xplicit
 				ply->health() <= 0)
 				continue;
 
-			NetworkPeer* peer = ply->get();
+			NetworkInstance* peer = ply->get();
 
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here
 			{

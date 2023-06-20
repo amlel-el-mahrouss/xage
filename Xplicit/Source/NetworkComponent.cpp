@@ -8,6 +8,7 @@
  */
 
 #include "NetworkComponent.h"
+#include "CommonEngine.h"
 
 namespace Xplicit 
 {
@@ -27,59 +28,25 @@ namespace Xplicit
 
 	int NetworkError::error() const noexcept { return mErr; }
 
-	// common operations for NetworkComponent.
-	static void xplicit_set_ioctl(SOCKET sock)
-	{
-#ifdef XPLICIT_WINDOWS
-		ULONG ul = 1;
-		auto err = ioctlsocket(sock, FIONBIO, &ul);
-
-		XPLICIT_ASSERT(err == NO_ERROR);
-#else
-#pragma error("DEFINE ME NetworkComponent.cpp")
-#endif
-	}
-
 	// NetworkComponent Constructor
 	NetworkComponent::NetworkComponent()
-		: Component(),  mAddr(), mReset(false)
+		: Component(),
+		mReset(false), 
+		mHost(nullptr)
 	{
-#ifdef XPLICIT_WINDOWS
-		mSocket = socket(PF_INET, SOCK_DGRAM, 0);
-
-		if (mSocket == SOCKET_ERROR)
-			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
-
-		xplicit_set_ioctl(mSocket);
-#else
-#pragma error("DEFINE ME NetworkComponent.cpp")
-#endif
-
 #ifndef _NDEBUG
 		XPLICIT_INFO("Created NetworkComponent");
 #endif
-
 	}
 
 	NetworkComponent::~NetworkComponent()
 	{
-		if (reset())
-			closesocket(mSocket);
-
 #ifndef _NDEBUG
 		XPLICIT_INFO("~NetworkComponent, Epoch: " + std::to_string(xplicit_get_epoch()));
 #endif
 
-		WSACleanup();
-	}
-
-	bool NetworkComponent::reset() noexcept
-	{
-#ifdef XPLICIT_WINDOWS
-		return shutdown(mSocket, SD_BOTH) != SOCKET_ERROR;
-#else
-#pragma error("DEFINE ME NetworkComponent.cpp")
-#endif
+		if (mHost)
+			enet_host_destroy(mHost);
 	}
 
 	bool NetworkComponent::connect(const char* ip)
@@ -87,30 +54,25 @@ namespace Xplicit
 		if (mSocket == SOCKET_ERROR)
 			return false;
 
-#ifdef XPLICIT_WINDOWS
-		memset(&mAddr, 0, sizeof(SOCKADDR_IN));
+		mHost = enet_host_create(nullptr, 1, 2, 0, 0);
 
-		mAddr.sin_family = AF_INET;
-		inet_pton(AF_INET, ip, &mAddr.sin_addr);
-		mAddr.sin_port = htons(XPLICIT_NETWORK_PORT);
+		if (mHost == nullptr)
+			throw NetworkError(NETWORK_ERR_BAD_CHALLENGE);
 
-		int result = ::connect(mSocket, reinterpret_cast<SOCKADDR*>(&mAddr), 
-			sizeof(PrivateAddressData));
+		ENetAddress address;
 
-		if (result == SOCKET_ERROR)
-			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
-#else
-#pragma error("DEFINE ME NetworkComponent.cpp")
-#endif
+		enet_address_set_host(&address, ip);
+		address.port = XPLICIT_NETWORK_PORT;
 
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[NetworkComponent] Connected!");
-#endif
+		mXnetHost = enet_host_connect(mHost, &address, XPLICIT_NUM_CHANNELS, 0);
+
+		if (mXnetHost == nullptr)
+			throw NetworkError(NETWORK_ERR_BAD_CHALLENGE);
 
 		return true;
 	}
 
-	bool NetworkComponent::send(NetworkPacket& packet, const std::size_t sz)
+	bool NetworkComponent::send(NetworkPacket& packet, const std::size_t sz, const bool data)
 	{
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
@@ -118,57 +80,57 @@ namespace Xplicit
 
 		packet.version = XPLICIT_NETWORK_VERSION;
 
-#ifdef XPLICIT_WINDOWS
-		int res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
-			reinterpret_cast<SOCKADDR*>(&mAddr), sizeof(mAddr));
+		ENetPacket* pckt = enet_packet_create((const void*)&packet, sizeof(NetworkPacket), 0);
 
-		if (res == SOCKET_ERROR)
-			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
-#else
-#pragma error("DEFINE ME NetworkComponent.cpp")
-#endif
+		if (enet_peer_send(mXnetHost, data ? XPLICIT_CHANNEL_DATA : XPLICIT_CHANNEL_CHAT, pckt) == 0)
+			enet_packet_destroy(pckt);
 
 		return true;
 	}
 
-	void NetworkComponent::update() 
+	void NetworkComponent::update()
 	{
-		this->read(mPacket);
-	}
-
-	bool NetworkComponent::read(NetworkPacket& packet, const std::size_t sz)
-	{
-		//! we gotta clear this one as we don't know if RST was sent.
-		mReset = false;
-
-		int length{ sizeof(struct sockaddr_in) };
-
-#ifdef XPLICIT_WINDOWS
-		int res = ::recvfrom(mSocket, reinterpret_cast<char*>(&packet), sz, 0,
-			(struct sockaddr*)&mAddr, &length);
-#else
-#pragma error("Define me NetworkComponent.cpp, NetworkComponent::read")
-#endif
-
-		if (res == SOCKET_ERROR)
+		static ENetEvent env;
+	
+		while (enet_host_service(mHost, &env, XPLICIT_WAIT_TIME) > 0)
 		{
-			int err = WSAGetLastError();
+			switch (env.type)
+			{
+			case ENET_EVENT_TYPE_RECEIVE:
+			{
+				if (env.packet->dataLength != sizeof(NetworkPacket))
+					break;
 
-			switch (err)
-			{
-			case ECONNABORTED:
-			case WSAECONNRESET:
-			{
-				mReset = true;
+				mChannelID = env.channelID;
+				mPacket = *(NetworkPacket*)env.packet->data;
+
+				enet_packet_destroy(env.packet);
+
 				break;
 			}
 			}
+		}
+	}
 
-			return false;
+	bool NetworkComponent::read(NetworkPacket& packet, const std::size_t sz, const bool data)
+	{
+		if (mChannelID == XPLICIT_CHANNEL_DATA)
+		{
+			if (!data)
+				return false;
 		}
 
-		if (packet.magic[0] == XPLICIT_NETWORK_MAG_0 && packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-			packet.magic[2] == XPLICIT_NETWORK_MAG_2 && packet.version == XPLICIT_NETWORK_VERSION)
+		if (mChannelID == XPLICIT_CHANNEL_CHAT)
+		{
+			if (data)
+				return false;
+		}
+
+		//! we gotta clear this one as we don't know if RST was sent.
+		mReset = false;
+
+		if (mPacket.magic[0] == XPLICIT_NETWORK_MAG_0 && mPacket.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+			mPacket.magic[2] == XPLICIT_NETWORK_MAG_2 && mPacket.version == XPLICIT_NETWORK_VERSION)
 		{
 			mPacket = packet;
 

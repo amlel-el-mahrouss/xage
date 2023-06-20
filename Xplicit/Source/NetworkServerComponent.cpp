@@ -15,15 +15,16 @@
  */
 
 #include "NetworkServerComponent.h"
+#include "CommonEngine.h"
 
 namespace Xplicit
 {
 	/// <summary>
 	/// Utility function which removes the peer and actor from the server.
 	/// </summary>
-	/// <param name="peer">The NetworkPeer being targeted.</param>
+	/// <param name="peer">The NetworkInstance being targeted.</param>
 	
-	static void xplicit_invalidate_peer(NetworkPeer* peer)
+	static void xplicit_invalidate_peer(NetworkInstance* peer)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("[INVALIDATE] UUID: " + uuids::to_string(peer->unique_addr.get()));
@@ -35,23 +36,11 @@ namespace Xplicit
 		peer->status = NETWORK_STAT_DISCONNECTED;
 	}
 
-	static void xplicit_set_ioctl(SOCKET sock)
-	{
-#ifdef XPLICIT_WINDOWS
-		auto ul = 1UL;
-
-		auto err = ioctlsocket(sock, FIONBIO, &ul);
-		XPLICIT_ASSERT(err == NO_ERROR);
-#else
-#pragma error("ServerComponent.cpp")
-#endif
-	}
-
 	NetworkServerComponent::NetworkServerComponent(const char* ip)
 		:
 		mSocket(INVALID_SOCKET), 
 		mAddress(ip),
-		mPrivate()
+		mXnetServer(nullptr)
 	{
 #ifndef _NDEBUG
 		std::string message;
@@ -61,39 +50,27 @@ namespace Xplicit
 		XPLICIT_INFO(message);
 #endif
 
-#ifdef XPLICIT_WINDOWS
-		// create ipv4 U.D.P socket.
-		mSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+		enet_address_set_host(&mXnetAddress, ip);
+		mXnetAddress.port = XPLICIT_NETWORK_PORT;
 
-		if (mSocket == SOCKET_ERROR)
+		mXnetServer = enet_host_create(&mXnetAddress, 
+			XPLICIT_MAX_CONNECTIONS, 
+			XPLICIT_NUM_CHANNELS,
+			0, 
+			0);
+
+		if (!mXnetServer)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
-		xplicit_set_ioctl(mSocket);
-
-		memset(&mPrivate, 0, sizeof(struct sockaddr_in));
-
-		/* internet packet */
-		mPrivate.sin_family = AF_INET;
-
-		inet_pton(AF_INET, ip, &mPrivate.sin_addr.S_un.S_addr);
-
-		mPrivate.sin_port = htons(XPLICIT_NETWORK_PORT);
-
-		auto ret_bind = bind(mSocket, reinterpret_cast<SOCKADDR*>(&mPrivate), sizeof(mPrivate));
-#else
-#pragma error("ServerComponent.cpp")
-#endif
-
-		if (ret_bind == SOCKET_ERROR)
-			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
-		
 		// Let's preallocate the clients.
 		// So we don't have to allocate them.
 
 		for (size_t i = 0; i < XPLICIT_MAX_CONNECTIONS; i++)
 		{
-			NetworkPeer* cl = new NetworkPeer();
-			mPeers.push_back(cl);
+			NetworkInstance* inst = new NetworkInstance();
+			XPLICIT_ASSERT(inst);
+
+			mPeers.push_back(std::make_pair(Auth::XplicitID(XPLICIT_UNIVERSE_ID, xplicit_get_epoch()), inst));
 		}
 
 #ifdef XPLICIT_DEBUG
@@ -106,18 +83,78 @@ namespace Xplicit
 		return mPeers.size(); 
 	}
 
-	NetworkPeer* NetworkServerComponent::get(const std::size_t& idx) noexcept 
+	NetworkInstance* NetworkServerComponent::get(const std::size_t& idx) noexcept 
 	{
-		return mPeers.at(idx); 
+		return mPeers.at(idx).second; 
 	}
 
 	const char* NetworkServerComponent::name() noexcept { return ("NetworkServerComponent"); }
 
 	NetworkServerComponent::INSTANCE_TYPE NetworkServerComponent::type() noexcept { return INSTANCE_NETWORK; }
 
-	void NetworkServerComponent::update() {}
+	void NetworkServerComponent::update() 
+	{
+		ENetEvent event;
+		/* Wait up to 1000 milliseconds for an event. */
+		while (enet_host_service(mXnetServer, &event, XPLICIT_WAIT_TIME) > 0)
+		{
+			switch (event.type)
+			{
+			case ENET_EVENT_TYPE_CONNECT:
+			{
+				for (std::size_t index = 0; index < mPeers.size(); index++)
+				{
+					if (mPeers[index].second->address == XPLICIT_BAD_ADDRESS)
+					{
+						mPeers[index].second->address = event.peer->address.host;
+						mPeers[index].second->port = event.peer->address.port;
+						event.peer->data = (void*)mPeers[index].first.as_string().c_str();
+					
+						break;
+					}
+				}
 
-	bool NetworkServerComponent::should_update() noexcept { return false; }
+				break;
+			}
+			case ENET_EVENT_TYPE_RECEIVE:
+				for (std::size_t index = 0; index < mPeers.size(); index++)
+				{
+					if (mPeers[index].second->address == event.peer->address.host &&
+						mPeers[index].second->port == event.peer->address.port)
+					{
+						mPeers[index].second->packet = *(NetworkPacket*)event.packet->data;
+						mPeers[index].second->channel = event.channelID;
+
+						break;
+					}
+				}
+
+				enet_packet_destroy(event.packet);
+
+				break;
+
+			case ENET_EVENT_TYPE_DISCONNECT:
+				printf("%s disconnected.\n", event.peer->data);
+
+				for (std::size_t index = 0; index < mPeers.size(); index++)
+				{
+					if (mPeers[index].second->address == event.peer->address.host &&
+						mPeers[index].second->port == event.peer->address.port)
+					{
+						mPeers[index].second->status = NETWORK_STAT_DISCONNECTED;
+						mPeers[index].second->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+
+						break;
+					}
+				}
+
+				/* Reset the peer's client information. */
+				event.peer->data = nullptr;
+			}
+		}
+	}
+
+	bool NetworkServerComponent::should_update() noexcept { return true; }
 
 	NetworkServerComponent::~NetworkServerComponent()
 	{
@@ -130,154 +167,9 @@ namespace Xplicit
 		XPLICIT_INFO(message);
 #endif
 
-#ifdef XPLICIT_WINDOWS
-		if (shutdown(mSocket, SD_BOTH) == SOCKET_ERROR)
-			closesocket(mSocket);
-#else
-#pragma error("ServerComponent.cpp")
-#endif
-
-		WSACleanup();
+		if (mXnetServer)
+			enet_host_destroy(mXnetServer);
 	}
 
 	const char* NetworkServerComponent::dns() noexcept { return mAddress.c_str(); }
-
-	static bool xplicit_recv_packet(
-		NetworkServerComponent* server,
-		const std::size_t& i,
-		NetworkPacket& packet)
-	{
-		if (server->get(i)->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
-			server->get(i)->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-			server->get(i)->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
-			server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
-		{
-			server->get(i)->packet = std::move(packet);
-
-			return true;
-		}
-
-		return false;
-	}
-	void NetworkServerHelper::recv_from(
-		NetworkServerComponent* server,
-		NetworkPeer* peer,
-		const std::size_t sz)
-	{
-		std::int32_t fromLen = sizeof(PrivateAddressData);
-		static NetworkPacket packet{};
-
-		std::int32_t res = ::recvfrom(server->mSocket,
-			reinterpret_cast<char*>(&packet),
-			sz,
-			0,
-			reinterpret_cast<sockaddr*>(&peer->address_data),
-			&fromLen);
-
-		if (peer->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
-			peer->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-			peer->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
-			peer->packet.version == XPLICIT_NETWORK_VERSION)
-		{
-			peer->packet = std::move(packet);
-		}
-		else
-		{
-			xplicit_invalidate_peer(peer);
-		}
-
-		if (res == SOCKET_ERROR)
-		{
-			std::int32_t reason = WSAGetLastError();
-
-			switch (reason)
-			{
-			case WSAECONNABORTED:
-				break;
-			case WSAECONNRESET:
-				break;
-			}
-		}
-	}
-
-	void NetworkServerHelper::recv(NetworkServerComponent* server, const std::size_t sz)
-	{
-		if (server)
-		{
-			for (std::size_t i = 0; i < server->size(); ++i)
-			{
-				std::int32_t fromLen = sizeof(sockaddr);
-				static NetworkPacket packet{};
-
-				std::int32_t res = ::recvfrom(server->mSocket,
-					reinterpret_cast<char*>(&packet), 
-					sz, 
-					0,
-					reinterpret_cast<sockaddr*>(&server->get(i)->address_data),
-					&fromLen);
-
-				if (res == SOCKET_ERROR)
-				{
-					std::int32_t reason = WSAGetLastError();
-
-					switch (reason)
-					{
-					case WSAECONNABORTED:
-						break;
-					case WSAECONNRESET:
-						break;
-					}
-				}
-
-				if (!xplicit_recv_packet(server, i, packet))
-					xplicit_invalidate_peer(server->get(i));
-			}
-		}
-	}
-
-	void NetworkServerHelper::send(NetworkServerComponent* server, const std::size_t sz)
-	{
-		if (server)
-		{
-			for (size_t i = 0; i < server->size(); i++)
-			{
-				server->get(i)->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
-				server->get(i)->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
-				server->get(i)->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
-
-				server->get(i)->packet.version = XPLICIT_NETWORK_VERSION;
-
-				std::int32_t sendLen = sizeof(sockaddr);
-
-				::sendto(server->mSocket, reinterpret_cast<const char*>(&server->get(i)->packet),
-					sz,
-					0,
-					reinterpret_cast<sockaddr*>(&server->get(i)->address_data),
-					sendLen);
-			}
-		}
-	}
-
-	void NetworkServerHelper::send_to(
-		NetworkServerComponent* server, 
-		NetworkPeer* peer,
-		const std::size_t sz)
-	{
-		if (peer && server)
-		{
-			peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
-			peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
-			peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
-
-			peer->packet.version = XPLICIT_NETWORK_VERSION;
-
-			std::int32_t sendLen = sizeof(sockaddr);
-
-			::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
-				sz,
-				0,
-				reinterpret_cast<sockaddr*>(&peer->address_data),
-				sendLen);
-		}
-	}
 }

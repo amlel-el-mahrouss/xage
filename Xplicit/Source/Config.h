@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <cstdint>
 
+#include <enet/enet.h>
 #include <uuid/uuid.h>
 #include <irrlicht.h>
 

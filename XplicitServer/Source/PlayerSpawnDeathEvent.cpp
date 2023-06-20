@@ -96,8 +96,6 @@ namespace Xplicit
 						peer_ptr->packet.speed[XPLICIT_NETWORK_X] = player->pos().X;
 						peer_ptr->packet.speed[XPLICIT_NETWORK_Y] = player->pos().Y;
 						peer_ptr->packet.speed[XPLICIT_NETWORK_Z] = player->pos().Z;
-
-						Xplicit::NetworkServerHelper::send(m_network);
 					}
 
 				}

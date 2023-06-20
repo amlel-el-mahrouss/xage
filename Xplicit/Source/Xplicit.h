@@ -345,17 +345,15 @@ namespace Xplicit
 		return path.string() + program_name;
 	}
 
-#ifdef XPLICIT_WINDOWS
-	static inline bool init_winsock(WSADATA* dat) 
+	static inline bool init_enet(WSADATA* dat) 
 	{
-		int result = WSAStartup(MAKEWORD(2, 2), dat);
-		if (result != 0) {
-			return false;
-		}
+		bool init = enet_initialize() == 0;
+
+		if (init)
+			std::atexit(enet_deinitialize);
 
 		return true;
 	}
-#endif
 
 #ifdef XPLICIT_WINDOWS
 	// for debug builds, also new the in-game console :p

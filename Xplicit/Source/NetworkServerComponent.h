@@ -4,15 +4,13 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: NetworkServerComponent.h
- *			Purpose: xconnect server protocol
- *
  * =====================================================================
  */
 
 #pragma once
 
 #include "NetworkComponent.h"
+#include "XplicitID.h"
 #include "Xplicit.h"
 #include "Event.h"
 
@@ -43,37 +41,18 @@ namespace Xplicit
 		virtual bool should_update() noexcept override;
 
 	public:
-		NetworkPeer* get(const std::size_t& idx) noexcept;
+		NetworkInstance* get(const std::size_t& idx) noexcept;
 		size_t size() noexcept;
 
 	private:
-		std::vector<NetworkPeer*> mPeers;
-		PrivateAddressData mPrivate;
-		std::string mAddress;
+		std::vector<std::pair<Auth::XplicitID, NetworkInstance*>> mPeers;
+		ENetAddress mXnetAddress;
+		ENetHost* mXnetServer;
+		String mAddress;
 		Socket mSocket;
 
 	private:
 		friend class NetworkServerHelper;
-
-	};
-
-	class XPLICIT_API NetworkServerHelper final
-	{
-	public:
-		static void send_to(
-			NetworkServerComponent* server, 
-			NetworkPeer* peer, 
-			const std::size_t sz = sizeof(NetworkPacket));
-
-		static void send(NetworkServerComponent* server, const std::size_t sz = sizeof(NetworkPacket));
-
-	public:
-		static void recv_from(
-			NetworkServerComponent* server,
-			NetworkPeer* peer,
-			const std::size_t sz = sizeof(NetworkPacket));
-
-		static void recv(NetworkServerComponent* server, const std::size_t sz = sizeof(NetworkPacket));
 
 	};
 }

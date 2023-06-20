@@ -19,11 +19,11 @@
 
 #define XPLICIT_DELTA_TIME		(1000.f)
 #define XPLICIT_COOLDOWN		(1000U)
+#define XPLICIT_WAIT_TIME		(1000U)
 #define XPLICIT_DEFAULT_HEALTH	(100U)
 #define XPLICIT_MOVEMENT_DELAY	(50U)
-#define XPLICIT_TICKRATE		(64)
 
-#define XPLICIT_DEFAULT_NAME	"NetworkPeer"
+#define XPLICIT_DEFAULT_NAME	"NetworkInstance"
 
 namespace Xplicit
 {

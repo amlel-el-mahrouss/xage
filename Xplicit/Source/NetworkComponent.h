@@ -68,24 +68,25 @@ namespace Xplicit
         virtual const char* name() noexcept override { return ("NetworkComponent"); }
         virtual INSTANCE_TYPE type() noexcept override { return INSTANCE_NETWORK; }
 
+        virtual bool should_update() noexcept override { return true; }
+
         virtual void update() override;
 
     public:
         bool connect(const char* ip);
 
     public:
-        bool send(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
-        bool read(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
+        bool send(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket), const bool data = true);
+        bool read(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket), const bool data = true);
 
         NetworkPacket& get() noexcept;
         bool is_reset() noexcept;
 
     private:
-        bool reset() noexcept;
-
-    private:
-		PrivateAddressData mAddr;
+        std::uint8_t mChannelID;
 		NetworkPacket mPacket;
+		ENetPeer* mXnetHost;
+		ENetHost* mHost;
         Socket mSocket;
         bool mReset;
 

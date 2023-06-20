@@ -19,7 +19,7 @@
 
 namespace Xplicit
 {
-    NetworkPeer::NetworkPeer() : 
+    NetworkInstance::NetworkInstance() : 
         packet(), 
         unique_addr(), 
 		hash(-1),
@@ -28,15 +28,15 @@ namespace Xplicit
         status(NETWORK_STAT_DISCONNECTED)
 	{}
 
-    NetworkPeer::~NetworkPeer() {}
+    NetworkInstance::~NetworkInstance() {}
     
-    NetworkPeer::UniqueAddress::UniqueAddress()
+    NetworkInstance::UniqueAddress::UniqueAddress()
 		: mUuid(UUIDFactory::version<4>())
 	{}
 
-    NetworkPeer::UniqueAddress::~UniqueAddress() = default;
+    NetworkInstance::UniqueAddress::~UniqueAddress() = default;
 
-    void NetworkPeer::reset() noexcept
+    void NetworkInstance::reset() noexcept
     {
         for (size_t cmd_index = 0; cmd_index < XPLICIT_NETWORK_CMD_MAX; ++cmd_index)
         {

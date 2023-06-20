@@ -147,7 +147,7 @@ int main(int argc, char** argv)
 		WSADATA wsa;
 		RtlZeroMemory(&wsa, sizeof(WSADATA));
 
-		Xplicit::init_winsock(&wsa);
+		Xplicit::init_enet(&wsa);
 #endif
 
 		/*
@@ -192,12 +192,8 @@ int main(int argc, char** argv)
 			if (XPLICIT_SHOULD_EXIT)
 				break;
 
-			Xplicit::NetworkServerHelper::recv(server);
-
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
-
-			Xplicit::NetworkServerHelper::send(server);
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr());
 

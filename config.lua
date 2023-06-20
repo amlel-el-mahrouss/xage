@@ -26,6 +26,7 @@ XPLICIT_CONFIG = {
 	  "dxgi",
 	  "d3d11",
 	  "d2d1",
+	  "Library/enet_static64",
 	  "d3dcompiler",
 	  "opengl32",
 	  "C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
