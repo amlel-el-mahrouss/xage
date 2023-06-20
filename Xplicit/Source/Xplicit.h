@@ -20,12 +20,6 @@
 
 #define XPLICIT_END_OF_BUFFER '\0'
 
-XPLICIT_API void xplicit_log(const char* str);
-XPLICIT_API size_t fstrlen(const char* str);
-XPLICIT_API time_t xplicit_get_epoch();
-XPLICIT_API FILE* xplicit_get_logger();
-XPLICIT_API bool xplicit_open_logger();
-
 #ifdef _MSC_VER
 #define PACKED_STRUCT(DECL) __pragma( pack(push, 1) ) DECL; __pragma( pack(pop))
 #else
@@ -609,6 +603,12 @@ namespace Xplicit
 
 	};
 }
+
+XPLICIT_API void xplicit_log(const char* str);
+XPLICIT_API size_t fstrlen(const char* str);
+XPLICIT_API time_t xplicit_get_epoch();
+XPLICIT_API FILE* xplicit_get_logger();
+XPLICIT_API bool xplicit_open_logger();
 
 #define XPLICIT_INIT_COM XPLICIT_ASSERT(SUCCEEDED(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE)))
 #define XPLICIT_FINI_COM CoUninitialize()

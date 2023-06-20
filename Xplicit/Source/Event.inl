@@ -4,9 +4,6 @@
  *			XplicitNgin C++ Game Engine
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Event.inl
- *			Purpose: Xplicit Event System
- *
  * =====================================================================
  */
 

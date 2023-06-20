@@ -12,7 +12,7 @@
 #include "Xplicit.h"
 
 /* XplicitNgin first universe */
-#define XPLICIT_UNIVERSE_ID (1U)
+#define XPLICIT_UNIVERSE_ID (1)
 #define XPLICIT_UNIVERSE_DELIM ":"
 #define XPLICIT_UNIVERSE_PREFIX "XPLICIT_"
 
@@ -37,14 +37,9 @@ namespace Xplicit::Auth
 		const std::int64_t& get() noexcept;
 		const String& as_string() noexcept;
 
-		const bool contains(std::int32_t bytes) noexcept;
-
 	private:
-		Xplicit::String mXplicitId;
-
-	private:
-		std::int64_t mConnectionHash;
-		std::int64_t mRegionId;
+		std::int64_t mConnectionID;
+		std::int64_t mVersion;
 
 	};
 }

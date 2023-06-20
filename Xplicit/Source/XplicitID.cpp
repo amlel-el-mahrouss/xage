@@ -11,30 +11,29 @@
 
 namespace Xplicit::Auth
 {
-	XplicitID::XplicitID(const int32_t& universe, const int32_t& connectionPublicHash) noexcept
-		: mRegionId(universe), mConnectionHash(connectionPublicHash), mXplicitId("")
-	{
-		mXplicitId = XPLICIT_UNIVERSE_PREFIX;
-		mXplicitId += std::move(std::to_string(mRegionId));
-		mXplicitId += XPLICIT_UNIVERSE_DELIM;
-		mXplicitId += std::move(std::to_string(mConnectionHash));
-	}
+	XplicitID::XplicitID(const int32_t& version, const int32_t& connectionPublicHash) noexcept
+		: mVersion(version), mConnectionID(connectionPublicHash)
+	{}
 
+	//! Generates a new Xplicit ID for a specific peer.
+	//! The Xplicit ID is done as follow
+	//! XPLICIT_<VERSION>:<CONNECTION_ID>:<USER_UUID>
+	
 	const String& XplicitID::as_string() noexcept
 	{
-		return mXplicitId;
+		Xplicit::String id;
+
+		id = XPLICIT_UNIVERSE_PREFIX;
+		id += std::move(std::to_string(mVersion));
+		id += XPLICIT_UNIVERSE_DELIM;
+		id += std::move(std::to_string(mConnectionID));
+		id += XPLICIT_UNIVERSE_DELIM;
+
+		return id;
 	}
 
 	const std::int64_t& XplicitID::get() noexcept
 	{
-		static const std::int64_t id = mRegionId | mConnectionHash;
-
-		/* return the complete id */
-		return id;
-	}
-
-	const bool XplicitID::contains(std::int32_t bytes) noexcept
-	{
-		return (bytes & mRegionId);
+		return mVersion;
 	}
 }

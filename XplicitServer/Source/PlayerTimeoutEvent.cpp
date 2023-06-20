@@ -33,6 +33,7 @@ namespace Xplicit
 		}
 		else
 		{
+			//! reset counter, we've done our cycles
 			mCounter = 0UL;
 
 			for (std::size_t index = 0; index < mNetwork->size(); ++index)

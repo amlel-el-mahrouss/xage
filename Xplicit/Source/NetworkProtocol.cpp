@@ -18,7 +18,8 @@
 
 namespace Xplicit
 {
-    NetworkPeer::NetworkPeer() : 
+    NetworkPeer::NetworkPeer() 
+        : 
         packet(), 
         addr(), 
         unique_addr(), 
@@ -40,7 +41,8 @@ namespace Xplicit
     }
 
     NetworkPeer::UniqueAddress::UniqueAddress()
-		: mUuid(UUIDFactory::version<4>()), 
+		:
+        mUuid(UUIDFactory::version<4>()), 
         mName("XplicitClient")
 	{}
 
