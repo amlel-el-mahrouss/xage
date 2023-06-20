@@ -72,7 +72,17 @@ namespace Xplicit
 		return true;
 	}
 
-	bool NetworkComponent::send(NetworkPacket& packet, const std::size_t sz, const bool data)
+	bool NetworkComponent::channel(const std::uint32_t& channelId) noexcept
+	{
+		if (channelId > XPLICIT_NUM_CHANNELS)
+			return false;
+
+		mChannelID = channelId;
+
+		return true;
+	}
+
+	bool NetworkComponent::send(NetworkPacket& packet, const std::size_t sz)
 	{
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
@@ -82,7 +92,7 @@ namespace Xplicit
 
 		ENetPacket* pckt = enet_packet_create((const void*)&packet, sizeof(NetworkPacket), 0);
 
-		if (enet_peer_send(mXnetHost, data ? XPLICIT_CHANNEL_DATA : XPLICIT_CHANNEL_CHAT, pckt) == 0)
+		if (enet_peer_send(mXnetHost, mChannelID, pckt) == 0)
 			enet_packet_destroy(pckt);
 
 		return true;
@@ -112,20 +122,8 @@ namespace Xplicit
 		}
 	}
 
-	bool NetworkComponent::read(NetworkPacket& packet, const std::size_t sz, const bool data)
+	bool NetworkComponent::read(NetworkPacket& packet, const std::size_t sz)
 	{
-		if (mChannelID == XPLICIT_CHANNEL_DATA)
-		{
-			if (!data)
-				return false;
-		}
-
-		if (mChannelID == XPLICIT_CHANNEL_CHAT)
-		{
-			if (data)
-				return false;
-		}
-
 		//! we gotta clear this one as we don't know if RST was sent.
 		mReset = false;
 

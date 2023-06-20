@@ -41,8 +41,15 @@ namespace Xplicit
 		virtual bool should_update() noexcept override;
 
 	public:
-		NetworkInstance* get(const std::size_t& idx) noexcept;
-		size_t size() noexcept;
+		size_t size() noexcept
+		{
+			return mPeers.size();
+		}
+
+		NetworkInstance* get(const std::size_t& idx) noexcept
+		{
+			return mPeers.at(idx).second;
+		}
 
 	private:
 		std::vector<std::pair<Auth::XplicitID, NetworkInstance*>> mPeers;

@@ -76,8 +76,14 @@ namespace Xplicit
         bool connect(const char* ip);
 
     public:
-        bool send(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket), const bool data = true);
-        bool read(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket), const bool data = true);
+        //! sets the working channel on xconnect connection.
+        //! channelId: channel (0 = data, 1 = chat)
+       
+        bool channel(const std::uint32_t& channelId) noexcept;
+
+    public:
+        bool send(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
+        bool read(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
 
         NetworkPacket& get() noexcept;
         bool is_reset() noexcept;

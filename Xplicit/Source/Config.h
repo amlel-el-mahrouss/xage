@@ -23,6 +23,12 @@
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 
+#ifdef _WIN32
+#   include <enet/win32.h>
+#elif defined(__linux__)
+#   include <enet/unix.h>
+#endif // ifdef WIN32
+
 #include <enet/enet.h>
 #include <uuid/uuid.h>
 #include <irrlicht.h>

@@ -27,7 +27,10 @@ XPLICIT_CONFIG = {
 	  "d3d11",
 	  "d2d1",
 	  "Library/enet_static64",
+	  "Library/enet64",
 	  "d3dcompiler",
+	  "ws2_32",
+	  "winmm",
 	  "opengl32",
 	  "C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
           "Library/glfw3",
@@ -63,9 +66,12 @@ XPLICIT_SERVER_CONFIG = {
     },
     ["_LIBDIR"] = {
 	"Library/enet_static64",
+	"Library/enet64",
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
     	"bin/Debug/Xplicit",
-        "Library/Irrlicht"
+        "Library/Irrlicht",
+	  "ws2_32",
+	  "winmm",
     },
     ["_INCDIR"] = {
         "Vendor/",
@@ -101,13 +107,15 @@ XPLICIT_CLIENT_CONFIG = {
     },
     ["_LIBDIR"] = {
 	"Library/enet_static64",
+	"Library/enet64",
     	"bin/Debug/Xplicit",
         "d3d11",
         "dxgi",
         "Library/glfw3",
         "d2d1",
         "opengl32",
-
+	  "ws2_32",
+	  "winmm",
       "Library/Irrlicht"
     },
     ["_INCDIR"] = {

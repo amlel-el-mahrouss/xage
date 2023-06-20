@@ -35,17 +35,4 @@ namespace Xplicit
 	{}
 
     NetworkInstance::UniqueAddress::~UniqueAddress() = default;
-
-    void NetworkInstance::reset() noexcept
-    {
-        for (size_t cmd_index = 0; cmd_index < XPLICIT_NETWORK_CMD_MAX; ++cmd_index)
-        {
-            packet.cmd[cmd_index] = NETWORK_CMD_INVALID;
-        }
-
-        status = NETWORK_STAT_INVALID;
-
-        hash = -1;
-        public_hash = -1;
-    }
 }

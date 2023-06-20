@@ -78,16 +78,6 @@ namespace Xplicit
 #endif
 	}
 
-	size_t NetworkServerComponent::size() noexcept 
-	{ 
-		return mPeers.size(); 
-	}
-
-	NetworkInstance* NetworkServerComponent::get(const std::size_t& idx) noexcept 
-	{
-		return mPeers.at(idx).second; 
-	}
-
 	const char* NetworkServerComponent::name() noexcept { return ("NetworkServerComponent"); }
 
 	NetworkServerComponent::INSTANCE_TYPE NetworkServerComponent::type() noexcept { return INSTANCE_NETWORK; }
