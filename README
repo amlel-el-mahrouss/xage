@@ -7,17 +7,16 @@ REQUIREMENTS:
 - Git.
 - Lua.
 - GLFW.
+- XplicitNet.
 - Mono.
-- Windows 7/8/10/11.
-- DirectXMath.
+- Windows 10/11.
 - Vulkan SDK 1.3.250.0
 - Visual Studio 2019.
 
 INSTALLING:
 ===========
 
-- Put the C# assemblies into %appdata%/Data.
-- Install lua via NuGet for XplicitServer and XplicitClient and Xplicit.dll.
+- Put the C# assemblies into %appdata%/Data
 
 ===================================================
 Copyright Xplicit Corporation, all rights reserved.
