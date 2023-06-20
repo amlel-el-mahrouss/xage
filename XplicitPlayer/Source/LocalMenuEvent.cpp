@@ -75,17 +75,6 @@ namespace Xplicit::Player
 
 			if (KB->key_down(KEY_KEY_Y))
 			{
-				static NetworkPacket stopPacket{};
-
-				stopPacket.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-				stopPacket.hash = mHash;
-
-				stopPacket.size = sizeof(NetworkPacket);
-
-				mNetwork->send(stopPacket);
-				
-				mEnabled = false;
-
 				std::exit(0);
 			}
 			else if (KB->key_down(KEY_KEY_N))

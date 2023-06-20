@@ -15,9 +15,10 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
-
 #include "Application.h"
 #include "GameMenuUI.h"
+
+#include <CommonEngine.h>
 
 namespace Xplicit::Player
 {
@@ -41,7 +42,7 @@ namespace Xplicit::Player
 		NetworkPacket& packet = mNetwork->get();
 
 		/* try send the acknowledge packet for the server. */
-		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = XPLICIT_XCONNECT_WATCHDOG_BYTE;
 
 		mNetwork->send(packet);
 

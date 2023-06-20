@@ -17,8 +17,7 @@ namespace Xplicit
 {
 	PlayerTimeoutEvent::PlayerTimeoutEvent()
 		:
-		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
-		mCounter(0UL)
+		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
 	{}
 
 	PlayerTimeoutEvent::~PlayerTimeoutEvent() = default;
@@ -27,29 +26,17 @@ namespace Xplicit
 	
 	void PlayerTimeoutEvent::operator()()
 	{
-		if (mCounter < PlayerTimeoutEvent::cycles)
+		for (std::size_t index = 0; index < mNetwork->size(); ++index)
 		{
-			++mCounter;
-		}
-		else
-		{
-			//! reset counter, we've done our cycles
-			mCounter = 0UL;
-
-			for (std::size_t index = 0; index < mNetwork->size(); ++index)
+			if (mNetwork->get(index)->stat == NETWORK_STAT_DISCONNECTED ||
+				mNetwork->get(index)->stat == NETWORK_STAT_INVALID)
 			{
-				if (mNetwork->get(index)->stat == NETWORK_STAT_DISCONNECTED ||
-					mNetwork->get(index)->stat == NETWORK_STAT_INVALID)
-					continue;
+				continue;
+			}
 
-				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
-				{
-					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-				}
-				else
-				{
-					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
-				}
+			if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != XPLICIT_XCONNECT_WATCHDOG_BYTE)
+			{
+				mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 			}
 		}
 	}

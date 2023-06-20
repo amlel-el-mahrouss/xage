@@ -91,10 +91,13 @@ namespace Xplicit
 					XPLICIT_INFO("Connected");
 
 					mNetwork->get(index)->stat = NETWORK_STAT_CONNECTED;
+
+					continue;
 				}
 			}
+
 			//! leaving
-			else if (mNetwork->get(index)->stat == NETWORK_STAT_CONNECTED)
+			if (mNetwork->get(index)->stat == NETWORK_STAT_CONNECTED)
 			{
 				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
@@ -115,9 +118,12 @@ namespace Xplicit
 
 					if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
+				
+					continue;
 				}
 			}
-			else if (mNetwork->get(index)->stat == NETWORK_STAT_INVALID)
+
+			if (mNetwork->get(index)->stat == NETWORK_STAT_INVALID)
 			{
 				continue;
 			}

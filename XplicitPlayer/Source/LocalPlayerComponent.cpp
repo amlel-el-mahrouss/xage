@@ -59,6 +59,10 @@ namespace Xplicit::Player
 
 		mNetwork->read(mPacket);
 
+		mPacket.cmd[XPLICIT_NETWORK_CMD_ACK] = XPLICIT_XCONNECT_WATCHDOG_BYTE;
+
+		mNetwork->send(mPacket);
+
 		if (mPacket.public_hash == mPublicHash)
 		{
 			if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
@@ -121,6 +125,10 @@ namespace Xplicit::Player
 	{
 		if (mNetwork == nullptr)
 			return;
+
+		mPacket.cmd[XPLICIT_NETWORK_CMD_ACK] = XPLICIT_XCONNECT_WATCHDOG_BYTE;
+
+		mNetwork->send(mPacket);
 
 		auto traits = Root::get_singleton_ptr()->Keyboard->get_layout();
 
