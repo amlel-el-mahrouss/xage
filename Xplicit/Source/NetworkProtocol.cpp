@@ -28,7 +28,7 @@ namespace Xplicit
         status(NETWORK_STAT_DISCONNECTED)
 	{}
 
-    NetworkInstance::~NetworkInstance() {}
+    NetworkInstance::~NetworkInstance() = default;
     
     NetworkInstance::UniqueAddress::UniqueAddress()
 		: mUuid(UUIDFactory::version<4>())

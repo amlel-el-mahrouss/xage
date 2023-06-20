@@ -102,6 +102,9 @@ namespace Xplicit
 						
 						event.peer->data = (void*)mPeers[index].first.as_string().c_str();
 					
+						mPeers[index].second->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
+						mPeers[index].second->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
 						break;
 					}
 				}
@@ -133,7 +136,6 @@ namespace Xplicit
 						mPeers[index].second->port == event.peer->address.port)
 					{
 						mPeers[index].second->status = NETWORK_STAT_DISCONNECTED;
-						
 						mPeers[index].second->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 
 						break;

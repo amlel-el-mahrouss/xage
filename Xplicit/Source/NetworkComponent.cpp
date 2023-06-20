@@ -44,9 +44,15 @@ namespace Xplicit
 #ifndef _NDEBUG
 		XPLICIT_INFO("~NetworkComponent, Epoch: " + std::to_string(xplicit_get_epoch()));
 #endif
+		if (mXnetHost)
+		{
+			enet_peer_reset(mXnetHost);
+		}
 
 		if (mHost)
+		{
 			enet_host_destroy(mHost);
+		}
 	}
 
 	bool NetworkComponent::connect(const char* ip)
