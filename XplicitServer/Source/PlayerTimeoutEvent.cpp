@@ -33,11 +33,6 @@ namespace Xplicit
 			{
 				continue;
 			}
-
-			if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != XPLICIT_XCONNECT_WATCHDOG_BYTE)
-			{
-				mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-			}
 		}
 	}
 }

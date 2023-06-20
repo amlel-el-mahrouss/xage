@@ -58,6 +58,9 @@ namespace Xplicit
 				peer->packet.public_hash = peer->public_hash;
 			}
 		}
+
+		//! notify everyone
+		NetworkServerHelper::send(server);
 	}
 
 	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() 
@@ -82,8 +85,21 @@ namespace Xplicit
 			if (mNetwork->get(index)->stat == NETWORK_STAT_DISCONNECTED)
 			{
 				//! we begin the communication
-				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN ||
-					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == XPLICIT_XCONNECT_WATCHDOG_BYTE)
+				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
+				{
+					mNetwork->get(index)->stat = NETWORK_STAT_CONNECTED;
+
+					NetworkServerHelper::send_to(mNetwork, mNetwork->get(index));
+
+					continue;
+				}
+			}
+
+			//! leave event
+			if (mNetwork->get(index)->stat == NETWORK_STAT_CONNECTED)
+			{
+				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == XPLICIT_NETWORK_CMD_ACK &&
+					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == XPLICIT_NETWORK_CMD_BEGIN)
 				{
 					PlayerComponent* player = mPlayers[index];
 					xplicit_create_notify_join(mNetwork->get(index), player, mNetwork);
@@ -94,15 +110,9 @@ namespace Xplicit
 
 					XPLICIT_INFO("PlayerComponent:OnConnect");
 
-					mNetwork->get(index)->stat = NETWORK_STAT_CONNECTED;
-
 					continue;
 				}
-			}
 
-			//! leave event
-			if (mNetwork->get(index)->stat == NETWORK_STAT_CONNECTED)
-			{
 				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 				{
