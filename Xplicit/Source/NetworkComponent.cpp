@@ -8,7 +8,6 @@
  */
 
 #include "NetworkComponent.h"
-#include "CommonEngine.h"
 
 namespace Xplicit 
 {
@@ -172,12 +171,6 @@ namespace Xplicit
 			packet.magic[2] == XPLICIT_NETWORK_MAG_2 && packet.version == XPLICIT_NETWORK_VERSION)
 		{
 			mPacket = packet;
-
-			if (mPacket.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
-			{
-				mPacket.cmd[XPLICIT_NETWORK_CMD_ACK] = XPLICIT_XCONNECT_WATCHDOG_BYTE;
-				this->send(mPacket);
-			}
 
 			//! return true here, the packet is valid!
 			return true;

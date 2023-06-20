@@ -135,5 +135,3 @@ namespace Xplicit
 		COMPONENT_ID_INVALID = 0xffff,
 	};
 }
-
-#define XPLICIT_XCONNECT_WATCHDOG_BYTE (0xAA55)

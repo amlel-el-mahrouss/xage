@@ -4,12 +4,16 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
+ *			File: LoadingComponent.cpp
+ *			Purpose: Loading Component
+ *
  * =====================================================================
  */
 
  /**
  @file
  */
+
 
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
@@ -18,8 +22,6 @@
 #include "LocalCameraComponent.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
-
-#include <CommonEngine.h>
 
 namespace Xplicit::Player
 {
@@ -132,7 +134,7 @@ namespace Xplicit::Player
 					NetworkPacket spawn{};
 
 					spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
-					spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = XPLICIT_XCONNECT_WATCHDOG_BYTE;
+					spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 					spawn.size = sizeof(NetworkPacket);
 

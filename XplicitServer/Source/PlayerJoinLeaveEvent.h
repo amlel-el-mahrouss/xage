@@ -32,11 +32,16 @@ namespace Xplicit
 		virtual void operator()() override;
 
 	public:
-		const size_t size() noexcept;
+		const size_t& size() noexcept;
+
+	private:
+		bool handle_leave_event(NetworkServerComponent* server) noexcept;
+		bool handle_join_event(NetworkServerComponent* server) noexcept;
 
 	private:
 		std::vector<PlayerComponent*> mPlayers;
 		NetworkServerComponent* mNetwork;
+		std::size_t mPlayerCount;
 
 	};
 }

@@ -19,12 +19,10 @@ T* Xplicit::ComponentManager::add(Args&&... args)
 
 	if (ptr)
 	{
-#ifdef XPLICIT_DEBUG
 		String fmt = "Created component: ";
 		fmt += typeid(T).name();
 
 		XPLICIT_INFO(fmt);
-#endif
 
 		mComponents.push_back(reinterpret_cast<Component*>(ptr));
 		return ptr;
@@ -109,12 +107,10 @@ bool Xplicit::ComponentManager::remove(T* ptr)
 		ptr->~T();
 		delete ptr;
 
-#ifdef XPLICIT_DEBUG
 		String fmt = "Destroyed component: ";
 		fmt += typeid(T).name();
 
 		XPLICIT_INFO(fmt);
-#endif // XPLICIT_DEBUG
 
 		mComponents.erase(iterator);
 

@@ -59,7 +59,7 @@ XPLICIT_MAIN()
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = Xplicit::NETWORK_CMD_STOP;
 				net->send(packet);
 			}
-			});
+		});
 
 		/* main game loop */
 		while (IRR->run() && 

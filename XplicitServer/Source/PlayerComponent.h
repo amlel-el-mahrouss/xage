@@ -52,7 +52,6 @@ namespace Xplicit
 		const int64_t health() noexcept;
 		bool is_frozen() noexcept;
 		bool alive() noexcept;
-		void reset() noexcept;
 
 	public:
 		PositionComponent Position;

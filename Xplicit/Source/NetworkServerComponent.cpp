@@ -29,7 +29,10 @@ namespace Xplicit
 		XPLICIT_INFO("[INVALIDATE] UUID: " + uuids::to_string(peer->unique_addr.get()));
 #endif // ifdef XPLICIT_DEBUG
 
-		peer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+		peer->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+		peer->unique_addr.invalidate();
+
+		peer->stat = NETWORK_STAT_DISCONNECTED;
 	}
 
 	static void xplicit_set_ioctl(SOCKET sock)
@@ -59,7 +62,6 @@ namespace Xplicit
 #endif
 
 #ifdef XPLICIT_WINDOWS
-
 		// create ipv4 U.D.P socket.
 		mSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -149,17 +151,13 @@ namespace Xplicit
 			server->get(i)->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
 			server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
 		{
-			server->get(i)->packet = packet;
-
-			if (server->get(i)->stat == NETWORK_STAT_INVALID)
-				server->get(i)->stat = NETWORK_STAT_DISCONNECTED;
+			server->get(i)->packet = std::move(packet);
 
 			return true;
 		}
 
 		return false;
 	}
-
 	void NetworkServerHelper::recv_from(
 		NetworkServerComponent* server,
 		NetworkPeer* peer,
@@ -175,6 +173,18 @@ namespace Xplicit
 			reinterpret_cast<sockaddr*>(&peer->addr),
 			&fromLen);
 
+		if (peer->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
+			peer->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+			peer->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
+			peer->packet.version == XPLICIT_NETWORK_VERSION)
+		{
+			peer->packet = std::move(packet);
+		}
+		else
+		{
+			xplicit_invalidate_peer(peer);
+		}
+
 		if (res == SOCKET_ERROR)
 		{
 			std::int32_t reason = WSAGetLastError();
@@ -186,23 +196,6 @@ namespace Xplicit
 			case WSAECONNRESET:
 				break;
 			}
-
-			return;
-		}
-
-		if (peer->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
-			peer->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-			peer->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
-			peer->packet.version == XPLICIT_NETWORK_VERSION)
-		{
-			peer->packet = packet;
-
-			if (peer->stat == NETWORK_STAT_INVALID)
-				peer->stat = NETWORK_STAT_DISCONNECTED;
-		}
-		else
-		{
-			xplicit_invalidate_peer(peer);
 		}
 	}
 
@@ -210,7 +203,7 @@ namespace Xplicit
 	{
 		if (server)
 		{
-			for (std::size_t index = 0; index < server->size(); ++index)
+			for (std::size_t i = 0; i < server->size(); ++i)
 			{
 				std::int32_t fromLen = sizeof(PrivateAddressData);
 				static NetworkPacket packet{};
@@ -219,8 +212,11 @@ namespace Xplicit
 					reinterpret_cast<char*>(&packet),
 					sz,
 					0,
-					reinterpret_cast<sockaddr*>(&server->get(index)->addr),
+					reinterpret_cast<sockaddr*>(&server->get(i)->addr),
 					&fromLen);
+
+				if (!xplicit_recv_packet(server, i, packet))
+					xplicit_invalidate_peer(server->get(i));
 
 				if (res == SOCKET_ERROR)
 				{
@@ -233,12 +229,7 @@ namespace Xplicit
 					case WSAECONNRESET:
 						break;
 					}
-
-					continue;
 				}
-
-				if (!xplicit_recv_packet(server, index, packet))
-					xplicit_invalidate_peer(server->get(index));
 			}
 		}
 	}
@@ -247,13 +238,11 @@ namespace Xplicit
 	{
 		if (server)
 		{
-			for (std::size_t i = 0; i < server->size(); i++)
+			for (size_t i = 0; i < server->size(); i++)
 			{
 				server->get(i)->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 				server->get(i)->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 				server->get(i)->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
-
-				server->get(i)->packet.hash = server->get(i)->hash;
 
 				server->get(i)->packet.version = XPLICIT_NETWORK_VERSION;
 
@@ -300,10 +289,7 @@ namespace Xplicit
 						continue;
 
 					if (equals(server->get(second_peer_idx)->addr, server->get(peer_idx)->addr))
-					{
 						server->get(second_peer_idx)->reset();
-						server->get(second_peer_idx)->unique_addr.invalidate();
-					}
 				}
 			}
 		}

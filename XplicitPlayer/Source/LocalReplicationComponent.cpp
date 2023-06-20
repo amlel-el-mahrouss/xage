@@ -26,9 +26,7 @@ namespace Xplicit::Player
 
 		// first acknowledge.
 		auto& packet = mNetwork->get();
-		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = XPLICIT_XCONNECT_WATCHDOG_BYTE;
-
-		mNetwork->send(packet);
+		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 		if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
 		{
