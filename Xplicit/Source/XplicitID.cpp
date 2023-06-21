@@ -25,7 +25,7 @@ namespace Xplicit::Auth
 		return mXplicitId;
 	}
 
-	const std::int64_t& XplicitID::as_int() noexcept
+	const std::int64_t& XplicitID::as_int() const noexcept
 	{
 		static const std::int64_t id = mRegionId | mConnectionHash;
 		return id;

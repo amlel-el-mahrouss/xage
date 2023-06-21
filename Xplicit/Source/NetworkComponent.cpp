@@ -100,7 +100,7 @@ namespace Xplicit
 			reinterpret_cast<const char*>(&packet), 
 			sizeof(NetworkPacket), 
 			0,
-			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), 
+			reinterpret_cast<sockaddr*>(&mSockAddrIn),
 			sizeof(mSockAddrIn)) == SOCKET_ERROR)
 		{
 			const auto err = WSAGetLastError();
@@ -121,12 +121,10 @@ namespace Xplicit
 
 		std::int32_t len = sizeof(struct sockaddr_in);
 
-		const std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
+		const std::int32_t err = ::recv(mSocket.PublicSocket, 
 			reinterpret_cast<char*>(&mPacket), 
 			sizeof(NetworkPacket), 
-			0, 
-			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), 
-			&len);
+			0);
 
 		if (len < 1)
 			return false;

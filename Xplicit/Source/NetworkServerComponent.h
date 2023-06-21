@@ -53,7 +53,7 @@ namespace Xplicit
 	class XPLICIT_API NetworkServerHelper final
 	{
 	public:
-		static void send_to(NetworkServerComponent* server, NetworkInstance* peer);
+		static void send(NetworkServerComponent* server, NetworkInstance* peer);
 		static void recv(NetworkServerComponent* server, NetworkInstance* peer);
 		static void accept(NetworkServerComponent* server);
 		static void send(NetworkServerComponent* server);

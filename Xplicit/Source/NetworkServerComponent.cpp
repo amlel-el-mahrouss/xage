@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: NetworkServerComponent.cpp
- *			Purpose: xconnect server protocol
- * 
  * =====================================================================
  */
 
@@ -47,6 +44,7 @@ namespace Xplicit
 
 	NetworkServerComponent::NetworkServerComponent(const char* ip)
 		:
+		Component(),
 		mSocket(INVALID_SOCKET), 
 		mDns(ip)
 	{
@@ -67,7 +65,7 @@ namespace Xplicit
 		sockaddr_in bindAddress = {};
 		memset(&bindAddress, 0, sizeof(struct sockaddr_in));
 		
-		inet_pton(AF_INET, ip, &bindAddress.sin_addr.S_un.S_addr);
+		inet_pton(AF_INET, this->mDns.c_str(), &bindAddress.sin_addr.S_un.S_addr);
 
 		bindAddress.sin_family = AF_INET;
 		bindAddress.sin_port = htons(XPLICIT_NETWORK_PORT);
@@ -103,14 +101,12 @@ namespace Xplicit
 
 	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
 
-	void NetworkServerHelper::recv(
-		NetworkServerComponent* server,
-		NetworkInstance* peer)
+	void NetworkServerHelper::recv(NetworkServerComponent* server, NetworkInstance* peer)
 	{
 		if (!peer || !server)
 			return;
 
-		std::int32_t fromLen = sizeof(PrivateAddressData);
+		std::int32_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
 
 		if (::recvfrom(server->mSocket,
@@ -118,7 +114,7 @@ namespace Xplicit
 			sizeof(NetworkPacket),
 			0,
 			reinterpret_cast<sockaddr*>(&peer->address),
-			&fromLen) == SOCKET_ERROR)
+			&from_len) == SOCKET_ERROR)
 		{
 			switch (WSAGetLastError())
 			{
@@ -128,7 +124,7 @@ namespace Xplicit
 				FD_ZERO(&fd);
 				FD_SET(server->mSocket, &fd);
 
-				static constexpr timeval timeout = { .tv_sec = 3, .tv_usec = 0 };
+				static constexpr timeval timeout = { .tv_sec = 1, .tv_usec = 0 };
 
 				::select(0, &fd, nullptr, nullptr, &timeout);
 #ifdef XPLICIT_DEBUG
@@ -151,37 +147,40 @@ namespace Xplicit
 				break;
 			}
 
+			return;
 		}
+
 		if (peer->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
 			peer->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
 			peer->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
 			peer->packet.version == XPLICIT_NETWORK_VERSION)
 		{
 			peer->packet = packet;
-			return;
 		}
-
-		xplicit_invalidate_peer(peer);
+		else
+		{
+			xplicit_invalidate_peer(peer);
+		}
 	}
 
 	void NetworkServerHelper::accept(NetworkServerComponent* server)
 	{
-		if (server)
+		XPLICIT_ASSERT(server);
+
+		for (std::size_t i = 0; i < server->size(); ++i)
 		{
-			for (std::size_t i = 0; i < server->size(); ++i)
-			{
-				Thread listeners([&]() {
-					const std::size_t peerAt = i;
+			Thread listeners([&]() {
+				const std::size_t peer_at = i;
 
-					while (server)
-					{
-						auto peer = server->get(peerAt);
-						NetworkServerHelper::recv(server, peer);
+				while (server)
+				{
+					const auto peer = server->get(peer_at);
 
-						std::this_thread::sleep_for(std::chrono::milliseconds(60));
-					}
+					NetworkServerHelper::recv(server, peer);
+
+					std::this_thread::sleep_for(std::chrono::milliseconds(60));
+				}
 				});
-			}
 		}
 	}
 
@@ -209,9 +208,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerHelper::send_to(
-		NetworkServerComponent* server,
-		NetworkInstance* peer)
+	void NetworkServerHelper::send(NetworkServerComponent* server, NetworkInstance* peer)
 	{
 		if (peer && server)
 		{

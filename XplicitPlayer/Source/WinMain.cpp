@@ -30,7 +30,7 @@ XPLICIT_MAIN()
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
 			Xplicit::DialogHelper::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
-				L"Cannot open more than one instance of the Xplicit Engine!", 
+				L"Cannot open more than one instance of the XplicitNgin.", 
 				MB_OK);
 
 			return 1;
@@ -64,6 +64,7 @@ XPLICIT_MAIN()
 				Xplicit::NetworkPacket packet{};
 
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = Xplicit::NETWORK_CMD_STOP;
+
 				net->send(packet);
 			}
 		});
