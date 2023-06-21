@@ -96,17 +96,17 @@ namespace Xplicit
 		packet.channel = mChannelID;
 		packet.version = XPLICIT_NETWORK_VERSION;
 		
-		if (const auto res = ::sendto(mSocket,
+		if (const auto res = ::sendto(mSocket.PublicSocket,
 			reinterpret_cast<const char*>(&packet), 
 			sizeof(NetworkPacket), 
 			0,
 			reinterpret_cast<sockaddr*>(&mSockAddrIn),
 			sizeof(mSockAddrIn)) == SOCKET_ERROR)
 		{
-			std::cout << "FUCK YOU" << std::endl;
+			std::cout << WSAGetLastError() << std::endl;
 
 			const auto err = WSAGetLastError();
-			return res != SOCKET_ERROR || err != WSAEWOULDBLOCK;
+			return err == WSAEWOULDBLOCK;
 		}
 		else
 		{

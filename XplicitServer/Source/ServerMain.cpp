@@ -176,8 +176,8 @@ int main(int argc, char** argv)
 		
 		do
 		{
-			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
+			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerHelper::send(server);
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 

@@ -11,7 +11,8 @@
 
 namespace Xplicit::Auth
 {
-	XplicitID::XplicitID(const int32_t& universe, const int32_t& hash) noexcept
+	XplicitID::XplicitID(const int32_t& universe, 
+						 const int32_t& hash) noexcept
 		: mRegionId(universe), mConnectionHash(hash), mXplicitId("")
 	{
 		mXplicitId = XPLICIT_UNIVERSE_PREFIX;
