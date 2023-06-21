@@ -290,39 +290,6 @@ namespace Xplicit
 	};
 #endif
 
-	template <typename Fn, typename... Args>
-	class AsyncAction final 
-	{
-	public:
-		using FnT = Fn;
-
-	public:
-		AsyncAction() = delete;
-
-		AsyncAction(FnT fn, Args&&... args)
-		{
-			XPLICIT_ASSERT(fn);
-			m_thread = std::thread(fn, args...);
-		}
-
-		~AsyncAction() {}
-
-		void detach() noexcept
-		{
-			m_thread.detach();
-		}
-
-		std::thread& operator->() const { return m_thread; }
-
-	public:
-		AsyncAction& operator=(const AsyncAction&) = default;
-		AsyncAction(const AsyncAction&) = default;
-
-	private:
-		std::jthread m_thread;
-
-	};
-
 	static inline std::string get_at_current_path(const std::string& program_name) 
 	{
 		auto path = std::filesystem::current_path();
@@ -610,10 +577,74 @@ namespace Xplicit
 		}
 
 	};
+	
+	namespace Threading
+	{
+
+		template <typename Fn, typename... Args>
+		class AsyncAction final
+		{
+			using FnT = Fn;
+
+		public:
+			AsyncAction() = delete;
+
+			AsyncAction(FnT fn, Args&&... args)
+			{
+				XPLICIT_ASSERT(fn);
+				m_thread = std::thread(fn, args...);
+			}
+
+			~AsyncAction() {}
+
+			void detach() noexcept
+			{
+				m_thread.detach();
+			}
+			
+			AsyncAction& operator=(const AsyncAction&) = default;
+			AsyncAction(const AsyncAction&) = default;
+
+		private:
+			std::jthread m_thread;
+
+		};
+
+		struct ThreadLockingSystem final
+		{
+		private:
+			Thread The;
+			bool Release;
+
+		public:
+			void release() { Release = true; }
+
+			explicit operator bool() const noexcept { return Release == false; }
+
+			explicit ThreadLockingSystem(Thread& thrd)
+				: Release(false), The(std::move(thrd))
+			{
+				XPLICIT_ASSERT(thrd.joinable());
+
+				if (!thrd.joinable())
+					throw EngineError("Thread is not joinable.");
+			}
+
+			~ThreadLockingSystem()
+			{
+				this->release();
+			}
+
+			XPLICIT_COPY_DEFAULT(ThreadLockingSystem)
+		};
+	}
+
 }
 
-#define XPLICIT_INIT_COM XPLICIT_ASSERT(SUCCEEDED(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE)))
-#define XPLICIT_FINI_COM CoUninitialize()
+#ifdef XPLICIT_WINDOWS
+#	define XPLICIT_INIT_COM XPLICIT_ASSERT(SUCCEEDED(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE)))
+#	define XPLICIT_FINI_COM CoUninitialize()
+#endif // ifdef XPLICIT_WINDOWS
 
 #define XPLICIT_CRITICAL(...) Xplicit::Logger::get_singleton().get()->critical(__VA_ARGS__)
 #define XPLICIT_ERROR(...) Xplicit::Logger::get_singleton().get()->error(__VA_ARGS__)

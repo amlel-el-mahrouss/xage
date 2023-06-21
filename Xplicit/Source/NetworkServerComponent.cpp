@@ -103,10 +103,12 @@ namespace Xplicit
 
 	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
 
-	void NetworkServerHelper::recv_from(
+	void NetworkServerHelper::recv(
 		NetworkServerComponent* server,
 		NetworkInstance* peer)
 	{
+		if (!peer || !server)
+			return;
 
 		std::int32_t fromLen = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
@@ -174,13 +176,11 @@ namespace Xplicit
 					while (server)
 					{
 						auto peer = server->get(peerAt);
-						NetworkServerHelper::recv_from(server, peer);
+						NetworkServerHelper::recv(server, peer);
 
 						std::this_thread::sleep_for(std::chrono::milliseconds(60));
 					}
 				});
-
-				listeners.detach();
 			}
 		}
 	}

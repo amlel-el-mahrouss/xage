@@ -54,9 +54,9 @@ namespace Xplicit
 	{
 	public:
 		static void send_to(NetworkServerComponent* server, NetworkInstance* peer);
-		static void send(NetworkServerComponent* server);
-		static void recv_from(NetworkServerComponent* server, NetworkInstance* peer);
+		static void recv(NetworkServerComponent* server, NetworkInstance* peer);
 		static void accept(NetworkServerComponent* server);
+		static void send(NetworkServerComponent* server);
 		
 	};
 }
