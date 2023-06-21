@@ -214,9 +214,9 @@ namespace Xplicit::Renderer::DX11
 		RenderComponentD3D11(const RenderComponentD3D11&) = default;
 		
 		void push(const Vector<float>& vert);
-		void push(ShaderSystemD3D11* system) noexcept;
+		void push_shader(ShaderSystemD3D11* system) noexcept;
 
-		void set(DriverSystemD3D11* dx11) noexcept;
+		void set_driver(DriverSystemD3D11* dx11) noexcept;
 
 		size_t size() noexcept;
 		void create();

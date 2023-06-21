@@ -31,8 +31,11 @@ namespace Xplicit
 	// NetworkComponent Constructor
 	NetworkComponent::NetworkComponent()
 		: Component(),
-		mReset(false), 
-		mHost(nullptr)
+		mReset(false),
+		mChannelID(XPLICIT_CHANNEL_DATA),
+		mSocket(Network::SOCKET_TYPE::UDP),
+		mSockAddrIn(),
+		mPacket()
 	{
 #ifndef _NDEBUG
 		XPLICIT_INFO("Created NetworkComponent");
@@ -44,41 +47,22 @@ namespace Xplicit
 #ifndef _NDEBUG
 		XPLICIT_INFO("~NetworkComponent, Epoch: " + std::to_string(xplicit_get_epoch()));
 #endif
-		if (mXnetHost)
-		{
-			enet_peer_reset(mXnetHost);
-		}
-
-		if (mHost)
-		{
-			enet_host_destroy(mHost);
-		}
 	}
 
 	bool NetworkComponent::connect(const char* ip)
 	{
-		if (mSocket == SOCKET_ERROR)
-			return false;
+		memset(&mSockAddrIn, 0, sizeof(sockaddr_in));
 
-		mHost = enet_host_create(nullptr, 1, 2, 0, 0);
+		mSockAddrIn.sin_family = AF_INET;
+		inet_pton(AF_INET, ip, &mSockAddrIn.sin_addr);
+		mSockAddrIn.sin_port = htons(XPLICIT_NETWORK_PORT);
 
-		if (mHost == nullptr)
-			throw NetworkError(NETWORK_ERR_BAD_CHALLENGE);
-
-		ENetAddress address;
-
-		enet_address_set_host(&address, ip);
-		address.port = XPLICIT_NETWORK_PORT;
-
-		mXnetHost = enet_host_connect(mHost, &address, XPLICIT_NUM_CHANNELS, 0);
-
-		if (mXnetHost == nullptr)
-			throw NetworkError(NETWORK_ERR_BAD_CHALLENGE);
+		::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr));
 
 		return true;
 	}
 
-	bool NetworkComponent::channel(const std::uint32_t& channelId) noexcept
+	bool NetworkComponent::set_channel(const std::uint32_t& channelId) noexcept
 	{
 		if (channelId > XPLICIT_NUM_CHANNELS)
 			return false;
@@ -96,47 +80,73 @@ namespace Xplicit
 
 		packet.version = XPLICIT_NETWORK_VERSION;
 
-		ENetPacket* pckt = enet_packet_create((const void*)&packet, 
-			sizeof(NetworkPacket), 
-			ENET_PACKET_FLAG_RELIABLE);
+		int res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
+			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in));
 
-		if (enet_peer_send(mXnetHost, mChannelID, pckt) == 0)
-			enet_packet_destroy(pckt);
+		if (res == SOCKET_ERROR)
+			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
 		return true;
 	}
 
-	void NetworkComponent::update()
-	{
-		static ENetEvent env;
-	
-		while (enet_host_service(mHost, &env, XPLICIT_WAIT_TIME) > 0)
-		{
-			switch (env.type)
-			{
-			case ENET_EVENT_TYPE_RECEIVE:
-			{
-				if (env.packet->dataLength != sizeof(NetworkPacket))
-					break;
-
-				mChannelID = env.channelID;
-				mPacket = *(NetworkPacket*)env.packet->data;
-
-				enet_packet_destroy(env.packet);
-
-				break;
-			}
-			}
-		}
-	}
+	void NetworkComponent::update() {}
 
 	bool NetworkComponent::read(NetworkPacket& packet, const std::size_t sz)
 	{
 		//! we gotta clear this one as we don't know if RST was sent.
 		mReset = false;
 
-		if (mPacket.magic[0] == XPLICIT_NETWORK_MAG_0 && mPacket.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-			mPacket.magic[2] == XPLICIT_NETWORK_MAG_2 && mPacket.version == XPLICIT_NETWORK_VERSION)
+		timeval timVal;
+		timVal.tv_sec = 1;
+
+		fd_set socket;
+		FD_ZERO(&socket);
+
+		FD_SET(mSocket.PublicSocket, &socket);
+
+		std::int32_t ret = ::select(1, &socket, nullptr, nullptr, &timVal);
+
+		if (ret == 0)
+			return false;
+
+		std::int32_t len = sizeof(struct sockaddr_in);
+
+		std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
+			reinterpret_cast<char*>(&mPacket), sz, 0, 
+			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), 
+			&len);
+
+		if (len < 1)
+			return false;
+
+		if (err == SOCKET_ERROR)
+		{
+			auto errWsa = WSAGetLastError();
+
+			switch (errWsa)
+			{
+			case WSAEWOULDBLOCK:
+			{
+				timVal.tv_sec = 1;
+				::select(1, &socket, nullptr, nullptr, &timVal);
+
+				break;
+			}
+			case WSAECONNRESET:
+			{
+				mReset = true;
+				break;
+			}
+
+			}
+
+			return false;
+		}
+
+		if (mPacket.magic[0] == XPLICIT_NETWORK_MAG_0 && 
+			mPacket.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+			mPacket.magic[2] == XPLICIT_NETWORK_MAG_2 && 
+			mPacket.version == XPLICIT_NETWORK_VERSION)
 		{
 			mPacket = packet;
 

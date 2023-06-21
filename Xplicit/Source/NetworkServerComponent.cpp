@@ -39,8 +39,7 @@ namespace Xplicit
 	NetworkServerComponent::NetworkServerComponent(const char* ip)
 		:
 		mSocket(INVALID_SOCKET), 
-		mAddress(ip),
-		mXnetServer(nullptr)
+		mDns(ip)
 	{
 #ifndef _NDEBUG
 		std::string message;
@@ -49,18 +48,6 @@ namespace Xplicit
 
 		XPLICIT_INFO(message);
 #endif
-
-		enet_address_set_host(&mXnetAddress, ip);
-		mXnetAddress.port = XPLICIT_NETWORK_PORT;
-
-		mXnetServer = enet_host_create(&mXnetAddress, 
-			XPLICIT_MAX_CONNECTIONS, 
-			XPLICIT_NUM_CHANNELS,
-			0, 
-			0);
-
-		if (!mXnetServer)
-			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
 		// Let's preallocate the clients.
 		// So we don't have to allocate them.
@@ -72,10 +59,6 @@ namespace Xplicit
 
 			mPeers.push_back(std::make_pair(Auth::XplicitID(XPLICIT_UNIVERSE_ID, xplicit_get_epoch()), inst));
 		}
-
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[SERVER] IP Address Version 4: " + mAddress);
-#endif
 	}
 
 	const char* NetworkServerComponent::name() noexcept { return ("NetworkServerComponent"); }
@@ -84,71 +67,7 @@ namespace Xplicit
 
 	void NetworkServerComponent::update() 
 	{
-		ENetEvent event;
-
-		/* Wait up to 1000 milliseconds for an event. */
-		while (enet_host_service(mXnetServer, &event, XPLICIT_WAIT_TIME) > 0)
-		{
-			switch (event.type)
-			{
-			case ENET_EVENT_TYPE_CONNECT:
-			{
-				for (std::size_t index = 0; index < mPeers.size(); index++)
-				{
-					if (mPeers[index].second->address == XPLICIT_BAD_ADDRESS)
-					{
-						mPeers[index].second->address = event.peer->address.host;
-						mPeers[index].second->port = event.peer->address.port;
-						
-						event.peer->data = (void*)mPeers[index].first.as_string().c_str();
-					
-						mPeers[index].second->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
-						mPeers[index].second->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
-						break;
-					}
-				}
-
-				break;
-			}
-			case ENET_EVENT_TYPE_RECEIVE:
-				for (std::size_t index = 0; index < mPeers.size(); index++)
-				{
-					if (mPeers[index].second->address == event.peer->address.host &&
-						mPeers[index].second->port == event.peer->address.port)
-					{
-						mPeers[index].second->packet = *(NetworkPacket*)event.packet->data;
-						
-						mPeers[index].second->channel = event.channelID;
-
-						break;
-					}
-				}
-
-				enet_packet_destroy(event.packet);
-
-				break;
-
-			case ENET_EVENT_TYPE_DISCONNECT:
-				for (std::size_t index = 0; index < mPeers.size(); index++)
-				{
-					if (mPeers[index].second->address == event.peer->address.host &&
-						mPeers[index].second->port == event.peer->address.port)
-					{
-						mPeers[index].second->status = NETWORK_STAT_DISCONNECTED;
-						mPeers[index].second->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-
-						break;
-					}
-				}
-
-				/*!
-				   Reset the peer's client information. 
-				   It removes the XplicitID associated with the player.
-				   */
-				event.peer->data = nullptr;
-			}
-		}
+		
 	}
 
 	bool NetworkServerComponent::should_update() noexcept { return true; }
@@ -164,9 +83,7 @@ namespace Xplicit
 		XPLICIT_INFO(message);
 #endif
 
-		if (mXnetServer)
-			enet_host_destroy(mXnetServer);
 	}
 
-	const char* NetworkServerComponent::dns() noexcept { return mAddress.c_str(); }
+	const char* NetworkServerComponent::dns() noexcept { return mDns.c_str(); }
 }

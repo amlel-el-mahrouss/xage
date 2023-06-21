@@ -45,7 +45,7 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(!mPath.empty());
 
 #ifdef XPLICIT_WINDOWS
-		Xplicit::init_enet(&mWsa);
+		Xplicit::init_winsock(&mWsa);
 #endif
 
 #ifdef XPLICIT_DEBUG

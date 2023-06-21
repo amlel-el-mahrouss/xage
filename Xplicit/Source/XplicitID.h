@@ -33,7 +33,7 @@ namespace Xplicit::Auth
 		//! notice pass the public hash here, not the private one!
 		//! otherwise this will leak the private hash of the user!
 		explicit XplicitID(const int32_t& universe, 
-			const int32_t& connectionPublicHash) noexcept;
+			const int32_t& hash) noexcept;
 
 		~XplicitID() = default;
 

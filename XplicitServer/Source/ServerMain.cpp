@@ -26,7 +26,6 @@
 #include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
 
-static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server);
 static void xplicit_load_mono();
 static void xplicit_read_xml();
 
@@ -106,21 +105,7 @@ static void xplicit_load_mono()
 	}
 }
 
-static void xplicit_send_stop_packet(Xplicit::NetworkServerComponent* server)
-{
-	XPLICIT_ASSERT(server != nullptr);
-
-	if (!server)
-		return;
-
-	for (size_t i = 0; i < server->size(); i++)
-	{
-		server->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
-		server->get(i)->packet.hash = server->get(i)->hash;
-	}
-}
-
-// our main entrypoint.
+/* Application main entrypoint */
 int main(int argc, char** argv)
 {
 	try
@@ -137,7 +122,7 @@ int main(int argc, char** argv)
 		WSADATA wsa;
 		RtlZeroMemory(&wsa, sizeof(WSADATA));
 
-		Xplicit::init_enet(&wsa);
+		Xplicit::init_winsock(&wsa);
 #endif
 
 		/*
@@ -169,13 +154,6 @@ int main(int argc, char** argv)
 		
 		xplicit_load_mono();
 		xplicit_read_xml();
-
-		std::atexit([]() -> void {
-			auto comp = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
-
-			if (comp)
-				xplicit_send_stop_packet(comp);
-		});
 
 		do
 		{

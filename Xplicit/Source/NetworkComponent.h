@@ -10,6 +10,7 @@
 #pragma once
 
 #include "NetworkProtocol.h"
+#include "SocketWrapper.h"
 #include "Component.h"
 #include "Event.h"
 
@@ -68,7 +69,7 @@ namespace Xplicit
         virtual const char* name() noexcept override { return ("NetworkComponent"); }
         virtual COMPONENT_TYPE type() noexcept override { return COMPONENT_NETWORK; }
 
-        virtual bool should_update() noexcept override { return true; }
+        virtual bool should_update() noexcept override { return false; }
 
         virtual void update() override;
 
@@ -79,7 +80,7 @@ namespace Xplicit
         //! sets the working channel on xconnect connection.
         //! channelId: channel (0 = data, 1 = chat)
        
-        bool channel(const std::uint32_t& channelId) noexcept;
+        bool set_channel(const std::uint32_t& channelId) noexcept;
 
     public:
         bool send(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
@@ -89,11 +90,10 @@ namespace Xplicit
         bool is_reset() noexcept;
 
     private:
+        struct sockaddr_in mSockAddrIn;
+        Network::Socket mSocket;
         std::uint8_t mChannelID;
 		NetworkPacket mPacket;
-		ENetPeer* mXnetHost;
-		ENetHost* mHost;
-        Socket mSocket;
         bool mReset;
 
         friend class NetworkEvent;

@@ -16,7 +16,9 @@
 
 namespace Xplicit
 {
-	constexpr const int XPLICIT_MAX_CONNECTIONS = 60;
+	constexpr const std::int16_t XPLICIT_MAX_CONNECTIONS = 30;
+
+	typedef std::vector<std::pair<Auth::XplicitID, NetworkInstance*>> NetworkVector;
 
 	// the main instance behind the networking.
 	class XPLICIT_API NetworkServerComponent final : public Component
@@ -41,22 +43,20 @@ namespace Xplicit
 		virtual bool should_update() noexcept override;
 
 	public:
-		size_t size() noexcept
-		{
-			return mPeers.size();
-		}
-
 		NetworkInstance* get(const std::size_t& idx) noexcept
 		{
 			return mPeers.at(idx).second;
 		}
 
+		size_t size() noexcept
+		{
+			return mPeers.size();
+		}
+
 	private:
-		std::vector<std::pair<Auth::XplicitID, NetworkInstance*>> mPeers;
-		ENetAddress mXnetAddress;
-		ENetHost* mXnetServer;
-		String mAddress;
+		NetworkVector mPeers;
 		Socket mSocket;
+		String mDns;
 
 	private:
 		friend class NetworkServerHelper;

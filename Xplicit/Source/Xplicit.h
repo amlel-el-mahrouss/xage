@@ -345,14 +345,20 @@ namespace Xplicit
 		return path.string() + program_name;
 	}
 
-	static inline bool init_enet(WSADATA* dat) 
+	static inline void fini_winsock() noexcept
 	{
-		bool init = enet_initialize() == 0;
+		WSACleanup();
+	}
 
-		if (init)
-			std::atexit(enet_deinitialize);
+	static inline bool init_winsock(WSADATA* dat) noexcept
+	{
+		if (WSAStartup(MAKEWORD(2, 2), nullptr) == 0)
+		{
+			std::atexit(fini_winsock);
+			return true;
+		}
 
-		return true;
+		return false;
 	}
 
 #ifdef XPLICIT_WINDOWS
@@ -542,9 +548,7 @@ namespace Xplicit
 
 	};
 
-	inline constexpr int XPLICIT_MAX_POOL = 100;
-
-	template <typename PtrType, std::size_t Size = XPLICIT_MAX_POOL>
+	template <typename PtrType, std::size_t Size>
 	class Pool final
 	{
 	public:
@@ -573,8 +577,8 @@ namespace Xplicit
 		char* mPointer;
 
 	public:
-		const std::size_t& nalloc() noexcept { return mIndex; }
 		std::size_t size() noexcept { return sizeof(PtrType) * Size; }
+		const std::size_t& capacity() noexcept { return mIndex; }
 		char* data() noexcept { return mPointer; }
 
 	public:

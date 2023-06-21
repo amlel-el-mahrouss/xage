@@ -23,7 +23,7 @@ namespace Xplicit::Player
 		tool->Slot = -1;
 		tool->Droppable = false;
 
-		Tools[mPool.nalloc() - 1] = tool;
+		Tools[mPool.capacity() - 1] = tool;
 
 		return tool;
 	}

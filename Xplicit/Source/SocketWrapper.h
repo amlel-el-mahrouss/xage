@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: SocketWrapper.h
- *			Purpose: C++ Socket Wrapper
- *
  * =====================================================================
  */
 
@@ -45,14 +42,16 @@ namespace Xplicit::Network
 	class XPLICIT_API Socket final
 	{
 	public:
-		Socket(const SOCKET_TYPE type);
+		explicit Socket(const SOCKET_TYPE type);
 		~Socket();
 
 		Socket& operator=(const Socket&) = default;
 		Socket(const Socket&) = default;
 
+	public:
 		operator bool() noexcept;
 
+	public:
 		template <typename Data, size_t Size = sizeof(Data)>
 		void send(Data ptr, std::size_t sz = 0);
 

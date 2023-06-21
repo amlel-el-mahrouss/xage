@@ -398,13 +398,13 @@ namespace Xplicit::Renderer::DX11
 
 	COMPONENT_TYPE RenderComponentD3D11::type() noexcept { return COMPONENT_RENDER; }
 
-	void RenderComponentD3D11::set(DriverSystemD3D11* driver) noexcept
+	void RenderComponentD3D11::set_driver(DriverSystemD3D11* driver) noexcept
 	{
 		if (driver)
 			m_pDriver = driver;
 	}
 
-	void RenderComponentD3D11::push(ShaderSystemD3D11* shaderSystem) noexcept
+	void RenderComponentD3D11::push_shader(ShaderSystemD3D11* shaderSystem) noexcept
 	{
 		if (shaderSystem)
 			m_pShader.push_back(shaderSystem);

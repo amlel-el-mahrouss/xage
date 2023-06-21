@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: SocketWrapper.cpp
- *			Purpose: C++ Socket Wrapper
- *
  * =====================================================================
  */
 
@@ -31,6 +28,6 @@ namespace Xplicit::Network
 
 	Socket::operator bool() noexcept
 	{
-		return this->PublicSocket != -1;
+		return this->PublicSocket != SOCKET_ERROR;
 	}
 }
