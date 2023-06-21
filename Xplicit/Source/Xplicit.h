@@ -352,7 +352,7 @@ namespace Xplicit
 
 	static inline bool init_winsock(WSADATA* dat) noexcept
 	{
-		if (WSAStartup(MAKEWORD(2, 2), nullptr) == 0)
+		if (WSAStartup(MAKEWORD(2, 2), dat) == 0)
 		{
 			std::atexit(fini_winsock);
 			return true;
