@@ -45,7 +45,7 @@ namespace Xplicit::Auth
 		const std::int64_t& as_int() noexcept;
 		
 		//! return xplicitID as string
-		const String& as_string() const noexcept;
+		const String& as_string()  noexcept;
 
 	private:
 		Xplicit::String mXplicitId;

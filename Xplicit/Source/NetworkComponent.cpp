@@ -103,6 +103,8 @@ namespace Xplicit
 			reinterpret_cast<sockaddr*>(&mSockAddrIn),
 			sizeof(mSockAddrIn)) == SOCKET_ERROR)
 		{
+			std::cout << "FUCK YOU" << std::endl;
+
 			const auto err = WSAGetLastError();
 			return res != SOCKET_ERROR || err != WSAEWOULDBLOCK;
 		}
