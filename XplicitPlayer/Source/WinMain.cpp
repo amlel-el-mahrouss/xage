@@ -61,7 +61,7 @@ XPLICIT_MAIN()
 
 			if (net)
 			{
-				Xplicit::NetworkPacket packet;
+				Xplicit::NetworkPacket packet{};
 
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = Xplicit::NETWORK_CMD_STOP;
 				net->send(packet);

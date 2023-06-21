@@ -110,7 +110,9 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		Xplicit::String title = "XplicitNgine (xconnect v";
+		Xplicit::String title = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
+
+		title += " (xconnect v";
 		title += std::to_string(XPLICIT_NETWORK_VERSION);
 		title += ")";
 

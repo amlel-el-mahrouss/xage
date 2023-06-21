@@ -56,6 +56,10 @@ namespace Xplicit
 		XPLICIT_ASSERT(checker(ip));
 
 		mSocket = XPLICIT_SOCKET(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+		if (mSocket == SOCKET_ERROR)
+			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
+
 		xplicit_set_ioctl(mSocket);
 
 		struct sockaddr_in bindAddress = {};
@@ -65,9 +69,9 @@ namespace Xplicit
 		inet_pton(AF_INET, mDns.c_str(), &bindAddress.sin_addr.S_un.S_addr);
 		bindAddress.sin_port = htons(XPLICIT_NETWORK_PORT);
 
-		auto bindedValue = bind(mSocket, reinterpret_cast<SOCKADDR*>(&bindAddress), sizeof(bindAddress));
+		auto boundValue = bind(mSocket, reinterpret_cast<SOCKADDR*>(&bindAddress), sizeof(bindAddress));
 
-		if (bindedValue == -1)
+		if (boundValue == -1)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
 		// !Let's preallocate the clients.
@@ -108,8 +112,7 @@ namespace Xplicit
 			server->get(i)->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
 			server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
 		{
-			server->get(i)->packet = packet;
-
+			server->get(i)->packet = std::move(packet);
 			return true;
 		}
 
@@ -123,23 +126,21 @@ namespace Xplicit
 	{
 		std::int32_t len = sizeof(PrivateAddressData);
 		static NetworkPacket packet{};
-
-		std::int32_t res = ::recvfrom(server->mSocket,
+		
+		if (::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
 			sz,
 			0,
 			reinterpret_cast<sockaddr*>(&peer->address),
-			&len);
-
-		if (res == SOCKET_ERROR)
+			&len) == SOCKET_ERROR)
 		{
-			std::int32_t reason = WSAGetLastError();
-
-			switch (reason)
+			switch (WSAGetLastError())
 			{
 			case WSAECONNABORTED:
 				break;
 			case WSAECONNRESET:
+				break;
+			default:
 				break;
 			}
 
@@ -167,29 +168,31 @@ namespace Xplicit
 			{
 				std::int32_t fromLen = sizeof(PrivateAddressData);
 				static NetworkPacket packet{};
-
-				std::int32_t res = ::recvfrom(server->mSocket,
+				
+				if (::recvfrom(server->mSocket,
 					reinterpret_cast<char*>(&packet),
 					sz,
 					0,
 					reinterpret_cast<sockaddr*>(&server->get(index)->address),
-					&fromLen);
-
-				if (res == SOCKET_ERROR)
+					&fromLen) == SOCKET_ERROR)
 				{
-					std::int32_t reason = WSAGetLastError();
-
-					switch (reason)
+					switch (WSAGetLastError())
 					{
+					case WSAEWOULDBLOCK:
+					{
+						break;
+					}
 					case WSAECONNABORTED:
 						break;
 					case WSAECONNRESET:
+						break;
+					default:
 						break;
 					}
 
 					continue;
 				}
-
+				
 				if (!xplicit_recv_packet(server, index, packet))
 					xplicit_invalidate_peer(server->get(index));
 			}

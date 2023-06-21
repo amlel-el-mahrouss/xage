@@ -47,6 +47,9 @@ namespace Xplicit
 		mSockAddrIn(),
 		mPacket()
 	{
+		if (!mSocket)
+			throw NetworkError(NETWORK_ERR_BAD_CHALLENGE);
+		
 		xplicit_set_ioctl(mSocket.PublicSocket);
 	}
 
@@ -59,9 +62,6 @@ namespace Xplicit
 
 	bool NetworkComponent::connect(const char* ip)
 	{
-		if (mSocket == SOCKET_ERROR)
-			return false;
-
 		memset(&mSockAddrIn, 0, sizeof(sockaddr_in));
 
 		mSockAddrIn.sin_family = AF_INET;
@@ -70,8 +70,8 @@ namespace Xplicit
 
 		auto result = ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in));
 
-		if (result == SOCKET_ERROR)
-			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
+		while (result == SOCKET_ERROR && WSAGetLastError() == WSAEWOULDBLOCK)
+		{}
 
 		return true;
 	}
@@ -99,8 +99,16 @@ namespace Xplicit
 
 		int res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
 			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in));
+
+		auto err = WSAGetLastError();
+
+		while (res == SOCKET_ERROR && err == WSAEWOULDBLOCK)
+		{
+			res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
+				reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in));
+		}
 		
-		return res != SOCKET_ERROR;
+		return true;
 	}
 
 	void NetworkComponent::update() {}
@@ -112,7 +120,7 @@ namespace Xplicit
 
 		std::int32_t len = sizeof(struct sockaddr_in);
 
-		std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
+		const std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
 			reinterpret_cast<char*>(&mPacket), sz, 0, 
 			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), 
 			&len);
@@ -122,9 +130,7 @@ namespace Xplicit
 
 		if (err == SOCKET_ERROR)
 		{
-			auto errWsa = WSAGetLastError();
-
-			switch (errWsa)
+			switch (WSAGetLastError())
 			{
 			case WSAECONNRESET:
 			{
