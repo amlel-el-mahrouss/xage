@@ -86,32 +86,35 @@ namespace Xplicit::Player
 
 	};
 
-	class UIThemeSchemeManager final
+	namespace Nixxon
 	{
-	public:
-		UIThemeSchemeManager() = default;
-		~UIThemeSchemeManager() = default;
-		
-		XPLICIT_COPY_DEFAULT(UIThemeSchemeManager);
-		
-		std::tuple<std::vector<Color<float>>, 
-			std::vector<Vector<float>>> get_white_scheme() noexcept;
+		class UIThemeSchemeManager final
+		{
+		public:
+			UIThemeSchemeManager() = default;
+			~UIThemeSchemeManager() = default;
 
-		std::tuple<std::vector<Color<float>>, 
-			std::vector<Vector<float>>> get_dark_scheme() noexcept;
+			XPLICIT_COPY_DEFAULT(UIThemeSchemeManager);
 
-	};
+			static std::tuple<std::vector<Color<float>>,
+				std::vector<Vector<float>>> get_white_scheme() noexcept;
 
-	class UIWidget
-	{
-	public:
-		UIWidget() = default;
-		virtual ~UIWidget() = default;
+			static std::tuple<std::vector<Color<float>>,
+				std::vector<Vector<float>>> get_dark_scheme() noexcept;
 
-		XPLICIT_COPY_DEFAULT(UIWidget);
-		
-		virtual const char* name() = 0;
-		virtual void update() = 0;
+		};
 
-	};
+		class UIWidget
+		{
+		public:
+			UIWidget() = default;
+			virtual ~UIWidget() = default;
+
+			XPLICIT_COPY_DEFAULT(UIWidget);
+
+			virtual const char* name() = 0;
+			virtual void update() = 0;
+
+		};
+	}
 }

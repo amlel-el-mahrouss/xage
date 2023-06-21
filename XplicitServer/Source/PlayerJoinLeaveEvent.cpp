@@ -17,24 +17,25 @@
 
 namespace Xplicit
 {
-	//!forward decls
-	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, NetworkServerComponent* server);
+	//!forward declaration
+
+	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server);
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid);
 
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid)
 	{
-		std::string uuid_str = uuids::to_string(uuid);
-		auto hash = std::hash<std::string>();
-		auto res = hash(uuid_str);
+		const std::string uuid_str = uuids::to_string(uuid);
+
+		constexpr auto hash = std::hash<std::string>();
+		const auto res = hash(uuid_str);
 
 		return res;
 	}
 
-	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, NetworkServerComponent* server)
+	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server)
 	{
-		auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
-
-		auto public_hash_uuid = UUIDFactory::version<4>();
+		const auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
+		const auto public_hash_uuid = UUIDFactory::version<4>();
 
 		peer->public_hash = xplicit_hash_from_uuid(public_hash_uuid);
 		peer->hash = hash;
@@ -64,10 +65,10 @@ namespace Xplicit
 	{
 		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
 		{
-			PlayerComponent* compPly = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
-			XPLICIT_ASSERT(compPly);
+			PlayerComponent* component = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
+			XPLICIT_ASSERT(component);
 
-			mPlayers.push_back(compPly);
+			mPlayers.push_back(component);
 		}
 	}
 
@@ -75,9 +76,6 @@ namespace Xplicit
 
 	void PlayerJoinLeaveEvent::operator()()
 	{
-		if (!mNetwork)
-			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
-
 		this->handle_join_event();
 		this->handle_leave_event();
 	}
@@ -100,18 +98,17 @@ namespace Xplicit
 				if (this->size() > XPLICIT_MAX_CONNECTIONS)
 				{
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+					return false;
 				}
-				else
-				{
-					PlayerComponent* player = mPlayers[mPlayerCount];
 
-					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
-					player->set(mNetwork->get(peer_idx));
+				PlayerComponent* player = mPlayers[mPlayerCount];
 
-					XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(mNetwork->get(peer_idx)->unique_addr.get()));
+				xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
+				player->set(mNetwork->get(peer_idx));
 
-					++mPlayerCount;
-				}
+				XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(mNetwork->get(peer_idx)->unique_addr.get()));
+
+				++mPlayerCount;
 			}
 		}
 

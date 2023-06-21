@@ -23,17 +23,23 @@ namespace Xplicit::Player
 	 * This is a popup class
 	 * used to create pop-up according to a state.
 	 */
-
-	// constructor
-	PopupComponent::PopupComponent(const std::function<void()>& onClick, const vector2di pos, const POPUP_TYPE popupType, const char* id) noexcept
-		: mClicked(onClick), mPos(pos), mPopupId(id)
+	
+	PopupComponent::PopupComponent(
+		const std::function<void()>& on_click, 
+		const vector2di pos, 
+		const POPUP_TYPE popup_type, 
+		const char* id) noexcept
+		:
+	mClicked(on_click),
+	mPos(pos),
+	mPopupId(id)
 	{
-		XPLICIT_ASSERT(onClick);
+		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
 
 		String path;
 
-		switch (popupType)
+		switch (popup_type)
 		{
 		case POPUP_TYPE::KICK:
 			path += "Kicked.png";
@@ -60,15 +66,13 @@ namespace Xplicit::Player
 		if (!mTex)
 			throw EngineError();
 	}
-
-	// c++ destructor
+	
 	PopupComponent::~PopupComponent()
 	{
 		if (mTex)
 			mTex->drop();
 	}
-
-	// update function
+	
 	void PopupComponent::update()
 	{
 		IRR->getVideoDriver()->draw2DImage(mTex, mPos);
@@ -112,22 +116,24 @@ namespace Xplicit::Player
 			mHealth = packet.health;
 	}
 
-
-	std::tuple<std::vector<Color<float>>, 
-		std::vector<Vector<float>>> UIThemeSchemeManager::get_white_scheme() noexcept
+	namespace Nixxon
 	{
-		std::tuple<std::vector<Color<float>>, std::vector<Vector<float>>> scheme;
+		std::tuple<std::vector<Color<float>>,
+			std::vector<Vector<float>>> UIThemeSchemeManager::get_white_scheme() noexcept
+		{
+			std::tuple<std::vector<Color<float>>, std::vector<Vector<float>>> scheme;
 
-		/* return scheme */
-		return scheme;
-	}
+			/* return scheme */
+			return scheme;
+		}
 
-	std::tuple<std::vector<Color<float>>, 
-		std::vector<Vector<float>>> UIThemeSchemeManager::get_dark_scheme() noexcept
-	{
-		std::tuple<std::vector<Color<float>>, std::vector<Vector<float>>> scheme;
+		std::tuple<std::vector<Color<float>>,
+			std::vector<Vector<float>>> UIThemeSchemeManager::get_dark_scheme() noexcept
+		{
+			std::tuple<std::vector<Color<float>>, std::vector<Vector<float>>> scheme;
 
-		/* return scheme */
-		return scheme;
+			/* return scheme */
+			return scheme;
+		}
 	}
 }
