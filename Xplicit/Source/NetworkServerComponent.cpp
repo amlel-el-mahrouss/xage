@@ -112,7 +112,7 @@ namespace Xplicit
 			server->get(i)->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
 			server->get(i)->packet.version == XPLICIT_NETWORK_VERSION)
 		{
-			server->get(i)->packet = std::move(packet);
+			server->get(i)->packet = packet;
 			return true;
 		}
 
@@ -168,7 +168,15 @@ namespace Xplicit
 			{
 				std::int32_t fromLen = sizeof(PrivateAddressData);
 				NetworkPacket packet{};
-				
+
+				fd_set fd;
+				FD_ZERO(&fd);
+				FD_SET(server->mSocket, &fd);
+
+				static constexpr const struct timeval timeout = { .tv_sec = 1, .tv_usec = 100 };
+
+				::select(0, &fd, nullptr, nullptr, &timeout);
+
 				if (::recvfrom(server->mSocket,
 					reinterpret_cast<char*>(&packet),
 					sz,
@@ -180,16 +188,23 @@ namespace Xplicit
 					{
 					case WSAEWOULDBLOCK:
 					{
+						XPLICIT_INFO("EWOULDBLOCK: Socket is blocked...");
 						break;
 					}
 					case WSAECONNABORTED:
+					{
+						XPLICIT_INFO("WSAECONNABORTED: Socket' connection aborted...");
 						break;
+					}
 					case WSAECONNRESET:
+					{
+						XPLICIT_INFO("WSAECONNRESET: Socket' connection reset...");
 						break;
+					}
 					default:
 						break;
 					}
-
+					
 					continue;
 				}
 				
