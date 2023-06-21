@@ -87,11 +87,8 @@ namespace Xplicit
 		return true;
 	}
 
-	bool NetworkComponent::send(NetworkPacket& packet, const std::size_t sz)
+	bool NetworkComponent::send(NetworkPacket& packet)
 	{
-		if (sz < 1)
-			return false;
-		
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
@@ -99,8 +96,12 @@ namespace Xplicit
 		packet.channel = mChannelID;
 		packet.version = XPLICIT_NETWORK_VERSION;
 		
-		if (const auto res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
-			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(mSockAddrIn)) == SOCKET_ERROR)
+		if (const auto res = ::sendto(mSocket,
+			reinterpret_cast<const char*>(&packet), 
+			sizeof(NetworkPacket), 
+			0,
+			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), 
+			sizeof(mSockAddrIn)) == SOCKET_ERROR)
 		{
 			const auto err = WSAGetLastError();
 			return res != SOCKET_ERROR || err != WSAEWOULDBLOCK;
@@ -113,7 +114,7 @@ namespace Xplicit
 
 	void NetworkComponent::update() {}
 
-	bool NetworkComponent::read(NetworkPacket& packet, const std::size_t sz)
+	bool NetworkComponent::read(NetworkPacket& packet)
 	{
 		//! we gotta clear this one as we don't know if RST was sent.
 		mReset = false;
@@ -122,7 +123,7 @@ namespace Xplicit
 
 		const std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
 			reinterpret_cast<char*>(&mPacket), 
-			sz, 
+			sizeof(NetworkPacket), 
 			0, 
 			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), 
 			&len);

@@ -79,8 +79,8 @@ namespace Xplicit
        
         bool set_channel(const std::uint32_t& channelId) noexcept;
         
-        bool send(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
-        bool read(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
+        bool send(NetworkPacket& packet);
+        bool read(NetworkPacket& packet);
 
         NetworkPacket& get() noexcept;
         bool is_reset() const noexcept;
