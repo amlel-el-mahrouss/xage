@@ -12,7 +12,7 @@
 #include "Xplicit.h"
 
 #ifndef XPLICIT_NETWORK_PORT
-#define XPLICIT_NETWORK_PORT (60001)
+#define XPLICIT_NETWORK_PORT (64734)
 #endif // ifndef XPLICIT_NETWORK_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY

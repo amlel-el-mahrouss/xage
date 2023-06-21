@@ -26,8 +26,6 @@ XPLICIT_CONFIG = {
 	  "dxgi",
 	  "d3d11",
 	  "d2d1",
-	  "Library/enet_static64",
-	  "Library/enet64",
 	  "d3dcompiler",
 	  "ws2_32",
 	  "winmm",
@@ -65,8 +63,6 @@ XPLICIT_SERVER_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-	"Library/enet_static64",
-	"Library/enet64",
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
     	"Library/Xplicit",
         "Library/Irrlicht",
@@ -106,8 +102,6 @@ XPLICIT_CLIENT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-	"Library/enet_static64",
-	"Library/enet64",
     	"Library/Xplicit",
         "d3d11",
         "dxgi",

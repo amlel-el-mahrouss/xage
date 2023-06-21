@@ -48,10 +48,10 @@ namespace Xplicit::Player
 			: ISceneNode(parent, mgr, id)
 		{}
 
-		virtual ~DynamicMesh() = default;
+		~DynamicMesh() override = default;
 
 	public:
-		virtual void OnRegisterSceneNode()
+		void OnRegisterSceneNode() override
 		{
 			if (IsVisible)
 				SceneManager->registerNodeForRendering(this);
@@ -65,11 +65,18 @@ namespace Xplicit::Player
 
 			driver->setMaterial(Material);
 			driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-			driver->drawVertexPrimitiveList(&Vertices.data()[0], 4, &Indices.data()[0], 4, video::EVT_STANDARD, scene::EPT_TRIANGLES, video::EIT_16BIT);
+			driver->drawVertexPrimitiveList(&
+				Vertices.data()[0], 
+				4, 
+				&Indices.data()[0], 
+				4, 
+				video::EVT_STANDARD, 
+				scene::EPT_TRIANGLES, 
+				video::EIT_32BIT);
 		}
 
 	public:
-		void add(u16 indice) noexcept
+		void add(const u16& indice) noexcept
 		{
 			Indices.push_back(indice);
 		}

@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: PlayerJoinLeaveEvent.h
- *			Purpose: Player Join and Leave Event
- *
  * =====================================================================
  */
 
@@ -32,8 +29,8 @@ namespace Xplicit
 		const size_t& size() noexcept;
 
 	private:
-		bool handle_leave_event(NetworkServerComponent* server) noexcept;
-		bool handle_join_event(NetworkServerComponent* server) noexcept;
+		bool handle_leave_event() noexcept;
+		bool handle_join_event() noexcept;
 		
 		std::vector<PlayerComponent*> mPlayers;
 		NetworkServerComponent* mNetwork;

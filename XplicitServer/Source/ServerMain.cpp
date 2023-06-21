@@ -101,7 +101,7 @@ static void xplicit_load_mono()
 	}
 	catch (...)
 	{
-		XPLICIT_CRITICAL("ScriptNgine.dll not found, to load a C# DLL use Manifest.xml.");
+		XPLICIT_CRITICAL("XplicitPluginRuntime not found, to load a C# DLL use Manifest.xml.");
 	}
 }
 
@@ -172,10 +172,10 @@ int main(int argc, char** argv)
 			}
 			});
 
+		Xplicit::NetworkServerHelper::accept(server);
+		
 		do
 		{
-			Xplicit::NetworkServerHelper::recv(server);
-
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 

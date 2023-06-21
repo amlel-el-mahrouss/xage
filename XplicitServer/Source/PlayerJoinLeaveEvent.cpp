@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: PlayerJoinLeaveEvent.h
- *			Purpose: Player Join and Leave Event (duh x2)
- *
  * =====================================================================
  */
 
@@ -20,8 +17,8 @@
 
 namespace Xplicit
 {
+	//!forward decls
 	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, NetworkServerComponent* server);
-
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid);
 
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid)
@@ -78,39 +75,40 @@ namespace Xplicit
 
 	void PlayerJoinLeaveEvent::operator()()
 	{
-		this->handle_join_event(mNetwork);
-		this->handle_leave_event(mNetwork);
+		if (!mNetwork)
+			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+
+		this->handle_join_event();
+		this->handle_leave_event();
 	}
 
 	const size_t& PlayerJoinLeaveEvent::size() noexcept { return mPlayerCount; }
 
-	bool PlayerJoinLeaveEvent::handle_join_event(NetworkServerComponent* server) noexcept
+	bool PlayerJoinLeaveEvent::handle_join_event() noexcept
 	{
-		if (!server) return false;
-
-		for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
+		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
-			if (server->get(peer_idx)->status == NETWORK_STAT_CONNECTED)
+			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED)
 				continue;
 
-			if (server->get(peer_idx)->packet.size < 1)
+			if (mNetwork->get(peer_idx)->packet.size < 1)
 				continue;
 
-			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
-				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
 				if (this->size() > XPLICIT_MAX_CONNECTIONS)
 				{
-					server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 				}
 				else
 				{
 					PlayerComponent* player = mPlayers[mPlayerCount];
 
-					xplicit_on_join(server->get(peer_idx), player, server);
-					player->set(server->get(peer_idx));
+					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
+					player->set(mNetwork->get(peer_idx));
 
-					XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+					XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(mNetwork->get(peer_idx)->unique_addr.get()));
 
 					++mPlayerCount;
 				}
@@ -123,34 +121,34 @@ namespace Xplicit
 	//! Decreases and free player resources.
 	/** Used by server to hook join and leave events. */
 
-	bool PlayerJoinLeaveEvent::handle_leave_event(NetworkServerComponent* server) noexcept
+	bool PlayerJoinLeaveEvent::handle_leave_event() noexcept
 	{
 		if (this->size() < 1) return false;
-		if (!server) return false;
+		if (!mNetwork) return false;
 
-		for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
+		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
-			if (server->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED)
+			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED)
 				continue;
 
-			if (server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
-				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				if (server->get(peer_idx)->packet.hash == server->get(peer_idx)->hash)
+				if (mNetwork->get(peer_idx)->packet.hash == mNetwork->get(peer_idx)->hash)
 				{
-					XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(server->get(peer_idx)->unique_addr.get()));
+					XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(mNetwork->get(peer_idx)->unique_addr.get()));
 
-					const auto public_hash = server->get(peer_idx)->public_hash;
+					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
-					server->get(peer_idx)->unique_addr.invalidate();
-					server->get(peer_idx)->reset();
+					mNetwork->get(peer_idx)->unique_addr.invalidate();
+					mNetwork->get(peer_idx)->reset();
 
-					for (std::size_t index = 0; index < server->size(); ++index)
+					for (std::size_t index = 0; index < mNetwork->size(); ++index)
 					{
-						if (server->get(index)->status == NETWORK_STAT_CONNECTED)
+						if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
 						{
-							server->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP;
-							server->get(index)->packet.public_hash = public_hash;
+							mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+							mNetwork->get(index)->packet.public_hash = public_hash;
 						}
 					}
 

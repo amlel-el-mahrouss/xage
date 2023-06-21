@@ -121,8 +121,8 @@ namespace Xplicit
 
 	public:
 		PositionComponent Position;
-		String Filename;
-		bool Looped;
+		String Filename{ "" };
+		bool Looped{ false };
 
 	};
 

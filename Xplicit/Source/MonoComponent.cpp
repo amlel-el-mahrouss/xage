@@ -92,7 +92,8 @@ namespace Xplicit
 		: m_app_domain(nullptr), m_domain(nullptr)
 	{
 		XPLICIT_GET_DATA_DIR(data_dir);
-		std::string path = data_dir;
+
+		String path = data_dir;
 		path += "\\Plugin\\";
 
 		mono_set_assemblies_path(path.c_str());
@@ -115,7 +116,7 @@ namespace Xplicit
 		}
 		else
 		{
-			throw std::runtime_error("XplicitScriptRuntime: bad domain!");
+			throw std::runtime_error("XplicitPluginRuntime: bad domain!");
 		}
 	}
 

@@ -53,19 +53,10 @@ namespace Xplicit
 	class XPLICIT_API NetworkServerHelper final
 	{
 	public:
-		static void send_to(
-			NetworkServerComponent* server,
-			NetworkInstance* peer,
-			const std::size_t sz = sizeof(NetworkPacket));
-
-		static void send(NetworkServerComponent* server, const std::size_t sz = sizeof(NetworkPacket));
+		static void send_to(NetworkServerComponent* server, NetworkInstance* peer);
+		static void send(NetworkServerComponent* server);
+		static void recv_from(NetworkServerComponent* server, NetworkInstance* peer);
+		static void accept(NetworkServerComponent* server);
 		
-		static void recv_from(
-			NetworkServerComponent* server,
-			NetworkInstance* peer,
-			const std::size_t sz = sizeof(NetworkPacket));
-
-		static void recv(NetworkServerComponent* server, const std::size_t sz = sizeof(NetworkPacket));
-
 	};
 }

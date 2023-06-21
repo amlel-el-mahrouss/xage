@@ -18,13 +18,13 @@ namespace Xplicit::Network
 		{
 			this->PublicSocket = XPLICIT_SOCKET(AF_INET,
 				SOCK_STREAM,
-				IPPROTO_TCP);
+				0);
 		}
 		else if (type == SOCKET_TYPE::UDP)
 		{
 			this->PublicSocket = XPLICIT_SOCKET(AF_INET,
 				SOCK_DGRAM,
-				IPPROTO_UDP);
+				0);
 		}
 
 		XPLICIT_ASSERT(this->PublicSocket != SOCKET_ERROR);

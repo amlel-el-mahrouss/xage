@@ -14,15 +14,16 @@ namespace Xplicit
 {
 	static void xplicit_set_ioctl(Socket sock)
 	{
-		unsigned long ul = 1;
-		auto err = XPLICIT_IOCTL(sock, FIONBIO, &ul);
+		auto ul = 1UL;
+		const auto error = XPLICIT_IOCTL(sock, static_cast<long>(SOCKET_FLAG::NON_BLOCKING), &ul);
+		(void)error;
 
-		XPLICIT_ASSERT(err == NO_ERROR);
+		XPLICIT_ASSERT(error == NO_ERROR);
 	}
 
 
 	NetworkError::NetworkError(const int what) 
-		: std::runtime_error("Network error, XplicitNgine encoutered an unrecoverable error.")
+		: std::runtime_error("Network error, XplicitNgine encountered an unrecoverable error.")
 #ifdef XPLICIT_WINDOWS
 		, mErr(WSAGetLastError())
 #endif
@@ -69,8 +70,8 @@ namespace Xplicit
 	{
 		memset(&mSockAddrIn, 0, sizeof(sockaddr_in));
 
-		mSockAddrIn.sin_family = AF_INET;
 		mSockAddrIn.sin_addr.S_un.S_addr = inet_addr(ip);
+		mSockAddrIn.sin_family = AF_INET;
 		mSockAddrIn.sin_port = htons(XPLICIT_NETWORK_PORT);
 		
 		return ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in)) != SOCKET_ERROR;
