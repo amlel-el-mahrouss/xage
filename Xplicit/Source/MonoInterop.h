@@ -24,23 +24,22 @@ namespace Xplicit
 	{
 	public:
 		MonoClassComponent() = delete;
-
-	public:
+		
 		MonoClassComponent(const char* namespase, const char* klass);
-		virtual ~MonoClassComponent();
+		~MonoClassComponent() override;
 
 		MonoClassComponent& operator=(const MonoClassComponent&) = default;
 		MonoClassComponent(const MonoClassComponent&) = default;
 
-		virtual COMPONENT_TYPE type() noexcept override;
-		virtual const char* name() noexcept override;
+		COMPONENT_TYPE type() noexcept override;
+		const char* name() noexcept override;
 
-		virtual void update() override;
+		void update() override;
 
-		virtual bool can_collide() noexcept override;
-		virtual bool has_physics() noexcept override;
+		bool can_collide() noexcept override;
+		bool has_physics() noexcept override;
 
-		virtual bool should_update() noexcept override;
+		bool should_update() noexcept override;
 
 	public:
 		operator bool();
@@ -65,24 +64,23 @@ namespace Xplicit
 	{
 	public:
 		MonoEvent() = delete;
-
-	public:
+		
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="name">The Event name</param>
-		MonoEvent(const char* name);
-		virtual ~MonoEvent() = default;
+		explicit MonoEvent(const char* name);
+		~MonoEvent() override = default;
 
 		MonoEvent& operator=(const MonoEvent&) = default;
 		MonoEvent(const MonoEvent&) = default;
 
-		virtual void operator()() override;
+		void operator()() override;
 
-		virtual const char* name() noexcept override;
+		const char* name() noexcept override;
 
 	private:
-		std::string m_name;
+		String m_name;
 
 	};
 

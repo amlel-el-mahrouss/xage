@@ -36,6 +36,13 @@ XPLICIT_MAIN()
 			return 1;
 		}
 
+#ifdef XPLICIT_WINDOWS
+		WSADATA wsa;
+		RtlZeroMemory(&wsa, sizeof(WSADATA));
+
+		Xplicit::init_winsock(&wsa);
+#endif
+
 		// parse the connection uri.
 		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
 		uri /= pCmdLine;

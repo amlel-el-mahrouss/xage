@@ -51,19 +51,17 @@ namespace Xplicit
 	{
 		XPLICIT_ASSERT(!mDns.empty());
 
-		Xplicit::Utils::InternetProtocolChecker checker;
+		Utils::InternetProtocolChecker checker;
 
 		XPLICIT_ASSERT(checker(ip));
 
 		mSocket = XPLICIT_SOCKET(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
 		xplicit_set_ioctl(mSocket);
 
-		struct sockaddr_in bindAddress;
-
+		struct sockaddr_in bindAddress = {};
 		memset(&bindAddress, 0, sizeof(struct sockaddr_in));
-		bindAddress.sin_port = AF_INET;
 
+		bindAddress.sin_family = AF_INET;
 		inet_pton(AF_INET, mDns.c_str(), &bindAddress.sin_addr.S_un.S_addr);
 		bindAddress.sin_port = htons(XPLICIT_NETWORK_PORT);
 
@@ -94,17 +92,11 @@ namespace Xplicit
 
 	NetworkServerComponent::~NetworkServerComponent() {}
 
-	const char* NetworkServerComponent::dns() noexcept { return mDns.c_str(); }
+	const char* NetworkServerComponent::dns() const noexcept { return mDns.c_str(); }
 
-	NetworkInstance* NetworkServerComponent::get(const std::size_t& idx) noexcept
-	{
-		return mPeers.at(idx).second;
-	}
+	NetworkInstance* NetworkServerComponent::get(const std::size_t& idx) const noexcept { return mPeers.at(idx).second; }
 
-	size_t NetworkServerComponent::size() noexcept
-	{
-		return mPeers.size();
-	}
+	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
 
 	static bool xplicit_recv_packet(
 		NetworkServerComponent* server,

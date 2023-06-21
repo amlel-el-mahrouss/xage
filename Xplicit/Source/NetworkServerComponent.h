@@ -25,33 +25,27 @@ namespace Xplicit
 	{
 	public:
 		explicit NetworkServerComponent() = default;
-
-	public:
+		
 		explicit NetworkServerComponent(const char* ip);
-		virtual ~NetworkServerComponent();
-
-	public:
+		~NetworkServerComponent() override;
+		
 		XPLICIT_COPY_DEFAULT(NetworkServerComponent);
+		
+		COMPONENT_TYPE type() noexcept;
+		const char* name() noexcept;
+		void update()  override;
 
-	public:
-		virtual COMPONENT_TYPE type() noexcept;
-		virtual const char* name() noexcept;
-		virtual void update() override;
-		const char* dns() noexcept;
-
-	public:
-		virtual bool should_update() noexcept override;
-
-	public:
-		NetworkInstance* get(const std::size_t& idx) noexcept;
-		size_t size() noexcept;
+		bool should_update() noexcept override;
+		
+		NetworkInstance* get(const std::size_t& idx) const noexcept;
+		const char* dns() const noexcept;
+		size_t size() const noexcept;
 
 	private:
 		NetworkVector mPeers;
 		Socket mSocket;
 		String mDns;
-
-	private:
+		
 		friend class NetworkServerHelper;
 
 	};

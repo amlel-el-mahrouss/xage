@@ -12,6 +12,15 @@
 
 namespace Xplicit 
 {
+	static void xplicit_set_ioctl(Socket sock)
+	{
+		unsigned long ul = 1;
+		auto err = XPLICIT_IOCTL(sock, FIONBIO, &ul);
+
+		XPLICIT_ASSERT(err == NO_ERROR);
+	}
+
+
 	NetworkError::NetworkError(const int what) 
 		: std::runtime_error("Xplicit Network Error")
 #ifdef XPLICIT_WINDOWS
@@ -30,24 +39,19 @@ namespace Xplicit
 
 	// NetworkComponent Constructor
 	NetworkComponent::NetworkComponent()
-		: Component(),
+		:
+		Component(),
 		mReset(false),
 		mChannelID(XPLICIT_CHANNEL_DATA),
 		mSocket(Network::SOCKET_TYPE::UDP),
 		mSockAddrIn(),
 		mPacket()
 	{
-#ifndef _NDEBUG
-		XPLICIT_INFO("Created NetworkComponent");
-#endif
+		xplicit_set_ioctl(mSocket.PublicSocket);
 	}
 
 	NetworkComponent::~NetworkComponent()
 	{
-#ifndef _NDEBUG
-		XPLICIT_INFO("~NetworkComponent, Epoch: " + std::to_string(xplicit_get_epoch()));
-#endif
-
 		if (shutdown(mSocket.PublicSocket, SD_BOTH) == SOCKET_ERROR)
 			XPLICIT_CLOSE(mSocket.PublicSocket);
 
@@ -55,13 +59,19 @@ namespace Xplicit
 
 	bool NetworkComponent::connect(const char* ip)
 	{
+		if (mSocket == SOCKET_ERROR)
+			return false;
+
 		memset(&mSockAddrIn, 0, sizeof(sockaddr_in));
 
 		mSockAddrIn.sin_family = AF_INET;
 		inet_pton(AF_INET, ip, &mSockAddrIn.sin_addr);
 		mSockAddrIn.sin_port = htons(XPLICIT_NETWORK_PORT);
 
-		::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr));
+		auto result = ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in));
+
+		if (result == SOCKET_ERROR)
+			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
 		return true;
 	}
@@ -78,6 +88,9 @@ namespace Xplicit
 
 	bool NetworkComponent::send(NetworkPacket& packet, const std::size_t sz)
 	{
+		if (sz < 1)
+			return false;
+
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
@@ -86,11 +99,8 @@ namespace Xplicit
 
 		int res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
 			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in));
-
-		if (res == SOCKET_ERROR)
-			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
-
-		return true;
+		
+		return res != SOCKET_ERROR;
 	}
 
 	void NetworkComponent::update() {}
@@ -142,7 +152,7 @@ namespace Xplicit
 		return false;
 	}
 
-	bool NetworkComponent::is_reset() noexcept { return mReset; }
+	bool NetworkComponent::is_reset() const noexcept { return mReset; }
 
 	NetworkPacket& NetworkComponent::get() noexcept { return mPacket; }
 }

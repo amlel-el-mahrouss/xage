@@ -49,11 +49,11 @@ namespace Xplicit::Renderer::Vk
 		VkInstanceCreateInfo create_simple_vulkan();
 	}
 
-	class XPLICIT_API DriverSystemVulkan : public DriverSystem
+	class XPLICIT_API DriverSystemVulkan final : public DriverSystem
 	{
 	public:
 		DriverSystemVulkan(HWND window);
-		virtual ~DriverSystemVulkan();
+		~DriverSystemVulkan() override;
 
 	public:
 		XPLICIT_DRIVER_SYSTEM_OVERRIDE();

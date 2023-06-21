@@ -142,18 +142,16 @@ namespace Xplicit::Renderer::DX11
 	{
 	public:
 		ShaderSystemD3D11() = delete;
-
-	public:
+		
 		explicit ShaderSystemD3D11(const PChar* filename)
 			: ShaderSystem(filename, FORMAT_HLSL), m_data()
 		{}
 
-		virtual ~ShaderSystemD3D11();
+		~ShaderSystemD3D11() override;
 
 		ShaderSystemD3D11& operator=(const ShaderSystemD3D11&) = default;
 		ShaderSystemD3D11(const ShaderSystemD3D11&) = default;
-
-	public:
+		
 		class XPLICIT_API ShaderTraits
 		{
 		public:
@@ -170,26 +168,23 @@ namespace Xplicit::Renderer::DX11
 
 			template <typename StructSz>
 			HRESULT create_matrix_buffer(ID3D11Device* device);
-
-		public:
+			
 			Microsoft::WRL::ComPtr<ID3D11HullShader> pHull;
 			Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixel;
 			Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertex;
 			Microsoft::WRL::ComPtr<ID3D11Buffer> pMatrixBuffer;
 			Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
-
-		public:
+			
 			std::vector<D3D11_INPUT_ELEMENT_DESC> input_layouts;
 
 		};
 
 		ShaderTraits& get();
-
-	public:
+		
 		/// <summary>
 		/// Compiles the HLSL shader
 		/// </summary>
-		virtual int compile() noexcept override;
+		int compile() noexcept override;
 
 		/// <summary>
 		/// Updates the shader.
@@ -198,8 +193,7 @@ namespace Xplicit::Renderer::DX11
 
 	private:
 		ShaderTraits m_data;
-
-	private:
+		
 		friend RenderComponentD3D11;
 
 	};

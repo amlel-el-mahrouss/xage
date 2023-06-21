@@ -62,7 +62,7 @@ namespace Xplicit::Renderer::D2D
 	{
 	public:
 		DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv);
-		virtual ~DriverSystemD2D();
+		~DriverSystemD2D();
 
 		DriverSystemD2D& operator=(const DriverSystemD2D&) = default;
 		DriverSystemD2D(const DriverSystemD2D&) = default;

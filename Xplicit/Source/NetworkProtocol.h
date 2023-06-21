@@ -12,7 +12,7 @@
 #include "Xplicit.h"
 
 #ifndef XPLICIT_UDP_PORT
-#define XPLICIT_NETWORK_PORT (55305)
+#define XPLICIT_NETWORK_PORT (60001)
 #endif // ifndef XPLICIT_UDP_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY
@@ -138,21 +138,17 @@ namespace Xplicit
         public:
             UniqueAddress();
             ~UniqueAddress();
-
-        public:
+            
 			XPLICIT_COPY_DEFAULT(UniqueAddress);
-
-        public:
+            
 			const uuids::uuid& get() noexcept { return mUuid; }
-
-        public:
+            
 			void invalidate() noexcept
             {
                 mUuid = UUIDFactory::version<4>(); 
                 mPublicUuid = UUIDFactory::version<4>(); 
             }
-
-        public:
+            
 			const UUID& get_public_uuid() noexcept { return this->get(); }
 			const UUID& get_private_uuid() noexcept { return mUuid; }
 
@@ -163,8 +159,7 @@ namespace Xplicit
             friend NetworkInstance;
 
         };
-
-    public:
+        
 		UniqueAddress unique_addr;
 		PrivateAddressData address;
         std::uint32_t channel;
@@ -174,14 +169,11 @@ namespace Xplicit
 		std::uint32_t port;
         int64_t hash;
  
-    public:
         explicit NetworkInstance();
         ~NetworkInstance();
-
-    public:
+        
         XPLICIT_COPY_DEFAULT(NetworkInstance);
-
-    public:
+        
         void reset() noexcept
 		{
 			for (size_t cmd_index = 0; cmd_index < XPLICIT_NETWORK_CMD_MAX; ++cmd_index)

@@ -60,34 +60,30 @@ namespace Xplicit
     {
     public:
         NetworkComponent();
-
-        virtual ~NetworkComponent();
+        ~NetworkComponent() override;
 
         NetworkComponent& operator=(const NetworkComponent& ctx) = default;
         NetworkComponent(const NetworkComponent& ctx) = default;
 
-        virtual const char* name() noexcept override { return ("NetworkComponent"); }
-        virtual COMPONENT_TYPE type() noexcept override { return COMPONENT_NETWORK; }
+        const char* name() noexcept override { return ("NetworkComponent"); }
+		COMPONENT_TYPE type() noexcept override { return COMPONENT_NETWORK; }
 
-        virtual bool should_update() noexcept override { return false; }
+        bool should_update() noexcept override { return false; }
 
-        virtual void update() override;
-
-    public:
+        void update() override;
+        
         bool connect(const char* ip);
-
-    public:
+        
         //! sets the working channel on xconnect connection.
         //! channelId: channel (0 = data, 1 = chat)
        
         bool set_channel(const std::uint32_t& channelId) noexcept;
-
-    public:
+        
         bool send(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
         bool read(NetworkPacket& packet, const std::size_t sz = sizeof(NetworkPacket));
 
         NetworkPacket& get() noexcept;
-        bool is_reset() noexcept;
+        bool is_reset() const noexcept;
 
     private:
         struct sockaddr_in mSockAddrIn;

@@ -31,7 +31,7 @@ namespace Xplicit
 	{
 	public:
 		MonoEngineComponent();
-		virtual ~MonoEngineComponent();
+		~MonoEngineComponent() override;
 
 		MonoEngineComponent& operator=(const MonoEngineComponent&) = default;
 		MonoEngineComponent(const MonoEngineComponent&) = default;

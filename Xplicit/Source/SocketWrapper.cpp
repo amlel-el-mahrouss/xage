@@ -12,10 +12,20 @@
 namespace Xplicit::Network
 {
 	Socket::Socket(const SOCKET_TYPE type)
+		: PublicSocket(SOCKET_ERROR)
 	{
-		this->PublicSocket = XPLICIT_SOCKET(AF_INET,
-			type == SOCKET_TYPE::TCP ? SOCK_STREAM : SOCK_DGRAM,
-			type == SOCKET_TYPE::TCP ? IPPROTO_TCP : IPPROTO_UDP);
+		if (type == SOCKET_TYPE::TCP)
+		{
+			this->PublicSocket = XPLICIT_SOCKET(AF_INET,
+				SOCK_STREAM,
+				IPPROTO_TCP);
+		}
+		else if (type == SOCKET_TYPE::UDP)
+		{
+			this->PublicSocket = XPLICIT_SOCKET(AF_INET,
+				SOCK_DGRAM,
+				IPPROTO_UDP);
+		}
 
 		XPLICIT_ASSERT(this->PublicSocket != SOCKET_ERROR);
 	}
