@@ -96,19 +96,6 @@ namespace Xplicit
 		//! we gotta clear this one as we don't know if RST was sent.
 		mReset = false;
 
-		timeval timVal;
-		timVal.tv_sec = 1;
-
-		fd_set socket;
-		FD_ZERO(&socket);
-
-		FD_SET(mSocket.PublicSocket, &socket);
-
-		std::int32_t ret = ::select(1, &socket, nullptr, nullptr, &timVal);
-
-		if (ret == 0)
-			return false;
-
 		std::int32_t len = sizeof(struct sockaddr_in);
 
 		std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
@@ -125,19 +112,13 @@ namespace Xplicit
 
 			switch (errWsa)
 			{
-			case WSAEWOULDBLOCK:
-			{
-				timVal.tv_sec = 1;
-				::select(1, &socket, nullptr, nullptr, &timVal);
-
-				break;
-			}
 			case WSAECONNRESET:
 			{
 				mReset = true;
 				break;
 			}
-
+			default:
+				break;
 			}
 
 			return false;

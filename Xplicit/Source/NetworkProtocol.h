@@ -166,7 +166,7 @@ namespace Xplicit
 
     public:
 		UniqueAddress unique_addr;
-		std::uint32_t address;
+		PrivateAddressData address;
         std::uint32_t channel;
         NetworkPacket packet;
         int64_t public_hash; 
@@ -196,6 +196,8 @@ namespace Xplicit
 		}
 
     };
+
+    XPLICIT_API bool equals(PrivateAddressData& lhs, PrivateAddressData& rhs);
 }
 
 #ifdef XPLICIT_WINDOWS
@@ -233,3 +235,40 @@ typedef int socklen_t;
 #define XPLICIT_REPL_CLICK (22)
 #define XPLICIT_REPL_DBL_CLICK (23)
 
+namespace Xplicit::Utils
+{
+    class InternetProtocolChecker final
+    {
+    public:
+        InternetProtocolChecker() = default;
+        ~InternetProtocolChecker() = default;
+
+    public:
+        bool operator()(const char* ip) noexcept
+        {
+            if (!ip ||
+                *ip == 0)
+                return false;
+
+            int cnter = 0;
+
+            for (std::size_t base = 0; base < strlen(ip); ++base) 
+            {
+                if (ip[base] == '.')
+                {
+                    cnter = 0;
+                }
+                else
+                {
+                    if (cnter == 3)
+                        return false;
+
+                    ++cnter;
+                }
+            }
+
+            return true;
+        }
+
+    };
+}

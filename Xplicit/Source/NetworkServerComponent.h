@@ -43,15 +43,8 @@ namespace Xplicit
 		virtual bool should_update() noexcept override;
 
 	public:
-		NetworkInstance* get(const std::size_t& idx) noexcept
-		{
-			return mPeers.at(idx).second;
-		}
-
-		size_t size() noexcept
-		{
-			return mPeers.size();
-		}
+		NetworkInstance* get(const std::size_t& idx) noexcept;
+		size_t size() noexcept;
 
 	private:
 		NetworkVector mPeers;
@@ -60,6 +53,29 @@ namespace Xplicit
 
 	private:
 		friend class NetworkServerHelper;
+
+	};
+
+	class XPLICIT_API NetworkServerHelper final
+	{
+	public:
+		static void send_to(
+			NetworkServerComponent* server,
+			NetworkInstance* peer,
+			const std::size_t sz = sizeof(NetworkPacket));
+
+		static void send(NetworkServerComponent* server, const std::size_t sz = sizeof(NetworkPacket));
+
+	public:
+		static void recv_from(
+			NetworkServerComponent* server,
+			NetworkInstance* peer,
+			const std::size_t sz = sizeof(NetworkPacket));
+
+		static void recv(NetworkServerComponent* server, const std::size_t sz = sizeof(NetworkPacket));
+
+	public:
+		static void correct(NetworkServerComponent* server);
 
 	};
 }

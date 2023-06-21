@@ -134,7 +134,7 @@ int main(int argc, char** argv)
 
 		if (!ip4)
 		{
-			XPLICIT_INFO("XPLICIT_SERVER_ADDR is undefined! please set this in the envpath.");
+			XPLICIT_INFO("Please define XPLICIT_SERVER_ADDR.");
 			return 1;
 		}
 
@@ -157,8 +157,13 @@ int main(int argc, char** argv)
 
 		do
 		{
+			Xplicit::NetworkServerHelper::recv(server);
+			Xplicit::NetworkServerHelper::correct(server);
+
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
+
+			Xplicit::NetworkServerHelper::send(server);
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr());
 

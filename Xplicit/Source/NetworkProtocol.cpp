@@ -35,4 +35,9 @@ namespace Xplicit
 	{}
 
     NetworkInstance::UniqueAddress::~UniqueAddress() = default;
+
+    bool equals(PrivateAddressData& lhs, PrivateAddressData& rhs)
+    {
+        return lhs.sin_addr.S_un.S_addr == rhs.sin_addr.S_un.S_addr;
+    }
 }
