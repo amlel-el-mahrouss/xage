@@ -26,7 +26,7 @@ namespace Xplicit
 		const char* name() noexcept override;
 		void operator()() override;
 		
-		const size_t& size() noexcept;
+		const size_t& size() const noexcept;
 
 	private:
 		bool handle_leave_event() noexcept;

@@ -20,7 +20,7 @@ namespace Xplicit::Player
 	LocalCameraComponent::LocalCameraComponent()
 		: Component(), mCamera(nullptr)
 	{
-		mCamera = IRR->getSceneManager()->addCameraSceneNodeFPS();
+		mCamera = IRR->getSceneManager()->addCameraSceneNodeMaya();
 
 		XPLICIT_ASSERT(mCamera);
 

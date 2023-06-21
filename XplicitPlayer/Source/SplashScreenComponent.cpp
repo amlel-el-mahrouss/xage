@@ -27,7 +27,7 @@
 
 namespace Xplicit::Player
 {
-	constexpr const int XPLICIT_TIMEOUT = ((1 * 60) * 300); // connection timeout
+	constexpr int XPLICIT_TIMEOUT = ((1 * 60) * 300); // connection timeout
 
 	SplashScreenComponent::SplashScreenComponent() 
 		: 
@@ -36,13 +36,13 @@ namespace Xplicit::Player
 		mTexture(nullptr), 
 		mTimeout(XPLICIT_TIMEOUT)
 	{
-		mTexture = IRR->getVideoDriver()->getTexture("DownloadSplash.png");
+		mTexture = IRR->getVideoDriver()->getTexture("load_overlay.png");
 	}
 
 	SplashScreenComponent::~SplashScreenComponent() 
 	{
 		if (mTexture)
-			mTexture->drop();
+			(void)mTexture->drop();
 	}
 
 	void SplashScreenComponent::update()
@@ -57,9 +57,9 @@ namespace Xplicit::Player
 		{
 			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>(
 				[]() { IRR->closeDevice(); },
-				vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
-					Xplicit::Player::XPLICIT_DIM.Height / 2.8),
-				Player::POPUP_TYPE::BANNED, "StopPopup");
+				vector2di(XPLICIT_DIM.Width / 2.8,
+					XPLICIT_DIM.Height / 2.8),
+				POPUP_TYPE::BANNED, "StopPopup");
 
 		}
 
@@ -71,18 +71,21 @@ namespace Xplicit::Player
 
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalReplicationComponent>(hash);
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::HudComponent>(publicHash);
+			ComponentManager::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
+			ComponentManager::get_singleton_ptr()->add<HudComponent>(publicHash);
 			
-			auto cam = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
-			
-			auto ply = ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(publicHash);
+			const auto cam = ComponentManager::get_singleton_ptr()->add<LocalCameraComponent>();
+			const auto ply = ComponentManager::get_singleton_ptr()->add<LocalPlayerComponent>(publicHash);
+
+			XPLICIT_ASSERT(ply);
+
+			if (ply)
+				ply->attach(cam);
+
+			EventManager::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash);
 			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(publicHash);
 
-			ply->attach(cam);
-
-			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalNetworkMonitorEvent>(hash);
-			EventManager::get_singleton_ptr()->add<Xplicit::Player::LocalMenuEvent>(hash);
+			EventManager::get_singleton_ptr()->add<LocalMenuEvent>();
 
 			mEnabled = false;
 		}
@@ -98,11 +101,11 @@ namespace Xplicit::Player
 
 				mNetwork->send(packet);
 
-				ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>(
+				ComponentManager::get_singleton_ptr()->add<PopupComponent>(
 					[]() { IRR->closeDevice(); }, 
-						vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
-						Xplicit::Player::XPLICIT_DIM.Height / 2.8),
-						Player::POPUP_TYPE::NETWORK, "StopPopup");
+						vector2di(XPLICIT_DIM.Width / 2.8,
+						XPLICIT_DIM.Height / 2.8),
+						POPUP_TYPE::NETWORK, "StopPopup");
 
 				mEnabled = false;
 			}
@@ -110,8 +113,9 @@ namespace Xplicit::Player
 			{
 				IRR->getVideoDriver()->draw2DImage(mTexture, 
 					vector2di(0, 0),
-					core::rect<s32>(0, 0, 1280, 720), 0,
-					video::SColor(255, 255, 255, 255), true);
+					core::recti(0, 0, 1280, 720), 
+					nullptr,
+					SColor(255, 255, 255, 255), true);
 			}
 		}
 	}

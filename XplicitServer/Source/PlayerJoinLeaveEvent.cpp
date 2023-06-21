@@ -17,11 +17,11 @@
 
 namespace Xplicit
 {
-	//!forward declaration
-
-	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server);
-	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid);
-
+	/**
+	 * \brief creates an hash from the GUID.
+	 * \param uuid GUID (version 4 recommended)
+	 * \return the hashed GUID.
+	 */
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid)
 	{
 		const std::string uuid_str = uuids::to_string(uuid);
@@ -32,6 +32,12 @@ namespace Xplicit
 		return res;
 	}
 
+	/**
+	 * \brief Setups and prepares the player for a join event.
+	 * \param peer Network instance
+	 * \param player Player component
+	 * \param server Server component
+	 */
 	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server)
 	{
 		const auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
@@ -59,9 +65,9 @@ namespace Xplicit
 	}
 
 	PlayerJoinLeaveEvent::PlayerJoinLeaveEvent() 
-		: 
-		mPlayerCount(0), 
-		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")) 
+		:
+		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
+		mPlayerCount(0)
 	{
 		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
 		{
@@ -80,7 +86,7 @@ namespace Xplicit
 		this->handle_leave_event();
 	}
 
-	const size_t& PlayerJoinLeaveEvent::size() noexcept { return mPlayerCount; }
+	const size_t& PlayerJoinLeaveEvent::size() const noexcept { return mPlayerCount; }
 
 	bool PlayerJoinLeaveEvent::handle_join_event() noexcept
 	{

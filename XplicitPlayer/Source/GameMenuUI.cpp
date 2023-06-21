@@ -56,6 +56,7 @@ namespace Xplicit::Player
 		case POPUP_TYPE::BANNED:
 			path += "Banned.png";
 			break;
+		default:
 			break;
 		}
 

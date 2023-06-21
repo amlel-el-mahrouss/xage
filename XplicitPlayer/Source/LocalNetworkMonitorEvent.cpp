@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: LocalNetworkMonitorEvent.cpp
- *			Purpose: Network Monitor event.
- *
  * =====================================================================
  */
 
@@ -21,7 +18,7 @@
 
 namespace Xplicit::Player
 {
-	constexpr const int XPLICIT_MAX_RESETS = 150; // Max resets allowed before connection drop
+	constexpr int XPLICIT_MAX_RESETS = 150; // Max resets allowed before connection drop
 
 	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(int64_t hash)
 		: mNetwork(nullptr), mResetCnt(0), mHash(hash)
@@ -40,7 +37,8 @@ namespace Xplicit::Player
 
 		NetworkPacket& packet = mNetwork->get();
 
-		/* try send the acknowledge packet for the server. */
+		/* send the acknowledge packet for the server. To prove that we still here */
+
 		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 		mNetwork->send(packet);
@@ -56,14 +54,14 @@ namespace Xplicit::Player
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
 		{
-			static NetworkPacket packet{};
+			NetworkPacket packet{};
 			packet = mNetwork->get();
 
-			auto plyers = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
+			const auto players = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
 
-			for (std::size_t index = 0UL; index < plyers.size(); ++index)
+			for (std::size_t index = 0UL; index < players.size(); ++index)
 			{
-				if (plyers[index]->id() == packet.public_hash)
+				if (players[index]->id() == packet.public_hash)
 					return;
 			}
 
@@ -74,7 +72,8 @@ namespace Xplicit::Player
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||
-			packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+			packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK ||
+			packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
 		{
 			if (packet.hash == mHash)
 			{
@@ -90,18 +89,17 @@ namespace Xplicit::Player
 					return;
 				}
 			}
-		}
-
-		if (packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
-		{
-			auto plyers = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
-
-			for (int ply = 0; ply < plyers.size(); ++ply)
+			else
 			{
-				if (packet.public_hash == plyers[ply]->id())
+				const auto players = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
+
+				for (int ply = 0; ply < players.size(); ++ply)
 				{
-					ComponentManager::get_singleton_ptr()->remove(plyers[ply]);
-					break;
+					if (packet.public_hash == players[ply]->id())
+					{
+						ComponentManager::get_singleton_ptr()->remove(players[ply]);
+						break;
+					}
 				}
 			}
 		}
