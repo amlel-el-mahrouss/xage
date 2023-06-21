@@ -150,14 +150,12 @@ namespace Xplicit
 			return;
 		}
 
-		if (peer->packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
-			peer->packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-			peer->packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
-			peer->packet.version == XPLICIT_NETWORK_VERSION)
-		{
-			peer->packet = packet;
-		}
-		else
+		peer->packet = packet;
+
+		if (peer->packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
+			peer->packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
+			peer->packet.magic[2] != XPLICIT_NETWORK_MAG_2 ||
+			peer->packet.version != XPLICIT_NETWORK_VERSION)
 		{
 			xplicit_invalidate_peer(peer);
 		}
