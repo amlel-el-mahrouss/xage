@@ -57,7 +57,6 @@ namespace Xplicit
 	{
 		if (XPLICIT_SHUTDOWN(mSocket.PublicSocket, SD_BOTH) == SOCKET_ERROR)
 			XPLICIT_CLOSE(mSocket.PublicSocket);
-
 	}
 
 	const char* NetworkComponent::name() noexcept { return ("NetworkComponent"); }
@@ -97,25 +96,18 @@ namespace Xplicit
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
 		packet.channel = mChannelID;
-
 		packet.version = XPLICIT_NETWORK_VERSION;
-
-		int res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
-			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(mSockAddrIn));
-
-		auto err = WSAGetLastError();
-
-		while (res == SOCKET_ERROR && err == WSAEWOULDBLOCK)
-		{
-			res = ::sendto(mSocket, 
-				reinterpret_cast<const char*>(&packet),
-				sz, 
-				0,
-				reinterpret_cast<struct sockaddr*>(&mSockAddrIn), 
-				sizeof(sockaddr_in));
-		}
 		
-		return true;
+		if (const auto res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
+			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(mSockAddrIn)) == SOCKET_ERROR)
+		{
+			const auto err = WSAGetLastError();
+			return res != SOCKET_ERROR || err != WSAEWOULDBLOCK;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	void NetworkComponent::update() {}

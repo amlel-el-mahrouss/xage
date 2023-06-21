@@ -30,9 +30,9 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mNetwork);
 	}
 
-	LocalNetworkMonitorEvent::~LocalNetworkMonitorEvent() {}
+	LocalNetworkMonitorEvent::~LocalNetworkMonitorEvent() = default;
 
-	const char* LocalNetworkMonitorEvent::name() noexcept { return ("LocalResetEvent"); }
+	const char* LocalNetworkMonitorEvent::name() noexcept { return ("LocalNetworkMonitorEvent"); }
 
 	void LocalNetworkMonitorEvent::operator()()
 	{

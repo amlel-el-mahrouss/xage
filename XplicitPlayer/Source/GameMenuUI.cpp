@@ -114,7 +114,7 @@ namespace Xplicit::Player
 
 
 	std::tuple<std::vector<Color<float>>, 
-		std::vector<Vector<float>>> UIThemeSchemeManager::set_white_scheme() noexcept
+		std::vector<Vector<float>>> UIThemeSchemeManager::get_white_scheme() noexcept
 	{
 		std::tuple<std::vector<Color<float>>, std::vector<Vector<float>>> scheme;
 
@@ -123,7 +123,7 @@ namespace Xplicit::Player
 	}
 
 	std::tuple<std::vector<Color<float>>, 
-		std::vector<Vector<float>>> UIThemeSchemeManager::set_dark_scheme() noexcept
+		std::vector<Vector<float>>> UIThemeSchemeManager::get_dark_scheme() noexcept
 	{
 		std::tuple<std::vector<Color<float>>, std::vector<Vector<float>>> scheme;
 

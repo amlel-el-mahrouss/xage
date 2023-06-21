@@ -145,7 +145,7 @@ namespace Xplicit::Renderer::D2D
 		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(x, y));
 	}
 
-	void DriverSystemD2D::queue(View* view) { m_pViews.push_back(view); }
+	void DriverSystemD2D::queue(UIView* view) { m_pViews.push_back(view); }
 }
 
 #endif

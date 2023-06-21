@@ -1,11 +1,8 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			XplicitPlayer
  *			Copyright Xplicit Corporation, all rights reserved.
- *
- *			File: LocalResetEvent.h
- *			Purpose: RST timeout event.
  *
  * =====================================================================
  */
@@ -21,22 +18,19 @@ namespace Xplicit::Player
 	{
 	public:
 		LocalNetworkMonitorEvent() = delete;
-
-	public:
+		
 		LocalNetworkMonitorEvent(int64_t hash);
-		virtual ~LocalNetworkMonitorEvent();
+		~LocalNetworkMonitorEvent() override;
 
 		LocalNetworkMonitorEvent& operator=(const LocalNetworkMonitorEvent&) = default;
 		LocalNetworkMonitorEvent(const LocalNetworkMonitorEvent&) = default;
-
-	public:
-		virtual void operator()() override;
+		
+		void operator()() override;
 		const char* name() noexcept;
 
 	private:
 		NetworkComponent* mNetwork;
 		
-	private:
 		std::int32_t mResetCnt;
 		std::int64_t mHash;
 

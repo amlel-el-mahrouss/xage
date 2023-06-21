@@ -71,11 +71,8 @@ namespace Xplicit::Bites
 
 	private:
 		void create_context();
-
-	private:
-		std::unique_ptr<SettingsManager> mSettings;
 		
-	private:
+		std::unique_ptr<SettingsManager> mSettings;
 		String mPath;
 
 #ifdef XPLICIT_WINDOWS

@@ -125,9 +125,9 @@ namespace Xplicit::Player
 			mNetwork = ComponentManager::get_singleton_ptr()->add<NetworkComponent>();
 			XPLICIT_ASSERT(mNetwork);
 
-#ifndef XPLICIT_DEBUG
+#ifdef XPLICIT_DEBUG
 			if (mNetwork == nullptr)
-				throw std::runtime_error("There was an error during connection, we're sorry!");
+				throw std::runtime_error("Unrecoverable state! Aborting should be done.");
 #endif // ifndef XPLICIT_DEBUG
 		}
 
@@ -147,7 +147,7 @@ namespace Xplicit::Player
 
 					mNetwork->send(spawn);
 					
-					std::this_thread::sleep_for(std::chrono::seconds(1));
+					std::this_thread::sleep_for(std::chrono::seconds(3));
 				}
 			});
 
@@ -159,8 +159,8 @@ namespace Xplicit::Player
 	{
 		ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 			IRR->closeDevice();
-			}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45,
-				Xplicit::Player::XPLICIT_DIM.Height / 4),
-				Player::POPUP_TYPE::NETWORK);
+			}, vector2di(XPLICIT_DIM.Width / 3.45,
+				XPLICIT_DIM.Height / 4),
+				POPUP_TYPE::NETWORK);
 	}
 }

@@ -40,26 +40,22 @@ namespace Xplicit::Player
 	{
 	public:
 		PopupComponent() = delete;
-
-	public:
+		
 		PopupComponent(const std::function<void()>& on_click, const vector2di pos = vector2di(0, 0), 
 			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, const char* id = "Popup") noexcept;
 
-		virtual ~PopupComponent();
-
-	public:
+		~PopupComponent() override;
+		
 		PopupComponent& operator=(const PopupComponent&) = default;
 		PopupComponent(const PopupComponent&) = default;
-
-	public:
-		virtual COMPONENT_TYPE type() noexcept override;
-		virtual const char* name() noexcept override;
-		virtual void update() override;
+		
+		COMPONENT_TYPE type() noexcept override;
+		const char* name() noexcept override;
+		void update() override;
 		
 	private:
 		using FunctionPopup = std::function<void()>;
-
-	private:
+		
 		FunctionPopup mClicked;
 		String mPopupId;
 		ITexture* mTex;
@@ -71,21 +67,17 @@ namespace Xplicit::Player
 	{
 	public:
 		HudComponent() = delete;
-
-	public:
+		
 		explicit HudComponent(const std::int64_t& publicHash);
-		virtual ~HudComponent();
-
-	public:
+		~HudComponent() override;
+		
 		HudComponent& operator=(const HudComponent&) = default;
 		HudComponent(const HudComponent&) = default;
 
-	public:
-		virtual const char* name() noexcept override { return "HUD"; }
-		virtual COMPONENT_TYPE type() noexcept override { return COMPONENT_GUI; }
-
-	public:
-		virtual void update() override;
+		const char* name() noexcept override { return "HUD"; }
+		COMPONENT_TYPE type() noexcept override { return COMPONENT_GUI; }
+		
+		void update() override;
 
 	private:
 		NetworkComponent* mNetwork;
@@ -99,16 +91,27 @@ namespace Xplicit::Player
 	public:
 		UIThemeSchemeManager() = default;
 		~UIThemeSchemeManager() = default;
-
-	public:
+		
 		XPLICIT_COPY_DEFAULT(UIThemeSchemeManager);
+		
+		std::tuple<std::vector<Color<float>>, 
+			std::vector<Vector<float>>> get_white_scheme() noexcept;
 
+		std::tuple<std::vector<Color<float>>, 
+			std::vector<Vector<float>>> get_dark_scheme() noexcept;
+
+	};
+
+	class UIWidget
+	{
 	public:
-		std::tuple<std::vector<Color<float>>, 
-			std::vector<Vector<float>>> set_white_scheme() noexcept;
+		UIWidget() = default;
+		virtual ~UIWidget() = default;
 
-		std::tuple<std::vector<Color<float>>, 
-			std::vector<Vector<float>>> set_dark_scheme() noexcept;
+		XPLICIT_COPY_DEFAULT(UIWidget);
+		
+		virtual const char* name() = 0;
+		virtual void update() = 0;
 
 	};
 }

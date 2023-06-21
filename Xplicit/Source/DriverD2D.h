@@ -39,20 +39,20 @@ namespace Xplicit
 
 namespace Xplicit::Renderer::D2D
 {
-	class View;
 	class DriverSystemD2D;
+	class UIView;
 
 	struct BrushDescriptor;
 	struct OutlineDescriptor;
 
-	class View
+	class UIView
 	{
 	public:
-		View() = default;
-		virtual ~View() = default;
+		UIView() = default;
+		virtual ~UIView() = default;
 
-		View& operator=(const View&) = default;
-		View(const View&) = default;
+		UIView& operator=(const UIView&) = default;
+		UIView(const UIView&) = default;
 
 		virtual void operator()(DriverSystemD2D*) = 0;
 
@@ -71,7 +71,7 @@ namespace Xplicit::Renderer::D2D
 		void update();
 		void end_scene();
 		void begin_scene();
-		void queue(View* view);
+		void queue(UIView* view);
 		void transform(const float x = 0, const float y = 0) noexcept;
 		void draw_line(const float x1, const float y1, const float x2, const float y2, const float stroke = 1.f) noexcept;
 		void draw_rectangle(const Rect rct, const float radiusX = 0, const float radiusY = 0, const float stroke = 1.f) noexcept;
@@ -80,8 +80,12 @@ namespace Xplicit::Renderer::D2D
 		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_pGhostWhiteBrush;
 		Microsoft::WRL::ComPtr<ID2D1RenderTarget> m_pRenderTarget;
 		Microsoft::WRL::ComPtr<ID2D1Factory> m_pDirect2dFactory;
-		Renderer::DX11::DriverSystemD3D11* m_pDriver;
-		std::vector<View*> m_pViews;
+		DX11::DriverSystemD3D11* m_pDriver;
+
+		//! bad!!!!!!!!!
+		//! cpu cache will cry!!!!!
+
+		std::vector<UIView*> m_pViews;
 
 	};
 }
