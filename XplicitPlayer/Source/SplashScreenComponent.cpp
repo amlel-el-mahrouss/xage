@@ -144,6 +144,8 @@ namespace Xplicit::Player
 					spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 					spawn.size = sizeof(NetworkPacket);
+
+					mNetwork->send(spawn);
 					
 					std::this_thread::sleep_for(std::chrono::seconds(1));
 				}

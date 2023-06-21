@@ -12,7 +12,7 @@
 #include "Xplicit.h"
 
 #ifndef XPLICIT_UDP_PORT
-#define XPLICIT_NETWORK_PORT (60001)
+#define XPLICIT_NETWORK_PORT (6001)
 #endif // ifndef XPLICIT_UDP_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY
@@ -119,6 +119,7 @@ namespace Xplicit
 		Xplicit::NetworkFloat speed[XPLICIT_NETWORK_SPEED_MAX];
 		std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
 		std::int64_t          public_hash;
+        std::int8_t           channel;
 		std::int32_t          version;
 		std::int64_t          health;
 		std::int64_t          hash;

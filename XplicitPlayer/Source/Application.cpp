@@ -100,7 +100,7 @@ namespace Xplicit::Bites
 
 	Application::SettingsManager::~SettingsManager() = default;
 
-	void Application::SettingsManager::write(Application::SettingsManager::Traits& traits)
+	Application::SettingsManager& Application::SettingsManager::operator <<(Traits& traits)
 	{
 		mINI::INIStructure struc;
 
@@ -108,10 +108,12 @@ namespace Xplicit::Bites
 		struc["Window"]["Height"] = std::to_string(traits.window_height);
 
 		mIni->write(struc, true);
+
+		return *this;
 	}
 
-	/* reads the clientsettings.dat INI file */
-	void Application::SettingsManager::read(Application::SettingsManager::Traits& traits)
+	/* reads the ClientSettings.dat INI file */
+	Application::SettingsManager& Application::SettingsManager::operator >>(Traits& traits)
 	{
 		mINI::INIStructure struc;
 		mIni->read(struc);
@@ -139,5 +141,7 @@ namespace Xplicit::Bites
 			traits.window_height = 720;
 			traits.window_width = 1280;
 		}
+
+		return *this;
 	}
 }

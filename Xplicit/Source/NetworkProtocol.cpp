@@ -19,9 +19,9 @@
 
 namespace Xplicit
 {
-    NetworkInstance::NetworkInstance() : 
+    NetworkInstance::NetworkInstance()
+	: 
         packet(), 
-        unique_addr(), 
 		hash(-1),
 		public_hash(-1),
         address(XPLICIT_BAD_ADDRESS),

@@ -94,7 +94,7 @@ static void xplicit_load_mono()
 		XPLICIT_GET_DATA_DIR(data);
 
 		Xplicit::String dll_path = data;
-		dll_path += "Library/ScriptNgine.dll";
+		dll_path += "Plugin/PluginNgine.dll";
 
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoEngineComponent>();
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(dll_path.c_str(), false);
@@ -157,10 +157,24 @@ int main(int argc, char** argv)
 		xplicit_load_mono();
 		xplicit_read_xml();
 
+		std::atexit([]() -> void {
+			auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+
+			if (net)
+			{
+				for (std::size_t index = 0UL; index < net->size(); ++index)
+				{
+					net->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
+					memcpy(net->get(index)->packet.buffer, "Shutting down...", strlen("Shutting down..."));
+				}
+
+				Xplicit::NetworkServerHelper::send(net);
+			}
+			});
+
 		do
 		{
 			Xplicit::NetworkServerHelper::recv(server);
-			Xplicit::NetworkServerHelper::correct(server);
 
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
@@ -188,7 +202,7 @@ int main(int argc, char** argv)
 			L"Program Exited", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 
-			_TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
+			TDCBF_OK_BUTTON);
 #endif
 #endif
 

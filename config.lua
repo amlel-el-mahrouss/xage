@@ -68,7 +68,7 @@ XPLICIT_SERVER_CONFIG = {
 	"Library/enet_static64",
 	"Library/enet64",
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
-    	"Library/Xplicit",
+    	"bin/Debug/Xplicit",
         "Library/Irrlicht",
 	  "ws2_32",
 	  "winmm",
@@ -108,7 +108,7 @@ XPLICIT_CLIENT_CONFIG = {
     ["_LIBDIR"] = {
 	"Library/enet_static64",
 	"Library/enet64",
-    	"Library/Xplicit",
+    	"bin/Debug/Xplicit",
         "d3d11",
         "dxgi",
         "Library/glfw3",

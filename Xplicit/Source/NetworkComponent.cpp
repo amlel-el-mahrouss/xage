@@ -22,13 +22,13 @@ namespace Xplicit
 
 
 	NetworkError::NetworkError(const int what) 
-		: std::runtime_error("Xplicit Network Error")
+		: std::runtime_error("Network error, XplicitNgine encoutered an unrecoverable error.")
 #ifdef XPLICIT_WINDOWS
 		, mErr(WSAGetLastError())
 #endif
 	{
 #ifdef XPLICIT_DEBUG
-		std::string err = "NetworkError, error code: ";
+		std::string err = "Error code: ";
 		err += std::to_string(mErr);
 
 		XPLICIT_CRITICAL(err);
@@ -55,25 +55,26 @@ namespace Xplicit
 
 	NetworkComponent::~NetworkComponent()
 	{
-		if (shutdown(mSocket.PublicSocket, SD_BOTH) == SOCKET_ERROR)
+		if (XPLICIT_SHUTDOWN(mSocket.PublicSocket, SD_BOTH) == SOCKET_ERROR)
 			XPLICIT_CLOSE(mSocket.PublicSocket);
 
 	}
 
-	bool NetworkComponent::connect(const char* ip)
+	const char* NetworkComponent::name() noexcept { return ("NetworkComponent"); }
+
+	COMPONENT_TYPE NetworkComponent::type() noexcept { return COMPONENT_NETWORK; }
+
+	bool NetworkComponent::should_update() noexcept { return false; }
+
+	bool NetworkComponent::connect(const char* ip) noexcept
 	{
 		memset(&mSockAddrIn, 0, sizeof(sockaddr_in));
 
 		mSockAddrIn.sin_family = AF_INET;
-		inet_pton(AF_INET, ip, &mSockAddrIn.sin_addr);
+		mSockAddrIn.sin_addr.S_un.S_addr = inet_addr(ip);
 		mSockAddrIn.sin_port = htons(XPLICIT_NETWORK_PORT);
-
-		auto result = ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in));
-
-		while (result == SOCKET_ERROR && WSAGetLastError() == WSAEWOULDBLOCK)
-		{}
-
-		return true;
+		
+		return ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in)) != SOCKET_ERROR;
 	}
 
 	bool NetworkComponent::set_channel(const std::uint32_t& channelId) noexcept
@@ -90,22 +91,28 @@ namespace Xplicit
 	{
 		if (sz < 1)
 			return false;
-
+		
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
+		packet.channel = mChannelID;
+
 		packet.version = XPLICIT_NETWORK_VERSION;
 
 		int res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
-			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in));
+			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(mSockAddrIn));
 
 		auto err = WSAGetLastError();
 
 		while (res == SOCKET_ERROR && err == WSAEWOULDBLOCK)
 		{
-			res = ::sendto(mSocket, reinterpret_cast<const char*>(&packet), sz, 0,
-				reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in));
+			res = ::sendto(mSocket, 
+				reinterpret_cast<const char*>(&packet),
+				sz, 
+				0,
+				reinterpret_cast<struct sockaddr*>(&mSockAddrIn), 
+				sizeof(sockaddr_in));
 		}
 		
 		return true;
@@ -121,13 +128,15 @@ namespace Xplicit
 		std::int32_t len = sizeof(struct sockaddr_in);
 
 		const std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
-			reinterpret_cast<char*>(&mPacket), sz, 0, 
+			reinterpret_cast<char*>(&mPacket), 
+			sz, 
+			0, 
 			reinterpret_cast<struct sockaddr*>(&mSockAddrIn), 
 			&len);
 
 		if (len < 1)
 			return false;
-
+		
 		if (err == SOCKET_ERROR)
 		{
 			switch (WSAGetLastError())

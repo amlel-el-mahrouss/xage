@@ -69,9 +69,9 @@ namespace Xplicit
 		inet_pton(AF_INET, mDns.c_str(), &bindAddress.sin_addr.S_un.S_addr);
 		bindAddress.sin_port = htons(XPLICIT_NETWORK_PORT);
 
-		auto boundValue = bind(mSocket, reinterpret_cast<SOCKADDR*>(&bindAddress), sizeof(bindAddress));
+		auto boundValue = ::bind(mSocket, reinterpret_cast<SOCKADDR*>(&bindAddress), sizeof(bindAddress));
 
-		if (boundValue == -1)
+		if (boundValue == SOCKET_ERROR)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
 		// !Let's preallocate the clients.
@@ -167,7 +167,7 @@ namespace Xplicit
 			for (std::size_t index = 0; index < server->size(); ++index)
 			{
 				std::int32_t fromLen = sizeof(PrivateAddressData);
-				static NetworkPacket packet{};
+				NetworkPacket packet{};
 				
 				if (::recvfrom(server->mSocket,
 					reinterpret_cast<char*>(&packet),
@@ -241,27 +241,6 @@ namespace Xplicit
 				0,
 				reinterpret_cast<sockaddr*>(&peer->address),
 				sizeof(PrivateAddressData));
-		}
-	}
-
-	void NetworkServerHelper::correct(NetworkServerComponent* server)
-	{
-		if (server)
-		{
-			for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
-			{
-				for (size_t second_peer_idx = 0; second_peer_idx < server->size(); ++second_peer_idx)
-				{
-					if (server->get(second_peer_idx) == server->get(peer_idx))
-						continue;
-
-					if (equals(server->get(second_peer_idx)->address, server->get(peer_idx)->address))
-					{
-						server->get(second_peer_idx)->reset();
-						server->get(second_peer_idx)->unique_addr.invalidate();
-					}
-				}
-			}
 		}
 	}
 }

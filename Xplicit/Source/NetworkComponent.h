@@ -65,14 +65,14 @@ namespace Xplicit
         NetworkComponent& operator=(const NetworkComponent& ctx) = default;
         NetworkComponent(const NetworkComponent& ctx) = default;
 
-        const char* name() noexcept override { return ("NetworkComponent"); }
-		COMPONENT_TYPE type() noexcept override { return COMPONENT_NETWORK; }
+        const char* name() noexcept override;
+        COMPONENT_TYPE type() noexcept override;
 
-        bool should_update() noexcept override { return false; }
+        bool should_update() noexcept override;
 
         void update() override;
         
-        bool connect(const char* ip);
+        bool connect(const char* ip) noexcept;
         
         //! sets the working channel on xconnect connection.
         //! channelId: channel (0 = data, 1 = chat)

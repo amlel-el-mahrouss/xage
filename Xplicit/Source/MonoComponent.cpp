@@ -89,22 +89,22 @@ namespace Xplicit
 	}
 
 	MonoEngineComponent::MonoEngineComponent()
-		: m_domain(nullptr), m_app_domain(nullptr)
+		: m_app_domain(nullptr), m_domain(nullptr)
 	{
 		XPLICIT_GET_DATA_DIR(data_dir);
 		std::string path = data_dir;
-		path += "\\Library\\";
+		path += "\\Plugin\\";
 
 		mono_set_assemblies_path(path.c_str());
 		m_domain = mono_jit_init_version("XplicitNgine", "v4.0.30319");
 
 		if (m_domain)
 		{
-#ifndef _NDEBUG
+#ifdef XPLICIT_DEBUG
 			XPLICIT_INFO("[C#] Domain allocated with success!");
-#endif
+#endif // ifdef XPLICIT_DEBUG
 
-			m_app_domain = mono_domain_create_appdomain(const_cast<char*>("XplicitScriptRuntime"), nullptr);
+			m_app_domain = mono_domain_create_appdomain(const_cast<char*>("XplicitPluginRuntime"), nullptr);
 			assert(m_app_domain);
 
 			if (!mono_domain_set(m_app_domain, true))

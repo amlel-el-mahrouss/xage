@@ -17,28 +17,24 @@
 
 namespace Xplicit
 {
-	class PlayerJoinLeaveEvent : public Event
+	class PlayerJoinLeaveEvent final : public Event
 	{
 	public:
 		PlayerJoinLeaveEvent();
-		virtual ~PlayerJoinLeaveEvent();
-
-	public:
+		~PlayerJoinLeaveEvent() override;
+		
 		PlayerJoinLeaveEvent& operator=(const PlayerJoinLeaveEvent&) = default;
 		PlayerJoinLeaveEvent(const PlayerJoinLeaveEvent&) = default;
-
-	public:
-		virtual const char* name() noexcept override;
-		virtual void operator()() override;
-
-	public:
+		
+		const char* name() noexcept override;
+		void operator()() override;
+		
 		const size_t& size() noexcept;
 
 	private:
 		bool handle_leave_event(NetworkServerComponent* server) noexcept;
 		bool handle_join_event(NetworkServerComponent* server) noexcept;
-
-	private:
+		
 		std::vector<PlayerComponent*> mPlayers;
 		NetworkServerComponent* mNetwork;
 		std::size_t mPlayerCount;

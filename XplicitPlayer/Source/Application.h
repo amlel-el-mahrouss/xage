@@ -60,8 +60,8 @@ namespace Xplicit::Bites
 			SettingsManager();
 			~SettingsManager();
 
-			void write(Traits& traits);
-			void read(Traits& traits);
+			SettingsManager& operator <<(Traits& traits);
+			SettingsManager& operator >>(Traits& traits);
 
 		private:
 			std::unique_ptr<mINI::INIFile> mIni;

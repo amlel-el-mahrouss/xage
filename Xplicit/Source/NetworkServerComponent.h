@@ -59,17 +59,13 @@ namespace Xplicit
 			const std::size_t sz = sizeof(NetworkPacket));
 
 		static void send(NetworkServerComponent* server, const std::size_t sz = sizeof(NetworkPacket));
-
-	public:
+		
 		static void recv_from(
 			NetworkServerComponent* server,
 			NetworkInstance* peer,
 			const std::size_t sz = sizeof(NetworkPacket));
 
 		static void recv(NetworkServerComponent* server, const std::size_t sz = sizeof(NetworkPacket));
-
-	public:
-		static void correct(NetworkServerComponent* server);
 
 	};
 }
