@@ -50,7 +50,7 @@ namespace Xplicit::Player
 		catch (...)
 		{
 #ifdef XPLICIT_DEBUG
-			XPLICIT_DEBUG("Could not delloacate pointer!")
+			XPLICIT_INFO("Could not delloacate pointer, tool probably doesn't exist in pool!");
 #endif
 		}
 	}

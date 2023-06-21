@@ -18,15 +18,27 @@
 #define XPLICIT_SHUTDOWN shutdown
 #define XPLICIT_ACCEPT accept
 #define XPLICIT_CONNECT connect
+#define XPLICIT_IOCTL ioctlsocket
 
 #else
 
 #define XPLICIT_SOCKET socket
 #define XPLICIT_CLOSE close
 #define XPLICIT_SHUTDOWN shutdown
+#define XPLICIT_ACCEPT accept
+#define XPLICIT_CONNECT connect
+#define XPLICIT_IOCTL ioctl
 
 #endif // XPLICIT_WINDOWS
 
+namespace Xplicit
+{
+	enum class SOCKET_FLAG : std::int64_t
+	{
+		NON_BLOCKING = FIONBIO,
+		ASYNC = FIOASYNC,
+	};
+}
 
 namespace Xplicit::Network
 {

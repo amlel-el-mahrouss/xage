@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: ServerReplicationManager.h
- *			Purpose: Server replication management.
- *
  * =====================================================================
  */
 
@@ -47,7 +44,8 @@ namespace Xplicit
 		{
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_DESTROY] = NETWORK_REPL_CMD_DESTROY;
 
-			mNetwork->get(i)->packet.id = id; /* store entity id in packet. */
+			/* store entity id in packet. */
+			mNetwork->get(i)->packet.id = id;
 			mNetwork->get(i)->packet.public_hash = component_hash;
 		}
 	}

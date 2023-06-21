@@ -116,7 +116,7 @@ int main(int argc, char** argv)
 
 		SetConsoleTitleA(title.c_str());
 
-		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_NULL));
+		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(EDT_NULL));
 
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
 		if (server == nullptr)
 			return 1;
 
-		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion<float>(0.f, 0.f, 0.f));
+		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();

@@ -47,6 +47,10 @@ namespace Xplicit
 #ifndef _NDEBUG
 		XPLICIT_INFO("~NetworkComponent, Epoch: " + std::to_string(xplicit_get_epoch()));
 #endif
+
+		if (shutdown(mSocket.PublicSocket, SD_BOTH) == SOCKET_ERROR)
+			XPLICIT_CLOSE(mSocket.PublicSocket);
+
 	}
 
 	bool NetworkComponent::connect(const char* ip)

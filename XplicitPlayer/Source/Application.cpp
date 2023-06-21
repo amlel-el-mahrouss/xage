@@ -31,7 +31,7 @@ namespace Xplicit::Bites
 		prebuilt += "\\Textures\\DefaultSkin.zip";
 
 		if (!IRR->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
-			throw std::runtime_error("Missing dialogs! This pack are needed for XplicitPlayer to work.");
+			throw std::runtime_error("Missing skin! This pack is needed for the XplicitPlayer to work.");
 	}
 
 	Application::Application(const char* dns)

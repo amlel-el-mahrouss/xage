@@ -91,10 +91,10 @@ XPLICIT_MAIN()
 		exit += L"\n";
 
 		Xplicit::DialogHelper::message_box(L"Xplicit Engine", 
-			L"Program Exited", 
+			L"Program Failure!", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 
-			_TASKDIALOG_COMMON_BUTTON_FLAGS::TDCBF_OK_BUTTON);
+			TDCBF_OK_BUTTON);
 	}
 
 	return 0;

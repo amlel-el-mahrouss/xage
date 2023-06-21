@@ -38,17 +38,10 @@ namespace Xplicit
 
 	static void xplicit_set_ioctl(Socket sock)
 	{
-#ifdef XPLICIT_WINDOWS
 		auto ul = 1UL;
 
-		auto err = ioctlsocket(sock, FIONBIO, &ul);
+		auto err = XPLICIT_IOCTL(sock, (long)SOCKET_FLAG::NON_BLOCKING, &ul);
 		XPLICIT_ASSERT(err == NO_ERROR);
-
-		err = ioctlsocket(sock, FIOASYNC, &ul);
-		XPLICIT_ASSERT(err == NO_ERROR);
-#else
-#pragma error("ServerComponent.cpp")
-#endif
 	}
 
 	NetworkServerComponent::NetworkServerComponent(const char* ip)

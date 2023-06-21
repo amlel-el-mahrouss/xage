@@ -13,11 +13,17 @@
 
 namespace Xplicit::Player
 {
-	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_LOGIC; }
+	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_REPLICATION; }
 
 	const char* LocalReplicationComponent::name() noexcept { return "LocalReplicationManager"; }
 
 	bool LocalReplicationComponent::should_update() noexcept { return true; }
+
+	/*
+	 *	This update function takes care of:
+	 *		- replication events.
+	 *		- event dispatch.
+	 */
 
 	void LocalReplicationComponent::update()
 	{
