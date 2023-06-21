@@ -11,9 +11,9 @@
 
 #include "Xplicit.h"
 
-#ifndef XPLICIT_UDP_PORT
-#define XPLICIT_NETWORK_PORT (6001)
-#endif // ifndef XPLICIT_UDP_PORT
+#ifndef XPLICIT_NETWORK_PORT
+#define XPLICIT_NETWORK_PORT (60001)
+#endif // ifndef XPLICIT_NETWORK_PORT
 
 #ifndef XPLICIT_ADDRESS_ANY
 #define XPLICIT_ADDRESS_ANY INADDR_ANY
@@ -54,7 +54,7 @@
 
 #define XPLICIT_SOCKET_ERROR  (-1)
 
-#define XPLICIT_BAD_ADDRESS (0xFFFFFF)
+#define XPLICIT_BAD_ADDRESS (XPLICIT_INVALID_ADDR)
 
 namespace Xplicit
 {
