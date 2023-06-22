@@ -54,10 +54,20 @@ namespace Xplicit
 	{
 		static void try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 		static void try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
-		static void try_create_send(NetworkServerComponent* server) noexcept;
 
 	public:
-		static void accept(NetworkServerComponent* server);
+		static void accept_send(NetworkServerComponent* server) noexcept;
+		static void accept_recv(NetworkServerComponent* server) noexcept;
+
+	public:
+		enum class NETWORK_CONTEXT
+		{
+			ONLINE,
+			DISCONNECTED,
+			COUNT,
+		};
+
+		static NETWORK_CONTEXT context;
 		
 	};
 }

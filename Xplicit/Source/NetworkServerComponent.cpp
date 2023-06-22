@@ -167,12 +167,14 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerContext::accept(NetworkServerComponent* server)
+	NetworkServerContext::NETWORK_CONTEXT NetworkServerContext::context = NetworkServerContext::NETWORK_CONTEXT::DISCONNECTED;
+
+	void NetworkServerContext::accept_recv(NetworkServerComponent* server) noexcept
 	{
 		XPLICIT_ASSERT(server);
 
 
-		/* We create recvers/senders threads here. */
+		/* We create recievers threads here. */
 
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
@@ -195,8 +197,6 @@ namespace Xplicit
 				}
 			});
 		}
-
-		NetworkServerContext::try_create_send(server);
 	}
 
 	void NetworkServerContext::try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept
@@ -215,7 +215,7 @@ namespace Xplicit
 
 	}
 
-	void NetworkServerContext::try_create_send(NetworkServerComponent* server) noexcept
+	void NetworkServerContext::accept_send(NetworkServerComponent* server) noexcept
 	{
 		if (server)
 		{
@@ -240,6 +240,9 @@ namespace Xplicit
 					}
 				});
 			}
+
+			// finally make it online!
+			context = NETWORK_CONTEXT::ONLINE;
 		}
 	}
 }

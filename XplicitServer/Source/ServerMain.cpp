@@ -171,11 +171,16 @@ int main(int argc, char** argv)
 			});
 
 		/* NetworkServerContext masterThread */
-		Xplicit::Thread network_master_thread([&]() {
-			Xplicit::NetworkServerContext::accept(server);
+		Xplicit::Thread network_master_thread_recv([&]() {
+			Xplicit::NetworkServerContext::accept_recv(server);
 			});
 
-		network_master_thread.detach();
+		Xplicit::Thread network_master_thread_send([&]() {
+			Xplicit::NetworkServerContext::accept_send(server);
+		});
+
+		network_master_thread_recv.detach();
+		network_master_thread_send.detach();
 		
 		do
 		{
