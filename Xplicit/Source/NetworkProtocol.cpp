@@ -23,7 +23,7 @@ namespace Xplicit
 	: 
         packet(), 
         thread_id(-1),
-		hash(-1),
+		hash(0xDEEBEFF),
 		public_hash(-1),
         address(XPLICIT_BAD_ADDRESS),
         status(NETWORK_STAT_DISCONNECTED)
