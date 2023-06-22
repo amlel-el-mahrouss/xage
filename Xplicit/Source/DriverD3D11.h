@@ -77,16 +77,15 @@ namespace Xplicit::Renderer::DX11
 	{
 	public:
 		DriverSystemD3D11() = delete;
-
-	public:
-		DriverSystemD3D11(HWND hwnd);
-		virtual ~DriverSystemD3D11();
+		
+		explicit DriverSystemD3D11(HWND hwnd);
+		~DriverSystemD3D11() override;
 
 		DriverSystemD3D11& operator=(const DriverSystemD3D11&) = default;
 		DriverSystemD3D11(const DriverSystemD3D11&) = default;
 
-		virtual const char* name() noexcept override;
-		virtual RENDER_SYSTEM api() noexcept override;
+		const char* name() noexcept override;
+		RENDER_SYSTEM api() noexcept override;
 
 		class XPLICIT_API DriverTraits
 		{
@@ -101,16 +100,16 @@ namespace Xplicit::Renderer::DX11
 			DXGI_SWAP_CHAIN_DESC SwapDesc;
 
 		public:
-			Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
-			Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
-			Microsoft::WRL::ComPtr<ID3D11DeviceContext> pCtx;
-			Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
-			Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthTexture;
-			Microsoft::WRL::ComPtr<ID3D11Texture2D> pRenderTexture;
-			Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterState;
-			Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDepthStencil;
-			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pRenderTarget;
-			Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
+			WRL::ComPtr<ID3D11Device> pDevice;
+			WRL::ComPtr<IDXGIAdapter> pAdapter;
+			WRL::ComPtr<ID3D11DeviceContext> pCtx;
+			WRL::ComPtr<IDXGISwapChain> pSwapChain;
+			WRL::ComPtr<ID3D11Texture2D> pDepthTexture;
+			WRL::ComPtr<ID3D11Texture2D> pRenderTexture;
+			WRL::ComPtr<ID3D11RasterizerState> pRasterState;
+			WRL::ComPtr<ID3D11DepthStencilView> pDepthStencil;
+			WRL::ComPtr<ID3D11RenderTargetView> pRenderTarget;
+			WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
 
 		};
 
@@ -118,7 +117,7 @@ namespace Xplicit::Renderer::DX11
 		void setup();
 
 	public:
-		void begin_scene(const float a, const float r, const float g, const float b);
+		void begin_scene(const float& a, const float& r, const float& g, const float& b, const bool zBuffer, const bool depth);
 		bool end_scene();
 
 	public:
@@ -128,8 +127,8 @@ namespace Xplicit::Renderer::DX11
 		operator bool();
 
 	private:
-		void handle_device_removed();
-		bool check_device_removed(HRESULT hr);
+		static void handle_device_removed();
+		static bool check_device_removed(HRESULT hr);
 
 	private:
 		DriverTraits m_private;
@@ -169,11 +168,11 @@ namespace Xplicit::Renderer::DX11
 			template <typename StructSz>
 			HRESULT create_matrix_buffer(ID3D11Device* device);
 			
-			Microsoft::WRL::ComPtr<ID3D11HullShader> pHull;
-			Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixel;
-			Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertex;
-			Microsoft::WRL::ComPtr<ID3D11Buffer> pMatrixBuffer;
-			Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
+			WRL::ComPtr<ID3D11HullShader> pHull;
+			WRL::ComPtr<ID3D11PixelShader> pPixel;
+			WRL::ComPtr<ID3D11VertexShader> pVertex;
+			WRL::ComPtr<ID3D11Buffer> pMatrixBuffer;
+			WRL::ComPtr<ID3D11InputLayout> pInputLayout;
 			
 			std::vector<D3D11_INPUT_ELEMENT_DESC> input_layouts;
 

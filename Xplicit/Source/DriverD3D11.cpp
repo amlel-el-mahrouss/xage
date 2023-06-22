@@ -23,7 +23,7 @@ namespace Xplicit::Renderer::DX11
 {
 	namespace Details
 	{
-		void ThrowIfFailed(HRESULT hr)
+		void ThrowIfFailed(const HRESULT hr)
 		{
 			if (FAILED(hr))
 				throw Win32Error("[ThrowIfFailed] Fatal DirectX error!");
@@ -238,15 +238,17 @@ namespace Xplicit::Renderer::DX11
 
 	DriverSystemD3D11::DriverTraits& DriverSystemD3D11::get() noexcept { return m_private; }
 
-	void DriverSystemD3D11::begin_scene(const float a, const float r, const float g, const float b) 
+	void DriverSystemD3D11::begin_scene(const float& a, const float& r, const float& g, const float& b, const bool zBuffer, const bool depth)
 	{
 		XPLICIT_ASSERT(m_private.pCtx);
 		XPLICIT_ASSERT(m_private.pRenderTarget);
 		XPLICIT_ASSERT(m_private.pDepthStencil);
 
-		float rgba[4]{ r, g, b, a };
+		const float rgba[4]{ r, g, b, a };
 
-		m_private.pCtx->OMSetRenderTargets(1, m_private.pRenderTarget.GetAddressOf(), m_private.pDepthStencil.Get());
+		m_private.pCtx->OMSetRenderTargets(1, 
+			m_private.pRenderTarget.GetAddressOf(), 
+			m_private.pDepthStencil.Get());
 
 		m_private.pCtx->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
 		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
@@ -254,6 +256,8 @@ namespace Xplicit::Renderer::DX11
 
 	void DriverSystemD3D11::handle_device_removed()
 	{
+		XPLICIT_INFO("Device removed!!!");
+
 		Details::ThrowIfFailed(E_FAIL);
 	}
 
@@ -261,7 +265,20 @@ namespace Xplicit::Renderer::DX11
 	{
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
-			this->handle_device_removed();
+			try
+			{
+				DriverSystemD3D11::handle_device_removed();
+			}
+			catch (...)
+			{
+				DialogHelper::message_box(L"Xplicit Rendering System",
+					L"Device has been removed!",
+					L"Direct3D driver crashed! Engine has to exit.", TD_ERROR_ICON,
+					TDCBF_OK_BUTTON);
+
+				std::exit(0);
+			}
+
 			return true;
 		}
 		else
@@ -279,7 +296,7 @@ namespace Xplicit::Renderer::DX11
 
 		HRESULT hr = m_private.pSwapChain->Present(m_private.bVSync ? 1 : 0, 0);
 
-		return !this->check_device_removed(hr);
+		return !DriverSystemD3D11::check_device_removed(hr);
 	}
 
 	void DriverSystemD3D11::close() noexcept { m_private.bEndRendering = true; }

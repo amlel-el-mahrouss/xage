@@ -395,8 +395,8 @@ namespace Xplicit
 	public:
 		static Logger& get_singleton() noexcept
 		{
-			static Logger LOGGER;
-			return LOGGER;
+			static Logger logging;
+			return logging;
 		}
 
 		auto get()
@@ -520,12 +520,13 @@ namespace Xplicit
 	{
 	public:
 		explicit Pool() noexcept
-			: mPointer(nullptr),
-			  mIndex(0UL)
+			:
+			mIndex(0UL),
+			mPointer(nullptr)
 		{
 			/* allocate these shits */                    
-			this->mPointer = (char*)malloc(sizeof(char) * (sizeof(PtrType) * Size * 8));
-			XPLICIT_ASSERT(mPointer);
+			this->mPointer = reinterpret_cast<char*>(malloc(sizeof(char) * (sizeof(PtrType) * Size * 8)));
+			XPLICIT_ASSERT(mPointer); // assert that shit
 
 			/* zero memory that shit */
 			ZeroMemory(this->mPointer, (sizeof(PtrType) * Size));
@@ -547,8 +548,7 @@ namespace Xplicit
 		std::size_t size() noexcept { return sizeof(PtrType) * Size; }
 		const std::size_t& capacity() noexcept { return mIndex; }
 		char* data() noexcept { return mPointer; }
-
-	public:
+		
 		template <typename... Args>
 		PtrType* allocate(Args&&... args) noexcept
 		{
@@ -606,29 +606,24 @@ namespace Xplicit
 			AsyncAction(const AsyncAction&) = default;
 
 		private:
-			std::jthread m_thread;
+			Thread m_thread;
 
 		};
 
 		struct ThreadLockingSystem final
 		{
 		private:
-			Thread The;
-			bool Release;
+			Thread mThe;
+			bool mRelease;
 
 		public:
-			void release() { Release = true; }
+			void release() { mRelease = true; }
 
-			explicit operator bool() const noexcept { return Release == false; }
+			explicit operator bool() const noexcept { return mRelease == false; }
 
 			explicit ThreadLockingSystem(Thread& thrd)
-				: Release(false), The(std::move(thrd))
-			{
-				XPLICIT_ASSERT(thrd.joinable());
-
-				if (!thrd.joinable())
-					throw EngineError("Thread is not joinable.");
-			}
+				: mThe(std::move(thrd)), mRelease(false)
+			{}
 
 			~ThreadLockingSystem()
 			{

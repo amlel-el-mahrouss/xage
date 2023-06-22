@@ -18,6 +18,9 @@ extern "C" {
 #	include "lauxlib.h"
 }
 
+#define XPLICIT_LUA_NAME "XplicitLua"
+#define XPLICIT_LUA_DESCRIPTION "A fork of lua by Xplicit Corporation."
+
 namespace Xplicit::Lua
 {
 	template <typename T>
@@ -25,6 +28,7 @@ namespace Xplicit::Lua
 	{
 	public:
 		ILuaClass() = default;
+		~ILuaClass() override = default;
 
 	public:
 		ILuaClass& operator=(const ILuaClass&) = default;
