@@ -35,7 +35,8 @@ namespace Xplicit::Bites
 	class XPLICIT_API Win32Window final
 	{
 	public:
-		Win32Window(const char* wndName, const char* wndClass,
+		Win32Window(const char* wndName, 
+			const char* wndClass,
 			HINSTANCE hInstance);
 
 		static LRESULT window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
@@ -55,7 +56,7 @@ namespace Xplicit::Bites
 
 		using Traits = Win32Traits;
 
-		int run(std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver, 
+		int run(const std::unique_ptr<Renderer::DX11::DriverSystemD3D11>& driver, 
 			const Color<float>& clr) noexcept;
 
 		Traits& get() noexcept;

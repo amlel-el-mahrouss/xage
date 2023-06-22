@@ -96,12 +96,11 @@ namespace Xplicit::Bites
 
 	Win32Window::Traits& Win32Window::get() noexcept { return m_traits; }
 
-	int Win32Window::run(std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver, const Color<float>& clr) noexcept
+	int Win32Window::run(const std::unique_ptr<Renderer::DX11::DriverSystemD3D11>& driver, const Color<float>& clr) noexcept
 	{
 		MSG msg;
 		RtlZeroMemory(&msg, sizeof(MSG));
-
-		int ret = -1;
+		
 		bool done = false;
 
 		while (!done)
@@ -115,7 +114,7 @@ namespace Xplicit::Bites
 			if (msg.message == WM_QUIT)
 				done = true;
 
-			driver->begin_scene(clr.A / 255, clr.R / 255, clr.G / 255, clr.B / 255);
+			driver->begin_scene(clr.A / 255, clr.R / 255, clr.G / 255, clr.B / 255, true, true);
 
 			ComponentManager::get_singleton_ptr()->update();
 			EventManager::get_singleton_ptr()->update();
@@ -127,7 +126,7 @@ namespace Xplicit::Bites
 				done = true;
 		}
 
-		return ret;
+		return msg.wParam;
 	}
 
 	void glfw_size_callback(GLFWwindow* window, int width, int height)
