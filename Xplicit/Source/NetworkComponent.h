@@ -74,9 +74,11 @@ namespace Xplicit
         
         bool connect(const char* ip) noexcept;
         
+        bool set_hash(const std::int64_t& hash) noexcept;
+
         //! sets the working channel on xconnect connection.
         //! channelId: channel (0 = data, 1 = chat)
-       
+
         bool set_channel(const std::uint32_t& channelId) noexcept;
         
         bool send(NetworkPacket& packet);
@@ -90,6 +92,7 @@ namespace Xplicit
         Network::Socket mSocket;
         std::uint8_t mChannelID;
 		NetworkPacket mPacket;
+        std::int64_t mHash;
         bool mReset;
 
         friend class NetworkEvent;

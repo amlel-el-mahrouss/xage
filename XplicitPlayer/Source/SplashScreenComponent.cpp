@@ -82,6 +82,8 @@ namespace Xplicit::Player
 			if (ply)
 				ply->attach(cam);
 
+			mNetwork->set_hash(hash);
+
 			EventManager::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash);
 			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(publicHash);
 

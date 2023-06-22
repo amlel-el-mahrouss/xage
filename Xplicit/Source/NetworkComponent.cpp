@@ -46,7 +46,8 @@ namespace Xplicit
 		mChannelID(XPLICIT_CHANNEL_DATA),
 		mSocket(Network::SOCKET_TYPE::UDP),
 		mSockAddrIn(),
-		mPacket()
+		mPacket(),
+		mHash(-1)
 	{
 		if (!mSocket)
 			throw NetworkError(NETWORK_ERR_BAD_CHALLENGE);
@@ -77,6 +78,17 @@ namespace Xplicit
 		return ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in)) != SOCKET_ERROR;
 	}
 
+	bool NetworkComponent::set_hash(const std::int64_t& hash) noexcept
+	{
+		if (mHash == -1)
+		{
+			mHash = hash;
+			return true;
+		}
+
+		return false;
+	}
+
 	bool NetworkComponent::set_channel(const std::uint32_t& channelId) noexcept
 	{
 		if (channelId > XPLICIT_NUM_CHANNELS)
@@ -89,6 +101,7 @@ namespace Xplicit
 
 	bool NetworkComponent::send(NetworkPacket& packet)
 	{
+		packet.hash = mHash;
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;

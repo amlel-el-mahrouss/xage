@@ -140,14 +140,14 @@ namespace Xplicit
 				::select(0, &fd, nullptr, nullptr, &timeout);
 
 #ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("EWOULDBLOCK: Socket is blocked...");
+				XPLICIT_INFO("EWOULDBLOCK: Socket blocked...");
 #endif // ifdef XPLICIT_DEBUG
 
 				break;
 			}
 			case WSAECONNABORTED:
 			{
-				XPLICIT_INFO("WSAECONNABORTED: Socket' connection aborted...");
+				XPLICIT_INFO("WSAECONNABORTED: Connection aborted...");
 				return XPLICIT_CONNRESET;
 			}
 			default:
@@ -155,6 +155,15 @@ namespace Xplicit
 			}
 
 			return 0;
+		}
+
+		for (std::size_t index = 0; index < server->size(); ++index)
+		{
+			if (server->get(index) == peer)
+				continue;
+
+			if (packet.hash == server->get(index)->hash)
+				return 0;
 		}
 
 		peer->packet = packet;
