@@ -486,7 +486,8 @@ namespace Xplicit
 		FilesystemWrapper() = default;
 		~FilesystemWrapper() = default;
 
-	public:
+		XPLICIT_COPY_DEFAULT(FilesystemWrapper);
+
 		std::ofstream write(const char* outPath) noexcept
 		{
 			if (std::filesystem::exists(outPath))

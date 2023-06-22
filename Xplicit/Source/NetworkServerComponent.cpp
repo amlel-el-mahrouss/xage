@@ -205,23 +205,18 @@ namespace Xplicit
 
 		xplicit_register_packet(packet, peer);
 	}
-
-	NetworkServerContext::NETWORK_CONTEXT NetworkServerContext::context = NetworkServerContext::NETWORK_CONTEXT::DISCONNECTED;
-
+	
 	void NetworkServerContext::accept_recv(NetworkServerComponent* server) noexcept
 	{
 		XPLICIT_ASSERT(server);
-
-
-		/* We create receivers threads here. */
-
+		
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
 			const std::size_t peer_at = i;
-			auto peer = server->get(peer_at);
+			const auto peer = server->get(peer_at);
 
 			XPLICIT_ASSERT(peer);
-			NetworkServerContext::try_recv(server, peer);
+			try_recv(server, peer);
 		}
 	}
 
@@ -250,11 +245,11 @@ namespace Xplicit
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
 				const std::size_t peer_at = i;
-				auto peer = server->get(peer_at);
 
+				const auto peer = server->get(peer_at);
 				XPLICIT_ASSERT(peer);
 
-				NetworkServerContext::try_send(server, peer);
+				try_send(server, peer);
 			}
 		}
 	}

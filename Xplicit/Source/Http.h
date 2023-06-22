@@ -66,12 +66,11 @@ namespace Xplicit::HTTP
     {
         class HTTPSocket final 
         {
-        private:
             struct sockaddr_in m_Addr;
             std::string m_Dns;
             SOCKET m_Socket;
 
-            friend Xplicit::HTTP::HTTPWriter;
+            friend HTTPWriter;
 
         public:
             HTTPSocket() : m_Socket(~0), m_Addr() {}
@@ -117,8 +116,7 @@ namespace Xplicit::HTTP
 
         HTTPError& operator=(const HTTPError&) = default;
         HTTPError(const HTTPError&) = default;
-
-    public:
+        
         int error() { return m_iErr; }
 
     private:

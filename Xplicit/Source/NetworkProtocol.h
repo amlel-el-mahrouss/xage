@@ -83,7 +83,7 @@ namespace Xplicit
         NETWORK_CMD_BAN,
         NETWORK_CMD_ACK, // acknowledge
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
-        NETWORK_CMD_REPL, // replication call
+        NETWORK_CMD_REPL, // replication call, download from website
         NETWORK_CMD_MSG, // chat message
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 15,
@@ -111,13 +111,22 @@ namespace Xplicit
 
     using NetworkFloat = float;
 
+	/*
+	 *
+	 *  @name NetworkPacket
+	 *  @brief Universe Network packet.
+	 *
+	 */
+
+
 	class XPLICIT_API NetworkPacket final
 	{
 	public:
 		char                  magic[XPLICIT_NETWORK_MAG_COUNT];
-		Xplicit::NetworkFloat pos[XPLICIT_NETWORK_POS_MAX];
-        char                  buffer[XPLICIT_NETWORK_BUF_SZ];
+        char                  buffer[XPLICIT_NETWORK_BUF_SZ]; // could be chat message or filesystem path to script, depends on channel_id field.
+		NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
 		std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
+
 		std::int64_t          public_hash;
         std::int8_t           channel;
 		std::int32_t          version;

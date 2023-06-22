@@ -105,6 +105,47 @@ static void xplicit_load_mono()
 	}
 }
 
+static void xplicit_print_help()
+{
+	XPLICIT_INFO("\a+-------------- Xplicit Game Server Manual --------------+");
+	XPLICIT_INFO("exit: Exits the current server.");
+	XPLICIT_INFO("xdp: Get XDP network status.");
+	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
+}
+
+static void xplicit_load_sh()
+{
+	char cmd_buf[1024];
+
+	while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
+	{
+		if (!XPLICIT_SHOULD_EXIT)
+			std::cout << "> ";
+
+		std::cin.getline(cmd_buf, 1024);
+
+		if (strcmp(cmd_buf, "exit") == 0)
+		{
+			std::exit(0);
+		}
+
+		if (strcmp(cmd_buf, "help") == 0)
+			xplicit_print_help();
+
+		if (strcmp(cmd_buf, "xconnect") == 0)
+		{
+
+			const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
+
+			if (!ip4)
+				XPLICIT_CRITICAL("CLI: Ip Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
+
+			XPLICIT_INFO(Xplicit::String("IP: ") + (ip4 ? ip4 : "?"));
+			XPLICIT_INFO(Xplicit::String("Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
+		}
+	}
+}
+
 /* Application main entrypoint */
 int main(int argc, char** argv)
 {
@@ -170,17 +211,31 @@ int main(int argc, char** argv)
 			}
 			});
 
-		while (Xplicit::ComponentManager::get_singleton_ptr() &&
-			   Xplicit::EventManager::get_singleton_ptr())
-		{
-			Xplicit::NetworkServerContext::accept_recv(server);
-			Xplicit::NetworkServerContext::try_correct(server);
 
+		Xplicit::Thread logicJob([&]() {while (Xplicit::ComponentManager::get_singleton_ptr() &&
+			Xplicit::EventManager::get_singleton_ptr())
+		{
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
 			Xplicit::NetworkServerContext::accept_send(server);
-		};
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}});
+
+		Xplicit::Thread networkJob([&]()
+			{
+				while (Xplicit::ComponentManager::get_singleton_ptr() &&
+					Xplicit::EventManager::get_singleton_ptr())
+				{
+					Xplicit::NetworkServerContext::accept_recv(server);
+					Xplicit::NetworkServerContext::try_correct(server);
+				};
+			});
+
+		networkJob.detach();
+
+		xplicit_load_sh();
 
 		return 0;
 	}

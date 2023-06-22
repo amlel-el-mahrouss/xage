@@ -26,17 +26,15 @@ namespace Xplicit::Player
 			mHash(hash)
 		{}
 
-		virtual ~LocalReplicationComponent() = default;
+		~LocalReplicationComponent() override = default;
+		
+		COMPONENT_TYPE type() noexcept override;
+		 const char* name() noexcept override;
 
-	public:
-		virtual COMPONENT_TYPE type() noexcept override;
-		virtual const char* name() noexcept override;
+		bool should_update() noexcept override;
 
-		virtual bool should_update() noexcept override;
-
-		virtual void update() override;
-
-	public:
+		void update() override;
+		
 		XPLICIT_COPY_DEFAULT(LocalReplicationComponent);
 
 	private:
