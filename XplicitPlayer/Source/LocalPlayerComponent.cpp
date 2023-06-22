@@ -82,8 +82,6 @@ namespace Xplicit::Player
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					mPos.X -= xSpeed;
 
-				mNetwork->send(mPacket);
-
 				this->node()->setPosition(mPos);
 				this->mCam->get()->setPosition(mPos);
 

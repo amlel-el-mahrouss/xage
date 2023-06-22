@@ -41,16 +41,12 @@ namespace Xplicit
 					mNetwork->get(index)->status == NETWORK_STAT_INVALID)
 					continue;
 
-				auto& packet = mNetwork->get(index)->packet;
-
-				if (packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
-				{
-					packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-				}
+				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
+					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 				else
-				{
-					packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
-				}
+					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
+
+
 			}
 		}
 	}

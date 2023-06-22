@@ -59,8 +59,6 @@ namespace Xplicit
 			auto* peer_ptr = player->get();
 			XPLICIT_ASSERT(peer_ptr);
 
-			auto& packet = peer_ptr->packet;
-
 			if (!player->alive())
 			{
 				// tell everyone that we're dead.
@@ -73,8 +71,8 @@ namespace Xplicit
 					if (peer_ptr->hash == mNetwork->get(peer)->hash)
 						continue;
 
-					packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
-					packet.public_hash = player->get()->public_hash;
+					peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
+					peer_ptr->packet.public_hash = player->get()->public_hash;
 				}
 			}
 			else
@@ -87,18 +85,18 @@ namespace Xplicit
 					
 					for (size_t peer = 0; peer < mNetwork->size(); ++peer)
 					{
-						packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
+						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
 
-						packet.public_hash = player->get()->public_hash;
-						packet.health = player->health();
+						peer_ptr->packet.public_hash = player->get()->public_hash;
+						peer_ptr->packet.health = player->health();
 
-						packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
 						xplicit_handle_spawn(mSpawner, player);
 
-						packet.speed[XPLICIT_NETWORK_X] = player->pos().X;
-						packet.speed[XPLICIT_NETWORK_Y] = player->pos().Y;
-						packet.speed[XPLICIT_NETWORK_Z] = player->pos().Z;
+						peer_ptr->packet.speed[XPLICIT_NETWORK_X] = player->pos().X;
+						peer_ptr->packet.speed[XPLICIT_NETWORK_Y] = player->pos().Y;
+						peer_ptr->packet.speed[XPLICIT_NETWORK_Z] = player->pos().Z;
 					}
 				}
 			}

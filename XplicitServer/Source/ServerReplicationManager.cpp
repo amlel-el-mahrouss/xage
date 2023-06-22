@@ -28,11 +28,9 @@ namespace Xplicit
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			auto& packet = mNetwork->get(i)->packet;
-
-			packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
-			packet.id = id;
-			packet.public_hash = component_hash;
+			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
+			mNetwork->get(i)->packet.id = id;
+			mNetwork->get(i)->packet.public_hash = component_hash;
 		}
 	}
 
@@ -43,11 +41,9 @@ namespace Xplicit
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			auto& packet = mNetwork->get(i)->packet;
-
-			packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_DESTROY;
-			packet.id = id;
-			packet.public_hash = component_hash;
+			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_DESTROY;
+			mNetwork->get(i)->packet.id = id;
+			mNetwork->get(i)->packet.public_hash = component_hash;
 		}
 	}
 
@@ -58,11 +54,9 @@ namespace Xplicit
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			auto& packet = mNetwork->get(i)->packet;
-
-			packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_UPDATE;
-			packet.id = id;
-			packet.public_hash = component_hash;
+			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_UPDATE;
+			mNetwork->get(i)->packet.id = id;
+			mNetwork->get(i)->packet.public_hash = component_hash;
 		}
 	}
 }
