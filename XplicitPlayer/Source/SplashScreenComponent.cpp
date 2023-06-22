@@ -72,7 +72,7 @@ namespace Xplicit::Player
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 			ComponentManager::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
-			ComponentManager::get_singleton_ptr()->add<HudComponent>(publicHash);
+			ComponentManager::get_singleton_ptr()->add<LocalHudComponent>(publicHash);
 			
 			const auto cam = ComponentManager::get_singleton_ptr()->add<LocalCameraComponent>();
 			const auto ply = ComponentManager::get_singleton_ptr()->add<LocalPlayerComponent>(publicHash);
@@ -96,11 +96,6 @@ namespace Xplicit::Player
 			// peek after the ++timeout, or retry
 			if (mTimeout < 0)
 			{
-				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-				packet.size = sizeof(NetworkPacket);
-
-				mNetwork->send(packet);
-
 				ComponentManager::get_singleton_ptr()->add<PopupComponent>(
 					[]() { IRR->closeDevice(); }, 
 						vector2di(XPLICIT_DIM.Width / 2.8,
@@ -113,9 +108,10 @@ namespace Xplicit::Player
 			{
 				IRR->getVideoDriver()->draw2DImage(mTexture, 
 					vector2di(0, 0),
-					core::recti(0, 0, 1280, 720), 
+					recti(0, 0, 1280, 720), 
 					nullptr,
-					SColor(255, 255, 255, 255), true);
+					SColor(255, 255, 255, 255), 
+					true);
 			}
 		}
 	}

@@ -63,16 +63,16 @@ namespace Xplicit::Player
 
 	};
 
-	class HudComponent final : public Component
+	class LocalHudComponent final : public Component
 	{
 	public:
-		HudComponent() = delete;
+		LocalHudComponent() = delete;
 		
-		explicit HudComponent(const std::int64_t& publicHash);
-		~HudComponent() override;
+		explicit LocalHudComponent(const std::int64_t& publicHash);
+		~LocalHudComponent() override;
 		
-		HudComponent& operator=(const HudComponent&) = default;
-		HudComponent(const HudComponent&) = default;
+		LocalHudComponent& operator=(const LocalHudComponent&) = default;
+		LocalHudComponent(const LocalHudComponent&) = default;
 
 		const char* name() noexcept override { return "HUD"; }
 		COMPONENT_TYPE type() noexcept override { return COMPONENT_GUI; }

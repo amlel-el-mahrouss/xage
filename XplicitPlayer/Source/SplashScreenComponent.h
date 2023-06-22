@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: LoadingComponent.h
- *			Purpose: Loading Component
- *
  * =====================================================================
  */
 
@@ -21,13 +18,12 @@ namespace Xplicit::Player
 	{
 	public:
 		SplashScreenComponent();
-		virtual ~SplashScreenComponent();
+		~SplashScreenComponent() override;
 
-		SplashScreenComponent& operator=(const SplashScreenComponent&) = default;
-		SplashScreenComponent(const SplashScreenComponent&) = default;
+		XPLICIT_COPY_DEFAULT(SplashScreenComponent);
 
-		virtual bool should_update() noexcept override { return mEnabled; }
-		virtual void update() override;
+		bool should_update() noexcept override { return mEnabled; }
+		void update() override;
 		void connect(const char* ip);
 
 		// resets the timeout and run..
@@ -35,10 +31,8 @@ namespace Xplicit::Player
 		void reset() noexcept;
 
 	private:
-		irr::video::ITexture* mTexture; /* Texture to show when loading the game.. */
+		ITexture* mTexture; /* Texture to show when loading the game.. */
 		NetworkComponent* mNetwork; /* Network instance */
-
-	private:
 		std::int64_t mTimeout; /* Network Timeout. */
 		bool mEnabled; /* Should we seek for a connection? */
 

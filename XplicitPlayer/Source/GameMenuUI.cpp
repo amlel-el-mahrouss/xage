@@ -93,7 +93,7 @@ namespace Xplicit::Player
 	}
 	
 	/* Heads up display */
-	HudComponent::HudComponent(const std::int64_t& publicHash)
+	LocalHudComponent::LocalHudComponent(const std::int64_t& publicHash)
 		: mHealth(0),
 		  mPublicHash(publicHash),
 		  mNetwork(nullptr)
@@ -104,9 +104,9 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mNetwork);
 	}
 
-	HudComponent::~HudComponent() = default;
+	LocalHudComponent::~LocalHudComponent() = default;
 
-	void HudComponent::update()
+	void LocalHudComponent::update()
 	{
 		if (!mNetwork)
 			return;

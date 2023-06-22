@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Config.h
- *			Purpose: Engine Config File
- *
  * =====================================================================
  */
 
@@ -117,6 +114,16 @@ KLASS& operator=(const KLASS&) = default;\
 KLASS(const KLASS&) = default;\
 
 
+
+#define XPLICIT_MOVE_DELETE(KLASS)\
+KLASS& operator=(KLASS&&) = delete;\
+KLASS(KLASS&&) = delete;\
+
+
+
+#define XPLICIT_MOVE_DEFAULT(KLASS)\
+KLASS& operator=(KLASS&&) = default;\
+KLASS(KLASS&&) = default;\
 
 #ifndef XPLICIT_SLEEP
 #   ifdef XPLICIT_WINDOWS
