@@ -35,19 +35,17 @@ namespace Xplicit::Bites
 	class XPLICIT_API Win32Window final
 	{
 	public:
-		Win32Window(const char* wndName, 
-			const char* wndClass,
-			HINSTANCE hInstance);
+		Win32Window(const char* wnd_name, 
+			const char* wnd_class,
+			HINSTANCE h_instance);
 
 		static LRESULT window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 		static LRESULT CALLBACK cdecl_window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 		~Win32Window();
-
-	public:
+		
 		XPLICIT_COPY_DELETE(Win32Window);
-
-	public:
+		
 		struct Win32Traits
 		{
 			HWND WindowHandle;
@@ -59,30 +57,30 @@ namespace Xplicit::Bites
 		int run(const std::unique_ptr<Renderer::DX11::DriverSystemD3D11>& driver, 
 			const Color<float>& clr) noexcept;
 
-		Traits& get() noexcept;
+		const Traits& get() const noexcept;
 
 	private:
-		Win32Traits m_traits;
+		Win32Traits mTraits;
+		bool mExit;
 
 	};
 
 	class XPLICIT_API GLFWWindow final
 	{
 	public:
-		GLFWWindow(const char* windowName);
+		GLFWWindow(const char* window_name);
 		~GLFWWindow();
 
 		XPLICIT_COPY_DELETE(GLFWWindow);
-
-	public:
-		GLFWwindow* get() noexcept;
-
-	public:
-		int run(std::unique_ptr<Xplicit::Renderer::OpenGL::DriverSystemOpenGL>& driver,
+		
+		GLFWwindow* get() const noexcept;
+		
+		int run(const std::unique_ptr<Renderer::OpenGL::DriverSystemOpenGL>& driver,
 			const Color<float>& clr) noexcept;
 
 	private:
-		struct GLFWwindow* m_pWindow;
+		GLFWwindow* mWindow;
+		bool mExit;
 
 	};
 }

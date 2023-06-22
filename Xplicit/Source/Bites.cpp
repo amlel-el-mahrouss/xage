@@ -17,22 +17,22 @@
 namespace Xplicit::Bites
 {
 	Win32Window::Win32Window(const char* wndName, const char* wndClass, HINSTANCE hInstance)
-		: m_traits()
+		: mTraits()
 	{
-		RtlZeroMemory(&m_traits.WndClass, sizeof(WNDCLASSEXA));
+		RtlZeroMemory(&mTraits.WndClass, sizeof(WNDCLASSEXA));
 
-		m_traits.WndClass.cbSize = sizeof(WNDCLASSEXA);
-		m_traits.WndClass.lpfnWndProc = Win32Window::cdecl_window_procedure;
-		m_traits.WndClass.lpszClassName = wndClass;
-		m_traits.WndClass.hInstance = hInstance;
-		m_traits.WndClass.hIcon = LoadIcon(hInstance, IDI_WINLOGO);
-		m_traits.WndClass.hIconSm = m_traits.WndClass.hIcon;
-		m_traits.WndClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
-		m_traits.WndClass.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
-		m_traits.WndClass.lpszMenuName = nullptr;
-		m_traits.WndClass.lpszClassName = wndClass;
+		mTraits.WndClass.cbSize = sizeof(WNDCLASSEXA);
+		mTraits.WndClass.lpfnWndProc = Win32Window::cdecl_window_procedure;
+		mTraits.WndClass.lpszClassName = wndClass;
+		mTraits.WndClass.hInstance = hInstance;
+		mTraits.WndClass.hIcon = LoadIcon(hInstance, IDI_WINLOGO);
+		mTraits.WndClass.hIconSm = mTraits.WndClass.hIcon;
+		mTraits.WndClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
+		mTraits.WndClass.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
+		mTraits.WndClass.lpszMenuName = nullptr;
+		mTraits.WndClass.lpszClassName = wndClass;
 
-		RegisterClassExA(&m_traits.WndClass);
+		RegisterClassExA(&mTraits.WndClass);
 
 		int x = GetSystemMetrics(SM_CXSCREEN);
 		int y = GetSystemMetrics(SM_CYSCREEN);
@@ -40,7 +40,7 @@ namespace Xplicit::Bites
 		x = (x - XPLICIT_MIN_WIDTH) / 2;
 		y = (y - XPLICIT_MIN_HEIGHT) / 2;
 
-		m_traits.WindowHandle = CreateWindowA(wndClass,
+		mTraits.WindowHandle = CreateWindowA(wndClass,
 			wndName,
 			WS_BORDER,
 			x,
@@ -52,10 +52,10 @@ namespace Xplicit::Bites
 			hInstance,
 			this);
 
-		XPLICIT_ASSERT(m_traits.WindowHandle);
+		XPLICIT_ASSERT(mTraits.WindowHandle);
 
-		ShowWindow(m_traits.WindowHandle, SW_SHOW);
-		UpdateWindow(m_traits.WindowHandle);
+		ShowWindow(mTraits.WindowHandle, SW_SHOW);
+		UpdateWindow(mTraits.WindowHandle);
 	}
 
 	LRESULT Win32Window::window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -90,41 +90,40 @@ namespace Xplicit::Bites
 
 	Win32Window::~Win32Window()
 	{
-		if (m_traits.WindowHandle)
-			DestroyWindow(m_traits.WindowHandle);
+		if (mTraits.WindowHandle)
+			DestroyWindow(mTraits.WindowHandle);
 	}
 
-	Win32Window::Traits& Win32Window::get() noexcept { return m_traits; }
+	const Win32Window::Traits& Win32Window::get() const noexcept { return mTraits; }
 
 	int Win32Window::run(const std::unique_ptr<Renderer::DX11::DriverSystemD3D11>& driver, const Color<float>& clr) noexcept
 	{
 		MSG msg;
 		RtlZeroMemory(&msg, sizeof(MSG));
 		
-		bool done = false;
+		Thread renderingThread([&]() {
+				while (!this->mExit)
+				{
+					if (PeekMessageA(&msg, mTraits.WindowHandle, 0, 0, PM_REMOVE))
+					{
+						TranslateMessage(&msg);
+						DispatchMessageA(&msg);
+					}
 
-		while (!done)
-		{
-			if (PeekMessageA(&msg, m_traits.WindowHandle, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessageA(&msg);
-			}
+					if (msg.message == WM_QUIT)
+						break;
 
-			if (msg.message == WM_QUIT)
-				done = true;
+					driver->begin_scene(clr.A / 255, clr.R / 255, clr.G / 255, clr.B / 255, true, true);
 
-			driver->begin_scene(clr.A / 255, clr.R / 255, clr.G / 255, clr.B / 255, true, true);
+					if (!driver->end_scene())
+						this->mExit = true;
 
-			ComponentManager::get_singleton_ptr()->update();
-			EventManager::get_singleton_ptr()->update();
+					if (driver->is_closed())
+						this->mExit = true;
+				}
+			});
 
-			if (!driver->end_scene())
-				throw EngineError();
-
-			if (driver->is_closed())
-				done = true;
-		}
+		renderingThread.detach();
 
 		return msg.wParam;
 	}
@@ -135,7 +134,7 @@ namespace Xplicit::Bites
 	}
 
 	GLFWWindow::GLFWWindow(const char* windowName)
-		: m_pWindow(nullptr)
+		: mWindow(nullptr)
 	{
 		glfwInit();
 
@@ -145,14 +144,14 @@ namespace Xplicit::Bites
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		m_pWindow = glfwCreateWindow(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT, windowName, nullptr, nullptr);
-		glfwMakeContextCurrent(m_pWindow);
+		mWindow = glfwCreateWindow(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT, windowName, nullptr, nullptr);
+		glfwMakeContextCurrent(mWindow);
 
 		gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 			
 		glViewport(0, 0, XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
 
-		glfwSetFramebufferSizeCallback(m_pWindow, glfw_size_callback);
+		glfwSetFramebufferSizeCallback(mWindow, glfw_size_callback);
 	}
 
 	GLFWWindow::~GLFWWindow()
@@ -160,33 +159,38 @@ namespace Xplicit::Bites
 		glfwTerminate();
 	}
 
-	int GLFWWindow::run(std::unique_ptr<Xplicit::Renderer::OpenGL::DriverSystemOpenGL>& driver,
+	int GLFWWindow::run(const std::unique_ptr<Renderer::OpenGL::DriverSystemOpenGL>& driver,
 		const Color<float>& clr) noexcept
 	{
-		while (!glfwWindowShouldClose(m_pWindow))
-		{
-			glClearColor(clr.R / 255, clr.G / 255, clr.B / 255, 1.0f);
+		Thread thrd([&]()
+			{
+				while (!glfwWindowShouldClose(mWindow))
+				{
+					glClearColor(clr.R / 255, clr.G / 255, clr.B / 255, 1.0f);
 
-			glClear(GL_COLOR_BUFFER_BIT);
-			glClear(GL_DEPTH_BUFFER_BIT);
+					glClear(GL_COLOR_BUFFER_BIT);
+					glClear(GL_DEPTH_BUFFER_BIT);
 
-			ComponentManager::get_singleton_ptr()->update();
-			EventManager::get_singleton_ptr()->update();
+					glfwSwapBuffers(mWindow);
+					glfwPollEvents();
 
-			glfwSwapBuffers(m_pWindow);
-			glfwPollEvents();
+					if (driver->is_closed())
+						break;
 
-			if (driver->is_closed())
-				break;
-		}
+					if (this->mExit)
+						glfwSetWindowShouldClose(mWindow, GLFW_TRUE);
+				}
+			});
+
+		thrd.detach();
 
 		return 0;
 	}
 
-	GLFWwindow* GLFWWindow::get() noexcept
+	GLFWwindow* GLFWWindow::get() const noexcept
 	{
-		return m_pWindow;
+		return mWindow;
 	}
 }
 
-#endif // XPLICIT_WINDOWS
+#endif // ifdef XPLICIT_WINDOWS
