@@ -23,7 +23,7 @@ namespace Xplicit
 	: 
         packet(), 
 		hash(XPLICIT_INVALID_HASH),
-		public_hash(-1),
+		public_hash(XPLICIT_INVALID_HASH),
         address(),
         status(NETWORK_STAT_DISCONNECTED)
 	{}

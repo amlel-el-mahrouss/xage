@@ -67,8 +67,8 @@ namespace Xplicit::Player
 				static f32 then = IRR->getTimer()->getTime();
 				f32 delta = (IRR->getTimer()->getTime() - then) / XPLICIT_DELTA_TIME;
 
-				auto xSpeed = mPacket.speed[XPLICIT_NETWORK_X] * delta;
-				auto zSpeed = mPacket.speed[XPLICIT_NETWORK_Z] * delta;
+				auto xSpeed = mPacket.pos[XPLICIT_NETWORK_X] * delta;
+				auto zSpeed = mPacket.pos[XPLICIT_NETWORK_Z] * delta;
 
 				if (mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 					mPos.Z -= zSpeed;

@@ -45,7 +45,7 @@ namespace Xplicit
 		mReset(false),
 		mChannelID(XPLICIT_CHANNEL_DATA),
 		mSocket(Network::SOCKET_TYPE::UDP),
-		mSockAddrIn(),
+		mTargetAddress(),
 		mPacket(),
 		mHash(-1)
 	{
@@ -69,13 +69,13 @@ namespace Xplicit
 
 	bool NetworkComponent::connect(const char* ip) noexcept
 	{
-		memset(&mSockAddrIn, 0, sizeof(sockaddr_in));
+		memset(&mTargetAddress, 0, sizeof(sockaddr_in));
 
-		mSockAddrIn.sin_addr.S_un.S_addr = inet_addr(ip);
-		mSockAddrIn.sin_family = AF_INET;
-		mSockAddrIn.sin_port = htons(XPLICIT_NETWORK_PORT);
+		mTargetAddress.sin_addr.S_un.S_addr = inet_addr(ip);
+		mTargetAddress.sin_family = AF_INET;
+		mTargetAddress.sin_port = htons(XPLICIT_NETWORK_PORT);
 		
-		return ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mSockAddrIn), sizeof(sockaddr_in)) != SOCKET_ERROR;
+		return ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mTargetAddress), sizeof(sockaddr_in)) != SOCKET_ERROR;
 	}
 
 	bool NetworkComponent::set_hash(const std::int64_t& hash) noexcept
@@ -115,8 +115,8 @@ namespace Xplicit
 			reinterpret_cast<const char*>(&packet), 
 			sizeof(NetworkPacket), 
 			0,
-			reinterpret_cast<sockaddr*>(&mSockAddrIn),
-			sizeof(mSockAddrIn)) == SOCKET_ERROR)
+			reinterpret_cast<sockaddr*>(&mTargetAddress),
+			sizeof(mTargetAddress)) == SOCKET_ERROR)
 		{
 			const auto err = WSAGetLastError();
 			return err == WSAEWOULDBLOCK;

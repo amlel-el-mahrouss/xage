@@ -35,23 +35,19 @@ namespace Xplicit::Player
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
 
-		XPLICIT_GET_DATA_DIR(data_dir);
-		String frame_path = data_dir;
-		frame_path += "\\menu_overlay.png";
+		String frame_path = "menu_overlay.png";
 
 		mMenu = IRR->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
 
-		frame_path = data_dir;
-		frame_path += "\\menu_hover.png";
+		frame_path += "menu_hover.png";
 
 		mButtonHover = IRR->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
 
-		frame_path = data_dir;
-		frame_path += "\\menu_no_hover.png";
+		frame_path += "menu_no_hover.png";
 
 		mButtonNoHover = IRR->getVideoDriver()->getTexture(frame_path.c_str());
 	}
@@ -112,7 +108,16 @@ namespace Xplicit::Player
 
 			if (KB->key_down(KEY_KEY_Y))
 			{
+				Xplicit::NetworkPacket packet{};
+
+				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+				packet.hash = mHash;
+				packet.size = sizeof(NetworkPacket);
+
+				mNetwork->send(packet);
+
 				mEnabled = false;
+
 				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))

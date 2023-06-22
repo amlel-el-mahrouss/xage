@@ -83,18 +83,16 @@ namespace Xplicit
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					ply->pos().X += speed;
 
-				peer->packet.speed[XPLICIT_NETWORK_X] = speed;
-				peer->packet.speed[XPLICIT_NETWORK_Y] = speed;
-				peer->packet.speed[XPLICIT_NETWORK_Z] = speed;
+				peer->packet.pos[XPLICIT_NETWORK_X] = speed;
+				peer->packet.pos[XPLICIT_NETWORK_Y] = speed;
+				peer->packet.pos[XPLICIT_NETWORK_Z] = speed;
 
 				/* send server delta to player, so that he is not out of touch. */
-				peer->packet.speed[XPLICIT_NETWORK_DELTA] = (IRR->getTimer()->getTime() - mThen) / XPLICIT_DELTA_TIME;
+				peer->packet.pos[XPLICIT_NETWORK_DELTA] = (IRR->getTimer()->getTime() - mThen) / XPLICIT_DELTA_TIME;
 
 				/* finally accept request */
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 				peer->packet.public_hash = peer->public_hash;
-
-				ply->idle_for(XPLICIT_MOVEMENT_DELAY);
 			}
 		}
 	}

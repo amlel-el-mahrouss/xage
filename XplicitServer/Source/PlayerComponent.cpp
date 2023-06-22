@@ -74,8 +74,6 @@ namespace Xplicit
 		return mCooldown > 0;
 	}
 
-	void PlayerComponent::idle_for(const int64_t& cooldown) noexcept { mCooldown = cooldown; }
-
 	Vector<float>& PlayerComponent::pos() noexcept { return Position.Position; }
 
 	void PlayerComponent::freeze(const bool enable) noexcept { mFrozen = true; }

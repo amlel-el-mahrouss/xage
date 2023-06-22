@@ -88,7 +88,7 @@ namespace Xplicit
         bool is_reset() const noexcept;
 
     private:
-        struct sockaddr_in mSockAddrIn;
+        struct sockaddr_in mTargetAddress;
         Network::Socket mSocket;
         std::uint8_t mChannelID;
 		NetworkPacket mPacket;

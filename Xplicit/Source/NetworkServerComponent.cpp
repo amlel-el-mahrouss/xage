@@ -302,21 +302,7 @@ namespace Xplicit
 
 					if (equals(server->get(second_peer_idx)->address, server->get(peer_idx)->address))
 					{
-						if (server->get(second_peer_idx)->packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
-							server->get(second_peer_idx)->packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
-							server->get(second_peer_idx)->packet.magic[2] != XPLICIT_NETWORK_MAG_2 ||
-							server->get(second_peer_idx)->packet.version != XPLICIT_NETWORK_VERSION)
-						{
-							server->get(second_peer_idx)->reset();
-						}
-
-						if (server->get(peer_idx)->packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
-							server->get(peer_idx)->packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
-							server->get(peer_idx)->packet.magic[2] != XPLICIT_NETWORK_MAG_2 ||
-							server->get(peer_idx)->packet.version != XPLICIT_NETWORK_VERSION)
-						{
-							server->get(peer_idx)->reset();
-						}
+						server->get(second_peer_idx)->reset();
 					}
 				}
 			}

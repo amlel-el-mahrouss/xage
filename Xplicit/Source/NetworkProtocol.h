@@ -12,28 +12,28 @@
 #include "Xplicit.h"
 
 #ifndef XPLICIT_NETWORK_PORT
-#define XPLICIT_NETWORK_PORT (64734)
+#   define XPLICIT_NETWORK_PORT (60001)
 #endif // ifndef XPLICIT_NETWORK_PORT
 
 #define XPLICIT_INVALID_HASH (0xDEEBEEF)
 
 #ifndef XPLICIT_ADDRESS_ANY
-#define XPLICIT_ADDRESS_ANY INADDR_ANY
-#define XPLICIT_ADDRESS_ANY_STR "0.0.0.0"
-#endif
+#   define XPLICIT_ADDRESS_ANY INADDR_ANY
+#   define XPLICIT_ADDRESS_ANY_STR "0.0.0.0"
+#endif // ifndef XPLICIT_ADDRESS_ANY
 
 #define XPLICIT_NETWORK_MAG_0 ('X')
 #define XPLICIT_NETWORK_MAG_1 ('C')
-#define XPLICIT_NETWORK_MAG_2 ('P')
+#define XPLICIT_NETWORK_MAG_2 ('C')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
-#define XPLICIT_NETWORK_CMD_MAX (30U)
+#define XPLICIT_NETWORK_CMD_MAX (25U)
 
 #ifndef XPLICIT_INVALID_ADDR
-#define XPLICIT_INVALID_ADDR INADDR_NONE
-#endif
+#   define XPLICIT_INVALID_ADDR INADDR_NONE
+#endif // ifndef XPLICIT_INVALID_ADDR
 
-#define XPLICIT_NETWORK_BUF_SZ (128U)
+#define XPLICIT_NETWORK_BUF_SZ (64U)
 #define XPLICIT_NETWORK_VERSION (1U)
 
 #define XPLICIT_NUM_CHANNELS (2)
@@ -49,7 +49,7 @@
 #define XPLICIT_NETWORK_DELTA (3)
 
 /*! max data inside speed field. */
-#define XPLICIT_NETWORK_SPEED_MAX (4)
+#define XPLICIT_NETWORK_POS_MAX (4)
 
 #define XPLICIT_SOCKET_ERROR  (-1)
 
@@ -115,7 +115,7 @@ namespace Xplicit
 	{
 	public:
 		char                  magic[XPLICIT_NETWORK_MAG_COUNT];
-		Xplicit::NetworkFloat speed[XPLICIT_NETWORK_SPEED_MAX];
+		Xplicit::NetworkFloat pos[XPLICIT_NETWORK_POS_MAX];
         char                  buffer[XPLICIT_NETWORK_BUF_SZ];
 		std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
 		std::int64_t          public_hash;
@@ -183,9 +183,12 @@ namespace Xplicit
             str_address.clear();
 			
             status = NETWORK_STAT_INVALID;
-			hash = XPLICIT_INVALID_HASH;
 
-			public_hash = -1;
+			hash = XPLICIT_INVALID_HASH;
+            public_hash = XPLICIT_INVALID_HASH;
+
+            memset(&address, 0, sizeof(PrivateAddressData));
+
 		}
 
     };
