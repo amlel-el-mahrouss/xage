@@ -163,6 +163,7 @@ namespace Xplicit
         
 		UniqueAddress unique_addr;
 		PrivateAddressData address;
+        std::uint32_t thread_id;
         std::uint32_t channel;
         NetworkPacket packet;
         int64_t public_hash; 

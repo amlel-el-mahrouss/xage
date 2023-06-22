@@ -181,9 +181,12 @@ namespace Xplicit
 
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
-			Thread([&]() {
+			Thread([&](const std::size_t id) {
 				const std::size_t peer_at = i;
 				auto peer = server->get(peer_at);
+
+				XPLICIT_ASSERT(peer);
+				peer->thread_id = id;
 
 				while (server)
 				{
@@ -204,7 +207,7 @@ namespace Xplicit
 					// sleep for one tick
 					std::this_thread::sleep_for(std::chrono::milliseconds(60));
 				}
-			});
+			}, i);
 		}
 	}
 
@@ -230,24 +233,30 @@ namespace Xplicit
 		{
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
-				Thread([&]() {
-					const std::size_t peer_at = i;
-					auto peer = server->get(peer_at);
+				if (server->get(i)->thread_id == -1)
+				{
+					Thread([&](const std::size_t id) {
+						const std::size_t peer_at = i;
+						auto peer = server->get(peer_at);
 
-					while (server)
-					{
-						if (!peer)
+						XPLICIT_ASSERT(peer);
+						peer->thread_id = id;
+
+						while (server)
 						{
-							peer = server->get(peer_at);
-							continue;
+							if (!peer)
+							{
+								peer = server->get(peer_at);
+								continue;
+							}
+
+							NetworkServerContext::try_send(server, peer);
+
+							// sleep for one tick
+							std::this_thread::sleep_for(std::chrono::milliseconds(60));
 						}
-
-						NetworkServerContext::try_send(server, peer);
-
-						// sleep for one tick
-						std::this_thread::sleep_for(std::chrono::milliseconds(60));
-					}
-				});
+						}, i);
+				}
 			}
 
 			// finally make it online!
