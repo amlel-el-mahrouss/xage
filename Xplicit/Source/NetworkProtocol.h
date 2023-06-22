@@ -15,11 +15,10 @@
 #define XPLICIT_NETWORK_PORT (64734)
 #endif // ifndef XPLICIT_NETWORK_PORT
 
+#define XPLICIT_INVALID_NET_DATA (0xDEEBEFF)
+
 #ifndef XPLICIT_ADDRESS_ANY
 #define XPLICIT_ADDRESS_ANY INADDR_ANY
-#endif
-
-#ifndef XPLICIT_ADDRESS_ANY_STR
 #define XPLICIT_ADDRESS_ANY_STR "0.0.0.0"
 #endif
 
@@ -32,7 +31,9 @@
 
 #ifndef XPLICIT_INVALID_ADDR
 #define XPLICIT_INVALID_ADDR INADDR_NONE
+#define XPLICIT_INVALID_ADDR_STR "255.255.255.255"
 #endif
+
 
 #define XPLICIT_NETWORK_BUF_SZ (128U)
 #define XPLICIT_NETWORK_VERSION (1U)
@@ -160,15 +161,16 @@ namespace Xplicit
             friend NetworkInstance;
 
         };
-        
+
+        PrivateAddressData address;
 		UniqueAddress unique_addr;
-		PrivateAddressData address;
         std::uint32_t thread_id;
         std::uint32_t channel;
         NetworkPacket packet;
         int64_t public_hash; 
 		NETWORK_STAT status;
 		std::uint32_t port;
+        String str_address;
         int64_t hash;
  
         explicit NetworkInstance();
@@ -183,9 +185,11 @@ namespace Xplicit
 				packet.cmd[cmd_index] = NETWORK_CMD_INVALID;
 			}
 
-			status = NETWORK_STAT_INVALID;
+            str_address = XPLICIT_INVALID_ADDR_STR;
+			
+            status = NETWORK_STAT_INVALID;
+			hash = XPLICIT_INVALID_NET_DATA;
 
-			hash = -1;
 			public_hash = -1;
 		}
 

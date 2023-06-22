@@ -86,30 +86,39 @@ namespace Xplicit
 
 	void PlayerJoinLeaveEvent::operator()()
 	{
-		this->handle_leave_event();
 		this->handle_join_event();
+		this->handle_leave_event();
 	}
 
 	const size_t& PlayerJoinLeaveEvent::size() const noexcept { return mPlayerCount; }
 
 	bool PlayerJoinLeaveEvent::handle_join_event() noexcept
 	{
+		String addr = "";
+
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
+			addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
+
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED)
 				continue;
 
 			if (mNetwork->get(peer_idx)->packet.size < 1)
 				continue;
 
+			/* if everything is ok, reserve new player. */
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
+				/* the reason i didn't place that earlier, is because the full may be full yes, but we could target the wrong player. */
 				if (this->size() > XPLICIT_MAX_CONNECTIONS)
 				{
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 					return false;
 				}
+
+				/* place this after kick algorithm. */
+				mNetwork->get(peer_idx)->str_address = addr;
 
 				PlayerComponent* player = mPlayers[mPlayerCount];
 				xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
@@ -130,6 +139,8 @@ namespace Xplicit
 
 	bool PlayerJoinLeaveEvent::handle_leave_event() noexcept
 	{
+		String addr = "";
+
 		if (this->size() == 0) return false;
 		if (!mNetwork) return false;
 
@@ -144,9 +155,7 @@ namespace Xplicit
 				if (mNetwork->get(peer_idx)->packet.hash == mNetwork->get(peer_idx)->hash)
 				{
 #ifdef XPLICIT_DEBUG
-
 					XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(mNetwork->get(peer_idx)->unique_addr.get()));
-
 #endif // XPLICIT_DEBUG
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;

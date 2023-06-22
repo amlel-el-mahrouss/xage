@@ -47,4 +47,12 @@ namespace Xplicit::Lua
 		}
 
 	};
+
+
+	class ILuaStateManager final
+	{
+	public:
+
+
+	};
 }

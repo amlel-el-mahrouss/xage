@@ -137,15 +137,10 @@ namespace Xplicit
 
 				::select(0, &fd, nullptr, nullptr, &timeout);
 
-#ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("EWOULDBLOCK: Socket blocked...");
-#endif // ifdef XPLICIT_DEBUG
-
 				break;
 			}
 			case WSAECONNABORTED:
 			{
-				XPLICIT_INFO("WSAECONNABORTED: Connection aborted...");
 				break;
 			}
 			default:
@@ -175,8 +170,6 @@ namespace Xplicit
 		}
 
 		peer->packet = packet;
-
-		return;
 	}
 
 	NetworkServerContext::NETWORK_CONTEXT NetworkServerContext::context = NetworkServerContext::NETWORK_CONTEXT::DISCONNECTED;
@@ -214,6 +207,9 @@ namespace Xplicit
 
 	void NetworkServerContext::try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
+		if (peer->hash != peer->packet.hash)
+			return;
+
 		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
@@ -225,7 +221,6 @@ namespace Xplicit
 			0,
 			reinterpret_cast<sockaddr*>(&peer->address),
 			sizeof(PrivateAddressData));
-
 	}
 
 	void NetworkServerContext::accept_send(NetworkServerComponent* server) noexcept
