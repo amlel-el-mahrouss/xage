@@ -128,10 +128,12 @@ namespace Xplicit
 #endif // XPLICIT_DEBUG
 
 				++mPlayerCount;
+			
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	//! Decreases and free player resources.
@@ -173,11 +175,13 @@ namespace Xplicit
 					}
 
 					--mPlayerCount;
+
+					return true;
 				}
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	const char* PlayerJoinLeaveEvent::name() noexcept { return ("PlayerJoinLeaveEvent"); }
