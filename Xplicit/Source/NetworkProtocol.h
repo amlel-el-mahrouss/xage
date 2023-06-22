@@ -15,7 +15,7 @@
 #define XPLICIT_NETWORK_PORT (64734)
 #endif // ifndef XPLICIT_NETWORK_PORT
 
-#define XPLICIT_INVALID_NET_DATA (0xDEEBEFF)
+#define XPLICIT_INVALID_HASH (0xDEEBEEF)
 
 #ifndef XPLICIT_ADDRESS_ANY
 #define XPLICIT_ADDRESS_ANY INADDR_ANY
@@ -183,7 +183,7 @@ namespace Xplicit
             str_address.clear();
 			
             status = NETWORK_STAT_INVALID;
-			hash = XPLICIT_INVALID_NET_DATA;
+			hash = XPLICIT_INVALID_HASH;
 
 			public_hash = -1;
 		}

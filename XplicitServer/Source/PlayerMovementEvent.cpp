@@ -92,10 +92,9 @@ namespace Xplicit
 
 				/* finally accept request */
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+				peer->packet.public_hash = peer->public_hash;
 
 				ply->idle_for(XPLICIT_MOVEMENT_DELAY);
-
-				NetworkServerContext::send(mNetwork, peer);
 			}
 		}
 	}

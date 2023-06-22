@@ -110,13 +110,47 @@ namespace Xplicit
 
 	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
 
+	static void xplicit_register_packet(NetworkPacket& packet, NetworkInstance* peer)
+	{
+		if (packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
+			packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
+			packet.magic[2] != XPLICIT_NETWORK_MAG_2 ||
+			packet.version != XPLICIT_NETWORK_VERSION)
+		{
+			xplicit_invalidate_peer(peer);
+		}
+		else if (packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
+			packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+			packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
+			packet.version == XPLICIT_NETWORK_VERSION)
+		{
+			peer->packet = packet;
+		}
+	}
+
 	void NetworkServerContext::try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		if (!peer || !server)
 			return;
 
 		std::int32_t from_len = sizeof(PrivateAddressData);
+
 		NetworkPacket packet{};
+		sockaddr addr {};
+
+		/*
+		* 
+		* Error handling algorithm
+		* needed for a good winsock backend.
+		* 
+		* We handle sockets that didn't receive their data yet (WSAEWOULDBLOCK)
+		* The connection aborted is not handled here.
+		* 
+		*/
+
+		::accept(server->mSocket,
+			reinterpret_cast<sockaddr*>(&peer->address),
+			&from_len);
 
 		if (::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
@@ -150,6 +184,16 @@ namespace Xplicit
 			return;
 		}
 
+#define XPLICIT_INET_SIZE (14)
+
+		/*
+		 *
+		 * Collision resolving algorithm
+		 * If the ip matches assign to the matching ip it's respective packet.
+		 * Otherwise don't do anything.
+		 *
+		 */
+
 		for (std::size_t index = 0; index < server->size(); ++index)
 		{
 			if (server->get(index) == peer)
@@ -159,20 +203,7 @@ namespace Xplicit
 				return;
 		}
 
-		if (packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
-			packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
-			packet.magic[2] != XPLICIT_NETWORK_MAG_2 ||
-			packet.version != XPLICIT_NETWORK_VERSION)
-		{
-			xplicit_invalidate_peer(peer);
-		}
-		else if(packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
-			packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-			packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
-			packet.version == XPLICIT_NETWORK_VERSION)
-		{
-			peer->packet = packet;
-		}
+		xplicit_register_packet(packet, peer);
 	}
 
 	NetworkServerContext::NETWORK_CONTEXT NetworkServerContext::context = NetworkServerContext::NETWORK_CONTEXT::DISCONNECTED;

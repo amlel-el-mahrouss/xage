@@ -22,7 +22,7 @@ namespace Xplicit
     NetworkInstance::NetworkInstance()
 	: 
         packet(), 
-		hash(XPLICIT_INVALID_NET_DATA),
+		hash(XPLICIT_INVALID_HASH),
 		public_hash(-1),
         address(),
         status(NETWORK_STAT_DISCONNECTED)
