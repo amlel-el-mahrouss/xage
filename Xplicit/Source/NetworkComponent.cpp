@@ -23,7 +23,7 @@ namespace Xplicit
 
 
 	NetworkError::NetworkError(const int what) 
-		: std::runtime_error("Network error, XplicitNgine encountered an unrecoverable error.")
+		: std::runtime_error("Network error, Xplicit Ngine got into an unrecoverable error.")
 #ifdef XPLICIT_WINDOWS
 		, mErr(WSAGetLastError())
 #endif
@@ -103,15 +103,11 @@ namespace Xplicit
 			reinterpret_cast<sockaddr*>(&mSockAddrIn),
 			sizeof(mSockAddrIn)) == SOCKET_ERROR)
 		{
-			std::cout << WSAGetLastError() << std::endl;
-
 			const auto err = WSAGetLastError();
 			return err == WSAEWOULDBLOCK;
 		}
-		else
-		{
-			return true;
-		}
+
+		return true;
 	}
 
 	void NetworkComponent::update() {}
@@ -152,9 +148,9 @@ namespace Xplicit
 			mPacket.magic[2] == XPLICIT_NETWORK_MAG_2 && 
 			mPacket.version == XPLICIT_NETWORK_VERSION)
 		{
-			mPacket = packet;
+			//! packet valid, validate.
 
-			//! return true here, the packet is valid!
+			packet = mPacket;
 			return true;
 		}
 

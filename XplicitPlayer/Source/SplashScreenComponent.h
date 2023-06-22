@@ -31,9 +31,10 @@ namespace Xplicit::Player
 		void reset() noexcept;
 
 	private:
-		ITexture* mTexture; /* Texture to show when loading the game.. */
-		NetworkComponent* mNetwork; /* Network instance */
-		std::int64_t mTimeout; /* Network Timeout. */
+		ITexture* mTexture;
+		NetworkComponent* mNetwork;
+
+		std::int64_t mTimeout; /* Network Timeout, incremented on each connection failure. */
 		bool mEnabled; /* Should we seek for a connection? */
 
 	};

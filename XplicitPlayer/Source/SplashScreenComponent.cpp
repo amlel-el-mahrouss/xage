@@ -30,13 +30,13 @@ namespace Xplicit::Player
 	constexpr int XPLICIT_TIMEOUT = ((1 * 60) * 300); // connection timeout
 
 	SplashScreenComponent::SplashScreenComponent() 
-		: 
-		mEnabled(true), 
+		:
+		mTexture(nullptr),
 		mNetwork(nullptr), 
-		mTexture(nullptr), 
-		mTimeout(XPLICIT_TIMEOUT)
+		mTimeout(XPLICIT_TIMEOUT),
+		mEnabled(true)
 	{
-		mTexture = IRR->getVideoDriver()->getTexture("load_overlay.png");
+		mTexture = IRR->getVideoDriver()->getTexture("bkg.png");
 	}
 
 	SplashScreenComponent::~SplashScreenComponent() 

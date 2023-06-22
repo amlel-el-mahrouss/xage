@@ -52,6 +52,8 @@ namespace Xplicit
 		peer->packet.size = sizeof(NetworkPacket);
 		peer->status = NETWORK_STAT_CONNECTED;
 
+		player->set(peer);
+
 		for (std::size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 		{
 			if (server->get(peer_idx)->hash != hash)
@@ -112,7 +114,11 @@ namespace Xplicit
 				xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
 				player->set(mNetwork->get(peer_idx));
 
+#ifdef XPLICIT_DEBUG
+
 				XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(mNetwork->get(peer_idx)->unique_addr.get()));
+
+#endif // XPLICIT_DEBUG
 
 				++mPlayerCount;
 			}
@@ -139,7 +145,11 @@ namespace Xplicit
 			{
 				if (mNetwork->get(peer_idx)->packet.hash == mNetwork->get(peer_idx)->hash)
 				{
+#ifdef XPLICIT_DEBUG
+
 					XPLICIT_INFO("[DISCONNECT] UUID: " + uuids::to_string(mNetwork->get(peer_idx)->unique_addr.get()));
+
+#endif // XPLICIT_DEBUG
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
