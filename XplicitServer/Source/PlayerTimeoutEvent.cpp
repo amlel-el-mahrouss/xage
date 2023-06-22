@@ -43,8 +43,6 @@ namespace Xplicit
 
 				auto& packet = mNetwork->get(index)->packet;
 
-				mNetwork->get(index)->done = false;
-
 				if (packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
 				{
 					packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
@@ -53,8 +51,6 @@ namespace Xplicit
 				{
 					packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
 				}
-
-				mNetwork->get(index)->done = true;
 			}
 		}
 	}

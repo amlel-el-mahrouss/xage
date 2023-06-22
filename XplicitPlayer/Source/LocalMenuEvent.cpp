@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: LocalMenuEvent.cpp
- *			Purpose: Client menu
- *
  * =====================================================================
  */
 
@@ -86,7 +83,7 @@ namespace Xplicit::Player
 			return;
 		
 		static float tween_start = LOCAL_MENU_TWEEN_START;
-		static float posOfMenu = 1.5;
+		static float posOfMenu = 1;
 
 		if (KB->key_down(KEY_ESCAPE) && 
 			mTimeout < 0)

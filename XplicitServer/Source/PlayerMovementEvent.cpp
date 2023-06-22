@@ -59,8 +59,6 @@ namespace Xplicit
 			NetworkInstance* peer = ply->get();
 			auto& packet = peer->packet;
 
-			peer->done = false;
-
 			if (packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
 			{
 				if (packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
@@ -86,8 +84,6 @@ namespace Xplicit
 				packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
 				ply->idle_for(XPLICIT_MOVEMENT_DELAY);
-
-				peer->done = true;
 			}
 		}
 	}

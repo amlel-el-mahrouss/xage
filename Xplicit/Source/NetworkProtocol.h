@@ -167,7 +167,6 @@ namespace Xplicit
 		std::uint32_t port;
         String str_address;
         int64_t hash;
-        bool done;
  
         explicit NetworkInstance();
         ~NetworkInstance();

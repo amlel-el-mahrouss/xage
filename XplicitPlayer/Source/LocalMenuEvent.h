@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: LocalMenuEvent.h
- *			Purpose: Client menu
- *
  * =====================================================================
  */
 

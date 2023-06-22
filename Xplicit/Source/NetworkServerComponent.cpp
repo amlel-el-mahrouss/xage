@@ -118,9 +118,6 @@ namespace Xplicit
 		std::int32_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
 
-		if (!peer->done)
-			return;
-
 		if (::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
 			sizeof(NetworkPacket),
@@ -162,19 +159,20 @@ namespace Xplicit
 				return;
 		}
 
-		peer->done = false;
-
 		if (packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
 			packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
 			packet.magic[2] != XPLICIT_NETWORK_MAG_2 ||
 			packet.version != XPLICIT_NETWORK_VERSION)
 		{
 			xplicit_invalidate_peer(peer);
-
-			return;
 		}
-
-		peer->packet = packet;
+		else if(packet.magic[0] == XPLICIT_NETWORK_MAG_0 &&
+			packet.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+			packet.magic[2] == XPLICIT_NETWORK_MAG_2 &&
+			packet.version == XPLICIT_NETWORK_VERSION)
+		{
+			peer->packet = packet;
+		}
 	}
 
 	NetworkServerContext::NETWORK_CONTEXT NetworkServerContext::context = NetworkServerContext::NETWORK_CONTEXT::DISCONNECTED;
@@ -204,9 +202,6 @@ namespace Xplicit
 	void NetworkServerContext::try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		if (peer->hash != peer->packet.hash)
-			return;
-
-		if (!peer->done)
 			return;
 
 		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
@@ -275,7 +270,5 @@ namespace Xplicit
 			0,
 			reinterpret_cast<sockaddr*>(&peer->address),
 			&from_len);
-
-		peer->done = true;
 	}
 }

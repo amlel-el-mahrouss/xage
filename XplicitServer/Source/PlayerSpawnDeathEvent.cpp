@@ -61,8 +61,6 @@ namespace Xplicit
 
 			auto& packet = peer_ptr->packet;
 
-			peer_ptr->done = false;
-
 			if (!player->alive())
 			{
 				// tell everyone that we're dead.
@@ -104,8 +102,6 @@ namespace Xplicit
 					}
 				}
 			}
-
-			peer_ptr->done = true;
 		}
 	}
 }
