@@ -167,8 +167,6 @@ int main(int argc, char** argv)
 					net->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
 					memcpy(net->get(index)->packet.buffer, "Shutting down...", strlen("Shutting down..."));
 				}
-
-				Xplicit::NetworkServerHelper::send(net);
 			}
 			});
 
@@ -178,10 +176,7 @@ int main(int argc, char** argv)
 		{
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
-
-			Xplicit::NetworkServerHelper::send(server);
-		} while (Xplicit::ComponentManager::get_singleton_ptr() && 
-			Xplicit::EventManager::get_singleton_ptr());
+		} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr());
 
 		return 0;
 	}
@@ -192,6 +187,10 @@ int main(int argc, char** argv)
 
 #ifdef XPLICIT_WINDOWS
 		std::wstring exit;
+
+		// UTF-8 to UTF-16 converter which transforms char bytes into wchar_t
+		// this is need due to the nature of utf-16 as it takes more bytes to encode a character.
+
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
 		exit += L"What: ";

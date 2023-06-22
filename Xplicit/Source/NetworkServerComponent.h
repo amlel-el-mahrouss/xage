@@ -52,11 +52,11 @@ namespace Xplicit
 
 	class XPLICIT_API NetworkServerHelper final
 	{
+		static void try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
+		static void try_create_send(NetworkServerComponent* server) noexcept;
+
 	public:
-		static void send(NetworkServerComponent* server, NetworkInstance* peer);
-		static void recv(NetworkServerComponent* server, NetworkInstance* peer);
 		static void accept(NetworkServerComponent* server);
-		static void send(NetworkServerComponent* server);
 		
 	};
 }
