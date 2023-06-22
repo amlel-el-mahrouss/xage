@@ -173,6 +173,7 @@ int main(int argc, char** argv)
 			Xplicit::EventManager::get_singleton_ptr())
 		{
 			Xplicit::NetworkServerContext::accept_recv(server);
+			Xplicit::NetworkServerContext::try_correct(server);
 
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
