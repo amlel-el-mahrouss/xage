@@ -40,7 +40,7 @@ namespace Xplicit::Player
 
 		XPLICIT_GET_DATA_DIR(data_dir);
 		String frame_path = data_dir;
-		frame_path += "\\alert_overlay.png";
+		frame_path += "\\menu_overlay.png";
 
 		mMenu = IRR->getVideoDriver()->getTexture(frame_path.c_str());
 
@@ -54,7 +54,7 @@ namespace Xplicit::Player
 		frame_path.clear();
 
 		frame_path = data_dir;
-		frame_path += "\\menu_nohover.png";
+		frame_path += "\\menu_no_hover.png";
 
 		mButtonNoHover = IRR->getVideoDriver()->getTexture(frame_path.c_str());
 	}
@@ -86,6 +86,7 @@ namespace Xplicit::Player
 			return;
 		
 		static float tween_start = LOCAL_MENU_TWEEN_START;
+		static float posOfMenu = 12;
 
 		if (KB->key_down(KEY_ESCAPE) && 
 			mTimeout < 0)
@@ -100,7 +101,7 @@ namespace Xplicit::Player
 		{
 			IRR->getVideoDriver()->draw2DImage(mButtonHover,
 				vector2di(30,
-					XPLICIT_DIM.Height / 0.80), rect<s32>(0, 0, 89, 70), 0, 0, true);
+					XPLICIT_DIM.Height / posOfMenu));
 
 			if (tween_start > LOCAL_MENU_TWEEN_END)
 				tween_start -= LOCAL_MENU_TWEENING;
@@ -115,7 +116,9 @@ namespace Xplicit::Player
 				mNetwork->send(packet);
 
 				mEnabled = false;
-				std::exit(0);
+
+				XPLICIT_SLEEP(1000);
+				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))
 			{
@@ -126,7 +129,7 @@ namespace Xplicit::Player
 		{
 			IRR->getVideoDriver()->draw2DImage(mButtonNoHover,
 				vector2di(30,
-					XPLICIT_DIM.Height / 0.80), rect<s32>(0, 0, 89, 70), 0, 0, true);
+					XPLICIT_DIM.Height / posOfMenu));
 
 			if (tween_start < LOCAL_MENU_TWEEN_START)
 				tween_start += LOCAL_MENU_TWEENING;

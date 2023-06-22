@@ -36,10 +36,13 @@ namespace Xplicit
 	static void xplicit_set_ioctl(Socket sock)
 	{
 		auto ul = 1UL;
-		const auto error = XPLICIT_IOCTL(sock, static_cast<long>(SOCKET_FLAG::NON_BLOCKING), &ul);
-		(void)error;
-
+		auto error = XPLICIT_IOCTL(sock, static_cast<long>(SOCKET_FLAG::NON_BLOCKING), &ul);
+		
 		XPLICIT_ASSERT(error == NO_ERROR);
+	
+#ifndef XPLICIT_DEBUG
+		(void)error;
+#endif
 	}
 
 	NetworkServerComponent::NetworkServerComponent(const char* ip)
@@ -132,9 +135,10 @@ namespace Xplicit
 				FD_ZERO(&fd);
 				FD_SET(server->mSocket, &fd);
 
-				static constexpr timeval timeout = { .tv_sec = 1, .tv_usec = 0 };
+				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 100000 };
 
 				::select(0, &fd, nullptr, nullptr, &timeout);
+
 #ifdef XPLICIT_DEBUG
 				XPLICIT_INFO("EWOULDBLOCK: Socket is blocked...");
 #endif // ifdef XPLICIT_DEBUG
@@ -145,12 +149,6 @@ namespace Xplicit
 			{
 				XPLICIT_INFO("WSAECONNABORTED: Socket' connection aborted...");
 				return XPLICIT_CONNRESET;
-			}
-			case WSAECONNRESET:
-			{
-				XPLICIT_INFO("WSAECONNABORTED: Socket' connection reset...");
-
-				break;
 			}
 			default:
 				break;

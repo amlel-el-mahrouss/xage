@@ -150,7 +150,6 @@ int main(int argc, char** argv)
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		
@@ -182,11 +181,23 @@ int main(int argc, char** argv)
 		network_master_thread_recv.detach();
 		network_master_thread_send.detach();
 		
-		do
+		Xplicit::Thread logic_thread([]() {
+			while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
+			{
+				Xplicit::ComponentManager::get_singleton_ptr()->update();
+				Xplicit::EventManager::get_singleton_ptr()->update();
+			}
+		});
+
+		logic_thread.detach();
+
+		std::string in;
+
+		while (std::getline(std::cin, in))
 		{
-			Xplicit::EventManager::get_singleton_ptr()->update();
-			Xplicit::ComponentManager::get_singleton_ptr()->update();
-		} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr());
+			if (in == "exit")
+				break;
+		}
 
 		return 0;
 	}

@@ -37,24 +37,19 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
 
-		String path;
+		String path = "menu_overlay.png";
 
 		switch (popup_type)
 		{
 		case POPUP_TYPE::KICK:
-			path += "Kicked.png";
 			break;
 		case POPUP_TYPE::NETWORK:
-			path += "NetworkError.png";
 			break;
 		case POPUP_TYPE::SHUTDOWN:
-			path += "Shutdown.png";
 			break;
 		case POPUP_TYPE::DOWNLOADING:
-			path += "Download.png";
 			break;
 		case POPUP_TYPE::BANNED:
-			path += "Banned.png";
 			break;
 		default:
 			break;

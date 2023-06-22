@@ -114,9 +114,6 @@ namespace Xplicit
 
 	bool NetworkComponent::read(NetworkPacket& packet)
 	{
-		//! we gotta clear this one as we don't know if RST was sent.
-		mReset = false;
-
 		std::int32_t len = sizeof(struct sockaddr_in);
 
 		const std::int32_t err = ::recv(mSocket.PublicSocket, 

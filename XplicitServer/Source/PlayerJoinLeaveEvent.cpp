@@ -132,7 +132,7 @@ namespace Xplicit
 
 	bool PlayerJoinLeaveEvent::handle_leave_event() noexcept
 	{
-		if (this->size() < 1) return false;
+		if (this->size() == 0) return false;
 		if (!mNetwork) return false;
 
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
