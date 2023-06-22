@@ -171,36 +171,16 @@ int main(int argc, char** argv)
 			}
 			});
 
-		/* NetworkServerContext masterThread */
-		Xplicit::Thread network_master_thread_recv([&]() {
-			Xplicit::NetworkServerContext::accept_recv(server);
-		});
-
-		Xplicit::Thread network_master_thread_send([&]() {
-			Xplicit::NetworkServerContext::accept_send(server);
-		});
-
-		network_master_thread_recv.detach();
-		network_master_thread_send.detach();
-		
-		Xplicit::Thread logic_thread([]() {
-			while (Xplicit::ComponentManager::get_singleton_ptr() &&
-				Xplicit::EventManager::get_singleton_ptr())
-			{
-				Xplicit::EventManager::get_singleton_ptr()->update();
-				Xplicit::ComponentManager::get_singleton_ptr()->update();
-			};
-		});
-
-		logic_thread.detach();
-
-		std::string in;
-
-		while (std::getline(std::cin, in))
+		while (Xplicit::ComponentManager::get_singleton_ptr() &&
+			Xplicit::EventManager::get_singleton_ptr())
 		{
-			if (in == "exit")
-				break;
-		}
+			Xplicit::NetworkServerContext::accept_recv(server);
+
+			Xplicit::EventManager::get_singleton_ptr()->update();
+			Xplicit::ComponentManager::get_singleton_ptr()->update();
+
+			Xplicit::NetworkServerContext::accept_send(server);
+		};
 
 		return 0;
 	}

@@ -217,16 +217,11 @@ namespace Xplicit
 
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
-			Thread thrd([&](const std::size_t id) {
-				const std::size_t peer_at = i;
-				auto peer = server->get(peer_at);
+			const std::size_t peer_at = i;
+			auto peer = server->get(peer_at);
 
-				while (server)
-				{
-					XPLICIT_ASSERT(peer);
-					NetworkServerContext::try_recv(server, peer);
-				}
-			}, i);
+			XPLICIT_ASSERT(peer);
+			NetworkServerContext::try_recv(server, peer);
 		}
 	}
 
@@ -254,22 +249,13 @@ namespace Xplicit
 		{
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
-				Thread thrd([&](const std::size_t id) {
-					const std::size_t peer_at = i;
-					auto peer = server->get(peer_at);
+				const std::size_t peer_at = i;
+				auto peer = server->get(peer_at);
 
-					XPLICIT_ASSERT(peer);
+				XPLICIT_ASSERT(peer);
 
-					while (server)
-					{
-						XPLICIT_ASSERT(peer);
-						NetworkServerContext::try_send(server, peer);
-					}
-					}, i);
+				NetworkServerContext::try_send(server, peer);
 			}
-
-			// finally make it online!
-			context = NETWORK_CONTEXT::ONLINE;
 		}
 	}
 

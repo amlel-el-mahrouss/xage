@@ -20,32 +20,25 @@ namespace Xplicit
 	{
 	public:
 		explicit PlayerComponent();
-		virtual ~PlayerComponent();
+		~PlayerComponent() override;
 
-	public:
 		XPLICIT_COPY_DEFAULT(PlayerComponent);
 
-	public:
 		void set(NetworkInstance* peer) noexcept;
 		NetworkInstance* get() noexcept;
 
-	public:
-		virtual PHYSICS_TYPE physics() noexcept override;
-		virtual COMPONENT_TYPE type() noexcept override;
-		virtual const char* name() noexcept override;
+		PHYSICS_TYPE physics() noexcept override;
+		COMPONENT_TYPE type() noexcept override;
+		const char* name() noexcept override;
 
-	private:
-		virtual bool should_update() noexcept override;
-		virtual void update() override;
+		bool should_update() noexcept override;
+		void update() override;
 
-	private:
-		virtual bool can_collide() noexcept override;
-		virtual bool has_physics() noexcept override;
+		bool can_collide() noexcept override;
+		bool has_physics() noexcept override;
 
-	public:
 		Vector<float>& pos() noexcept;
 
-	public:
 		void idle_for(const int64_t& cooldown) noexcept;
 		void health(const int32_t& health) noexcept;
 		void freeze(const bool enable) noexcept;
@@ -57,8 +50,8 @@ namespace Xplicit
 		PositionComponent Position;
 
 	private:
-		int64_t mDeathTimeout;
 		NetworkInstance* mPeer;
+		int64_t mDeathTimeout;
 		int64_t mCooldown;
 		int64_t mHealth;
 		bool mFrozen;

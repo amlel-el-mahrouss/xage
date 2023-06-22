@@ -35,38 +35,45 @@ namespace Xplicit
 
 	void PlayerLeaveEvent::operator()()
 	{
+		String addr = "";
+
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED ||
 				mNetwork->get(peer_idx)->status == NETWORK_STAT_INVALID)
 				continue;
 
-			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+			addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
+
+			if (addr == mNetwork->get(peer_idx)->str_address)
 			{
-				if (mNetwork->get(peer_idx)->packet.hash == mNetwork->get(peer_idx)->hash)
+				if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 				{
+					if (mNetwork->get(peer_idx)->packet.hash == mNetwork->get(peer_idx)->hash)
+					{
 #ifdef XPLICIT_DEBUG
 
-					XPLICIT_INFO("[DISCONNECT] IP: " +mNetwork->get(peer_idx)->str_address);
+						XPLICIT_INFO("[DISCONNECT] IP: " + mNetwork->get(peer_idx)->str_address);
 
 #endif // XPLICIT_DEBUG
 
-					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
+						const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
-					mNetwork->get(peer_idx)->unique_addr.invalidate();
-					mNetwork->get(peer_idx)->reset();
+						mNetwork->get(peer_idx)->unique_addr.invalidate();
+						mNetwork->get(peer_idx)->reset();
 
-					for (std::size_t index = 0; index < mNetwork->size(); ++index)
-					{
-						if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
+						for (std::size_t index = 0; index < mNetwork->size(); ++index)
 						{
-							mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-							mNetwork->get(index)->packet.public_hash = public_hash;
+							if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
+							{
+								mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+								mNetwork->get(index)->packet.public_hash = public_hash;
+							}
 						}
-					}
 
-					--mPlayerCount;
+						--mPlayerCount;
+					}
 				}
 			}
 		}

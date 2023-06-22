@@ -93,12 +93,10 @@ namespace Xplicit
 
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
-			auto& packet = mNetwork->get(peer_idx)->packet;
-
-			if (packet.size < 1)
+			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED)
 				continue;
 
-			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED)
+			if (mNetwork->get(peer_idx)->packet.size < 1)
 				continue;
 
 			addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
@@ -106,8 +104,8 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->str_address.empty())
 			{
 				/* if everything is ok, reserve new player. */
-				if (packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
-					packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
+				if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 				{
 					/* place this after kick algorithm. */
 					mNetwork->get(peer_idx)->str_address = addr;
@@ -119,11 +117,9 @@ namespace Xplicit
 					XPLICIT_INFO("[CONNECT] IP: " + addr);
 #endif // XPLICIT_DEBUG
 
-					mNetwork->get(peer_idx)->packet = packet;
-					
-					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
-
 					++mPlayerCount;
+
+					break;
 				}
 			}
 		}

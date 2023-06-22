@@ -19,8 +19,9 @@
 namespace Xplicit
 {
 	PlayerComponent::PlayerComponent() 
-		: Component(), 
-		mPeer(nullptr), 
+		: 
+		Component(), 
+		mPeer(nullptr),
 		mHealth(XPLICIT_DEFAULT_HEALTH), 
 		mDeathTimeout(0), 
 		Position(), 
