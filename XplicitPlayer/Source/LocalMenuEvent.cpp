@@ -25,11 +25,12 @@ namespace Xplicit::Player
 {
 	constexpr int XPLICIT_TIMEOUT_MENU = 2000;
 
-	LocalMenuEvent::LocalMenuEvent()
+	LocalMenuEvent::LocalMenuEvent(const std::int64_t& hash)
 		:
 			mNetwork(nullptr),
 			mButtonNoHover(nullptr),
 			mButtonHover(nullptr),
+			mHash(hash),
 			mTimeout(0UL),
 			mMenu(nullptr),
 			mEnabled(false)
@@ -99,13 +100,20 @@ namespace Xplicit::Player
 		{
 			IRR->getVideoDriver()->draw2DImage(mButtonHover,
 				vector2di(30,
-					XPLICIT_DIM.Height / LOCAL_MENU_TWEEN_END));
+					XPLICIT_DIM.Height / 0.80), rect<s32>(0, 0, 89, 70), 0, 0, true);
 
 			if (tween_start > LOCAL_MENU_TWEEN_END)
 				tween_start -= LOCAL_MENU_TWEENING;
 
 			if (KB->key_down(KEY_KEY_Y))
 			{
+				Xplicit::NetworkPacket packet{};
+
+				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = Xplicit::NETWORK_CMD_STOP;
+				packet.hash = mHash;
+
+				mNetwork->send(packet);
+
 				mEnabled = false;
 				std::exit(0);
 			}
@@ -118,7 +126,7 @@ namespace Xplicit::Player
 		{
 			IRR->getVideoDriver()->draw2DImage(mButtonNoHover,
 				vector2di(30,
-					XPLICIT_DIM.Height / LOCAL_MENU_TWEEN_END));
+					XPLICIT_DIM.Height / 0.80), rect<s32>(0, 0, 89, 70), 0, 0, true);
 
 			if (tween_start < LOCAL_MENU_TWEEN_START)
 				tween_start += LOCAL_MENU_TWEENING;

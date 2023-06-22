@@ -85,7 +85,7 @@ namespace Xplicit::Player
 			EventManager::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash);
 			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(publicHash);
 
-			EventManager::get_singleton_ptr()->add<LocalMenuEvent>();
+			EventManager::get_singleton_ptr()->add<LocalMenuEvent>(hash);
 
 			mEnabled = false;
 		}

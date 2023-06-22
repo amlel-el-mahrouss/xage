@@ -107,10 +107,12 @@ namespace Xplicit
 
 	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
 
-	void NetworkServerContext::try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept
+#define XPLICIT_CONNRESET (1)
+
+	std::int32_t NetworkServerContext::try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		if (!peer || !server)
-			return;
+			return 0;
 
 		std::int32_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
@@ -142,18 +144,19 @@ namespace Xplicit
 			case WSAECONNABORTED:
 			{
 				XPLICIT_INFO("WSAECONNABORTED: Socket' connection aborted...");
-				break;
+				return XPLICIT_CONNRESET;
 			}
 			case WSAECONNRESET:
 			{
-				XPLICIT_INFO("WSAECONNRESET: Socket' connection reset...");
+				XPLICIT_INFO("WSAECONNABORTED: Socket' connection reset...");
+
 				break;
 			}
 			default:
 				break;
 			}
 
-			return;
+			return 0;
 		}
 
 		peer->packet = packet;
@@ -165,6 +168,8 @@ namespace Xplicit
 		{
 			xplicit_invalidate_peer(peer);
 		}
+
+		return 0;
 	}
 
 	NetworkServerContext::NETWORK_CONTEXT NetworkServerContext::context = NetworkServerContext::NETWORK_CONTEXT::DISCONNECTED;
@@ -178,7 +183,7 @@ namespace Xplicit
 
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
-			Thread listeners([&]() {
+			Thread([&]() {
 				const std::size_t peer_at = i;
 				auto peer = server->get(peer_at);
 
@@ -187,10 +192,16 @@ namespace Xplicit
 					if (!peer)
 					{
 						peer = server->get(peer_at);
+						XPLICIT_ASSERT(peer != nullptr);
+
 						continue;
 					}
 
-					NetworkServerContext::try_recv(server, peer);
+					if (NetworkServerContext::try_recv(server, peer) == XPLICIT_CONNRESET)
+					{
+						peer->reset();
+						peer->unique_addr.invalidate();
+					}
 
 					// sleep for one tick
 					std::this_thread::sleep_for(std::chrono::milliseconds(60));
@@ -221,7 +232,7 @@ namespace Xplicit
 		{
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
-				Thread listeners([&]() {
+				Thread([&]() {
 					const std::size_t peer_at = i;
 					auto peer = server->get(peer_at);
 

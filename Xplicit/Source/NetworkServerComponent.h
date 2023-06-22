@@ -52,7 +52,7 @@ namespace Xplicit
 
 	class XPLICIT_API NetworkServerContext final
 	{
-		static void try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
+		static std::int32_t try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 		static void try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 
 	public:

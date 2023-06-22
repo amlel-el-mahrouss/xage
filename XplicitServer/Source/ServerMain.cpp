@@ -186,9 +186,6 @@ int main(int argc, char** argv)
 		{
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
-			
-			// sleep for one tick
-			std::this_thread::sleep_for(std::chrono::milliseconds(60));
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr());
 
 		return 0;

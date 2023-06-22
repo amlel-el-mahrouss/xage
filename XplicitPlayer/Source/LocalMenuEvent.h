@@ -20,7 +20,7 @@ namespace Xplicit::Player
 	class XPLICIT_API LocalMenuEvent final : public Event
 	{
 	public:
-		explicit LocalMenuEvent();
+		explicit LocalMenuEvent(const std::int64_t& hash);
 		~LocalMenuEvent() override;
 
 		LocalMenuEvent& operator=(const LocalMenuEvent&) = default;
@@ -36,6 +36,7 @@ namespace Xplicit::Player
 		NetworkComponent* mNetwork;
 		ITexture* mButtonNoHover;
 		ITexture* mButtonHover;
+		std::int64_t mHash;
 		int64_t mTimeout;
 		ITexture* mMenu;
 		bool mEnabled;
