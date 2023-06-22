@@ -29,6 +29,9 @@ namespace Xplicit
 		const size_t& size() const noexcept;
 
 	private:
+		void handle_leave_event() noexcept;
+		void handle_join_event() noexcept;
+
 		std::vector<PlayerComponent*> mPlayers;
 		NetworkServerComponent* mNetwork;
 		std::size_t mPlayerCount;

@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			XplicitServer
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  * =====================================================================
@@ -38,8 +38,12 @@ namespace Xplicit
 	 * \param player Player component
 	 * \param server Server component
 	 */
+
 	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server)
 	{
+		// just in case.
+		peer->unique_addr.invalidate();
+
 		const auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
 		const auto public_hash_uuid = UUIDFactory::version<4>();
 
@@ -68,7 +72,7 @@ namespace Xplicit
 		}
 	}
 
-	PlayerJoinEvent::PlayerJoinEvent() 
+	PlayerJoinEvent::PlayerJoinEvent()
 		:
 		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0)
@@ -84,7 +88,7 @@ namespace Xplicit
 
 	PlayerJoinEvent::~PlayerJoinEvent() = default;
 
-	void PlayerJoinEvent::operator()()
+	void PlayerJoinEvent::handle_join_event() noexcept
 	{
 		String addr = "";
 
@@ -101,28 +105,68 @@ namespace Xplicit
 
 			addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
 
-			if (mNetwork->get(peer_idx)->str_address.empty())
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				/* if everything is ok, reserve new player. */
-				if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
-				{
-					/* place this after kick algorithm. */
-					mNetwork->get(peer_idx)->str_address = addr;
+				/* OK. reserve player now. */
+				PlayerComponent* player = mPlayers[mPlayerCount];
+				xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
 
-					PlayerComponent* player = mPlayers[mPlayerCount];
-					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
+				mNetwork->get(peer_idx)->str_address = addr;
 
 #ifdef XPLICIT_DEBUG
-					XPLICIT_INFO("[CONNECT] IP: " + addr);
+				XPLICIT_INFO("[CONNECT] IP: " + addr);
 #endif // XPLICIT_DEBUG
 
-					++mPlayerCount;
+				++mPlayerCount;
+			}
+		}
+	}
 
-					break;
+	void PlayerJoinEvent::handle_leave_event() noexcept
+	{
+		String addr = "";
+
+		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
+		{
+			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED)
+				continue;
+
+			addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
+
+			if (addr == mNetwork->get(peer_idx)->str_address)
+			{
+				if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+				{
+#ifdef XPLICIT_DEBUG
+					XPLICIT_INFO("[DISCONNECT] IP: " + mNetwork->get(peer_idx)->str_address);
+#endif // XPLICIT_DEBUG
+
+					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
+
+					mNetwork->get(peer_idx)->unique_addr.invalidate();
+					mNetwork->get(peer_idx)->reset();
+
+					for (std::size_t index = 0; index < mNetwork->size(); ++index)
+					{
+						if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
+						{
+							mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+							mNetwork->get(index)->packet.public_hash = public_hash;
+						}
+					}
+
+					--mPlayerCount;
 				}
 			}
 		}
+	}
+
+	void PlayerJoinEvent::operator()()
+	{
+		this->handle_leave_event();
+		this->handle_join_event();
 	}
 
 	const size_t& PlayerJoinEvent::size() const noexcept { return mPlayerCount; }

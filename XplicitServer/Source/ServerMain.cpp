@@ -22,7 +22,6 @@
 #include "SpawnComponent.h"
 #include "PlayerComponent.h"
 #include "PlayerJoinEvent.h"
-#include "PlayerLeaveEvent.h"
 #include "PlayerTimeoutEvent.h"
 #include "PlayerMovementEvent.h"
 #include "PlayerSpawnDeathEvent.h"
@@ -150,7 +149,6 @@ int main(int argc, char** argv)
 
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLeaveEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();

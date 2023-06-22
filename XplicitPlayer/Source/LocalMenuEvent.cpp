@@ -122,9 +122,6 @@ namespace Xplicit::Player
 
 				mEnabled = false;
 
-				/* sleep a little bit */
-				XPLICIT_SLEEP(200);
-
 				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))
