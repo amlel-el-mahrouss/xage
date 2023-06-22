@@ -170,12 +170,20 @@ int main(int argc, char** argv)
 			}
 			});
 
-		Xplicit::NetworkServerHelper::accept(server);
+		/* NetworkServerContext masterThread */
+		Xplicit::Thread network_master_thread([&]() {
+			Xplicit::NetworkServerContext::accept(server);
+			});
+
+		network_master_thread.detach();
 		
 		do
 		{
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
+			
+			// sleep for one tick
+			std::this_thread::sleep_for(std::chrono::milliseconds(60));
 		} while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr());
 
 		return 0;

@@ -46,13 +46,14 @@ namespace Xplicit
 		Socket mSocket;
 		String mDns;
 		
-		friend class NetworkServerHelper;
+		friend class NetworkServerContext;
 
 	};
 
-	class XPLICIT_API NetworkServerHelper final
+	class XPLICIT_API NetworkServerContext final
 	{
 		static void try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
+		static void try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 		static void try_create_send(NetworkServerComponent* server) noexcept;
 
 	public:

@@ -97,11 +97,17 @@ namespace Xplicit
 
 	const char* NetworkServerComponent::dns() const noexcept { return mDns.c_str(); }
 
-	NetworkInstance* NetworkServerComponent::get(const std::size_t& idx) const noexcept { return mPeers.at(idx).second; }
+	NetworkInstance* NetworkServerComponent::get(const std::size_t& idx) const noexcept 
+	{ 
+		if (mPeers.empty())
+			return nullptr;
+
+		return mPeers.at(idx).second; 
+	}
 
 	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
 
-	void NetworkServerHelper::try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept
+	void NetworkServerContext::try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		if (!peer || !server)
 			return;
@@ -161,7 +167,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerHelper::accept(NetworkServerComponent* server)
+	void NetworkServerContext::accept(NetworkServerComponent* server)
 	{
 		XPLICIT_ASSERT(server);
 
@@ -172,22 +178,44 @@ namespace Xplicit
 		{
 			Thread listeners([&]() {
 				const std::size_t peer_at = i;
+				auto peer = server->get(peer_at);
 
 				while (server)
 				{
-					const auto peer = server->get(peer_at);
+					if (!peer)
+					{
+						peer = server->get(peer_at);
+						continue;
+					}
 
-					NetworkServerHelper::try_recv(server, peer);
+					NetworkServerContext::try_recv(server, peer);
 
+					// sleep for one tick
 					std::this_thread::sleep_for(std::chrono::milliseconds(60));
 				}
 			});
 		}
 
-		NetworkServerHelper::try_create_send(server);
+		NetworkServerContext::try_create_send(server);
 	}
 
-	void NetworkServerHelper::try_create_send(NetworkServerComponent* server) noexcept
+	void NetworkServerContext::try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept
+	{
+		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
+		peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
+		peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+
+		peer->packet.version = XPLICIT_NETWORK_VERSION;
+
+		::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
+			sizeof(NetworkPacket),
+			0,
+			reinterpret_cast<sockaddr*>(&peer->address),
+			sizeof(PrivateAddressData));
+
+	}
+
+	void NetworkServerContext::try_create_send(NetworkServerComponent* server) noexcept
 	{
 		if (server)
 		{
@@ -195,23 +223,19 @@ namespace Xplicit
 			{
 				Thread listeners([&]() {
 					const std::size_t peer_at = i;
+					auto peer = server->get(peer_at);
 
 					while (server)
 					{
-						server->get(i)->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
-						server->get(i)->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
-						server->get(i)->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+						if (!peer)
+						{
+							peer = server->get(peer_at);
+							continue;
+						}
 
-						server->get(i)->packet.hash = server->get(i)->hash;
+						NetworkServerContext::try_send(server, peer);
 
-						server->get(i)->packet.version = XPLICIT_NETWORK_VERSION;
-
-						::sendto(server->mSocket, reinterpret_cast<const char*>(&server->get(i)->packet),
-							sizeof(NetworkPacket),
-							0,
-							reinterpret_cast<sockaddr*>(&server->get(i)->address),
-							sizeof(PrivateAddressData));
-
+						// sleep for one tick
 						std::this_thread::sleep_for(std::chrono::milliseconds(60));
 					}
 				});
