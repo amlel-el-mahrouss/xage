@@ -86,8 +86,8 @@ namespace Xplicit
 
 	void PlayerJoinLeaveEvent::operator()()
 	{
-		this->handle_join_event();
 		this->handle_leave_event();
+		this->handle_join_event();
 	}
 
 	const size_t& PlayerJoinLeaveEvent::size() const noexcept { return mPlayerCount; }

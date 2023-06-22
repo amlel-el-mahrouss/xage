@@ -110,12 +110,10 @@ namespace Xplicit
 
 	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
 
-#define XPLICIT_CONNRESET (1)
-
-	std::int32_t NetworkServerContext::try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept
+	void NetworkServerContext::try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		if (!peer || !server)
-			return 0;
+			return;
 
 		std::int32_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
@@ -148,13 +146,13 @@ namespace Xplicit
 			case WSAECONNABORTED:
 			{
 				XPLICIT_INFO("WSAECONNABORTED: Connection aborted...");
-				return XPLICIT_CONNRESET;
+				break;
 			}
 			default:
 				break;
 			}
 
-			return 0;
+			return;
 		}
 
 		for (std::size_t index = 0; index < server->size(); ++index)
@@ -163,20 +161,22 @@ namespace Xplicit
 				continue;
 
 			if (packet.hash == server->get(index)->hash)
-				return 0;
+				return;
+		}
+
+		if (packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
+			packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
+			packet.magic[2] != XPLICIT_NETWORK_MAG_2 ||
+			packet.version != XPLICIT_NETWORK_VERSION)
+		{
+			xplicit_invalidate_peer(peer);
+
+			return;
 		}
 
 		peer->packet = packet;
 
-		if (peer->packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
-			peer->packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
-			peer->packet.magic[2] != XPLICIT_NETWORK_MAG_2 ||
-			peer->packet.version != XPLICIT_NETWORK_VERSION)
-		{
-			xplicit_invalidate_peer(peer);
-		}
-
-		return 0;
+		return;
 	}
 
 	NetworkServerContext::NETWORK_CONTEXT NetworkServerContext::context = NetworkServerContext::NETWORK_CONTEXT::DISCONNECTED;
@@ -206,14 +206,7 @@ namespace Xplicit
 						continue;
 					}
 
-					if (NetworkServerContext::try_recv(server, peer) == XPLICIT_CONNRESET)
-					{
-						peer->reset();
-						peer->unique_addr.invalidate();
-					}
-
-					// sleep for one tick
-					std::this_thread::sleep_for(std::chrono::milliseconds(60));
+					NetworkServerContext::try_recv(server, peer);
 				}
 			}, i);
 		}
@@ -259,9 +252,6 @@ namespace Xplicit
 							}
 
 							NetworkServerContext::try_send(server, peer);
-
-							// sleep for one tick
-							std::this_thread::sleep_for(std::chrono::milliseconds(60));
 						}
 						}, i);
 				}
