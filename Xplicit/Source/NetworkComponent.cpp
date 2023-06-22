@@ -102,14 +102,13 @@ namespace Xplicit
 	bool NetworkComponent::send(NetworkPacket& packet)
 	{
 		packet.hash = mHash;
+		packet.channel = mChannelID;
+		packet.size = sizeof(NetworkPacket);
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
-
-		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
-		packet.channel = mChannelID;
 		packet.version = XPLICIT_NETWORK_VERSION;
+		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 		
 		if (const auto res = ::sendto(mSocket.PublicSocket,
 			reinterpret_cast<const char*>(&packet), 
@@ -119,9 +118,21 @@ namespace Xplicit
 			sizeof(mTargetAddress)) == SOCKET_ERROR)
 		{
 			const auto err = WSAGetLastError();
-			return err == WSAEWOULDBLOCK;
-		}
 
+			if (err == WSAEWOULDBLOCK)
+			{
+				fd_set fd;
+				FD_ZERO(&fd);
+				FD_SET(mSocket.PublicSocket, &fd);
+
+				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 100000 };
+
+				::select(0, &fd, nullptr, nullptr, &timeout);
+			}
+
+			return false;
+		}
+		
 		return true;
 	}
 
@@ -145,6 +156,14 @@ namespace Xplicit
 			{
 			case WSAECONNRESET:
 			{
+				fd_set fd;
+				FD_ZERO(&fd);
+				FD_SET(mSocket.PublicSocket, &fd);
+
+				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 100000 };
+
+				::select(0, &fd, nullptr, nullptr, &timeout);
+
 				mReset = true;
 				break;
 			}

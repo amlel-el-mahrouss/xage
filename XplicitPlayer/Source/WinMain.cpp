@@ -14,7 +14,7 @@
  @file
  */
 
-#include "LocalToolFactory.h"
+#include "Tool.h"
 #include "Application.h"
 
 #include <Bites.h>

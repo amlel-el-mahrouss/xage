@@ -108,13 +108,13 @@ namespace Xplicit::Player
 
 			if (KB->key_down(KEY_KEY_Y))
 			{
-				Xplicit::NetworkPacket packet{};
-
+				NetworkPacket packet{};
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-				packet.hash = mHash;
-				packet.size = sizeof(NetworkPacket);
 
-				mNetwork->send(packet);
+				do
+				{
+					packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+				} while (!mNetwork->send(packet));
 
 				mEnabled = false;
 

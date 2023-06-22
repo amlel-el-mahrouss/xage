@@ -5,7 +5,7 @@
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: MonoComponent.cpp
- *			Purpose: C# Foundations
+ *			Purpose: C# Foundation
  *
  * =====================================================================
  */

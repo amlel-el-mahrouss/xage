@@ -4,16 +4,12 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: IMeshable.h
- *			Purpose: Mesh Property
- *
  * =====================================================================
  */
 
 #pragma once
 
 #include <Xplicit.h>
-#include <Root.h>
 
 namespace Xplicit::Player
 {
@@ -22,16 +18,21 @@ namespace Xplicit::Player
 	{
 	public:
 		StaticMesh() = delete;
-
-	public:
+		
 		explicit StaticMesh(const char* path);
-		virtual ~StaticMesh();
 
-	public:
+		~StaticMesh() noexcept
+		{
+			if (mNode)
+				(void)mNode->drop();
+
+			if (mMdl)
+				(void)mMdl->drop();
+		}
+		
 		StaticMesh& operator=(const StaticMesh&) = default;
 		StaticMesh(const StaticMesh&) = default;
-
-	public:
+		
 		IAnimatedMeshSceneNode* node() const { return mNode; }
 		IAnimatedMesh* operator->() const { return mMdl; }
 
@@ -41,16 +42,15 @@ namespace Xplicit::Player
 
 	};
 
-	class DynamicMesh final : public irr::scene::ISceneNode
+	class DynamicMesh final : public ISceneNode
 	{
 	public:
-		DynamicMesh(scene::ISceneNode* parent, scene::ISceneManager* mgr, s32 id)
+		DynamicMesh(ISceneNode* parent, ISceneManager* mgr, s32 id)
 			: ISceneNode(parent, mgr, id)
 		{}
 
 		~DynamicMesh() override = default;
-
-	public:
+		
 		void OnRegisterSceneNode() override
 		{
 			if (IsVisible)
@@ -59,9 +59,9 @@ namespace Xplicit::Player
 			ISceneNode::OnRegisterSceneNode();
 		}
 
-		virtual void render()
+		void render() override
 		{
-			video::IVideoDriver* driver = SceneManager->getVideoDriver();
+			IVideoDriver* driver = SceneManager->getVideoDriver();
 
 			driver->setMaterial(Material);
 			driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
@@ -74,8 +74,7 @@ namespace Xplicit::Player
 				scene::EPT_TRIANGLES, 
 				video::EIT_32BIT);
 		}
-
-	public:
+		
 		void add(const u16& indice) noexcept
 		{
 			Indices.push_back(indice);

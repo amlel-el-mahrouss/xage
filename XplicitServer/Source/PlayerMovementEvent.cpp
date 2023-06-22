@@ -43,14 +43,7 @@ namespace Xplicit
 	void PlayerMovementEvent::operator()()
 	{
 		if (!mNetwork)
-		{
-			// :((((((((
-			if (!ComponentManager::get_singleton_ptr())
-				return;
-
 			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
-			return;
-		}
 
 		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
 		NetworkFloat speed = mGameVar->as_float();

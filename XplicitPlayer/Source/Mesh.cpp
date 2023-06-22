@@ -14,6 +14,7 @@
  @file
  */
 
+#include <Root.h>
 #include "Mesh.h"
 
 namespace Xplicit::Player
@@ -33,11 +34,4 @@ namespace Xplicit::Player
 		if (mMdl)
 			mMdl->setMaterialFlag(EMF_LIGHTING, true);
 	}
-
-	StaticMesh::~StaticMesh()
-	{
-		if (mNode)
-			mNode->drop();
-	}
-
 }

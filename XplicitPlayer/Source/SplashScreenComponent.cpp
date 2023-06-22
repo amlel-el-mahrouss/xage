@@ -138,7 +138,7 @@ namespace Xplicit::Player
 			Thread thrd([&]() {
 				while (mEnabled)
 				{
-					XPLICIT_INFO("Trying to connect to peer...");
+					XPLICIT_INFO("Connect to peer...");
 
 					NetworkPacket spawn{};
 
@@ -147,7 +147,7 @@ namespace Xplicit::Player
 
 					mNetwork->send(spawn);
 					
-					std::this_thread::sleep_for(std::chrono::seconds(10));
+					std::this_thread::sleep_for(std::chrono::seconds(1));
 				}
 			});
 
