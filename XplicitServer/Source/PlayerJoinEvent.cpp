@@ -140,14 +140,14 @@ namespace Xplicit
 #endif // XPLICIT_DEBUG
 
 				}
-
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_INVALID;
 			}
 		}
 	}
 
 	void PlayerJoinEvent::handle_leave_event() noexcept
 	{
+		if (this->size() == 0) return;
+
 		String addr = "";
 
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)

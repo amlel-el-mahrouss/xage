@@ -194,13 +194,16 @@ namespace Xplicit
 		 *
 		 */
 
-		for (std::size_t index = 0; index < server->size(); ++index)
+		if (peer->hash != XPLICIT_INVALID_HASH)
 		{
-			if (server->get(index) == peer)
-				continue;
+			for (std::size_t index = 0; index < server->size(); ++index)
+			{
+				if (server->get(index) == peer)
+					continue;
 
-			if (packet.hash == server->get(index)->hash)
-				return;
+				if (packet.hash == server->get(index)->hash)
+					return;
+			}
 		}
 
 		xplicit_register_packet(packet, peer);

@@ -214,6 +214,7 @@ int main(int argc, char** argv)
 		});
 		
 		Xplicit::Thread networkJob([&](){
+				/* Network logic */
 				while (Xplicit::ComponentManager::get_singleton_ptr() &&
 					Xplicit::EventManager::get_singleton_ptr())
 				{
@@ -222,10 +223,10 @@ int main(int argc, char** argv)
 
 					Xplicit::ComponentManager::get_singleton_ptr()->update();
 					Xplicit::EventManager::get_singleton_ptr()->update();
-
+					
 					Xplicit::NetworkServerContext::accept_send(server);
 				};
-			});
+		});
 
 		networkJob.detach();
 
