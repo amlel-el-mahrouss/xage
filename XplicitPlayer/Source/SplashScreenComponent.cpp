@@ -135,14 +135,23 @@ namespace Xplicit::Player
 
 		if (mNetwork->connect(ip))
 		{
-			NetworkPacket spawn{};
+			Thread thrd([&]() {
+				while (mEnabled)
+				{
+					XPLICIT_INFO("Trying to connect to peer...");
 
-			spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
-			spawn.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+					NetworkPacket spawn{};
 
-			spawn.size = sizeof(NetworkPacket);
+					spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
+					spawn.size = sizeof(NetworkPacket);
 
-			mNetwork->send(spawn);
+					mNetwork->send(spawn);
+					
+					std::this_thread::sleep_for(std::chrono::seconds(1));
+				}
+			});
+
+			thrd.detach();
 		}
 	}
 

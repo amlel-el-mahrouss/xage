@@ -39,8 +39,22 @@ namespace Xplicit
 	 * \param server Server component
 	 */
 
-	static void xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server)
+	static bool xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server)
 	{
+		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
+
+		for (std::size_t actor_idx = 0; actor_idx < server->size(); ++actor_idx)
+		{
+			if (!players[actor_idx]->get())
+				continue;
+
+			if (players[actor_idx]->get() == peer)
+				return false;
+
+			if (equals(peer->address, players[actor_idx]->get()->address))
+				return false;
+		}
+
 		// just in case.
 		peer->unique_addr.invalidate();
 
@@ -70,6 +84,8 @@ namespace Xplicit
 				server->get(peer_idx)->packet.public_hash = peer->public_hash;
 			}
 		}
+
+		return true;
 	}
 
 	PlayerJoinEvent::PlayerJoinEvent()
@@ -101,21 +117,24 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.size < 1)
 				continue;
 
-			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
 			{
 				/* OK. reserve player now. */
 				PlayerComponent* player = mPlayers[mPlayerCount];
-				xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
+				if (xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
+				{
 
 #ifdef XPLICIT_DEBUG
-				String addr = "";
-				addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
+					String addr = "";
+					addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
 
-				XPLICIT_INFO("[CONNECT] IP: " + addr);
+					XPLICIT_INFO("[CONNECT] IP: " + addr);
 #endif // XPLICIT_DEBUG
 
-				++mPlayerCount;
+					++mPlayerCount;
+				}
+
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
 			}
 		}
 	}
@@ -136,11 +155,7 @@ namespace Xplicit
 				String addr = "";
 				addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
 
-				if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
-					XPLICIT_INFO("[KICK] IP: " + addr);
-				else
-					XPLICIT_INFO("[DISCONNECT] IP: " + addr);
-
+				XPLICIT_INFO("[DISCONNECT] IP: " + addr);
 #endif // XPLICIT_DEBUG
 
 				const auto public_hash = mNetwork->get(peer_idx)->public_hash;
