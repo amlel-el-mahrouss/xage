@@ -49,7 +49,9 @@ namespace Xplicit
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
+		peer->packet.hash = peer->hash;
 		peer->packet.size = sizeof(NetworkPacket);
+
 		peer->status = NETWORK_STAT_CONNECTED;
 
 		player->set(peer);
@@ -58,10 +60,10 @@ namespace Xplicit
 		{
 			if (server->get(peer_idx)->hash != hash)
 			{
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
-				peer->packet.public_hash = peer->public_hash;
+				server->get(peer_idx)->packet.public_hash = peer->public_hash;
 			}
 		}
 	}
@@ -110,14 +112,10 @@ namespace Xplicit
 				}
 
 				PlayerComponent* player = mPlayers[mPlayerCount];
-
 				xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
-				player->set(mNetwork->get(peer_idx));
 
 #ifdef XPLICIT_DEBUG
-
 				XPLICIT_INFO("[CONNECT] UUID: " + uuids::to_string(mNetwork->get(peer_idx)->unique_addr.get()));
-
 #endif // XPLICIT_DEBUG
 
 				++mPlayerCount;

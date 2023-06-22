@@ -60,15 +60,13 @@ namespace Xplicit
 		Event& operator=(const Event&) = default;
 		Event(const Event&) = default;
 
-	public:
 		virtual void operator()();
+
 		void update() noexcept;
 
-	public:
 		bool remove(EventListener* listener);
 		void add(EventListener* listener);
 
-	public:
 		virtual const char* name() noexcept;
 
 	protected:

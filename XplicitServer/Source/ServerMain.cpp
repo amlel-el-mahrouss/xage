@@ -182,19 +182,12 @@ int main(int argc, char** argv)
 		network_master_thread_send.detach();
 		
 		Xplicit::Thread logic_thread([]() {
-			Xplicit::Thread components_thread([]() {
-				while (Xplicit::ComponentManager::get_singleton_ptr())
-				{
-					Xplicit::ComponentManager::get_singleton_ptr()->update();
-				}
-			});
-
-			Xplicit::Thread events_thread([]() {
-				while (Xplicit::EventManager::get_singleton_ptr())
-				{
-					Xplicit::EventManager::get_singleton_ptr()->update();
-				}
-			});
+			while (Xplicit::ComponentManager::get_singleton_ptr() &&
+				Xplicit::EventManager::get_singleton_ptr())
+			{
+				Xplicit::ComponentManager::get_singleton_ptr()->update();
+				Xplicit::EventManager::get_singleton_ptr()->update();
+			};
 		});
 
 		logic_thread.detach();

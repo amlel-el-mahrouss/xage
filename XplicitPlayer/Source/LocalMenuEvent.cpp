@@ -86,7 +86,7 @@ namespace Xplicit::Player
 			return;
 		
 		static float tween_start = LOCAL_MENU_TWEEN_START;
-		static float posOfMenu = 12;
+		static float posOfMenu = 1.5;
 
 		if (KB->key_down(KEY_ESCAPE) && 
 			mTimeout < 0)
@@ -97,11 +97,18 @@ namespace Xplicit::Player
 			mTimeout = XPLICIT_TIMEOUT_MENU;
 		}
 
+		/*
+			menu is being open
+		*/
+
 		if (mEnabled)
 		{
 			IRR->getVideoDriver()->draw2DImage(mButtonHover,
-				vector2di(30,
-					XPLICIT_DIM.Height / posOfMenu));
+				vector2di(30, XPLICIT_DIM.Height / posOfMenu),
+				rect<s32>(0, 0, 63, 42),
+				nullptr,
+				SColor(255, 255, 255, 255),
+				true);
 
 			if (tween_start > LOCAL_MENU_TWEEN_END)
 				tween_start -= LOCAL_MENU_TWEENING;
@@ -112,12 +119,15 @@ namespace Xplicit::Player
 
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = Xplicit::NETWORK_CMD_STOP;
 				packet.hash = mHash;
+				packet.size = sizeof(NetworkPacket);
 
 				mNetwork->send(packet);
 
 				mEnabled = false;
 
-				XPLICIT_SLEEP(1000);
+				/* sleep a little bit */
+				XPLICIT_SLEEP(200);
+
 				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))
@@ -125,11 +135,17 @@ namespace Xplicit::Player
 				mEnabled = false;
 			}
 		}
+		/*
+			menu is being closed/inactive
+		*/
 		else
 		{
 			IRR->getVideoDriver()->draw2DImage(mButtonNoHover,
-				vector2di(30,
-					XPLICIT_DIM.Height / posOfMenu));
+				vector2di(30, XPLICIT_DIM.Height / posOfMenu),
+				rect<s32>(0, 0, 63, 42),
+				nullptr,
+				SColor(255, 255, 255, 255),
+				true);
 
 			if (tween_start < LOCAL_MENU_TWEEN_START)
 				tween_start += LOCAL_MENU_TWEENING;

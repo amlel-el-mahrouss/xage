@@ -177,15 +177,14 @@ namespace Xplicit
 		XPLICIT_ASSERT(server);
 
 
-		/* We create recievers threads here. */
+		/* We create receivers threads here. */
 
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
-			Thread([&](const std::size_t id) {
+			Thread thrd([&](const std::size_t id) {
 				const std::size_t peer_at = i;
 				auto peer = server->get(peer_at);
 
-				XPLICIT_ASSERT(peer);
 				peer->thread_id = id;
 
 				while (server)
@@ -235,7 +234,7 @@ namespace Xplicit
 			{
 				if (server->get(i)->thread_id == -1)
 				{
-					Thread([&](const std::size_t id) {
+					Thread thrd([&](const std::size_t id) {
 						const std::size_t peer_at = i;
 						auto peer = server->get(peer_at);
 
