@@ -14,7 +14,7 @@
  @file
  */
 
-#include "Tool.h"
+#include "LocalHTTPComponent.h"
 #include "Application.h"
 
 #include <Bites.h>
@@ -54,7 +54,7 @@ XPLICIT_MAIN()
 		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri.get().c_str());
 
 		if (!app) throw Xplicit::EngineError("Could not create application context, exiting!");
-
+		
 		/* main game loop */
 		while (IRR->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 

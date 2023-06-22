@@ -108,16 +108,16 @@ namespace Xplicit::HTTP
         HTTP_ERROR_COUNT = 6,
     };
 
-    class HTTPError : public std::runtime_error 
+    class HTTPError final : public std::runtime_error 
     {
     public:
-        HTTPError(const uint16_t what) : std::runtime_error("Xplicit HTTP Error") {}
-        ~HTTPError() = default; // let the ABI define that.
+        explicit HTTPError(const uint16_t what) : std::runtime_error("Xplicit HTTP Error") {  }
+        ~HTTPError() override = default; // let the ABI define that.
 
         HTTPError& operator=(const HTTPError&) = default;
         HTTPError(const HTTPError&) = default;
         
-        int error() { return m_iErr; }
+        int error() const { return m_iErr; }
 
     private:
         int m_iErr{ 200 };
@@ -222,12 +222,12 @@ namespace Xplicit::HTTP
             ZeroMemory(&sock->m_Addr, sizeof(struct sockaddr_in));
 
             sock->m_Addr.sin_family = AF_INET;
-            inet_pton(AF_INET, dns.c_str(), &sock->m_Addr.sin_addr);
+            ::inet_pton(AF_INET, dns.c_str(), &sock->m_Addr.sin_addr);
 
-            sock->m_Addr.sin_port = htons(XPLICIT_HTTP_PORT);
+            sock->m_Addr.sin_port = ::htons(XPLICIT_HTTP_PORT);
             sock->m_Dns = std::string{ dns.data() };
 
-            int result = connect(sock->m_Socket, reinterpret_cast<SOCKADDR*>(&sock->m_Addr), sizeof(sock->m_Addr));
+            int result = ::connect(sock->m_Socket, reinterpret_cast<SOCKADDR*>(&sock->m_Addr), sizeof(sock->m_Addr));
             
             if (result == SOCKET_ERROR) 
                 throw HTTPError(HTTP_DNS_ERROR);
@@ -253,12 +253,6 @@ namespace Xplicit::HTTP
 
         int64_t read_from_socket(HTTPSharedPtr& sock, char* bytes, int len) 
         {
-            if (!sock) 
-                throw HTTPError(HTTP_INTERNAL_ERROR);
-
-            if (!bytes) 
-                throw HTTPError(HTTP_INTERNAL_ERROR);
-
 #ifdef XPLICIT_DEBUG
             XPLICIT_ASSERT(sock);
 #endif

@@ -14,43 +14,46 @@
 
 namespace Xplicit::Player
 {
-	void download(const String& assetId) noexcept
+	void LocalHTTPComponent::download(const String& assetId) noexcept
 	{
-		Thread thrd([&](String asset) {
-            String request = mEndpoint + "/" + asset;
-    
-            HTTPWriter writer;
-            
-            HTTP::HTTPHeader* hdr = new http::http_header{
-                .Type = http::http_request_type::GET,
-                .Bytes = request.c_str(),
-                .SizeOfBytes = (int64_t)request.size(),
-            };
-        
-            NonNil<HTTP::HTTPHeader*> hdr_wrapper{ hdr };
+        String request = mEndpoint + "/" + assetId;
 
-            auto sock = writer.create_socket_and_connect(host);
-            writer.send_from_socket(sock, hdr_wrapper);
-            
-            std::ofstream file = mWriter->create{ assetId + ".xasset" };
+        HTTP::HTTPWriter writer;
 
-            char* bytes = new char[1000000];
-            memset(bytes, 0, 1000000);
+        auto hdr = new HTTP::HTTP::HTTPHeader{
+            .Type = HTTP::HTTP::RequestType::GET,
+            .Bytes = request.data(),
+            .Size = static_cast<int>(request.size()),
+        };
 
-            writer.read_from_socket(sock, bytes, 1000000);
-        
-            file << bytes;
-        
-            file.flush();
-            file.close();
-        
-            delete hdr;
-		}, assetId);
-		
-		thrd.detach();
+        Ref<HTTP::HTTP::HTTPHeader*> hdr_wrapper{ hdr };
+
+        auto sock = writer.create_and_connect( mEndpoint );
+
+        if (!sock)
+            return;
+
+        if (!writer.send_from_socket(sock, hdr_wrapper))
+            return;
+
+        std::ofstream file = mWriter->write((assetId + ".xasset").c_str());
+
+        constexpr int64_t MAX_BUF = 100000;
+
+        auto bytes = new char[MAX_BUF];
+        memset(bytes, 0, MAX_BUF);
+
+        writer.read_from_socket(sock, bytes, MAX_BUF);
+
+        file << bytes;
+
+        file.flush();
+        file.close();
+
+        delete hdr;
 	}
 	
-	void set(const String& endpoint) noexcept
+	void LocalHTTPComponent::set(const String& endpoint) noexcept
 	{
 		if (!endpoint.empty())
 			mEndpoint = endpoint;

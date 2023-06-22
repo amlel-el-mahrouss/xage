@@ -34,7 +34,7 @@ namespace Xplicit::Player
 		const int version() { return 1; }
 		
 	private:
-		std::unique_ptr<FilesystemWriter> mWriter;
+		std::unique_ptr<FilesystemWrapper> mWriter;
 		String mEndpoint;
 	
 	};
