@@ -246,4 +246,36 @@ namespace Xplicit
 			context = NETWORK_CONTEXT::ONLINE;
 		}
 	}
+
+
+	void NetworkServerContext::send(NetworkServerComponent* server, NetworkInstance* peer) noexcept
+	{
+		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
+		peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
+		peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+
+		peer->packet.version = XPLICIT_NETWORK_VERSION;
+
+		::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
+			sizeof(NetworkPacket),
+			0,
+			reinterpret_cast<sockaddr*>(&peer->address),
+			sizeof(PrivateAddressData));
+	}
+
+	void NetworkServerContext::recv(NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept
+	{
+		XPLICIT_ASSERT(peer && server);
+
+		std::int32_t from_len = sizeof(PrivateAddressData);
+
+		::recvfrom(server->mSocket,
+			reinterpret_cast<char*>(&packet),
+			sizeof(NetworkPacket),
+			0,
+			reinterpret_cast<sockaddr*>(&peer->address),
+			&from_len);
+
+		peer->done = true;
+	}
 }

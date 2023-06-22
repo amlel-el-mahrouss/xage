@@ -120,6 +120,8 @@ namespace Xplicit
 #endif // XPLICIT_DEBUG
 
 					mNetwork->get(peer_idx)->packet = packet;
+					
+					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
 					++mPlayerCount;
 				}

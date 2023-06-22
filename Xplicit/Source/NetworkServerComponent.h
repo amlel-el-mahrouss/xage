@@ -60,6 +60,9 @@ namespace Xplicit
 		static void accept_send(NetworkServerComponent* server) noexcept;
 		static void accept_recv(NetworkServerComponent* server) noexcept;
 
+		static void send(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
+		static void recv(NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept;
+
 	public:
 		enum class NETWORK_CONTEXT
 		{
