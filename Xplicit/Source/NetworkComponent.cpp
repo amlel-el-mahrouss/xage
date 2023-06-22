@@ -101,6 +101,9 @@ namespace Xplicit
 
 	bool NetworkComponent::send(NetworkPacket& packet)
 	{
+		if (mHash == -1)
+			return false;
+
 		packet.hash = mHash;
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
