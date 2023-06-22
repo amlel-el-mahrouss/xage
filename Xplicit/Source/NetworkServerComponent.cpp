@@ -253,8 +253,7 @@ namespace Xplicit
 			}
 		}
 	}
-
-
+	
 	void NetworkServerContext::send(NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;

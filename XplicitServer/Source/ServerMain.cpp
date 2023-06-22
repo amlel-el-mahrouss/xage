@@ -209,27 +209,21 @@ int main(int argc, char** argv)
 					memcpy(net->get(index)->packet.buffer, "Shutting down...", strlen("Shutting down..."));
 				}
 			}
-			});
 
-
-		Xplicit::Thread logicJob([&]() {while (Xplicit::ComponentManager::get_singleton_ptr() &&
-			Xplicit::EventManager::get_singleton_ptr())
-		{
-			Xplicit::EventManager::get_singleton_ptr()->update();
-			Xplicit::ComponentManager::get_singleton_ptr()->update();
-
-			Xplicit::NetworkServerContext::accept_send(server);
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
-		}});
-
-		Xplicit::Thread networkJob([&]()
-			{
+			Xplicit::NetworkServerContext::accept_send(net);
+		});
+		
+		Xplicit::Thread networkJob([&](){
 				while (Xplicit::ComponentManager::get_singleton_ptr() &&
 					Xplicit::EventManager::get_singleton_ptr())
 				{
 					Xplicit::NetworkServerContext::accept_recv(server);
-					Xplicit::NetworkServerContext::try_correct(server);
+					// Xplicit::NetworkServerContext::try_correct(server);
+
+					Xplicit::ComponentManager::get_singleton_ptr()->update();
+					Xplicit::EventManager::get_singleton_ptr()->update();
+
+					Xplicit::NetworkServerContext::accept_send(server);
 				};
 			});
 

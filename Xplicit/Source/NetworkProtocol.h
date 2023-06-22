@@ -191,7 +191,7 @@ namespace Xplicit
 
             str_address.clear();
 			
-            status = NETWORK_STAT_INVALID;
+            status = NETWORK_STAT_DISCONNECTED;
 
 			hash = XPLICIT_INVALID_HASH;
             public_hash = XPLICIT_INVALID_HASH;
