@@ -37,17 +37,24 @@ namespace Xplicit
 
 			for (std::size_t index = 0; index < mNetwork->size(); ++index)
 			{
-				if (mNetwork->get(index)->status == NETWORK_STAT_DISCONNECTED)
+				if (mNetwork->get(index)->status == NETWORK_STAT_DISCONNECTED ||
+					mNetwork->get(index)->status == NETWORK_STAT_INVALID)
 					continue;
 
-				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
+				auto& packet = mNetwork->get(index)->packet;
+
+				mNetwork->get(index)->done = false;
+
+				if (packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
 				{
-					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+					packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 				}
 				else
 				{
-					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
+					packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
 				}
+
+				mNetwork->get(index)->done = true;
 			}
 		}
 	}

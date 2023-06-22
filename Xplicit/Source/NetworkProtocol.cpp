@@ -22,7 +22,6 @@ namespace Xplicit
     NetworkInstance::NetworkInstance()
 	: 
         packet(), 
-        thread_id(-1),
 		hash(XPLICIT_INVALID_NET_DATA),
 		public_hash(-1),
         address(),

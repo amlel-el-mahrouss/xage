@@ -39,84 +39,30 @@ namespace Xplicit
 #endif
 	}
 
-	PHYSICS_TYPE PlayerComponent::physics() noexcept 
-	{
-		return PHYSICS_NONE; 
-	}
+	PHYSICS_TYPE PlayerComponent::physics() noexcept { return PHYSICS_NONE; }
 
-	bool PlayerComponent::has_physics() noexcept 
-	{ 
-		return false; 
-	}
+	bool PlayerComponent::has_physics() noexcept { return false; }
 
-	void PlayerComponent::update()
-	{
-		if (!mPeer)
-			return;
+	void PlayerComponent::update() {}
 
-		if (mPeer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] == NETWORK_CMD_DEAD)
-		{
-			mDeathTimeout = XPLICIT_COOLDOWN;
-			this->health(0);
-		}
-		
-		//! nvm i got it
-		//! Checks for death timeout, and respawn player if deathTimeout is reached.
-		if (mDeathTimeout > 0)
-		{
-			--mDeathTimeout;
+	void PlayerComponent::health(const int32_t& health) noexcept { this->mHealth = health; }
 
-			if (mDeathTimeout < 1)
-			{
-				mDeathTimeout = 0UL;
+	const int64_t PlayerComponent::health() noexcept { return this->mHealth; }
 
-				this->health(XPLICIT_DEFAULT_HEALTH);
-				mPeer->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
-			}
-		}
+	bool PlayerComponent::can_collide() noexcept { return true; }
 
-		--mCooldown;
-	}
+	COMPONENT_TYPE PlayerComponent::type() noexcept { return COMPONENT_PLAYER; }
 
-	void PlayerComponent::health(const int32_t& health) noexcept 
-	{ 
-		this->mHealth = health; 
-	}
+	const char* PlayerComponent::name() noexcept { return "PlayerComponent"; }
 
-	const int64_t PlayerComponent::health() noexcept 
-	{ 
-		return this->mHealth; 
-	}
+	bool PlayerComponent::should_update() noexcept { return false;  }
 
-	bool PlayerComponent::can_collide() noexcept 
-	{
-		return true; 
-	}
-
-	COMPONENT_TYPE PlayerComponent::type() noexcept
-	{ 
-		return COMPONENT_PLAYER; 
-	}
-
-	const char* PlayerComponent::name() noexcept 
-	{ 
-		return "PlayerComponent"; 
-	}
-
-	bool PlayerComponent::should_update() noexcept 
-	{ 
-		return true; 
-	}
-
-	NetworkInstance* PlayerComponent::get() noexcept 
-	{ 
-		return mPeer; 
-	}
+	NetworkInstance* PlayerComponent::get() noexcept { return mPeer; }
 
 	void PlayerComponent::set(NetworkInstance* peer) noexcept 
 	{
-		XPLICIT_ASSERT(peer);
-		mPeer = peer;
+		if (peer)
+			mPeer = peer;
 	}
 
 	bool PlayerComponent::is_frozen() noexcept
@@ -127,23 +73,11 @@ namespace Xplicit
 		return mCooldown > 0;
 	}
 
-	void PlayerComponent::idle_for(const int64_t& cooldown) noexcept
-	{
-		mCooldown = cooldown;
-	}
+	void PlayerComponent::idle_for(const int64_t& cooldown) noexcept { mCooldown = cooldown; }
 
-	Vector<float>& PlayerComponent::pos() noexcept
-	{
-		return Position.Position;
-	}
+	Vector<float>& PlayerComponent::pos() noexcept { return Position.Position; }
 
-	void PlayerComponent::freeze(const bool enable) noexcept
-	{
-		mFrozen = true;
-	}
+	void PlayerComponent::freeze(const bool enable) noexcept { mFrozen = true; }
 
-	bool PlayerComponent::alive() noexcept
-	{
-		return mHealth > 0;
-	}
+	bool PlayerComponent::alive() noexcept { return mHealth > 0; }
 }

@@ -56,19 +56,27 @@ namespace Xplicit
 			if (player->get()->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
 				continue;
 
+			auto* peer_ptr = player->get();
+			XPLICIT_ASSERT(peer_ptr);
+
+			auto& packet = peer_ptr->packet;
+
+			peer_ptr->done = false;
+
 			if (!player->alive())
 			{
 				// tell everyone that we're dead.
 				player->health(0);
+
 				mDeadActors.push_back(player);
 
-				for (size_t peer = 0; peer < m_network->size(); ++peer)
+				for (size_t peer = 0; peer < mNetwork->size(); ++peer)
 				{
-					auto* peer_ptr = m_network->get(peer);
-					XPLICIT_ASSERT(peer_ptr);
+					if (peer_ptr->hash == mNetwork->get(peer)->hash)
+						continue;
 
-					peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
-					peer_ptr->packet.public_hash = player->get()->public_hash;
+					packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
+					packet.public_hash = player->get()->public_hash;
 				}
 			}
 			else
@@ -79,27 +87,25 @@ namespace Xplicit
 				{
 					mDeadActors.erase(it);
 					
-					for (size_t peer = 0; peer < m_network->size(); ++peer)
+					for (size_t peer = 0; peer < mNetwork->size(); ++peer)
 					{
-						auto* peer_ptr = m_network->get(peer);
-						XPLICIT_ASSERT(peer_ptr);
+						packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
 
-						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
+						packet.public_hash = player->get()->public_hash;
+						packet.health = player->health();
 
-						peer_ptr->packet.public_hash = player->get()->public_hash;
-						peer_ptr->packet.health = player->health();
-
-						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+						packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
 						xplicit_handle_spawn(mSpawner, player);
 
-						peer_ptr->packet.speed[XPLICIT_NETWORK_X] = player->pos().X;
-						peer_ptr->packet.speed[XPLICIT_NETWORK_Y] = player->pos().Y;
-						peer_ptr->packet.speed[XPLICIT_NETWORK_Z] = player->pos().Z;
+						packet.speed[XPLICIT_NETWORK_X] = player->pos().X;
+						packet.speed[XPLICIT_NETWORK_Y] = player->pos().Y;
+						packet.speed[XPLICIT_NETWORK_Z] = player->pos().Z;
 					}
-
 				}
 			}
+
+			peer_ptr->done = true;
 		}
 	}
 }

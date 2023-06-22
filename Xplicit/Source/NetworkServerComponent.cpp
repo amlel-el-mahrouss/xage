@@ -118,6 +118,9 @@ namespace Xplicit
 		std::int32_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
 
+		if (!peer->done)
+			return;
+
 		if (::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
 			sizeof(NetworkPacket),
@@ -159,6 +162,8 @@ namespace Xplicit
 				return;
 		}
 
+		peer->done = false;
+
 		if (packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
 			packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
 			packet.magic[2] != XPLICIT_NETWORK_MAG_2 ||
@@ -187,18 +192,9 @@ namespace Xplicit
 				const std::size_t peer_at = i;
 				auto peer = server->get(peer_at);
 
-				peer->thread_id = id;
-
 				while (server)
 				{
-					if (!peer)
-					{
-						peer = server->get(peer_at);
-						XPLICIT_ASSERT(peer != nullptr);
-
-						continue;
-					}
-
+					XPLICIT_ASSERT(peer);
 					NetworkServerContext::try_recv(server, peer);
 				}
 			}, i);
@@ -208,6 +204,9 @@ namespace Xplicit
 	void NetworkServerContext::try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		if (peer->hash != peer->packet.hash)
+			return;
+
+		if (!peer->done)
 			return;
 
 		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
@@ -229,27 +228,18 @@ namespace Xplicit
 		{
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
-				if (server->get(i)->thread_id == -1)
-				{
-					Thread thrd([&](const std::size_t id) {
-						const std::size_t peer_at = i;
-						auto peer = server->get(peer_at);
+				Thread thrd([&](const std::size_t id) {
+					const std::size_t peer_at = i;
+					auto peer = server->get(peer_at);
 
+					XPLICIT_ASSERT(peer);
+
+					while (server)
+					{
 						XPLICIT_ASSERT(peer);
-						peer->thread_id = id;
-
-						while (server)
-						{
-							if (!peer)
-							{
-								peer = server->get(peer_at);
-								continue;
-							}
-
-							NetworkServerContext::try_send(server, peer);
-						}
-						}, i);
-				}
+						NetworkServerContext::try_send(server, peer);
+					}
+					}, i);
 			}
 
 			// finally make it online!

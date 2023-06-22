@@ -21,10 +21,10 @@ namespace Xplicit
 	{
 	public:
 		PlayerSpawnDeathEvent() 
-			: m_network(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
+			: mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 			  mSpawner(ComponentManager::get_singleton_ptr()->get<SpawnComponent>("SpawnComponent"))
 		{
-			XPLICIT_ASSERT(m_network);
+			XPLICIT_ASSERT(mNetwork);
 			XPLICIT_ASSERT(mSpawner);
 		}
 
@@ -39,7 +39,7 @@ namespace Xplicit
 
 	private:
 		std::vector<PlayerComponent*> mDeadActors;
-		NetworkServerComponent* m_network;
+		NetworkServerComponent* mNetwork;
 		SpawnComponent* mSpawner;
 
 	};

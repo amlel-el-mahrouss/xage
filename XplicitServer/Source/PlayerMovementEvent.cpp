@@ -57,32 +57,37 @@ namespace Xplicit
 				continue;
 
 			NetworkInstance* peer = ply->get();
+			auto& packet = peer->packet;
 
-			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
+			peer->done = false;
+
+			if (packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
 			{
-				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
+				if (packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 					ply->pos().Z += speed;
 
-				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
+				if (packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
 					ply->pos().Z -= speed;
 
-				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
+				if (packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
 					ply->pos().X -= speed;
 
-				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
+				if (packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					ply->pos().X += speed;
 
-				peer->packet.speed[XPLICIT_NETWORK_X] = speed;
-				peer->packet.speed[XPLICIT_NETWORK_Y] = speed;
-				peer->packet.speed[XPLICIT_NETWORK_Z] = speed;
+				packet.speed[XPLICIT_NETWORK_X] = speed;
+				packet.speed[XPLICIT_NETWORK_Y] = speed;
+				packet.speed[XPLICIT_NETWORK_Z] = speed;
 
 				/* send server delta to player, so that he is not out of touch. */
-				peer->packet.speed[XPLICIT_NETWORK_DELTA] = (IRR->getTimer()->getTime() - mThen) / XPLICIT_DELTA_TIME;
+				packet.speed[XPLICIT_NETWORK_DELTA] = (IRR->getTimer()->getTime() - mThen) / XPLICIT_DELTA_TIME;
 
 				/* finally accept request */
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+				packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
 				ply->idle_for(XPLICIT_MOVEMENT_DELAY);
+
+				peer->done = true;
 			}
 		}
 	}

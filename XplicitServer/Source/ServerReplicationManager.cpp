@@ -28,10 +28,15 @@ namespace Xplicit
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
+			auto& packet = mNetwork->get(i)->packet;
+			mNetwork->get(i)->done = false;
 
-			mNetwork->get(i)->packet.id = id; /* store entity id in packet. */
-			mNetwork->get(i)->packet.public_hash = component_hash;
+			packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
+			packet.id = id;
+			packet.public_hash = component_hash;
+
+			mNetwork->get(i)->done = true;
+			mNetwork->get(i)->packet = packet;
 		}
 	}
 
@@ -42,11 +47,15 @@ namespace Xplicit
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_DESTROY] = NETWORK_REPL_CMD_DESTROY;
+			auto& packet = mNetwork->get(i)->packet;
+			mNetwork->get(i)->done = false;
 
-			/* store entity id in packet. */
-			mNetwork->get(i)->packet.id = id;
-			mNetwork->get(i)->packet.public_hash = component_hash;
+			packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_DESTROY;
+			packet.id = id;
+			packet.public_hash = component_hash;
+
+			mNetwork->get(i)->done = true;
+			mNetwork->get(i)->packet = packet;
 		}
 	}
 
@@ -57,10 +66,15 @@ namespace Xplicit
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_UPDATE] = NETWORK_REPL_CMD_UPDATE;
+			auto& packet = mNetwork->get(i)->packet;
+			mNetwork->get(i)->done = false;
 
-			mNetwork->get(i)->packet.id = id; /* store entity id in packet. */
-			mNetwork->get(i)->packet.public_hash = component_hash; /* see COMPONENT_ID_ENUM */
+			packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_UPDATE;
+			packet.id = id;
+			packet.public_hash = component_hash;
+
+			mNetwork->get(i)->done = true;
+			mNetwork->get(i)->packet = packet;
 		}
 	}
 }

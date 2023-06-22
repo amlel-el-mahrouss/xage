@@ -21,9 +21,9 @@
 #include "CommonInclude.h"
 #include "SpawnComponent.h"
 #include "PlayerComponent.h"
+#include "PlayerJoinEvent.h"
 #include "PlayerTimeoutEvent.h"
 #include "PlayerMovementEvent.h"
-#include "PlayerJoinLeaveEvent.h"
 #include "PlayerSpawnDeathEvent.h"
 
 static void xplicit_load_mono();
@@ -149,9 +149,9 @@ int main(int argc, char** argv)
 
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinLeaveEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinEvent>();
 		
 		xplicit_load_mono();
 		xplicit_read_xml();
