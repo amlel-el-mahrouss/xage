@@ -83,7 +83,7 @@ namespace Xplicit
         NETWORK_CMD_BAN,
         NETWORK_CMD_ACK, // acknowledge
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
-        NETWORK_CMD_REPL, // replication call done
+        NETWORK_CMD_REPL, // replication call
         NETWORK_CMD_MSG, // chat message
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 15,

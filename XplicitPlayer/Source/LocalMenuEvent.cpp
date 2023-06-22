@@ -79,7 +79,7 @@ namespace Xplicit::Player
 			return;
 		
 		static float tween_start = LOCAL_MENU_TWEEN_START;
-		static float posOfMenu = 1;
+		static float posOfMenu = 1.5;
 
 		if (KB->key_down(KEY_ESCAPE) && 
 			mTimeout < 0)
@@ -98,7 +98,7 @@ namespace Xplicit::Player
 		{
 			IRR->getVideoDriver()->draw2DImage(mButtonHover,
 				vector2di(30, XPLICIT_DIM.Height / posOfMenu),
-				rect<s32>(0, 0, 63, 42),
+				rect(0, 0, 63, 42),
 				nullptr,
 				SColor(255, 255, 255, 255),
 				true);
@@ -132,7 +132,7 @@ namespace Xplicit::Player
 		{
 			IRR->getVideoDriver()->draw2DImage(mButtonNoHover,
 				vector2di(30, XPLICIT_DIM.Height / posOfMenu),
-				rect<s32>(0, 0, 63, 42),
+				rect(0, 0, 63, 42),
 				nullptr,
 				SColor(255, 255, 255, 255),
 				true);

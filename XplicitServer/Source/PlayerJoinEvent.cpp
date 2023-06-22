@@ -152,32 +152,29 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				if (mNetwork->get(peer_idx)->hash == mNetwork->get(peer_idx)->packet.hash)
+				const auto public_hash = mNetwork->get(peer_idx)->public_hash;
+
+				mNetwork->get(peer_idx)->unique_addr.invalidate();
+				mNetwork->get(peer_idx)->reset();
+
+				for (std::size_t index = 0; index < mNetwork->size(); ++index)
 				{
-					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
-
-					mNetwork->get(peer_idx)->unique_addr.invalidate();
-					mNetwork->get(peer_idx)->reset();
-
-					for (std::size_t index = 0; index < mNetwork->size(); ++index)
+					if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
 					{
-						if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
-						{
-							mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-							mNetwork->get(index)->packet.public_hash = public_hash;
-						}
+						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+						mNetwork->get(index)->packet.public_hash = public_hash;
 					}
+				}
 
-					--mPlayerCount;
+				--mPlayerCount;
 
 #ifdef XPLICIT_DEBUG
-					String addr = "";
-					addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
+				String addr = "";
+				addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
 
-					XPLICIT_INFO("[DISCONNECT] IP: " + addr);
-					XPLICIT_INFO("[DISCONNECT] PLAYER COUNT: " + std::to_string(mPlayerCount));
+				XPLICIT_INFO("[DISCONNECT] IP: " + addr);
+				XPLICIT_INFO("[DISCONNECT] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
-				}
 			}
 		}
 	}
