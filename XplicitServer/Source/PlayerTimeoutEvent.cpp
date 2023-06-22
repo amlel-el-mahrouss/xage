@@ -27,27 +27,21 @@ namespace Xplicit
 	
 	void PlayerTimeoutEvent::operator()()
 	{
-		if (mCounter < PlayerTimeoutEvent::cycles)
+		for (std::size_t index = 0; index < mNetwork->size(); ++index)
 		{
-			++mCounter;
-		}
-		else
-		{
-			mCounter = 0UL;
+			if (mNetwork->get(index)->status == NETWORK_STAT_DISCONNECTED ||
+				mNetwork->get(index)->status == NETWORK_STAT_INVALID)
+				continue;
 
-			for (std::size_t index = 0; index < mNetwork->size(); ++index)
+			if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
 			{
-				if (mNetwork->get(index)->status == NETWORK_STAT_DISCONNECTED ||
-					mNetwork->get(index)->status == NETWORK_STAT_INVALID)
-					continue;
-
-				if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
-					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-				else
-					mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
-
-
+				mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_INVALID;
+				continue;
 			}
+
+			if (mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
+				mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+
 		}
 	}
 }

@@ -90,8 +90,6 @@ namespace Xplicit
 
 	void PlayerJoinEvent::handle_join_event() noexcept
 	{
-		String addr = "";
-
 		if (this->size() > XPLICIT_MAX_CONNECTIONS)
 			return;
 
@@ -103,8 +101,6 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.size < 1)
 				continue;
 
-			addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
-
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
@@ -112,9 +108,10 @@ namespace Xplicit
 				PlayerComponent* player = mPlayers[mPlayerCount];
 				xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork);
 
-				mNetwork->get(peer_idx)->str_address = addr;
-
 #ifdef XPLICIT_DEBUG
+				String addr = "";
+				addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
+
 				XPLICIT_INFO("[CONNECT] IP: " + addr);
 #endif // XPLICIT_DEBUG
 
@@ -132,33 +129,35 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED)
 				continue;
 
-			addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
-
-			if (addr == mNetwork->get(peer_idx)->str_address)
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
-				{
 #ifdef XPLICIT_DEBUG
-					XPLICIT_INFO("[DISCONNECT] IP: " + mNetwork->get(peer_idx)->str_address);
+				String addr = "";
+				addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
+
+				if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+					XPLICIT_INFO("[KICK] IP: " + addr);
+				else
+					XPLICIT_INFO("[DISCONNECT] IP: " + addr);
+
 #endif // XPLICIT_DEBUG
 
-					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
+				const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
-					mNetwork->get(peer_idx)->unique_addr.invalidate();
-					mNetwork->get(peer_idx)->reset();
+				mNetwork->get(peer_idx)->unique_addr.invalidate();
+				mNetwork->get(peer_idx)->reset();
 
-					for (std::size_t index = 0; index < mNetwork->size(); ++index)
+				for (std::size_t index = 0; index < mNetwork->size(); ++index)
+				{
+					if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
 					{
-						if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
-						{
-							mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-							mNetwork->get(index)->packet.public_hash = public_hash;
-						}
+						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+						mNetwork->get(index)->packet.public_hash = public_hash;
 					}
-
-					--mPlayerCount;
 				}
+
+				--mPlayerCount;
 			}
 		}
 	}

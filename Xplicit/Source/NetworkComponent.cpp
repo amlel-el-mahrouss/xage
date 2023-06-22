@@ -106,6 +106,8 @@ namespace Xplicit
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
+		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
 		packet.channel = mChannelID;
 		packet.version = XPLICIT_NETWORK_VERSION;
 		
