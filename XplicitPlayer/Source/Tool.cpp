@@ -11,7 +11,7 @@
 
 namespace Xplicit::Player
 {
-	ToolComponent* LocalToolFactory::create(const char* name)
+	ToolComponent* LocalToolAllocator::create(const char* name)
 	{
 		ToolComponent* tool = mPool.allocate();
 
@@ -23,12 +23,12 @@ namespace Xplicit::Player
 		tool->Slot = -1;
 		tool->Droppable = false;
 
-		Tools[mPool.capacity() - 1] = tool;
+		Collection[mPool.capacity() - 1] = tool;
 
 		return tool;
 	}
 
-	void LocalToolFactory::destroy(ToolComponent* component)
+	void LocalToolAllocator::destroy(ToolComponent* component)
 	{
 		try
 		{
@@ -36,9 +36,9 @@ namespace Xplicit::Player
 
 			for (std::size_t toolIndex = 0; toolIndex < sz; ++toolIndex)
 			{
-				if (Tools[toolIndex] == component)
+				if (Collection[toolIndex] == component)
 				{
-					Tools[toolIndex] = nullptr;
+					Collection[toolIndex] = nullptr;
 
 					if (component)
 						mPool.deallocate(component);

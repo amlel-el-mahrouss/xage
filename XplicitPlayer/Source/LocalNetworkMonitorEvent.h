@@ -31,7 +31,7 @@ namespace Xplicit::Player
 	private:
 		NetworkComponent* mNetwork;
 		
-		std::int32_t mResetCnt;
+		std::int32_t mResetCount;
 		std::int64_t mHash;
 
 	};

@@ -54,7 +54,7 @@ namespace Xplicit
 			if (equals(peer->address, players[actor_idx]->get()->address))
 				return false;
 			
-			if (peer->str_address == players[actor_idx]->get()->str_address)
+			if (peer->ip_address == players[actor_idx]->get()->ip_address)
 				return false;
 		}
 
@@ -117,6 +117,9 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED)
 				continue;
 
+			if (mNetwork->get(peer_idx)->packet.channel == XPLICIT_CHANNEL_CHAT)
+				continue;
+
 			if (mNetwork->get(peer_idx)->packet.size < 1)
 				continue;
 
@@ -132,13 +135,14 @@ namespace Xplicit
 					String addr = "";
 					addr = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
 
-					mNetwork->get(peer_idx)->str_address = addr;
+					mNetwork->get(peer_idx)->ip_address = addr;
 
 #ifdef XPLICIT_DEBUG
 					XPLICIT_INFO("[CONNECT] IP: " + addr);
 					XPLICIT_INFO("[CONNECT] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
 
+					NetworkServerContext::accept_send(mNetwork);
 				}
 			}
 		}
@@ -155,13 +159,16 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED)
 				continue;
 
+			if (mNetwork->get(peer_idx)->packet.channel == XPLICIT_CHANNEL_CHAT)
+				continue;
+
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
 				const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
 #ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("[DISCONNECT] IP: " + mNetwork->get(peer_idx)->str_address);
+				XPLICIT_INFO("[DISCONNECT] IP: " + mNetwork->get(peer_idx)->ip_address);
 				XPLICIT_INFO("[DISCONNECT] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
 
@@ -178,6 +185,8 @@ namespace Xplicit
 				}
 
 				--mPlayerCount;
+
+				NetworkServerContext::accept_send(mNetwork);
 			}
 		}
 	}

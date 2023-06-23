@@ -24,7 +24,7 @@
 
 #define XPLICIT_NETWORK_MAG_0 ('X')
 #define XPLICIT_NETWORK_MAG_1 ('C')
-#define XPLICIT_NETWORK_MAG_2 ('C')
+#define XPLICIT_NETWORK_MAG_2 ('P')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
 #define XPLICIT_NETWORK_CMD_MAX (25U)
@@ -174,31 +174,24 @@ namespace Xplicit
         int64_t public_hash; 
 		NETWORK_STAT status;
 		std::uint32_t port;
-        String str_address;
+        String ip_address;
         int64_t hash;
- 
+
+    public:
         explicit NetworkInstance();
         ~NetworkInstance();
         
         XPLICIT_COPY_DEFAULT(NetworkInstance);
-        
-        void reset() noexcept
-		{
-			for (size_t cmd_index = 0; cmd_index < XPLICIT_NETWORK_CMD_MAX; ++cmd_index)
-			{
-				packet.cmd[cmd_index] = NETWORK_CMD_INVALID;
-			}
 
-            str_address.clear();
-            status = NETWORK_STAT_DISCONNECTED;
+        void timeout() noexcept;
+        void reset() noexcept;
 
-			hash = XPLICIT_INVALID_HASH;
-            public_hash = XPLICIT_INVALID_HASH;
-		}
+    private:
+        bool mTimeout;
 
     };
 
-    XPLICIT_API bool equals(PrivateAddressData& lhs, PrivateAddressData& rhs);
+    XPLICIT_API bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs);
 }
 
 #ifdef XPLICIT_WINDOWS

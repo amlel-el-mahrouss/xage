@@ -17,31 +17,27 @@
 namespace Xplicit::Player
 {
 	//!
-	//! This class helps create tools for a specific context (player)
-	//! returns 'ToolComponent' when pool is successfully allocating bytes.
+	//! This class help create tools for players/npcs.
+	//! It returns 'ToolComponent' when pool is successfully allocating bytes.
 	//!
 
-	class LocalToolFactory final
+	class LocalToolAllocator final
 	{
 	public:
-		LocalToolFactory() = default;
-		~LocalToolFactory() = default;
-
-	public:
-		static constexpr const std::size_t max = 72;
-
-	public:
-		XPLICIT_COPY_DEFAULT(LocalToolFactory);
-
-	public:
+		LocalToolAllocator() = default;
+		~LocalToolAllocator() = default;
+		
+		static constexpr const std::size_t max = 20;
+		
+		XPLICIT_COPY_DEFAULT(LocalToolAllocator);
+		
 		ToolComponent* create(const char* name);
 		void destroy(ToolComponent* component);
-
-	public:
-		ToolComponent* Tools[LocalToolFactory::max];
+		
+		ToolComponent* Collection[LocalToolAllocator::max];
 
 	private:
-		Pool<ToolComponent, LocalToolFactory::max> mPool;
+		Pool<ToolComponent, LocalToolAllocator::max> mPool;
 
 	};
 }

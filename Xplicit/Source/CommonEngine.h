@@ -28,11 +28,10 @@ namespace Xplicit
 	{
 	public:
 		explicit PositionComponent() : Position(0.f, 0.f, 0.f) {}
-		virtual ~PositionComponent() = default;
+		~PositionComponent() = default;
 
 		XPLICIT_COPY_DEFAULT(PositionComponent);
-
-	public:
+		
 		String serialize() noexcept
 		{
 			String serialized = "<Vector3 X=\"" 
@@ -52,11 +51,10 @@ namespace Xplicit
 	{
 	public:
 		explicit SizeComponent() : Size(0.f, 0.f, 0.f) {}
-		virtual ~SizeComponent() = default;
+		~SizeComponent() = default;
 
 		XPLICIT_COPY_DEFAULT(SizeComponent);
 
-	public:
 		String serialize() noexcept
 		{
 			String serialized = "<Dimension Width=\"" + std::to_string(Size.X) 
@@ -70,19 +68,17 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API RenderableComponent
+	class XPLICIT_API RenderableComponent final
 	{
 	public:
 		RenderableComponent() = default;
-		virtual ~RenderableComponent() = default;
-
-	public:
+		~RenderableComponent() = default;
+		
 		XPLICIT_COPY_DEFAULT(RenderableComponent);
-
-	public:
+		
 		PositionComponent Position;
-		scene::ISceneNode* Node;
 		SizeComponent Size;
+		ISceneNode* Node{ nullptr };
 
 	};
 
@@ -90,22 +86,13 @@ namespace Xplicit
 	{
 	public:
 		explicit ToolComponent() = default;
-		virtual ~ToolComponent() = default;
-
-	public:
+		~ToolComponent() = default;
+		
 		typedef std::int64_t ToolOwner;
 
-	public:
-		//! Owner public hash
-		ToolOwner Owner;
-
-		//! The slot to place this on.
 		std::int32_t Slot;
-
-		//! can drop?
+		ToolOwner Owner;
 		bool Droppable;
-
-		//! It's name
 		String Name;
 
 	};
@@ -114,7 +101,7 @@ namespace Xplicit
 	{
 	public:
 		explicit SoundComponent() = default;
-		virtual ~SoundComponent() = default;
+		~SoundComponent() = default;
 
 	public:
 		PositionComponent Position;
@@ -130,6 +117,7 @@ namespace Xplicit
 		COMPONENT_ID_SHAPE = 0x0408,
 		COMPONENT_ID_TOOL = 0x5b2f,
 		COMPONENT_ID_SOUND = 0xa8cf,
+		COMPONENT_ID_CLASS = 0x5fae,
 
 		/* custom components here. */
 		COMPONENT_ID_INVALID = 0xffff,

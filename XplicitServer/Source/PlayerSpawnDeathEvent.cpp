@@ -57,13 +57,15 @@ namespace Xplicit
 				continue;
 
 			auto* peer_ptr = player->get();
-			XPLICIT_ASSERT(peer_ptr);
+
+			if (!peer_ptr)
+				continue;
+
+			if (peer_ptr->packet.channel == XPLICIT_CHANNEL_CHAT)
+				continue;
 
 			if (!player->alive())
 			{
-				// tell everyone that we're dead.
-				player->health(0);
-
 				mDeadActors.push_back(player);
 
 				for (size_t peer = 0; peer < mNetwork->size(); ++peer)

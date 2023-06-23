@@ -488,7 +488,7 @@ namespace Xplicit
 
 		XPLICIT_COPY_DEFAULT(FilesystemWrapper);
 
-		std::ofstream write(const char* outPath) noexcept
+		std::ofstream write(const char* outPath) const noexcept
 		{
 			if (std::filesystem::exists(outPath))
 				return std::ofstream(outPath, std::ios::app);
@@ -496,20 +496,20 @@ namespace Xplicit
 			return std::ofstream(outPath);
 		}
 
-		std::ofstream open(const char* outPath)
+		std::ofstream open(const char* outPath) const noexcept
 		{
 			if (!std::filesystem::exists(outPath))
-				throw std::runtime_error("Bad File-system path!");
+				return {};
 
 			return std::ofstream(outPath);
 		}
 
-		bool create_directory(const char* path)
+		bool create_directory(const char* path) const noexcept
 		{
 			return std::filesystem::create_directory(path);
 		}
 
-		std::filesystem::path get_temp() noexcept
+		std::filesystem::path get_temp() const noexcept
 		{
 			return std::filesystem::temp_directory_path();
 		}
@@ -525,8 +525,8 @@ namespace Xplicit
 			mIndex(0UL),
 			mPointer(nullptr)
 		{
-			/* allocate these shits */                    
-			this->mPointer = reinterpret_cast<char*>(malloc(sizeof(char) * (sizeof(PtrType) * Size * 8)));
+			/* allocate these shits */										// type			  size   align
+			this->mPointer = static_cast<char*>(malloc(sizeof(char) * (sizeof(PtrType) * Size * 8)));
 			XPLICIT_ASSERT(mPointer); // assert that shit
 
 			/* zero memory that shit */
@@ -611,9 +611,8 @@ namespace Xplicit
 
 		};
 
-		struct ThreadLockingSystem final
+		class ThreadLockingSystem final
 		{
-		private:
 			Thread mThe;
 			bool mRelease;
 
@@ -632,6 +631,7 @@ namespace Xplicit
 			}
 
 			XPLICIT_COPY_DEFAULT(ThreadLockingSystem)
+
 		};
 	}
 

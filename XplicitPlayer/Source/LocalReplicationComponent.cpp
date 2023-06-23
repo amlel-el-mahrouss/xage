@@ -11,6 +11,8 @@
 
 #include <CommonEngine.h>
 
+/* This file downloads and create scripts/sounds/textures/models according to the COMPONENT_ID */
+
 namespace Xplicit::Player
 {
 	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_REPLICATION; }
@@ -29,11 +31,10 @@ namespace Xplicit::Player
 	{
 		if (!mNetwork)
 			return;
-
-		// first acknowledge.
-		auto& packet = mNetwork->get();
-		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
+		
+		NetworkPacket packet;
+		mNetwork->read(packet);
+		
 		if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
 		{
 			switch (packet.id)
@@ -48,6 +49,8 @@ namespace Xplicit::Player
 				break;
 			case COMPONENT_ID_SHAPE:
 				break;
+			default:
+				return;
 			}
 
 			packet.id = -1;
@@ -72,6 +75,8 @@ namespace Xplicit::Player
 				break;
 			case COMPONENT_ID_SHAPE:
 				break;
+			default:
+				return;
 			}
 
 			packet.id = -1;

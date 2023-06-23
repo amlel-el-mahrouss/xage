@@ -190,10 +190,10 @@ int main(int argc, char** argv)
 
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinEvent>();
 		
 		xplicit_load_mono();
 		xplicit_read_xml();
@@ -206,7 +206,7 @@ int main(int argc, char** argv)
 				for (std::size_t index = 0UL; index < net->size(); ++index)
 				{
 					net->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
-					memcpy(net->get(index)->packet.buffer, "Shutting down...", strlen("Shutting down..."));
+					memcpy(net->get(index)->packet.buffer, "Shutting down Xplicit...", strlen("Shutting down Xplicit..."));
 				}
 			}
 
@@ -219,7 +219,7 @@ int main(int argc, char** argv)
 					Xplicit::EventManager::get_singleton_ptr())
 				{
 					Xplicit::NetworkServerContext::accept_recv(server);
-					// Xplicit::NetworkServerContext::try_correct(server);
+					Xplicit::NetworkServerContext::try_correct(server);
 
 					Xplicit::ComponentManager::get_singleton_ptr()->update();
 					Xplicit::EventManager::get_singleton_ptr()->update();
@@ -229,6 +229,18 @@ int main(int argc, char** argv)
 		});
 
 		networkJob.detach();
+
+		Xplicit::Thread logicJob([&]() {
+			/* Network logic */
+			while (Xplicit::ComponentManager::get_singleton_ptr() &&
+				Xplicit::EventManager::get_singleton_ptr())
+			{
+				Xplicit::ComponentManager::get_singleton_ptr()->update();
+				Xplicit::EventManager::get_singleton_ptr()->update();
+			};
+		});
+
+		logicJob.detach();
 
 		xplicit_load_sh();
 

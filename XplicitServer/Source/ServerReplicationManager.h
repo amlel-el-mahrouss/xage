@@ -24,9 +24,9 @@ namespace Xplicit
 		
 		static ServerReplicationManager* get_singleton_ptr() noexcept;
 		
-		void remove(const std::int32_t& id, const std::int64_t& component_hash) noexcept;
-		void create(const std::int32_t& id, const std::int64_t& component_hash) noexcept;
-		void update(const std::int32_t& id, const std::int64_t& component_hash) noexcept;
+		void remove(const std::int32_t& id, const char* path) noexcept;
+		void create(const std::int32_t& id, const char* path) noexcept;
+		void update(const std::int32_t& id, const char* path) noexcept;
 		
 	private:
 		NetworkServerComponent* mNetwork{ nullptr };

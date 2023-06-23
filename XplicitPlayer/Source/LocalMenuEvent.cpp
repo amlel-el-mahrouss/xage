@@ -108,7 +108,14 @@ namespace Xplicit::Player
 
 			if (KB->key_down(KEY_KEY_Y))
 			{
+				NetworkPacket packet;
+				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+
+				mNetwork->set_channel(XPLICIT_CHANNEL_DATA);
+				mNetwork->send(packet);
+
 				mEnabled = false;
+
 				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))

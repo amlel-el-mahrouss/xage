@@ -183,29 +183,7 @@ namespace Xplicit
 
 			return;
 		}
-
-#define XPLICIT_INET_SIZE (14)
-
-		/*
-		 *
-		 * Collision resolving algorithm
-		 * If the ip matches assign to the matching ip it's respective packet.
-		 * Otherwise don't do anything.
-		 *
-		 */
-
-		if (peer->hash != XPLICIT_INVALID_HASH)
-		{
-			for (std::size_t index = 0; index < server->size(); ++index)
-			{
-				if (server->get(index) == peer)
-					continue;
-
-				if (packet.hash == server->get(index)->hash)
-					return;
-			}
-		}
-
+		
 		xplicit_register_packet(packet, peer);
 	}
 	
@@ -217,9 +195,8 @@ namespace Xplicit
 		{
 			const std::size_t peer_at = i;
 			const auto peer = server->get(peer_at);
-
-			XPLICIT_ASSERT(peer);
-			try_recv(server, peer);
+			
+			NetworkServerContext::try_recv(server, peer);
 		}
 	}
 
@@ -250,8 +227,7 @@ namespace Xplicit
 				const std::size_t peer_at = i;
 
 				const auto peer = server->get(peer_at);
-				XPLICIT_ASSERT(peer);
-
+				
 				try_send(server, peer);
 			}
 		}

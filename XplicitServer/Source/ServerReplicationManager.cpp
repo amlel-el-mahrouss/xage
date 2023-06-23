@@ -21,42 +21,61 @@ namespace Xplicit
 		return manager;
 	}
 
-	void ServerReplicationManager::create(const std::int32_t& id, const std::int64_t& component_hash) noexcept
+	/*
+	 *
+	 * These methods handles replication events.
+	 * They fill a buffer to tell what class/asset to load.
+	 *
+	 */
+
+	void ServerReplicationManager::create(const std::int32_t& id, const char* path) noexcept
 	{
 		if (!mNetwork)
 			return;
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
+			if (mNetwork->get(i)->packet.channel == XPLICIT_CHANNEL_CHAT)
+				continue;
+
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
 			mNetwork->get(i)->packet.id = id;
-			mNetwork->get(i)->packet.public_hash = component_hash;
+
+			memcpy(mNetwork->get(i)->packet.buffer, path, 64);
 		}
 	}
 
-	void ServerReplicationManager::remove(const std::int32_t& id, const std::int64_t& component_hash) noexcept
+	void ServerReplicationManager::remove(const std::int32_t& id, const char* path) noexcept
 	{
 		if (!mNetwork)
 			return;
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
+			if (mNetwork->get(i)->packet.channel == XPLICIT_CHANNEL_CHAT)
+				continue;
+
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_DESTROY;
 			mNetwork->get(i)->packet.id = id;
-			mNetwork->get(i)->packet.public_hash = component_hash;
+			
+			memcpy(mNetwork->get(i)->packet.buffer, path, 64);
 		}
 	}
 
-	void ServerReplicationManager::update(const std::int32_t& id, const std::int64_t& component_hash) noexcept
+	void ServerReplicationManager::update(const std::int32_t& id, const char* path) noexcept
 	{
 		if (!mNetwork)
 			return;
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
+			if (mNetwork->get(i)->packet.channel == XPLICIT_CHANNEL_CHAT)
+				continue;
+
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_UPDATE;
 			mNetwork->get(i)->packet.id = id;
-			mNetwork->get(i)->packet.public_hash = component_hash;
+
+			memcpy(mNetwork->get(i)->packet.buffer, path, 64);
 		}
 	}
 }
