@@ -72,18 +72,7 @@ namespace Xplicit
 		peer->packet.size = sizeof(NetworkPacket);
 		
 		player->set_peer(peer);
-
-		for (std::size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
-		{
-			if (server->get(peer_idx)->hash != hash)
-			{
-				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
-				server->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
-
-				server->get(peer_idx)->packet.public_hash = peer->public_hash;
-			}
-		}
-
+		
 		return true;
 	}
 
