@@ -20,7 +20,6 @@
 
 #include "CommonInclude.h"
 #include "SpawnComponent.h"
-#include "PlayerComponent.h"
 #include "PlayerJoinEvent.h"
 #include "PlayerTimeoutEvent.h"
 #include "PlayerMovementEvent.h"
@@ -30,6 +29,8 @@ static void xplicit_load_mono();
 static void xplicit_read_xml();
 
 static const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
+static Xplicit::String XPLICIT_RESOURCE_ENDPOINT = "";
+static Xplicit::String XPLICIT_GAME_NAME = "";
 static bool XPLICIT_SHOULD_EXIT = false;
 
 static void xplicit_read_xml()
@@ -55,6 +56,24 @@ static void xplicit_read_xml()
 
 	while (node)
 	{
+		if (strcmp(node->name(), "Endpoint") == 0)
+		{
+			auto http = node->value();
+			XPLICIT_RESOURCE_ENDPOINT = http;
+
+			XPLICIT_ASSERT(http);
+			
+		}
+
+		if (strcmp(node->name(), "Name") == 0)
+		{
+			auto server_name = node->value();
+			XPLICIT_GAME_NAME = server_name;
+
+			XPLICIT_ASSERT(server_name);
+			
+		}
+
 		if (strcmp(node->name(), "Dll") == 0)
 		{
 			auto dll = node->value();
@@ -78,6 +97,7 @@ static void xplicit_read_xml()
 				XPLICIT_INFO("[C#] " + path + " No such file.");
 				Xplicit::ComponentManager::get_singleton_ptr()->remove(csharp_dll);
 			}
+			
 		}
 
 		if (node->parent())
@@ -109,7 +129,7 @@ static void xplicit_print_help()
 {
 	XPLICIT_INFO("\a+-------------- Xplicit Game Server Manual --------------+");
 	XPLICIT_INFO("exit: Exits the current server.");
-	XPLICIT_INFO("xdp: Get XDP network status.");
+	XPLICIT_INFO("xconnect: Get Xconnect network info.");
 	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
 }
 
@@ -181,12 +201,7 @@ int main(int argc, char** argv)
 			return 1;
 		}
 
-		auto server = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
-		
-		XPLICIT_ASSERT(server);
-
-		if (server == nullptr)
-			return 1;
+		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
 
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
@@ -194,12 +209,12 @@ int main(int argc, char** argv)
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinEvent>();
-		
+
 		xplicit_load_mono();
 		xplicit_read_xml();
 
 		std::atexit([]() -> void {
-			auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 			if (net)
 			{
@@ -213,79 +228,18 @@ int main(int argc, char** argv)
 			}
 
 			Xplicit::NetworkServerContext::accept_send(net);
-		});
-		
+			});
+
 		Xplicit::Thread logicJob([&]() {
-			/* Game logic */
-			try
-			{
-				while (Xplicit::ComponentManager::get_singleton_ptr() &&
-					Xplicit::EventManager::get_singleton_ptr())
-				{
-					Xplicit::ComponentManager::get_singleton_ptr()->update();
-					Xplicit::EventManager::get_singleton_ptr()->update();
-				};
-			}
-			catch (std::runtime_error& err)
-			{
-				Xplicit::String what = "C++ Exception: ";
-				what += err.what();
-
-				XPLICIT_INFO(what);
-
-				std::wstring exit;
-				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-
-				exit += L"What: ";
-				exit += converter.from_bytes(what);
-				exit += L"\n";
-
-				Xplicit::DialogHelper::message_box(L"Xplicit Engine",
-					L"Thread Exited",
-					exit.c_str(),
-					TD_INFORMATION_ICON,
-					TDCBF_OK_BUTTON);
-			}
-		});
-		
-		Xplicit::Thread networkJob([&]() {
-			/* Network logic */
-			try
-			{
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
-				Xplicit::NetworkServerContext::accept_recv(server);
-				Xplicit::NetworkServerContext::try_correct(server);
-
-				std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-				Xplicit::NetworkServerContext::accept_send(server);
-
-				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				Xplicit::ComponentManager::get_singleton_ptr()->update();
+				Xplicit::EventManager::get_singleton_ptr()->update();
 			};
-			}
-			catch (std::runtime_error& err)
-			{
-				Xplicit::String what = "C++ Exception: ";
-				what += err.what();
-
-				XPLICIT_INFO(what);
-
-				std::wstring exit;
-				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-
-				exit += L"What: ";
-				exit += converter.from_bytes(what);
-				exit += L"\n";
-
-				Xplicit::DialogHelper::message_box(L"Xplicit Engine",
-					L"Thread Exited",
-					exit.c_str(),
-					TD_INFORMATION_ICON,
-					TDCBF_OK_BUTTON);
-			}
 		});
+		
+		logicJob.detach();
 		
 		xplicit_load_sh();
 

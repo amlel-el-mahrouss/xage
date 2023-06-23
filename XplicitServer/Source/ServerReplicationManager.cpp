@@ -28,7 +28,7 @@ namespace Xplicit
 	 *
 	 */
 
-	void ServerReplicationManager::create(const std::int32_t& id, const char* path) noexcept
+	void ServerReplicationManager::create(const std::int32_t& id, const char* path) const noexcept
 	{
 		if (!mNetwork)
 			return;
@@ -45,7 +45,7 @@ namespace Xplicit
 		}
 	}
 
-	void ServerReplicationManager::remove(const std::int32_t& id, const char* path) noexcept
+	void ServerReplicationManager::remove(const std::int32_t& id, const char* path) const noexcept
 	{
 		if (!mNetwork)
 			return;
@@ -62,7 +62,7 @@ namespace Xplicit
 		}
 	}
 
-	void ServerReplicationManager::update(const std::int32_t& id, const char* path) noexcept
+	void ServerReplicationManager::update(const std::int32_t& id, const char* path) const noexcept
 	{
 		if (!mNetwork)
 			return;

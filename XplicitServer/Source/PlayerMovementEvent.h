@@ -28,14 +28,13 @@ namespace Xplicit
 	{
 	public:
 		PlayerMovementEvent();
-		virtual ~PlayerMovementEvent();
+		~PlayerMovementEvent() override;
 
 		PlayerMovementEvent& operator=(const PlayerMovementEvent&) = default;
 		PlayerMovementEvent(const PlayerMovementEvent&) = default;
-
-	public:
-		virtual const char* name() noexcept override;
-		virtual void operator()() override;
+		
+		const char* name() noexcept override;
+		void operator()() override;
 
 	private:
 		NetworkServerComponent* mNetwork;

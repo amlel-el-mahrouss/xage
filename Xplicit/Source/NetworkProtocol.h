@@ -176,8 +176,7 @@ namespace Xplicit
 		std::uint32_t port;
         String ip_address;
         int64_t hash;
-
-    public:
+        
         explicit NetworkInstance();
         ~NetworkInstance();
         
@@ -185,10 +184,7 @@ namespace Xplicit
 
         void timeout() noexcept;
         void reset() noexcept;
-
-    private:
-        bool mTimeout;
-
+        
     };
 
     XPLICIT_API bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs);

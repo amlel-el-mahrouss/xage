@@ -35,21 +35,15 @@ namespace Xplicit::Player
 	{
 		if (!mNetwork) return;
 
-		NetworkPacket& packet = mNetwork->get();
-
-		/* send the acknowledge packet for the server. To prove that we still here */
-
-		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
-		mNetwork->send(packet);
-
+		const NetworkPacket& packet = mNetwork->get();
+		
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
 			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 				IRR->closeDevice();
-				}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 3.45,
-					Xplicit::Player::XPLICIT_DIM.Height / 4),
-					Player::POPUP_TYPE::BANNED, "BanPopup");
+				}, vector2di(XPLICIT_DIM.Width / 3.45,
+					XPLICIT_DIM.Height / 4),
+					POPUP_TYPE::BANNED, "BanPopup");
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
@@ -81,9 +75,9 @@ namespace Xplicit::Player
 				{
 					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 						std::exit(0);
-					}, vector2di(Xplicit::Player::XPLICIT_DIM.Width / 2.8,
-							Xplicit::Player::XPLICIT_DIM.Height / 2.8),
-							Player::POPUP_TYPE::SHUTDOWN,
+					}, vector2di(XPLICIT_DIM.Width / 2.8,
+							XPLICIT_DIM.Height / 2.8),
+							POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
 
 					return;

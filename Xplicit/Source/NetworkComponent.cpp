@@ -29,10 +29,14 @@ namespace Xplicit
 #endif
 	{
 #ifdef XPLICIT_DEBUG
-		std::string err = "Error code: ";
+		String err = "Error code: ";
 		err += std::to_string(mErr);
 
 		XPLICIT_CRITICAL(err);
+
+#ifdef XPLICIT_WINDOWS
+		OutputDebugStringA(err.c_str());
+#endif // XPLICIT_WINDOWS
 #endif
 	}
 
@@ -65,7 +69,7 @@ namespace Xplicit
 
 	COMPONENT_TYPE NetworkComponent::type() noexcept { return COMPONENT_NETWORK; }
 
-	bool NetworkComponent::should_update() noexcept { return true; }
+	bool NetworkComponent::should_update() noexcept { return false; }
 
 	bool NetworkComponent::connect(const char* ip) noexcept
 	{
@@ -136,13 +140,7 @@ namespace Xplicit
 		return true;
 	}
 
-	void NetworkComponent::update()
-	{
-		this->read(mPacket);
-
-		NetworkPacket dummyPacket;
-		this->send(dummyPacket);
-	}
+	void NetworkComponent::update() {}
 
 	bool NetworkComponent::read(NetworkPacket& packet)
 	{

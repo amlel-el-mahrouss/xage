@@ -131,24 +131,12 @@ namespace Xplicit
 			return;
 
 		std::int32_t from_len = sizeof(PrivateAddressData);
-
 		NetworkPacket packet{};
-		sockaddr addr {};
-
-		/*
-		* 
-		* Error handling algorithm
-		* needed for a good winsock backend.
-		* 
-		* We handle sockets that didn't receive their data yet (WSAEWOULDBLOCK)
-		* The connection aborted is not handled here.
-		* 
-		*/
 
 		::accept(server->mSocket,
 			reinterpret_cast<sockaddr*>(&peer->address),
 			&from_len);
-
+		
 		if (::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
 			sizeof(NetworkPacket),
@@ -160,14 +148,6 @@ namespace Xplicit
 			{
 			case WSAEWOULDBLOCK:
 			{
-				fd_set fd;
-				FD_ZERO(&fd);
-				FD_SET(server->mSocket, &fd);
-
-				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 1000 };
-
-				::select(0, &fd, nullptr, nullptr, &timeout);
-
 				break;
 			}
 			case WSAECONNABORTED:

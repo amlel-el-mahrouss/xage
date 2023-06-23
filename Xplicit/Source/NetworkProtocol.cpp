@@ -12,15 +12,15 @@
  */
 
 #include "NetworkProtocol.h"
-
 #include "NetworkServerComponent.h"
-#include "CommonEngine.h"
 
 namespace Xplicit
 {
     NetworkInstance::NetworkInstance()
 	: 
-        packet(), 
+        packet(),
+		port(0),
+		channel(XPLICIT_CHANNEL_DATA),
 		hash(XPLICIT_INVALID_HASH),
 		public_hash(XPLICIT_INVALID_HASH),
         address(),
@@ -31,6 +31,7 @@ namespace Xplicit
 
     void NetworkInstance::reset() noexcept
     {
+        /* don't do anything if disconnected. */
         if (status == NETWORK_STAT_DISCONNECTED)
             return;
 
@@ -48,35 +49,33 @@ namespace Xplicit
 
     void NetworkInstance::timeout() noexcept
     {
-        if (mTimeout)
-            return;
+        this->status = NETWORK_STAT_INVALID;
 
-        mTimeout = true;
-
-        Thread timeout([&]() {
-            this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
-
-            // Sleep for tirty seconds, let the client be aware of our packet.
+		Thread timeout([&]() {
+			// Sleep for tirty seconds, let the client be aware of our packet.
             std::this_thread::sleep_for(std::chrono::seconds(5));
 
             if (this->status == NETWORK_STAT_DISCONNECTED)
             {
-                mTimeout = false;
-
 #ifdef XPLICIT_DEBUG
                 XPLICIT_INFO("Player disconnected before timeout, action canceled.");
 #endif // ifdef XPLICIT_DEBUG
-
-                return;
             }
 
             if (this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
+            {
+#ifdef XPLICIT_DEBUG
+                XPLICIT_INFO("Player will be disconnected.");
+#endif // ifdef XPLICIT_DEBUG
+
+                this->packet.hash = this->hash;
                 this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-
-            mTimeout = false;
+            }
+            else
+            {
+                this->status = NETWORK_STAT_CONNECTED;
+            }
         });
-
-        timeout.detach();
     }
 
     NetworkInstance::UniqueAddress::UniqueAddress()
