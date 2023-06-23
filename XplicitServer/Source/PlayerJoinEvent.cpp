@@ -41,26 +41,6 @@ namespace Xplicit
 
 	static bool xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server)
 	{
-		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
-
-		for (std::size_t actor_idx = 0; actor_idx < server->size(); ++actor_idx)
-		{
-			if (!players[actor_idx]->get())
-				continue;
-
-			if (players[actor_idx]->get() == peer)
-				return false;
-
-			if (equals(peer->address, players[actor_idx]->get()->address))
-				return false;
-			
-			if (peer->ip_address == players[actor_idx]->get()->ip_address)
-				return false;
-		}
-
-		// just in case.
-		peer->unique_addr.invalidate();
-
 		const auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
 		const auto public_hash_uuid = UUIDFactory::version<4>();
 
@@ -75,7 +55,7 @@ namespace Xplicit
 
 		peer->status = NETWORK_STAT_CONNECTED;
 
-		player->set(peer);
+		player->set_peer(peer);
 
 		for (std::size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
 		{
@@ -186,6 +166,7 @@ namespace Xplicit
 
 				--mPlayerCount;
 
+				/* immediately invalidate packets. */
 				NetworkServerContext::accept_send(mNetwork);
 			}
 		}

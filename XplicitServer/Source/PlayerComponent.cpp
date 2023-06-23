@@ -60,7 +60,7 @@ namespace Xplicit
 
 	NetworkInstance* PlayerComponent::get() noexcept { return mPeer; }
 
-	void PlayerComponent::set(NetworkInstance* peer) noexcept 
+	void PlayerComponent::set_peer(NetworkInstance* peer) noexcept 
 	{
 		if (peer)
 			mPeer = peer;

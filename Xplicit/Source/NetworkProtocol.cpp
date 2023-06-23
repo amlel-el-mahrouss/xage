@@ -57,7 +57,7 @@ namespace Xplicit
             this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
 
             // Sleep for tirty seconds, let the client be aware of our packet.
-            std::this_thread::sleep_for(std::chrono::seconds(10));
+            std::this_thread::sleep_for(std::chrono::seconds(5));
 
             if (this->status == NETWORK_STAT_DISCONNECTED)
             {
@@ -75,6 +75,8 @@ namespace Xplicit
 
             mTimeout = false;
         });
+
+        timeout.detach();
     }
 
     NetworkInstance::UniqueAddress::UniqueAddress()

@@ -65,7 +65,7 @@ namespace Xplicit
 
 	COMPONENT_TYPE NetworkComponent::type() noexcept { return COMPONENT_NETWORK; }
 
-	bool NetworkComponent::should_update() noexcept { return false; }
+	bool NetworkComponent::should_update() noexcept { return true; }
 
 	bool NetworkComponent::connect(const char* ip) noexcept
 	{
@@ -136,7 +136,13 @@ namespace Xplicit
 		return true;
 	}
 
-	void NetworkComponent::update() {}
+	void NetworkComponent::update()
+	{
+		this->read(mPacket);
+
+		NetworkPacket dummyPacket;
+		this->send(dummyPacket);
+	}
 
 	bool NetworkComponent::read(NetworkPacket& packet)
 	{

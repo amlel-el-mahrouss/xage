@@ -115,7 +115,6 @@ namespace Xplicit::Player
 				mNetwork->send(packet);
 
 				mEnabled = false;
-
 				IRR->closeDevice();
 			}
 			else if (KB->key_down(KEY_KEY_N))

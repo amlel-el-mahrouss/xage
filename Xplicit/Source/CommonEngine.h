@@ -13,14 +13,17 @@
 #pragma once
 
 #include "Xplicit.h"
-#include "Component.h"
-
 #include <Nplicit.h>
 
 #define XPLICIT_DELTA_TIME		(1000.f)
 #define XPLICIT_DEFAULT_HEALTH	(100U)
 
 #define XPLICIT_DEFAULT_NAME	"NetworkInstance"
+
+#define XPLICIT_REPLICATION_ASK "XASSET\r\n/ASK"
+#define XPLICIT_REPLICATION_ASK_OK "XASSET\r\n/OK"
+#define XPLICIT_REPLICATION_ASK_FAIL "XASSET\r\n/FAIL"
+#define XPLICIT_REPLICATION_REQ "XASSET\r\n/ASSET"
 
 namespace Xplicit
 {
@@ -41,8 +44,7 @@ namespace Xplicit
 
 			return serialized;
 		}
-
-	public:
+		
 		Vector<float> Position;
 
 	};
@@ -62,8 +64,7 @@ namespace Xplicit
 
 			return serialized;
 		}
-
-	public:
+		
 		Vector<float> Size;
 
 	};

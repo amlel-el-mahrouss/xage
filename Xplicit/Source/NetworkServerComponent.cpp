@@ -27,10 +27,7 @@ namespace Xplicit
 		XPLICIT_INFO("[INVALIDATE] UUID: " + uuids::to_string(peer->unique_addr.get()));
 #endif // ifdef XPLICIT_DEBUG
 
-		peer->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 		peer->unique_addr.invalidate();
-
-		peer->status = NETWORK_STAT_DISCONNECTED;
 	}
 
 	static void xplicit_set_ioctl(Socket sock)
@@ -81,7 +78,7 @@ namespace Xplicit
 
 		for (std::size_t index = 0; index < XPLICIT_MAX_CONNECTIONS; index++)
 		{
-			NetworkInstance* inst = new NetworkInstance();
+			auto inst = new NetworkInstance();
 			XPLICIT_ASSERT(inst);
 
 			mPeers.push_back(std::make_pair(Auth::XplicitID(XPLICIT_UNIVERSE_ID, xplicit_get_epoch()), inst));
@@ -110,7 +107,7 @@ namespace Xplicit
 
 	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
 
-	static void xplicit_register_packet(NetworkPacket& packet, NetworkInstance* peer)
+	static void xplicit_register_packet(const NetworkPacket& packet, NetworkInstance* peer)
 	{
 		if (packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
 			packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
@@ -167,7 +164,7 @@ namespace Xplicit
 				FD_ZERO(&fd);
 				FD_SET(server->mSocket, &fd);
 
-				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 100000 };
+				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 1000 };
 
 				::select(0, &fd, nullptr, nullptr, &timeout);
 

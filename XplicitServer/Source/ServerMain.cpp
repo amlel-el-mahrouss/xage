@@ -206,6 +206,8 @@ int main(int argc, char** argv)
 				for (std::size_t index = 0UL; index < net->size(); ++index)
 				{
 					net->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
+					net->get(index)->packet.channel = XPLICIT_CHANNEL_CHAT;
+
 					memcpy(net->get(index)->packet.buffer, "Shutting down Xplicit...", strlen("Shutting down Xplicit..."));
 				}
 			}
@@ -213,35 +215,78 @@ int main(int argc, char** argv)
 			Xplicit::NetworkServerContext::accept_send(net);
 		});
 		
-		Xplicit::Thread networkJob([&](){
-				/* Network logic */
+		Xplicit::Thread logicJob([&]() {
+			/* Game logic */
+			try
+			{
 				while (Xplicit::ComponentManager::get_singleton_ptr() &&
 					Xplicit::EventManager::get_singleton_ptr())
 				{
-					Xplicit::NetworkServerContext::accept_recv(server);
-					Xplicit::NetworkServerContext::try_correct(server);
-
 					Xplicit::ComponentManager::get_singleton_ptr()->update();
 					Xplicit::EventManager::get_singleton_ptr()->update();
-					
-					Xplicit::NetworkServerContext::accept_send(server);
 				};
+			}
+			catch (std::runtime_error& err)
+			{
+				Xplicit::String what = "C++ Exception: ";
+				what += err.what();
+
+				XPLICIT_INFO(what);
+
+				std::wstring exit;
+				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+				exit += L"What: ";
+				exit += converter.from_bytes(what);
+				exit += L"\n";
+
+				Xplicit::DialogHelper::message_box(L"Xplicit Engine",
+					L"Thread Exited",
+					exit.c_str(),
+					TD_INFORMATION_ICON,
+					TDCBF_OK_BUTTON);
+			}
 		});
-
-		networkJob.detach();
-
-		Xplicit::Thread logicJob([&]() {
+		
+		Xplicit::Thread networkJob([&]() {
 			/* Network logic */
+			try
+			{
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
-				Xplicit::ComponentManager::get_singleton_ptr()->update();
-				Xplicit::EventManager::get_singleton_ptr()->update();
+				Xplicit::NetworkServerContext::accept_recv(server);
+				Xplicit::NetworkServerContext::try_correct(server);
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+				Xplicit::NetworkServerContext::accept_send(server);
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			};
+			}
+			catch (std::runtime_error& err)
+			{
+				Xplicit::String what = "C++ Exception: ";
+				what += err.what();
+
+				XPLICIT_INFO(what);
+
+				std::wstring exit;
+				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+				exit += L"What: ";
+				exit += converter.from_bytes(what);
+				exit += L"\n";
+
+				Xplicit::DialogHelper::message_box(L"Xplicit Engine",
+					L"Thread Exited",
+					exit.c_str(),
+					TD_INFORMATION_ICON,
+					TDCBF_OK_BUTTON);
+			}
 		});
-
-		logicJob.detach();
-
+		
 		xplicit_load_sh();
 
 		return 0;
