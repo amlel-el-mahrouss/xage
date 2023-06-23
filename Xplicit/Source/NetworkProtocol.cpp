@@ -69,7 +69,9 @@ namespace Xplicit
 #endif // ifdef XPLICIT_DEBUG
 
                 this->packet.hash = this->hash;
+
                 this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+                this->status = NETWORK_STAT_DISCONNECTED;
             }
             else
             {
