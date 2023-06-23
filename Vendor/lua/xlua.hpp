@@ -18,8 +18,8 @@ extern "C" {
 #	include "lauxlib.h"
 }
 
-#define XPLICIT_LUA_NAME "XplicitLua"
-#define XPLICIT_LUA_DESCRIPTION "Custom dialect for JACK Engine."
+#define XPLICIT_LUA_NAME "XplicitNgine Lua"
+#define XPLICIT_LUA_DESCRIPTION "Custom dialect for Xplicit"
 
 namespace Xplicit::Lua
 {

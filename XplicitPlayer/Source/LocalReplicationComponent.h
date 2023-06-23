@@ -18,8 +18,7 @@ namespace Xplicit::Player
 	{
 	public:
 		LocalReplicationComponent() = delete;
-
-	public:
+		
 		explicit LocalReplicationComponent(const std::int64_t& hash)
 			: 
 			mNetwork(ComponentManager::get_singleton_ptr()->get_first<NetworkComponent>()),
@@ -36,6 +35,8 @@ namespace Xplicit::Player
 		void update() override;
 		
 		XPLICIT_COPY_DEFAULT(LocalReplicationComponent);
+
+		std::vector<std::pair<std::string, void*>> Collection;
 
 	private:
 		NetworkComponent* mNetwork;

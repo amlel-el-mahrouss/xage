@@ -62,6 +62,9 @@ namespace Xplicit::Player
 				if (script.protocol() != "xasset://")
 					break;
 
+				auto texture = IRR->getVideoDriver()->getTexture(script.get().c_str());
+				Collection.push_back(std::pair("ITexture_" + script.get(), reinterpret_cast<void*>(texture)));
+
 				break;
 			}
 			case COMPONENT_ID_SOUND:
@@ -70,7 +73,7 @@ namespace Xplicit::Player
 
 				if (script.protocol() != "xasset://")
 					break;
-
+				
 				break;
 			}
 			default:
