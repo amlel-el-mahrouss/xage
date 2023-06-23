@@ -27,11 +27,11 @@ XPLICIT_MAIN()
 {
 	try
 	{
-		// Search and exit if another Xplicit app is open.
+		// Search and exit if another Xplicit player is open.
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
 			Xplicit::DialogHelper::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
-				L"Cannot open more than one instance of the XplicitNgin.", 
+				L"Cannot open more than one instance of the XplicitNgin", 
 				MB_OK);
 
 			return 1;

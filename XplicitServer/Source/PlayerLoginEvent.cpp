@@ -15,6 +15,8 @@
 
 #include "PlayerLoginEvent.h"
 
+#include "ServerReplicationManager.h"
+
 namespace Xplicit
 {
 	/**
@@ -97,8 +99,7 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.size < 1)
 				continue;
 
-			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
 			{
 				if (PlayerComponent* player = mPlayers[mPlayerCount]; 
 					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
@@ -112,6 +113,8 @@ namespace Xplicit
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
+
+					ServerReplicationManager::get_singleton_ptr()->create(COMPONENT_ID_SCRIPT, "xlocal://xplicit-client.lua", mNetwork->get(peer_idx)->public_hash);
 
 					++mPlayerCount;
 
@@ -138,32 +141,35 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+				if (mNetwork->get(peer_idx)->hash == mNetwork->get(peer_idx)->packet.hash)
+				{
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
 #ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
-				XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
+					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
+					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
 
-				const auto public_hash = mNetwork->get(peer_idx)->public_hash;
+					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
-				mNetwork->get(peer_idx)->unique_addr.invalidate();
-				mNetwork->get(peer_idx)->reset();
+					mNetwork->get(peer_idx)->unique_addr.invalidate();
+					mNetwork->get(peer_idx)->reset();
 
-				/* we still want to notify players about our departure. */
+					/* we still want to notify players about our departure. */
 
-				for (std::size_t index = 0; index < mNetwork->size(); ++index)
-				{
-					if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
+					for (std::size_t index = 0; index < mNetwork->size(); ++index)
 					{
-						mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-						mNetwork->get(index)->packet.public_hash = public_hash;
+						if (mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
+						{
+							mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+							mNetwork->get(index)->packet.public_hash = public_hash;
+						}
 					}
+
+					--mPlayerCount;
+
+					break;
 				}
-
-				--mPlayerCount;
-
-				break;
 			}
 		}
 	}

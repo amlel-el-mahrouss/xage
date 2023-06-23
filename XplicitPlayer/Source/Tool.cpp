@@ -15,8 +15,7 @@ namespace Xplicit::Player
 	{
 		ToolComponent* tool = mPool.allocate();
 
-		if (tool == nullptr)
-			throw EngineError("Inventory is full!");
+		if (tool == nullptr) return nullptr;
 
 		tool->Name = name;
 		tool->Owner = -1;

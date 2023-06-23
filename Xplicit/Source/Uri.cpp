@@ -101,5 +101,7 @@ namespace Xplicit::Utils
 
 	std::string UriParser::port() noexcept { return m_port; }
 
+	std::string UriParser::protocol() noexcept { return m_protocol; }
+
 	UriParser& UriError::get() { return m_uri; }
 }

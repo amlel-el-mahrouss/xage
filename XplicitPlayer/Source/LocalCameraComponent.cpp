@@ -12,7 +12,6 @@
  */
 
 #include "LocalCameraComponent.h"
-#include "Application.h"
 #include "GameMenuUI.h"
 
 namespace Xplicit::Player
@@ -51,11 +50,11 @@ namespace Xplicit::Player
 
 		IRR->getVideoDriver()->draw2DImage(mCursor,
 			IRR->getCursorControl()->getPosition(),
-			rect<s32>(0, 0, 38, 38),
+			rect(0, 0, 38, 38),
 			nullptr,
 			SColor(255, 255, 255, 255),
 			true);
 	}
 
-	irr::scene::ICameraSceneNode* LocalCameraComponent::get() noexcept { return mCamera; }
+	ICameraSceneNode* LocalCameraComponent::get() noexcept { return mCamera; }
 }

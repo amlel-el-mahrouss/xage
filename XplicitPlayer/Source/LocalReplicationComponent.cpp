@@ -10,8 +10,8 @@
 #include "LocalReplicationComponent.h"
 
 #include <CommonEngine.h>
-
-/* This file downloads and create scripts/sounds/textures/models according to the COMPONENT_ID */
+#include <xlua.hpp>
+#include <Uri.h>
 
 namespace Xplicit::Player
 {
@@ -40,15 +40,39 @@ namespace Xplicit::Player
 			switch (packet.id)
 			{
 			case COMPONENT_ID_SCRIPT:
+			{
+				Utils::UriParser script = Utils::UriParser(packet.buffer);
+
+				if (script.protocol() != "xasset://" ||
+					script.protocol() != "xlocal://")
+					break;
+
+				XPLICIT_GET_DATA_DIR(path);
+				path += "Contents/";
+				path += script.get();
+				
+				Lua::ILuaStateManager::get_singleton_ptr()->run(path.c_str());
+
 				break;
+			}
 			case COMPONENT_ID_TEXTURE:
+			{
+				Utils::UriParser script = Utils::UriParser(packet.buffer);
+
+				if (script.protocol() != "xasset://")
+					break;
+
 				break;
-			case COMPONENT_ID_TOOL:
-				break;
+			}
 			case COMPONENT_ID_SOUND:
+			{
+				Utils::UriParser script = Utils::UriParser(packet.buffer);
+
+				if (script.protocol() != "xasset://")
+					break;
+
 				break;
-			case COMPONENT_ID_SHAPE:
-				break;
+			}
 			default:
 				return;
 			}

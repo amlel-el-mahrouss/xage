@@ -115,10 +115,7 @@ namespace Xplicit
 	{
 		COMPONENT_ID_SCRIPT = 0xc307,
 		COMPONENT_ID_TEXTURE = 0x687e,
-		COMPONENT_ID_SHAPE = 0x0408,
-		COMPONENT_ID_TOOL = 0x5b2f,
 		COMPONENT_ID_SOUND = 0xa8cf,
-		COMPONENT_ID_CLASS = 0x5fae,
 
 		/* custom components here. */
 		COMPONENT_ID_INVALID = 0xffff,

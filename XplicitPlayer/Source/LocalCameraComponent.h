@@ -17,23 +17,20 @@
 namespace Xplicit::Player
 {
 	// The player view in-person.
-	class LocalCameraComponent : public Component
+	class LocalCameraComponent final : public Component
 	{
 	public:
 		LocalCameraComponent();
-		virtual ~LocalCameraComponent();
-
-	public:
+		~LocalCameraComponent() override;
+		
 		LocalCameraComponent& operator=(const LocalCameraComponent&) = default;
 		LocalCameraComponent(const LocalCameraComponent&) = default;
 
-	public:
-		virtual COMPONENT_TYPE type() noexcept override;
-		virtual const char* name() noexcept override;
+		COMPONENT_TYPE type() noexcept override;
+		const char* name() noexcept override;
 
-		virtual void update() override;
-
-	public:
+		void update() override;
+		 
 		ICameraSceneNode* get() noexcept;
 
 	private:

@@ -19,40 +19,41 @@ extern "C" {
 }
 
 #define XPLICIT_LUA_NAME "XplicitLua"
-#define XPLICIT_LUA_DESCRIPTION "A fork of lua by Xplicit Corporation."
+#define XPLICIT_LUA_DESCRIPTION "Custom dialect for JACK Engine."
 
 namespace Xplicit::Lua
 {
-	template <typename T>
-	class ILuaClass final : public T
-	{
-	public:
-		ILuaClass() = default;
-		~ILuaClass() override = default;
-
-	public:
-		ILuaClass& operator=(const ILuaClass&) = default;
-		ILuaClass(const ILuaClass&) = default;
-
-	public:
-		template <typename StateManager, typename MethodTranslater>
-		void register_class(MethodTranslater& methods, const std::string& name) noexcept
-		{
-			luaL_newmetatable(StateManager::get_singleton_ptr(), name.c_str());
-			lua_pushstring(StateManager::get_singleton_ptr(), "_index");
-
-			methods<StateManager, T>(this);
-
-			lua_setglobal(StateManager::get_singleton_ptr()->state(), name.c_str());
-		}
-
-	};
-
-
 	class ILuaStateManager final
 	{
+	private:
+		explicit ILuaStateManager()
+			: mL(lua_open())
+		{}
+
+	private:
+		lua_State* mL;
+
 	public:
+		~ILuaStateManager() = default;
 
+		XPLICIT_COPY_DEFAULT(ILuaStateManager);
 
+	public:
+		static ILuaStateManager* get_singleton_ptr() noexcept
+		{
+			static ILuaStateManager* state = nullptr;
+
+			if (state == nullptr)
+				state = new ILuaStateManager();
+
+			return state;
+		}
+
+		std::int32_t run(const char* file)
+		{
+			if (file)
+				luaL_dofile(file);
+		}
+		
 	};
 }

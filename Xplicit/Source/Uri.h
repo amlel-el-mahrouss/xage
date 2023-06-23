@@ -14,6 +14,10 @@
 
 #include "Xplicit.h"
 
+#ifndef XPLICIT_XLOCAL_PROTOCOL
+#define XPLICIT_XLOCAL_PROTOCOL ("xlocal://")
+#endif // XPLICIT_XLOCAL_PROTOCOL
+
 #ifndef XPLICIT_XASSET_PROTOCOL
 #define XPLICIT_XASSET_PROTOCOL ("xasset://")
 #endif // XPLICIT_XASSET_PROTOCOL
@@ -37,6 +41,7 @@ namespace Xplicit::Utils
 		UriParser(const UriParser&) = default;
 
 		std::string port() noexcept;
+		std::string protocol() noexcept;
 		std::string get(const UriAccessor offset = 0) noexcept;
 
 	public:
