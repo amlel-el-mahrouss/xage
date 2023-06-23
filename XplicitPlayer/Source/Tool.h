@@ -33,7 +33,8 @@ namespace Xplicit::Player
 		
 		ToolComponent* create(const char* name);
 		void destroy(ToolComponent* component);
-		
+
+	public:
 		ToolComponent* Collection[LocalToolAllocator::max];
 
 	private:

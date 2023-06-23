@@ -34,7 +34,7 @@ namespace Xplicit::Bites
 			throw std::runtime_error("Missing skin! This pack is needed for the XplicitPlayer to work.");
 	}
 
-	Application::Application(const char* dns)
+	Application::Application(Utils::UriParser& xconnectTo)
 		: mSettings(), mWsa(), mPath("")
 	{
 		this->create_context();
@@ -56,7 +56,7 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(splashScreen);
 
 		if (splashScreen)
-			splashScreen->connect(dns);
+			splashScreen->connect(xconnectTo);
 	}
 
 	Application::~Application() {}

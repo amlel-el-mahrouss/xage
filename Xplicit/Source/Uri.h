@@ -36,6 +36,7 @@ namespace Xplicit::Utils
 		UriParser& operator=(const UriParser&) = default;
 		UriParser(const UriParser&) = default;
 
+		std::string port() noexcept;
 		std::string get(const UriAccessor offset = 0) noexcept;
 
 	public:
@@ -43,8 +44,9 @@ namespace Xplicit::Utils
 		UriParser& operator/=(const char* uri);
 
 	private:
-		std::string m_protocol;
 		std::vector<char> m_data;
+		std::string m_protocol;
+		std::string m_port;
 
 	};
 

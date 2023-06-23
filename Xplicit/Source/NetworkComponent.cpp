@@ -70,13 +70,15 @@ namespace Xplicit
 
 	bool NetworkComponent::should_update() noexcept { return true; }
 
-	bool NetworkComponent::connect(const char* ip) noexcept
+	bool NetworkComponent::connect(const char* ip, const char* port) noexcept
 	{
+		std::cout << port << std::endl;
+
 		memset(&mTargetAddress, 0, sizeof(sockaddr_in));
 
 		mTargetAddress.sin_addr.S_un.S_addr = inet_addr(ip);
 		mTargetAddress.sin_family = AF_INET;
-		mTargetAddress.sin_port = htons(XPLICIT_NETWORK_PORT);
+		mTargetAddress.sin_port = htons(std::atoi(port));
 		
 		return ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mTargetAddress), sizeof(sockaddr_in)) != SOCKET_ERROR;
 	}

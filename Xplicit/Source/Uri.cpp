@@ -77,12 +77,27 @@ namespace Xplicit::Utils
 		{
 			if (uri[i] == '\\' || uri[i] == '/')
 				m_data.push_back(URI_SEPARATOR);
+			else if (uri[i] == ':')
+			{
+				++i;
+
+				for (size_t y = i; y < strlen(uri); ++y)
+				{
+					m_port += uri[y];
+				}
+
+				break;
+			}
 			else
+			{
 				m_data.push_back(uri[i]);
+			}
 		}
 
 		return *this;
 	}
+
+	std::string UriParser::port() noexcept { return m_port; }
 
 	UriParser& UriError::get() { return m_uri; }
 }

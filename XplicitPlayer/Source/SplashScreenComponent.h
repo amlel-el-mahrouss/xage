@@ -10,6 +10,8 @@
 #pragma once
 
 #include <NetworkComponent.h>
+#include <Uri.h>
+
 #include "GameMenuUI.h"
 
 namespace Xplicit::Player
@@ -24,7 +26,7 @@ namespace Xplicit::Player
 
 		bool should_update() noexcept override { return mEnabled; }
 		void update() override;
-		void connect(const char* ip);
+		void connect(Utils::UriParser& ip);
 
 		// resets the timeout and run..
 		// in case of a watchdog..

@@ -51,7 +51,7 @@ XPLICIT_MAIN()
 			return 1;
 
 		// create a new app.
-		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri.get().c_str());
+		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri);
 
 		if (!app) throw Xplicit::EngineError("Could not create application context, exiting!");
 		

@@ -68,7 +68,9 @@ namespace Xplicit
 
 		bindAddress.sin_family = AF_INET;
 		bindAddress.sin_port = htons(XPLICIT_NETWORK_PORT);
-		
+
+		mPort = ntohs(bindAddress.sin_port);
+
 		if (::bind(mSocket, reinterpret_cast<SOCKADDR*>(&bindAddress), sizeof(bindAddress)) == SOCKET_ERROR)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
@@ -83,6 +85,8 @@ namespace Xplicit
 			mPeers.push_back(std::make_pair(Auth::XplicitID(XPLICIT_UNIVERSE_ID, xplicit_get_epoch()), inst));
 		}
 	}
+
+	const std::uint16_t NetworkServerComponent::port() const noexcept { return mPort; }
 
 	const char* NetworkServerComponent::name() noexcept { return ("NetworkServerComponent"); }
 
@@ -269,25 +273,5 @@ namespace Xplicit
 			0,
 			reinterpret_cast<sockaddr*>(&peer->address),
 			&from_len);
-	}
-
-	void NetworkServerContext::try_correct(NetworkServerComponent* server) noexcept
-	{
-		if (server)
-		{
-			for (size_t peer_idx = 0; peer_idx < server->size(); ++peer_idx)
-			{
-				for (size_t second_peer_idx = 0; second_peer_idx < server->size(); ++second_peer_idx)
-				{
-					if (server->get(second_peer_idx) == server->get(peer_idx))
-						continue;
-
-					if (equals(server->get(second_peer_idx)->address, server->get(peer_idx)->address))
-					{
-						server->get(second_peer_idx)->reset();
-					}
-				}
-			}
-		}
 	}
 }

@@ -31,6 +31,10 @@ static void xplicit_read_xml();
 static const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
 static bool XPLICIT_SHOULD_EXIT = false;
 
+bool XPLICIT_DONE = false;
+std::mutex XPLICIT_THREAD_MUTEX;
+std::condition_variable XPLICIT_THREADS_CV;
+
 static void xplicit_read_xml()
 {
 	XPLICIT_GET_DATA_DIR(data_path);
@@ -152,14 +156,6 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		Xplicit::String title = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
-
-		title += " (xconnect v";
-		title += std::to_string(XPLICIT_NETWORK_VERSION);
-		title += ")";
-
-		SetConsoleTitleA(title.c_str());
-
 		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(EDT_NULL));
 
 #ifdef XPLICIT_WINDOWS
@@ -182,7 +178,18 @@ int main(int argc, char** argv)
 			return 1;
 		}
 
-		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
+		const auto network = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
+
+		Xplicit::String title = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
+		
+		title += ":";
+		title += std::to_string(network->port());
+		title += " (xconnect v";
+		title += std::to_string(XPLICIT_NETWORK_VERSION);
+		title += ")";
+
+		SetConsoleTitleA(title.c_str());
+
 
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
@@ -210,21 +217,27 @@ int main(int argc, char** argv)
 
 			Xplicit::NetworkServerContext::accept_send(net);
 			});
-
+		
 		std::unique_ptr<Xplicit::Thread> logicJob = std::make_unique<Xplicit::Thread>([&]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
+				XPLICIT_DONE = false;
+
 				Xplicit::NetworkServerContext::accept_recv(net);
 
 				Xplicit::ComponentManager::get_singleton_ptr()->update();
 				Xplicit::EventManager::get_singleton_ptr()->update();
-
+				
 				Xplicit::NetworkServerContext::accept_send(net);
+
+				XPLICIT_DONE = true;
 			};
 		});
+
+		logicJob->detach();
 		
 		xplicit_load_sh(logicJob);
 
@@ -240,6 +253,7 @@ int main(int argc, char** argv)
 
 		// UTF-8 to UTF-16 converter which transforms char bytes into wchar_t
 		// this is need due to the nature of utf-16 as it takes more bytes to encode a character.
+		// also deprecated since c++17 for retarded reasons.
 
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 

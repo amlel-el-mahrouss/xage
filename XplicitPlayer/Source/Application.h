@@ -42,7 +42,7 @@ namespace Xplicit::Bites
 		Application() = delete;
 
 	public:
-		Application(const char* xconnectTo);
+		Application(Utils::UriParser& xconnectTo);
 		~Application();
 
 	public:

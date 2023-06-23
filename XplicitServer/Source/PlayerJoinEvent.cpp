@@ -41,24 +41,12 @@ namespace Xplicit
 
 	static bool xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server)
 	{
-		const auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
+		if (!server ||
+			!peer ||
+			!player ||
+			player->get() != nullptr)
+			return false;
 		
-		if (!peer->ip_address.empty())
-		{
-			for (std::size_t actor_idx = 0; actor_idx < server->size(); ++actor_idx)
-			{
-				if (!players[actor_idx]->get() ||
-					players[actor_idx]->get() == peer)
-					continue;
-
-				if (equals(peer->address, players[actor_idx]->get()->address) ||
-					peer->ip_address == players[actor_idx]->get()->ip_address)
-				{
-					return false;
-				}
-			}
-		}
-
 		const auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
 		const auto public_hash_uuid = UUIDFactory::version<4>();
 
@@ -99,18 +87,8 @@ namespace Xplicit
 
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
-			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED)
 				continue;
-
-			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED ||
-				mNetwork->get(peer_idx)->status == NETWORK_STAT_INVALID)
-			{
-				if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_INVALID;
-
-				continue;
-			}
 
 			if (mNetwork->get(peer_idx)->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
@@ -121,24 +99,20 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
-				memcpy(mNetwork->get(peer_idx)->packet.buffer, XPLICIT_XASSET_ENDPOINT, strlen(XPLICIT_XASSET_ENDPOINT));
-
-				/* OK. reserve player now. */
-				PlayerComponent* player = mPlayers[mPlayerCount];
-
-				if (xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
+				if (PlayerComponent* player = mPlayers[mPlayerCount]; 
+					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
 				{
+					memcpy(mNetwork->get(peer_idx)->packet.buffer, XPLICIT_XASSET_ENDPOINT, strlen(XPLICIT_XASSET_ENDPOINT));
+
 					mNetwork->get(peer_idx)->ip_address = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
 					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
 
-					if (this->size() < XPLICIT_MAX_CONNECTIONS)
-						++mPlayerCount;
-					
 #ifdef XPLICIT_DEBUG
 					XPLICIT_INFO("[CONNECT] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[CONNECT] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
+
+					++mPlayerCount;
 				}
 			}
 		}
@@ -147,7 +121,7 @@ namespace Xplicit
 
 	void PlayerJoinEvent::handle_leave_event() noexcept
 	{
-		if (this->size() == 0) 
+		if (this->size() < 0) 
 			return;
 		
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
@@ -184,9 +158,7 @@ namespace Xplicit
 					}
 				}
 
-				if (this->size() > 1)
-					--mPlayerCount;
-
+				--mPlayerCount;
 			}
 		}
 	}

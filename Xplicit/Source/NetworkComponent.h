@@ -72,7 +72,7 @@ namespace Xplicit
 
         void update() override;
         
-        bool connect(const char* ip) noexcept;
+        bool connect(const char* ip, const char* port) noexcept;
         
         bool set_hash(const std::int64_t& hash) noexcept;
 

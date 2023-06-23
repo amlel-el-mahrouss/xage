@@ -38,11 +38,13 @@ namespace Xplicit
 		bool should_update() noexcept override;
 		
 		NetworkInstance* get(const std::size_t& idx) const noexcept;
+		const std::uint16_t port() const noexcept;
 		const char* dns() const noexcept;
 		size_t size() const noexcept;
 
 	private:
 		NetworkVector mPeers;
+		std::uint16_t mPort;
 		Socket mSocket;
 		String mDns;
 		
@@ -60,7 +62,6 @@ namespace Xplicit
 		static void accept_send(NetworkServerComponent* server) noexcept;
 		static void accept_recv(NetworkServerComponent* server) noexcept;
 		
-		static void try_correct(NetworkServerComponent* server) noexcept;
 		static void send(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 		static void recv(NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept;
 		

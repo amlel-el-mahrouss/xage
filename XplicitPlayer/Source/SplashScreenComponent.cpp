@@ -88,7 +88,6 @@ namespace Xplicit::Player
 			mNetwork->set_hash(hash);
 
 			const auto monitor = EventManager::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
-
 			XPLICIT_ASSERT(monitor);
 
 			monitor->Endpoint = packet.buffer;
@@ -126,7 +125,7 @@ namespace Xplicit::Player
 		}
 	}
 
-	void SplashScreenComponent::connect(const char* ip)
+	void SplashScreenComponent::connect(Utils::UriParser& ip)
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -141,12 +140,12 @@ namespace Xplicit::Player
 #endif // ifndef XPLICIT_DEBUG
 		}
 
-		if (mNetwork->connect(ip))
+		if (mNetwork->connect(ip.get().c_str(), ip.port().c_str()))
 		{
 			Thread thrd([&]() {
 				while (mEnabled)
 				{
-					XPLICIT_INFO("Connect to peer...");
+					XPLICIT_INFO("Connecting to peer...");
 
 					NetworkPacket spawn{};
 
