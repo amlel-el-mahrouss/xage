@@ -23,7 +23,7 @@ extern "C" {
 
 namespace Xplicit::Lua
 {
-	class ILuaStateManager final
+	class XPLICIT_API ILuaStateManager final
 	{
 	private:
 		explicit ILuaStateManager()
@@ -52,7 +52,9 @@ namespace Xplicit::Lua
 		std::int32_t run(const char* file)
 		{
 			if (file)
-				luaL_dofile(file);
+				return luaL_dofile(mL, file);
+			
+			return -1;
 		}
 		
 	};

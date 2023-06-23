@@ -21,7 +21,7 @@ namespace Xplicit::Player
 		
 		explicit LocalReplicationComponent(const std::int64_t& hash)
 			: 
-			mNetwork(ComponentManager::get_singleton_ptr()->get_first<NetworkComponent>()),
+			mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 			mHash(hash)
 		{}
 

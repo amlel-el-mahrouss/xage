@@ -23,8 +23,7 @@ namespace Xplicit::Player
 
 	/*
 	 *	This update function takes care of:
-	 *		- replication events.
-	 *		- event dispatch.
+	 *		- replication events (create, remove components)
 	 */
 
 	void LocalReplicationComponent::update()
@@ -32,8 +31,7 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 		
-		NetworkPacket packet;
-		mNetwork->read(packet);
+		NetworkPacket& packet = mNetwork->get();
 		
 		if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
 		{
@@ -43,8 +41,7 @@ namespace Xplicit::Player
 			{
 				Utils::UriParser script = Utils::UriParser(packet.buffer);
 
-				if (script.protocol() != "xasset://" ||
-					script.protocol() != "xlocal://")
+				if (script.protocol() != "xasset://")
 					break;
 
 				XPLICIT_GET_DATA_DIR(path);
@@ -83,11 +80,6 @@ namespace Xplicit::Player
 			packet.id = -1;
 			packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_CMD_INVALID;
 		}
-		else if (packet.cmd[XPLICIT_REPL_UPDATE] == NETWORK_REPL_CMD_UPDATE)
-		{
-
-			packet.cmd[XPLICIT_REPL_UPDATE] = NETWORK_CMD_INVALID;
-		}
 		else if (packet.cmd[XPLICIT_REPL_DESTROY] == NETWORK_REPL_CMD_DESTROY)
 		{
 			switch (packet.id)
@@ -96,11 +88,7 @@ namespace Xplicit::Player
 				break;
 			case COMPONENT_ID_TEXTURE:
 				break;
-			case COMPONENT_ID_TOOL:
-				break;
 			case COMPONENT_ID_SOUND:
-				break;
-			case COMPONENT_ID_SHAPE:
 				break;
 			default:
 				return;
@@ -108,21 +96,6 @@ namespace Xplicit::Player
 
 			packet.id = -1;
 			packet.cmd[XPLICIT_REPL_DESTROY] = NETWORK_CMD_INVALID;
-		}
-		else if (packet.cmd[XPLICIT_REPL_TOUCH] == NETWORK_REPL_CMD_TOUCH)
-		{
-
-			packet.cmd[XPLICIT_REPL_TOUCH] = NETWORK_CMD_INVALID;
-		}
-		else if (packet.cmd[XPLICIT_REPL_CLICK] == NETWORK_REPL_CMD_CLICK)
-		{
-
-			packet.cmd[XPLICIT_REPL_CLICK] = NETWORK_CMD_INVALID;
-		}
-		else if (packet.cmd[XPLICIT_REPL_DBL_CLICK] == NETWORK_REPL_CMD_DBL_CLICK)
-		{
-
-			packet.cmd[XPLICIT_REPL_DBL_CLICK] = NETWORK_CMD_INVALID;
 		}
 	}
 }

@@ -23,18 +23,19 @@
 #endif // ifndef XPLICIT_ADDRESS_ANY
 
 #define XPLICIT_NETWORK_MAG_0 ('X')
-#define XPLICIT_NETWORK_MAG_1 ('C')
-#define XPLICIT_NETWORK_MAG_2 ('P')
+#define XPLICIT_NETWORK_MAG_1 ('P')
+#define XPLICIT_NETWORK_MAG_2 ('X')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
-#define XPLICIT_NETWORK_CMD_MAX (25U)
+#define XPLICIT_NETWORK_CMD_MAX (19U)
 
 #ifndef XPLICIT_INVALID_ADDR
 #   define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif // ifndef XPLICIT_INVALID_ADDR
 
-#define XPLICIT_NETWORK_BUF_SZ (64U)
-#define XPLICIT_NETWORK_VERSION (1U)
+#define XPLICIT_NETWORK_BUF_SZ      (32U)
+#define XPLICIT_NETWORK_BUF_CHAT_SZ (128U)
+#define XPLICIT_NETWORK_VERSION     (1U)
 
 #define XPLICIT_NUM_CHANNELS (2)
 
@@ -84,9 +85,8 @@ namespace Xplicit
         NETWORK_CMD_ACK, // acknowledge
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
         NETWORK_CMD_REPL, // replication call, download from website
-        NETWORK_CMD_MSG, // chat message
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
-        NETWORK_CMD_COUNT = 15,
+        NETWORK_CMD_COUNT = 17,
     };
 
     /* replication network commands. */
@@ -95,9 +95,6 @@ namespace Xplicit
         NETWORK_REPL_CMD_CREATE = NETWORK_CMD_INVALID + 1,
         NETWORK_REPL_CMD_DESTROY,
         NETWORK_REPL_CMD_UPDATE,
-        NETWORK_REPL_CMD_TOUCH,
-        NETWORK_REPL_CMD_CLICK,
-        NETWORK_REPL_CMD_DBL_CLICK,
         NETWORK_REPL_CMD_COUNT = 7,
     };
 
@@ -119,23 +116,33 @@ namespace Xplicit
 	 */
 
 
-	class XPLICIT_API NetworkPacket final
+    PACKED_STRUCT(class XPLICIT_API NetworkPacket final
 	{
 	public:
 		char                  magic[XPLICIT_NETWORK_MAG_COUNT];
-        char                  buffer[XPLICIT_NETWORK_BUF_SZ]; // could be chat message or filesystem path to script, depends on channel_id field.
+        std::int8_t           channel;
+
+        char                  buffer[XPLICIT_NETWORK_BUF_SZ];
 		NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
 		std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
+        std::int16_t          version;
+        std::int16_t          health;
+        std::int16_t          size;
+        std::int16_t          id;
 
 		std::int64_t          public_hash;
-        std::int8_t           channel;
-		std::int32_t          version;
-		std::int64_t          health;
-		std::int64_t          hash;
-		std::size_t           size;
-		std::int32_t          id;
+        std::int64_t          hash;
+        
+	})
 
-	};
+    PACKED_STRUCT(class XPLICIT_API NetworkPacketChat final
+    {
+    public:
+        char                  magic[XPLICIT_NETWORK_MAG_COUNT];
+        std::int8_t           channel;
+        char                  buffer[XPLICIT_NETWORK_BUF_CHAT_SZ];
+
+    })
 
     class XPLICIT_API NetworkInstance final
     {
@@ -221,9 +228,6 @@ typedef int socklen_t;
 #define XPLICIT_REPL_CREATE (18)
 #define XPLICIT_REPL_DESTROY (19)
 #define XPLICIT_REPL_UPDATE (20)
-#define XPLICIT_REPL_TOUCH (21)
-#define XPLICIT_REPL_CLICK (22)
-#define XPLICIT_REPL_DBL_CLICK (23)
 
 namespace Xplicit::Utils
 {

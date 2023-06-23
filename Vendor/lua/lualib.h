@@ -14,10 +14,6 @@
 /* Key to file-handle type */
 #define LUA_FILEHANDLE		"FILE*"
 
-#ifndef LUALIB_API
-#define LUALIB_API
-#endif // ifndef LUALIB_API
-
 #define LUA_COLIBNAME	"coroutine"
 LUALIB_API int (luaopen_base) (lua_State *L);
 

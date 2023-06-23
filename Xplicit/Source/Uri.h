@@ -14,10 +14,6 @@
 
 #include "Xplicit.h"
 
-#ifndef XPLICIT_XLOCAL_PROTOCOL
-#define XPLICIT_XLOCAL_PROTOCOL ("xlocal://")
-#endif // XPLICIT_XLOCAL_PROTOCOL
-
 #ifndef XPLICIT_XASSET_PROTOCOL
 #define XPLICIT_XASSET_PROTOCOL ("xasset://")
 #endif // XPLICIT_XASSET_PROTOCOL

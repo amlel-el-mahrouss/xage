@@ -32,6 +32,7 @@ XPLICIT_CONFIG = {
 	  "opengl32",
 	  "C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
         "Library/glfw3",
+	  "Library/lua",
 	  "Library/irrlicht",
     },
     ["_INCDIR"] = {
@@ -64,8 +65,9 @@ XPLICIT_SERVER_CONFIG = {
     },
     ["_LIBDIR"] = {
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
-    	"Library/Xplicit",
+    	  "Library/Xplicit",
         "Library/Irrlicht",
+	  "Library/lua",
 	  "ws2_32",
 	  "winmm",
     },
@@ -104,6 +106,7 @@ XPLICIT_CLIENT_CONFIG = {
     ["_LIBDIR"] = {
     	"Library/Xplicit",
         "d3d11",
+	  "Library/lua",
         "dxgi",
         "Library/glfw3",
         "d2d1",

@@ -134,7 +134,7 @@ static void xplicit_load_sh(const std::unique_ptr<Xplicit::Thread>& job)
 			const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
 			if (!ip4)
-				XPLICIT_CRITICAL("CLI: IP Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
+				XPLICIT_CRITICAL("xconnect: IP address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
 			XPLICIT_INFO(Xplicit::String("IP: ") + (ip4 ? ip4 : "?"));
 			XPLICIT_INFO(Xplicit::String("Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
@@ -206,22 +206,21 @@ int main(int argc, char** argv)
 				}
 			}
 
-			Xplicit::NetworkServerContext::accept_send(net);
+			Xplicit::NetworkServerContext::send_all(net);
 		});
-
-
-		std::unique_ptr<Xplicit::Thread> logic_job = std::make_unique<Xplicit::Thread>([]() {
+		
+		const std::unique_ptr<Xplicit::Thread> logic_job = std::make_unique<Xplicit::Thread>([]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
-				Xplicit::NetworkServerContext::accept_recv(net);
+				Xplicit::NetworkServerContext::recv_all(net);
 
 				Xplicit::ComponentManager::get_singleton_ptr()->update();
 				Xplicit::EventManager::get_singleton_ptr()->update();
-
-				Xplicit::NetworkServerContext::accept_send(net);
+				
+				Xplicit::NetworkServerContext::send_all(net);
 			};
 		});
 

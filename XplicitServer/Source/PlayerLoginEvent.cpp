@@ -25,12 +25,11 @@ namespace Xplicit
 	 * \return the hashed GUID.
 	 */
 
-	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid)
+	static size_t xplicit_hash()
 	{
-		const String uuid_str = uuids::to_string(uuid);
-
-		constexpr auto hash = std::hash<String>();
-		const auto res = hash(uuid_str);
+		const auto tim = xplicit_get_epoch();
+		const auto hash = std::hash<time_t>();
+		const auto res = hash(tim);
 
 		return res;
 	}
@@ -50,11 +49,8 @@ namespace Xplicit
 			player->get() != nullptr)
 			return false;
 		
-		const auto hash = xplicit_hash_from_uuid(peer->unique_addr.get());
-		const auto public_hash_uuid = UUIDFactory::version<4>();
-
-		peer->public_hash = xplicit_hash_from_uuid(public_hash_uuid);
-		peer->hash = hash;
+		peer->public_hash = xplicit_hash();
+		peer->hash = xplicit_hash();
 
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
@@ -96,10 +92,8 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
 
-			if (mNetwork->get(peer_idx)->packet.size < 1)
-				continue;
-
-			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
 				if (PlayerComponent* player = mPlayers[mPlayerCount]; 
 					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
@@ -114,11 +108,12 @@ namespace Xplicit
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
 
-					ServerReplicationManager::get_singleton_ptr()->create(COMPONENT_ID_SCRIPT, "xlocal://xplicit-client.lua", mNetwork->get(peer_idx)->public_hash);
+					ServerReplicationManager::get_singleton_ptr()->create(COMPONENT_ID_SCRIPT, "xasset://xplicit-client.lua", mNetwork->get(peer_idx)->public_hash);
+					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
 					++mPlayerCount;
 
-					break;
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_INVALID;
 				}
 			}
 		}
@@ -127,7 +122,7 @@ namespace Xplicit
 
 	void PlayerLoginEvent::handle_leave_event() noexcept
 	{
-		if (this->size() < 1) 
+		if (this->size() <= 0) 
 			return;
 		
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
@@ -143,11 +138,11 @@ namespace Xplicit
 			{
 				if (mNetwork->get(peer_idx)->hash == mNetwork->get(peer_idx)->packet.hash)
 				{
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
 #ifdef XPLICIT_DEBUG
-					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
-					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
+					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
+					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
@@ -167,8 +162,6 @@ namespace Xplicit
 					}
 
 					--mPlayerCount;
-
-					break;
 				}
 			}
 		}

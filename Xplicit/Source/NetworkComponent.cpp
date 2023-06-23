@@ -72,8 +72,6 @@ namespace Xplicit
 
 	bool NetworkComponent::connect(const char* ip, const char* port) noexcept
 	{
-		std::cout << port << std::endl;
-
 		memset(&mTargetAddress, 0, sizeof(sockaddr_in));
 
 		mTargetAddress.sin_addr.S_un.S_addr = inet_addr(ip);
@@ -179,10 +177,8 @@ namespace Xplicit
 				break;
 			}
 			default:
-				break;
+				return false;
 			}
-
-			return false;
 		}
 
 		if (mPacket.magic[0] == XPLICIT_NETWORK_MAG_0 && 
