@@ -29,8 +29,6 @@ static void xplicit_load_mono();
 static void xplicit_read_xml();
 
 static const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
-static Xplicit::String XPLICIT_RESOURCE_ENDPOINT = "";
-static Xplicit::String XPLICIT_GAME_NAME = "";
 static bool XPLICIT_SHOULD_EXIT = false;
 
 static void xplicit_read_xml()
@@ -56,24 +54,6 @@ static void xplicit_read_xml()
 
 	while (node)
 	{
-		if (strcmp(node->name(), "Endpoint") == 0)
-		{
-			auto http = node->value();
-			XPLICIT_RESOURCE_ENDPOINT = http;
-
-			XPLICIT_ASSERT(http);
-			
-		}
-
-		if (strcmp(node->name(), "Name") == 0)
-		{
-			auto server_name = node->value();
-			XPLICIT_GAME_NAME = server_name;
-
-			XPLICIT_ASSERT(server_name);
-			
-		}
-
 		if (strcmp(node->name(), "Dll") == 0)
 		{
 			auto dll = node->value();
@@ -133,7 +113,7 @@ static void xplicit_print_help()
 	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
 }
 
-static void xplicit_load_sh()
+static void xplicit_load_sh(const std::unique_ptr<Xplicit::Thread>& job)
 {
 	char cmd_buf[1024];
 
@@ -146,6 +126,8 @@ static void xplicit_load_sh()
 
 		if (strcmp(cmd_buf, "exit") == 0)
 		{
+			job->request_stop();
+
 			std::exit(0);
 		}
 
@@ -223,14 +205,14 @@ int main(int argc, char** argv)
 					net->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
 					net->get(index)->packet.channel = XPLICIT_CHANNEL_CHAT;
 
-					memcpy(net->get(index)->packet.buffer, "Shutting down Xplicit...", strlen("Shutting down Xplicit..."));
+					memcpy(net->get(index)->packet.buffer, "XplicitNgin, goodbye...", strlen("XplicitNgin, goodbye..."));
 				}
 			}
 
 			Xplicit::NetworkServerContext::accept_send(net);
 			});
 
-		Xplicit::Thread logicJob([&]() {
+		std::unique_ptr<Xplicit::Thread> logicJob = std::make_unique<Xplicit::Thread>([&]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
@@ -245,7 +227,7 @@ int main(int argc, char** argv)
 			};
 		});
 		
-		xplicit_load_sh();
+		xplicit_load_sh(logicJob);
 
 		return 0;
 	}

@@ -99,9 +99,18 @@ namespace Xplicit
 
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+				continue;
+
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED ||
 				mNetwork->get(peer_idx)->status == NETWORK_STAT_INVALID)
+			{
+				if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_INVALID;
+
 				continue;
+			}
 
 			if (mNetwork->get(peer_idx)->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
@@ -112,7 +121,8 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+				memcpy(mNetwork->get(peer_idx)->packet.buffer, XPLICIT_XASSET_ENDPOINT, strlen(XPLICIT_XASSET_ENDPOINT));
 
 				/* OK. reserve player now. */
 				PlayerComponent* player = mPlayers[mPlayerCount];
@@ -151,6 +161,8 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+
 #ifdef XPLICIT_DEBUG
 				XPLICIT_INFO("[DISCONNECT] IP: " + mNetwork->get(peer_idx)->ip_address);
 				XPLICIT_INFO("[DISCONNECT] PLAYER COUNT: " + std::to_string(mPlayerCount));
@@ -160,6 +172,8 @@ namespace Xplicit
 
 				mNetwork->get(peer_idx)->unique_addr.invalidate();
 				mNetwork->get(peer_idx)->reset();
+
+				/* we still want to notify players about our departure. */
 
 				for (std::size_t index = 0; index < mNetwork->size(); ++index)
 				{

@@ -12,6 +12,8 @@
 #include "CommonInclude.h"
 #include "PlayerComponent.h"
 
+#define XPLICIT_XASSET_ENDPOINT ("play-xplicit.com/assets")
+
 namespace Xplicit
 {
 	class PlayerJoinEvent final : public Event

@@ -20,8 +20,7 @@ namespace Xplicit
 
 		XPLICIT_ASSERT(error == NO_ERROR);
 	}
-
-
+	
 	NetworkError::NetworkError(const int what) 
 		: std::runtime_error("Network error, Xplicit Ngine got into an unrecoverable error.")
 #ifdef XPLICIT_WINDOWS
@@ -69,7 +68,7 @@ namespace Xplicit
 
 	COMPONENT_TYPE NetworkComponent::type() noexcept { return COMPONENT_NETWORK; }
 
-	bool NetworkComponent::should_update() noexcept { return false; }
+	bool NetworkComponent::should_update() noexcept { return true; }
 
 	bool NetworkComponent::connect(const char* ip) noexcept
 	{
@@ -140,7 +139,11 @@ namespace Xplicit
 		return true;
 	}
 
-	void NetworkComponent::update() {}
+	void NetworkComponent::update()
+	{
+		static NetworkPacket ack;
+		this->send(ack);
+	}
 
 	bool NetworkComponent::read(NetworkPacket& packet)
 	{

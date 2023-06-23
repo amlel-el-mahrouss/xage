@@ -61,6 +61,8 @@ namespace Xplicit::Player
 					XPLICIT_DIM.Height / 2.8),
 				POPUP_TYPE::BANNED, "StopPopup");
 
+			mEnabled = false;
+			return;
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&

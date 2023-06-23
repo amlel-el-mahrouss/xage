@@ -36,7 +36,10 @@ namespace Xplicit::Player
 		std::int64_t mHash;
 		int64_t mTimeout;
 		ITexture* mMenu;
-		bool mEnabled;
+
+		/* logic states */
+		bool mShutdown; // is shutdown requested?
+		bool mEnabled; // is menu enabled?
 
 	};
 }

@@ -33,6 +33,7 @@ namespace Xplicit
 				mNetwork->get(index)->status == NETWORK_STAT_INVALID)
 				continue;
 
+			mNetwork->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_INVALID;
 			mNetwork->get(index)->timeout();
 		}
 	}
