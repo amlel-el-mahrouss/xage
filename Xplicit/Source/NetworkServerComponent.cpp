@@ -189,6 +189,9 @@ namespace Xplicit
 		}
 		else
 		{
+			const sockaddr_in in = *reinterpret_cast<sockaddr_in*>(&rhs);
+			peer->address = in;
+
 			xplicit_register_packet(packet, peer);
 		}
 	}
