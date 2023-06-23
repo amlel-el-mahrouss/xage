@@ -27,8 +27,6 @@ namespace Xplicit
 	
 	void PlayerTimeoutEvent::operator()()
 	{
-		NetworkServerContext::accept_recv(mNetwork);
-
 		for (std::size_t index = 0; index < mNetwork->size(); ++index)
 		{
 			if (mNetwork->get(index)->status == NETWORK_STAT_DISCONNECTED ||
@@ -37,7 +35,5 @@ namespace Xplicit
 
 			mNetwork->get(index)->timeout();
 		}
-
-		NetworkServerContext::accept_send(mNetwork);
 	}
 }

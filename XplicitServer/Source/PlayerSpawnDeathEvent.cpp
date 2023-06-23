@@ -47,9 +47,7 @@ namespace Xplicit
 			return;
 
 		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
-
-		NetworkServerContext::accept_recv(mNetwork);
-
+		
 		for (PlayerComponent* player : players)
 		{
 			if (player == nullptr)
@@ -105,7 +103,5 @@ namespace Xplicit
 				}
 			}
 		}
-
-		NetworkServerContext::accept_send(mNetwork);
 	}
 }

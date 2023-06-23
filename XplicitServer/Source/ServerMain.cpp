@@ -231,15 +231,19 @@ int main(int argc, char** argv)
 			});
 
 		Xplicit::Thread logicJob([&]() {
+			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
+				Xplicit::NetworkServerContext::accept_recv(net);
+
 				Xplicit::ComponentManager::get_singleton_ptr()->update();
 				Xplicit::EventManager::get_singleton_ptr()->update();
+
+				Xplicit::NetworkServerContext::accept_send(net);
 			};
 		});
-		
-		logicJob.detach();
 		
 		xplicit_load_sh();
 

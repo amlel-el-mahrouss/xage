@@ -42,22 +42,20 @@ namespace Xplicit
 	static bool xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server)
 	{
 		const auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
-
+		
 		if (!peer->ip_address.empty())
 		{
 			for (std::size_t actor_idx = 0; actor_idx < server->size(); ++actor_idx)
 			{
-				if (!players[actor_idx]->get())
+				if (!players[actor_idx]->get() ||
+					players[actor_idx]->get() == peer)
 					continue;
 
-				if (players[actor_idx]->get() == peer)
+				if (equals(peer->address, players[actor_idx]->get()->address) ||
+					peer->ip_address == players[actor_idx]->get()->ip_address)
+				{
 					return false;
-
-				if (equals(peer->address, players[actor_idx]->get()->address))
-					return false;
-
-				if (peer->ip_address == players[actor_idx]->get()->ip_address)
-					return false;
+				}
 			}
 		}
 
@@ -110,8 +108,6 @@ namespace Xplicit
 		if (this->size() > XPLICIT_MAX_CONNECTIONS)
 			return;
 
-		NetworkServerContext::accept_recv(mNetwork);
-
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED ||
@@ -127,6 +123,8 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
+
 				/* OK. reserve player now. */
 				PlayerComponent* player = mPlayers[mPlayerCount];
 
@@ -146,26 +144,15 @@ namespace Xplicit
 			}
 		}
 
-		NetworkServerContext::accept_send(mNetwork);
 	}
 
 	void PlayerJoinEvent::handle_leave_event() noexcept
 	{
 		if (this->size() == 0) 
 			return;
-
-		NetworkServerContext::accept_recv(mNetwork);
-
+		
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
-			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED)
-			{
-				if (mNetwork->get(peer_idx)->hash == XPLICIT_INVALID_HASH)
-				{
-					goto OnLeaveGoto;
-				}
-			}
-
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED)
 				continue;
 
@@ -181,8 +168,7 @@ namespace Xplicit
 					XPLICIT_INFO("[DISCONNECT] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[DISCONNECT] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
-
-OnLeaveGoto:
+					
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
 					mNetwork->get(peer_idx)->unique_addr.invalidate();
@@ -203,8 +189,6 @@ OnLeaveGoto:
 				}
 			}
 		}
-
-		NetworkServerContext::accept_send(mNetwork);
 	}
 
 	void PlayerJoinEvent::operator()()

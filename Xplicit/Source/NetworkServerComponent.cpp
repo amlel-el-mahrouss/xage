@@ -12,7 +12,6 @@
  */
 
 #include "NetworkServerComponent.h"
-#include "CommonEngine.h"
 
 namespace Xplicit
 {
@@ -24,7 +23,7 @@ namespace Xplicit
 	static void xplicit_invalidate_peer(NetworkInstance* peer)
 	{
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[INVALIDATE] UUID: " + uuids::to_string(peer->unique_addr.get()));
+		XPLICIT_INFO("[INVALIDATE] IP: " + peer->ip_address);
 #endif // ifdef XPLICIT_DEBUG
 
 		peer->unique_addr.invalidate();
@@ -133,15 +132,18 @@ namespace Xplicit
 		std::int32_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
 
+		sockaddr rhs;
+		sockaddr lhs = *reinterpret_cast<sockaddr*>(&peer->address);
+
 		::accept(server->mSocket,
-			reinterpret_cast<sockaddr*>(&peer->address),
+			&rhs,
 			&from_len);
 		
 		if (::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
 			sizeof(NetworkPacket),
 			0,
-			reinterpret_cast<sockaddr*>(&peer->address),
+			&rhs,
 			&from_len) == SOCKET_ERROR)
 		{
 			switch (WSAGetLastError())
@@ -160,8 +162,35 @@ namespace Xplicit
 
 			return;
 		}
-		
-		xplicit_register_packet(packet, peer);
+
+		/* just a precaution to prevent address 0.0.0.0 from getting in. */
+
+		if (peer->status == NETWORK_STAT_CONNECTED)
+		{
+			if (memcmp(lhs.sa_data, rhs.sa_data, 14) > 0)
+			{
+				for (std::size_t i = 0; i < server->size(); ++i)
+				{
+					const std::size_t peer_at = i;
+					const auto peer_lhs = server->get(peer_at);
+					const sockaddr _lhs = *reinterpret_cast<sockaddr*>(&peer_lhs->address);
+
+					if (memcmp(_lhs.sa_data, rhs.sa_data, 14) == 0)
+					{
+						xplicit_register_packet(packet, peer_lhs);
+						return;
+					}
+				}
+			}
+			else
+			{
+				xplicit_register_packet(packet, peer);
+			}
+		}
+		else
+		{
+			xplicit_register_packet(packet, peer);
+		}
 	}
 	
 	void NetworkServerContext::accept_recv(NetworkServerComponent* server) noexcept

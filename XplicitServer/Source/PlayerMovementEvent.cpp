@@ -47,9 +47,7 @@ namespace Xplicit
 
 		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
 		NetworkFloat speed = mGameVar->as_float();
-
-		NetworkServerContext::accept_recv(mNetwork);
-
+		
 		for (std::size_t i = 0; i < players.size(); ++i)
 		{
 			PlayerComponent* ply = players[i];
@@ -93,7 +91,5 @@ namespace Xplicit
 				peer->packet.public_hash = peer->public_hash;
 			}
 		}
-
-		NetworkServerContext::accept_send(mNetwork);
 	}
 }
