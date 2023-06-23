@@ -90,6 +90,10 @@ namespace Xplicit::Player
 			if (packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 				std::exit(0);
 
+			packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+
+			mNetwork->send(packet);
+
 			return;
 		}
 		

@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Server.cpp
- *			Purpose: Server main unit
- *
  * =====================================================================
  */
 
@@ -20,7 +17,7 @@
 
 #include "CommonInclude.h"
 #include "SpawnComponent.h"
-#include "PlayerJoinEvent.h"
+#include "PlayerLoginEvent.h"
 #include "PlayerTimeoutEvent.h"
 #include "PlayerMovementEvent.h"
 #include "PlayerSpawnDeathEvent.h"
@@ -29,11 +26,6 @@ static void xplicit_load_mono();
 static void xplicit_read_xml();
 
 static const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
-static bool XPLICIT_SHOULD_EXIT = false;
-
-bool XPLICIT_DONE = false;
-std::mutex XPLICIT_THREAD_MUTEX;
-std::condition_variable XPLICIT_THREADS_CV;
 
 static void xplicit_read_xml()
 {
@@ -123,8 +115,7 @@ static void xplicit_load_sh(const std::unique_ptr<Xplicit::Thread>& job)
 
 	while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
 	{
-		if (!XPLICIT_SHOULD_EXIT)
-			std::cout << "> ";
+		std::cout << "> ";
 
 		std::cin.getline(cmd_buf, 1024);
 
@@ -196,7 +187,7 @@ int main(int argc, char** argv)
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerJoinEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
 
 		xplicit_load_mono();
 		xplicit_read_xml();
@@ -216,34 +207,31 @@ int main(int argc, char** argv)
 			}
 
 			Xplicit::NetworkServerContext::accept_send(net);
-			});
-		
-		std::unique_ptr<Xplicit::Thread> logicJob = std::make_unique<Xplicit::Thread>([&]() {
+		});
+
+
+		std::unique_ptr<Xplicit::Thread> logic_job = std::make_unique<Xplicit::Thread>([]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
-				XPLICIT_DONE = false;
-
 				Xplicit::NetworkServerContext::accept_recv(net);
 
 				Xplicit::ComponentManager::get_singleton_ptr()->update();
 				Xplicit::EventManager::get_singleton_ptr()->update();
-				
-				Xplicit::NetworkServerContext::accept_send(net);
 
-				XPLICIT_DONE = true;
+				Xplicit::NetworkServerContext::accept_send(net);
 			};
 		});
 
-		logicJob->detach();
+		logic_job->detach();
 		
-		xplicit_load_sh(logicJob);
+		xplicit_load_sh(logic_job);
 
 		return 0;
 	}
-	catch (const std::exception& err)
+	catch (const std::runtime_error& err)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_CRITICAL(err.what());

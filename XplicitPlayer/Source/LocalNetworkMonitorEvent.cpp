@@ -42,11 +42,14 @@ namespace Xplicit::Player
 		
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
-			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
-				IRR->closeDevice();
-				}, vector2di(XPLICIT_DIM.Width / 3.45,
-					XPLICIT_DIM.Height / 4),
-					POPUP_TYPE::BANNED, "BanPopup");
+			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
+			{
+				ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+					IRR->closeDevice();
+					}, vector2di(XPLICIT_DIM.Width / 3.45,
+						XPLICIT_DIM.Height / 4),
+						POPUP_TYPE::BANNED, "BanPopup");
+			}
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)

@@ -76,7 +76,9 @@ namespace Xplicit::Utils
 		for (size_t i = strlen(m_protocol.c_str()); i < strlen(uri); ++i)
 		{
 			if (uri[i] == '\\' || uri[i] == '/')
+			{
 				m_data.push_back(URI_SEPARATOR);
+			}
 			else if (uri[i] == ':')
 			{
 				++i;

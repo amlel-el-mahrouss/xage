@@ -16,14 +16,14 @@
 
 namespace Xplicit
 {
-	class PlayerJoinEvent final : public Event
+	class PlayerLoginEvent final : public Event
 	{
 	public:
-		PlayerJoinEvent();
-		~PlayerJoinEvent() override;
+		PlayerLoginEvent();
+		~PlayerLoginEvent() override;
 		
-		PlayerJoinEvent& operator=(const PlayerJoinEvent&) = default;
-		PlayerJoinEvent(const PlayerJoinEvent&) = default;
+		PlayerLoginEvent& operator=(const PlayerLoginEvent&) = default;
+		PlayerLoginEvent(const PlayerLoginEvent&) = default;
 		
 		const char* name() noexcept override;
 		void operator()() override;

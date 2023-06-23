@@ -13,7 +13,7 @@
 
  */
 
-#include "PlayerJoinEvent.h"
+#include "PlayerLoginEvent.h"
 
 namespace Xplicit
 {
@@ -64,7 +64,7 @@ namespace Xplicit
 		return true;
 	}
 
-	PlayerJoinEvent::PlayerJoinEvent()
+	PlayerLoginEvent::PlayerLoginEvent()
 		:
 		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0)
@@ -78,9 +78,9 @@ namespace Xplicit
 		}
 	}
 
-	PlayerJoinEvent::~PlayerJoinEvent() = default;
+	PlayerLoginEvent::~PlayerLoginEvent() = default;
 
-	void PlayerJoinEvent::handle_join_event() noexcept
+	void PlayerLoginEvent::handle_join_event() noexcept
 	{
 		if (this->size() > XPLICIT_MAX_CONNECTIONS)
 			return;
@@ -108,20 +108,22 @@ namespace Xplicit
 					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
 
 #ifdef XPLICIT_DEBUG
-					XPLICIT_INFO("[CONNECT] IP: " + mNetwork->get(peer_idx)->ip_address);
-					XPLICIT_INFO("[CONNECT] PLAYER COUNT: " + std::to_string(mPlayerCount));
+					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
+					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
 
 					++mPlayerCount;
+
+					break;
 				}
 			}
 		}
 
 	}
 
-	void PlayerJoinEvent::handle_leave_event() noexcept
+	void PlayerLoginEvent::handle_leave_event() noexcept
 	{
-		if (this->size() < 0) 
+		if (this->size() < 1) 
 			return;
 		
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
@@ -138,8 +140,8 @@ namespace Xplicit
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
 #ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("[DISCONNECT] IP: " + mNetwork->get(peer_idx)->ip_address);
-				XPLICIT_INFO("[DISCONNECT] PLAYER COUNT: " + std::to_string(mPlayerCount));
+				XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
+				XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
 
 				const auto public_hash = mNetwork->get(peer_idx)->public_hash;
@@ -159,17 +161,19 @@ namespace Xplicit
 				}
 
 				--mPlayerCount;
+
+				break;
 			}
 		}
 	}
 
-	void PlayerJoinEvent::operator()()
+	void PlayerLoginEvent::operator()()
 	{
 		this->handle_leave_event();
 		this->handle_join_event();
 	}
 
-	const size_t& PlayerJoinEvent::size() const noexcept { return mPlayerCount; }
+	const size_t& PlayerLoginEvent::size() const noexcept { return mPlayerCount; }
 
-	const char* PlayerJoinEvent::name() noexcept { return ("PlayerJoinEvent"); }
+	const char* PlayerLoginEvent::name() noexcept { return ("PlayerLoginEvent"); }
 }

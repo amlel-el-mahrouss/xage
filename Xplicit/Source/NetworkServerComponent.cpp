@@ -34,7 +34,7 @@ namespace Xplicit
 		auto ul = 1UL;
 		auto error = XPLICIT_IOCTL(sock, static_cast<long>(SOCKET_FLAG::NON_BLOCKING), &ul);
 		
-		XPLICIT_ASSERT(error == NO_ERROR);
+		XPLICIT_ASSERT(error != SOCKET_ERROR);
 	
 #ifndef XPLICIT_DEBUG
 		(void)error;
@@ -62,7 +62,7 @@ namespace Xplicit
 		xplicit_set_ioctl(mSocket);
 
 		sockaddr_in bindAddress = {};
-		memset(&bindAddress, 0, sizeof(struct sockaddr_in));
+		memset(&bindAddress, 0, sizeof(sockaddr_in));
 		
 		inet_pton(AF_INET, this->mDns.c_str(), &bindAddress.sin_addr.S_un.S_addr);
 
@@ -143,12 +143,12 @@ namespace Xplicit
 			&rhs,
 			&from_len);
 		
-		if (::recvfrom(server->mSocket,
+		if (const auto ret = ::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
 			sizeof(NetworkPacket),
 			0,
 			&rhs,
-			&from_len) == SOCKET_ERROR)
+			&from_len); ret == SOCKET_ERROR)
 		{
 			switch (WSAGetLastError())
 			{
@@ -206,10 +206,7 @@ namespace Xplicit
 		
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
-			const std::size_t peer_at = i;
-			const auto peer = server->get(peer_at);
-			
-			NetworkServerContext::try_recv(server, peer);
+			try_recv(server, server->get(i));
 		}
 	}
 
@@ -237,11 +234,7 @@ namespace Xplicit
 		{
 			for (std::size_t i = 0; i < server->size(); ++i)
 			{
-				const std::size_t peer_at = i;
-
-				const auto peer = server->get(peer_at);
-				
-				try_send(server, peer);
+				try_send(server, server->get(i));
 			}
 		}
 	}
@@ -273,5 +266,7 @@ namespace Xplicit
 			0,
 			reinterpret_cast<sockaddr*>(&peer->address),
 			&from_len);
+
+		xplicit_register_packet(packet, peer);
 	}
 }
