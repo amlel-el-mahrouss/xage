@@ -136,11 +136,10 @@ static void xplicit_load_sh(const std::unique_ptr<Xplicit::Thread>& job)
 
 		if (strcmp(cmd_buf, "xconnect") == 0)
 		{
-
 			const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
 			if (!ip4)
-				XPLICIT_CRITICAL("CLI: Ip Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
+				XPLICIT_CRITICAL("CLI: IP Address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
 			XPLICIT_INFO(Xplicit::String("IP: ") + (ip4 ? ip4 : "?"));
 			XPLICIT_INFO(Xplicit::String("Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));

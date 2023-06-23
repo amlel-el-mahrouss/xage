@@ -20,8 +20,11 @@ namespace Xplicit::Player
 {
 	constexpr int XPLICIT_MAX_RESETS = 150; // Max resets allowed before connection drop
 
-	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(int64_t hash)
-		: mNetwork(nullptr), mResetCount(0), mHash(hash)
+	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(const std::int64_t& priv, const std::int64_t& publ)
+		: mNetwork(nullptr),
+			mResetCount(0),
+			mPublicHash(publ),
+			mHash(priv)
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
@@ -69,18 +72,19 @@ namespace Xplicit::Player
 			packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK ||
 			packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
 		{
-			if (packet.hash == mHash)
+			if (packet.hash == mHash ||
+				packet.public_hash == mPublicHash)
 			{
-				if (!ComponentManager::get_singleton_ptr()->get<Player::PopupComponent>("ConnShutdown"))
+				if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
 				{
-					ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
+					ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 						std::exit(0);
 					}, vector2di(XPLICIT_DIM.Width / 2.8,
 							XPLICIT_DIM.Height / 2.8),
 							POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
 
-					return;
+					mNetwork = nullptr;
 				}
 			}
 			else
@@ -104,18 +108,7 @@ namespace Xplicit::Player
 			++mResetCount;
 
 			if (mResetCount > XPLICIT_MAX_RESETS)
-			{
-				if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ResetPopup"))
-				{
-					ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-						std::exit(0);
-					},
-						vector2di(XPLICIT_DIM.Width / 2.8,
-							XPLICIT_DIM.Height / 2.8),
-						POPUP_TYPE::SHUTDOWN, "ResetPopup");
-
-				}
-			}
+				std::exit(0);
 		}
 	}
 

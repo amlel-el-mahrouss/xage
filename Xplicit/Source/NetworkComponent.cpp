@@ -147,6 +147,8 @@ namespace Xplicit
 
 	bool NetworkComponent::read(NetworkPacket& packet)
 	{
+		mReset = false;
+
 		std::int32_t len = sizeof(struct sockaddr_in);
 
 		const std::int32_t err = ::recv(mSocket.PublicSocket, 

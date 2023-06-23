@@ -81,6 +81,9 @@ namespace Xplicit::Player
 
 		if (mShutdown)
 		{
+			if (mNetwork->is_reset())
+				std::exit(0);
+
 			NetworkPacket packet;
 			mNetwork->read(packet);
 
@@ -91,7 +94,7 @@ namespace Xplicit::Player
 		}
 		
 		static float tween_start = LOCAL_MENU_TWEEN_START;
-		static float posOfMenu = 1.5;
+		static float posOfMenu = 12;
 
 		if (KB->key_down(KEY_ESCAPE) && 
 			mTimeout < 0)

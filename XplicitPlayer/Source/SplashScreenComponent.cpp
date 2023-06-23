@@ -20,6 +20,7 @@
 #include "SplashScreenComponent.h"
 #include "LocalPlayerComponent.h"
 #include "LocalCameraComponent.h"
+#include "LocalHTTPComponent.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
@@ -68,16 +69,16 @@ namespace Xplicit::Player
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
 			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
 		{
-			auto publicHash = packet.public_hash;
+			auto public_hash = packet.public_hash;
 			auto hash = packet.hash;
 
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 			ComponentManager::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
-			ComponentManager::get_singleton_ptr()->add<LocalHudComponent>(publicHash);
+			ComponentManager::get_singleton_ptr()->add<LocalHudComponent>(public_hash);
 			
 			const auto cam = ComponentManager::get_singleton_ptr()->add<LocalCameraComponent>();
-			const auto ply = ComponentManager::get_singleton_ptr()->add<LocalPlayerComponent>(publicHash);
+			const auto ply = ComponentManager::get_singleton_ptr()->add<LocalPlayerComponent>(public_hash);
 
 			XPLICIT_ASSERT(ply);
 
@@ -86,9 +87,14 @@ namespace Xplicit::Player
 
 			mNetwork->set_hash(hash);
 
-			EventManager::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash);
-			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(publicHash);
+			const auto monitor = EventManager::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
 
+			XPLICIT_ASSERT(monitor);
+
+			monitor->Endpoint = packet.buffer;
+			monitor->HTTP = std::make_unique<LocalHTTPComponent>();
+			
+			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>(hash);
 
 			mEnabled = false;
