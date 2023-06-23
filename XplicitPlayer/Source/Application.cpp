@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Application.cpp
- *			Purpose: Application Framework
- *
  * =====================================================================
  */
 
@@ -15,6 +12,7 @@
  */
 
 #include "Application.h"
+#include "SplashScreenComponent.h"
 
 namespace Xplicit::Player
 {
@@ -63,13 +61,13 @@ namespace Xplicit::Bites
 
 	void Application::create_context()
 	{
-		auto singleton = Xplicit::Root::get_singleton_ptr();
+		const auto singleton = Root::get_singleton_ptr();
 
-		Xplicit::Root::get_singleton_ptr()->set(new Xplicit::InputReceiver());
+		Root::get_singleton_ptr()->set(new InputReceiver());
 
 		singleton->set(
 			irr::createDevice(
-				irr::video::EDT_OPENGL,
+				EDT_OPENGL,
 				Xplicit::Player::XPLICIT_DIM,
 				32U,
 				false,
@@ -88,7 +86,8 @@ namespace Xplicit::Bites
 	}
 
 	Application::SettingsManager::SettingsManager()
-		: mSettingsPath()
+		:
+	mSettingsPath()
 	{
 		XPLICIT_GET_DATA_DIR(dat);
 
@@ -120,14 +119,11 @@ namespace Xplicit::Bites
 
 		try
 		{
-			auto width = struc["Window"]["Width"];
-			auto widthInt = std::atoi(width.c_str());
+			const auto width_int = std::atoi(struc["Window"]["Width"].c_str());
+			const auto height_int = std::atoi(struc["Window"]["Height"].c_str());
 
-			auto height = struc["Window"]["Height"];
-			auto heightInt = std::atoi(width.c_str());
-
-			traits.window_width = widthInt;
-			traits.window_height = heightInt;
+			traits.window_width = width_int;
+			traits.window_height = height_int;
 
 			if (traits.window_width > 1280 ||
 				traits.window_height > 720)

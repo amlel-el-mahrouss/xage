@@ -22,6 +22,7 @@ namespace Xplicit
 	 * \param uuid GUID (version 4 recommended)
 	 * \return the hashed GUID.
 	 */
+
 	static size_t xplicit_hash_from_uuid(const uuids::uuid& uuid)
 	{
 		const String uuid_str = uuids::to_string(uuid);

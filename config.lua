@@ -31,7 +31,7 @@ XPLICIT_CONFIG = {
 	  "winmm",
 	  "opengl32",
 	  "C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
-          "Library/glfw3",
+        "Library/glfw3",
 	  "Library/irrlicht",
     },
     ["_INCDIR"] = {

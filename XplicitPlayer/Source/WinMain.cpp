@@ -15,6 +15,7 @@
  */
 
 #include "LocalHTTPComponent.h"
+#include "NetworkProtocol.h"
 #include "Application.h"
 
 #include <Bites.h>

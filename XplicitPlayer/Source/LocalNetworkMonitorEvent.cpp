@@ -12,6 +12,7 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
+#include "LocalPlayerComponent.h"
 
 #include "Application.h"
 #include "GameMenuUI.h"
@@ -21,7 +22,8 @@ namespace Xplicit::Player
 	constexpr int XPLICIT_MAX_RESETS = 150; // Max resets allowed before connection drop
 
 	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(const std::int64_t& priv, const std::int64_t& publ)
-		: mNetwork(nullptr),
+		:
+			mNetwork(nullptr),
 			mResetCount(0),
 			mPublicHash(publ),
 			mHash(priv)
@@ -92,7 +94,7 @@ namespace Xplicit::Player
 			}
 			else
 			{
-				const auto players = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
+				const auto players = ComponentManager::get_singleton_ptr()->all_of<LocalPlayerComponent>("LocalPlayerComponent");
 
 				for (int ply = 0; ply < players.size(); ++ply)
 				{

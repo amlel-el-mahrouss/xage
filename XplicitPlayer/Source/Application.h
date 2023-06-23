@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: App.h
- *			Purpose: Application Framework
- *
  * =====================================================================
  */
 
@@ -19,12 +16,7 @@
 #include <Uri.h>
 #include <ini.h>
 
-/* client classes */
-#include "LocalCameraComponent.h"
-#include "SplashScreenComponent.h"
-#include "LocalPlayerComponent.h"
-
-#define XPLICIT_DEFAULT_WIDTH (1280)
+#define XPLICIT_DEFAULT_WIDTH  (1280)
 #define XPLICIT_DEFAULT_HEIGHT (720)
 
 namespace Xplicit::Player
