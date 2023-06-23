@@ -26,6 +26,16 @@ XPLICIT_MAIN()
 {
 	try
 	{
+		// Search and exit if another Xplicit app is open.
+		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
+		{
+			Xplicit::DialogHelper::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
+				L"Cannot open more than one instance of the XplicitNgin.", 
+				MB_OK);
+
+			return 1;
+		}
+
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
 		RtlZeroMemory(&wsa, sizeof(WSADATA));
