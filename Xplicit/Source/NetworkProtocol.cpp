@@ -52,11 +52,12 @@ namespace Xplicit
 
     void NetworkInstance::timeout() noexcept
     {
-        if (this->status == NETWORK_STAT_INVALID)
+        if (this->status == NETWORK_STAT_STASIS)
             return;
 
 		Thread timeout([&]() {
             const auto before = this->status;
+            this->status = NETWORK_STAT_STASIS;
 
 			// Sleep for tirty seconds, let the client be aware of our packet.
             std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_MAX_TIMEOUT));

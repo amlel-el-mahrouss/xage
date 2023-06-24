@@ -142,6 +142,9 @@ static void xplicit_load_sh()
 				if (network->get(index)->status == Xplicit::NETWORK_STAT_INVALID)
 					std::cout << "Invalid, ";
 
+				if (network->get(index)->status == Xplicit::NETWORK_STAT_STASIS)
+					std::cout << "Check, ";
+
 				std::cout << "Address: " << network->get(index)->ip_address << std::endl;
 			}
 		}

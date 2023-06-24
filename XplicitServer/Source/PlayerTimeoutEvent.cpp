@@ -30,7 +30,8 @@ namespace Xplicit
 		for (std::size_t index = 0; index < mNetwork->size(); ++index)
 		{
 			if (mNetwork->get(index)->status == NETWORK_STAT_DISCONNECTED ||
-				mNetwork->get(index)->status == NETWORK_STAT_INVALID)
+				mNetwork->get(index)->status == NETWORK_STAT_INVALID ||
+				mNetwork->get(index)->status == NETWORK_STAT_STASIS)
 				continue;
 			
 			mNetwork->get(index)->timeout();

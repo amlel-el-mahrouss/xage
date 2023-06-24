@@ -96,15 +96,16 @@ namespace Xplicit
         NETWORK_REPL_CMD_CREATE = NETWORK_CMD_INVALID + 1,
         NETWORK_REPL_CMD_DESTROY,
         NETWORK_REPL_CMD_UPDATE,
-        NETWORK_REPL_CMD_COUNT = 7,
+        NETWORK_REPL_CMD_COUNT = 3,
     };
 
     enum NETWORK_STAT : int16_t
     {
-        NETWORK_STAT_INVALID = 255, // 0xFF
-		NETWORK_STAT_CONNECTED = 400,
+        NETWORK_STAT_INVALID      = 255, // 0xFF
+		NETWORK_STAT_CONNECTED    = 400,
         NETWORK_STAT_DISCONNECTED = 800,
-        NETWORK_STAT_COUNT = 2,
+        NETWORK_STAT_STASIS       = 1200,
+        NETWORK_STAT_COUNT        = 2,
     };
 
     using NetworkFloat = float;
