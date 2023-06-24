@@ -231,30 +231,18 @@ int main(int argc, char** argv)
 
 		});
 
-		auto id = std::this_thread::get_id();
-
-		Xplicit::Thread net([&]() {
-			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
-
-			while (Xplicit::ComponentManager::get_singleton_ptr() &&
-				Xplicit::EventManager::get_singleton_ptr())
-			{
-				Xplicit::NetworkServerContext::recv_all(net);
-				
-				Xplicit::NetworkServerContext::send_all(net);
-			};
-		});
-
-		net.detach();
-
 		Xplicit::Thread logic([&]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
+				Xplicit::NetworkServerContext::recv_all(net);
+
 				Xplicit::ComponentManager::get_singleton_ptr()->update();
 				Xplicit::EventManager::get_singleton_ptr()->update();
+
+				Xplicit::NetworkServerContext::send_all(net);
 			};
 		});
 

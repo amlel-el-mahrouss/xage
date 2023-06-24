@@ -163,8 +163,15 @@ namespace Xplicit
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
-					mNetwork->get(peer_idx)->unique_addr.invalidate();
 					mNetwork->get(peer_idx)->reset();
+
+					for (std::size_t player = 0; player < mPlayers.size(); ++player)
+					{
+						if (mPlayers[player]->get() == mNetwork->get(peer_idx))
+						{
+							mPlayers[player]->set_peer(nullptr);
+						}
+					}
 
 					/* we still want to notify players about our departure. */
 

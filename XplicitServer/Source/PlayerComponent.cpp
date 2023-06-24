@@ -62,8 +62,7 @@ namespace Xplicit
 
 	void PlayerComponent::set_peer(NetworkInstance* peer) noexcept 
 	{
-		if (peer)
-			mPeer = peer;
+		mPeer = peer;
 	}
 
 	bool PlayerComponent::is_frozen() noexcept

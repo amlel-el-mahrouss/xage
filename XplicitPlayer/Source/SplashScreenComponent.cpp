@@ -62,6 +62,9 @@ namespace Xplicit::Player
 				POPUP_TYPE::BANNED, "StopPopup");
 
 			mEnabled = false;
+
+			ComponentManager::get_singleton_ptr()->remove(mNetwork);
+
 			return;
 		}
 
@@ -109,6 +112,8 @@ namespace Xplicit::Player
 						XPLICIT_DIM.Height / 2.8),
 						POPUP_TYPE::NETWORK, "StopPopup");
 
+				ComponentManager::get_singleton_ptr()->remove(mNetwork);
+
 				mEnabled = false;
 			}
 			else
@@ -143,6 +148,9 @@ namespace Xplicit::Player
 			Thread thrd([&]() {
 				while (mEnabled)
 				{
+					if (!mNetwork)
+						return;
+
 					XPLICIT_INFO("Connecting to peer...");
 
 					NetworkPacket spawn{};
@@ -153,8 +161,9 @@ namespace Xplicit::Player
 					mNetwork->send(spawn);
 
 					NetworkPacket isAck{};
+
 					if (isAck.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
-						break;
+						return;
 
 					mNetwork->read(isAck);
 					
