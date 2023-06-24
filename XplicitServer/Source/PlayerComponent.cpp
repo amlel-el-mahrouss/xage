@@ -58,7 +58,7 @@ namespace Xplicit
 
 	bool PlayerComponent::should_update() noexcept { return false;  }
 
-	NetworkInstance* PlayerComponent::get() noexcept { return mPeer; }
+	NetworkInstance* PlayerComponent::get_peer() noexcept { return mPeer; }
 
 	void PlayerComponent::set_peer(NetworkInstance* peer) noexcept 
 	{

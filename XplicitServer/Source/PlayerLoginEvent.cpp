@@ -46,7 +46,7 @@ namespace Xplicit
 		if (!server ||
 			!peer ||
 			!player ||
-			player->get() != nullptr)
+			player->get_peer() != nullptr)
 			return false;
 		
 		peer->public_hash = xplicit_hash();
@@ -167,7 +167,7 @@ namespace Xplicit
 
 					for (std::size_t player = 0; player < mPlayers.size(); ++player)
 					{
-						if (mPlayers[player]->get() == mNetwork->get(peer_idx))
+						if (mPlayers[player]->get_peer() == mNetwork->get(peer_idx))
 						{
 							mPlayers[player]->set_peer(nullptr);
 						}

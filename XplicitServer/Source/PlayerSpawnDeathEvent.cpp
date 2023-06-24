@@ -50,7 +50,7 @@ namespace Xplicit
 			if (player == nullptr)
 				continue;
 			
-			auto* peer_ptr = player->get();
+			auto* peer_ptr = player->get_peer();
 
 			if (!peer_ptr)
 				continue;
@@ -68,7 +68,7 @@ namespace Xplicit
 						continue;
 
 					peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
-					peer_ptr->packet.public_hash = player->get()->public_hash;
+					peer_ptr->packet.public_hash = player->get_peer()->public_hash;
 				}
 			}
 			else
@@ -83,7 +83,7 @@ namespace Xplicit
 					{
 						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
 
-						peer_ptr->packet.public_hash = player->get()->public_hash;
+						peer_ptr->packet.public_hash = player->get_peer()->public_hash;
 						peer_ptr->packet.health = player->health();
 
 						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;

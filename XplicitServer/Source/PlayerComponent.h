@@ -25,7 +25,7 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(PlayerComponent);
 
 		void set_peer(NetworkInstance* peer) noexcept;
-		NetworkInstance* get() noexcept;
+		NetworkInstance* get_peer() noexcept;
 
 		PHYSICS_TYPE physics() noexcept override;
 		COMPONENT_TYPE type() noexcept override;

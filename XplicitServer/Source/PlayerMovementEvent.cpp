@@ -56,7 +56,7 @@ namespace Xplicit
 				ply->health() < 1)
 				continue;
 
-			NetworkInstance* peer = ply->get();
+			NetworkInstance* peer = ply->get_peer();
 
 			/* always check peer here! */
 			if (!peer)
