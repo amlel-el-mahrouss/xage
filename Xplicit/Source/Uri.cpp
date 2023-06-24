@@ -27,17 +27,19 @@
 namespace Xplicit::Utils
 {
 	UriParser::UriParser(const char* protocol)
-		: m_protocol(protocol)
 	{
+		for (std::size_t i = 0; i < strlen(protocol); i++)
+		{
+			if (protocol[i] == ':')
+				break;
 
+			m_protocol += protocol[i];
+		}
 	}
 
-	UriParser::~UriParser()
-	{
+	UriParser::~UriParser() = default;
 
-	}
-
-	std::string UriParser::get(const UriAccessor offset) noexcept
+	std::string UriParser::get() noexcept
 	{
 		if (m_data.empty())
 			return (m_protocol + "invalid");
@@ -46,7 +48,10 @@ namespace Xplicit::Utils
 
 		for (size_t i = 0; i < m_data.size(); i++)
 		{
-			if (m_data[offset] == URI_SEPARATOR)
+			if (m_data[i] == URI_SEPARATOR)
+				continue;
+
+			if (m_data[i] == ':')
 				break;
 
 			uri.push_back(m_data[i]);
@@ -68,24 +73,26 @@ namespace Xplicit::Utils
 			*uri == 0)
 			return *this;
 
+		std::string uri_str = uri;
+
+		size_t count = 0;
+
 		if (!strstr(uri, m_protocol.c_str()))
-			return *this;
+			count = m_protocol.size();
 
-		int32_t count = 0;
-
-		for (size_t i = strlen(m_protocol.c_str()); i < strlen(uri); ++i)
+		for (size_t i = count; i < uri_str.size(); ++i)
 		{
-			if (uri[i] == '\\' || uri[i] == '/')
+			if (uri_str[i] == '\\' || uri_str[i] == '/')
 			{
 				m_data.push_back(URI_SEPARATOR);
 			}
-			else if (uri[i] == ':')
+			else if (uri_str[i] == ':')
 			{
 				++i;
 
-				for (size_t y = i; y < strlen(uri); ++y)
+				for (size_t y = i; y < uri_str.size(); ++y)
 				{
-					m_port += uri[y];
+					m_port += uri_str[y];
 				}
 
 				break;

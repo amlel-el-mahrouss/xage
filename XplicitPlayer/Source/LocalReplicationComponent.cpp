@@ -43,11 +43,10 @@ namespace Xplicit::Player
 			case COMPONENT_ID_SCRIPT:
 			{
 				auto script = Utils::UriParser(packet.buffer);
-				
-				if (script.protocol() != "xasset://")
-					break;
+				script /= packet.buffer;
 
-				std::cout << script.get();
+				if (script.protocol() != "xasset")
+					break;
 
 				XPLICIT_GET_DATA_DIR(path);
 				path += "Contents/";
@@ -59,9 +58,10 @@ namespace Xplicit::Player
 			}
 			case COMPONENT_ID_SOUND:
 			{
-				Utils::UriParser script = Utils::UriParser(packet.buffer);
+				auto sound = Utils::UriParser(packet.buffer);
+				sound /= packet.buffer;
 
-				if (script.protocol() != "xasset://")
+				if (sound.protocol() != "xasset")
 					break;
 				
 				break;

@@ -25,6 +25,7 @@
 #include "Application.h"
 
 #include <CommonEngine.h>
+#include <lua/lua.hpp>
 
 namespace Xplicit::Player
 {
@@ -94,7 +95,7 @@ namespace Xplicit::Player
 
 			monitor->Endpoint = packet.buffer;
 			monitor->HTTP = std::make_unique<LocalHTTPComponent>();
-			
+
 			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>(hash);
 

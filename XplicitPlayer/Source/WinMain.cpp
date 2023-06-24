@@ -19,6 +19,7 @@
 #include "Application.h"
 
 #include <XplicitSound.h>
+#include <lua/lua.hpp>
 #include <Bites.h>
 #include <codecvt>
 
@@ -49,10 +50,17 @@ XPLICIT_MAIN()
 		Xplicit::init_winsock(&wsa);
 #endif
 
+#ifdef XPLICIT_DEBUG
+		Xplicit::open_terminal();
+#endif
+
 		// parse the connection uri.
 		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
 
-		uri /= pCmdLine;
+		std::string cmd_line = pCmdLine;
+		cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
+
+		uri /= cmd_line;
 
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
 			return 1;

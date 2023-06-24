@@ -38,7 +38,7 @@ namespace Xplicit::Utils
 
 		std::string port() noexcept;
 		std::string protocol() noexcept;
-		std::string get(const UriAccessor offset = 0) noexcept;
+		std::string get() noexcept;
 
 	public:
 		UriParser& operator/=(const std::string& uri);

@@ -46,10 +46,6 @@ namespace Xplicit::Bites
 		Xplicit::init_winsock(&mWsa);
 #endif
 
-#ifdef XPLICIT_DEBUG
-		Xplicit::open_terminal(stdout);
-#endif
-
 		auto splashScreen = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();
 		XPLICIT_ASSERT(splashScreen);
 

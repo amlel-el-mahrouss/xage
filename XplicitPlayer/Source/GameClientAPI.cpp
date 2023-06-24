@@ -38,13 +38,8 @@ static int lua_PlaySound(lua_State* L)
 		return 0;
 	}
 
-	std::unique_ptr<Xplicit::Utils::UriParser> uri = std::make_unique<Xplicit::Utils::UriParser>(path);
-
-	if (uri->protocol() != "xasset://")
-	{
-		XPLICIT_CRITICAL("Not an Xasset!");
-		return 0;
-	}
+	std::unique_ptr<Xplicit::Utils::UriParser> uri = std::make_unique<Xplicit::Utils::UriParser>("xasset://");
+	*uri /= path;
 
 	XPLICIT_MONITOR->HTTP->download(uri->get());
 
