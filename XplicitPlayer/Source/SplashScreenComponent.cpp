@@ -66,8 +66,7 @@ namespace Xplicit::Player
 			return;
 		}
 
-		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
-			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
+		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
 			auto public_hash = packet.public_hash;
 			auto hash = packet.hash;

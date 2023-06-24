@@ -111,8 +111,6 @@ namespace Xplicit
 					++mPlayerCount;
 
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
-
-					break;
 				}
 			}
 		}
@@ -163,8 +161,6 @@ namespace Xplicit
 					}
 
 					--mPlayerCount;
-
-					break;
 				}
 			}
 		}

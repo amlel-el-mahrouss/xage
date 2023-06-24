@@ -110,8 +110,6 @@ static void xplicit_print_help()
 
 static void xplicit_load_sh()
 {
-	const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
-
 	char cmd_buf[1024];
 
 	while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
@@ -123,7 +121,7 @@ static void xplicit_load_sh()
 		if (strcmp(cmd_buf, "exit") == 0)
 		{
 			XPLICIT_EXIT_REQUESTED = true;
-			std::exit(0);
+			std::terminate();
 		}
 
 		if (strcmp(cmd_buf, "help") == 0)
@@ -134,7 +132,7 @@ static void xplicit_load_sh()
 			const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
 			if (!ip4)
-				XPLICIT_CRITICAL("xconnect: IP address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
+				XPLICIT_CRITICAL("xconnect: address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
 			XPLICIT_INFO(Xplicit::String("IP: ") + (ip4 ? ip4 : "?"));
 			XPLICIT_INFO(Xplicit::String("Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
