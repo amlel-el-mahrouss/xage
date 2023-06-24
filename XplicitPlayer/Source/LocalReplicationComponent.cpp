@@ -31,7 +31,7 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 		
-		NetworkPacket packet;
+		NetworkPacket packet{};
 
 		if (!mNetwork->read(packet))
 			return;
@@ -67,11 +67,8 @@ namespace Xplicit::Player
 				break;
 			}
 			default:
-				return;
+				break;
 			}
-
-			packet.id = -1;
-			packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_CMD_INVALID;
 		}
 		else if (packet.cmd[XPLICIT_REPL_DESTROY] == NETWORK_REPL_CMD_DESTROY)
 		{
@@ -82,11 +79,8 @@ namespace Xplicit::Player
 			case COMPONENT_ID_SOUND:
 				break;
 			default:
-				return;
+				break;
 			}
-
-			packet.id = -1;
-			packet.cmd[XPLICIT_REPL_DESTROY] = NETWORK_CMD_INVALID;
 		}
 	}
 }

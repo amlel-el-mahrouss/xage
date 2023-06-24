@@ -59,6 +59,14 @@ namespace Xplicit::Lua
 			
 			return -1;
 		}
-		
+
+		std::int32_t run_string(const char* file) noexcept
+		{
+			if (file)
+				return luaL_dostring(mL, file);
+
+			return -1;
+		}
+
 	};
 }

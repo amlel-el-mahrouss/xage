@@ -17,6 +17,7 @@
 #include "LocalHTTPComponent.h"
 #include "NetworkProtocol.h"
 #include "Application.h"
+#include <lua/xlua.hpp>
 
 #include <Bites.h>
 #include <codecvt>

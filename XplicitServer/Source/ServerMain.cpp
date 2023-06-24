@@ -25,7 +25,6 @@
 
 const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
 bool XPLICIT_EXIT_REQUESTED = false;
-std::mutex XPLICIT_MUTEX;
 
 static void xplicit_read_xml()
 {
@@ -111,6 +110,8 @@ static void xplicit_print_help()
 
 static void xplicit_load_sh()
 {
+	const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+
 	char cmd_buf[1024];
 
 	while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
@@ -127,24 +128,6 @@ static void xplicit_load_sh()
 
 		if (strcmp(cmd_buf, "help") == 0)
 			xplicit_print_help();
-
-		if (strcmp(cmd_buf, "script_test") == 0)
-		{
-			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
-
-			if (net)
-			{
-				for (std::size_t index = 0UL; index < net->size(); ++index)
-				{
-					if (net->get(index)->status != Xplicit::NETWORK_STAT_CONNECTED)
-						continue;
-
-					Xplicit::ServerReplicationManager::get_singleton_ptr()->create(Xplicit::COMPONENT_ID_SCRIPT, "xasset://xplicit-client.lua", net->get(index)->public_hash);
-				}
-			}
-
-			Xplicit::NetworkServerContext::send_all(net);
-		}
 
 		if (strcmp(cmd_buf, "xconnect") == 0)
 		{
@@ -236,16 +219,9 @@ int main(int argc, char** argv)
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
-				if (XPLICIT_EXIT_REQUESTED)
-					break;
-
 				Xplicit::NetworkServerContext::recv_all(net);
-
-				XPLICIT_MUTEX.lock();
-
-				Xplicit::NetworkServerContext::send_all(net);
 				
-				XPLICIT_MUTEX.unlock();
+				Xplicit::NetworkServerContext::send_all(net);
 			};
 		});
 
@@ -257,15 +233,8 @@ int main(int argc, char** argv)
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
-				if (XPLICIT_EXIT_REQUESTED)
-					break;
-
-				XPLICIT_MUTEX.lock();
-
 				Xplicit::ComponentManager::get_singleton_ptr()->update();
 				Xplicit::EventManager::get_singleton_ptr()->update();
-
-				XPLICIT_MUTEX.unlock();
 			};
 		});
 

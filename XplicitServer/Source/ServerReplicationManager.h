@@ -21,7 +21,13 @@ namespace Xplicit
 
 	class ServerReplicationManager final
 	{
-		ServerReplicationManager() = default;
+		explicit ServerReplicationManager()
+			:
+			mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
+		{
+			
+		}
+
 
 	public:
 		~ServerReplicationManager() = default;
@@ -35,7 +41,7 @@ namespace Xplicit
 		void update(const std::int32_t& id, const char* path, const std::int64_t& public_hash) noexcept;
 
 	private:
-		NetworkServerComponent* mNetwork{ nullptr };
+		NetworkServerComponent* mNetwork;
 
 	};
 }

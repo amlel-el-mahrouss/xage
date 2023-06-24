@@ -31,7 +31,7 @@ namespace Xplicit
 	void ServerReplicationManager::create(const std::int32_t& id, const char* path, const std::int64_t& public_hash) noexcept
 	{
 		if (!mNetwork)
-			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+			return;
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
@@ -52,7 +52,7 @@ namespace Xplicit
 	void ServerReplicationManager::remove(const std::int32_t& id, const char* path, const std::int64_t& public_hash) noexcept
 	{
 		if (!mNetwork)
-			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+			return;
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
@@ -73,7 +73,7 @@ namespace Xplicit
 	void ServerReplicationManager::update(const std::int32_t& id, const char* path, const std::int64_t& public_hash) noexcept
 	{
 		if (!mNetwork)
-			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+			return;
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{

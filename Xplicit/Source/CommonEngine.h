@@ -113,8 +113,8 @@ namespace Xplicit
 
 	enum COMPONENT_ID_ENUM : std::int32_t
 	{
-		COMPONENT_ID_SCRIPT = 0xc307,
-		COMPONENT_ID_SOUND = 0xa8cf,
-		COMPONENT_ID_INVALID = 0xffff,
+		COMPONENT_ID_SCRIPT = 0xc37,
+		COMPONENT_ID_SOUND = 0xa8f,
+		COMPONENT_ID_INVALID = 0x00,
 	};
 }
