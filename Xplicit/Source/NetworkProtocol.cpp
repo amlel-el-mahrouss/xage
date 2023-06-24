@@ -24,7 +24,7 @@ namespace Xplicit
 		hash(XPLICIT_INVALID_HASH),
 		public_hash(XPLICIT_INVALID_HASH),
         address(),
-        status(NETWORK_STAT_DISCONNECTED)
+        status(NETWORK_STAT_INVALID)
 	{
         memset(&this->address, 0, sizeof(PrivateAddressData));
     }

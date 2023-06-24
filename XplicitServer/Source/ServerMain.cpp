@@ -139,6 +139,9 @@ static void xplicit_load_sh()
 				if (network->get(index)->status == Xplicit::NETWORK_STAT_DISCONNECTED)
 					std::cout << "Disconnected, ";
 
+				if (network->get(index)->status == Xplicit::NETWORK_STAT_INVALID)
+					std::cout << "Invalid, ";
+
 				std::cout << "Address: " << network->get(index)->ip_address << std::endl;
 			}
 		}
@@ -201,10 +204,10 @@ int main(int argc, char** argv)
 
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
 
 		xplicit_load_mono();
 		xplicit_read_xml();
