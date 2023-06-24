@@ -51,6 +51,8 @@ namespace Xplicit
 		
 		peer->public_hash = xplicit_hash();
 		peer->hash = xplicit_hash();
+
+		peer->status = NETWORK_STAT_CONNECTED;
 		
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
