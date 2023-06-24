@@ -113,12 +113,12 @@ namespace Xplicit
 		packet.version = XPLICIT_NETWORK_VERSION;
 		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 		
-		if (const auto res = ::sendto(mSocket.PublicSocket,
+		if (::sendto(mSocket.PublicSocket,
 			reinterpret_cast<const char*>(&packet), 
 			sizeof(NetworkPacket), 
 			0,
 			reinterpret_cast<sockaddr*>(&mTargetAddress),
-			sizeof(mTargetAddress)) == SOCKET_ERROR)
+			sizeof(PrivateAddressData)) == SOCKET_ERROR)
 		{
 			const auto err = WSAGetLastError();
 
@@ -149,21 +149,25 @@ namespace Xplicit
 	{
 		mReset = false;
 
-		std::int32_t len = sizeof(struct sockaddr_in);
+		std::int32_t len = sizeof(PrivateAddressData);
 
-		const std::int32_t err = ::recv(mSocket.PublicSocket, 
+		const std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
 			reinterpret_cast<char*>(&mPacket), 
 			sizeof(NetworkPacket), 
-			0);
-
-		if (len < 1)
-			return false;
+			0,
+			reinterpret_cast<sockaddr*>(&mTargetAddress),
+			&len);
 		
 		if (err == SOCKET_ERROR)
 		{
 			switch (WSAGetLastError())
 			{
 			case WSAECONNRESET:
+			{
+				mReset = true;
+				break;
+			}
+			case WSAEWOULDBLOCK:
 			{
 				fd_set fd;
 				FD_ZERO(&fd);
@@ -173,7 +177,6 @@ namespace Xplicit
 
 				::select(0, &fd, nullptr, nullptr, &timeout);
 
-				mReset = true;
 				break;
 			}
 			default:

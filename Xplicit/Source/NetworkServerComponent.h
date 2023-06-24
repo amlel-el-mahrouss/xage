@@ -55,16 +55,13 @@ namespace Xplicit
 	class XPLICIT_API NetworkServerContext final
 	{
 		// try slots.
-		static void try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
-		static void try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
-
 	public:
-		static void send_all(NetworkServerComponent* server) noexcept;
-		static void recv_all(NetworkServerComponent* server) noexcept;
-
-	public:
+		static void send_all(const NetworkServerComponent* server) noexcept;
+		static void recv_all(const NetworkServerComponent* server) noexcept;
+		
+		static void recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 		static void send(const NetworkServerComponent* server, NetworkInstance* peer) noexcept;
-		static void recv(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept;
+		static void recv_from(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept;
 		
 	};
 }

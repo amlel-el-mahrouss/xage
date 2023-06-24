@@ -30,7 +30,6 @@ namespace Xplicit::Player
 			mHash(hash),
 			mTimeout(0UL),
 			mMenu(nullptr),
-			mShutdown(false),
 			mEnabled(false)
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
@@ -78,20 +77,6 @@ namespace Xplicit::Player
 	{
 		if (!mNetwork)
 			return;
-
-		if (mShutdown)
-		{
-			if (mNetwork->is_reset())
-				std::exit(0);
-
-			NetworkPacket packet;
-			mNetwork->read(packet);
-
-			if (packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
-				std::exit(0);
-			
-			return;
-		}
 		
 		static float tween_start = LOCAL_MENU_TWEEN_START;
 		static float posOfMenu = 12;
@@ -128,9 +113,10 @@ namespace Xplicit::Player
 
 				mNetwork->set_channel(XPLICIT_CHANNEL_DATA);
 				mNetwork->send(packet);
-
-				mShutdown = true;
+				
 				mEnabled = false;
+
+				std::exit(0);
 			}
 			else if (KB->key_down(KEY_KEY_N))
 			{

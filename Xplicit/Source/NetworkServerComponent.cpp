@@ -125,7 +125,7 @@ namespace Xplicit
 		return false;
 	}
 
-	void NetworkServerContext::try_recv(NetworkServerComponent* server, NetworkInstance* peer) noexcept
+	void NetworkServerContext::recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		std::int32_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
@@ -133,37 +133,71 @@ namespace Xplicit
 		sockaddr rhs;
 		const sockaddr lhs = *reinterpret_cast<sockaddr*>(&peer->address);
 
-		if (const auto ret = ::recvfrom(server->mSocket,
-			reinterpret_cast<char*>(&packet),
-			sizeof(NetworkPacket),
-			0,
-			&rhs,
-			&from_len); ret == SOCKET_ERROR)
-		{
-			switch (WSAGetLastError())
-			{
-			case WSAEWOULDBLOCK:
-			{
-				constexpr timeval time_value = { .tv_sec = 2, .tv_usec = 0 };
-
-				fd_set fd;
-
-				FD_ZERO(&fd);
-				FD_SET(server->mSocket, &fd);
-
-				::select(0, &fd, nullptr, nullptr, &time_value);
-
-				break;
-			}
-			default:
-				break;
-			}
-		}
-
-		/* just a precaution to prevent address 0.0.0.0 from getting in. */
-
 		if (peer->status == NETWORK_STAT_CONNECTED)
 		{
+			sockaddr_in recv_addr;
+			recv_addr.sin_family = AF_INET;
+			recv_addr.sin_port = htons(XPLICIT_NETWORK_PORT);
+			recv_addr.sin_addr.s_addr = inet_addr(peer->ip_address.c_str());
+
+			if (const auto ret = ::recvfrom(server->mSocket,
+				reinterpret_cast<char*>(&packet),
+				sizeof(NetworkPacket),
+				0,
+				reinterpret_cast<sockaddr*>(&recv_addr),
+				&from_len); ret == SOCKET_ERROR)
+			{
+				switch (WSAGetLastError())
+				{
+				case WSAEWOULDBLOCK:
+				{
+					fd_set fd;
+
+					FD_ZERO(&fd);
+					FD_SET(server->mSocket, &fd);
+
+					constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
+
+					::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
+
+					break;
+				}
+				default:
+					break;
+				}
+			}
+
+			xplicit_register_packet(packet, peer);
+		}
+		else
+		{
+			if (const auto ret = ::recvfrom(server->mSocket,
+				reinterpret_cast<char*>(&packet),
+				sizeof(NetworkPacket),
+				0,
+				&rhs,
+				&from_len); ret == SOCKET_ERROR)
+			{
+				switch (WSAGetLastError())
+				{
+				case WSAEWOULDBLOCK:
+				{
+					fd_set fd;
+
+					FD_ZERO(&fd);
+					FD_SET(server->mSocket, &fd);
+
+					constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
+
+					::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
+
+					break;
+				}
+				default:
+					break;
+				}
+			}
+
 			if (memcmp(lhs.sa_data, rhs.sa_data, 14) > 0)
 			{
 				for (std::size_t i = 0; i < server->size(); ++i)
@@ -181,51 +215,32 @@ namespace Xplicit
 			}
 			else
 			{
-				(void)xplicit_register_packet(packet, peer);
-			}
-		}
-		else
-		{
-			if (xplicit_register_packet(packet, peer))
-			{
-				const sockaddr_in in = *reinterpret_cast<sockaddr_in*>(&rhs);
-				peer->address = in;
+				if (xplicit_register_packet(packet, peer))
+				{
+					const sockaddr_in in = *reinterpret_cast<sockaddr_in*>(&rhs);
+					peer->address = in;
+				}
 			}
 		}
 	}
 	
-	void NetworkServerContext::recv_all(NetworkServerComponent* server) noexcept
+	void NetworkServerContext::recv_all(const NetworkServerComponent* server) noexcept
 	{
 		XPLICIT_ASSERT(server);
 		
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
-			try_recv(server, server->get(i));
+			recv(server, server->get(i));
 		}
 	}
-
-	void NetworkServerContext::try_send(NetworkServerComponent* server, NetworkInstance* peer) noexcept
-	{
-		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
-		peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
-		peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
-
-		peer->packet.version = XPLICIT_NETWORK_VERSION;
-
-		::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
-			sizeof(NetworkPacket),
-			0,
-			reinterpret_cast<sockaddr*>(&peer->address),
-			sizeof(PrivateAddressData));
-	}
-
-	void NetworkServerContext::send_all(NetworkServerComponent* server) noexcept
+	
+	void NetworkServerContext::send_all(const NetworkServerComponent* server) noexcept
 	{
 		XPLICIT_ASSERT(server);
 
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
-			try_send(server, server->get(i));
+			send(server, server->get(i));
 		}
 	}
 	
@@ -236,26 +251,31 @@ namespace Xplicit
 		peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
 		peer->packet.version = XPLICIT_NETWORK_VERSION;
+		
+		PrivateAddressData recv_addr;
+		recv_addr.sin_family = AF_INET;
+		recv_addr.sin_port = htons(XPLICIT_NETWORK_PORT);
+		recv_addr.sin_addr.s_addr = inet_addr(peer->ip_address.c_str());
 
 		if (::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
 			sizeof(NetworkPacket),
 			0,
-			reinterpret_cast<sockaddr*>(&peer->address),
+			reinterpret_cast<sockaddr*>(&recv_addr),
 			sizeof(PrivateAddressData)) == SOCKET_ERROR)
 		{
 			switch (WSAGetLastError())
 			{
 			case WSAEWOULDBLOCK:
 			{
-				constexpr timeval time_value = { .tv_sec = 2, .tv_usec = 0 };
-
 				fd_set fd;
 
 				FD_ZERO(&fd);
 				FD_SET(server->mSocket, &fd);
+				
+				constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
 
-				::select(0, &fd, nullptr, nullptr, &time_value);
-
+				::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
+				
 				break;
 			}
 			default:
@@ -264,17 +284,22 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerContext::recv(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept
+	void NetworkServerContext::recv_from(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept
 	{
 		XPLICIT_ASSERT(peer && server);
 
 		std::int32_t from_len = sizeof(PrivateAddressData);
 
+		PrivateAddressData recv_addr;
+		recv_addr.sin_family = AF_INET;
+		recv_addr.sin_port = htons(XPLICIT_NETWORK_PORT);
+		recv_addr.sin_addr.s_addr = inet_addr(peer->ip_address.c_str());
+
 		::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
 			sizeof(NetworkPacket),
 			0,
-			reinterpret_cast<sockaddr*>(&peer->address),
+			reinterpret_cast<sockaddr*>(&recv_addr),
 			&from_len);
 
 		xplicit_register_packet(packet, peer);

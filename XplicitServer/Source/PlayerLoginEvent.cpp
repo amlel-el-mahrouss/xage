@@ -102,13 +102,11 @@ namespace Xplicit
 
 					mNetwork->get(peer_idx)->ip_address = address_to_string(mNetwork->get(peer_idx));
 					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
-
-#ifdef XPLICIT_DEBUG
+					
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
-#endif // XPLICIT_DEBUG
 
-					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT;
 
 					++mPlayerCount;
 				}
@@ -137,10 +135,8 @@ namespace Xplicit
 				{
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
-#ifdef XPLICIT_DEBUG
 					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
-#endif // XPLICIT_DEBUG
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
