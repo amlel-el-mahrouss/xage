@@ -47,7 +47,7 @@ namespace Xplicit::Bites
 #endif
 
 #ifdef XPLICIT_DEBUG
-		Xplicit::open_terminal();
+		Xplicit::open_terminal(stdout);
 #endif
 
 		auto splashScreen = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();

@@ -68,5 +68,10 @@ namespace Xplicit::Lua
 			return -1;
 		}
 
+		lua_State* state() noexcept 
+		{
+			return mL;
+		}
+
 	};
 }

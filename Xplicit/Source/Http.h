@@ -43,7 +43,7 @@ namespace Xplicit::HTTP
         MIMEFactory::MIME operator()(char* name) 
         {
             if (!name) 
-                return { .t_name = "Any", .t_mime = "*/*" };
+                return { .t_name = "Anything", .t_mime = "*/*" };
 
             std::string extension = strchr(name, '.');
             XPLICIT_ASSERT(!extension.empty());

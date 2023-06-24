@@ -24,6 +24,8 @@
 
 #ifdef XPLICIT_WINDOWS
 
+extern void xplicit_register_clientside_win64();
+
 XPLICIT_MAIN()
 {
 	try
@@ -55,13 +57,14 @@ XPLICIT_MAIN()
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
 			return 1;
 
-		Xplicit::open_terminal(stdout);
-
 		// create a new app.
 		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri);
 
 		if (!app) throw Xplicit::EngineError("Could not create application context, exiting!");
 		
+		// register lua calls, such as PlaySound
+		xplicit_register_clientside_win64();
+
 		/* main game loop */
 		while (IRR->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 

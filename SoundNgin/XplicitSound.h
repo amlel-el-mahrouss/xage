@@ -72,7 +72,7 @@ namespace Xplicit
 			~XAudioEngine() = default;
 
 		public:
-			struct XAudioHandle
+			struct XAudioHandle final
 			{
 			public:
 				XAudioHandle(DirectX::AudioEngine* engine, const wchar_t* path)
@@ -81,6 +81,7 @@ namespace Xplicit
 					assert(mAudio);
 				}
 
+			public:
 				void operator()() noexcept
 				{
 					mAudio->Play();

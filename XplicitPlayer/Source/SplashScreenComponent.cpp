@@ -51,7 +51,8 @@ namespace Xplicit::Player
 		if (!mNetwork) return;
 		if (!mEnabled) return;
 
-		NetworkPacket packet = mNetwork->get();
+		NetworkPacket packet;
+		mNetwork->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
@@ -160,13 +161,6 @@ namespace Xplicit::Player
 
 					mNetwork->send(spawn);
 
-					NetworkPacket isAck{};
-
-					if (isAck.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
-						return;
-
-					mNetwork->read(isAck);
-					
 					std::this_thread::sleep_for(std::chrono::seconds(1));
 				}
 			});

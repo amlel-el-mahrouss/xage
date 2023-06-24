@@ -10,6 +10,8 @@
 // @file LocalHTTPComponent.cpp
 
 #include "LocalHTTPComponent.h"
+
+#include <HelperMacros.h>
 #include <Http.h>
 
 namespace Xplicit::Player
@@ -36,7 +38,11 @@ namespace Xplicit::Player
         if (!writer.send_from_socket(sock, hdr_wrapper))
             return;
 
-        std::ofstream file = mWriter->write((assetId + ".xasset").c_str());
+        XPLICIT_GET_DATA_DIR(fullPath);
+        fullPath += "Contents/";
+        fullPath += assetId;
+
+        std::ofstream file = mWriter->write(fullPath.c_str());
 
         constexpr int64_t MAX_BUF = 100000;
 
