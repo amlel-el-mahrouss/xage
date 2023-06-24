@@ -86,6 +86,18 @@ namespace Xplicit
 
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
+			for (size_t second_peer_idx = peer_idx; second_peer_idx < mNetwork->size(); ++second_peer_idx)
+			{
+				if (mNetwork->get(peer_idx) != mNetwork->get(second_peer_idx) &&
+					address_to_string(mNetwork->get(peer_idx)) == mNetwork->get(second_peer_idx)->ip_address)
+				{
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_INVALID;
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
+
+					return;
+				}
+			}
+
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED)
 				continue;
 
@@ -109,6 +121,10 @@ namespace Xplicit
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT;
 
 					++mPlayerCount;
+
+					Xplicit::NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+
+					break;
 				}
 			}
 		}
@@ -131,9 +147,13 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 			{
-				if (mNetwork->get(peer_idx)->hash == mNetwork->get(peer_idx)->packet.hash)
+				const auto hash_lhs = mNetwork->get(peer_idx)->packet.hash;
+				const auto hash_rhs = mNetwork->get(peer_idx)->hash;
+
+				if (hash_lhs == hash_rhs)
 				{
-					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
+					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
 
 					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
@@ -155,6 +175,8 @@ namespace Xplicit
 					}
 
 					--mPlayerCount;
+
+					break;
 				}
 			}
 		}

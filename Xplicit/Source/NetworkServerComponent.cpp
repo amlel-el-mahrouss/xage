@@ -186,6 +186,19 @@ namespace Xplicit
 		}
 		else
 		{
+			for (std::size_t i = 0; i < server->size(); ++i)
+			{
+				const std::size_t peer_at = i;
+				const auto peer_lhs = server->get(peer_at);
+				const sockaddr _lhs = *reinterpret_cast<sockaddr*>(&peer_lhs->address);
+
+				if (memcmp(_lhs.sa_data, rhs.sa_data, 14) == 0)
+				{
+					(void)xplicit_register_packet(packet, peer_lhs);
+					return;
+				}
+			}
+
 			if (xplicit_register_packet(packet, peer))
 			{
 				const sockaddr_in in = *reinterpret_cast<sockaddr_in*>(&rhs);

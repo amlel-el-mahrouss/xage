@@ -42,10 +42,12 @@ namespace Xplicit::Player
 			{
 			case COMPONENT_ID_SCRIPT:
 			{
-				Utils::UriParser script = Utils::UriParser(packet.buffer);
+				auto script = Utils::UriParser(packet.buffer);
 				
 				if (script.protocol() != "xasset://")
 					break;
+
+				std::cout << script.get();
 
 				XPLICIT_GET_DATA_DIR(path);
 				path += "Contents/";
