@@ -51,8 +51,7 @@ namespace Xplicit::Player
 		if (!mNetwork) return;
 		if (!mEnabled) return;
 
-		NetworkPacket packet;
-		mNetwork->read(packet);
+		NetworkPacket packet = mNetwork->get();
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
@@ -145,6 +144,12 @@ namespace Xplicit::Player
 				while (mEnabled)
 				{
 					XPLICIT_INFO("Connecting to peer...");
+
+					NetworkPacket isAck{};
+					mNetwork->read(isAck);
+
+					if (isAck.cmd[XPLICIT_NETWORK_CMD_ACK] == XPLICIT_NETWORK_CMD_ACK)
+						break;
 
 					NetworkPacket spawn{};
 

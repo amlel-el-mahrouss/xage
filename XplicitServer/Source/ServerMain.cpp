@@ -185,10 +185,10 @@ int main(int argc, char** argv)
 
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
+		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
 
 		xplicit_load_mono();
 		xplicit_read_xml();
