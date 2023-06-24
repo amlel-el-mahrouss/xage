@@ -148,7 +148,7 @@ namespace Xplicit::Player
 					NetworkPacket isAck{};
 					mNetwork->read(isAck);
 
-					if (isAck.cmd[XPLICIT_NETWORK_CMD_ACK] == XPLICIT_NETWORK_CMD_ACK)
+					if (isAck.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 						break;
 
 					NetworkPacket spawn{};
