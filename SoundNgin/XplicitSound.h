@@ -12,6 +12,9 @@
 #pragma once
 
 #include <iostream>
+#include <string>
+
+#define _USE_MATH_DEFINES
 #include <Audio.h>
 
 #ifndef XPLICIT_AUDIO_RATE
@@ -28,11 +31,24 @@ namespace Xplicit
 			explicit XAudioEngine()
 			{
 				DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_Default;
-#ifdef _DEBUG
+
+#ifdef XPLICIT_DEBUG
 				eflags |= DirectX::AudioEngine_Debug;
 #endif
 
-				mAudioNgin = std::make_unique<DirectX::AudioEngine>(eflags);
+				try
+				{
+					mAudioNgin = std::make_unique<DirectX::AudioEngine>(eflags);
+				}
+				catch (const std::runtime_error& err)
+				{
+					std::string error = "ERROR: ";
+					error += err.what();
+
+					XPLICIT_CRITICAL(error);
+
+					return;
+				}
 
 				auto enumList = DirectX::AudioEngine::GetRendererDetails();
 
@@ -45,8 +61,8 @@ namespace Xplicit
 					for (const auto& it : enumList)
 					{
 						std::cout << "Audio device detected\n";
-						std::cout << it.deviceId.c_str() << std::endl;
-						std::cout << it.description.c_str() << std::endl;
+						std::wcout << it.deviceId.c_str() << std::endl;
+						std::wcout << it.description.c_str() << std::endl;
 					}
 				}
 

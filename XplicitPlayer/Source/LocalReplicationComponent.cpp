@@ -10,7 +10,7 @@
 #include "LocalReplicationComponent.h"
 
 #include <CommonEngine.h>
-#include <xlua.hpp>
+#include <lua.hpp>
 #include <Uri.h>
 
 namespace Xplicit::Player

@@ -17,8 +17,8 @@
 #include "LocalHTTPComponent.h"
 #include "NetworkProtocol.h"
 #include "Application.h"
-#include <lua/xlua.hpp>
 
+#include <XplicitSound.h>
 #include <Bites.h>
 #include <codecvt>
 
@@ -28,6 +28,8 @@ XPLICIT_MAIN()
 {
 	try
 	{
+		XPLICIT_INIT_COM;
+
 		// Search and exit if another Xplicit player is open.
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
@@ -47,10 +49,13 @@ XPLICIT_MAIN()
 
 		// parse the connection uri.
 		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
+
 		uri /= pCmdLine;
 
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
 			return 1;
+
+		Xplicit::open_terminal(stdout);
 
 		// create a new app.
 		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri);
@@ -93,6 +98,7 @@ XPLICIT_MAIN()
 			TDCBF_OK_BUTTON);
 	}
 
+	XPLICIT_FINI_COM;
 	return 0;
 }
 
