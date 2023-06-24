@@ -49,13 +49,15 @@ namespace Xplicit
         this->public_hash = XPLICIT_INVALID_HASH;
     }
 
+    constexpr std::int32_t XPLICIT_MAX_TIMEOUT = 3;
+
     void NetworkInstance::timeout() noexcept
     {
         this->status = NETWORK_STAT_INVALID;
 
 		Thread timeout([&]() {
 			// Sleep for tirty seconds, let the client be aware of our packet.
-            std::this_thread::sleep_for(std::chrono::seconds(5));
+            std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_MAX_TIMEOUT));
 
             if (this->status == NETWORK_STAT_DISCONNECTED)
             {

@@ -21,6 +21,7 @@
 #include "PlayerTimeoutEvent.h"
 #include "PlayerMovementEvent.h"
 #include "PlayerSpawnDeathEvent.h"
+#include "ServerReplicationManager.h"
 
 
 const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
@@ -131,6 +132,24 @@ static void xplicit_load_sh()
 
 		if (strcmp(cmd_buf, "help") == 0)
 			xplicit_print_help();
+
+		if (strcmp(cmd_buf, "script_test") == 0)
+		{
+			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+
+			if (net)
+			{
+				for (std::size_t index = 0UL; index < net->size(); ++index)
+				{
+					if (net->get(index)->status != Xplicit::NETWORK_STAT_CONNECTED)
+						continue;
+
+					Xplicit::ServerReplicationManager::get_singleton_ptr()->create(Xplicit::COMPONENT_ID_SCRIPT, "xasset://xplicit-client.lua", net->get(index)->public_hash);
+					Xplicit::NetworkServerContext::send(net, net->get(index));
+				}
+			}
+
+		}
 
 		if (strcmp(cmd_buf, "xconnect") == 0)
 		{

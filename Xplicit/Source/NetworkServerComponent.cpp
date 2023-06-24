@@ -41,6 +41,8 @@ namespace Xplicit
 		XPLICIT_ASSERT(!mDns.empty());
 
 #ifdef XPLICIT_DEBUG
+		/* checks for a	valid ip-4 address. */
+
 		Utils::InternetProtocolChecker checker;
 		XPLICIT_ASSERT(checker(ip));
 #endif // ifdef XPLICIT_DEBUG
@@ -235,7 +237,7 @@ namespace Xplicit
 
 		peer->packet.version = XPLICIT_NETWORK_VERSION;
 
-		if (auto err = ::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
+		if (::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
 			sizeof(NetworkPacket),
 			0,
 			reinterpret_cast<sockaddr*>(&peer->address),
@@ -259,7 +261,6 @@ namespace Xplicit
 			default:
 				break;
 			}
-
 		}
 	}
 

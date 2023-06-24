@@ -108,7 +108,6 @@ namespace Xplicit
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif // XPLICIT_DEBUG
 
-					ServerReplicationManager::get_singleton_ptr()->create(COMPONENT_ID_SCRIPT, "xasset://xplicit-client.lua", mNetwork->get(peer_idx)->public_hash);
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
 					++mPlayerCount;
