@@ -100,7 +100,7 @@ namespace Xplicit
 				{
 					memcpy(mNetwork->get(peer_idx)->packet.buffer, XPLICIT_XASSET_ENDPOINT, strlen(XPLICIT_XASSET_ENDPOINT));
 
-					mNetwork->get(peer_idx)->ip_address = inet_ntoa(mNetwork->get(peer_idx)->address.sin_addr);
+					mNetwork->get(peer_idx)->ip_address = address_to_string(mNetwork->get(peer_idx));
 					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
 
 #ifdef XPLICIT_DEBUG
@@ -112,8 +112,6 @@ namespace Xplicit
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
 					++mPlayerCount;
-
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_INVALID;
 				}
 			}
 		}

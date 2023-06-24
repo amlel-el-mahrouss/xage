@@ -28,18 +28,17 @@ namespace Xplicit
 	 *
 	 */
 
-	void ServerReplicationManager::create(const std::int32_t& id, const char* path, std::int64_t& public_hash) const noexcept
+	void ServerReplicationManager::create(const std::int32_t& id, const char* path, const std::int64_t& public_hash) noexcept
 	{
 		if (!mNetwork)
-			return;
+			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			if (mNetwork->get(i)->packet.channel == XPLICIT_CHANNEL_CHAT)
-				continue;
-
 			if (mNetwork->get(i)->public_hash != public_hash)
 				continue;
+
+			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
 			mNetwork->get(i)->packet.id = id;
@@ -50,20 +49,19 @@ namespace Xplicit
 		}
 	}
 
-	void ServerReplicationManager::remove(const std::int32_t& id, const char* path, std::int64_t& public_hash) const noexcept
+	void ServerReplicationManager::remove(const std::int32_t& id, const char* path, const std::int64_t& public_hash) noexcept
 	{
 		if (!mNetwork)
-			return;
+			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			if (mNetwork->get(i)->packet.channel == XPLICIT_CHANNEL_CHAT)
-				continue;
-
 			if (mNetwork->get(i)->public_hash != public_hash)
 				continue;
 
-			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_DESTROY;
+			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
+
+			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_DESTROY] = NETWORK_REPL_CMD_DESTROY;
 			mNetwork->get(i)->packet.id = id;
 			
 			memcpy(mNetwork->get(i)->packet.buffer, path, 64);
@@ -72,20 +70,19 @@ namespace Xplicit
 		}
 	}
 
-	void ServerReplicationManager::update(const std::int32_t& id, const char* path, std::int64_t& public_hash) const noexcept
+	void ServerReplicationManager::update(const std::int32_t& id, const char* path, const std::int64_t& public_hash) noexcept
 	{
 		if (!mNetwork)
-			return;
+			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			if (mNetwork->get(i)->packet.channel == XPLICIT_CHANNEL_CHAT)
-				continue;
-
 			if (mNetwork->get(i)->public_hash != public_hash)
 				continue;
 
-			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_UPDATE;
+			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
+
+			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_UPDATE] = NETWORK_REPL_CMD_UPDATE;
 			mNetwork->get(i)->packet.id = id;
 
 			memcpy(mNetwork->get(i)->packet.buffer, path, 64);

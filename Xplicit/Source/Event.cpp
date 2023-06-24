@@ -22,7 +22,10 @@ namespace Xplicit
 	{
 		for (std::size_t i = 0; i < mEvents.size(); i++)
 		{
+#ifdef XPLICIT_DEBUG
 			XPLICIT_ASSERT(mEvents[i]);
+#endif // ifdef XPLICIT_DEBUG
+
 			mEvents[i]->update();
 		}
 	}
@@ -43,7 +46,10 @@ namespace Xplicit
 	{
 		for (size_t i = 0; i < mListeners.size(); i++)
 		{
+#ifdef XPLICIT_DEBUG
 			XPLICIT_ASSERT(mListeners[i]);
+#endif // ifdef XPLICIT_DEBUG
+
 			mListeners[i]->update(this);
 		}
 
@@ -58,11 +64,11 @@ namespace Xplicit
 			mListeners.push_back(listener);
 	}
 
-	bool Event::remove(EventListener* listener) 
+	bool Event::remove(const EventListener* listener) 
 	{
 		if (listener)
 		{
-			auto it = std::find(mListeners.cbegin(), mListeners.cend(), listener);
+			const auto it = std::find(mListeners.cbegin(), mListeners.cend(), listener);
 
 			if (it != mListeners.cend())
 			{

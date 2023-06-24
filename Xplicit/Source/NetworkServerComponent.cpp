@@ -18,7 +18,7 @@ namespace Xplicit
 	/// <summary>
 	/// Utility function which removes the peer and actor from the server.
 	/// </summary>
-	/// <param name="peer">The NetworkInstance being targeted.</param>
+	/// <param name="sock">The NetworkInstance being targeted.</param>
 	
 	static void xplicit_set_ioctl(Socket sock)
 	{
@@ -73,7 +73,7 @@ namespace Xplicit
 			auto inst = new NetworkInstance();
 			XPLICIT_ASSERT(inst);
 
-			mPeers.push_back(std::make_pair(Auth::XplicitID(XPLICIT_UNIVERSE_ID, xplicit_get_epoch()), inst));
+			mPeers.push_back(std::make_pair(Auth::XplicitID(index, xplicit_get_epoch()), inst));
 		}
 	}
 
@@ -129,7 +129,7 @@ namespace Xplicit
 		NetworkPacket packet{};
 
 		sockaddr rhs;
-		sockaddr lhs = *reinterpret_cast<sockaddr*>(&peer->address);
+		const sockaddr lhs = *reinterpret_cast<sockaddr*>(&peer->address);
 
 		if (const auto ret = ::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
@@ -142,7 +142,7 @@ namespace Xplicit
 			{
 			case WSAEWOULDBLOCK:
 			{
-				const timeval time_value = { .tv_sec = 2, .tv_usec = 0 };
+				constexpr timeval time_value = { .tv_sec = 2, .tv_usec = 0 };
 
 				fd_set fd;
 
@@ -227,7 +227,7 @@ namespace Xplicit
 		}
 	}
 	
-	void NetworkServerContext::send(NetworkServerComponent* server, NetworkInstance* peer) noexcept
+	void NetworkServerContext::send(const NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
@@ -245,7 +245,7 @@ namespace Xplicit
 			{
 			case WSAEWOULDBLOCK:
 			{
-				const timeval time_value = { .tv_sec = 2, .tv_usec = 0 };
+				constexpr timeval time_value = { .tv_sec = 2, .tv_usec = 0 };
 
 				fd_set fd;
 
@@ -263,7 +263,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerContext::recv(NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept
+	void NetworkServerContext::recv(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept
 	{
 		XPLICIT_ASSERT(peer && server);
 

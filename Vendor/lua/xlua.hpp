@@ -10,7 +10,7 @@
 #pragma once
 
 /* Author: Amlal El Mahrouss */
-/* XLua for C++ classes. */
+/* XLua for the XplicitNgine. */
 
 extern "C" {
 #	include "lua.h"
@@ -27,8 +27,11 @@ namespace Xplicit::Lua
 	{
 	private:
 		explicit ILuaStateManager()
-			: mL(lua_open())
-		{}
+			: mL(luaL_newstate())
+		{
+			XPLICIT_ASSERT(mL);
+			luaL_openlibs(mL);
+		}
 
 	private:
 		lua_State* mL;

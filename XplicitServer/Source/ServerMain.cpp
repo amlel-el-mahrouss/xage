@@ -22,10 +22,11 @@
 #include "PlayerMovementEvent.h"
 #include "PlayerSpawnDeathEvent.h"
 
-static void xplicit_load_mono();
-static void xplicit_read_xml();
 
-static const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
+const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
+std::thread::id XPLICIT_THREAD_ID;
+bool XPLICIT_EXIT_REQUESTED = false;
+std::mutex XPLICIT_MUTEX;
 
 static void xplicit_read_xml()
 {
@@ -60,8 +61,8 @@ static void xplicit_read_xml()
 			path += "/Library/";
 			path += dll;
 
-			auto csharp_dll = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
-			auto assembly_file = mono->open(path.c_str());
+			const auto csharp_dll = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
+			const auto assembly_file = mono->open(path.c_str());
 
 			if (assembly_file)
 			{
@@ -109,7 +110,7 @@ static void xplicit_print_help()
 	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
 }
 
-static void xplicit_load_sh(const std::unique_ptr<Xplicit::Thread>& job)
+static void xplicit_load_sh()
 {
 	char cmd_buf[1024];
 
@@ -121,8 +122,10 @@ static void xplicit_load_sh(const std::unique_ptr<Xplicit::Thread>& job)
 
 		if (strcmp(cmd_buf, "exit") == 0)
 		{
-			job->request_stop();
+			XPLICIT_EXIT_REQUESTED = true;
 
+			while (XPLICIT_THREAD_ID != std::this_thread::get_id());
+			
 			std::exit(0);
 		}
 
@@ -171,8 +174,10 @@ int main(int argc, char** argv)
 
 		const auto network = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
 
+#ifdef XPLICIT_WINDOWS
+
 		Xplicit::String title = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
-		
+
 		title += ":";
 		title += std::to_string(network->port());
 		title += " (xconnect v";
@@ -181,7 +186,8 @@ int main(int argc, char** argv)
 
 		SetConsoleTitleA(title.c_str());
 
-
+#endif // XPLICIT_WINDOWS
+		
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
@@ -208,26 +214,60 @@ int main(int argc, char** argv)
 
 			Xplicit::NetworkServerContext::send_all(net);
 		});
-		
-		const std::unique_ptr<Xplicit::Thread> logic_job = std::make_unique<Xplicit::Thread>([]() {
+
+		auto id = std::this_thread::get_id();
+
+		Xplicit::Thread net([&]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 			while (Xplicit::ComponentManager::get_singleton_ptr() &&
 				Xplicit::EventManager::get_singleton_ptr())
 			{
+				if (XPLICIT_EXIT_REQUESTED)
+					break;
+
+				XPLICIT_MUTEX.lock();
+
+				XPLICIT_THREAD_ID = std::this_thread::get_id();
+
 				Xplicit::NetworkServerContext::recv_all(net);
 
-				Xplicit::ComponentManager::get_singleton_ptr()->update();
-				Xplicit::EventManager::get_singleton_ptr()->update();
-				
 				Xplicit::NetworkServerContext::send_all(net);
+
+				XPLICIT_MUTEX.unlock();
+
+				XPLICIT_THREAD_ID = id;
 			};
 		});
 
-		logic_job->detach();
-		
-		xplicit_load_sh(logic_job);
+		net.detach();
 
+		Xplicit::Thread logic([&]() {
+			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+
+			while (Xplicit::ComponentManager::get_singleton_ptr() &&
+				Xplicit::EventManager::get_singleton_ptr())
+			{
+				if (XPLICIT_EXIT_REQUESTED)
+					break;
+
+				XPLICIT_MUTEX.lock();
+
+				XPLICIT_THREAD_ID = std::this_thread::get_id();
+
+				Xplicit::ComponentManager::get_singleton_ptr()->update();
+				Xplicit::EventManager::get_singleton_ptr()->update();
+
+				XPLICIT_MUTEX.unlock();
+
+				XPLICIT_THREAD_ID = id;
+			};
+		});
+
+		logic.detach();
+
+		xplicit_load_sh();
+		
 		return 0;
 	}
 	catch (const std::runtime_error& err)

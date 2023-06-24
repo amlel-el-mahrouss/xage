@@ -21,7 +21,9 @@ namespace Xplicit
 
 		for (std::size_t i = 0; i < sz; i++)
 		{
+#ifdef XPLICIT_DEBUG
 			XPLICIT_ASSERT(mComponents[i]);
+#endif // ifdef XPLICIT_DEBUG
 
 			if (mComponents[i]->should_update())
 				mComponents[i]->update();
@@ -48,5 +50,6 @@ namespace Xplicit
 	const char* Component::name() noexcept { return ("Component"); }
 
 	PHYSICS_TYPE Component::physics() noexcept { return PHYSICS_SIMPLE; }
+
 	COMPONENT_TYPE Component::type() noexcept { return COMPONENT_LOGIC; }
 }

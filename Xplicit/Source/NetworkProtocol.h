@@ -194,6 +194,7 @@ namespace Xplicit
         
     };
 
+    XPLICIT_API String address_to_string(NetworkInstance* instance);
     XPLICIT_API bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs);
 }
 

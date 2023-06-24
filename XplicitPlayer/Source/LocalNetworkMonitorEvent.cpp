@@ -40,8 +40,20 @@ namespace Xplicit::Player
 	{
 		if (!mNetwork) return;
 
-		const NetworkPacket& packet = mNetwork->get();
-		
+		/* did we lost connection to peer? */
+		if (mNetwork->is_reset())
+		{
+			++mResetCount;
+
+			if (mResetCount > XPLICIT_MAX_RESETS)
+				std::exit(0);
+
+			return;
+		}
+
+		NetworkPacket packet;
+		if (!mNetwork->read(packet)) return;
+
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
 			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
@@ -105,15 +117,6 @@ namespace Xplicit::Player
 					}
 				}
 			}
-		}
-
-		/* did we lost connection to peer? */
-		if (mNetwork->is_reset())
-		{
-			++mResetCount;
-
-			if (mResetCount > XPLICIT_MAX_RESETS)
-				std::exit(0);
 		}
 	}
 

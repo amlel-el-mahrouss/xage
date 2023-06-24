@@ -56,8 +56,7 @@ namespace Xplicit::Player
 	void LocalPlayerComponent::update()
 	{
 		if (mNetwork == nullptr) return;
-
-		mNetwork->read(mPacket);
+		if (!mNetwork->read(mPacket)) return;
 
 		if (mPacket.public_hash == mPublicHash)
 		{

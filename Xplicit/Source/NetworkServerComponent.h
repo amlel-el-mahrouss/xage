@@ -63,8 +63,8 @@ namespace Xplicit
 		static void recv_all(NetworkServerComponent* server) noexcept;
 
 	public:
-		static void send(NetworkServerComponent* server, NetworkInstance* peer) noexcept;
-		static void recv(NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept;
+		static void send(const NetworkServerComponent* server, NetworkInstance* peer) noexcept;
+		static void recv(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept;
 		
 	};
 }

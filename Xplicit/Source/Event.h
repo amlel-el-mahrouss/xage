@@ -19,31 +19,25 @@ namespace Xplicit
 	
 	class XPLICIT_API EventManager final 
 	{
-	private:
 		EventManager() = default;
 
 	public:
 		~EventManager() = default;
-
-	public:
+		
 		EventManager& operator=(const EventManager&) = delete;
 		EventManager(const EventManager&) = delete;
-
-	public:
+		
 		template <typename T, typename... Args>
 		T* add(Args&&...   args);
 
 		template <typename T>
 		bool remove(T* ptr);
-
-	public:
+		
 		template <typename T>
 		T* get(const char* name);
-
-	public:
+		
 		void update() noexcept;
-
-	public:
+		
 		static EventManager* get_singleton_ptr() noexcept;
 
 	private:
@@ -54,8 +48,8 @@ namespace Xplicit
 	class XPLICIT_API Event
 	{
 	public:
-		Event() {}
-		virtual ~Event() {}
+		Event() = default;
+		virtual ~Event() = default;
 
 		Event& operator=(const Event&) = default;
 		Event(const Event&) = default;
@@ -64,7 +58,7 @@ namespace Xplicit
 
 		void update() noexcept;
 
-		bool remove(EventListener* listener);
+		bool remove(const EventListener* listener);
 		void add(EventListener* listener);
 
 		virtual const char* name() noexcept;
@@ -85,22 +79,19 @@ namespace Xplicit
 	{
 	public:
 		using EventPtr = void*;
-
-	public:
+		
 		EventListener() = default;
 		virtual ~EventListener() = default;
-
-	public:
+		
 		EventListener& operator=(const EventListener&) = default;
 		EventListener(const EventListener&) = default;
-
-	public:
+		
 		/// <summary>
 		/// Update function
 		/// </summary>
-		/// <param name="pEvent">The Event* class</param>
+		/// <param name="env">The Event* class</param>
 		 
-		virtual void update(EventPtr ptr_event) {}
+		virtual void update(EventPtr env) {}
 		virtual const char* name() noexcept { return ("EventListener"); }
 
 	};

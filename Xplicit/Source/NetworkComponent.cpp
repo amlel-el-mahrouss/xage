@@ -22,7 +22,7 @@ namespace Xplicit
 	}
 	
 	NetworkError::NetworkError(const int what) 
-		: std::runtime_error("Network error, Xplicit Ngine got into an unrecoverable error.")
+		: std::runtime_error("Network error, check error-code.")
 #ifdef XPLICIT_WINDOWS
 		, mErr(WSAGetLastError())
 #endif

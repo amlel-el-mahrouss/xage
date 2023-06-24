@@ -21,37 +21,27 @@ namespace Xplicit
 
 	class XPLICIT_API ComponentManager final 
 	{
-	private:
 		ComponentManager() = default;
 
 	public:
 		~ComponentManager() = default;
-
-	public:
+		
 		XPLICIT_COPY_DEFAULT(ComponentManager);
-
-	public:
+		
 		template <typename T>
 		std::vector<T*> all_of(const char* name);
-
-	public:
+		
 		template <typename T, typename... Args>
 		T* add(Args&&... args);
 
 		template <typename T>
 		bool remove(T* ptr);
-
-	public:
+		
 		template <typename T>
 		T* get(const char* name) noexcept;
-
-		template <typename T>
-		T* get_first() noexcept;
-
-	public:
+		
 		void update() noexcept;
-
-	public:
+		
 		static ComponentManager* get_singleton_ptr() noexcept;
 
 	private:
@@ -87,19 +77,15 @@ namespace Xplicit
 	public:
 		Component() = default;
 		virtual ~Component() = default;
-
-	public:
+		
 		XPLICIT_COPY_DEFAULT(Component);
-
-	public:
+		
 		virtual bool should_update() noexcept;
 		virtual void update();
-
-	public:
+		
 		virtual COMPONENT_TYPE type() noexcept;
 		virtual const char* name() noexcept;
 
-	public:
 		virtual PHYSICS_TYPE physics() noexcept;
 		virtual bool can_collide() noexcept;
 		virtual bool has_physics() noexcept;

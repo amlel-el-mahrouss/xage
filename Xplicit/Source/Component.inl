@@ -53,21 +53,6 @@ T* Xplicit::ComponentManager::get(const char* name) noexcept
 }
 
 template <typename T>
-T* Xplicit::ComponentManager::get_first() noexcept
-{
-	for (size_t i = 0; i < mComponents.size(); ++i)
-	{
-		if (!mComponents[i])
-			continue;
-
-		if (T* casted = dynamic_cast<T*>(mComponents[i]))
-			return casted;
-	}
-
-	return nullptr;
-}
-
-template <typename T>
 std::vector<T*> Xplicit::ComponentManager::all_of(const char* name)
 {
 	std::vector<T*> list;

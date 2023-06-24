@@ -40,6 +40,8 @@ namespace Xplicit
             this->packet.cmd[cmd_index] = NETWORK_CMD_INVALID;
         }
 
+        memset(&this->address, 0, sizeof(PrivateAddressData));
+
         this->ip_address.clear();
         this->status = NETWORK_STAT_DISCONNECTED;
 
@@ -83,6 +85,11 @@ namespace Xplicit
 	{}
 
     NetworkInstance::UniqueAddress::~UniqueAddress() = default;
+
+    XPLICIT_API String address_to_string(NetworkInstance* instance)
+    {
+        return inet_ntoa(instance->address.sin_addr);
+    }
 
     bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs)
     {

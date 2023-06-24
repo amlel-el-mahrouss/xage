@@ -31,7 +31,10 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 		
-		NetworkPacket& packet = mNetwork->get();
+		NetworkPacket packet;
+
+		if (!mNetwork->read(packet))
+			return;
 		
 		if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
 		{
@@ -40,7 +43,7 @@ namespace Xplicit::Player
 			case COMPONENT_ID_SCRIPT:
 			{
 				Utils::UriParser script = Utils::UriParser(packet.buffer);
-
+				
 				if (script.protocol() != "xasset://")
 					break;
 

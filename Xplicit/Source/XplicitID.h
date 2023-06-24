@@ -11,8 +11,6 @@
 
 #include "Xplicit.h"
 
-/* XplicitNgin first universe */
-#define XPLICIT_UNIVERSE_ID (1U)
 #define XPLICIT_UNIVERSE_DELIM ":"
 #define XPLICIT_UNIVERSE_PREFIX "XPLICIT_"
 
