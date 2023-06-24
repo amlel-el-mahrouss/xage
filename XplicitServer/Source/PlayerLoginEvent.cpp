@@ -51,7 +51,7 @@ namespace Xplicit
 		
 		peer->public_hash = xplicit_hash();
 		peer->hash = xplicit_hash();
-
+		
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
@@ -86,18 +86,6 @@ namespace Xplicit
 
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
-			for (size_t second_peer_idx = peer_idx; second_peer_idx < mNetwork->size(); ++second_peer_idx)
-			{
-				if (mNetwork->get(peer_idx) != mNetwork->get(second_peer_idx) &&
-					address_to_string(mNetwork->get(peer_idx)) == mNetwork->get(second_peer_idx)->ip_address)
-				{
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_INVALID;
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
-
-					return;
-				}
-			}
-
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED)
 				continue;
 
@@ -122,7 +110,7 @@ namespace Xplicit
 
 					++mPlayerCount;
 
-					Xplicit::NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
 					break;
 				}

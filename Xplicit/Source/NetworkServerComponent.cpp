@@ -190,6 +190,10 @@ namespace Xplicit
 			{
 				const std::size_t peer_at = i;
 				const auto peer_lhs = server->get(peer_at);
+
+				if (peer_lhs->ip_address == XPLICIT_BAD_ADDRESS_STR)
+					continue;
+
 				const sockaddr _lhs = *reinterpret_cast<sockaddr*>(&peer_lhs->address);
 
 				if (memcmp(_lhs.sa_data, rhs.sa_data, 14) == 0)

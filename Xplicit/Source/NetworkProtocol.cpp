@@ -42,7 +42,7 @@ namespace Xplicit
 
         memset(&this->address, 0, sizeof(PrivateAddressData));
 
-        this->ip_address.clear();
+        this->ip_address = XPLICIT_BAD_ADDRESS_STR;
         this->status = NETWORK_STAT_DISCONNECTED;
 
         this->hash = XPLICIT_INVALID_HASH;
@@ -56,20 +56,15 @@ namespace Xplicit
         this->status = NETWORK_STAT_INVALID;
 
 		Thread timeout([&]() {
+            this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
+
 			// Sleep for tirty seconds, let the client be aware of our packet.
             std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_MAX_TIMEOUT));
 
-            if (this->status == NETWORK_STAT_CONNECTED)
+            if (this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
             {
-	            if (this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
-	            {
-	                this->packet.hash = this->hash;
-	                this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-	            }
-	            else
-	            {
-	                this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
-	            }
+                this->packet.hash = this->hash;
+                this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
             }
         });
 

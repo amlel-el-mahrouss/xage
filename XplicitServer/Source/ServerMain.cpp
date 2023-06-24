@@ -244,7 +244,7 @@ int main(int argc, char** argv)
 				XPLICIT_MUTEX.lock();
 
 				Xplicit::NetworkServerContext::send_all(net);
-
+				
 				XPLICIT_MUTEX.unlock();
 			};
 		});

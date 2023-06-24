@@ -57,6 +57,9 @@ namespace Xplicit::Player
 	{
 		if (mNetwork == nullptr) return;
 		if (!mNetwork->read(mPacket)) return;
+		
+		if (mPublicHash == 0)
+			mPublicHash = mPacket.public_hash;
 
 		if (mPacket.public_hash == mPublicHash)
 		{
@@ -83,8 +86,6 @@ namespace Xplicit::Player
 
 				this->node()->setPosition(mPos);
 				this->mCam->get()->setPosition(mPos);
-
-				return;
 			}
 		}
 	}
