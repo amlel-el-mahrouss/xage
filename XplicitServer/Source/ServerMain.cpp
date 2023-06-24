@@ -112,6 +112,8 @@ static void xplicit_load_sh()
 {
 	char cmd_buf[1024];
 
+	const auto network = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+
 	while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
 	{
 		std::cout << "> ";
@@ -121,11 +123,25 @@ static void xplicit_load_sh()
 		if (strcmp(cmd_buf, "exit") == 0)
 		{
 			XPLICIT_EXIT_REQUESTED = true;
-			std::terminate();
+			break;
 		}
 
 		if (strcmp(cmd_buf, "help") == 0)
 			xplicit_print_help();
+
+		if (strcmp(cmd_buf, "list") == 0)
+		{
+			for (int index = 0; index < network->size(); ++index)
+			{
+				if (network->get(index)->status == Xplicit::NETWORK_STAT_CONNECTED)
+					std::cout << "Connected, ";
+
+				if (network->get(index)->status == Xplicit::NETWORK_STAT_DISCONNECTED)
+					std::cout << "Disconnected, ";
+
+				std::cout << "Address: " << network->get(index)->ip_address << std::endl;
+			}
+		}
 
 		if (strcmp(cmd_buf, "xconnect") == 0)
 		{

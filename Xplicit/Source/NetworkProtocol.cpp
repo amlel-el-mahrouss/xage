@@ -44,7 +44,8 @@ namespace Xplicit
 
         memset(&this->address, 0, sizeof(PrivateAddressData));
 
-        this->ip_address = XPLICIT_BAD_ADDRESS_STR;
+        this->ip_address.clear();
+
         this->status = NETWORK_STAT_DISCONNECTED;
 
         this->hash = XPLICIT_INVALID_HASH;

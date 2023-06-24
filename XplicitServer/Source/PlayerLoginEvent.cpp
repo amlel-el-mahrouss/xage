@@ -112,7 +112,6 @@ namespace Xplicit
 					++mPlayerCount;
 
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
 			}
 		}
