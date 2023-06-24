@@ -27,8 +27,7 @@ namespace Xplicit
 		~ServerReplicationManager() = default;
 		
 		XPLICIT_COPY_DEFAULT(ServerReplicationManager);
-
-	public:
+		
 		static ServerReplicationManager* get_singleton_ptr() noexcept;
 		
 		void remove(const std::int32_t& id, const char* path, const std::int64_t& public_hash) noexcept;

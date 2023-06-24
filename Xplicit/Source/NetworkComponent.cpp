@@ -169,14 +169,6 @@ namespace Xplicit
 			}
 			case WSAEWOULDBLOCK:
 			{
-				fd_set fd;
-				FD_ZERO(&fd);
-				FD_SET(mSocket.PublicSocket, &fd);
-
-				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 100000 };
-
-				::select(0, &fd, nullptr, nullptr, &timeout);
-
 				break;
 			}
 			default:

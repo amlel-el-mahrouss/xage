@@ -25,9 +25,7 @@
 
 
 const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
-std::thread::id XPLICIT_THREAD_ID;
 bool XPLICIT_EXIT_REQUESTED = false;
-std::mutex XPLICIT_MUTEX;
 
 static void xplicit_read_xml()
 {
@@ -124,9 +122,6 @@ static void xplicit_load_sh()
 		if (strcmp(cmd_buf, "exit") == 0)
 		{
 			XPLICIT_EXIT_REQUESTED = true;
-
-			while (XPLICIT_THREAD_ID != std::this_thread::get_id());
-			
 			std::exit(0);
 		}
 
@@ -206,7 +201,7 @@ int main(int argc, char** argv)
 		SetConsoleTitleA(title.c_str());
 
 #endif // XPLICIT_WINDOWS
-		
+
 		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
 
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
@@ -245,17 +240,8 @@ int main(int argc, char** argv)
 				if (XPLICIT_EXIT_REQUESTED)
 					break;
 
-				XPLICIT_MUTEX.lock();
-
-				XPLICIT_THREAD_ID = std::this_thread::get_id();
-
 				Xplicit::NetworkServerContext::recv_all(net);
-
 				Xplicit::NetworkServerContext::send_all(net);
-
-				XPLICIT_MUTEX.unlock();
-
-				XPLICIT_THREAD_ID = id;
 			};
 		});
 
@@ -269,17 +255,9 @@ int main(int argc, char** argv)
 			{
 				if (XPLICIT_EXIT_REQUESTED)
 					break;
-
-				XPLICIT_MUTEX.lock();
-
-				XPLICIT_THREAD_ID = std::this_thread::get_id();
-
+				
 				Xplicit::ComponentManager::get_singleton_ptr()->update();
 				Xplicit::EventManager::get_singleton_ptr()->update();
-
-				XPLICIT_MUTEX.unlock();
-
-				XPLICIT_THREAD_ID = id;
 			};
 		});
 
