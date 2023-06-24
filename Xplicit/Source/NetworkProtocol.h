@@ -33,14 +33,14 @@
 #   define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif // ifndef XPLICIT_INVALID_ADDR
 
-#define XPLICIT_NETWORK_BUF_SZ      (32U)
+#define XPLICIT_NETWORK_BUF_SZ      (64U)
 #define XPLICIT_NETWORK_BUF_CHAT_SZ (128U)
 #define XPLICIT_NETWORK_VERSION     (1U)
 
 #define XPLICIT_NUM_CHANNELS (2)
 
-#define XPLICIT_CHANNEL_DATA (0)
-#define XPLICIT_CHANNEL_CHAT (1)
+#define XPLICIT_CHANNEL_DATA (1)
+#define XPLICIT_CHANNEL_CHAT (3)
 
 /* Used by the protocol to tell the velocity. */
 

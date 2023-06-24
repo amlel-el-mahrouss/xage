@@ -144,14 +144,14 @@ namespace Xplicit
 			{
 			case WSAEWOULDBLOCK:
 			{
-				constexpr timeval time_value = { .tv_sec = 2, .tv_usec = 0 };
-
 				fd_set fd;
 
 				FD_ZERO(&fd);
 				FD_SET(server->mSocket, &fd);
+				
+				constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
 
-				::select(0, &fd, nullptr, nullptr, &time_value);
+				::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
 
 				break;
 			}
@@ -221,7 +221,7 @@ namespace Xplicit
 		peer->packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
 		peer->packet.version = XPLICIT_NETWORK_VERSION;
-		
+
 		if (::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
 			sizeof(NetworkPacket),
 			0,
@@ -255,16 +255,11 @@ namespace Xplicit
 
 		std::int32_t from_len = sizeof(PrivateAddressData);
 
-		PrivateAddressData recv_addr;
-		recv_addr.sin_family = AF_INET;
-		recv_addr.sin_port = htons(XPLICIT_NETWORK_PORT);
-		recv_addr.sin_addr.s_addr = inet_addr(peer->ip_address.c_str());
-
 		::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
 			sizeof(NetworkPacket),
 			0,
-			reinterpret_cast<sockaddr*>(&recv_addr),
+			reinterpret_cast<sockaddr*>(&peer->address),
 			&from_len);
 
 		xplicit_register_packet(packet, peer);

@@ -23,9 +23,9 @@
 #include "PlayerSpawnDeathEvent.h"
 #include "ServerReplicationManager.h"
 
-
 const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
 bool XPLICIT_EXIT_REQUESTED = false;
+std::mutex XPLICIT_MUTEX;
 
 static void xplicit_read_xml()
 {
@@ -140,10 +140,10 @@ static void xplicit_load_sh()
 						continue;
 
 					Xplicit::ServerReplicationManager::get_singleton_ptr()->create(Xplicit::COMPONENT_ID_SCRIPT, "xasset://xplicit-client.lua", net->get(index)->public_hash);
-					Xplicit::NetworkServerContext::send(net, net->get(index));
 				}
 			}
 
+			Xplicit::NetworkServerContext::send_all(net);
 		}
 
 		if (strcmp(cmd_buf, "xconnect") == 0)
@@ -226,7 +226,6 @@ int main(int argc, char** argv)
 				}
 			}
 
-			Xplicit::NetworkServerContext::send_all(net);
 		});
 
 		auto id = std::this_thread::get_id();
@@ -241,7 +240,12 @@ int main(int argc, char** argv)
 					break;
 
 				Xplicit::NetworkServerContext::recv_all(net);
+
+				XPLICIT_MUTEX.lock();
+
 				Xplicit::NetworkServerContext::send_all(net);
+
+				XPLICIT_MUTEX.unlock();
 			};
 		});
 
@@ -255,9 +259,13 @@ int main(int argc, char** argv)
 			{
 				if (XPLICIT_EXIT_REQUESTED)
 					break;
-				
+
+				XPLICIT_MUTEX.lock();
+
 				Xplicit::ComponentManager::get_singleton_ptr()->update();
 				Xplicit::EventManager::get_singleton_ptr()->update();
+
+				XPLICIT_MUTEX.unlock();
 			};
 		});
 

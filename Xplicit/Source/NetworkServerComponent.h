@@ -16,7 +16,7 @@
 
 namespace Xplicit
 {
-	constexpr const std::int16_t XPLICIT_MAX_CONNECTIONS = 16;
+	constexpr std::int16_t XPLICIT_MAX_CONNECTIONS = 16;
 
 	typedef std::vector<std::pair<Auth::XplicitID, NetworkInstance*>> NetworkVector;
 
@@ -83,6 +83,10 @@ namespace Xplicit
 		static NetworkPacketQueue* get_singleton_ptr() noexcept
 		{
 			static NetworkPacketQueue* queue = nullptr;
+
+			if (queue == nullptr)
+				queue = new NetworkPacketQueue();
+
 			return queue;
 		}
 

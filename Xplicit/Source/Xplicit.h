@@ -473,6 +473,8 @@ namespace Xplicit
 
 				return gen();
 			}
+			default:
+				break;
 			}
 
 			return {};
@@ -525,12 +527,12 @@ namespace Xplicit
 			mIndex(0UL),
 			mPointer(nullptr)
 		{
-			/* allocate these shits */										// type			  size   align
-			this->mPointer = static_cast<char*>(malloc(sizeof(char) * (sizeof(PtrType) * Size * 8)));
+			/* allocate these shits */										// type			  size
+			this->mPointer = static_cast<char*>(malloc(sizeof(char) * (sizeof(PtrType) * Size)));
 			XPLICIT_ASSERT(mPointer); // assert that shit
 
 			/* zero memory that shit */
-			ZeroMemory(this->mPointer, (sizeof(PtrType) * Size));
+			ZeroMemory(this->mPointer, sizeof(PtrType) * Size);
 		}
 
 		~Pool() noexcept
@@ -546,9 +548,9 @@ namespace Xplicit
 		char* mPointer;
 
 	public:
-		std::size_t size() noexcept { return sizeof(PtrType) * Size; }
-		const std::size_t& capacity() noexcept { return mIndex; }
-		char* data() noexcept { return mPointer; }
+		std::size_t size() const noexcept { return sizeof(PtrType) * Size; }
+		const std::size_t& capacity() const noexcept { return mIndex; }
+		char* data() const noexcept { return mPointer; }
 		
 		template <typename... Args>
 		PtrType* allocate(Args&&... args) noexcept
@@ -593,21 +595,21 @@ namespace Xplicit
 			AsyncAction(FnT fn, Args&&... args)
 			{
 				XPLICIT_ASSERT(fn);
-				m_thread = std::thread(fn, args...);
+				mThread = std::thread(fn, args...);
 			}
 
 			~AsyncAction() {}
 
 			void detach() noexcept
 			{
-				m_thread.detach();
+				mThread.detach();
 			}
 			
 			AsyncAction& operator=(const AsyncAction&) = default;
 			AsyncAction(const AsyncAction&) = default;
 
 		private:
-			Thread m_thread;
+			Thread mThread;
 
 		};
 
@@ -630,6 +632,7 @@ namespace Xplicit
 				this->release();
 			}
 
+		public:
 			XPLICIT_COPY_DEFAULT(ThreadLockingSystem)
 
 		};

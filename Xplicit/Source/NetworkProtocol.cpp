@@ -59,27 +59,21 @@ namespace Xplicit
 			// Sleep for tirty seconds, let the client be aware of our packet.
             std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_MAX_TIMEOUT));
 
-            if (this->status == NETWORK_STAT_DISCONNECTED)
+            if (this->status == NETWORK_STAT_CONNECTED)
             {
-#ifdef XPLICIT_DEBUG
-                XPLICIT_INFO("Player disconnected before timeout, action canceled.");
-#endif // ifdef XPLICIT_DEBUG
-            }
-
-            if (this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
-            {
-#ifdef XPLICIT_DEBUG
-                XPLICIT_INFO("Player will be disconnected.");
-#endif // ifdef XPLICIT_DEBUG
-
-                this->packet.hash = this->hash;
-                this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-            }
-            else
-            {
-                this->status = NETWORK_STAT_CONNECTED;
+	            if (this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
+	            {
+	                this->packet.hash = this->hash;
+	                this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+	            }
+	            else
+	            {
+	                this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
+	            }
             }
         });
+
+        timeout.detach();
     }
 
     NetworkInstance::UniqueAddress::UniqueAddress()

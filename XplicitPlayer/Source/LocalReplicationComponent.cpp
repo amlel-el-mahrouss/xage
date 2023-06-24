@@ -55,18 +55,6 @@ namespace Xplicit::Player
 
 				break;
 			}
-			case COMPONENT_ID_TEXTURE:
-			{
-				Utils::UriParser script = Utils::UriParser(packet.buffer);
-
-				if (script.protocol() != "xasset://")
-					break;
-
-				auto texture = IRR->getVideoDriver()->getTexture(script.get().c_str());
-				Collection.push_back(std::pair("ITexture_" + script.get(), reinterpret_cast<void*>(texture)));
-
-				break;
-			}
 			case COMPONENT_ID_SOUND:
 			{
 				Utils::UriParser script = Utils::UriParser(packet.buffer);
@@ -88,8 +76,6 @@ namespace Xplicit::Player
 			switch (packet.id)
 			{
 			case COMPONENT_ID_SCRIPT:
-				break;
-			case COMPONENT_ID_TEXTURE:
 				break;
 			case COMPONENT_ID_SOUND:
 				break;

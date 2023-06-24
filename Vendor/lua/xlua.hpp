@@ -52,7 +52,7 @@ namespace Xplicit::Lua
 			return state;
 		}
 
-		std::int32_t run(const char* file)
+		std::int32_t run(const char* file) noexcept
 		{
 			if (file)
 				return luaL_dofile(mL, file);

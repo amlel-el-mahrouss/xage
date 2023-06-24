@@ -35,9 +35,7 @@ namespace Xplicit::Player
 		void update() override;
 		
 		XPLICIT_COPY_DEFAULT(LocalReplicationComponent);
-
-		std::vector<std::pair<std::string, void*>> Collection;
-
+		
 	private:
 		NetworkComponent* mNetwork;
 		std::int64_t mHash;

@@ -81,7 +81,7 @@ namespace Xplicit
 
 	void PlayerLoginEvent::handle_join_event() noexcept
 	{
-		if (this->size() > XPLICIT_MAX_CONNECTIONS)
+		if (this->size() >= XPLICIT_MAX_CONNECTIONS)
 			return;
 
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
