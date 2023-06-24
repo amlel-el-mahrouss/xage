@@ -108,12 +108,11 @@ namespace Xplicit
 					
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
-
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT;
-
+					
 					++mPlayerCount;
 
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
 			}
 		}
@@ -141,6 +140,8 @@ namespace Xplicit
 
 				if (hash_lhs == hash_rhs)
 				{
+					--mPlayerCount;
+
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
 
@@ -162,8 +163,6 @@ namespace Xplicit
 							mNetwork->get(index)->packet.public_hash = public_hash;
 						}
 					}
-
-					--mPlayerCount;
 				}
 			}
 		}

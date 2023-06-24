@@ -145,18 +145,18 @@ namespace Xplicit::Player
 				{
 					XPLICIT_INFO("Connecting to peer...");
 
-					NetworkPacket isAck{};
-					mNetwork->read(isAck);
-
-					if (isAck.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
-						break;
-
 					NetworkPacket spawn{};
 
 					spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
 					spawn.size = sizeof(NetworkPacket);
 
 					mNetwork->send(spawn);
+
+					NetworkPacket isAck{};
+					if (isAck.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
+						break;
+
+					mNetwork->read(isAck);
 					
 					std::this_thread::sleep_for(std::chrono::seconds(1));
 				}
