@@ -41,21 +41,15 @@ namespace Xplicit
 
 	void PlayerSpawnDeathEvent::operator()()
 	{
-		auto network = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
-
-		if (!network)
+		if (!mNetwork)
 			return;
 
-		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player");
-		
-		for (PlayerComponent* player : players)
+		for (const auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player"); 
+			PlayerComponent* player : players)
 		{
 			if (player == nullptr)
 				continue;
-
-			if (player->get()->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
-				continue;
-
+			
 			auto* peer_ptr = player->get();
 
 			if (!peer_ptr)

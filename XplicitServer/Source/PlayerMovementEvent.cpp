@@ -45,7 +45,7 @@ namespace Xplicit
 		if (!mNetwork)
 			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
-		auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
+		const auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("PlayerComponent");
 		NetworkFloat speed = mGameVar->as_float();
 		
 		for (std::size_t i = 0; i < players.size(); ++i)
@@ -53,7 +53,7 @@ namespace Xplicit
 			PlayerComponent* ply = players[i];
 
 			if (ply == nullptr ||
-				ply->health() <= 0)
+				ply->health() < 1)
 				continue;
 
 			NetworkInstance* peer = ply->get();

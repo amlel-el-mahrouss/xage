@@ -59,7 +59,19 @@ namespace Xplicit
 
 		peer->packet.hash = peer->hash;
 		peer->packet.size = sizeof(NetworkPacket);
-		
+
+		for (std::size_t index = 0; index < server->size(); ++index)
+		{
+			if (server->get(index)->hash == peer->hash)
+				continue;
+
+			if (server->get(index)->status == NETWORK_STAT_CONNECTED)
+			{
+				server->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+				server->get(index)->packet.public_hash = peer->public_hash;
+			}
+		}
+
 		player->set_peer(peer);
 		
 		return true;
