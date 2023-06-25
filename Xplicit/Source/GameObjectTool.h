@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "CommonEngine.h"
+#include "DataValue.h"
 #include <lua/lua.hpp>
 
 #ifdef _MSC_VER
@@ -20,7 +20,7 @@
 
 namespace Xplicit
 {
-	class Tool final
+	class GameObjectTool final
 	{
 	public:
 		void (XPLICIT_CALLING_CONV *Equip)(lua_State*);

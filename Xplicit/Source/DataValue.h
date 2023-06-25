@@ -14,12 +14,23 @@
 
 #include "Xplicit.h"
 
-namespace Xplicit::Scene
+namespace Xplicit
 {
-	struct DataValue
+	enum class DATA_VALUE_TYPE
 	{
-		char Name[64];
-		char Value[64];
+		BOOLE,
+		STRING,
+		INTEGER,
+		IEE754,
+	};
+
+	class DataValue final
+	{
+	public:
+		String Name;
+		String Value;
+		DATA_VALUE_TYPE Type;
+
 	};
 
 	/*
@@ -32,10 +43,14 @@ namespace Xplicit::Scene
 	inline std::unique_ptr<DataValue> make_data_value(const char* name, const char* value = "Nil") noexcept
 	{
 		DataValue* data_value = new DataValue();
+
+		if (data_value == nullptr)
+			throw EngineError("Invalid DataValue (probably out of memory?)");
+
 		XPLICIT_ASSERT(data_value);
 
-		memcpy(data_value->Name, name, strnlen(name, 64));
-		memcpy(data_value->Value, value, strnlen(name, 64));
+		data_value->Name = name;
+		data_value->Value = value;
 
 		return std::make_unique<DataValue>(data_value);
 	}

@@ -61,8 +61,8 @@ static int lua_PlaySound(lua_State* L)
 
 void xplicit_register_client_lua()
 {
-	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "PlaySound");
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlaySound");
 }
 
 #endif // ifdef XPLICIT_WINDOWS

@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: ApplicationContext.h
- *			Purpose: Application Context
+ *			File: Root.h
+ *			Purpose: Root Application context.
  *
  * =====================================================================
  */

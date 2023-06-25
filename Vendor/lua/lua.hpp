@@ -23,10 +23,10 @@ extern "C" {
 
 namespace Xplicit::Lua
 {
-	class XPLICIT_API ILuaStateManager final
+	class XPLICIT_API XLuaStateManager final
 	{
 	private:
-		explicit ILuaStateManager()
+		explicit XLuaStateManager()
 			: mL(luaL_newstate())
 		{
 			XPLICIT_ASSERT(mL);
@@ -37,17 +37,17 @@ namespace Xplicit::Lua
 		lua_State* mL;
 
 	public:
-		~ILuaStateManager() = default;
+		~XLuaStateManager() = default;
 
-		XPLICIT_COPY_DEFAULT(ILuaStateManager);
+		XPLICIT_COPY_DEFAULT(XLuaStateManager);
 
 	public:
-		static ILuaStateManager* get_singleton_ptr() noexcept
+		static XLuaStateManager* get_singleton_ptr() noexcept
 		{
-			static ILuaStateManager* state = nullptr;
+			static XLuaStateManager* state = nullptr;
 
 			if (state == nullptr)
-				state = new ILuaStateManager();
+				state = new XLuaStateManager();
 
 			return state;
 		}

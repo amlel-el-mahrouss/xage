@@ -131,29 +131,29 @@ static int lua_Kill(lua_State* L)
 
 void xplicit_register_server_lua()
 {
-	Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->run_string("PlayerManager = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("PlayerManager = {}");
 
-	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_GetHealth);
-	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "PlayerManager:GetHealth");
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_GetHealth);
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:GetHealth");
 
-	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_SetHealth);
-	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "PlayerManager:SetHealth");
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetHealth);
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:SetHealth");
 
-	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_TakeDamage);
-	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "PlayerManager:TakeDamage");
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_TakeDamage);
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:TakeDamage");
 
-	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_Kill);
-	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "PlayerManager:Kill");
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_Kill);
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:Kill");
 
-	Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->run_string("Sound = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {}");
 
-	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
 
 	XPLICIT_GET_DATA_DIR(fullPath);
 
 	fullPath += "Contents/";
 	fullPath += "xplicit.lua";
 
-	luaL_dofile(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), fullPath.c_str());
+	luaL_dofile(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), fullPath.c_str());
 }

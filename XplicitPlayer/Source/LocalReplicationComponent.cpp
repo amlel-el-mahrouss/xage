@@ -52,7 +52,7 @@ namespace Xplicit::Player
 				path += "Contents/";
 				path += script.get();
 				
-				Lua::ILuaStateManager::get_singleton_ptr()->run(path.c_str());
+				Lua::XLuaStateManager::get_singleton_ptr()->run(path.c_str());
 
 				break;
 			}

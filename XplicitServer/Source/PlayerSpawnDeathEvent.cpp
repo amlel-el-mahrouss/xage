@@ -64,7 +64,7 @@ namespace Xplicit
 				player->should_spawn(false);
 
 				XPLICIT_INFO("Humanoid:Death [EVENT]");
-				Lua::ILuaStateManager::get_singleton_ptr()->run_string("Engine:Death()");
+				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Death()");
 
 				// Place event here (TODO)
 
@@ -84,7 +84,7 @@ namespace Xplicit
 						humanoid->health(XPLICIT_DEFAULT_HEALTH);
 
 						XPLICIT_INFO("Humanoid:Spawn [EVENT]");
-						Lua::ILuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
+						Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
 					}
 				}, player);
 			}

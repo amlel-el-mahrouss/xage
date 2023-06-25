@@ -125,7 +125,7 @@ namespace Xplicit
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
 					XPLICIT_INFO("Humanoid:Login [EVENT]");
-					Lua::ILuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
 				}
 			}
 		}
@@ -186,7 +186,7 @@ namespace Xplicit
 					}
 
 					XPLICIT_INFO("Humanoid:Logoff [EVENT]");
-					Lua::ILuaStateManager::get_singleton_ptr()->run_string("Engine:Leave()");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Leave()");
 				}
 			}
 		}
