@@ -124,6 +124,9 @@ namespace Xplicit
 					++mPlayerCount;
 
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+
+					XPLICIT_INFO("Humanoid:Login [EVENT]");
+					// Place event here (TODO)
 				}
 			}
 		}
@@ -182,6 +185,9 @@ namespace Xplicit
 							mNetwork->get(index)->packet.public_hash = public_hash;
 						}
 					}
+
+					XPLICIT_INFO("Humanoid:Logoff [EVENT]");
+					// Place event here (TODO)
 				}
 			}
 		}

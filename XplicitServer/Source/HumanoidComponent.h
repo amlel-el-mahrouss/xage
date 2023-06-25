@@ -42,9 +42,11 @@ namespace Xplicit
 
 	public:
 		void health(const int32_t& health) noexcept;
-		void freeze(const bool enable) noexcept;
+
+		void should_spawn(const bool enable) noexcept;
+		bool can_spawn() const noexcept;
+
 		int64_t health() const noexcept;
-		bool is_frozen() const noexcept;
 		bool alive() const noexcept;
 
 	public:
@@ -52,9 +54,8 @@ namespace Xplicit
 
 	private:
 		NetworkInstance* mPeer;
-		int64_t mDeathTimeout;
 		int64_t mHealth;
-		bool mFrozen;
+		bool mCanSpawn;
 
 	};
 

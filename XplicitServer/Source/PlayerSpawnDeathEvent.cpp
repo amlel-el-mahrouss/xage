@@ -18,7 +18,7 @@
 
 namespace Xplicit
 {
-	constexpr int16_t XPLICIT_DEATH_DELAY = 1000;
+	constexpr int16_t XPLICIT_DEATH_DELAY = 5;
 
 	/// <summary>
 	/// Handle Spawn at a specific point.
@@ -58,8 +58,14 @@ namespace Xplicit
 
 			peer_ptr->packet.health = player->health();
 
-			if (!player->alive())
+			if (!player->alive() && player->can_spawn())
 			{
+				player->should_spawn(false);
+
+				XPLICIT_INFO("Humanoid:Death [EVENT]");
+
+				// Place event here (TODO)
+
 				mDeadPlayers.push_back(player);
 
 				for (size_t peer = 0; peer < mNetwork->size(); ++peer)
@@ -67,6 +73,18 @@ namespace Xplicit
 					peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
 					peer_ptr->packet.public_hash = player->get_peer()->public_hash;
 				}
+
+				Thread respawnJob([](HumanoidComponent* humanoid) {
+					std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_DEATH_DELAY));
+
+					if (humanoid)
+					{
+						humanoid->health(XPLICIT_DEFAULT_HEALTH);
+
+						XPLICIT_INFO("Humanoid:Spawn [EVENT]");
+						// Place event here (TODO)
+					}
+				}, player);
 			}
 			else
 			{
@@ -74,6 +92,9 @@ namespace Xplicit
 
 				if (it != mDeadPlayers.cend())
 				{
+					if (player->can_spawn())
+						continue;
+
 					mDeadPlayers.erase(it);
 					
 					for (size_t peer = 0; peer < mNetwork->size(); ++peer)
@@ -92,6 +113,8 @@ namespace Xplicit
 						peer_ptr->packet.pos[XPLICIT_NETWORK_Y] = player->pos().Y;
 						peer_ptr->packet.pos[XPLICIT_NETWORK_Z] = player->pos().Z;
 					}
+
+					player->should_spawn(true);
 				}
 			}
 		}

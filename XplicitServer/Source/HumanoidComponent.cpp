@@ -22,9 +22,8 @@ namespace Xplicit
 		: 
 		Component(), 
 		mPeer(nullptr),
-		mDeathTimeout(0),
 		mHealth(XPLICIT_DEFAULT_HEALTH), 
-		mFrozen(false)
+		mCanSpawn(true)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("HumanoidComponent::HumanoidComponent");
@@ -63,14 +62,14 @@ namespace Xplicit
 		mPeer = peer;
 	}
 
-	bool HumanoidComponent::is_frozen() const noexcept
+	bool HumanoidComponent::can_spawn() const noexcept
 	{
-		return mFrozen;
+		return mCanSpawn;
 	}
 
 	Vector<float>& HumanoidComponent::pos() noexcept { return Position.Position; }
 
-	void HumanoidComponent::freeze(const bool enable) noexcept { mFrozen = enable; }
+	void HumanoidComponent::should_spawn(const bool enable) noexcept { mCanSpawn = enable; }
 
 	bool HumanoidComponent::alive() const noexcept { return mHealth > 0; }
 }
