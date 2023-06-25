@@ -37,6 +37,16 @@ namespace Xplicit::Player
 		IAnimatedMesh* operator->() const { return mMdl; }
 
 	protected:
+		bool update_mesh(void) const noexcept
+		{
+			mNode->setVisible(IRR->getVideoDriver()->getOcclusionQueryResult(mNode) < 0);
+
+			if (!mNode->isVisible())
+				return false;
+
+			return true;
+		}
+
 		IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic
 		IAnimatedMesh* mMdl; // Model Data pointer, generic
 
@@ -61,18 +71,23 @@ namespace Xplicit::Player
 
 		void render() override
 		{
+			this->setVisible(IRR->getVideoDriver()->getOcclusionQueryResult(this) < 0);
+
+			if (!this->isVisible())
+				return;
+
 			IVideoDriver* driver = SceneManager->getVideoDriver();
 
 			driver->setMaterial(Material);
-			driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
+			driver->setTransform(ETS_WORLD, AbsoluteTransformation);
 			driver->drawVertexPrimitiveList(&
 				Vertices.data()[0], 
 				4, 
 				&Indices.data()[0], 
 				4, 
-				video::EVT_STANDARD, 
-				scene::EPT_TRIANGLES, 
-				video::EIT_32BIT);
+				EVT_STANDARD, 
+				EPT_TRIANGLES, 
+				EIT_32BIT);
 		}
 		
 		void add(const u16& indice) noexcept
@@ -112,16 +127,14 @@ namespace Xplicit::Player
 			}
 
 		}
-
-	public:
+		
 		DynamicMesh& operator=(const DynamicMesh&) = default;
 		DynamicMesh(const DynamicMesh&) = default;
-
-	public:
-		std::vector<video::S3DVertex> Vertices;
+		
+		std::vector<S3DVertex> Vertices;
 		std::vector<u16> Indices;
-		video::SMaterial Material;
-		core::aabbox3d<f32> Box;
+		SMaterial Material;
+		aabbox3d<f32> Box;
 
 	};
 }

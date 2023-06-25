@@ -5,7 +5,7 @@
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: DriverSystem.h
- *			Purpose: C++ Rendering Driver API
+ *			Purpose: C++ Rendering Driver API, replacement of LegacyRenderer.
  *
  * =====================================================================
  */

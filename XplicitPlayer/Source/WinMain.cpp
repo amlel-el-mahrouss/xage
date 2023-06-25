@@ -69,6 +69,8 @@ XPLICIT_MAIN()
 		// register lua calls, such as PlaySound
 		xplicit_register_client_lua();
 
+		std::uint32_t time_now = IRR->getTimer()->getTime();
+
 		/* main game loop */
 		while (IRR->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 
@@ -78,6 +80,13 @@ XPLICIT_MAIN()
 
 			IRR->getSceneManager()->drawAll();
 			IRR->getGUIEnvironment()->drawAll();
+
+			if (IRR->getTimer()->getTime() - time_now > 100)
+			{
+				IRR->getVideoDriver()->runAllOcclusionQueries(false);
+				IRR->getVideoDriver()->updateAllOcclusionQueries();
+				time_now = IRR->getTimer()->getTime();
+			}
 
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
