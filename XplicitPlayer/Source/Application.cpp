@@ -32,7 +32,7 @@ namespace Xplicit::Bites
 			throw std::runtime_error("Missing skin! This pack is needed for the XplicitPlayer to work.");
 	}
 
-	Application::Application(Utils::UriParser& xconnectTo)
+	Application::Application(Utils::UriParser& xconnect_to)
 		: mSettings(), mWsa(), mPath("")
 	{
 		this->create_context();
@@ -46,11 +46,14 @@ namespace Xplicit::Bites
 		Xplicit::init_winsock(&mWsa);
 #endif
 
-		auto splashScreen = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();
-		XPLICIT_ASSERT(splashScreen);
+#ifdef XPLICIT_DEBUG
+		Xplicit::open_terminal(stdout);
+#endif
 
-		if (splashScreen)
-			splashScreen->connect(xconnectTo);
+		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();
+		XPLICIT_ASSERT(splash_screen);
+
+		splash_screen->connect(xconnect_to);
 	}
 
 	Application::~Application() {}

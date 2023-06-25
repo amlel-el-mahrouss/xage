@@ -47,16 +47,16 @@ namespace Xplicit
 		for (const auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player"); 
 			PlayerComponent* player : players)
 		{
-			if (player == nullptr)
+			if (player == nullptr ||
+				player->get_peer() == nullptr)
 				continue;
 			
 			auto* peer_ptr = player->get_peer();
 
-			if (!peer_ptr)
-				continue;
-
 			if (peer_ptr->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
+
+			peer_ptr->packet.health = player->health();
 
 			if (!player->alive())
 			{
@@ -64,9 +64,6 @@ namespace Xplicit
 
 				for (size_t peer = 0; peer < mNetwork->size(); ++peer)
 				{
-					if (peer_ptr->hash == mNetwork->get(peer)->hash)
-						continue;
-
 					peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
 					peer_ptr->packet.public_hash = player->get_peer()->public_hash;
 				}
@@ -82,6 +79,7 @@ namespace Xplicit
 					for (size_t peer = 0; peer < mNetwork->size(); ++peer)
 					{
 						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_INVALID;
+						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
 						peer_ptr->packet.public_hash = player->get_peer()->public_hash;
 						peer_ptr->packet.health = player->health();

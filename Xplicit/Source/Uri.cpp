@@ -51,9 +51,6 @@ namespace Xplicit::Utils
 			if (m_data[i] == URI_SEPARATOR)
 				continue;
 
-			if (m_data[i] == ':')
-				break;
-
 			uri.push_back(m_data[i]);
 		}
 
@@ -75,12 +72,10 @@ namespace Xplicit::Utils
 
 		std::string uri_str = uri;
 
-		size_t count = 0;
+		if (strstr(uri, m_protocol.c_str()))
+			return *this;
 
-		if (!strstr(uri, m_protocol.c_str()))
-			count = m_protocol.size();
-
-		for (size_t i = count; i < uri_str.size(); ++i)
+		for (size_t i = 0; i < uri_str.size(); ++i)
 		{
 			if (uri_str[i] == '\\' || uri_str[i] == '/')
 			{

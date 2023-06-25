@@ -30,7 +30,7 @@ namespace Xplicit::Player
 	enum class POPUP_TYPE
 	{
 		NETWORK,
-		DOWNLOADING,
+		TELEPORTING,
 		BANNED,
 		SHUTDOWN,
 		KICK,
@@ -83,6 +83,7 @@ namespace Xplicit::Player
 		NetworkComponent* mNetwork;
 		std::int64_t mPublicHash;
 		std::int64_t mHealth;
+		ITexture* mOverlay;
 
 	};
 

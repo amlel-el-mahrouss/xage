@@ -50,10 +50,6 @@ XPLICIT_MAIN()
 		Xplicit::init_winsock(&wsa);
 #endif
 
-#ifdef XPLICIT_DEBUG
-		Xplicit::open_terminal();
-#endif
-
 		// parse the connection uri.
 		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
 
@@ -94,8 +90,8 @@ XPLICIT_MAIN()
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO(err.what());
 #endif
-		std::wstring exit;
 
+		std::wstring exit;
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
 		exit += L"What: ";

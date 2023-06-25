@@ -201,7 +201,7 @@ namespace Xplicit::Renderer::DX11
 	{
 	public:
 		RenderComponentD3D11();
-		~RenderComponentD3D11();
+		~RenderComponentD3D11() override;
 
 		RenderComponentD3D11& operator=(const RenderComponentD3D11&) = default;
 		RenderComponentD3D11(const RenderComponentD3D11&) = default;
@@ -215,12 +215,12 @@ namespace Xplicit::Renderer::DX11
 		void create();
 
 	public:
-		virtual void update() override;
+		void update() override;
 
 	public:
-		virtual bool should_update() noexcept override;
-		virtual COMPONENT_TYPE type() noexcept override;
-		virtual const char* name() noexcept override;
+		bool should_update() noexcept override;
+		COMPONENT_TYPE type() noexcept override;
+		const char* name() noexcept override;
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;

@@ -47,7 +47,7 @@ namespace Xplicit::Player
 			break;
 		case POPUP_TYPE::SHUTDOWN:
 			break;
-		case POPUP_TYPE::DOWNLOADING:
+		case POPUP_TYPE::TELEPORTING:
 			break;
 		case POPUP_TYPE::BANNED:
 			break;
@@ -89,14 +89,15 @@ namespace Xplicit::Player
 	
 	/* Heads up display */
 	LocalHudComponent::LocalHudComponent(const std::int64_t& publicHash)
-		: mHealth(0),
+		:
+		  mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		  mPublicHash(publicHash),
-		  mNetwork(nullptr)
+		  mHealth(0),
+		  mOverlay(IRR->getVideoDriver()->getTexture("hit_overlay.png"))
 	{
-		XPLICIT_ASSERT(publicHash != -1);
-
-		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		XPLICIT_ASSERT(mPublicHash != XPLICIT_INVALID_HASH);
 		XPLICIT_ASSERT(mNetwork);
+		XPLICIT_ASSERT(mOverlay);
 	}
 
 	LocalHudComponent::~LocalHudComponent() = default;
@@ -106,10 +107,19 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 
-		const auto& packet = mNetwork->get();
+		auto& packet = mNetwork->get();
 	
 		if (packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
+		{
 			mHealth = packet.health;
+
+			IRR->getVideoDriver()->draw2DImage(mOverlay, vector2di(0, 0), rect(0, 0, 1280, 720),
+				nullptr,
+				SColor(255, 255, 255, 255),
+				true);
+
+			packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] = NETWORK_CMD_DAMAGE;
+		}
 	}
 
 	namespace Nixxon
