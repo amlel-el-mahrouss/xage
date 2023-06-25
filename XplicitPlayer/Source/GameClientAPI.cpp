@@ -30,7 +30,7 @@ static int lua_PlaySound(lua_State* L)
 {
 	const char* path = lua_tostring(L, 1);
 
-	if (!path)
+	if (path == nullptr)
 		return 0;
 
 	std::unique_ptr<Xplicit::Utils::UriParser> uri = std::make_unique<Xplicit::Utils::UriParser>("xasset://");

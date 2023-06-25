@@ -14,8 +14,7 @@
  */
 
 #include "PlayerLoginEvent.h"
-
-#include "ServerReplicationManager.h"
+#include <lua/lua.hpp>
 
 namespace Xplicit
 {
@@ -126,7 +125,7 @@ namespace Xplicit
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
 					XPLICIT_INFO("Humanoid:Login [EVENT]");
-					// Place event here (TODO)
+					Lua::ILuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
 				}
 			}
 		}
@@ -187,7 +186,7 @@ namespace Xplicit
 					}
 
 					XPLICIT_INFO("Humanoid:Logoff [EVENT]");
-					// Place event here (TODO)
+					Lua::ILuaStateManager::get_singleton_ptr()->run_string("Engine:Leave()");
 				}
 			}
 		}
