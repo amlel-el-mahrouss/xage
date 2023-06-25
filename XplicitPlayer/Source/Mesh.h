@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <Root.h>
 #include <Xplicit.h>
 
 namespace Xplicit::Player

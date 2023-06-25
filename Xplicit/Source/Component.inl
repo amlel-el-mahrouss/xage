@@ -7,7 +7,6 @@
  * =====================================================================
  */
 
-#include "Avx.h"
 
 template <typename T, typename... Args>
 T* Xplicit::ComponentManager::add(Args&&... args)
@@ -65,7 +64,9 @@ std::vector<T*> Xplicit::ComponentManager::all_of(const char* name)
 		if (!mComponents[i])
 			continue;
 
+		// move that to upper file if you happen to use that in eveyr part of the file.
 #ifdef XPLICIT_USE_VECTOR
+#	include "Avx.h"
 		if (avx_strequals(name, mComponents[i]->name()))
 #else
 		if (strcmp(name, mComponents[i]->name()) == 0)

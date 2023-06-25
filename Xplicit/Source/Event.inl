@@ -7,8 +7,6 @@
  * =====================================================================
  */
 
-#include "Avx.h"
-
 template <typename T, typename... Args>
 T* Xplicit::EventManager::add(Args&&... args)
 {
@@ -33,6 +31,8 @@ T* Xplicit::EventManager::get(const char* name)
 			continue;
 
 #ifdef XPLICIT_USE_VECTOR
+#	include "Avx.h"
+
 		if (avx_strequals(name, mEvents[i]->name()))
 #else
 		if (strcmp(name, mEvents[i]->name()) == 0)
