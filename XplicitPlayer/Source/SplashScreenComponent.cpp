@@ -113,8 +113,9 @@ namespace Xplicit::Player
 						POPUP_TYPE::NETWORK, "StopPopup");
 
 				ComponentManager::get_singleton_ptr()->remove(mNetwork);
-
 				mEnabled = false;
+
+				return;
 			}
 			else
 			{
@@ -151,7 +152,7 @@ namespace Xplicit::Player
 					if (!mNetwork)
 						return;
 
-					XPLICIT_INFO("Connecting to peer...");
+					XPLICIT_INFO("[XCONNECT] connecting...");
 
 					NetworkPacket spawn{};
 

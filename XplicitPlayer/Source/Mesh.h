@@ -38,16 +38,6 @@ namespace Xplicit::Player
 		IAnimatedMesh* operator->() const { return mMdl; }
 
 	protected:
-		bool update_mesh(void) const noexcept
-		{
-			mNode->setVisible(IRR->getVideoDriver()->getOcclusionQueryResult(mNode) < 0);
-
-			if (!mNode->isVisible())
-				return false;
-
-			return true;
-		}
-
 		IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic
 		IAnimatedMesh* mMdl; // Model Data pointer, generic
 

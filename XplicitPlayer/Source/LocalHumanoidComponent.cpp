@@ -55,31 +55,28 @@ namespace Xplicit::Player
 
 	void LocalHumanoidComponent::update()
 	{
-		if (this->update_mesh())
+		if (mNetwork == nullptr) return;
+		if (!mNetwork->read(mPacket)) return;
+
+		if (mPublicHash == 0)
+			mPublicHash = mPacket.public_hash;
+
+		if (mPacket.public_hash == mPublicHash)
 		{
-			if (mNetwork == nullptr) return;
-			if (!mNetwork->read(mPacket)) return;
-
-			if (mPublicHash == 0)
-				mPublicHash = mPacket.public_hash;
-
-			if (mPacket.public_hash == mPublicHash)
+			if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
+				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{
-				if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
-					mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
-				{
-					const float delta = mPacket.pos[XPLICIT_NETWORK_DELTA];
-					const float xSpeed = mPacket.pos[XPLICIT_NETWORK_X] * delta;
-					const float zSpeed = mPacket.pos[XPLICIT_NETWORK_Z] * delta;
-					const float ySpeed = mPacket.pos[XPLICIT_NETWORK_Y] * delta;
+				const float delta = mPacket.pos[XPLICIT_NETWORK_DELTA];
+				const float xSpeed = mPacket.pos[XPLICIT_NETWORK_X] * delta;
+				const float zSpeed = mPacket.pos[XPLICIT_NETWORK_Z] * delta;
+				const float ySpeed = mPacket.pos[XPLICIT_NETWORK_Y] * delta;
 
-					mPos.Z = zSpeed;
-					mPos.X = xSpeed;
-					mPos.Y = ySpeed;
-					
-					this->node()->setPosition(mPos);
-					this->mCam->get()->setPosition(mPos);
-				}
+				mPos.Z = zSpeed;
+				mPos.X = xSpeed;
+				mPos.Y = ySpeed;
+
+				this->node()->setPosition(mPos);
+				this->mCam->get()->setPosition(mPos);
 			}
 		}
 	}

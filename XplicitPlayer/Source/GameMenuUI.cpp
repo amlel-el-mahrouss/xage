@@ -37,7 +37,7 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
 
-		String path = "menu_overlay.png";
+		String path = "overlay.png";
 
 		switch (popup_type)
 		{

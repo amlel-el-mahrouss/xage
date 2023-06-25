@@ -59,13 +59,10 @@ XPLICIT_MAIN()
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
 			return 1;
 
-		// create a new app.
 		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri);
 
 		if (!app) throw Xplicit::EngineError("Could not create application context, exiting!");
 		
-		std::uint32_t time_now = IRR->getTimer()->getTime();
-
 		/* main game loop */
 		while (IRR->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 
@@ -75,13 +72,6 @@ XPLICIT_MAIN()
 
 			IRR->getSceneManager()->drawAll();
 			IRR->getGUIEnvironment()->drawAll();
-
-			if (IRR->getTimer()->getTime() - time_now > 100)
-			{
-				IRR->getVideoDriver()->runAllOcclusionQueries(false);
-				IRR->getVideoDriver()->updateAllOcclusionQueries();
-				time_now = IRR->getTimer()->getTime();
-			}
 
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
