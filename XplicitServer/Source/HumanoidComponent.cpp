@@ -38,7 +38,13 @@ namespace Xplicit
 
 	bool HumanoidComponent::has_physics() noexcept { return false; }
 
-	void HumanoidComponent::update() {}
+	void HumanoidComponent::update() 
+	{
+		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
+			State = HUMANOID_STATE::ALIVE;
+		else if (mHealth < 1)
+			State = HUMANOID_STATE::DEAD;
+	}
 
 	void HumanoidComponent::health(const int32_t& health) noexcept { this->mHealth = health; }
 
@@ -50,12 +56,13 @@ namespace Xplicit
 
 	const char* HumanoidComponent::name() noexcept { return "HumanoidComponent"; }
 
-	bool HumanoidComponent::should_update() noexcept { return false;  }
+	bool HumanoidComponent::should_update() noexcept { return true;  }
 
 	NetworkInstance* HumanoidComponent::get_peer() const noexcept { return mPeer; }
 
 	void HumanoidComponent::set_peer(NetworkInstance* peer) noexcept 
 	{
+		State = HUMANOID_STATE::INVALID;
 		mPeer = peer;
 	}
 

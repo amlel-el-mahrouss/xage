@@ -21,7 +21,7 @@ namespace Xplicit
 	PlayerMovementEvent::PlayerMovementEvent() 
 		: 
 		mNetwork(nullptr),
-		mDelta(0)
+		mDeltaTime(0UL)
 	{
 		mVelocityVar = GameVarManager::get_singleton_ptr()->get("Server-DefaultVelocity");
 		
@@ -31,7 +31,13 @@ namespace Xplicit
 				"0.035f",
 				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
 
-			mDeltaVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-Delta",
+		}
+
+		mDeltaVar = GameVarManager::get_singleton_ptr()->get("Server-DeltaTime");
+
+		if (!mDeltaVar)
+		{
+			mDeltaVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DeltaTime",
 				"0.01",
 				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
 		}
@@ -82,7 +88,7 @@ namespace Xplicit
 				peer->packet.pos[XPLICIT_NETWORK_Z] = ply->pos().Z;
 
 				/* send server delta to player, so that he is not out of touch. */
-				peer->packet.pos[XPLICIT_NETWORK_DELTA] = mDelta;
+				peer->packet.pos[XPLICIT_NETWORK_DELTA] = mDeltaTime;
 
 				/* finally accept request */
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
@@ -93,6 +99,6 @@ namespace Xplicit
 			}
 		}
 
-		mDelta += mDeltaVar->as_float();
+		mDeltaTime += (mDeltaVar->as_float() / 1000.f);
 	}
 }

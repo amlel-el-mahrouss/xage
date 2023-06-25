@@ -13,6 +13,13 @@
 
 namespace Xplicit
 {
+	enum class HUMANOID_STATE
+	{
+		ALIVE,
+		DEAD,
+		INVALID,
+	};
+
 	class HumanoidComponent final : public Component
 	{
 	public:
@@ -53,6 +60,7 @@ namespace Xplicit
 
 	public:
 		PositionComponent Position;
+		HUMANOID_STATE State;
 
 	private:
 		NetworkInstance* mPeer;
