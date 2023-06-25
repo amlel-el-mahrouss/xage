@@ -30,6 +30,9 @@ namespace Xplicit::Player
 		mCursor = IRR->getVideoDriver()->getTexture("cursor.png");
 
 		XPLICIT_ASSERT(mCursor);
+
+		if (mCursor)
+			mCursor->drop();
 	}
 
 	LocalCameraComponent::~LocalCameraComponent()
