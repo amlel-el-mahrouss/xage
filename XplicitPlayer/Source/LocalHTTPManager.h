@@ -25,6 +25,7 @@ namespace Xplicit::Player
 		LocalHTTPManager() = default;
 		~LocalHTTPManager() = default;
 
+	public:
 		XPLICIT_COPY_DEFAULT(LocalHTTPManager);
 		
 	public:

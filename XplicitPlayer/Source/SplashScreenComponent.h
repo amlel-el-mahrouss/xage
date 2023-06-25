@@ -22,6 +22,7 @@ namespace Xplicit::Player
 		SplashScreenComponent();
 		~SplashScreenComponent() override;
 
+	public:
 		XPLICIT_COPY_DEFAULT(SplashScreenComponent);
 
 		bool should_update() noexcept override { return mEnabled; }

@@ -11,6 +11,7 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
+#include "LocalPlaneAsset.h"
 #include "Application.h"
 
 #include <LuaScriptComponent.h>
@@ -61,24 +62,12 @@ static int lua_PlaySound(lua_State* L)
 	return 0;
 }
 
-static int lua_CreateWorkspace(lua_State* L)
-{
-	const char* name = lua_tostring(L, 1);
-
-	return 0;
-}
-
 void xplicit_register_client_lua()
 {
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {};");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play2D");
-
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Workspace = {};");
-
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_CreateWorkspace);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Workspace:Create");
 }
 
 #endif // ifdef XPLICIT_WINDOWS
