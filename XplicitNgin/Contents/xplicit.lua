@@ -2,8 +2,8 @@
 
 print('Xplicit Game Server');
 
-Engine = Engine or {};
-Engine.Events = Engine.Events or {};
+Engine = {};
+Engine.Events = {};
 
 Engine.PlayerCount = 0;
 
