@@ -15,10 +15,9 @@
 #include "Xplicit.h"
 #include <Nplicit.h>
 
-#define XPLICIT_DELTA_TIME		(1000.f)
 #define XPLICIT_DEFAULT_HEALTH	(100U)
 
-#define XPLICIT_DEFAULT_NAME	"NetworkInstance"
+#define XPLICIT_DEFAULT_NAME	"Humanoid"
 
 #define XPLICIT_REPLICATION_ASK "XASSET\r\n/ASK"
 #define XPLICIT_REPLICATION_ASK_OK "XASSET\r\n/OK"

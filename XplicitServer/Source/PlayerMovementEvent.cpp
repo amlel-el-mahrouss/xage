@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: PlayerMovementEvent.h
- *			Purpose: Player Movement Event handler.
- *
  * =====================================================================
  */
 
@@ -24,14 +21,18 @@ namespace Xplicit
 	PlayerMovementEvent::PlayerMovementEvent() 
 		: 
 		mNetwork(nullptr),
-		mThen(IRR->getTimer()->getTime()) 
+		mDelta(0)
 	{
-		mGameVar = GameVarManager::get_singleton_ptr()->get("Server-DefaultVelocity");
+		mVelocityVar = GameVarManager::get_singleton_ptr()->get("Server-DefaultVelocity");
 		
-		if (!mGameVar)
+		if (!mVelocityVar)
 		{
-			mGameVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DefaultVelocity",
+			mVelocityVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DefaultVelocity",
 				"0.035f",
+				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
+
+			mDeltaVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-Delta",
+				"0.01",
 				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
 		}
 	}
@@ -46,21 +47,18 @@ namespace Xplicit
 			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
 		const auto players = ComponentManager::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
-		NetworkFloat speed = mGameVar->as_float();
+		NetworkFloat speed = mVelocityVar->as_float();
 		
 		for (std::size_t i = 0; i < players.size(); ++i)
 		{
 			HumanoidComponent* ply = players[i];
 
 			if (ply == nullptr ||
-				ply->health() < 1)
+				ply->health() < 1 ||
+				ply->get_peer() == nullptr)
 				continue;
 
 			NetworkInstance* peer = ply->get_peer();
-
-			/* always check peer here! */
-			if (!peer)
-				continue;
 
 			if (peer->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
@@ -79,17 +77,19 @@ namespace Xplicit
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					ply->pos().X += speed;
 
-				peer->packet.pos[XPLICIT_NETWORK_X] = speed;
-				peer->packet.pos[XPLICIT_NETWORK_Y] = speed;
-				peer->packet.pos[XPLICIT_NETWORK_Z] = speed;
+				peer->packet.pos[XPLICIT_NETWORK_X] = ply->pos().X;
+				peer->packet.pos[XPLICIT_NETWORK_Y] = ply->pos().Y;
+				peer->packet.pos[XPLICIT_NETWORK_Z] = ply->pos().Z;
 
 				/* send server delta to player, so that he is not out of touch. */
-				peer->packet.pos[XPLICIT_NETWORK_DELTA] = (IRR->getTimer()->getTime() - mThen) / XPLICIT_DELTA_TIME;
+				peer->packet.pos[XPLICIT_NETWORK_DELTA] = mDelta;
 
 				/* finally accept request */
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 				peer->packet.public_hash = peer->public_hash;
 			}
 		}
+
+		mDelta += mDeltaVar->as_float();
 	}
 }

@@ -66,23 +66,17 @@ namespace Xplicit::Player
 			if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
 				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{
-				static f32 then = IRR->getTimer()->getTime();
-				f32 delta = (IRR->getTimer()->getTime() - then) / XPLICIT_DELTA_TIME;
+				const float delta = mPacket.pos[XPLICIT_NETWORK_DELTA];
+				const float xSpeed = mPacket.pos[XPLICIT_NETWORK_X] * delta;
+				const float zSpeed = mPacket.pos[XPLICIT_NETWORK_Z] * delta;
+				const float ySpeed = mPacket.pos[XPLICIT_NETWORK_Y] * delta;
 
-				auto xSpeed = mPacket.pos[XPLICIT_NETWORK_X] * delta;
-				auto zSpeed = mPacket.pos[XPLICIT_NETWORK_Z] * delta;
+				mPos.Z = zSpeed;
+				mPos.X = xSpeed;
+				mPos.Y = ySpeed;
 
-				if (mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					mPos.Z -= zSpeed;
-
-				if (mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					mPos.Z += zSpeed;
-
-				if (mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					mPos.X += xSpeed;
-
-				if (mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					mPos.X -= xSpeed;
+				std::cout << delta << std::endl;
+				std::cout << xSpeed << " " << ySpeed << " " << zSpeed << std::endl;
 
 				this->node()->setPosition(mPos);
 				this->mCam->get()->setPosition(mPos);

@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: PlayerMovementEvent.h
- *			Purpose: Player Movement Event
- *
  * =====================================================================
  */
 
@@ -38,8 +35,9 @@ namespace Xplicit
 
 	private:
 		NetworkServerComponent* mNetwork;
-		GameVarPtr mGameVar;
-		float mThen;
+		GameVarPtr mVelocityVar;
+		GameVarPtr mDeltaVar;
+		float mDelta;
 
 	};
 }
