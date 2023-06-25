@@ -20,7 +20,6 @@ namespace Xplicit::Player
 		: Component(), mCamera(nullptr)
 	{
 		mCamera = IRR->getSceneManager()->addCameraSceneNodeFPS();
-
 		XPLICIT_ASSERT(mCamera);
 
 		mCamera->setName(this->name());
@@ -28,11 +27,7 @@ namespace Xplicit::Player
 		IRR->getCursorControl()->setVisible(false);
 
 		mCursor = IRR->getVideoDriver()->getTexture("cursor.png");
-
 		XPLICIT_ASSERT(mCursor);
-
-		if (mCursor)
-			mCursor->drop();
 	}
 
 	LocalCameraComponent::~LocalCameraComponent()
@@ -40,6 +35,8 @@ namespace Xplicit::Player
 		if (mCamera)
 			mCamera->drop();
 
+		if (mCursor)
+			mCursor->drop();
 	}
 
 	COMPONENT_TYPE LocalCameraComponent::type() noexcept { return COMPONENT_CAMERA; }

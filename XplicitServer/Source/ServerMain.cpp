@@ -220,22 +220,6 @@ int main(int argc, char** argv)
 		xplicit_load_mono();
 		xplicit_read_xml();
 
-		std::atexit([]() -> void {
-			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
-
-			if (net)
-			{
-				for (std::size_t index = 0UL; index < net->size(); ++index)
-				{
-					net->get(index)->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
-					net->get(index)->packet.channel = XPLICIT_CHANNEL_CHAT;
-
-					memcpy(net->get(index)->packet.buffer, "XplicitNgin, goodbye...", strlen("XplicitNgin, goodbye..."));
-				}
-			}
-
-		});
-
 		Xplicit::Thread logic([&]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 

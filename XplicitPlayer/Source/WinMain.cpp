@@ -41,6 +41,10 @@ XPLICIT_MAIN()
 			return 1;
 		}
 
+#ifdef XPLICIT_DEBUG
+		Xplicit::open_terminal();
+#endif
+
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
 		RtlZeroMemory(&wsa, sizeof(WSADATA));

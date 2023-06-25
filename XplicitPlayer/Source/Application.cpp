@@ -37,10 +37,6 @@ namespace Xplicit::Bites
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mSettings(), mWsa(), mPath("")
 	{
-#ifdef XPLICIT_DEBUG
-		Xplicit::open_terminal(stdout);
-#endif
-
 		this->create_context();
 
 		XPLICIT_GET_DATA_DIR(tmp);

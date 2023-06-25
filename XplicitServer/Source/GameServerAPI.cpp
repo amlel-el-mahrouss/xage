@@ -100,7 +100,7 @@ void xplicit_register_server_lua()
 	XPLICIT_GET_DATA_DIR(fullPath);
 
 	fullPath += "Contents/";
-	fullPath += "xplicit-server-api.lua";
+	fullPath += "xplicit.lua";
 
 	luaL_dofile(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), fullPath.c_str());
 }

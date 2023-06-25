@@ -35,7 +35,7 @@ namespace Xplicit::Player
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
 
-		String frame_path = "menu_overlay.png";
+		String frame_path = "overlay.png";
 
 		mMenu = IRR->getVideoDriver()->getTexture(frame_path.c_str());
 
