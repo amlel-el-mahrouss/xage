@@ -64,7 +64,7 @@ static void xplicit_read_xml()
 
 			if (assembly_file)
 			{
-				XPLICIT_INFO("[C#] Running: " + path);
+				XPLICIT_INFO("[C#] Running Engine Module: " + path);
 				mono->run(assembly_file, argc, argv);
 			}
 			else
@@ -96,7 +96,7 @@ static void xplicit_load_mono()
 	}
 	catch (...)
 	{
-		XPLICIT_CRITICAL("XplicitPluginRuntime not found, to load a C# DLL use Manifest.xml.");
+		XPLICIT_CRITICAL("The Core Xplicit Runtime was not found, to load a C# DLL you need this runtime.");
 	}
 }
 
