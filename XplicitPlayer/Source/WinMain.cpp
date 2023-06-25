@@ -25,8 +25,6 @@
 
 #ifdef XPLICIT_WINDOWS
 
-extern void xplicit_register_client_lua();
-
 XPLICIT_MAIN()
 {
 	try
@@ -66,9 +64,6 @@ XPLICIT_MAIN()
 
 		if (!app) throw Xplicit::EngineError("Could not create application context, exiting!");
 		
-		// register lua calls, such as PlaySound
-		xplicit_register_client_lua();
-
 		std::uint32_t time_now = IRR->getTimer()->getTime();
 
 		/* main game loop */

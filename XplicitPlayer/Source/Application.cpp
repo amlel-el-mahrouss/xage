@@ -14,6 +14,8 @@
 #include "Application.h"
 #include "SplashScreenComponent.h"
 
+extern void xplicit_register_client_lua();
+
 namespace Xplicit::Player
 {
 	dimension2du XPLICIT_DIM = dimension2du(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
@@ -35,6 +37,10 @@ namespace Xplicit::Bites
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mSettings(), mWsa(), mPath("")
 	{
+#ifdef XPLICIT_DEBUG
+		Xplicit::open_terminal(stdout);
+#endif
+
 		this->create_context();
 
 		XPLICIT_GET_DATA_DIR(tmp);
@@ -44,10 +50,6 @@ namespace Xplicit::Bites
 
 #ifdef XPLICIT_WINDOWS
 		Xplicit::init_winsock(&mWsa);
-#endif
-
-#ifdef XPLICIT_DEBUG
-		Xplicit::open_terminal(stdout);
 #endif
 
 		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();
@@ -70,7 +72,7 @@ namespace Xplicit::Bites
 				Xplicit::Player::XPLICIT_DIM,
 				32U,
 				false,
-				true,
+				false,
 				false,
 				KB
 			)
@@ -82,6 +84,9 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(mSettings);
 
 		IRR->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
+
+		// register lua calls, such as PlaySound
+		xplicit_register_client_lua();
 	}
 
 	Application::SettingsManager::SettingsManager()
