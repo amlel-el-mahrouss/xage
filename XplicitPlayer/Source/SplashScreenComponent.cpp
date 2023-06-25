@@ -20,7 +20,7 @@
 #include "SplashScreenComponent.h"
 #include "LocalPlayerComponent.h"
 #include "LocalCameraComponent.h"
-#include "LocalHTTPComponent.h"
+#include "LocalHTTPManager.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
@@ -94,7 +94,7 @@ namespace Xplicit::Player
 			XPLICIT_ASSERT(monitor);
 
 			monitor->Endpoint = packet.buffer;
-			monitor->HTTP = std::make_unique<LocalHTTPComponent>();
+			monitor->HTTP = std::make_unique<LocalHTTPManager>();
 
 			EventManager::get_singleton_ptr()->add<LocalPlayerMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>(hash);

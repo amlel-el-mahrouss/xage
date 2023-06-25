@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Actor.h
- *			Purpose: Server-Side Actors (players)
- *
  * =====================================================================
  */
 
@@ -16,34 +13,39 @@
 
 namespace Xplicit
 {
-	class PlayerComponent final : public Component
+	class HumanoidComponent final : public Component
 	{
 	public:
-		explicit PlayerComponent();
-		~PlayerComponent() override;
+		explicit HumanoidComponent();
+		~HumanoidComponent() override;
 
-		XPLICIT_COPY_DEFAULT(PlayerComponent);
+		XPLICIT_COPY_DEFAULT(HumanoidComponent);
 
+	public:
 		void set_peer(NetworkInstance* peer) noexcept;
-		NetworkInstance* get_peer() noexcept;
+		NetworkInstance* get_peer() const noexcept;
 
+	public:
 		PHYSICS_TYPE physics() noexcept override;
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 
+	public:
 		bool should_update() noexcept override;
 		void update() override;
 
+	public:
 		bool can_collide() noexcept override;
 		bool has_physics() noexcept override;
 
 		Vector<float>& pos() noexcept;
 
+	public:
 		void health(const int32_t& health) noexcept;
 		void freeze(const bool enable) noexcept;
-		const int64_t health() noexcept;
-		bool is_frozen() noexcept;
-		bool alive() noexcept;
+		int64_t health() const noexcept;
+		bool is_frozen() const noexcept;
+		bool alive() const noexcept;
 
 	public:
 		PositionComponent Position;
@@ -51,11 +53,10 @@ namespace Xplicit
 	private:
 		NetworkInstance* mPeer;
 		int64_t mDeathTimeout;
-		int64_t mCooldown;
 		int64_t mHealth;
 		bool mFrozen;
 
 	};
 
-	using PlayerArray = std::vector<PlayerComponent*>;
+	using PlayerArray = std::vector<HumanoidComponent*>;
 }

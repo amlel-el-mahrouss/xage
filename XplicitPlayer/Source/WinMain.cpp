@@ -14,7 +14,7 @@
  @file
  */
 
-#include "LocalHTTPComponent.h"
+#include "LocalHTTPManager.h"
 #include "NetworkProtocol.h"
 #include "Application.h"
 

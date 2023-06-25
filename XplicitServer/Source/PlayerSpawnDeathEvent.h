@@ -13,7 +13,7 @@
 #pragma once
 
 #include "SpawnComponent.h"
-#include "PlayerComponent.h"
+#include "HumanoidComponent.h"
 
 namespace Xplicit
 {
@@ -38,7 +38,7 @@ namespace Xplicit
 		virtual void operator()() override;
 
 	private:
-		std::vector<PlayerComponent*> mDeadActors;
+		std::vector<HumanoidComponent*> mDeadPlayers;
 		NetworkServerComponent* mNetwork;
 		SpawnComponent* mSpawner;
 

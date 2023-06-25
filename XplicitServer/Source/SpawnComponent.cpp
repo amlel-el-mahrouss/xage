@@ -12,7 +12,7 @@
  */
 
 #include "SpawnComponent.h"
-#include "PlayerComponent.h"
+#include "HumanoidComponent.h"
 
 namespace Xplicit
 {

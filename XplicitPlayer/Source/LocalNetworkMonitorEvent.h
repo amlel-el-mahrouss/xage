@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "LocalHTTPComponent.h"
+#include "LocalHTTPManager.h"
 
 #include <NetworkComponent.h>
 #include <Event.h>
@@ -30,7 +30,7 @@ namespace Xplicit::Player
 		void operator()() override;
 		const char* name() noexcept override;
 
-		std::unique_ptr<LocalHTTPComponent> HTTP;
+		std::unique_ptr<LocalHTTPManager> HTTP;
 		String Endpoint;
 
 	private:

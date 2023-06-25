@@ -24,18 +24,18 @@ namespace Xplicit
 	/// Handle Spawn at a specific point.
 	/// </summary>
 	/// <param name="spawner">The spawn component</param>
-	/// <param name="actor">The targeted actor</param>
+	/// <param name="player">The targeted player</param>
 	/// <returns></returns>
 	
-	static void xplicit_handle_spawn(SpawnComponent* spawner, PlayerComponent* actor) noexcept
+	static void xplicit_handle_spawn(SpawnComponent* spawner, HumanoidComponent* player) noexcept
 	{
-		if (actor)
+		if (player)
 		{
-			auto& pos = spawner->get();
+			const auto& pos = spawner->get();
 
-			actor->pos().X = pos.X;
-			actor->pos().Y = pos.Y;
-			actor->pos().Z = pos.Z;
+			player->pos().X = pos.X;
+			player->pos().Y = pos.Y;
+			player->pos().Z = pos.Z;
 		}
 	}
 
@@ -44,8 +44,8 @@ namespace Xplicit
 		if (!mNetwork)
 			return;
 
-		for (const auto players = ComponentManager::get_singleton_ptr()->all_of<PlayerComponent>("Player"); 
-			PlayerComponent* player : players)
+		for (const auto players = ComponentManager::get_singleton_ptr()->all_of<HumanoidComponent>("Player"); 
+			HumanoidComponent* player : players)
 		{
 			if (player == nullptr ||
 				player->get_peer() == nullptr)
@@ -60,7 +60,7 @@ namespace Xplicit
 
 			if (!player->alive())
 			{
-				mDeadActors.push_back(player);
+				mDeadPlayers.push_back(player);
 
 				for (size_t peer = 0; peer < mNetwork->size(); ++peer)
 				{
@@ -70,11 +70,11 @@ namespace Xplicit
 			}
 			else
 			{
-				auto it = std::find(mDeadActors.cbegin(), mDeadActors.cend(), player);
+				auto it = std::find(mDeadPlayers.cbegin(), mDeadPlayers.cend(), player);
 
-				if (it != mDeadActors.cend())
+				if (it != mDeadPlayers.cend())
 				{
-					mDeadActors.erase(it);
+					mDeadPlayers.erase(it);
 					
 					for (size_t peer = 0; peer < mNetwork->size(); ++peer)
 					{

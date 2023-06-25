@@ -13,7 +13,7 @@
 #pragma once
 
 #include "CommonInclude.h"
-#include "PlayerComponent.h"
+#include "HumanoidComponent.h"
 
 namespace Xplicit
 {

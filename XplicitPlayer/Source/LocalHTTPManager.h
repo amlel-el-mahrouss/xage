@@ -14,24 +14,24 @@
 namespace Xplicit::Player
 {
 	/*
-	 *	@brief LocalHTTPComponent
+	 *	@brief LocalHTTPManager
 	 *	@purpose Downloads and xasset:// from HTTP/1.1 using Xplicit's own client.
 	 */
 	
-	class LocalHTTPComponent final
+	class LocalHTTPManager final
 	{
 	public:
-		LocalHTTPComponent() = default;
-		~LocalHTTPComponent() = default;
+		LocalHTTPManager() = default;
+		~LocalHTTPManager() = default;
 
-		XPLICIT_COPY_DEFAULT(LocalHTTPComponent);
+		XPLICIT_COPY_DEFAULT(LocalHTTPManager);
 		
 	public:
-		void download(const String& assetId) noexcept;
+		void download(const String& assetId) const noexcept;
 		void set(const String& endpoint) noexcept;
 		
-		const char* protocol() { return "xasset://"; }
-		const int version() { return 1; }
+		const char* protocol() noexcept { return "xasset://"; }
+		float version() const noexcept { return 1.1f; }
 		
 	private:
 		std::unique_ptr<FilesystemWrapper> mWriter;

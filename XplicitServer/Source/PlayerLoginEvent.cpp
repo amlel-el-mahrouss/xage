@@ -20,8 +20,7 @@
 namespace Xplicit
 {
 	/**
-	 * \brief creates an hash from the GUID.
-	 * \param uuid GUID (version 4 recommended)
+	 * \brief Creates an hash from the GUID.
 	 * \return the hashed GUID.
 	 */
 
@@ -41,7 +40,7 @@ namespace Xplicit
 	 * \param server Server component
 	 */
 
-	static bool xplicit_on_join(NetworkInstance* peer, PlayerComponent* player, const NetworkServerComponent* server)
+	static bool xplicit_on_join(NetworkInstance* peer, HumanoidComponent* player, const NetworkServerComponent* server)
 	{
 		if (!server ||
 			!peer ||
@@ -84,7 +83,7 @@ namespace Xplicit
 	{
 		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
 		{
-			PlayerComponent* component = ComponentManager::get_singleton_ptr()->add<PlayerComponent>();
+			HumanoidComponent* component = ComponentManager::get_singleton_ptr()->add<HumanoidComponent>();
 			XPLICIT_ASSERT(component);
 
 			mPlayers.push_back(component);
@@ -111,7 +110,7 @@ namespace Xplicit
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				if (PlayerComponent* player = mPlayers[mPlayerCount]; 
+				if (HumanoidComponent* player = mPlayers[mPlayerCount]; 
 					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
 				{
 					memcpy(mNetwork->get(peer_idx)->packet.buffer, XPLICIT_XASSET_ENDPOINT, strlen(XPLICIT_XASSET_ENDPOINT));

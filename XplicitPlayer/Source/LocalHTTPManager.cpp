@@ -7,16 +7,16 @@
  * =====================================================================
  */
 
-// @file LocalHTTPComponent.cpp
+// @file LocalHTTPManager.cpp
 
-#include "LocalHTTPComponent.h"
+#include "LocalHTTPManager.h"
 
 #include <HelperMacros.h>
 #include <Http.h>
 
 namespace Xplicit::Player
 {
-	void LocalHTTPComponent::download(const String& assetId) noexcept
+	void LocalHTTPManager::download(const String& assetId) const noexcept
 	{
         String request = mEndpoint + "/" + assetId;
 
@@ -59,7 +59,7 @@ namespace Xplicit::Player
         delete hdr;
 	}
 	
-	void LocalHTTPComponent::set(const String& endpoint) noexcept
+	void LocalHTTPManager::set(const String& endpoint) noexcept
 	{
 		if (!endpoint.empty())
 			mEndpoint = endpoint;

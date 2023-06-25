@@ -10,7 +10,7 @@
 #pragma once
 
 #include "CommonInclude.h"
-#include "PlayerComponent.h"
+#include "HumanoidComponent.h"
 
 #define XPLICIT_XASSET_ENDPOINT ("play-xplicit.com/assets")
 
@@ -34,7 +34,7 @@ namespace Xplicit
 		void handle_leave_event() noexcept;
 		void handle_join_event() noexcept;
 
-		std::vector<PlayerComponent*> mPlayers;
+		std::vector<HumanoidComponent*> mPlayers;
 		NetworkServerComponent* mNetwork;
 		std::size_t mPlayerCount;
 
