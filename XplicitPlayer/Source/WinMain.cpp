@@ -25,7 +25,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-extern void xplicit_register_clientside_win64();
+extern void xplicit_register_client_lua();
 
 XPLICIT_MAIN()
 {
@@ -67,7 +67,7 @@ XPLICIT_MAIN()
 		if (!app) throw Xplicit::EngineError("Could not create application context, exiting!");
 		
 		// register lua calls, such as PlaySound
-		xplicit_register_clientside_win64();
+		xplicit_register_client_lua();
 
 		/* main game loop */
 		while (IRR->run() && 
@@ -98,7 +98,7 @@ XPLICIT_MAIN()
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::DialogHelper::message_box(L"Xplicit Engine", 
+		Xplicit::DialogHelper::message_box(L"Xplicit Client", 
 			L"Program Failure!", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 

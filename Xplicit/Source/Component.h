@@ -51,8 +51,7 @@ namespace Xplicit
 
 	enum COMPONENT_TYPE : uint8_t
 	{
-		COMPONENT_ACTOR, // Engine Actor (According to which side you're on (client or server))
-		COMPONENT_PLAYER, // Player
+		COMPONENT_HUMANOID, // Player
 		COMPONENT_LOGIC, // Generic Component
 		COMPONENT_CAMERA, // Camera instance
 		COMPONENT_SCRIPT, // Script instance

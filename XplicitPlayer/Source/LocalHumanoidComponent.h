@@ -20,24 +20,24 @@
 
 namespace Xplicit::Player
 {
-	class LocalPlayerMoveEvent;
+	class LocalHumanoidMoveEvent;
 
 	//! Replicated player component
-	/** LocalPlayerComponent is the player's logic */
-	class LocalPlayerComponent : public Component, public StaticMesh
+	/** LocalHumanoidComponent is the player's logic */
+	class LocalHumanoidComponent final : public Component, public StaticMesh
 	{
 	public:
-		LocalPlayerComponent(const int64_t& public_hash);
-		virtual ~LocalPlayerComponent();
+		LocalHumanoidComponent(const int64_t& public_hash);
+		~LocalHumanoidComponent() override;
 
-		LocalPlayerComponent& operator=(const LocalPlayerComponent&) = default;
-		LocalPlayerComponent(const LocalPlayerComponent&) = default;
+		LocalHumanoidComponent& operator=(const LocalHumanoidComponent&) = default;
+		LocalHumanoidComponent(const LocalHumanoidComponent&) = default;
 
-		virtual COMPONENT_TYPE type() noexcept override;
-		virtual const char* name() noexcept override;
+		COMPONENT_TYPE type() noexcept override;
+		const char* name() noexcept override;
 
 	public:
-		virtual void update() override;
+		void update() override;
 
 	public:
 		void attach(LocalCameraComponent* cam) noexcept;
@@ -53,18 +53,18 @@ namespace Xplicit::Player
 
 	};
 
-	class XPLICIT_API LocalPlayerMoveEvent : public Event
+	class XPLICIT_API LocalHumanoidMoveEvent : public Event
 	{
 	public:
-		LocalPlayerMoveEvent() = delete;
+		LocalHumanoidMoveEvent() = delete;
 
 	public:
-		explicit LocalPlayerMoveEvent(const std::int64_t& public_hash);
-		virtual ~LocalPlayerMoveEvent();
+		explicit LocalHumanoidMoveEvent(const std::int64_t& public_hash);
+		virtual ~LocalHumanoidMoveEvent();
 
 	public:
-		LocalPlayerMoveEvent& operator=(const LocalPlayerMoveEvent&) = default;
-		LocalPlayerMoveEvent(const LocalPlayerMoveEvent&) = default;
+		LocalHumanoidMoveEvent& operator=(const LocalHumanoidMoveEvent&) = default;
+		LocalHumanoidMoveEvent(const LocalHumanoidMoveEvent&) = default;
 
 	public:
 		virtual void operator()() override;

@@ -49,6 +49,8 @@ namespace Xplicit
 		int64_t health() const noexcept;
 		bool alive() const noexcept;
 
+		int64_t id() const noexcept;
+
 	public:
 		PositionComponent Position;
 
@@ -56,8 +58,9 @@ namespace Xplicit
 		NetworkInstance* mPeer;
 		int64_t mHealth;
 		bool mCanSpawn;
+		int64_t mId;
 
 	};
 
-	using PlayerArray = std::vector<HumanoidComponent*>;
+	using PlayerID = std::int64_t;
 }

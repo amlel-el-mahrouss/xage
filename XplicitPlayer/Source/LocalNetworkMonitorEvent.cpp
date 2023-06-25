@@ -12,7 +12,7 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
-#include "LocalPlayerComponent.h"
+#include "LocalHumanoidComponent.h"
 
 #include "Application.h"
 #include "GameMenuUI.h"
@@ -71,7 +71,7 @@ namespace Xplicit::Player
 			NetworkPacket packet{};
 			packet = mNetwork->get();
 
-			const auto players = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalPlayerComponent>("LocalPlayerComponent");
+			const auto players = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalHumanoidComponent>("LocalHumanoidComponent");
 
 			for (std::size_t index = 0UL; index < players.size(); ++index)
 			{
@@ -79,7 +79,7 @@ namespace Xplicit::Player
 					return;
 			}
 
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalPlayerComponent>(packet.public_hash);
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash);
 
 			/*! invalidate command right there. */
 			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_INVALID;
@@ -106,7 +106,7 @@ namespace Xplicit::Player
 			}
 			else
 			{
-				const auto players = ComponentManager::get_singleton_ptr()->all_of<LocalPlayerComponent>("LocalPlayerComponent");
+				const auto players = ComponentManager::get_singleton_ptr()->all_of<LocalHumanoidComponent>("LocalHumanoidComponent");
 
 				for (int ply = 0; ply < players.size(); ++ply)
 				{

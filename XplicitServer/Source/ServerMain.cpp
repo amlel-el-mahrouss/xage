@@ -162,6 +162,8 @@ static void xplicit_load_sh()
 	}
 }
 
+extern void xplicit_register_server_lua();
+
 /* Application main entrypoint */
 int main(int argc, char** argv)
 {
@@ -211,6 +213,9 @@ int main(int argc, char** argv)
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
+
+		// register lua calls, such as PlaySound
+		xplicit_register_server_lua();
 
 		xplicit_load_mono();
 		xplicit_read_xml();
@@ -270,7 +275,7 @@ int main(int argc, char** argv)
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::DialogHelper::message_box(L"Xplicit Engine", 
+		Xplicit::DialogHelper::message_box(L"Xplicit Server", 
 			L"Program Exited", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 

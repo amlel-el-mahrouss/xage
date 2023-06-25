@@ -14,7 +14,7 @@
  @file
  */
 
-#include "LocalPlayerComponent.h"
+#include "LocalHumanoidComponent.h"
 #include "Application.h"
 #include "GameMenuUI.h"
 
@@ -25,7 +25,7 @@ namespace Xplicit::Player
 	constexpr const short XPLICIT_NETWORK_DELAY = 100;
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
 
-	LocalPlayerComponent::LocalPlayerComponent(const int64_t& public_hash)
+	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& public_hash)
 		:
 		StaticMesh("xplicit-player.dae"),
 		mPublicHash(public_hash),
@@ -38,22 +38,22 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mNetwork);
 
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("LocalPlayerComponent::LocalPlayerComponent");
+		XPLICIT_INFO("LocalHumanoidComponent::LocalHumanoidComponent");
 #endif
 	}
 
-	LocalPlayerComponent::~LocalPlayerComponent()
+	LocalHumanoidComponent::~LocalHumanoidComponent()
 	{
 #ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("LocalPlayerComponent::~LocalPlayerComponent");
+		XPLICIT_INFO("LocalHumanoidComponent::~LocalHumanoidComponent");
 #endif
 	}
 
-	COMPONENT_TYPE LocalPlayerComponent::type() noexcept { return COMPONENT_ACTOR; }
+	COMPONENT_TYPE LocalHumanoidComponent::type() noexcept { return COMPONENT_HUMANOID; }
 
-	const char* LocalPlayerComponent::name() noexcept { return ("LocalPlayerComponent"); }
+	const char* LocalHumanoidComponent::name() noexcept { return ("LocalHumanoidComponent"); }
 
-	void LocalPlayerComponent::update()
+	void LocalHumanoidComponent::update()
 	{
 		if (mNetwork == nullptr) return;
 		if (!mNetwork->read(mPacket)) return;
@@ -84,15 +84,15 @@ namespace Xplicit::Player
 		}
 	}
 
-	void LocalPlayerComponent::attach(LocalCameraComponent* cam) noexcept
+	void LocalHumanoidComponent::attach(LocalCameraComponent* cam) noexcept
 	{ 
 		if (cam)
 			mCam = cam; 
 	}
 
-	vector3df LocalPlayerComponent::get_pos() noexcept { return mPos; }
+	vector3df LocalHumanoidComponent::get_pos() noexcept { return mPos; }
 
-	LocalPlayerMoveEvent::LocalPlayerMoveEvent(const std::int64_t& public_hash)
+	LocalHumanoidMoveEvent::LocalHumanoidMoveEvent(const std::int64_t& public_hash)
 		: 
 		mPacket(), 
 		mNetwork(nullptr),
@@ -102,14 +102,14 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mNetwork);
 	}
 
-	LocalPlayerMoveEvent::~LocalPlayerMoveEvent() = default;
+	LocalHumanoidMoveEvent::~LocalHumanoidMoveEvent() = default;
 
-	const char* LocalPlayerMoveEvent::name() noexcept { return ("LocalPlayerMoveEvent"); }
+	const char* LocalHumanoidMoveEvent::name() noexcept { return ("LocalHumanoidMoveEvent"); }
 
-	const int64_t& LocalPlayerComponent::id() noexcept { return mPublicHash; }
+	const int64_t& LocalHumanoidComponent::id() noexcept { return mPublicHash; }
 
 	/* LocalPlayer movement logic */
-	void LocalPlayerMoveEvent::operator()()
+	void LocalHumanoidMoveEvent::operator()()
 	{
 		if (mNetwork == nullptr)
 			return;

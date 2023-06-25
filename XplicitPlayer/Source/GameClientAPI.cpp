@@ -28,15 +28,10 @@ static Xplicit::Audio::XAudioEngine XPLICIT_AUDIO;
 
 static int lua_PlaySound(lua_State* L)
 {
-	// xcasset://Halloween.wav
-
 	const char* path = lua_tostring(L, 1);
 
 	if (!path)
-	{
-		XPLICIT_CRITICAL("Xplicit asset has not been specified!");
 		return 0;
-	}
 
 	std::unique_ptr<Xplicit::Utils::UriParser> uri = std::make_unique<Xplicit::Utils::UriParser>("xasset://");
 	*uri /= path;
@@ -49,10 +44,7 @@ static int lua_PlaySound(lua_State* L)
 	fullPath += uri->get();
 
 	if (!std::filesystem::exists(fullPath))
-	{
-		XPLICIT_CRITICAL("Failed to download content from HTTP!");
 		return 0;
-	}
 
 	std::wstring assetPath;
 
@@ -67,7 +59,7 @@ static int lua_PlaySound(lua_State* L)
 	return 0;
 }
 
-void xplicit_register_clientside_win64()
+void xplicit_register_client_lua()
 {
 	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "PlaySound");

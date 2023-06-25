@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Actor.cpp
- *			Purpose: Server-Side Actors
- *
  * =====================================================================
  */
 
@@ -49,7 +46,7 @@ namespace Xplicit
 
 	bool HumanoidComponent::can_collide() noexcept { return true; }
 
-	COMPONENT_TYPE HumanoidComponent::type() noexcept { return COMPONENT_PLAYER; }
+	COMPONENT_TYPE HumanoidComponent::type() noexcept { return COMPONENT_HUMANOID; }
 
 	const char* HumanoidComponent::name() noexcept { return "HumanoidComponent"; }
 
@@ -72,4 +69,6 @@ namespace Xplicit
 	void HumanoidComponent::should_spawn(const bool enable) noexcept { mCanSpawn = enable; }
 
 	bool HumanoidComponent::alive() const noexcept { return mHealth > 0; }
+
+	int64_t HumanoidComponent::id() const noexcept { return mId; }
 }

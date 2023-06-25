@@ -4,9 +4,6 @@
  *			NplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: NMath.cpp
- *			Purpose: Nplicit C++ Math Library
- *
  * =====================================================================
  */
 
