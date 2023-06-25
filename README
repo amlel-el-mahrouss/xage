@@ -19,6 +19,6 @@ INSTALLING:
 - Put the C# assemblies into %appdata%/Data
 - Download DirectXTK for the XplicitSound header. (XplicitPlayer) via NuGet.
 
-===================================================
-Copyright Xplicit Corporation, all rights reserved.
-===================================================
+======================================================================
+Copyright Xplicit Corporation, Amlal El Mahrouss, all rights reserved.
+======================================================================
