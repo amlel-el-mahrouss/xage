@@ -10,17 +10,15 @@
 // @file LocalHTTPManager.cpp
 
 #include "LocalHTTPManager.h"
-
 #include <HelperMacros.h>
-#include <Http.h>
 
 namespace Xplicit::Player
 {
 	void LocalHTTPManager::download(const String& assetId) const noexcept
 	{
+        HTTP::HTTPWriter http_writer;
+        
         String request = mEndpoint + "/" + assetId;
-
-        HTTP::HTTPWriter writer;
 
         auto hdr = new HTTP::HTTP::HTTPHeader{
             .Type = HTTP::HTTP::RequestType::GET,
@@ -30,12 +28,12 @@ namespace Xplicit::Player
 
         Ref<HTTP::HTTP::HTTPHeader*> hdr_wrapper{ hdr };
 
-        auto sock = writer.create_and_connect( mEndpoint );
+        auto sock = http_writer.create_and_connect( mEndpoint );
 
         if (!sock)
             return;
 
-        if (!writer.send_from_socket(sock, hdr_wrapper))
+        if (!http_writer.send_from_socket(sock, hdr_wrapper))
             return;
 
         XPLICIT_GET_DATA_DIR(fullPath);
@@ -49,7 +47,7 @@ namespace Xplicit::Player
         auto bytes = new char[MAX_BUF];
         memset(bytes, 0, MAX_BUF);
 
-        writer.read_from_socket(sock, bytes, MAX_BUF);
+        http_writer.read_from_socket(sock, bytes, MAX_BUF);
 
         file << bytes;
 

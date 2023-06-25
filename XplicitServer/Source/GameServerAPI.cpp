@@ -148,7 +148,7 @@ void xplicit_register_server_lua()
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {}");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play2D");
 
 	XPLICIT_GET_DATA_DIR(fullPath);
 

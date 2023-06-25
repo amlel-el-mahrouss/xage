@@ -15,6 +15,13 @@ T* Xplicit::EventManager::add(Args&&... args)
 
 	if (ptr)
 	{
+#ifdef XPLICIT_DEBUG
+		String fmt = "Created Event: ";
+		fmt += typeid(T).name();
+
+		XPLICIT_INFO(fmt);
+#endif
+
 		mEvents.push_back(reinterpret_cast<Event*>(ptr));
 		return ptr;
 	}
@@ -53,6 +60,13 @@ bool Xplicit::EventManager::remove(T* ptr)
 
 	if (iterator != mEvents.cend())
 	{
+#ifdef XPLICIT_DEBUG
+		String fmt = "Removed Event: ";
+		fmt += typeid(T).name();
+
+		XPLICIT_INFO(fmt);
+#endif
+
 		mEvents.erase(iterator);
 		delete ptr;
 

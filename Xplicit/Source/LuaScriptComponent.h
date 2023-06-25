@@ -33,34 +33,42 @@ namespace Xplicit::Lua
 		COMPONENT_TYPE type() noexcept override { COMPONENT_SCRIPT; }
 
 	public:
-		void run(const char* file)
+		void do_file(const char* file) noexcept
 		{
-			if (file)
-			{
-				if (XLuaStateManager::get_singleton_ptr()->run(file) != 0)
+			Thread job([](String _file) {
+				if (!_file.empty())
 				{
-					String lua_error_str = "[LUA] ";
-					lua_error_str += lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1);
+					if (XLuaStateManager::get_singleton_ptr()->run(_file.c_str()) != 0)
+					{
+						String lua_error_str = "[DoFile (LUA)] ";
+						lua_error_str += lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1);
 
-					XPLICIT_INFO(lua_error_str);
+						XPLICIT_INFO(lua_error_str);
 
+					}
 				}
-			}
+			}, file);
+
+			job.detach();
 		}
 
-		void do_string(const char* file)
+		void do_string(const char* file) noexcept
 		{
-			if (file)
-			{
-				if (XLuaStateManager::get_singleton_ptr()->run_string(file) != 0)
+			Thread job([](String _file) {
+				if (!_file.empty())
 				{
-					String lua_error_str = "[LUA] ";
-					lua_error_str += lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1);
+					if (XLuaStateManager::get_singleton_ptr()->run(_file.c_str()) != 0)
+					{
+						String lua_error_str = "[RunString (LUA)] ";
+						lua_error_str += lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1);
 
-					XPLICIT_INFO(lua_error_str);
+						XPLICIT_INFO(lua_error_str);
 
+					}
 				}
-			}
+			}, file);
+
+			job.detach();
 		}
 
 	};

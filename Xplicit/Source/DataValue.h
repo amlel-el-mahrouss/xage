@@ -40,7 +40,7 @@ namespace Xplicit
 	 *
 	 */
 
-	inline std::unique_ptr<DataValue> make_data_value(const char* name, const char* value = "Nil") noexcept
+	inline DataValue* make_data_value(const char* name, const char* value = "Nil") noexcept
 	{
 		DataValue* data_value = new DataValue();
 
@@ -52,6 +52,6 @@ namespace Xplicit
 		data_value->Name = name;
 		data_value->Value = value;
 
-		return std::make_unique<DataValue>(data_value);
+		return data_value;
 	}
 }

@@ -30,7 +30,6 @@ namespace Xplicit::Lua
 			: mL(luaL_newstate())
 		{
 			XPLICIT_ASSERT(mL);
-			luaL_openlibs(mL);
 		}
 
 	private:

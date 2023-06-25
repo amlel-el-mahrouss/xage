@@ -35,7 +35,7 @@ T* Xplicit::ComponentManager::get(const char* name) noexcept
 	if (!name || *name == 0)
 		return nullptr;
 
-	for (size_t i = 0; i < mComponents.size(); ++i)
+	for (std::size_t i = 0; i < mComponents.size(); ++i)
 	{
 		if (!mComponents[i])
 			continue;
@@ -59,7 +59,7 @@ std::vector<T*> Xplicit::ComponentManager::all_of(const char* name)
 	if (!name || *name == 0)
 		return list;
 
-	for (size_t i = 0; i < mComponents.size(); ++i)
+	for (std::size_t i = 0; i < mComponents.size(); ++i)
 	{
 		if (!mComponents[i])
 			continue;

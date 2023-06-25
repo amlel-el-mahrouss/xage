@@ -152,7 +152,7 @@ namespace Xplicit::Player
 					if (!mNetwork)
 						return;
 
-					XPLICIT_INFO("[XCONNECT] connecting...");
+					XPLICIT_INFO("[XCONNECT] Connecting...");
 
 					NetworkPacket spawn{};
 
@@ -161,7 +161,7 @@ namespace Xplicit::Player
 
 					mNetwork->send(spawn);
 
-					std::this_thread::sleep_for(std::chrono::seconds(1));
+					std::this_thread::sleep_for(std::chrono::milliseconds(500));
 				}
 			});
 
