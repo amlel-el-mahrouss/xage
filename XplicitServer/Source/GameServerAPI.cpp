@@ -89,13 +89,13 @@ static int lua_TakeDamage(lua_State* L)
 void xplicit_register_server_lua()
 {
 	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_GetHealth);
-	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "_GetHealth");
+	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "PlayerGetHealth");
 
 	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_SetHealth);
-	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "_SetHealth");
+	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "PlayerSetHealth");
 
 	lua_pushcfunction(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), lua_TakeDamage);
-	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "_TakeHealth");
+	lua_setglobal(Xplicit::Lua::ILuaStateManager::get_singleton_ptr()->state(), "PlayerTakeDamage");
 
 	XPLICIT_GET_DATA_DIR(fullPath);
 

@@ -18,7 +18,7 @@ namespace Xplicit
 	class NPLICIT_API PhysicsComponent
 	{
 	public:
-		PhysicsComponent() : Position(0, 0, 0), Velocity(0, 0, 0), Force(0, 0, 0) {}
+		explicit PhysicsComponent() : Position(0, 0, 0), Velocity(0, 0, 0), Force(0, 0, 0) {}
 		virtual ~PhysicsComponent() {}
 
 		PhysicsComponent& operator=(const PhysicsComponent&) = default;
@@ -28,7 +28,15 @@ namespace Xplicit
 		Vector<TypeFloat> Position;
 		Vector<TypeFloat> Velocity;
 		Vector<TypeFloat> Force;
+
+		// Our mass
 		TypeFloat Mass;
+
+		// is it locked?
+		bool Anchored;
+
+		// should we collide with other objects?
+		bool NoCollide;
 
 	};
 

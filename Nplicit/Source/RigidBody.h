@@ -18,7 +18,7 @@ namespace Xplicit
 	{
 	public:
 		RigidBodyComponent() = default;
-		virtual ~RigidBodyComponent() = default;
+		~RigidBodyComponent() override = default;
 
 		RigidBodyComponent& operator=(const RigidBodyComponent&) = default;
 		RigidBodyComponent(const RigidBodyComponent&) = default;

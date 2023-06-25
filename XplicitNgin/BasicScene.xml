@@ -1,0 +1,52 @@
+<!--- Xplicit Studio rocks! www.play-xplicit.com --->
+
+<Xplicit>
+	<DataValue Name="Anchor" Value="True"/>
+
+	<Plane>
+		<Color>
+			<R>255</R>
+			<G>255</G>
+			<B>255</B>
+		</Color>
+	</Plane>
+
+	<SpawnComponent>
+		<!--- shared --->
+
+		<X>0</X>
+		<Y>0</Y>
+		<Z>0</Z>
+
+		<!--- client --->
+
+		<Color>
+			<R>255</R>
+			<G>0</G>
+			<B>0</B>
+		</Color>
+	</SpawnComponent>
+
+	<AssetComponent>
+		<Cube>
+			<X>0</X>
+			<Y>0</Y>
+ 			<Z>0</Z>
+
+			<W>10</W>
+			<H>10</H>
+		</Cube>
+
+		<!--- clientside, sent to server via replication --->
+		<OnTouch Id="0" Script="OnTouchScript"/>
+		<OnClick Id="1" Script="OnClickScript"/>
+	</AssetComponent>
+</Xplicit>
+
+<OnClickScript>
+	PlaySound('xasset://Halloween.wav');
+</OnClickScript>
+
+<OnTouchScript>
+	print('hello Lua!');
+</OnTouchScript>
