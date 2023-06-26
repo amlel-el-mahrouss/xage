@@ -67,6 +67,7 @@ namespace Xplicit::Player
 				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{
 				const float delta = mPacket.pos[XPLICIT_NETWORK_DELTA];
+
 				const float xSpeed = mPacket.pos[XPLICIT_NETWORK_X] * delta;
 				const float zSpeed = mPacket.pos[XPLICIT_NETWORK_Z] * delta;
 				const float ySpeed = mPacket.pos[XPLICIT_NETWORK_Y] * delta;

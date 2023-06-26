@@ -37,19 +37,19 @@ namespace Xplicit::Player
 
 		String frame_path = "overlay.png";
 
-		mMenu = IRR->getVideoDriver()->getTexture(frame_path.c_str());
+		mMenu = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
 
 		frame_path += "menu_hover.png";
 
-		mButtonHover = IRR->getVideoDriver()->getTexture(frame_path.c_str());
+		mButtonHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
 
 		frame_path += "menu_no_hover.png";
 
-		mButtonNoHover = IRR->getVideoDriver()->getTexture(frame_path.c_str());
+		mButtonNoHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 	}
 
 	LocalMenuEvent::~LocalMenuEvent() 
@@ -96,8 +96,8 @@ namespace Xplicit::Player
 
 		if (mEnabled)
 		{
-			IRR->getVideoDriver()->draw2DImage(mButtonHover,
-				vector2di(30, XPLICIT_DIM.Height / posOfMenu),
+			RENDER->getVideoDriver()->draw2DImage(mButtonHover,
+				vector2di(30, XPLICIT_DIM.Y / posOfMenu),
 				rect(0, 0, 63, 42),
 				nullptr,
 				SColor(255, 255, 255, 255),
@@ -128,8 +128,8 @@ namespace Xplicit::Player
 		*/
 		else
 		{
-			IRR->getVideoDriver()->draw2DImage(mButtonNoHover,
-				vector2di(30, XPLICIT_DIM.Height / posOfMenu),
+			RENDER->getVideoDriver()->draw2DImage(mButtonNoHover,
+				vector2di(30, XPLICIT_DIM.Y / posOfMenu),
 				rect(0, 0, 63, 42),
 				nullptr,
 				SColor(255, 255, 255, 255),
@@ -141,9 +141,9 @@ namespace Xplicit::Player
 
 		if (tween_start < LOCAL_MENU_TWEEN_START)
 		{
-			IRR->getVideoDriver()->draw2DImage(mMenu, 
-				vector2di(XPLICIT_DIM.Width / 2.8,
-				XPLICIT_DIM.Height / tween_start));
+			RENDER->getVideoDriver()->draw2DImage(mMenu, 
+				vector2di(XPLICIT_DIM.X / 2.8,
+				XPLICIT_DIM.Y / tween_start));
 		}
 
 		--mTimeout;

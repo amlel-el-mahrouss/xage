@@ -18,7 +18,7 @@ extern void xplicit_register_client_lua();
 
 namespace Xplicit::Player
 {
-	dimension2du XPLICIT_DIM = dimension2du(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
+	Vector<float> XPLICIT_DIM = Vector<float>(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
 }
 
 namespace Xplicit::Bites
@@ -30,7 +30,7 @@ namespace Xplicit::Bites
 		String prebuilt = dir;
 		prebuilt += "\\Textures\\DefaultSkin.zip";
 
-		if (!IRR->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
+		if (!RENDER->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
 			throw std::runtime_error("Missing skin! This pack is needed for the XplicitPlayer to work.");
 	}
 
@@ -65,7 +65,7 @@ namespace Xplicit::Bites
 		singleton->set(
 			irr::createDevice(
 				EDT_OPENGL,
-				Xplicit::Player::XPLICIT_DIM,
+				dimension2d<irr::u32>(Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y),
 				32U,
 				false,
 				false,
@@ -79,7 +79,7 @@ namespace Xplicit::Bites
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
 
-		IRR->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
+		RENDER->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
 
 		// register lua calls, such as PlaySound
 		xplicit_register_client_lua();

@@ -11,7 +11,6 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
-#include "LocalPlaneAsset.h"
 #include "Application.h"
 
 #include <LuaScriptComponent.h>
@@ -27,8 +26,6 @@ static Xplicit::Player::LocalNetworkMonitorEvent* XPLICIT_MONITOR;
 
 #ifdef XPLICIT_WINDOWS
 
-static Xplicit::Audio::XAudioEngine XPLICIT_AUDIO;
-
 static int lua_PlaySound(lua_State* L)
 {
 	const char* path = lua_tostring(L, 1);
@@ -36,28 +33,15 @@ static int lua_PlaySound(lua_State* L)
 	if (path == nullptr)
 		return 0;
 
-	std::unique_ptr<Xplicit::Utils::UriParser> uri = std::make_unique<Xplicit::Utils::UriParser>("xasset://");
-	*uri /= path;
-
-	XPLICIT_MONITOR->HTTP->download(uri->get());
-
-	XPLICIT_GET_DATA_DIR(fullPath);
-
-	fullPath += "Contents/";
-	fullPath += uri->get();
-
-	if (!std::filesystem::exists(fullPath))
-		return 0;
-
 	std::wstring assetPath;
 
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	assetPath = converter.from_bytes(fullPath);
+	assetPath = converter.from_bytes(path);
 
-	auto aud = XPLICIT_AUDIO.make_audio(assetPath.c_str());
+	auto aud = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(assetPath.c_str());
 
 	if (aud)
-		(*aud)();
+		aud->play();
 
 	return 0;
 }
@@ -67,7 +51,7 @@ void xplicit_register_client_lua()
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {};");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play2D");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
 }
 
 #endif // ifdef XPLICIT_WINDOWS

@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: CoreUI.h
- *			Purpose: Client UI
- *
  * =====================================================================
  */
 
@@ -22,7 +19,7 @@
 
 namespace Xplicit::Player
 {
-	extern dimension2du XPLICIT_DIM;
+	extern Vector<float> XPLICIT_DIM;
 }
 
 namespace Xplicit::Player

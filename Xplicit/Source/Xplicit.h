@@ -407,17 +407,19 @@ namespace Xplicit
 			{
 				auto info = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
 				info->set_level(spdlog::level::info);
-				info->set_pattern("[%^XPLICIT%$] %v");
+				info->set_pattern("[%^C++%$] %v");
 
 				auto critical = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
 				critical->set_level(spdlog::level::critical);
-				critical->set_pattern("[%^XPLICIT%$] %v");
+				critical->set_pattern("[%^C++%$] %v");
 
 				auto err = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
 				err->set_level(spdlog::level::err);
-				err->set_pattern("[%^XPLICIT%$] %v");
+				err->set_pattern("[%^C++%$] %v");
 
-				LOGGER = new spdlog::logger("EngineSink", { err, info, critical });
+				LOGGER = new spdlog::logger("XplicitSink", { err, info, critical });
+
+				std::ios_base::sync_with_stdio(false);
 			}
 
 			return LOGGER;
@@ -428,7 +430,7 @@ namespace Xplicit
 	class Timer final
 	{
 	public:
-		Timer() noexcept : m_then(std::chrono::steady_clock::now()) {}
+		Timer() noexcept : mTimer(std::chrono::steady_clock::now()) {}
 		~Timer() {}
 
 		std::chrono::steady_clock::time_point now() noexcept
@@ -438,16 +440,16 @@ namespace Xplicit
 
 		const std::chrono::steady_clock::time_point& start() noexcept
 		{
-			return m_then;
+			return mTimer;
 		}
 
 		std::chrono::duration<double> time_since(const std::chrono::steady_clock::time_point& at) noexcept
 		{
-			return at - m_then;
+			return at - mTimer;
 		}
 
 	private:
-		std::chrono::steady_clock::time_point m_then;
+		std::chrono::steady_clock::time_point mTimer;
 
 	};
 

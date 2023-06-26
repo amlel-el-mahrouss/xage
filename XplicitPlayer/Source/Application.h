@@ -9,9 +9,8 @@
 
 #pragma once
 
-/*! irrlicht XML class */
 #include <IXMLWriter.h>
-
+#include <Nplicit.h>
 #include <Root.h>
 #include <Uri.h>
 #include <ini.h>
@@ -21,12 +20,12 @@
 
 namespace Xplicit::Player
 {
-	extern dimension2du XPLICIT_DIM;
-}
+	extern Vector<float> XPLICIT_DIM;
+} // namespace Xplicit::Player
 
 namespace Xplicit::Bites
 {
-	constexpr const PChar* XPLICIT_APP_NAME = L"Xplicit - www.play-xplicit.com";
+	constexpr const PChar* XPLICIT_APP_NAME = L"XplicitNgine - www.play-xplicit.com";
 
 	class Application final
 	{
@@ -73,4 +72,4 @@ namespace Xplicit::Bites
 #endif
 
 	};
-}
+} // namespace Xplicit::Player

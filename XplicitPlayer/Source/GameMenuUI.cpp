@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: CoreUI.cpp
- *			Purpose: Client UI
- *
  * =====================================================================
  */
 
@@ -55,7 +52,7 @@ namespace Xplicit::Player
 			break;
 		}
 
-		mTex = IRR->getVideoDriver()->getTexture(path.c_str());
+		mTex = RENDER->getVideoDriver()->getTexture(path.c_str());
 
 		XPLICIT_ASSERT(mTex);
 
@@ -71,7 +68,7 @@ namespace Xplicit::Player
 	
 	void PopupComponent::update()
 	{
-		IRR->getVideoDriver()->draw2DImage(mTex, mPos);
+		RENDER->getVideoDriver()->draw2DImage(mTex, mPos);
 
 		if (KB->key_down(KEY_RETURN))
 			mClicked();
@@ -93,9 +90,12 @@ namespace Xplicit::Player
 		  mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		  mPublicHash(publicHash),
 		  mHealth(0),
-		  mOverlay(IRR->getVideoDriver()->getTexture("hit_overlay.png"))
+		  mOverlay(RENDER->getVideoDriver()->getTexture("hit_overlay.png"))
 	{
+		// verify hash.
 		XPLICIT_ASSERT(mPublicHash != XPLICIT_INVALID_HASH);
+
+		// verify textures.
 		XPLICIT_ASSERT(mNetwork);
 		XPLICIT_ASSERT(mOverlay);
 	}
@@ -113,7 +113,7 @@ namespace Xplicit::Player
 		{
 			mHealth = packet.health;
 
-			IRR->getVideoDriver()->draw2DImage(mOverlay, vector2di(0, 0), rect(0, 0, 1280, 720),
+			RENDER->getVideoDriver()->draw2DImage(mOverlay, vector2di(0, 0), rect(0, 0, 1280, 720),
 				nullptr,
 				SColor(255, 255, 255, 255),
 				true);

@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Root.h
- *			Purpose: Root Application context.
- *
  * =====================================================================
  */
 
@@ -17,9 +14,9 @@
 #include <IEventReceiver.h>
 
 /* common engine macros for RootSingleton */
-#define XML Xplicit::Root::get_singleton_ptr()->Reader
-#define IRR  Xplicit::Root::get_singleton_ptr()->Dev
-#define KB  Xplicit::Root::get_singleton_ptr()->Keyboard
+#define XML		Xplicit::Root::get_singleton_ptr()->Reader
+#define RENDER  Xplicit::Root::get_singleton_ptr()->Dev
+#define KB		Xplicit::Root::get_singleton_ptr()->Keyboard
 
 namespace Xplicit
 {

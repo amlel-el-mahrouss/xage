@@ -25,10 +25,10 @@ namespace Xplicit::Player
 		_path += "/XplicitNgin/Contents/";
 		_path += path;
 
-		mMdl = IRR->getSceneManager()->getMesh(_path.c_str());
+		mMdl = RENDER->getSceneManager()->getMesh(_path.c_str());
 		XPLICIT_ASSERT(mMdl);
 
-		mNode = IRR->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
+		mNode = RENDER->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
 		XPLICIT_ASSERT(mNode);
 	
 		if (mMdl)

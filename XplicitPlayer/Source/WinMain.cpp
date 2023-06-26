@@ -25,6 +25,8 @@
 
 #ifdef XPLICIT_WINDOWS
 
+extern void xplicit_register_client_lua();
+
 XPLICIT_MAIN()
 {
 	try
@@ -35,7 +37,7 @@ XPLICIT_MAIN()
 		if (Xplicit::Win32Helpers::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
 		{
 			Xplicit::DialogHelper::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
-				L"Cannot open more than one instance of the XplicitNgin", 
+				L"Cannot open more than one instance of the Xplicit Ngine", 
 				MB_OK);
 
 			return 1;
@@ -63,24 +65,27 @@ XPLICIT_MAIN()
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
 			return 1;
 
-		Xplicit::Bites::Application* app = new Xplicit::Bites::Application(uri);
+		Xplicit::Bites::Application* application = new Xplicit::Bites::Application(uri);
 
-		if (!app) throw Xplicit::EngineError("Could not create application context, exiting!");
-		
+		if (!application) throw Xplicit::EngineError("Could not create application context, exiting!");
+
+		xplicit_register_client_lua();
+
 		/* main game loop */
-		while (IRR->run() && 
+		while (RENDER->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr())
 		{
-			IRR->getVideoDriver()->beginScene(true, true, SColor(255, 40, 40, 40));
+			RENDER->getVideoDriver()->beginScene(true, true, SColor(255, 40, 40, 40));
 
-			IRR->getSceneManager()->drawAll();
-			IRR->getGUIEnvironment()->drawAll();
+			RENDER->getSceneManager()->drawAll();
+			RENDER->getGUIEnvironment()->drawAll();
 
+			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 			
-			IRR->getVideoDriver()->endScene();
+			RENDER->getVideoDriver()->endScene();
 		}
 	}
 	catch (Xplicit::EngineError& err)

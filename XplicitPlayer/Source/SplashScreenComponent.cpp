@@ -38,7 +38,7 @@ namespace Xplicit::Player
 		mTimeout(XPLICIT_TIMEOUT),
 		mEnabled(true)
 	{
-		mTexture = IRR->getVideoDriver()->getTexture("bkg.png");
+		mTexture = RENDER->getVideoDriver()->getTexture("bkg.png");
 	}
 
 	SplashScreenComponent::~SplashScreenComponent() 
@@ -58,9 +58,9 @@ namespace Xplicit::Player
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
 			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>(
-				[]() { IRR->closeDevice(); },
-				vector2di(XPLICIT_DIM.Width / 2.8,
-					XPLICIT_DIM.Height / 2.8),
+				[]() { RENDER->closeDevice(); },
+				vector2di(XPLICIT_DIM.X / 2.8,
+					XPLICIT_DIM.Y / 2.8),
 				POPUP_TYPE::BANNED, "StopPopup");
 
 			mEnabled = false;
@@ -107,9 +107,9 @@ namespace Xplicit::Player
 			if (mTimeout < 0)
 			{
 				ComponentManager::get_singleton_ptr()->add<PopupComponent>(
-					[]() { IRR->closeDevice(); }, 
-						vector2di(XPLICIT_DIM.Width / 2.8,
-						XPLICIT_DIM.Height / 2.8),
+					[]() { RENDER->closeDevice(); }, 
+						vector2di(XPLICIT_DIM.X / 2.8,
+						XPLICIT_DIM.Y / 2.8),
 						POPUP_TYPE::NETWORK, "StopPopup");
 
 				ComponentManager::get_singleton_ptr()->remove(mNetwork);
@@ -119,7 +119,7 @@ namespace Xplicit::Player
 			}
 			else
 			{
-				IRR->getVideoDriver()->draw2DImage(mTexture, 
+				RENDER->getVideoDriver()->draw2DImage(mTexture, 
 					vector2di(0, 0),
 					recti(0, 0, 1280, 720), 
 					nullptr,
@@ -172,9 +172,9 @@ namespace Xplicit::Player
 	void SplashScreenComponent::reset() noexcept
 	{
 		ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
-			IRR->closeDevice();
-			}, vector2di(XPLICIT_DIM.Width / 3.45,
-				XPLICIT_DIM.Height / 4),
+			RENDER->closeDevice();
+			}, vector2di(XPLICIT_DIM.X / 3.45,
+				XPLICIT_DIM.Y / 4),
 				POPUP_TYPE::NETWORK);
 	}
 }

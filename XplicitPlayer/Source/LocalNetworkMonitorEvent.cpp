@@ -29,6 +29,8 @@ namespace Xplicit::Player
 			mHash(priv)
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+
+		// just in case.
 		XPLICIT_ASSERT(mNetwork);
 	}
 
@@ -59,9 +61,9 @@ namespace Xplicit::Player
 			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
 			{
 				ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					IRR->closeDevice();
-					}, vector2di(XPLICIT_DIM.Width / 3.45,
-						XPLICIT_DIM.Height / 4),
+					RENDER->closeDevice();
+					}, vector2di(XPLICIT_DIM.X / 3.45,
+						XPLICIT_DIM.Y / 4),
 						POPUP_TYPE::BANNED, "BanPopup");
 			}
 		}
@@ -96,8 +98,8 @@ namespace Xplicit::Player
 				{
 					ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 						std::exit(0);
-					}, vector2di(XPLICIT_DIM.Width / 2.8,
-							XPLICIT_DIM.Height / 2.8),
+					}, vector2di(XPLICIT_DIM.X / 2.8,
+							XPLICIT_DIM.Y / 2.8),
 							POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
 

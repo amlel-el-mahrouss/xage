@@ -99,6 +99,7 @@ static int lua_PlaySound(lua_State* L)
 	if (hash == XPLICIT_INVALID_HASH)
 		return 1;
 
+	// must be an xasset!
 	Xplicit::ServerReplicationManager::get_singleton_ptr()->create(Xplicit::COMPONENT_ID_SOUND, path, hash);
 
 	return 0;
@@ -140,7 +141,7 @@ void xplicit_register_server_lua()
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:SetHealth");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_TakeDamage);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:TakeDamage");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:Hurt");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_Kill);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:Kill");
@@ -148,7 +149,7 @@ void xplicit_register_server_lua()
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {}");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play2D");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
 
 	XPLICIT_GET_DATA_DIR(fullPath);
 

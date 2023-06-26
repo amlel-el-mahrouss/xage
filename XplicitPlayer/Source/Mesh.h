@@ -63,7 +63,7 @@ namespace Xplicit::Player
 
 		void render() override
 		{
-			this->setVisible(IRR->getVideoDriver()->getOcclusionQueryResult(this) < 0);
+			this->setVisible(RENDER->getVideoDriver()->getOcclusionQueryResult(this) < 0);
 
 			if (!this->isVisible())
 				return;

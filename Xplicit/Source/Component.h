@@ -74,8 +74,10 @@ namespace Xplicit
 		Component() = default;
 		virtual ~Component() = default;
 		
+	public:
 		XPLICIT_COPY_DEFAULT(Component);
 		
+	public:
 		virtual bool should_update() noexcept;
 		virtual void update();
 		

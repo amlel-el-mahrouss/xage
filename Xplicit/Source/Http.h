@@ -136,6 +136,7 @@ namespace Xplicit::HTTP
 
             std::string request = "GET " + path + " HTTP/1.1\r\n";
             request += "Host: " + host + "\r\n";
+            request += "Connection: close\r\n";
             request += "\r\n\r\n";
 
             return request;
@@ -153,7 +154,7 @@ namespace Xplicit::HTTP
         }
 
         template <int Base>
-        static int content_length(const std::string& http)
+        static long content_length(const std::string& http)
         {
             size_t at = http.find("Content-Length: ");
 
@@ -172,7 +173,7 @@ namespace Xplicit::HTTP
                 }
             }
 
-            return std::stoi(final, nullptr, Base);
+            return std::stol(final, nullptr, Base);
         }
 
         static const int bad_pos = -1;

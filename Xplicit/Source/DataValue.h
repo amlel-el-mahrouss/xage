@@ -21,7 +21,7 @@ namespace Xplicit
 		BOOLE,
 		STRING,
 		INTEGER,
-		IEE754,
+		IEE754, /* floating point number. */
 	};
 
 	class DataValue final

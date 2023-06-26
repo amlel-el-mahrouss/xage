@@ -19,14 +19,14 @@ namespace Xplicit::Player
 	LocalCameraComponent::LocalCameraComponent()
 		: Component(), mCamera(nullptr)
 	{
-		mCamera = IRR->getSceneManager()->addCameraSceneNode();
+		mCamera = RENDER->getSceneManager()->addCameraSceneNode();
 		XPLICIT_ASSERT(mCamera);
 
 		mCamera->setName(this->name());
 
-		IRR->getCursorControl()->setVisible(false);
+		RENDER->getCursorControl()->setVisible(false);
 
-		mCursor = IRR->getVideoDriver()->getTexture("cursor.png");
+		mCursor = RENDER->getVideoDriver()->getTexture("cursor.png");
 		XPLICIT_ASSERT(mCursor);
 	}
 
@@ -48,8 +48,8 @@ namespace Xplicit::Player
 		if (!mCursor)
 			return;
 
-		IRR->getVideoDriver()->draw2DImage(mCursor,
-			IRR->getCursorControl()->getPosition(),
+		RENDER->getVideoDriver()->draw2DImage(mCursor,
+			RENDER->getCursorControl()->getPosition(),
 			rect(0, 0, 38, 38),
 			nullptr,
 			SColor(255, 255, 255, 255),

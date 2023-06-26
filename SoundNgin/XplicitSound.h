@@ -15,7 +15,9 @@
 #include <string>
 
 #define _USE_MATH_DEFINES
+
 #include <Audio.h>
+#include <SimpleMath.h>
 
 #ifndef XPLICIT_AUDIO_RATE
 #	define XPLICIT_AUDIO_RATE (44100)
@@ -27,7 +29,6 @@ namespace Xplicit
 	{
 		class XAudioEngine final
 		{
-		public:
 			explicit XAudioEngine()
 			{
 				DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_Default;
@@ -54,7 +55,7 @@ namespace Xplicit
 
 				if (enumList.empty())
 				{
-					// No audio devices
+					throw EngineError("No audio devices detected!");
 				}
 				else
 				{
@@ -69,6 +70,7 @@ namespace Xplicit
 				mAudioNgin->SetDefaultSampleRate(44100);
 			}
 
+		public:
 			~XAudioEngine() = default;
 
 		public:
@@ -76,24 +78,54 @@ namespace Xplicit
 			{
 			public:
 				XAudioHandle(DirectX::AudioEngine* engine, const wchar_t* path)
-					: mAudio(std::make_unique<DirectX::SoundEffect>(engine, path))
+					: 
+					mAudio(std::make_unique<DirectX::SoundEffect>(engine, path)),
+					mEmitter(),
+					mListener(),
+					mPos(0.f, 0.0f, 0.0f)
 				{
 					assert(mAudio);
 				}
 
 			public:
-				void operator()() noexcept
+				void play() noexcept
 				{
 					mAudio->Play();
 				}
 
-				void operator()(const float volume, const float pitch, const float pan) noexcept
+				void play(const float volume, const float pitch, const float pan) noexcept
 				{
 					mAudio->Play(volume, pitch, pan);
 				}
 
+				void play_3d(const Vector<float>& pos, const bool loop = false) noexcept
+				{
+					if (!mAudio)
+						return;
+
+					mSource = mAudio->CreateInstance(DirectX::SoundEffectInstance_Use3D);
+
+					if (!mAudio)
+						return;
+
+					mSource->Play(loop);
+				}
+
 			private:
+				std::unique_ptr<DirectX::SoundEffectInstance> mSource;
 				std::unique_ptr<DirectX::SoundEffect> mAudio;
+
+			private:
+				DirectX::AudioListener mListener;
+				DirectX::AudioEmitter  mEmitter;
+				Vector<float> mPos;
+
+			private:
+				// accessed by friend class.
+				bool should_play;
+
+			private:
+				friend XAudioEngine;
 
 			};
 
@@ -107,14 +139,43 @@ namespace Xplicit
 						std::cout << "No audio device active!\n";
 					}
 				}
+				else
+				{
+					for (std::size_t index = 0; index < mHandles.size(); ++index)
+					{
+						if (!mHandles[index])
+							continue;
+
+						mHandles[index]->mEmitter.Update(DirectX::FXMVECTOR({ mHandles[index]->mPos.X, mHandles[index]->mPos.Y, mHandles[index]->mPos.Z }),
+							DirectX::SimpleMath::Vector3::Up,
+							static_cast<float>(std::chrono::steady_clock::duration().count()));
+
+						if (mHandles[index]->mSource)
+						{
+							mHandles[index]->mSource->Apply3D(mHandles[index]->mListener, mHandles[index]->mEmitter);
+						}
+					}
+				}
 			}
 
-			std::unique_ptr<XAudioHandle> make_audio(const wchar_t* path) noexcept
+			static XAudioEngine* get_singleton_ptr() noexcept
+			{
+				static XAudioEngine* ngin = nullptr;
+
+				if (ngin == nullptr)
+					ngin = new XAudioEngine();
+
+				return ngin;
+			}
+
+			std::shared_ptr<XAudioHandle> make_audio(const wchar_t* path) noexcept
 			{
 				if (!mAudioNgin)
 					return {};
 
-				std::unique_ptr<XAudioHandle> effect = std::make_unique<XAudioHandle>(mAudioNgin.get(), path);
+				std::shared_ptr<XAudioHandle> effect = std::make_unique<XAudioHandle>(mAudioNgin.get(), path);
+				mHandles.push_back(effect);
+
 				return effect;
 			}
 
@@ -193,8 +254,12 @@ namespace Xplicit
 			}
 
 		private:
+			std::vector<std::shared_ptr<XAudioHandle>> mHandles;
 			std::unique_ptr<DirectX::AudioEngine> mAudioNgin;
 
+		private:
+			Timer mTimer;
+			
 		};
 	}
 }
