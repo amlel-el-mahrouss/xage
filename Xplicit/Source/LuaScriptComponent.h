@@ -22,7 +22,10 @@ namespace Xplicit::Lua
 	class XPLICIT_API LuaScriptComponent : public Component
 	{
 	public:
-		LuaScriptComponent() = default;
+		LuaScriptComponent() = delete;
+
+	public:
+		LuaScriptComponent(const char* name) : Component(), mName(name) {}
 		~LuaScriptComponent() override = default;
 
 	public:
@@ -33,43 +36,26 @@ namespace Xplicit::Lua
 		COMPONENT_TYPE type() noexcept override { COMPONENT_SCRIPT; }
 
 	public:
-		void do_file(const char* file) noexcept
+		void operator()() noexcept
 		{
 			Thread job([](String _file) {
 				if (!_file.empty())
 				{
 					if (XLuaStateManager::get_singleton_ptr()->run(_file.c_str()) != 0)
 					{
-						String lua_error_str = "[DoFile (LUA)] ";
-						lua_error_str += lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1);
+						String lua_error_str = "[LuaScriptComponent] error at file: ";
+						lua_error_str += _file;
 
 						XPLICIT_INFO(lua_error_str);
-
 					}
 				}
-			}, file);
+			}, mName);
 
 			job.detach();
 		}
 
-		void do_string(const char* file) noexcept
-		{
-			Thread job([](String _file) {
-				if (!_file.empty())
-				{
-					if (XLuaStateManager::get_singleton_ptr()->run(_file.c_str()) != 0)
-					{
-						String lua_error_str = "[RunString (LUA)] ";
-						lua_error_str += lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1);
-
-						XPLICIT_INFO(lua_error_str);
-
-					}
-				}
-			}, file);
-
-			job.detach();
-		}
+	private:
+		String mName;
 
 	};
 }

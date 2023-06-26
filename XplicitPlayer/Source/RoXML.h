@@ -113,10 +113,10 @@ namespace Xplicit::SceneManager
 								{
 									if (strcmp(name_value.c_str(), XPLICIT_EVENTS[event_idx]))
 									{
-										String func_name = "__xplicit_generatedByEditor";
-										func_name += std::to_string(xplicit_get_epoch());;
+										String func_name = "__xplicitJACKstudioMethod";
+										func_name += std::to_string(xplicit_get_epoch());
 
-										String event_code = "local function ";
+										String event_code = "local func ";
 										event_code += func_name;
 										event_code += "()\n";
 

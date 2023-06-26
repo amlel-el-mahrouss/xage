@@ -56,7 +56,14 @@ namespace Xplicit::Lua
 		std::int32_t run(const char* file) noexcept
 		{
 			if (file)
-				return luaL_dofile(mL, file);
+			{
+				const auto ret = luaL_dofile(mL, file);
+
+				if (ret > 0)
+					std::cout << lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
+
+				return ret;
+			}
 			
 			return -1;
 		}
@@ -64,7 +71,14 @@ namespace Xplicit::Lua
 		std::int32_t run_string(const char* file) noexcept
 		{
 			if (file)
-				return luaL_dostring(mL, file);
+			{
+				const auto ret = luaL_dostring(mL, file);
+
+				if (ret > 0)
+					std::cout << lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
+
+				return ret;
+			}
 
 			return -1;
 		}
