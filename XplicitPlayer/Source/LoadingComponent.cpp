@@ -97,6 +97,9 @@ namespace Xplicit::Player
 			EventManager::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>(hash);
 
+			XPLICIT_INFO("LocalHumanoid:CharacterSpawn [EVENT]");
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");
+
 			mEnabled = false;
 		}
 		else

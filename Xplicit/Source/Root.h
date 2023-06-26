@@ -11,6 +11,7 @@
 
 #include "Xplicit.h"
 
+#include <lua/lua.hpp>
 #include <IEventReceiver.h>
 
 /* common engine macros for RootSingleton */
@@ -196,25 +197,41 @@ namespace Xplicit
 				switch (env.MouseInput.Event)
 				{
 				case irr::EMIE_LMOUSE_PRESSED_DOWN:
+				{
+					XPLICIT_INFO("LocalHumanoid:Click [EVENT]");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Click()");
+
 					mMouseLeft.Down = true;
 					break;
+				}
 
 				case irr::EMIE_LMOUSE_LEFT_UP:
 					mMouseLeft.Down = false;
 					break;
 
 				case irr::EMIE_RMOUSE_PRESSED_DOWN:
+				{
+					XPLICIT_INFO("LocalHumanoid:RightClick [EVENT]");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:RightClick()");
+
 					mMouseRight.Down = true;
 					break;
+				}
 
 				case irr::EMIE_RMOUSE_LEFT_UP:
 					mMouseRight.Down = false;
 					break;
 
 				case irr::EMIE_MOUSE_MOVED:
+				{
 					mMousePos.X = env.MouseInput.X;
 					mMousePos.Y = env.MouseInput.Y;
+
+					XPLICIT_INFO("LocalHumanoid:MouseMove [EVENT]");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:MouseMove()");
+
 					break;
+				}
 
 				default:
 					// We won't use the wheel

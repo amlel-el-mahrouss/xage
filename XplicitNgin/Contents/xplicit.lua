@@ -28,6 +28,56 @@ func Engine:Leave()
     end
 end
 
+func Engine:Touch()
+    Engine.PlayerCount = Engine.PlayerCount - 1;
+
+    for _, v in ipairs(Engine.Events) do
+        if (v.Name == "Touch") then
+            v.Func();
+        end
+    end
+end
+
+func Engine:Click()
+    Engine.PlayerCount = Engine.PlayerCount - 1;
+
+    for _, v in ipairs(Engine.Events) do
+        if (v.Name == "Click") then
+            v.Func();
+        end
+    end
+end
+
+func Engine:RightClick()
+    Engine.PlayerCount = Engine.PlayerCount - 1;
+
+    for _, v in ipairs(Engine.Events) do
+        if (v.Name == "RightClick") then
+            v.Func();
+        end
+    end
+end
+
+func Engine:MouseMove()
+    Engine.PlayerCount = Engine.PlayerCount - 1;
+
+    for _, v in ipairs(Engine.Events) do
+        if (v.Name == "MouseMove") then
+            v.Func();
+        end
+    end
+end
+
+func Engine:LocalSpawn()
+    Engine.PlayerCount = Engine.PlayerCount - 1;
+
+    for _, v in ipairs(Engine.Events) do
+        if (v.Name == "LocalSpawn") then
+            v.Func();
+        end
+    end
+end
+
 func Engine:Move()
     for _, v in ipairs(Engine.Events) do
         if (v.Name == "Move") then
@@ -65,17 +115,18 @@ func Engine:Init()
 
     Engine.Name = "Xplicit";
     Engine.Description = "Game Engine";
-    Engine.Version = "1.0.0";
+    Engine.Version = "1.0.1";
 
-    Engine.AutorunClient = "xasset://xplicit-client.lua";
+    # Given by server to initialize UI and stuff...
+    Engine.AutorunClient = "xasset://autorun-client.lua";
 end
 
 func Engine:Connect(Name, Func)
     print('Registering event...');
     
     Engine.Events[Engine.Counter] = {
-        .Name = Name,
-        .Func = Func,
+        Name = Name,
+        Func = Func,
     };
 
     Engine.Counter = Engine.Counter + 1;

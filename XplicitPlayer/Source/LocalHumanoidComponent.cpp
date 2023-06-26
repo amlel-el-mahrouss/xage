@@ -19,6 +19,7 @@
 #include "GameMenuUI.h"
 
 #include <CommonEngine.h>
+#include <lua/lua.hpp>
 
 namespace Xplicit::Player
 {
@@ -77,6 +78,9 @@ namespace Xplicit::Player
 				mPos.Y = ySpeed;
 
 				// TODO: set player position (lua)
+
+				XPLICIT_INFO("LocalHumanoid:Move [EVENT]");
+				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Move()");
 			}
 		}
 	}

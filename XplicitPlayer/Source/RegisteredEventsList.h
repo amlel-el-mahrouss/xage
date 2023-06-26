@@ -10,13 +10,17 @@
 #pragma once
 
 static inline const char* XPLICIT_EVENTS[] = {
-	"Clicked",
+	"Move",
+	"Leave",
+	"Join",
 	"Touched",
-	"Killed",
+	"Death",
 	"Spawn",
-	"Hurt",
-	"LeftClick",
+	"Damage",
+	"Click",
 	"RightClick",
+	"MouseMove",
+	"LocalSpawn",
 };
 
-#define XPLICIT_EVENT_MAX (7)
+#define XPLICIT_EVENT_MAX (11)

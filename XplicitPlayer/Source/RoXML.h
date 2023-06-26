@@ -123,7 +123,7 @@ namespace Xplicit::SceneManager
 										event_code += node->value();
 
 										event_code += "\nend\n";
-										event_code += "Local.Event:Connect(";
+										event_code += "Engine:Connect(";
 										event_code += "\"";
 										event_code += name_value;
 										event_code += "\"";

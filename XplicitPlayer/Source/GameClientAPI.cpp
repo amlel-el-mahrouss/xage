@@ -48,10 +48,19 @@ static int lua_PlaySound(lua_State* L)
 
 void xplicit_load_lua()
 {
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("include(\"xplicit-base\")");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {};");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
+
+
+	XPLICIT_GET_DATA_DIR(full_path);
+
+	full_path += "Contents/";
+	full_path += "xplicit.lua";
+
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run(full_path.c_str());
 }
 
 #endif // ifdef XPLICIT_WINDOWS

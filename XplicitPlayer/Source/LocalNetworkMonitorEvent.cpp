@@ -13,9 +13,10 @@
 
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalHumanoidComponent.h"
-
 #include "Application.h"
 #include "GameMenuUI.h"
+
+#include <lua/lua.hpp>
 
 namespace Xplicit::Player
 {
@@ -83,6 +84,9 @@ namespace Xplicit::Player
 
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash);
 
+			XPLICIT_INFO("LocalHumanoid:Join [EVENT]");
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
+
 			/*! invalidate command right there. */
 			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_INVALID;
 		}
@@ -114,6 +118,9 @@ namespace Xplicit::Player
 				{
 					if (packet.public_hash == players[ply]->id())
 					{
+						XPLICIT_INFO("LocalHumanoid:Leave [EVENT]");
+						Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Leave()");
+
 						ComponentManager::get_singleton_ptr()->remove(players[ply]);
 						break;
 					}
