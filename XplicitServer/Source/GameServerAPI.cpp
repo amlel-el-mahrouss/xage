@@ -151,10 +151,10 @@ void xplicit_register_server_lua()
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
 
-	XPLICIT_GET_DATA_DIR(fullPath);
+	XPLICIT_GET_DATA_DIR(full_path);
 
-	fullPath += "Contents/";
-	fullPath += "xplicit.lua";
+	full_path += "Contents/";
+	full_path += "xplicit.lua";
 
-	luaL_dofile(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), fullPath.c_str());
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run(full_path.c_str());
 }

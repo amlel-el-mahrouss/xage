@@ -407,17 +407,17 @@ namespace Xplicit
 			{
 				auto info = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
 				info->set_level(spdlog::level::info);
-				info->set_pattern("[%^C++%$] %v");
+				info->set_pattern("[%^Engine%$] %v");
 
 				auto critical = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
 				critical->set_level(spdlog::level::critical);
-				critical->set_pattern("[%^C++%$] %v");
+				critical->set_pattern("[%^Engine%$] %v");
 
 				auto err = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
 				err->set_level(spdlog::level::err);
-				err->set_pattern("[%^C++%$] %v");
+				err->set_pattern("[%^Engine%$] %v");
 
-				LOGGER = new spdlog::logger("XplicitSink", { err, info, critical });
+				LOGGER = new spdlog::logger("EngineSink", { err, info, critical });
 
 				std::ios_base::sync_with_stdio(false);
 			}
