@@ -16,7 +16,7 @@
 	</Spawn>
 
 	<Mesh>
-		<DataValue Name="Anchor" Value="True"/>
+		<DataValue Name="Anchor" Type="BOOLE" Value="True"/>
 	
 		<Cube>
 			<X>0</X>
@@ -28,12 +28,12 @@
 		</Cube>
 
 		<Event>
-			<OnClick Id="1" Script="OnClickScript"/>
+			<OnClick Id="1" Script="Clicked"/>
 		</Event>
 	</Mesh>
 
-	<OnClickScript>
+	<Lua Name="Clicked">
 		Sound:Play('xasset://Halloween.wav');
 		Chat:Print('Hello world');
-	</OnClickScript>
+	</Lua>
 </Xplicit>

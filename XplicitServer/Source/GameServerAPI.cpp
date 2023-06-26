@@ -130,7 +130,7 @@ static int lua_Kill(lua_State* L)
 	return 0;
 }
 
-void xplicit_register_server_lua()
+void xplicit_load_lua()
 {
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("PlayerManager = {}");
 

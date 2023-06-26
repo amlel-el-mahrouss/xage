@@ -186,7 +186,7 @@ namespace Xplicit
 	class XPLICIT_API InputReceiver final : public irr::IEventReceiver
 	{
 	public:
-		virtual bool OnEvent(const irr::SEvent & env) override
+		bool OnEvent(const irr::SEvent & env) override
 		{
 			if (env.EventType == irr::EET_KEY_INPUT_EVENT)
 				mKeys[env.KeyInput.Key] = env.KeyInput.PressedDown;
@@ -238,7 +238,8 @@ namespace Xplicit
 		explicit InputReceiver()
 			: mMouseLeft(), 
 			mMouseRight(), 
-			mMousePos()
+			mMousePos(),
+			mLayout()
 		{
 			for (irr::u32 i = 0; i < irr::KEY_KEY_CODES_COUNT; ++i)
 				mKeys[i] = 0;
@@ -271,12 +272,16 @@ namespace Xplicit
 		MouseEventTraits& get_pos() noexcept { return mMousePos; }
 		
 	public:
-		struct MovementTraits
+		struct MovementTraits final
 		{
-			char mBackward;
-			char mForward;
-			char mRight;
-			char mLeft;
+		public:
+			MovementTraits() = default;
+			~MovementTraits() = default;
+
+			char mBackward{ -1 };
+			char mForward{ -1 };
+			char mRight{ -1 };
+			char mLeft{ -1 };
 		};
 
 		MovementTraits& get_layout() noexcept

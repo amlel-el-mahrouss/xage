@@ -312,6 +312,7 @@ namespace Xplicit
 		return path.string() + program_name;
 	}
 
+#ifdef XPLICIT_WINDOWS
 	static inline void fini_winsock() noexcept
 	{
 		WSACleanup();
@@ -328,7 +329,6 @@ namespace Xplicit
 		return false;
 	}
 
-#ifdef XPLICIT_WINDOWS
 	// for debug builds, also new the in-game console :p
 	static inline void open_terminal(FILE* fp = stdout)
 	{
@@ -490,8 +490,10 @@ namespace Xplicit
 		FilesystemWrapper() = default;
 		~FilesystemWrapper() = default;
 
+	public:
 		XPLICIT_COPY_DEFAULT(FilesystemWrapper);
 
+	public:
 		std::ofstream write(const char* outPath) const noexcept
 		{
 			if (std::filesystem::exists(outPath))
@@ -516,6 +518,14 @@ namespace Xplicit
 		std::filesystem::path get_temp() const noexcept
 		{
 			return std::filesystem::temp_directory_path();
+		}
+
+		std::filesystem::path get_engine_dir() const noexcept
+		{
+			String dir = XPLICIT_ENV("APPDATA");
+			dir += "/XplicitNgin/";
+
+			return dir;
 		}
 
 	};
@@ -585,7 +595,6 @@ namespace Xplicit
 	
 	namespace Threading
 	{
-
 		template <typename Fn, typename... Args>
 		class AsyncAction final
 		{
@@ -612,30 +621,6 @@ namespace Xplicit
 
 		private:
 			Thread mThread;
-
-		};
-
-		class ThreadLockingSystem final
-		{
-			Thread mThe;
-			bool mRelease;
-
-		public:
-			void release() { mRelease = true; }
-
-			explicit operator bool() const noexcept { return mRelease == false; }
-
-			explicit ThreadLockingSystem(Thread& thrd)
-				: mThe(std::move(thrd)), mRelease(false)
-			{}
-
-			~ThreadLockingSystem()
-			{
-				this->release();
-			}
-
-		public:
-			XPLICIT_COPY_DEFAULT(ThreadLockingSystem)
 
 		};
 	}

@@ -21,18 +21,24 @@
 
 namespace Xplicit
 {
-	class Tool final
+	/* 
+		Class: Gear View.
+		Purpose: Gear data container.
+
+		Example:
+			Tooltip: "The best gun in the world
+			Name: Fargun
+	*/
+
+	class GearView final
 	{
 	public:
-		void (XPLICIT_CALLING_CONV *Equip)(lua_State*);
-		void (XPLICIT_CALLING_CONV *Unequip)(lua_State*);
-		void (XPLICIT_CALLING_CONV *Drop)(lua_State*);
-		void (XPLICIT_CALLING_CONV *Use)(lua_State*);
-
-	public:
-		std::int32_t ID;
-		String Tooltip;
-		String Name;
+		String Tooltip; // gear tooltip
+		String Name; // gear name
+		String Mesh; // xasset mesh
+		int32_t Delay;
+		int32_t Dmg;
+		int32_t Id;
 
 	};
 }

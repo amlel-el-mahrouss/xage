@@ -14,7 +14,7 @@
 #include "Application.h"
 #include "SplashScreenComponent.h"
 
-extern void xplicit_register_client_lua();
+extern void xplicit_load_lua();
 
 namespace Xplicit::Player
 {
@@ -82,7 +82,7 @@ namespace Xplicit::Bites
 		RENDER->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
 
 		// register lua calls, such as PlaySound
-		xplicit_register_client_lua();
+		xplicit_load_lua();
 	}
 
 	Application::SettingsManager::SettingsManager()

@@ -46,7 +46,7 @@ static int lua_PlaySound(lua_State* L)
 	return 0;
 }
 
-void xplicit_register_client_lua()
+void xplicit_load_lua()
 {
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {};");
 

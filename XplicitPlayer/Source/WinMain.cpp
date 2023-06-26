@@ -25,7 +25,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-extern void xplicit_register_client_lua();
+extern void xplicit_load_lua();
 
 XPLICIT_MAIN()
 {
@@ -69,8 +69,6 @@ XPLICIT_MAIN()
 
 		if (!application) throw Xplicit::EngineError("Could not create application context, exiting!");
 
-		xplicit_register_client_lua();
-
 		/* main game loop */
 		while (RENDER->run() && 
 			Xplicit::ComponentManager::get_singleton_ptr() && 
@@ -102,7 +100,7 @@ XPLICIT_MAIN()
 		exit += L"\n";
 
 		Xplicit::DialogHelper::message_box(L"Xplicit Client", 
-			L"Program Failure!", 
+			L"Program Exit", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 
 			TDCBF_OK_BUTTON);

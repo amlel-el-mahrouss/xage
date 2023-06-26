@@ -26,62 +26,6 @@
 const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
 bool XPLICIT_EXIT_REQUESTED = false;
 
-static void xplicit_read_xml()
-{
-	XPLICIT_GET_DATA_DIR(data_path);
-	std::string path = data_path;
-
-	path += "/"; 
-	path += XPLICIT_MANIFEST_FILE;
-
-	rapidxml::file<> xml{ path.c_str() };
-	XPLICIT_ASSERT(xml.size() > 0);
-
-	auto mono = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::MonoEngineComponent>("MonoEngineComponent");
-
-	const int argc = 2;
-	const char* argv[] = { "XplicitNgine", "1.1.1" };
-
-	rapidxml::xml_document<> doc{};
-	doc.parse<0>(xml.data());
-
-	auto node = doc.first_node();
-
-	while (node)
-	{
-		if (strcmp(node->name(), "Dll") == 0)
-		{
-			auto dll = node->value();
-
-			path.clear();
-
-			path += data_path;
-			path += "/Library/";
-			path += dll;
-
-			const auto csharp_dll = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(path.c_str(), false);
-			const auto assembly_file = mono->open(path.c_str());
-
-			if (assembly_file)
-			{
-				XPLICIT_INFO("[C#] Running Engine Module: " + path);
-				mono->run(assembly_file, argc, argv);
-			}
-			else
-			{
-				XPLICIT_INFO("[C#] " + path + " No such file.");
-				Xplicit::ComponentManager::get_singleton_ptr()->remove(csharp_dll);
-			}
-			
-		}
-
-		if (node->parent())
-			node = node->next_sibling();
-		else
-			break;
-	}
-}
-
 static void xplicit_load_mono()
 {
 	try
@@ -162,7 +106,7 @@ static void xplicit_load_sh()
 	}
 }
 
-extern void xplicit_register_server_lua();
+extern void xplicit_load_lua();
 
 /* Application main entrypoint */
 int main(int argc, char** argv)
@@ -215,7 +159,7 @@ int main(int argc, char** argv)
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
 
 		xplicit_load_mono();
-		xplicit_read_xml();
+		xplicit_load_lua();
 
 		Xplicit::Thread logic([&]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
@@ -234,9 +178,6 @@ int main(int argc, char** argv)
 
 		logic.detach();
 
-		// register lua calls, such as PlaySound
-		xplicit_register_server_lua();
-
 		xplicit_load_sh();
 		
 		return 0;
@@ -245,6 +186,8 @@ int main(int argc, char** argv)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_CRITICAL(err.what());
+
+#endif // ifdef XPLICIT_DEBUG
 
 #ifdef XPLICIT_WINDOWS
 		std::wstring exit;
@@ -259,13 +202,12 @@ int main(int argc, char** argv)
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::DialogHelper::message_box(L"Xplicit Server", 
-			L"Program Exited", 
+		Xplicit::DialogHelper::message_box(L"Xplicit Game Server", 
+			L"Program Exit", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 
 			TDCBF_OK_BUTTON);
-#endif
-#endif
+#endif // ifdef XPLICIT_WINDOWS
 
 		return -1;
 	}
