@@ -24,7 +24,7 @@ namespace Xplicit::Player
 
 	//! Replicated player component
 	/** LocalHumanoidComponent is the player's logic */
-	class LocalHumanoidComponent final : public Component, public StaticMesh
+	class LocalHumanoidComponent final : public Component, public StaticBundleMesh
 	{
 	public:
 		LocalHumanoidComponent(const int64_t& public_hash);

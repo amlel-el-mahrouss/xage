@@ -16,14 +16,14 @@
 
 namespace Xplicit::Player
 {
-	class SplashScreenComponent final : public Component
+	class LoadingComponent final : public Component
 	{
 	public:
-		SplashScreenComponent();
-		~SplashScreenComponent() override;
+		LoadingComponent();
+		~LoadingComponent() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(SplashScreenComponent);
+		XPLICIT_COPY_DEFAULT(LoadingComponent);
 
 		bool should_update() noexcept override { return mEnabled; }
 		void update() override;

@@ -12,7 +12,9 @@
  */
 
 #include "Application.h"
-#include "SplashScreenComponent.h"
+
+#include "LoadingComponent.h"
+#include "RoXML.h"
 
 extern void xplicit_load_lua();
 
@@ -35,7 +37,7 @@ namespace Xplicit::Bites
 	}
 
 	Application::Application(Utils::UriParser& xconnect_to)
-		: mSettings(), mWsa(), mPath("")
+		: mPath(""), mWsa()
 	{
 		this->create_context();
 
@@ -44,11 +46,12 @@ namespace Xplicit::Bites
 
 		XPLICIT_ASSERT(!mPath.empty());
 
-#ifdef XPLICIT_WINDOWS
-		Xplicit::init_winsock(&mWsa);
-#endif
+		String scene = "C:/Users/amlal/AppData/Roaming/XplicitNgin/BasicScene.roxml";
 
-		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::SplashScreenComponent>();
+		SceneManager::RoXMLDocumentParser parser;
+		parser.load_scene(scene);
+
+		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::LoadingComponent>();
 		XPLICIT_ASSERT(splash_screen);
 
 		splash_screen->connect(xconnect_to);

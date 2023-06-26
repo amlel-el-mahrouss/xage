@@ -21,7 +21,7 @@ namespace Xplicit::Player
 	{
 	public:
 		LocalCameraComponent();
-		~LocalCameraComponent() override;
+		~LocalCameraComponent() noexcept override;
 		
 		LocalCameraComponent& operator=(const LocalCameraComponent&) = default;
 		LocalCameraComponent(const LocalCameraComponent&) = default;

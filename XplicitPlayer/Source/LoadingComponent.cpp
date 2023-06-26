@@ -5,7 +5,7 @@
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  *			File: LoadingComponent.cpp
- *			Purpose: Loading Component
+ *			Purpose: 
  *
  * =====================================================================
  */
@@ -17,7 +17,7 @@
 
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
-#include "SplashScreenComponent.h"
+#include "LoadingComponent.h"
 #include "LocalHumanoidComponent.h"
 #include "LocalCameraComponent.h"
 #include "LocalHTTPManager.h"
@@ -31,7 +31,7 @@ namespace Xplicit::Player
 {
 	constexpr int XPLICIT_TIMEOUT = ((1 * 60) * 300); // connection timeout
 
-	SplashScreenComponent::SplashScreenComponent() 
+	LoadingComponent::LoadingComponent() 
 		:
 		mTexture(nullptr),
 		mNetwork(nullptr), 
@@ -41,13 +41,13 @@ namespace Xplicit::Player
 		mTexture = RENDER->getVideoDriver()->getTexture("bkg.png");
 	}
 
-	SplashScreenComponent::~SplashScreenComponent() 
+	LoadingComponent::~LoadingComponent() 
 	{
 		if (mTexture)
 			(void)mTexture->drop();
 	}
 
-	void SplashScreenComponent::update()
+	void LoadingComponent::update()
 	{
 		if (!mNetwork) return;
 		if (!mEnabled) return;
@@ -129,7 +129,7 @@ namespace Xplicit::Player
 		}
 	}
 
-	void SplashScreenComponent::connect(Utils::UriParser& ip)
+	void LoadingComponent::connect(Utils::UriParser& ip)
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -169,7 +169,7 @@ namespace Xplicit::Player
 		}
 	}
 
-	void SplashScreenComponent::reset() noexcept
+	void LoadingComponent::reset() noexcept
 	{
 		ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 			RENDER->closeDevice();

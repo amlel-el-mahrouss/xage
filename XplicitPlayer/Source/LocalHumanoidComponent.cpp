@@ -27,7 +27,7 @@ namespace Xplicit::Player
 
 	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& public_hash)
 		:
-		StaticMesh("xplicit-player.dae"),
+		StaticBundleMesh("head.obj", "torso.obj", "arm.obj", "leg.obj"),
 		mPublicHash(public_hash),
 		mCam(nullptr), 
 		mPacket(),
@@ -76,7 +76,13 @@ namespace Xplicit::Player
 				mPos.X = xSpeed;
 				mPos.Y = ySpeed;
 
-				this->node()->setPosition(mPos);
+				this->node(0)->setPosition(mPos);
+				this->node(1)->setPosition(mPos);
+				this->node(2)->setPosition(mPos);
+				this->node(3)->setPosition(mPos);
+				this->node(4)->setPosition(mPos);
+				this->node(5)->setPosition(mPos);
+
 				this->mCam->get()->setPosition(mPos);
 			}
 		}

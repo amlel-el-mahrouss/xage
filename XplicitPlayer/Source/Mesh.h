@@ -10,8 +10,7 @@
 #pragma once
 
 #include <Root.h>
-#include <Xplicit.h>
-#include <DataValue.h>
+#include <Nplicit.h>
 
 namespace Xplicit::Player
 {
@@ -22,16 +21,8 @@ namespace Xplicit::Player
 		StaticMesh() = delete;
 		
 		explicit StaticMesh(const char* path);
+		virtual ~StaticMesh() noexcept;
 
-		~StaticMesh() noexcept
-		{
-			if (mNode)
-				(void)mNode->drop();
-
-			if (mMdl)
-				(void)mMdl->drop();
-		}
-		
 		StaticMesh& operator=(const StaticMesh&) = default;
 		StaticMesh(const StaticMesh&) = default;
 		
@@ -44,7 +35,35 @@ namespace Xplicit::Player
 
 	};
 
-	class DynamicMesh final : public ISceneNode
+	/* this one combines meshes to make a bundle */
+	/* example: Epic Bundle */
+	class StaticBundleMesh
+	{
+	public:
+		StaticBundleMesh() = delete;
+
+		explicit StaticBundleMesh(const char* head, const char* torso, const char* arm, const char* leg);
+		virtual ~StaticBundleMesh() noexcept;
+
+		StaticBundleMesh& operator=(const StaticBundleMesh&) = default;
+		StaticBundleMesh(const StaticBundleMesh&) = default;
+
+		IAnimatedMeshSceneNode* node(const std::size_t& index) const { return mParts[index].first; }
+		IAnimatedMesh* model(const std::size_t& index) const { return mParts[index].second; }
+
+	protected:
+		std::vector<std::pair<IAnimatedMeshSceneNode*, IAnimatedMesh*>> mParts;
+		
+	};
+
+#define XPLICIT_BUNDLE_HEAD		 (0)
+#define XPLICIT_BUNDLE_LEFT_ARM  (1)
+#define XPLICIT_BUNDLE_TORSO     (2)
+#define XPLICIT_BUNDLE_RIGHT_ARM (3)
+#define XPLICIT_BUNDLE_LEFT_LEG  (4)
+#define XPLICIT_BUNDLE_RIGHT_LEG (5)
+
+	class DynamicMesh : public ISceneNode
 	{
 	public:
 		DynamicMesh(ISceneNode* parent, ISceneManager* mgr, s32 id)
