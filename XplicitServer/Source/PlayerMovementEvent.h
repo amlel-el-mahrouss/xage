@@ -9,6 +9,9 @@
 
 #pragma once
 
+#include <Nplicit.h>
+#include <RigidBody.h>
+
 #include "CommonInclude.h"
 #include "HumanoidComponent.h"
 
@@ -32,6 +35,11 @@ namespace Xplicit
 		
 		const char* name() noexcept override;
 		void operator()() override;
+
+		std::shared_ptr<SolverSystem<float>> get_solver() noexcept;
+
+	private:
+		std::shared_ptr<SolverSystem<float>> mSolver;
 
 	private:
 		NetworkServerComponent* mNetwork;

@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Crc32.h
- *			Purpose: CRC32
- *
  * =====================================================================
  */
 

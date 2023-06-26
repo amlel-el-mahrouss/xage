@@ -1,39 +1,14 @@
 <!-- made with Xplicit Studio, www.play-xplicit.com -->
 
-<Xplicit>
-	<Spawn>
-		<DataValue Name="Anchor" Value="True"/>
-	
-		<X>0</X>
-		<Y>0</Y>
-		<Z>0</Z>
+<Spawn X="0" Y="0" Z="0" Name="PlayerSpawn"/>
 
-		<Color>
-			<R>255</R>
-			<G>0</G>
-			<B>0</B>
-		</Color>
-	</Spawn>
+<Brick Who="TestBrick">
+	<Color Who="TestBrick" Mat="0">
+		FF0000
+	</Color>
 
-	<Mesh>
-		<DataValue Name="Anchor" Type="BOOLE" Value="True"/>
-	
-		<Cube>
-			<X>0</X>
-			<Y>0</Y>
- 			<Z>0</Z>
-
-			<W>10</W>
-			<H>10</H>
-		</Cube>
-
-		<Event>
-			<OnClick Id="1" Script="Clicked"/>
-		</Event>
-	</Mesh>
-
-	<Lua Name="Clicked">
-		Sound:Play('xasset://Halloween.wav');
-		Chat:Print('Hello world');
-	</Lua>
-</Xplicit>
+	<Event Name="Clicked">
+		Sound:Play('Halloween.wav');
+		Chat:Print('You clicked this thing, gg')
+	</Event>
+</Brick>

@@ -7,27 +7,30 @@
  * =====================================================================
  */
 
-// bug count = 1
+// bug count = 0
 
  /**
  * @file
  */
 
-#include <Root.h>
 #include "PlayerMovementEvent.h"
+
+#include <lua/lua.hpp>
+#include <Root.h>
 
 namespace Xplicit
 {
 	PlayerMovementEvent::PlayerMovementEvent() 
 		: 
+		mSolver(std::make_unique<SolverSystem<float>>()),
 		mNetwork(nullptr),
 		mDeltaTime(0UL)
 	{
-		mVelocityVar = GameVarManager::get_singleton_ptr()->get("Server-DefaultVelocity");
+		mVelocityVar = GameVarManager::get_singleton_ptr()->get("Server-Velocity");
 		
 		if (!mVelocityVar)
 		{
-			mVelocityVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DefaultVelocity",
+			mVelocityVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-Velocity",
 				"0.035f",
 				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
 
@@ -95,10 +98,12 @@ namespace Xplicit
 				peer->packet.public_hash = peer->public_hash;
 
 				XPLICIT_INFO("Humanoid:Move [EVENT]");
-				// Place event here (TODO)
+				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Move()");
 			}
 		}
 
 		mDeltaTime += (mDeltaVar->as_float() / 1000.f);
 	}
+
+	std::shared_ptr<SolverSystem<float>> PlayerMovementEvent::get_solver() noexcept { return mSolver; }
 }

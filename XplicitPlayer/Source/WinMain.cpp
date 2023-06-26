@@ -17,6 +17,7 @@
 #include "LocalHTTPManager.h"
 #include "NetworkProtocol.h"
 #include "Application.h"
+#include "RoXML.h"
 
 #include <XplicitSound.h>
 #include <lua/lua.hpp>
@@ -47,6 +48,10 @@ XPLICIT_MAIN()
 		Xplicit::open_terminal();
 #endif
 
+		Xplicit::String scene = "C:/Users/amlal/AppData/Roaming/XplicitNgin/BasicScene.roxml";
+
+		Xplicit::SceneManager::RoXMLDocumentParser parser;
+		parser.load_scene(scene);
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
 		RtlZeroMemory(&wsa, sizeof(WSADATA));
