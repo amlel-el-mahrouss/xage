@@ -18,11 +18,13 @@ extern "C" {
 #	include "lauxlib.h"
 }
 
-#define XPLICIT_LUA_NAME "XplicitNgine Lua"
+#define XPLICIT_LUA_NAME "XLua"
 #define XPLICIT_LUA_DESCRIPTION "Custom dialect for Xplicit"
 
 namespace Xplicit::Lua
 {
+	typedef lua_State* XLuaStatePtr;
+
 	class XPLICIT_API XLuaStateManager final
 	{
 	private:

@@ -4,19 +4,19 @@ XplicitNgin
 REQUIREMENTS:
 =============
 
-- Git.
-- Lua.
-- GLFW.
-- XplicitNet.
-- Mono.
-- Windows 10/11.
+- Git
+- Lua
+- GLFW
+- Mono
+- OpenSSL
+- Windows 10/11
 - Vulkan SDK 1.3.250.0
-- Visual Studio 2019.
+- Visual Studio 2019
 
 INSTALLING:
 ===========
 
-- Put the C# assemblies into %appdata%/Data
+- Put the C# assemblies into %appdata%/Data.
 - Download DirectXTK for the XplicitSound header. (XplicitPlayer) via NuGet.
 
 ======================================================================

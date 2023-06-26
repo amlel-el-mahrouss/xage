@@ -22,7 +22,7 @@ XPLICIT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-          "C:/Program Files/Mono/lib/mono-2.0-sgen",
+      "C:/Program Files/Mono/lib/mono-2.0-sgen",
 	  "dxgi",
 	  "d3d11",
 	  "d2d1",
@@ -31,11 +31,14 @@ XPLICIT_CONFIG = {
 	  "winmm",
 	  "opengl32",
 	  "C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
-          "Library/glfw3",
+      "Library/glfw3",
 	  "Library/lua",
 	  "Library/irrlicht",
+      "C:/Program Files/OpenSSL-Win64/lib/libssl",
+      "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
     },
     ["_INCDIR"] = {
+        "C:/Program Files/OpenSSL-Win64/include/openssl",
         "Vendor/",
 	"Vendor/luajit/src",
 	"Vendor/glfw/include/GLFW/",
@@ -70,8 +73,11 @@ XPLICIT_SERVER_CONFIG = {
 	  "Library/lua",
 	  "ws2_32",
 	  "winmm",
+      "C:/Program Files/OpenSSL-Win64/lib/libssl",
+      "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
     },
     ["_INCDIR"] = {
+        "C:/Program Files/OpenSSL-Win64/include/openssl",
         "Vendor/",
         "Vendor/stb/",
 	"Vendor/luajit/src",
@@ -114,8 +120,11 @@ XPLICIT_CLIENT_CONFIG = {
 	  "ws2_32",
 	  "winmm",
       "Library/Irrlicht"
+      "C:/Program Files/OpenSSL-Win64/lib/libssl",
+      "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
     },
     ["_INCDIR"] = {
+        "C:/Program Files/OpenSSL-Win64/include/openssl",
         "Vendor/",
         "SoundNgin/",
     	"Xplicit/Source/",
@@ -152,7 +161,6 @@ NPLICIT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-	"C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
     	"Library/Xplicit",
         "d3d11",
         "dxgi",
@@ -169,8 +177,6 @@ NPLICIT_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
         "Vendor/nuklear/",
 	    "Vendor/irr/include",
-        "C:/Program Files/Mono/include/mono-2.0/",
-        "C:/Program Files/Mono/include/mono-2.0/mono",
     }
 };
 

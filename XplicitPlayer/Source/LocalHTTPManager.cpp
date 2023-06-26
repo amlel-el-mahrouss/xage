@@ -18,12 +18,10 @@ namespace Xplicit::Player
 	{
         HTTP::HTTPWriter http_writer;
         
-        String request = mEndpoint + "/" + assetId;
-
         auto hdr = new HTTP::HTTP::HTTPHeader{
             .Type = HTTP::HTTP::RequestType::GET,
-            .Bytes = request.data(),
-            .Size = static_cast<int>(request.size()),
+            .Bytes = const_cast<char*>(assetId.data()),
+            .Size = static_cast<int>(assetId.size()),
         };
 
         Ref<HTTP::HTTP::HTTPHeader*> hdr_wrapper{ hdr };

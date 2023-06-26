@@ -11,6 +11,7 @@
 
 #include <Root.h>
 #include <Xplicit.h>
+#include <DataValue.h>
 
 namespace Xplicit::Player
 {

@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: Http.h
- *			Purpose: Xplicit C++ HTTP client
- *
  * =====================================================================
  */
 
@@ -14,9 +11,13 @@
 
 #include "Xplicit.h"
 
+// OpenSSL
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
 namespace Xplicit::HTTP
 {
-    constexpr int16_t XPLICIT_HTTP_PORT = 80;
+    constexpr int16_t XPLICIT_HTTP_PORT = 443;
 
     class MIMEFactory;
     class HTTPError;
@@ -111,16 +112,16 @@ namespace Xplicit::HTTP
     class HTTPError final : public std::runtime_error 
     {
     public:
-        explicit HTTPError(const uint16_t what) : std::runtime_error("Xplicit HTTP Error") {  }
+        explicit HTTPError(const std::uint16_t what) : std::runtime_error("Xplicit HTTP Error") {  }
         ~HTTPError() override = default; // let the ABI define that.
 
         HTTPError& operator=(const HTTPError&) = default;
         HTTPError(const HTTPError&) = default;
         
-        int error() const { return m_iErr; }
+        int error() const { return mError; }
 
     private:
-        int m_iErr{ 200 };
+        int mError{ 200 };
 
     };
 
@@ -128,16 +129,13 @@ namespace Xplicit::HTTP
     {
     public:
         static std::string make_get(const std::string& path, 
-            const std::string& host,
-            const char* user_agent = "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36\n"
+            const std::string& host
         ) 
         {
             if (path.empty() || host.empty()) return "";
-            if (!user_agent || *user_agent == 0) return "";
 
             std::string request = "GET " + path + " HTTP/1.1\r\n";
             request += "Host: " + host + "\r\n";
-            request += user_agent;
             request += "\r\n\r\n";
 
             return request;
@@ -149,7 +147,7 @@ namespace Xplicit::HTTP
                 return false;
 
             if (rest.empty())
-                throw std::runtime_error("Bad restrict");
+                throw std::runtime_error("Bad restrict.");
 
             return http.find(rest) != std::string::npos;
         }
@@ -158,6 +156,7 @@ namespace Xplicit::HTTP
         static int content_length(const std::string& http)
         {
             size_t at = http.find("Content-Length: ");
+
             if (at == std::string::npos) 
                 return HTTPHelpers::bad_pos;
 
@@ -185,20 +184,33 @@ namespace Xplicit::HTTP
     class HTTPWriter final 
     {
     public:
-        HTTPWriter() = default;
+        explicit HTTPWriter()
+        {
+            m_SslCtx = init_ssl();
+            m_Ssl = SSL_new(m_SslCtx);
+
+            // in case the SSL context fails
+            if (m_Ssl == nullptr)
+            {
+                fprintf(stderr, "SSL_new() failed\n");
+
+                throw EngineError("Bad SSL context, SSL_new() failed!");
+            }
+        }
 
         ~HTTPWriter() noexcept 
         {
             if (shutdown(m_Socket->m_Socket, SD_BOTH) == SOCKET_ERROR)
                 closesocket(m_Socket->m_Socket);
 
-#ifdef XPLICIT_DEBUG
             char buf[256];
             vsprintf_s<256U>(buf, "[SERVER] %s has been closed!", m_Socket->m_Dns.data());
 
             XPLICIT_INFO(buf);
             xplicit_log(buf);
-#endif
+
+            SSL_free(m_Ssl);
+            SSL_CTX_free(m_SslCtx);
         }
 
         HTTPWriter& operator=(const HTTPWriter&) = default;
@@ -232,39 +244,59 @@ namespace Xplicit::HTTP
             if (result == SOCKET_ERROR) 
                 throw HTTPError(HTTP_DNS_ERROR);
 
+            SSL_set_fd(m_Ssl, sock->m_Socket);
+            auto status = SSL_connect(m_Ssl);
+
+            if (status != 1)
+            {
+                SSL_get_error(m_Ssl, status);
+                ERR_print_errors_fp(stderr); //High probability this doesn't do anything
+
+                return nullptr;
+            }
+
+            printf("[HTTPS] Connected with %s encryption\n", SSL_get_cipher(m_Ssl));
+
             return sock;
         }
 
         int64_t send_from_socket(HTTPSharedPtr& sock, Ref<HTTP::HTTPHeader*>& hdr) 
         {
-#ifndef NDEBUG
-            assert(sock);
-            assert(hdr);
-            assert(!sock->m_Dns.empty());
-#endif
+            XPLICIT_ASSERT(sock);
+            XPLICIT_ASSERT(hdr);
+            XPLICIT_ASSERT(!sock->m_Dns.empty());
 
-            int64_t result{ SOCKET_ERROR };
-
-            if (result = send(sock->m_Socket, hdr->Bytes, hdr->Size, 0) != hdr->Size)
-                throw HTTPError(HTTP_INTERNAL_ERROR);
-
-            return result;
+            return SSL_write(m_Ssl, hdr->Bytes, hdr->Size);
         }
 
         int64_t read_from_socket(HTTPSharedPtr& sock, char* bytes, int len) 
         {
-#ifdef XPLICIT_DEBUG
             XPLICIT_ASSERT(sock);
-#endif
+            XPLICIT_ASSERT(bytes);
+            XPLICIT_ASSERT(len > 0);
 
-            int64_t data_length{ -1 };
-            data_length = recv(sock->m_Socket, bytes, len, 0);
+            return SSL_read(m_Ssl, bytes, len);
+        }
 
-            return data_length;
+    private:
+        SSL_CTX* init_ssl(void) noexcept
+        {
+            const SSL_METHOD* method = TLS_client_method(); /* Create new client-method instance */
+            SSL_CTX* ctx = SSL_CTX_new(method);
+
+            if (ctx == nullptr)
+            {
+                ERR_print_errors_fp(stderr);
+                return nullptr;
+            }
+
+            return ctx;
         }
 
     private:
         HTTPSharedPtr m_Socket;
+        SSL_CTX* m_SslCtx;
+        SSL* m_Ssl;
 
     };
 }
