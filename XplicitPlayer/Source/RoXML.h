@@ -66,6 +66,9 @@ namespace Xplicit::SceneManager
 							auto brick = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getMesh(path.c_str()));
 
 							brick->setName(node_id);
+							brick->setPosition(vector3df(0.f, 0.f, 0.0f));
+
+							brick->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
 						}
 
 						if (node_name == "Color")
@@ -120,9 +123,15 @@ namespace Xplicit::SceneManager
 										event_code += node->value();
 
 										event_code += "\nend\n";
-										event_code += "Event:Connect(";
+										event_code += "Local.Event:Connect(";
+										event_code += "\"";
+										event_code += name_value;
+										event_code += "\"";
+										event_code += ",";
 										event_code += func_name;
 										event_code += ");";
+
+										std::cout << event_code << std::endl;
 
 										Lua::XLuaStateManager::get_singleton_ptr()->run_string(event_code.c_str());
 

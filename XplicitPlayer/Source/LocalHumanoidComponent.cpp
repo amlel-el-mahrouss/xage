@@ -31,7 +31,7 @@ namespace Xplicit::Player
 		mPublicHash(public_hash),
 		mCam(nullptr), 
 		mPacket(),
-		mPos(0.f, 0.f, 0.f)
+		mPos(0.f, 2.f, 0.f)
 	{
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -76,14 +76,7 @@ namespace Xplicit::Player
 				mPos.X = xSpeed;
 				mPos.Y = ySpeed;
 
-				this->node(0)->setPosition(mPos);
-				this->node(1)->setPosition(mPos);
-				this->node(2)->setPosition(mPos);
-				this->node(3)->setPosition(mPos);
-				this->node(4)->setPosition(mPos);
-				this->node(5)->setPosition(mPos);
-
-				this->mCam->get()->setPosition(mPos);
+				// TODO: set player position (lua)
 			}
 		}
 	}
@@ -91,7 +84,11 @@ namespace Xplicit::Player
 	void LocalHumanoidComponent::attach(LocalCameraComponent* cam) noexcept
 	{ 
 		if (cam)
-			mCam = cam; 
+		{
+			mCam = cam;
+
+			// TODO: set camera position (lua)
+		}
 	}
 
 	vector3df LocalHumanoidComponent::get_pos() noexcept { return mPos; }
