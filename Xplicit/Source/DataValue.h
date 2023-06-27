@@ -4,9 +4,6 @@
  *			XplicitNgin C++ Game Engine
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: DataValue.h
- *			Purpose: Xplicit DataValue container.
- *
  * =====================================================================
  */
 
@@ -18,9 +15,10 @@ namespace Xplicit
 {
 	enum class DATA_VALUE_TYPE
 	{
-		BOOLE,
+		BOOLEAN,
 		STRING,
 		INTEGER,
+		NIL,
 		IEE754, /* floating point number. */
 	};
 
@@ -40,15 +38,16 @@ namespace Xplicit
 	 *
 	 */
 
-	inline DataValue* make_data_value(const char* name, const char* value = "Nil") noexcept
+	inline DataValue* make_data_value(const char* name, const char* value = "Nil", const DATA_VALUE_TYPE type = DATA_VALUE_TYPE::NIL) noexcept
 	{
 		DataValue* data_value = new DataValue();
 
 		if (data_value == nullptr)
-			throw EngineError("Invalid DataValue (probably out of memory?)");
+			throw EngineError("Could not allocate DataValue (probably out of memory?)");
 
 		XPLICIT_ASSERT(data_value);
 
+		data_value->Type = type;
 		data_value->Name = name;
 		data_value->Value = value;
 

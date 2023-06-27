@@ -21,6 +21,9 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <uuid/uuid.h>
+
+#define _IRR_STATIC_LIB_
+
 #include <irrlicht.h>
 
 using namespace irr;
@@ -60,7 +63,7 @@ using namespace core;
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(lib, "Ws2_32.lib")
 
-#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 #ifdef _WIN32
 #define XPLICIT_WINDOWS 1

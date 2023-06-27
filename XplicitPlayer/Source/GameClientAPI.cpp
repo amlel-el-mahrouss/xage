@@ -1,11 +1,8 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			XplicitPlayer
  *			Copyright Xplicit Corporation, all rights reserved.
- *
- *			File: WinMain.cpp
- *			Purpose: Main Application entrypoint.
  *
  * =====================================================================
  */

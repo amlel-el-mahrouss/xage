@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{82E3E386-EEC2-6222-F7DA-EDF86339C983}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Xplicit</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\Debug\</OutDir>
+    <IntDir>obj\Debug\Xplicit\</IntDir>
+    <TargetName>Xplicit</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\Release\</OutDir>
+    <IntDir>obj\Release\Xplicit\</IntDir>
+    <TargetName>Xplicit</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_DEBUG;__XPLICIT__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;__XPLICIT_DLL__;__EXPORT_XPLICIT__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files\OpenSSL-Win64\include;Vendor;Vendor\luajit\src;Vendor\glfw\include\GLFW;Vendor\yaml\include;Nplicit\Source;C:\VulkanSDK\1.3.250.0\Include;Vendor\irr\include;Vendor\libzip\lib;C:\Program Files\Mono\include\mono-2.0;C:\Program Files\Mono\include\mono-2.0\mono;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Program Files\Mono\lib\mono-2.0-sgen.lib;dxgi.lib;d3d11.lib;d2d1.lib;d3dcompiler.lib;ws2_32.lib;winmm.lib;opengl32.lib;C:\VulkanSDK\1.3.250.0\Lib\vulkan-1.lib;Library\glfw3.lib;Library\lua.lib;Library\Irrlicht.lib;C:\Program Files\OpenSSL-Win64\lib\libssl.lib;C:\Program Files\OpenSSL-Win64\lib\libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>bin\Debug\Xplicit.lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_NDEBUG;__XPLICIT__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;__XPLICIT_DLL__;__EXPORT_XPLICIT__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files\OpenSSL-Win64\include;Vendor;Vendor\luajit\src;Vendor\glfw\include\GLFW;Vendor\yaml\include;Nplicit\Source;C:\VulkanSDK\1.3.250.0\Include;Vendor\irr\include;Vendor\libzip\lib;C:\Program Files\Mono\include\mono-2.0;C:\Program Files\Mono\include\mono-2.0\mono;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>C:\Program Files\Mono\lib\mono-2.0-sgen.lib;dxgi.lib;d3d11.lib;d2d1.lib;d3dcompiler.lib;ws2_32.lib;winmm.lib;opengl32.lib;C:\VulkanSDK\1.3.250.0\Lib\vulkan-1.lib;Library\glfw3.lib;Library\lua.lib;Library\Irrlicht.lib;C:\Program Files\OpenSSL-Win64\lib\libssl.lib;C:\Program Files\OpenSSL-Win64\lib\libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>bin\Release\Xplicit.lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Xplicit\Source\Ar.h" />
+    <ClInclude Include="Xplicit\Source\Avx.h" />
+    <ClInclude Include="Xplicit\Source\Bites.h" />
+    <ClInclude Include="Xplicit\Source\CommonEngine.h" />
+    <ClInclude Include="Xplicit\Source\Component.h" />
+    <ClInclude Include="Xplicit\Source\Component.inl" />
+    <ClInclude Include="Xplicit\Source\Config.h" />
+    <ClInclude Include="Xplicit\Source\Crc32.h" />
+    <ClInclude Include="Xplicit\Source\D3D11ShaderSystem.inl" />
+    <ClInclude Include="Xplicit\Source\DataValue.h" />
+    <ClInclude Include="Xplicit\Source\DriverD2D.h" />
+    <ClInclude Include="Xplicit\Source\DriverD3D11.h" />
+    <ClInclude Include="Xplicit\Source\DriverD3D11.inl" />
+    <ClInclude Include="Xplicit\Source\DriverOpenGL.h" />
+    <ClInclude Include="Xplicit\Source\DriverSystem.h" />
+    <ClInclude Include="Xplicit\Source\DriverVulkan.h" />
+    <ClInclude Include="Xplicit\Source\Event.h" />
+    <ClInclude Include="Xplicit\Source\Event.inl" />
+    <ClInclude Include="Xplicit\Source\GLad.h" />
+    <ClInclude Include="Xplicit\Source\GameVar.h" />
+    <ClInclude Include="Xplicit\Source\HelperMacros.h" />
+    <ClInclude Include="Xplicit\Source\Http.h" />
+    <ClInclude Include="Xplicit\Source\LuaScriptComponent.h" />
+    <ClInclude Include="Xplicit\Source\MonoComponent.h" />
+    <ClInclude Include="Xplicit\Source\MonoInterop.h" />
+    <ClInclude Include="Xplicit\Source\NetworkComponent.h" />
+    <ClInclude Include="Xplicit\Source\NetworkProtocol.h" />
+    <ClInclude Include="Xplicit\Source\NetworkServerComponent.h" />
+    <ClInclude Include="Xplicit\Source\Root.h" />
+    <ClInclude Include="Xplicit\Source\SocketWrapper.h" />
+    <ClInclude Include="Xplicit\Source\SocketWrapper.inl" />
+    <ClInclude Include="Xplicit\Source\Uri.h" />
+    <ClInclude Include="Xplicit\Source\Util.h" />
+    <ClInclude Include="Xplicit\Source\VideoDriver.h" />
+    <ClInclude Include="Xplicit\Source\Xplicit.h" />
+    <ClInclude Include="Xplicit\Source\XplicitID.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Xplicit\Source\Ar.cpp" />
+    <ClCompile Include="Xplicit\Source\Avx.cpp" />
+    <ClCompile Include="Xplicit\Source\Bites.cpp" />
+    <ClCompile Include="Xplicit\Source\CommonEngine.cpp" />
+    <ClCompile Include="Xplicit\Source\Component.cpp" />
+    <ClCompile Include="Xplicit\Source\Crc32.cpp" />
+    <ClCompile Include="Xplicit\Source\D3D11ShaderSystem.cpp" />
+    <ClCompile Include="Xplicit\Source\DriverD2D.cpp" />
+    <ClCompile Include="Xplicit\Source\DriverD3D11.cpp" />
+    <ClCompile Include="Xplicit\Source\DriverOpenGL.cpp" />
+    <ClCompile Include="Xplicit\Source\DriverSystem.cpp" />
+    <ClCompile Include="Xplicit\Source\DriverVulkan.cpp" />
+    <ClCompile Include="Xplicit\Source\Event.cpp" />
+    <ClCompile Include="Xplicit\Source\GLad.cpp" />
+    <ClCompile Include="Xplicit\Source\GameVar.cpp" />
+    <ClCompile Include="Xplicit\Source\HelperMacros.cpp" />
+    <ClCompile Include="Xplicit\Source\Http.cpp" />
+    <ClCompile Include="Xplicit\Source\MonoComponent.cpp" />
+    <ClCompile Include="Xplicit\Source\MonoInterop.cpp" />
+    <ClCompile Include="Xplicit\Source\NetworkComponent.cpp" />
+    <ClCompile Include="Xplicit\Source\NetworkProtocol.cpp" />
+    <ClCompile Include="Xplicit\Source\NetworkServerComponent.cpp" />
+    <ClCompile Include="Xplicit\Source\SocketWrapper.cpp" />
+    <ClCompile Include="Xplicit\Source\Uri.cpp" />
+    <ClCompile Include="Xplicit\Source\VideoDriver.cpp" />
+    <ClCompile Include="Xplicit\Source\Xplicit.cpp" />
+    <ClCompile Include="Xplicit\Source\XplicitID.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

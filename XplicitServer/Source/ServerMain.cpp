@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			XplicitServer
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  * =====================================================================
@@ -15,6 +15,7 @@
 #include <codecvt>
 #include <XplicitID.h>
 
+#include "ServerConfig.h"
 #include "CommonInclude.h"
 #include "SpawnComponent.h"
 #include "PlayerLoginEvent.h"

@@ -34,30 +34,43 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
 
-		String path = "overlay.png";
+		String path = "";
 
 		switch (popup_type)
 		{
 		case POPUP_TYPE::KICK:
+			path = "network_kick.png";
 			break;
 		case POPUP_TYPE::NETWORK:
+			path = "network_timeout.png";
 			break;
 		case POPUP_TYPE::SHUTDOWN:
+			path = "network_shutdown.png";
 			break;
 		case POPUP_TYPE::TELEPORTING:
+			path = "network_teleport.png";
 			break;
 		case POPUP_TYPE::BANNED:
+			path = "network_ban.png";
 			break;
 		default:
 			break;
 		}
 
-		mTex = RENDER->getVideoDriver()->getTexture(path.c_str());
+		if (!path.empty())
+		{
+			mTex = RENDER->getVideoDriver()->getTexture(path.c_str());
 
-		XPLICIT_ASSERT(mTex);
+			XPLICIT_ASSERT(mTex);
 
-		if (!mTex)
-			throw EngineError();
+			if (!mTex)
+				throw EngineError();
+		}
+		else
+		{
+			XPLICIT_INFO("Invalid popup! destroying current instance...");
+			ComponentManager::get_singleton_ptr()->remove(this);
+		}
 	}
 	
 	PopupComponent::~PopupComponent()

@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "PlayerConfig.h"
 #include <Nplicit.h>
 #include <Root.h>
 #include <Uri.h>

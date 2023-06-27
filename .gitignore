@@ -27,10 +27,6 @@ Docs/html/
 
 *.irr
 
-Scripts/Output/XplicitSetup.exe
-
-packages.config
-
 # Compiled Object files
 *.slo
 *.lo
@@ -645,8 +641,3 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,visualstudio,csharp
-
-*.vcxproj
-*.filters
-*.sln
-*.vcproj

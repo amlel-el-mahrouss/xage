@@ -17,9 +17,9 @@
 
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
-#include "LoadingComponent.h"
 #include "LocalHumanoidComponent.h"
 #include "LocalCameraComponent.h"
+#include "LoadingComponent.h"
 #include "LocalHTTPManager.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
