@@ -46,10 +46,8 @@ namespace Xplicit::Bites
 
 		XPLICIT_ASSERT(!mPath.empty());
 
-		String scene = "C:/Users/amlal/AppData/Roaming/XplicitNgin/BasicScene.roxml";
-
-		SceneManager::RoXMLDocumentParser parser;
-		parser.load_scene(scene);
+		// register lua calls, such as PlaySound
+		xplicit_load_lua();
 
 		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::LoadingComponent>();
 		XPLICIT_ASSERT(splash_screen);
@@ -83,9 +81,6 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(mSettings);
 
 		RENDER->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
-
-		// register lua calls, such as PlaySound
-		xplicit_load_lua();
 	}
 
 	Application::SettingsManager::SettingsManager()

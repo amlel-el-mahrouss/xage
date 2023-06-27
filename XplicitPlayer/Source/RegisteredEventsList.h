@@ -13,7 +13,6 @@ static inline const char* XPLICIT_EVENTS[] = {
 	"Move",
 	"Leave",
 	"Join",
-	"Touched",
 	"Death",
 	"Spawn",
 	"Damage",
@@ -23,4 +22,4 @@ static inline const char* XPLICIT_EVENTS[] = {
 	"LocalSpawn",
 };
 
-#define XPLICIT_EVENT_MAX (11)
+#define XPLICIT_EVENT_MAX (10)

@@ -113,7 +113,7 @@ namespace Xplicit::SceneManager
 								{
 									if (strcmp(name_value.c_str(), XPLICIT_EVENTS[event_idx]))
 									{
-										String func_name = "__xplicitJACKstudioMethod";
+										String func_name = "methodXplicit";
 										func_name += std::to_string(xplicit_get_epoch());
 
 										String event_code = "local func ";
@@ -130,8 +130,6 @@ namespace Xplicit::SceneManager
 										event_code += ",";
 										event_code += func_name;
 										event_code += ");";
-
-										std::cout << event_code << std::endl;
 
 										Lua::XLuaStateManager::get_singleton_ptr()->run_string(event_code.c_str());
 

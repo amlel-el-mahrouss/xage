@@ -3,5 +3,11 @@
 Vector3 = {}
 
 func Vector3:New(X, Y, Z)
-    return { Name = "Vector3", Type = "Vector", A1 = X, A2 = Y, A3 = Z };
+    return { Name = "Vector3", Type = "Vector", X = X, Y = Y, Z = Z };
+end
+
+Color = {}
+
+func Color:New(R, G, B)
+    return { Name = "Color", Type = "Color", Red = R, Green = G, Blue = B };
 end

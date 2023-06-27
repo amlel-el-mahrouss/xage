@@ -28,17 +28,16 @@ static Xplicit::Player::LocalNetworkMonitorEvent* XPLICIT_MONITOR;
 
 static int lua_PlaySound(lua_State* L)
 {
-	const char* path = lua_tostring(L, 1);
+	Xplicit::String path = lua_tostring(L, 1);
 
-	if (path == nullptr)
+	if (path.empty())
 		return 0;
 
-	std::wstring assetPath;
-
+	std::wstring asset_path;
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	assetPath = converter.from_bytes(path);
+	asset_path = converter.from_bytes(path);
 
-	auto aud = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(assetPath.c_str());
+	auto aud = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(asset_path.c_str());
 
 	if (aud)
 		aud->play();
@@ -52,7 +51,6 @@ void xplicit_load_lua()
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
-
 
 	XPLICIT_GET_DATA_DIR(full_path);
 

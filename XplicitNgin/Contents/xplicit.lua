@@ -29,19 +29,7 @@ func Engine:Leave()
     end
 end
 
-func Engine:Touch()
-    Engine.PlayerCount = Engine.PlayerCount - 1;
-
-    for _, v in ipairs(Engine.Events) do
-        if (v.Name == "Touch") then
-            v.Func();
-        end
-    end
-end
-
 func Engine:Click()
-    Engine.PlayerCount = Engine.PlayerCount - 1;
-
     for _, v in ipairs(Engine.Events) do
         if (v.Name == "Click") then
             v.Func();
@@ -50,8 +38,6 @@ func Engine:Click()
 end
 
 func Engine:RightClick()
-    Engine.PlayerCount = Engine.PlayerCount - 1;
-
     for _, v in ipairs(Engine.Events) do
         if (v.Name == "RightClick") then
             v.Func();
@@ -60,8 +46,6 @@ func Engine:RightClick()
 end
 
 func Engine:MouseMove()
-    Engine.PlayerCount = Engine.PlayerCount - 1;
-
     for _, v in ipairs(Engine.Events) do
         if (v.Name == "MouseMove") then
             v.Func();
@@ -70,8 +54,6 @@ func Engine:MouseMove()
 end
 
 func Engine:LocalSpawn()
-    Engine.PlayerCount = Engine.PlayerCount - 1;
-
     for _, v in ipairs(Engine.Events) do
         if (v.Name == "LocalSpawn") then
             v.Func();
@@ -131,6 +113,8 @@ func Engine:Connect(Name, Func)
     };
 
     Engine.Counter = Engine.Counter + 1;
+
+    print('Registered!');
 end
 
 func Engine:Disconnect(Name)
@@ -139,6 +123,11 @@ func Engine:Disconnect(Name)
     for _, v in ipairs(Engine.Events) do
         if (v.Name == Name) then
             v.Func = nil;
+            v.Name = nil;
+
+            Engine.Counter = Engine.Counter - 1;
+
+            print('Event Disconnected...');
         end
     end
 end
