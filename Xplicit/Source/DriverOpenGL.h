@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Xplicit.h"
+#include "Bites.h"
 #include "DriverSystem.h"
 
 #ifndef __gl_h_
@@ -66,6 +66,10 @@ namespace Xplicit::Renderer::OpenGL
 
 		XPLICIT_COPY_DELETE(DriverSystemOpenGL);
 		XPLICIT_DRIVER_SYSTEM_OVERRIDE();
+
+	public:
+		void begin_scene(const Color<float>& clr) noexcept;
+		void end_scene(const std::unique_ptr<Bites::GLFWWindow>& window) noexcept;
 
 	public:
 		const bool& is_closed() noexcept;

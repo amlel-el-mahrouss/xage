@@ -54,9 +54,8 @@ namespace Xplicit::Bites
 
 		using Traits = Win32Traits;
 
-		int run(const std::unique_ptr<Renderer::DX11::DriverSystemD3D11>& driver, 
-			const Color<float>& clr) noexcept;
-
+	public:
+		int run() noexcept;
 		const Traits& get() const noexcept;
 
 	private:
@@ -75,8 +74,8 @@ namespace Xplicit::Bites
 		
 		GLFWwindow* get() const noexcept;
 		
-		int run(const std::unique_ptr<Renderer::OpenGL::DriverSystemOpenGL>& driver,
-			const Color<float>& clr) noexcept;
+	public:
+		int run() noexcept;
 
 	private:
 		GLFWwindow* mWindow;

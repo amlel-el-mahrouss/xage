@@ -10,8 +10,8 @@
  * =====================================================================
  */
 
-#include "GLad.h"
 #include "DriverOpenGL.h"
+#include <glfw3.h>
 
  /**
  * @file
@@ -49,10 +49,7 @@ namespace Xplicit::Renderer::OpenGL
 		
 	}
 
-	DriverSystemOpenGL::~DriverSystemOpenGL()
-	{
-			
-	}
+	DriverSystemOpenGL::~DriverSystemOpenGL() = default;
 
 	const char* DriverSystemOpenGL::name() noexcept { return ("DriverSystemOpenGL"); }
 
@@ -60,4 +57,19 @@ namespace Xplicit::Renderer::OpenGL
 
 	const bool& DriverSystemOpenGL::is_closed() noexcept { return m_bClose;  }
 	void DriverSystemOpenGL::close() noexcept { m_bClose = true; }
+
+	void DriverSystemOpenGL::begin_scene(const Color<float>& clr)
+	{
+		glClearColor(clr.R / 255, clr.G / 255, clr.B / 255, 1.0f);
+
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+	}
+
+	void DriverSystemOpenGL::end_scene(const std::unique_ptr<Bites::GLFWWindow>& window) noexcept
+	{
+		glfwSwapBuffers(window->get());
+		glfwPollEvents();
+	}
 }

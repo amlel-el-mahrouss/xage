@@ -96,7 +96,7 @@ namespace Xplicit::Bites
 
 	const Win32Window::Traits& Win32Window::get() const noexcept { return mTraits; }
 
-	int Win32Window::run(const std::unique_ptr<Renderer::DX11::DriverSystemD3D11>& driver, const Color<float>& clr) noexcept
+	int Win32Window::run() noexcept
 	{
 		MSG msg;
 		RtlZeroMemory(&msg, sizeof(MSG));
@@ -111,15 +111,8 @@ namespace Xplicit::Bites
 					}
 
 					if (msg.message == WM_QUIT)
-						break;
+						std::exit(0);
 
-					driver->begin_scene(clr.A / 255, clr.R / 255, clr.G / 255, clr.B / 255, true, true);
-
-					if (!driver->end_scene())
-						this->mExit = true;
-
-					if (driver->is_closed())
-						this->mExit = true;
 				}
 			});
 
@@ -159,24 +152,12 @@ namespace Xplicit::Bites
 		glfwTerminate();
 	}
 
-	int GLFWWindow::run(const std::unique_ptr<Renderer::OpenGL::DriverSystemOpenGL>& driver,
-		const Color<float>& clr) noexcept
+	int GLFWWindow::run() noexcept
 	{
 		Thread thrd([&]()
 			{
 				while (!glfwWindowShouldClose(mWindow))
 				{
-					glClearColor(clr.R / 255, clr.G / 255, clr.B / 255, 1.0f);
-
-					glClear(GL_COLOR_BUFFER_BIT);
-					glClear(GL_DEPTH_BUFFER_BIT);
-
-					glfwSwapBuffers(mWindow);
-					glfwPollEvents();
-
-					if (driver->is_closed())
-						break;
-
 					if (this->mExit)
 						glfwSetWindowShouldClose(mWindow, GLFW_TRUE);
 				}
