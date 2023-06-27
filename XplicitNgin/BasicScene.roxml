@@ -8,8 +8,7 @@
 		FF0000
 	</Color>
 
-	<Event Name="Clicked">
+	<Event Name="Click">
 		Sound:Play('Halloween.wav');
-		Chat:Print('You clicked this thing, gg')
 	</Event>
 </Brick>
