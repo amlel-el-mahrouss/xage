@@ -27,9 +27,9 @@ namespace Xplicit::Player
 		const POPUP_TYPE popup_type, 
 		const char* id) noexcept
 		:
-	mClicked(on_click),
-	mPos(pos),
-	mPopupId(id)
+			mClicked(on_click),
+			mPos(pos),
+			mPopupId(id)
 	{
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
@@ -105,6 +105,7 @@ namespace Xplicit::Player
 		  mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		  mPublicHash(publicHash),
 		  mHealth(0),
+		  mTimeout(0),
 		  mOverlay(RENDER->getVideoDriver()->getTexture("hit_overlay.png"))
 	{
 		// verify hash.
@@ -124,7 +125,7 @@ namespace Xplicit::Player
 
 		auto& packet = mNetwork->get();
 	
-		if (packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
+		if (packet.health != mHealth)
 		{
 			mHealth = packet.health;
 
@@ -133,8 +134,18 @@ namespace Xplicit::Player
 				SColor(255, 255, 255, 255),
 				true);
 
-			packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] = NETWORK_CMD_DAMAGE;
+			mTimeout = 255;
 		}
+
+		if (mTimeout < 1)
+			return;
+
+		RENDER->getVideoDriver()->draw2DImage(mOverlay, vector2di(0, 0), rect(0, 0, 1280, 720),
+			nullptr,
+			SColor(mTimeout, 255, 255, 255),
+			true);
+
+		--mTimeout;
 	}
 
 	namespace Nixxon

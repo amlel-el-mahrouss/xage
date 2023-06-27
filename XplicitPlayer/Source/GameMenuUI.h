@@ -79,6 +79,7 @@ namespace Xplicit::Player
 	private:
 		NetworkComponent* mNetwork;
 		std::int64_t mPublicHash;
+		std::int64_t mTimeout;
 		std::int64_t mHealth;
 		ITexture* mOverlay;
 

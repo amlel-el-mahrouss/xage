@@ -12,6 +12,7 @@
  */
 
 #include "HumanoidComponent.h"
+#include <lua/lua.hpp>
 
 namespace Xplicit
 {
@@ -44,6 +45,17 @@ namespace Xplicit
 			State = HUMANOID_STATE::ALIVE;
 		else if (mHealth < 1)
 			State = HUMANOID_STATE::DEAD;
+
+		if (this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
+		{
+			this->mHealth -= this->get_peer()->packet.health;
+			this->get_peer()->packet.health = this->mHealth;
+
+			this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] = NETWORK_CMD_INVALID;
+
+			XPLICIT_INFO("Humanoid:Damage [EVENT]");
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Damage()");
+		}
 	}
 
 	void HumanoidComponent::health(const int32_t& health) noexcept { this->mHealth = health; }

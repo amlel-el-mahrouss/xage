@@ -64,7 +64,7 @@ namespace Xplicit
 
 	private:
 		NetworkInstance* mPeer;
-		int64_t mHealth;
+		int16_t mHealth;
 		bool mCanSpawn;
 		int64_t mId;
 

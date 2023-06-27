@@ -44,10 +44,8 @@ namespace Xplicit::Bites
 	{
 		this->create_context();
 
-		XPLICIT_GET_DATA_DIR(tmp);
-		mPath += tmp;
-
-		XPLICIT_ASSERT(!mPath.empty());
+		XPLICIT_GET_DATA_DIR(data_appdata);
+		mPath += data_appdata;
 
 		// register lua calls, such as PlaySound
 		xplicit_load_lua();
@@ -84,6 +82,14 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(mSettings);
 
 		RENDER->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
+
+		XPLICIT_GET_DATA_DIR(data_appdata);
+
+		String loading_scene_path = data_appdata;
+		loading_scene_path += "LoadingScene.roxml";
+
+		SceneManager::RoXMLDocumentParser scene;
+		scene.load_scene(loading_scene_path);
 	}
 
 	Application::SettingsManager::SettingsManager()

@@ -53,15 +53,11 @@ static int lua_SetTitle(lua_State* L)
 
 void xplicit_load_lua() noexcept
 {
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {};");
-
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
-	
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Window = {};");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlaySound");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetTitle);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Window:SetTitle");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "SetWindowTitle");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 

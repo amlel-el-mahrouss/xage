@@ -195,32 +195,26 @@ static int lua_NetworkGetXplicitID(lua_State* L)
 
 void xplicit_load_lua() noexcept
 {
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("PlayerManager = {}");
-
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_GetHealth);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:GetHealth");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "GetPlayerHealth");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetHealth);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:SetHealth");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "SetPlayerHealth");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_TakeDamage);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:Hurt");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "HurtPlayer");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_Kill);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlayerManager:Kill");
-
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {}");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "KillPlayer");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Sound:Play");
-
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Network = {}");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlaySound");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_NetworkPacketFromPlayerID);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Network:PacketFromPlayerID");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "GetPacketFromPlayerID");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_NetworkGetXplicitID);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Network:GetXplicitID");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "GetXplicitID");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 

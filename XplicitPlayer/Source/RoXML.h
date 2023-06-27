@@ -56,33 +56,40 @@ namespace Xplicit::SceneManager
 
 				while (root_node)
 				{
-					xml_node<>* node = root_node->first_node();
+					String node_name = root_node->name();
+					auto node = root_node;
 
-					String node_name = node->name();
-
-					if (node_name == "Stud")
-					{
-						if (strncmp(node->first_attribute()->name(), "Id", 2) == 0)
-						{
-							auto node_id = node->first_attribute()->value();
-
-							auto brick_mesh = RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(STUD_WIDTH, STUD_HEIGHT, STUD_TALL));
-							auto brick = RENDER->getSceneManager()->addMeshSceneNode(brick_mesh);
-
-							brick->setName(node_id);
-							brick->setPosition(vector3df(0.f, 0.f, 0.0f));
-
-							brick->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-						}
-					}
+					std::cout << node_name << std::endl;
+					std::cout << root_node->value() << std::endl;
 
 					while (node)
 					{
 						node_name = node->name();
-						std::cout << node->name() << std::endl;
+
+						if (node_name == "Stud")
+						{
+							if (node->first_attribute())
+							{
+								if (strncmp(node->first_attribute()->name(), "Id", 2) == 0)
+								{
+									auto node_id = node->first_attribute()->value();
+
+									auto brick_mesh = RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(STUD_WIDTH, STUD_HEIGHT, STUD_TALL));
+									auto brick = RENDER->getSceneManager()->addMeshSceneNode(brick_mesh);
+
+									brick->setName(node_id);
+									brick->setPosition(vector3df(0.f, 0.f, 0.0f));
+
+									brick->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+								}
+							}
+						}
 
 						if (node_name == "Color")
 						{
+							if (!node->first_attribute())
+								break;
+
 							String attr_who = node->first_attribute()->name();
 							String attr_mat = node->first_attribute()->next_attribute()->name();
 
@@ -121,7 +128,55 @@ namespace Xplicit::SceneManager
 								attr_y == "Y" &&
 								attr_z == "Z")
 							{
-								String id = node->value();
+								String id;
+
+								for (std::size_t i = 0; i < strlen(node->value()); i++)
+								{
+									if (isalnum(node->value()[i]))
+									{
+										id += node->value()[i];
+									}
+								}
+
+								String x = node->first_attribute()->value();
+								String y = node->first_attribute()->next_attribute()->value();
+								String z = node->first_attribute()->next_attribute()->next_attribute()->value();
+
+								const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+
+								try
+								{
+									if (!scene_node)
+										throw std::runtime_error("Invalid position requested, ignoring...");
+
+									scene_node->setPosition(vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+								}
+								catch (const std::runtime_error& err)
+								{
+									XPLICIT_INFO(err.what());
+								}
+							}
+						}
+
+						if (node_name == "Size3")
+						{
+							String attr_x = node->first_attribute()->name();
+							String attr_y = node->first_attribute()->next_attribute()->name();
+							String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
+
+							if (attr_x == "X" &&
+								attr_y == "Y" &&
+								attr_z == "Z")
+							{
+								String id;
+
+								for (std::size_t i = 0; i < strlen(node->value()); i++)
+								{
+									if (isalnum(node->value()[i]))
+									{
+										id += node->value()[i];
+									}
+								}
 
 								String x = node->first_attribute()->value();
 								String y = node->first_attribute()->next_attribute()->value();
@@ -135,7 +190,7 @@ namespace Xplicit::SceneManager
 								}
 								catch (...)
 								{
-									XPLICIT_INFO("Invalid Position requested, ignoring...");
+									XPLICIT_INFO("Invalid Size requested, ignoring...");
 								}
 							}
 						}
