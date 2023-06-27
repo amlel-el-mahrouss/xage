@@ -1,0 +1,16 @@
+<!-- made with Xplicit Studio, www.play-xplicit.com -->
+
+<Stud Who="MyStud">
+	<Color Who="MyStud" Mat="0">
+		FF0000
+	</Color>
+
+	<Vector3 X="1.0" Y="0.0" Z="1.0">
+		TestBrick
+	</Vector3>
+
+	<Event Name="Click">
+		print('hello world!');
+		Sound:Play('Halloween.wav');
+	</Event>
+</Stud>

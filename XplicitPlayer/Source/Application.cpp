@@ -13,6 +13,9 @@
 
 #include "Application.h"
 
+// RoXML format
+#include "RoXML.h"
+
 // We need this to connect and download from server.
 #include "LoadingComponent.h"
 

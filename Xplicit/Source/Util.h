@@ -23,6 +23,7 @@ static inline Xplicit::Color<float> Black(0, 0, 0, 0xFF);
 static inline Xplicit::Color<float> Red(0xFF, 0, 0, 0xFF);
 
 static inline Xplicit::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, 0xFFFFFF);
+static inline Xplicit::Vector<float> XPLICIT_ORIGIN(0.0f, 0.0f, 0.0f);
 
 static inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 {
