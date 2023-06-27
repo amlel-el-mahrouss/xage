@@ -1,6 +1,7 @@
 -- Copyright Xplicit Corporation
 
-print('Xplicit Game Server');
+import('xplicit-base.lua');
+print('XplicitNgine');
 
 Engine = {};
 Engine.Events = {};
@@ -114,8 +115,8 @@ func Engine:Init()
     print('Registering engine...');
 
     Engine.Name = "Xplicit";
-    Engine.Description = "Game Engine";
-    Engine.Version = "1.0.1";
+    Engine.Description = "GameNgine";
+    Engine.Version = "1.0.2";
 
     # Given by server to initialize UI and stuff...
     Engine.AutorunClient = "xasset://autorun-client.lua";

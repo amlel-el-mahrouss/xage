@@ -48,7 +48,6 @@ static int lua_PlaySound(lua_State* L)
 
 void xplicit_load_lua()
 {
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("include(\"xplicit-base\")");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Sound = {};");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
