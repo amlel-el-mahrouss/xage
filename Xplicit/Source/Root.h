@@ -353,9 +353,6 @@ namespace Xplicit
 		{
 			if (Dev)
 				Dev->drop();
-
-			if (Keyboard)
-				Keyboard->drop();
 		}
 
 		Root& operator=(const Root&) = default;

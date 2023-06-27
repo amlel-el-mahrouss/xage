@@ -9,6 +9,7 @@ REQUIREMENTS:
 - GLFW
 - Mono
 - OpenSSL
+- GwenNext
 - Windows 10/11
 - Vulkan SDK 1.3.250.0
 - Visual Studio 2019
