@@ -16,14 +16,15 @@
 
 namespace Xplicit
 {
-    NetworkInstance::NetworkInstance()
-	: 
+    NetworkInstance::NetworkInstance(const Xplicit::Auth::XplicitID& id)
+	:
+        address(),
+        xplicit_id(id),
         packet(),
 		port(0),
 		channel(XPLICIT_CHANNEL_DATA),
 		hash(XPLICIT_INVALID_HASH),
 		public_hash(XPLICIT_INVALID_HASH),
-        address(),
         status(NETWORK_STAT_DISCONNECTED)
 	{
         memset(&this->address, 0, sizeof(PrivateAddressData));

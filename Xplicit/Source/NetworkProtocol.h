@@ -153,7 +153,7 @@ namespace Xplicit
         class XPLICIT_API UniqueAddress final
         {
         public:
-            UniqueAddress();
+            explicit UniqueAddress();
             ~UniqueAddress();
             
 			XPLICIT_COPY_DEFAULT(UniqueAddress);
@@ -188,9 +188,11 @@ namespace Xplicit
         String ip_address;
         int64_t hash;
         
-        explicit NetworkInstance();
+    public:
+        explicit NetworkInstance(const Xplicit::Auth::XplicitID& id);
         ~NetworkInstance();
         
+    public:
         XPLICIT_COPY_DEFAULT(NetworkInstance);
 
         void timeout() noexcept;
