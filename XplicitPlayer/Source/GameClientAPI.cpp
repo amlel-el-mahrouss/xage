@@ -20,6 +20,7 @@
 #include <Uri.h>
 
 std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_UTF16_CONV;
+ILightSceneNode* XPLICIT_LIGHT = nullptr;
 
 #ifdef XPLICIT_WINDOWS
 

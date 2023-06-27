@@ -65,10 +65,13 @@ namespace Xplicit
 
             if (this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
             {
-                XPLICIT_INFO("[TIMEOUT] IP: " + this->ip_address);
-                this->packet.hash = this->hash;
-                this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+                if (this->status == NETWORK_STAT_STASIS)
+                {
+                    XPLICIT_INFO("[TIMEOUT] IP: " + this->ip_address);
 
+                    this->packet.hash = this->hash;
+                    this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+                }
             }
             else
             {

@@ -27,9 +27,12 @@
 #include <CommonEngine.h>
 #include <lua/lua.hpp>
 
+extern ILightSceneNode* XPLICIT_LIGHT;
+
 namespace Xplicit::Player
 {
-	constexpr int XPLICIT_TIMEOUT = ((1 * 60) * 300); // connection timeout
+	// connection timeout, then client quits.
+	constexpr int XPLICIT_TIMEOUT = 18000;
 
 	LoadingComponent::LoadingComponent() 
 		:
@@ -96,6 +99,8 @@ namespace Xplicit::Player
 
 			EventManager::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>(hash);
+
+			XPLICIT_LIGHT = RENDER->getSceneManager()->addLightSceneNode(nullptr, vector3df(0, 0, 0), SColorf(1.0, 1.0, 1.0, 1.0), 1000.0);
 
 			XPLICIT_INFO("LocalHumanoid:LocalSpawn [EVENT]");
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");

@@ -78,6 +78,7 @@ namespace Xplicit::Player
 
 		_path = XPLICIT_ENV("APPDATA");
 		_path += "/XplicitNgin/Contents/";
+		_path += "right_";
 		_path += arm;
 
 		auto _right_arm = RENDER->getSceneManager()->getMesh(_path.c_str());
@@ -87,6 +88,7 @@ namespace Xplicit::Player
 
 		_path = XPLICIT_ENV("APPDATA");
 		_path += "/XplicitNgin/Contents/";
+		_path += "right_";
 		_path += leg;
 
 		auto _leg_left = RENDER->getSceneManager()->getMesh(_path.c_str());
@@ -106,14 +108,21 @@ namespace Xplicit::Player
 
 		mesh_torso->setJointMode(E_JOINT_UPDATE_ON_RENDER::EJUOR_CONTROL);
 
-		mesh_head->setPosition(vector3df(0.f, 2.f, 0.f));
-		mesh_head->setParent(mesh_torso);
-		
+		mesh_torso->setPosition(vector3df(0.f, 2.f, 0.f));
+		mesh_torso->setRotation(vector3df(90, 0, 0));
+
 		_path.clear();
 
 		_path = XPLICIT_ENV("APPDATA");
 		_path += "/XplicitNgin/Contents/";
 		_path += "face.png";
+
+		mesh_head->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture(_path.c_str()));
+
+		mesh_torso->setPosition(vector3df(0.f, 2.f, 0.f));
+
+		mesh_head->setParent(mesh_torso);
+		mesh_head->setPosition(vector3df(0.f, 3.5f, 0.f));
 
 		left_arm->setParent(mesh_torso);
 		left_arm->setPosition(vector3df(-1.5f, 2.f, 0.f));
@@ -122,21 +131,18 @@ namespace Xplicit::Player
 		right_arm->setPosition(vector3df(1.5f, 2.f, 0.f));
 
 		right_leg->setParent(mesh_torso);
-		right_leg->setPosition(vector3df(0.5, 0, 0));
+		right_leg->setPosition(vector3df(0.5f, 0.f, 0.f));
 
 		left_leg->setParent(mesh_torso);
-		left_leg->setPosition(vector3df(-0.5, 0, 0));
+		left_leg->setPosition(vector3df(-0.5f, 0.f, 0.f));
 
-		mesh_head->setPosition(vector3df(0.f, 3.5f, 0.f));
-		mesh_head->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture(_path.c_str()));
+		mesh_torso->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
 
-		mesh_torso->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+		left_arm->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+		right_arm->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
 
-		left_arm->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-		right_arm->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-
-		right_leg->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-		left_leg->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+		right_leg->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+		left_leg->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
 
 		XPLICIT_INFO("Loaded StaticBundleMesh successfully!");
 	}

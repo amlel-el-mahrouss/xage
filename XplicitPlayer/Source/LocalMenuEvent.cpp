@@ -81,10 +81,16 @@ namespace Xplicit::Player
 		static float tween_start = LOCAL_MENU_TWEEN_START;
 		static float posOfMenu = 12;
 
-		/*
-			menu is being open
-		*/
+		if (KB->key_down(KEY_ESCAPE) &&
+			mTimeout < 0)
+		{
+			tween_start = LOCAL_MENU_TWEEN_START;
 
+			mEnabled = !mEnabled;
+			mTimeout = XPLICIT_TIMEOUT_MENU;
+		}
+
+		/* menu is being open */
 		if (mEnabled)
 		{
 			RENDER->getVideoDriver()->draw2DImage(mButtonHover,
@@ -99,7 +105,8 @@ namespace Xplicit::Player
 
 			if (KB->key_down(KEY_RETURN))
 			{
-				NetworkPacket packet;
+				NetworkPacket packet{};
+
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 
 				mNetwork->set_channel(XPLICIT_CHANNEL_DATA);
@@ -109,7 +116,7 @@ namespace Xplicit::Player
 
 				std::exit(0);
 			}
-			else if (KB->key_down(KEY_ESCAPE))
+			else if (KB->key_down(KEY_KEY_N))
 			{
 				mEnabled = false;
 			}
