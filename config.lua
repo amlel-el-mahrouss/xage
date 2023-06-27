@@ -33,7 +33,7 @@ XPLICIT_CONFIG = {
 	  "C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
       "Library/glfw3",
 	  "Library/lua",
-	  "Library/irrlicht",
+	  "Library/LegacyRenderer",
       "C:/Program Files/OpenSSL-Win64/lib/libssl",
       "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
     },

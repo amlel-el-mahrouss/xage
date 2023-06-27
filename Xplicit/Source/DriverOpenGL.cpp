@@ -58,7 +58,7 @@ namespace Xplicit::Renderer::OpenGL
 	const bool& DriverSystemOpenGL::is_closed() noexcept { return m_bClose;  }
 	void DriverSystemOpenGL::close() noexcept { m_bClose = true; }
 
-	void DriverSystemOpenGL::begin_scene(const Color<float>& clr)
+	void DriverSystemOpenGL::begin_scene(const Color<float>& clr) noexcept
 	{
 		glClearColor(clr.R / 255, clr.G / 255, clr.B / 255, 1.0f);
 

@@ -10,6 +10,7 @@
  * =====================================================================
  */
 
+#include "GLad.h"
 #include "Bites.h"
 
 #ifdef XPLICIT_WINDOWS
@@ -96,7 +97,7 @@ namespace Xplicit::Bites
 
 	const Win32Window::Traits& Win32Window::get() const noexcept { return mTraits; }
 
-	int Win32Window::run() noexcept
+	int Win32Window::update() noexcept
 	{
 		MSG msg;
 		RtlZeroMemory(&msg, sizeof(MSG));
@@ -152,7 +153,7 @@ namespace Xplicit::Bites
 		glfwTerminate();
 	}
 
-	int GLFWWindow::run() noexcept
+	int GLFWWindow::update() noexcept
 	{
 		Thread thrd([&]()
 			{

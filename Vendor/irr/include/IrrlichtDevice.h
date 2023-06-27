@@ -85,7 +85,7 @@ namespace irr
 		\param timeMs: Time to sleep for in milliseconds.
 		\param pauseTimer: If true, pauses the device timer while sleeping
 		*/
-		virtual void sleep(u32 timeMs, bool pauseTimer=false) = 0;
+		virtual void sleep(u32 timeMs, bool pauseTimer = false) = 0;
 
 		//! Provides access to the video driver for drawing 3d and 2d geometry.
 		/** \return Pointer the video driver. */
@@ -138,19 +138,19 @@ namespace irr
 
 		//! Provides access to the engine's currently set randomizer.
 		/** \return Pointer to the IRandomizer object. */
-		virtual IRandomizer* getRandomizer() const =0;
+		virtual IRandomizer* getRandomizer() const = 0;
 
 		//! Sets a new randomizer.
 		/** \param r Pointer to the new IRandomizer object. This object is
 		grab()'ed by the engine and will be released upon the next setRandomizer
 		call or upon device destruction. */
-		virtual void setRandomizer(IRandomizer* r) =0;
+		virtual void setRandomizer(IRandomizer* r) = 0;
 
 		//! Creates a new default randomizer.
 		/** The default randomizer provides the random sequence known from previous
 		Irrlicht versions and is the initial randomizer set on device creation.
 		\return Pointer to the default IRandomizer object. */
-		virtual IRandomizer* createDefaultRandomizer() const =0;
+		virtual IRandomizer* createDefaultRandomizer() const = 0;
 
 		//! Sets the caption of the window.
 		/** \param text: New text of the window caption. */
@@ -229,7 +229,7 @@ namespace irr
 		/** The default is false. This method only works in windowed
 		mode.
 		\param resize Flag whether the window should be resizable. */
-		virtual void setResizable(bool resize=false) = 0;
+		virtual void setResizable(bool resize = false) = 0;
 
 		//! Resize the render window.
 		/**	This will only work in windowed mode and is not yet supported on all systems.
@@ -239,13 +239,13 @@ namespace irr
 		virtual void setWindowSize(const irr::core::dimension2d<u32>& size) = 0;
 
 		//! Minimizes the window if possible.
-		virtual void minimizeWindow() =0;
+		virtual void minimizeWindow() = 0;
 
 		//! Maximizes the window if possible.
-		virtual void maximizeWindow() =0;
+		virtual void maximizeWindow() = 0;
 
 		//! Restore the window to normal size if possible.
-		virtual void restoreWindow() =0;
+		virtual void restoreWindow() = 0;
 
 		//! Get the position of the frame on-screen
 		virtual core::position2di getWindowPosition() = 0;
@@ -258,27 +258,27 @@ namespace irr
 		\return true if joysticks are supported on this device and _IRR_COMPILE_WITH_JOYSTICK_EVENTS_
 				is defined, false if joysticks are not supported or support is compiled out.
 		*/
-		virtual bool activateJoysticks(core::array<SJoystickInfo>& joystickInfo) =0;
+		virtual bool activateJoysticks(core::array<SJoystickInfo>& joystickInfo) = 0;
 
 		//! Set the current Gamma Value for the Display
 		virtual bool setGammaRamp(f32 red, f32 green, f32 blue,
-					f32 relativebrightness, f32 relativecontrast) =0;
+			f32 relativebrightness, f32 relativecontrast) = 0;
 
 		//! Get the current Gamma Value for the Display
-		virtual bool getGammaRamp(f32 &red, f32 &green, f32 &blue,
-					f32 &brightness, f32 &contrast) =0;
+		virtual bool getGammaRamp(f32& red, f32& green, f32& blue,
+			f32& brightness, f32& contrast) = 0;
 
 		//! Set the maximal elapsed time between 2 clicks to generate doubleclicks for the mouse. It also affects tripleclick behavior.
 		/** When set to 0 no double- and tripleclicks will be generated.
 		\param timeMs maximal time in milliseconds for two consecutive clicks to be recognized as double click
 		*/
-		virtual void setDoubleClickTime(u32 timeMs) =0;
+		virtual void setDoubleClickTime(u32 timeMs) = 0;
 
 		//! Get the maximal elapsed time between 2 clicks to generate double- and tripleclicks for the mouse.
 		/** When return value is 0 no double- and tripleclicks will be generated.
 		\return maximal time in milliseconds for two consecutive clicks to be recognized as double click
 		*/
-		virtual u32 getDoubleClickTime() const =0;
+		virtual u32 getDoubleClickTime() const = 0;
 
 		//! Remove messages pending in the system message loop
 		/** This function is usually used after messages have been buffered for a longer time, for example
@@ -304,34 +304,30 @@ namespace irr
 		{
 			switch (driver)
 			{
-				case video::EDT_NULL:
-					return true;
-				case video::EDT_SOFTWARE:
+			case video::EDT_NULL:
+				return true;
+			case video::EDT_SOFTWARE:
 #ifdef _IRR_COMPILE_WITH_SOFTWARE_
-					return true;
+				return true;
 #else
-					return false;
+				return false;
 #endif
-				case video::EDT_BURNINGSVIDEO:
+			case video::EDT_BURNINGSVIDEO:
 #ifdef _IRR_COMPILE_WITH_BURNINGSVIDEO_
-					return true;
+				return true;
 #else
-					return false;
+				return false;
 #endif
-				case video::EDT_DIRECT3D9:
-#ifdef _IRR_COMPILE_WITH_DIRECT3D_9_
-					return true;
-#else
-					return false;
-#endif
-				case video::EDT_OPENGL:
+			case video::EDT_DIRECT3D9:
+				return false;
+			case video::EDT_OPENGL:
 #ifdef _IRR_COMPILE_WITH_OPENGL_
-					return true;
+				return true;
 #else
-					return false;
+				return false;
 #endif
-				default:
-					return false;
+			default:
+				return false;
 			}
 		}
 	};

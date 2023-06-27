@@ -13,10 +13,10 @@
 
 #include "Application.h"
 
+// We need this to connect and download from server.
 #include "LoadingComponent.h"
-#include "RoXML.h"
 
-extern void xplicit_load_lua();
+extern void xplicit_load_lua() noexcept;
 
 namespace Xplicit::Player
 {
@@ -64,7 +64,7 @@ namespace Xplicit::Bites
 		Root::get_singleton_ptr()->set(new InputReceiver());
 
 		singleton->set(
-			irr::createDevice(
+			createDevice(
 				EDT_OPENGL,
 				dimension2d<irr::u32>(Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y),
 				32U,

@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include <IXMLWriter.h>
 #include <Nplicit.h>
 #include <Root.h>
 #include <Uri.h>
@@ -25,7 +24,7 @@ namespace Xplicit::Player
 
 namespace Xplicit::Bites
 {
-	constexpr const PChar* XPLICIT_APP_NAME = L"XplicitNgine - www.play-xplicit.com";
+	constexpr const PChar* XPLICIT_APP_NAME = L"Xplicit - [ No Place ]";
 
 	class Application final
 	{

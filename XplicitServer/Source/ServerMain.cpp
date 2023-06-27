@@ -88,14 +88,14 @@ static void xplicit_load_sh()
 	}
 }
 
-extern void xplicit_load_lua();
+extern void xplicit_load_lua() noexcept;
 
 /* Application main entrypoint */
 int main(int argc, char** argv)
 {
 	try
 	{
-		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(EDT_NULL));
+		Xplicit::Root::get_singleton_ptr()->set(createDevice(EDT_NULL));
 
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;

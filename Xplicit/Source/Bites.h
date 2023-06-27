@@ -12,9 +12,7 @@
 
 #pragma once
 
-#include "Event.h"
 #include "Xplicit.h"
-#include "Component.h"
 
 #define XPLICIT_DEFAULT_WIDTH (1280)
 #define XPLICIT_DEFAULT_HEIGHT (720)
@@ -24,8 +22,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-#include "DriverD3D11.h"
-#include "DriverOpenGL.h"
+#include <glfw3.h>
 
 #define XPLICIT_GET_X_POS(LPARAM) GET_X_LPARAM(LPARAM)
 #define XPLICIT_GET_Y_POS(LPARAM) GET_Y_LPARAM(LPARAM)
@@ -55,7 +52,7 @@ namespace Xplicit::Bites
 		using Traits = Win32Traits;
 
 	public:
-		int run() noexcept;
+		int update() noexcept;
 		const Traits& get() const noexcept;
 
 	private:
@@ -75,7 +72,7 @@ namespace Xplicit::Bites
 		GLFWwindow* get() const noexcept;
 		
 	public:
-		int run() noexcept;
+		int update() noexcept;
 
 	private:
 		GLFWwindow* mWindow;

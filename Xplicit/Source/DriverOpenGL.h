@@ -12,13 +12,8 @@
 
 #pragma once
 
-#include "Bites.h"
 #include "DriverSystem.h"
-
-#ifndef __gl_h_
-#	include "GLad.h"
-#	include <glfw3.h>
-#endif
+#include "Bites.h"
 
 namespace Xplicit::Renderer::OpenGL
 {
@@ -53,7 +48,8 @@ namespace Xplicit::Renderer::OpenGL
 
 			XPLICIT_COPY_DEFAULT(OpenGLShaderFactory);
 
-			OpenGLShaderFactory::Traits operator()(const char* path);
+		public:
+			Traits operator()(const char* path);
 
 		};
 	}

@@ -19,6 +19,8 @@
 #include "Application.h"
 
 #include <XplicitSound.h>
+#include <Component.h>
+#include <Event.h>
 #include <Bites.h>
 #include <codecvt>
 
