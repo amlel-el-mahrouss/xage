@@ -16,9 +16,9 @@
 
 namespace Xplicit
 {
-	constexpr std::int16_t XPLICIT_MAX_CONNECTIONS = 16;
+	constexpr std::int16_t XPLICIT_MAX_CONNECTIONS = 24;
 
-	typedef std::vector<std::pair<Auth::XplicitID, NetworkInstance*>> NetworkVector;
+	typedef std::vector<NetworkInstance*> NetworkVector;
 
 	// the main instance behind the networking.
 	class XPLICIT_API NetworkServerComponent final : public Component

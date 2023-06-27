@@ -18,9 +18,7 @@ namespace Xplicit::Auth
 {
 	//!
 	//! @class : XplicitID
-	//! @purpose : Xplicit IDentifier
-	//! 
-	//! @brief Xplicit.com ID
+	//! @brief : Xplicit IDentifier or @brief Xplicit.com ID
 	//! 
 	class XPLICIT_API XplicitID final
 	{
@@ -31,7 +29,7 @@ namespace Xplicit::Auth
 		//! notice pass the public hash here, not the private one!
 		//! otherwise this will leak the private hash of the user!
 		explicit XplicitID(const int32_t& universe, 
-			const int32_t& hash) noexcept;
+			const int32_t& id) noexcept;
 
 		~XplicitID() = default;
 
@@ -54,6 +52,7 @@ namespace Xplicit::Auth
 	private:
 		String mXplicitId;
 		
+	private:
 		std::int64_t mConnectionHash;
 		std::int64_t mRegionId;
 

@@ -72,10 +72,10 @@ namespace Xplicit
 
 		for (std::size_t index = 0; index < XPLICIT_MAX_CONNECTIONS; index++)
 		{
-			auto inst = new NetworkInstance();
+			auto inst = new NetworkInstance(Auth::XplicitID(index, xplicit_get_epoch()));
 			XPLICIT_ASSERT(inst);
 
-			mPeers.push_back(std::make_pair(Auth::XplicitID(index, xplicit_get_epoch()), inst));
+			mPeers.push_back(inst);
 		}
 	}
 
@@ -98,7 +98,7 @@ namespace Xplicit
 		if (mPeers.empty())
 			return nullptr;
 
-		return mPeers.at(idx).second; 
+		return mPeers.at(idx); 
 	}
 
 	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }

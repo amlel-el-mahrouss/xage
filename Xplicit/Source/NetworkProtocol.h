@@ -10,6 +10,7 @@
 #pragma once
 
 #include "Xplicit.h"
+#include "XplicitID.h"
 
 #ifndef XPLICIT_NETWORK_PORT
 #   define XPLICIT_NETWORK_PORT (60001)
@@ -49,7 +50,7 @@
 #define XPLICIT_NETWORK_Z     (2)
 #define XPLICIT_NETWORK_DELTA (3)
 
-/*! max data inside speed field. */
+/*! max data inside position field. */
 #define XPLICIT_NETWORK_POS_MAX (4)
 
 #define XPLICIT_SOCKET_ERROR  (-1)
@@ -177,6 +178,7 @@ namespace Xplicit
         };
 
         PrivateAddressData address;
+        Auth::XplicitID xplicit_id;
 		UniqueAddress unique_addr;
         std::uint32_t channel;
         NetworkPacket packet;
