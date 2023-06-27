@@ -63,6 +63,8 @@ namespace Xplicit::Player
 #define XPLICIT_BUNDLE_LEFT_LEG  (4)
 #define XPLICIT_BUNDLE_RIGHT_LEG (5)
 
+#define XPLICIT_BUNDLE_MAX (6)
+
 	class DynamicMesh : public ISceneNode
 	{
 	public:

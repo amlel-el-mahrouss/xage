@@ -117,6 +117,8 @@ namespace Xplicit::Player
 		_path += "/XplicitNgin/Contents/";
 		_path += "face.png";
 
+		/* set origin of model. */
+
 		mesh_head->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture(_path.c_str()));
 
 		mesh_torso->setPosition(vector3df(0.f, 2.f, 0.f));
@@ -143,6 +145,15 @@ namespace Xplicit::Player
 
 		right_leg->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
 		left_leg->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+
+		left_leg->setRotation(vector3df(90, 0, 0));
+		left_arm->setRotation(vector3df(90, 0, 0));
+		right_leg->setRotation(vector3df(90, 0, 0));
+		right_arm->setRotation(vector3df(90, 0, 0));
+
+		mesh_torso->setRotation(vector3df(90, 0, 0));
+		mesh_head->setRotation(vector3df(90, 0, 0));
+
 
 		XPLICIT_INFO("Loaded StaticBundleMesh successfully!");
 	}
