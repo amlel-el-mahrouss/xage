@@ -58,7 +58,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;__NPLICIT__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;__NPLICIT_DLL__;__EXPORT_NPLICIT__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Vendor;Xplicit\Source;Xplicit\Vendor\include;Vendor\irr\includeinclude;Vendor\lua;Vendor\stb;Vendor\libzip\lib;Vendor\yaml\include;Vendor\glfw\include\GLFW;Vendor\nuklear;Vendor\irr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Vendor;Xplicit\Source;Xplicit\Vendor\include;$(IRRLICHT_INCLUDE_DIR);Vendor\lua;Vendor\stb;Vendor\libzip\lib;Vendor\yaml\include;Vendor\glfw\include\GLFW;Vendor\nuklear;Vendor\irr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -78,7 +78,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_NDEBUG;__NPLICIT__;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;__NPLICIT_DLL__;__EXPORT_NPLICIT__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Vendor;Xplicit\Source;Xplicit\Vendor\include;Vendor\irr\includeinclude;Vendor\lua;Vendor\stb;Vendor\libzip\lib;Vendor\yaml\include;Vendor\glfw\include\GLFW;Vendor\nuklear;Vendor\irr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Vendor;Xplicit\Source;Xplicit\Vendor\include;$(IRRLICHT_INCLUDE_DIR);Vendor\lua;Vendor\stb;Vendor\libzip\lib;Vendor\yaml\include;Vendor\glfw\include\GLFW;Vendor\nuklear;Vendor\irr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
