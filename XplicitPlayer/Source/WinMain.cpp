@@ -87,7 +87,7 @@ XPLICIT_MAIN()
 			RENDER->getVideoDriver()->endScene();
 		}
 	}
-	catch (Xplicit::EngineError& err)
+	catch (const std::runtime_error& err)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO(err.what());

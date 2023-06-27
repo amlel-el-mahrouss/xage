@@ -85,8 +85,7 @@ namespace Xplicit::Bites
 	}
 
 	Application::SettingsManager::SettingsManager()
-		:
-	mSettingsPath()
+		: mSettingsPath()
 	{
 		XPLICIT_GET_DATA_DIR(dat);
 
@@ -100,12 +99,12 @@ namespace Xplicit::Bites
 
 	Application::SettingsManager& Application::SettingsManager::operator <<(Traits& traits)
 	{
-		mINI::INIStructure struc;
+		mINI::INIStructure ini;
 
-		struc["Window"]["Width"] = std::to_string(traits.window_width);
-		struc["Window"]["Height"] = std::to_string(traits.window_height);
+		ini["Window"]["Width"] = std::to_string(traits.window_width);
+		ini["Window"]["Height"] = std::to_string(traits.window_height);
 
-		mIni->write(struc, true);
+		mIni->write(ini, true);
 
 		return *this;
 	}
@@ -113,13 +112,13 @@ namespace Xplicit::Bites
 	/* reads the ClientSettings.dat INI file */
 	Application::SettingsManager& Application::SettingsManager::operator >>(Traits& traits)
 	{
-		mINI::INIStructure struc;
-		mIni->read(struc);
+		mINI::INIStructure ini;
+		mIni->read(ini);
 
 		try
 		{
-			const auto width_int = std::atoi(struc["Window"]["Width"].c_str());
-			const auto height_int = std::atoi(struc["Window"]["Height"].c_str());
+			const auto width_int = std::atoi(ini["Window"]["Width"].c_str());
+			const auto height_int = std::atoi(ini["Window"]["Height"].c_str());
 
 			traits.window_width = width_int;
 			traits.window_height = height_int;
