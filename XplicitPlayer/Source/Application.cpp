@@ -82,14 +82,6 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(mSettings);
 
 		RENDER->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
-
-		XPLICIT_GET_DATA_DIR(data_appdata);
-
-		String loading_scene_path = data_appdata;
-		loading_scene_path += "LoadingScene.roxml";
-
-		SceneManager::RoXMLDocumentParser scene;
-		scene.load_scene(loading_scene_path);
 	}
 
 	Application::SettingsManager::SettingsManager()

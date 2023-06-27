@@ -1,16 +1,23 @@
 <!-- made with Xplicit Studio, www.play-xplicit.com -->
 
-<Stud Who="MyStud">
-	<Color Who="MyStud" Mat="0">
+<Stud Id="Workspace">
+	<Color Who="Workspace" Mat="0">
 		FF0000
 	</Color>
 
-	<Vector3 X="1.0" Y="0.0" Z="1.0">
-		TestBrick
+	<Size3 X="2048" Y="16" Z="2048">
+		Workspace
+	</Size3>
+
+	<Vector3 X="-10.0" Y="-10.5" Z="-10.0">
+		Workspace
 	</Vector3>
 
-	<Event Name="Click">
-		print('hello world!');
-		Sound:Play('Halloween.wav');
+	<Event Name="LocalSpawn">
+		Hurt(10);
+		PlaySound('HalloweenGhost.wav');
 	</Event>
+
+	<XAsset Path="xasset://1/rocket.lua" Type="Server"/>
+	<XAsset Path="xasset://1/rocket_tool.lua" Type="Client"/>
 </Stud>
