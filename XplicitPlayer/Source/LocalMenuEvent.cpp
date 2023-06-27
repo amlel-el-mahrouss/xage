@@ -35,7 +35,7 @@ namespace Xplicit::Player
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
 
-		String frame_path = "overlay.png";
+		String frame_path = "network_leave.png";
 
 		mMenu = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 
@@ -81,15 +81,6 @@ namespace Xplicit::Player
 		static float tween_start = LOCAL_MENU_TWEEN_START;
 		static float posOfMenu = 12;
 
-		if (KB->key_down(KEY_ESCAPE) && 
-			mTimeout < 0)
-		{
-			tween_start = LOCAL_MENU_TWEEN_START;
-
-			mEnabled = !mEnabled;
-			mTimeout = XPLICIT_TIMEOUT_MENU;
-		}
-
 		/*
 			menu is being open
 		*/
@@ -106,7 +97,7 @@ namespace Xplicit::Player
 			if (tween_start > LOCAL_MENU_TWEEN_END)
 				tween_start -= LOCAL_MENU_TWEENING;
 
-			if (KB->key_down(KEY_KEY_Y))
+			if (KB->key_down(KEY_RETURN))
 			{
 				NetworkPacket packet;
 				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
@@ -118,7 +109,7 @@ namespace Xplicit::Player
 
 				std::exit(0);
 			}
-			else if (KB->key_down(KEY_KEY_N))
+			else if (KB->key_down(KEY_ESCAPE))
 			{
 				mEnabled = false;
 			}

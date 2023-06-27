@@ -96,6 +96,7 @@ namespace Xplicit::Player
 		mParts.push_back(std::make_pair(RENDER->getSceneManager()->addAnimatedMeshSceneNode(_leg_right), _leg_right));
 
 		auto mesh_torso = mParts[XPLICIT_BUNDLE_TORSO].first;
+		auto mesh_head = mParts[XPLICIT_BUNDLE_HEAD].first;
 
 		auto left_arm = mParts[XPLICIT_BUNDLE_LEFT_ARM].first;
 		auto right_arm = mParts[XPLICIT_BUNDLE_RIGHT_ARM].first;
@@ -105,11 +106,29 @@ namespace Xplicit::Player
 
 		mesh_torso->setJointMode(E_JOINT_UPDATE_ON_RENDER::EJUOR_CONTROL);
 
+		mesh_head->setPosition(vector3df(0.f, 2.f, 0.f));
+		mesh_head->setParent(mesh_torso);
+		
+		_path.clear();
+
+		_path = XPLICIT_ENV("APPDATA");
+		_path += "/XplicitNgin/Contents/";
+		_path += "face.png";
+
 		left_arm->setParent(mesh_torso);
+		left_arm->setPosition(vector3df(-1.5f, 2.f, 0.f));
+
 		right_arm->setParent(mesh_torso);
+		right_arm->setPosition(vector3df(1.5f, 2.f, 0.f));
 
 		right_leg->setParent(mesh_torso);
+		right_leg->setPosition(vector3df(0.5, 0, 0));
+
 		left_leg->setParent(mesh_torso);
+		left_leg->setPosition(vector3df(-0.5, 0, 0));
+
+		mesh_head->setPosition(vector3df(0.f, 3.5f, 0.f));
+		mesh_head->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture(_path.c_str()));
 
 		mesh_torso->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
 

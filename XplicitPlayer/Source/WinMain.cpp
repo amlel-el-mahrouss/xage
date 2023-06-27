@@ -75,7 +75,7 @@ XPLICIT_MAIN()
 			Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr())
 		{
-			RENDER->getVideoDriver()->beginScene(true, true, SColor(255, 255, 255, 255));
+			RENDER->getVideoDriver()->beginScene(true, true, SColor(255, 0x87, 0xCE, 0xEB));
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
