@@ -16,9 +16,11 @@
 #include "XplicitID.h"
 #include "NetworkServerComponent.h"
 
-static inline Xplicit::Color<float> Black(0, 0, 0, 255);
-static inline Xplicit::Color<float> White(255, 255, 255, 255);
-static inline Xplicit::Color<float> Red(255, 0, 0, 255);
+static inline Xplicit::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
+static inline Xplicit::Color<float> White(0xFF, 0xFF, 0xFF, 0xFF);
+static inline Xplicit::Color<float> DakrRed(0x8B, 0, 0, 0xFF);
+static inline Xplicit::Color<float> Black(0, 0, 0, 0xFF);
+static inline Xplicit::Color<float> Red(0xFF, 0, 0, 0xFF);
 
 static inline Xplicit::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, 0xFFFFFF);
 

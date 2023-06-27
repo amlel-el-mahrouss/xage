@@ -30,13 +30,19 @@ namespace Xplicit
 	
 	static void xplicit_handle_spawn(SpawnComponent* spawner, HumanoidComponent* player) noexcept
 	{
-		if (player)
+		if (player && spawner)
 		{
 			const auto& pos = spawner->get();
 
 			player->pos().X = pos.X;
 			player->pos().Y = pos.Y;
 			player->pos().Z = pos.Z;
+		}
+		else if (player)
+		{
+			player->pos().X = 0.f;
+			player->pos().Y = 0.f;
+			player->pos().Z = 0.f;
 		}
 	}
 

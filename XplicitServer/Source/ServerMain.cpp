@@ -26,24 +26,6 @@
 const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
 bool XPLICIT_EXIT_REQUESTED = false;
 
-static void xplicit_load_mono()
-{
-	try
-	{
-		XPLICIT_GET_DATA_DIR(data);
-
-		Xplicit::String dll_path = data;
-		dll_path += "Plugin/PluginNgine.dll";
-
-		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoEngineComponent>();
-		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::MonoScriptComponent>(dll_path.c_str(), false);
-	}
-	catch (...)
-	{
-		XPLICIT_CRITICAL("The Core Xplicit Runtime was not found, to load a C# DLL you need this runtime.");
-	}
-}
-
 static void xplicit_print_help()
 {
 	XPLICIT_INFO("\a+-------------- Xplicit Game Server Manual --------------+");
@@ -151,14 +133,11 @@ int main(int argc, char** argv)
 
 #endif // XPLICIT_WINDOWS
 
-		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::SpawnComponent>(Xplicit::Quaternion(0.f, 0.f, 0.f));
-
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
 
-		xplicit_load_mono();
 		xplicit_load_lua();
 
 		Xplicit::Thread logic([&]() {

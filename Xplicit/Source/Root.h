@@ -14,8 +14,7 @@
 #include <lua/lua.hpp>
 #include <IEventReceiver.h>
 
-/* common engine macros for RootSingleton */
-#define XML		Xplicit::Root::get_singleton_ptr()->Reader
+/* common engine macros for Root */
 #define RENDER  Xplicit::Root::get_singleton_ptr()->Dev
 #define KB		Xplicit::Root::get_singleton_ptr()->Keyboard
 
@@ -253,7 +252,8 @@ namespace Xplicit
 
 	public:
 		explicit InputReceiver()
-			: mMouseLeft(), 
+			: 
+			mMouseLeft(), 
 			mMouseRight(), 
 			mMousePos(),
 			mLayout()
@@ -344,11 +344,9 @@ namespace Xplicit
 	private:
 		Root()
 			: 
-			Keyboard(nullptr), 
-			Dev(nullptr), 
-			Reader(nullptr), 
-			Writer(nullptr), 
-			ShouldExit(false)
+			Keyboard(nullptr),
+			ShouldExit(false),
+			Dev(nullptr)
 		{}
 
 		~Root()
@@ -356,11 +354,8 @@ namespace Xplicit
 			if (Dev)
 				Dev->drop();
 
-			if (Reader)
-				Reader->drop();
-
-			if (Writer)
-				Writer->drop();
+			if (Keyboard)
+				Keyboard->drop();
 		}
 
 		Root& operator=(const Root&) = default;
@@ -378,23 +373,22 @@ namespace Xplicit
 			return app;
 		}
 
-		void set(irr::IrrlichtDevice* dev)
+	public:
+		void set(irr::IrrlichtDevice* dev) noexcept
 		{
 			if (dev)
 				Dev = dev;
 		}
 
-		void set(InputReceiver* kb)
+		void set(InputReceiver* kb) noexcept
 		{
 			if (kb)
 				Keyboard = kb;
 		}
 
 	public:
-		irr::io::IIrrXMLReader<char, IReferenceCounted>* Reader;
-		irr::io::IXMLWriter* Writer;
-		irr::IrrlichtDevice* Dev;
 		InputReceiver* Keyboard;
+		irr::IrrlichtDevice* Dev;
 		bool ShouldExit;
 
 	};
