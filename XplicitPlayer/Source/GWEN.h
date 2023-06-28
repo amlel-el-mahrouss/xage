@@ -44,7 +44,7 @@ namespace Xplicit
 
 			Canvas->SetSize(dim.X, dim.Y);
 			Canvas->SetDrawBackground(true);
-			Canvas->SetBackgroundColor(Gwk::Color(150, 0, 0, 255));
+			Canvas->SetBackgroundColor(Gwk::Color(255, 255, 255, 255));
 		}
 
 		~GWENComponentManager()

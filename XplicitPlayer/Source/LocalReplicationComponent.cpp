@@ -48,12 +48,6 @@ namespace Xplicit::Player
 				if (script.protocol() != "xasset")
 					break;
 
-				XPLICIT_GET_DATA_DIR(path);
-				path += "Contents/";
-				path += script.get();
-				
-				Lua::XLuaStateManager::get_singleton_ptr()->run(path.c_str());
-
 				break;
 			}
 			case COMPONENT_ID_SOUND:
