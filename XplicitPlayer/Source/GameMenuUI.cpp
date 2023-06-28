@@ -85,9 +85,7 @@ namespace Xplicit::Player
 			return;
 
 		RENDER->getVideoDriver()->draw2DImage(mTex, mPos);
-
-		if (KB->key_down(KEY_RETURN))
-			mClicked();
+		mClicked();
 	}
 
 	const char* PopupComponent::name() noexcept

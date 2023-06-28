@@ -62,7 +62,8 @@ namespace Xplicit::Player
 			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
 			{
 				ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					RENDER->closeDevice();
+					if (KB->key_down(KEY_RETURN))
+						RENDER->closeDevice();
 					}, vector2di(XPLICIT_DIM.X / 3.45,
 						XPLICIT_DIM.Y / 4),
 						POPUP_TYPE::BANNED, "BanPopup");
@@ -101,7 +102,8 @@ namespace Xplicit::Player
 				if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
 				{
 					ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-						std::exit(0);
+						if (KB->key_down(KEY_RETURN))
+							RENDER->closeDevice();
 					}, vector2di(XPLICIT_DIM.X / 2.8,
 							XPLICIT_DIM.Y / 2.8),
 							POPUP_TYPE::SHUTDOWN,

@@ -27,9 +27,17 @@ namespace Xplicit
 	{
 	public:
 		explicit InputReceiver(Gwk::IInputEventListener* el)
-			: mGwenInput()
+			: 
+			mGwenInput(),
+			mMouseLeft(),
+			mMouseRight(),
+			mMousePos(),
+			mLayout()
 		{
 			mGwenInput.Initialize(el);
+
+			for (irr::u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
+				mKeys[i] = 0;
 		}
 
 		bool OnEvent(const SEvent& env) override
@@ -106,25 +114,17 @@ namespace Xplicit
 		};
 
 	public:
-		explicit InputReceiver()
-			:
-			mMouseLeft(),
-			mMouseRight(),
-			mMousePos(),
-			mLayout()
-		{
-			for (irr::u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
-				mKeys[i] = 0;
-		}
-
 		virtual ~InputReceiver() = default;
 
+	public:
 		InputReceiver& operator=(const InputReceiver&) = default;
 		InputReceiver(const InputReceiver&) = default;
 
+	public:
 		bool right_down() noexcept { return mMouseRight.Down; }
 		bool left_down() noexcept { return mMouseLeft.Down; }
 
+	public:
 		float mouse_wheel() noexcept 
 		{ 
 			if (mWheelEnable) 

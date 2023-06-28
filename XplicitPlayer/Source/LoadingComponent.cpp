@@ -61,7 +61,10 @@ namespace Xplicit::Player
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
 			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>(
-				[]() { RENDER->closeDevice(); },
+				[]() { 
+					if (KB->key_down(KEY_RETURN))
+						RENDER->closeDevice();
+				},
 				vector2di(XPLICIT_DIM.X / 2.8,
 					XPLICIT_DIM.Y / 2.8),
 				POPUP_TYPE::BANNED, "StopPopup");
@@ -114,7 +117,10 @@ namespace Xplicit::Player
 			if (mTimeout < 0)
 			{
 				ComponentManager::get_singleton_ptr()->add<PopupComponent>(
-					[]() { RENDER->closeDevice(); }, 
+					[]() {
+						if (KB->key_down(KEY_RETURN))
+							RENDER->closeDevice(); 
+					}, 
 						vector2di(XPLICIT_DIM.X / 2.8,
 						XPLICIT_DIM.Y / 2.8),
 						POPUP_TYPE::NETWORK, "StopPopup");
@@ -179,7 +185,8 @@ namespace Xplicit::Player
 	void LoadingComponent::reset() noexcept
 	{
 		ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
-			RENDER->closeDevice();
+			if (KB->key_down(KEY_RETURN))
+				RENDER->closeDevice();
 			}, vector2di(XPLICIT_DIM.X / 3.45,
 				XPLICIT_DIM.Y / 4),
 				POPUP_TYPE::NETWORK);
