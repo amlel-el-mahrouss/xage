@@ -76,6 +76,14 @@ namespace Xplicit::Bites
 			Xplicit::Player::XPLICIT_DIM.Y, 
 			0.0f));
 
+#ifdef XPLICIT_DEBUG
+
+		Gwk::Controls::Button* pDebugButton = new Gwk::Controls::Button(mGwenManager->Canvas);
+		pDebugButton->SetPos(10, 10);
+		pDebugButton->SetText("Xplicit Team was here...");
+
+#endif
+
 		Root::get_singleton_ptr()->set(new InputReceiver(mGwenManager->Canvas));
 
 		xplicit_open_skins();
