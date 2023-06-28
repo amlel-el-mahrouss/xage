@@ -18,6 +18,7 @@ REQUIREMENTS:
 - GLFW
 - Mono
 - OpenSSL
+- LegacyRenderer
 - GwenNext
 - Windows 11.
 - Vulkan SDK 1.3.250.0

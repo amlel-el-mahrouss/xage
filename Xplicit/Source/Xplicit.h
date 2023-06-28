@@ -81,7 +81,7 @@ namespace Xplicit
 
 	template <typename T>
 	class ModuleType;
-	class Win32Helpers;
+	class Win32Helper;
 	class ModuleManagerWin32;
 
 	template <typename T>
@@ -101,7 +101,7 @@ namespace Xplicit
 
 	};
 
-	class Win32Helpers final 
+	class Win32Helper final 
 	{
 	public:
 		static HWND find_wnd(const wchar_t* compare) 
@@ -290,7 +290,7 @@ namespace Xplicit
 	};
 #endif
 
-	static inline std::string get_at_current_path(const std::string& program_name) 
+	inline std::string get_at_current_path(const std::string& program_name) 
 	{
 		auto path = std::filesystem::current_path();
 		path /= program_name;
@@ -313,12 +313,12 @@ namespace Xplicit
 	}
 
 #ifdef XPLICIT_WINDOWS
-	static inline void fini_winsock() noexcept
+	inline void fini_winsock() noexcept
 	{
 		WSACleanup();
 	}
 
-	static inline bool init_winsock(WSADATA* dat) noexcept
+	inline bool init_winsock(WSADATA* dat) noexcept
 	{
 		if (WSAStartup(MAKEWORD(2, 2), dat) == 0)
 		{
@@ -330,7 +330,7 @@ namespace Xplicit
 	}
 
 	// for debug builds, also new the in-game console :p
-	static inline void open_terminal(FILE* fp = stdout)
+	inline void open_terminal(FILE* fp = stdout)
 	{
 		AllocConsole();
 		(void)freopen("CONOUT$", "w", fp);
@@ -407,15 +407,15 @@ namespace Xplicit
 			{
 				auto info = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
 				info->set_level(spdlog::level::info);
-				info->set_pattern("[%^Engine%$] %v");
+				info->set_pattern("[%^Ngine%$] %v");
 
 				auto critical = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
 				critical->set_level(spdlog::level::critical);
-				critical->set_pattern("[%^Engine%$] %v");
+				critical->set_pattern("[%^Ngine%$] %v");
 
 				auto err = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
 				err->set_level(spdlog::level::err);
-				err->set_pattern("[%^Engine%$] %v");
+				err->set_pattern("[%^Ngine%$] %v");
 
 				LOGGER = new spdlog::logger("EngineSink", { err, info, critical });
 

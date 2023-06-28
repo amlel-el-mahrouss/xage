@@ -33,9 +33,11 @@ namespace Xplicit::Player
 		NetworkComponent* mNetwork;
 		ITexture* mButtonNoHover;
 		ITexture* mButtonHover;
-		std::int64_t mHash;
-		int64_t mTimeout;
 		ITexture* mMenu;
+
+	private:
+		std::int64_t mHash;
+		std::int64_t mTimeout;
 		
 		bool mEnabled; // is menu enabled?
 

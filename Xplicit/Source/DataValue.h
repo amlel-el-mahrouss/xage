@@ -18,6 +18,7 @@ namespace Xplicit
 		BOOLEAN,
 		STRING,
 		INTEGER,
+		ARRAY,
 		NIL,
 		IEE754, /* floating point number. */
 	};
@@ -26,31 +27,53 @@ namespace Xplicit
 	{
 	public:
 		String Name;
-		String Value;
-		DATA_VALUE_TYPE Type;
+		DATA_VALUE_TYPE Kind;
+		std::vector<String> Values;
 
 	};
 
-	/*
-	 *
-	 * this should be called only for creating single data values.
-	 * refer to Xplicit::Pool for multiple DataValues.
-	 *
-	 */
-
-	inline DataValue* make_data_value(const char* name, const char* value = "Nil", const DATA_VALUE_TYPE type = DATA_VALUE_TYPE::NIL) noexcept
+	inline Vector<float> to_float(DataValue& pos_or_size)
 	{
-		DataValue* data_value = new DataValue();
+		try
+		{
+			float x = std::atof(pos_or_size.Values[0]);
+			float y = std::atof(pos_or_size.Values[1]);
+			float z = std::atof(pos_or_size.Values[2]);
 
-		if (data_value == nullptr)
-			throw EngineError("Could not allocate DataValue (probably out of memory?)");
+			return Vector<float>(x, y, z);
+		}
+		catch (const std::exception& error)
+		{
+			XPLICIT_INFO(error.what());
 
-		XPLICIT_ASSERT(data_value);
+			return Vector<float>(0.f, 0.f, 0.f);
+		}
+	}
 
-		data_value->Type = type;
-		data_value->Name = name;
-		data_value->Value = value;
+	inline bool to_bool(DataValue& boolean_type)
+	{
+		if (boolean_type.Values.empty())
+			return false;
 
-		return data_value;
+		if (boolean_type.Values[0] == "True")
+			return true
+		else if (boolean_type.Values[0] == "False")
+			return false;
+
+		throw std::runtime_error("Invalid DataValue! Please select valid!");
+
+		return false;
+	}
+
+	inline long to_integer(DataValue& integer_type)
+	{
+		try
+		{
+			return std::atol(integer_type.Values[0]);
+		}
+		catch (...)
+		{
+			return ~0;
+		}
 	}
 }
