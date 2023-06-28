@@ -36,9 +36,9 @@ namespace Xplicit
 	{
 		try
 		{
-			float x = std::atof(pos_or_size.Values[0]);
-			float y = std::atof(pos_or_size.Values[1]);
-			float z = std::atof(pos_or_size.Values[2]);
+			float x = std::atof(pos_or_size.Values[0].c_str());
+			float y = std::atof(pos_or_size.Values[1].c_str());
+			float z = std::atof(pos_or_size.Values[2].c_str());
 
 			return Vector<float>(x, y, z);
 		}
@@ -56,7 +56,7 @@ namespace Xplicit
 			return false;
 
 		if (boolean_type.Values[0] == "True")
-			return true
+			return true;
 		else if (boolean_type.Values[0] == "False")
 			return false;
 
@@ -69,7 +69,7 @@ namespace Xplicit
 	{
 		try
 		{
-			return std::atol(integer_type.Values[0]);
+			return std::atol(integer_type.Values[0].c_str());
 		}
 		catch (...)
 		{
