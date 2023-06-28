@@ -133,7 +133,7 @@ namespace Xplicit::Player
 		if (mNetwork == nullptr)
 			return;
 
-		auto traits = Root::get_singleton_ptr()->Keyboard->get_layout();
+		auto traits = KB->get_layout();
 
 		if (KB->key_down(traits.mForward))
 		{

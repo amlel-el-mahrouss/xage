@@ -28,7 +28,7 @@ namespace Xplicit::Player
 
 namespace Xplicit::Bites
 {
-	static void open_prebuilt_dialogs()
+	static void xplicit_open_skins()
 	{
 		XPLICIT_GET_DATA_DIR(dir);
 
@@ -42,7 +42,7 @@ namespace Xplicit::Bites
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mPath(""), mWsa()
 	{
-		this->create_context();
+		this->create_and_set_contexts();
 
 		XPLICIT_GET_DATA_DIR(data_appdata);
 		mPath += data_appdata;
@@ -58,13 +58,9 @@ namespace Xplicit::Bites
 
 	Application::~Application() {}
 
-	void Application::create_context()
+	void Application::create_and_set_contexts()
 	{
-		const auto singleton = Root::get_singleton_ptr();
-
-		Root::get_singleton_ptr()->set(new InputReceiver());
-
-		singleton->set(
+		Root::get_singleton_ptr()->set(
 			createDevice(
 				EDT_OPENGL,
 				dimension2d<irr::u32>(Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y),
@@ -72,14 +68,23 @@ namespace Xplicit::Bites
 				false,
 				false,
 				false,
-				KB
+				nullptr
 			)
 		);
 
-		open_prebuilt_dialogs();
+		mGwenManager = std::make_unique<GWENComponentManager>(Vector<float>(0.0f, 0.0f, 0.0f));
+		Root::get_singleton_ptr()->set(new InputReceiver(mGwenManager->Canvas));
+
+		// Gwk::Controls::Button* button = new Gwk::Controls::Button(mGwenManager->Canvas);
+		// button->SetText("XplicitNgin now supports GUI!");
+		// button->SetPos(10, 10);
+
+		xplicit_open_skins();
 
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
+
+		RENDER->setEventReceiver(Root::get_singleton_ptr()->Keyboard);
 
 		RENDER->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
 	}

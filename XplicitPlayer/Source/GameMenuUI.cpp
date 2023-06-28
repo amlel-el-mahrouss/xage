@@ -148,7 +148,7 @@ namespace Xplicit::Player
 		--mTimeout;
 	}
 
-	namespace Nixxon
+	namespace NixxonUI
 	{
 		std::tuple<std::vector<Color<float>>,
 			std::vector<Vector<float>>> UIThemeSchemeManager::get_white_scheme() noexcept

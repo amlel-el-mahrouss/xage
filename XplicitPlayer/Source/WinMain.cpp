@@ -68,7 +68,7 @@ XPLICIT_MAIN()
 
 		Xplicit::Bites::Application* application = new Xplicit::Bites::Application(uri);
 
-		if (!application) throw Xplicit::EngineError("Could not create application context, exiting!");
+		if (!application) throw Xplicit::EngineError("Could not create application context, quitting!");
 
 		/* main game loop */
 		while (RENDER->run() && 
@@ -83,7 +83,9 @@ XPLICIT_MAIN()
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
-			
+
+			application->leak_gwen()->Canvas->RenderCanvas();
+
 			RENDER->getVideoDriver()->endScene();
 		}
 	}

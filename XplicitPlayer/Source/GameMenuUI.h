@@ -85,7 +85,7 @@ namespace Xplicit::Player
 
 	};
 
-	namespace Nixxon
+	namespace NixxonUI
 	{
 		class UIThemeSchemeManager final
 		{

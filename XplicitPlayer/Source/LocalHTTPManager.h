@@ -16,7 +16,7 @@ namespace Xplicit::Player
 {
 	/*
 	 *	@brief LocalHTTPManager
-	 *	@purpose Downloads and xasset:// from HTTP/1.1 using Xplicit's own client.
+	 *	@brief Downloads and xasset:// from HTTP/1.1 using Xplicit's own client.
 	 */
 	
 	class LocalHTTPManager final

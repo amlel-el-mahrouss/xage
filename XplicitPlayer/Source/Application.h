@@ -10,17 +10,185 @@
 #pragma once
 
 #include "PlayerConfig.h"
+#include "GWEN.h"
+
+#include <lua/lua.hpp>
 #include <Nplicit.h>
+#include <Bites.h>
 #include <Root.h>
 #include <Uri.h>
 #include <ini.h>
 
-#define XPLICIT_DEFAULT_WIDTH  (1280)
-#define XPLICIT_DEFAULT_HEIGHT (720)
+#define KB		((InputReceiver*)Xplicit::Root::get_singleton_ptr()->Keyboard)
 
-namespace Xplicit::Player
+namespace Xplicit
 {
-	extern Vector<float> XPLICIT_DIM;
+	class InputReceiver final : public IEventReceiver
+	{
+	public:
+		explicit InputReceiver(Gwk::IInputEventListener* el)
+			: mGwenInput()
+		{
+			mGwenInput.Initialize(el);
+		}
+
+		bool OnEvent(const SEvent& env) override
+		{
+			if (env.EventType == EET_KEY_INPUT_EVENT)
+				mKeys[env.KeyInput.Key] = env.KeyInput.PressedDown;
+
+			if (env.EventType == EET_MOUSE_INPUT_EVENT)
+			{
+				switch (env.MouseInput.Event)
+				{
+				case EMIE_LMOUSE_PRESSED_DOWN:
+				{
+					XPLICIT_INFO("LocalHumanoid:Click [EVENT]");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Click()");
+
+					mMouseLeft.Down = true;
+					break;
+				}
+
+				case EMIE_LMOUSE_LEFT_UP:
+					mMouseLeft.Down = false;
+					break;
+
+				case EMIE_RMOUSE_PRESSED_DOWN:
+				{
+					XPLICIT_INFO("LocalHumanoid:RightClick [EVENT]");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:RightClick()");
+
+					mMouseRight.Down = true;
+					break;
+				}
+
+				case EMIE_RMOUSE_LEFT_UP:
+					mMouseRight.Down = false;
+					break;
+
+				case EMIE_MOUSE_MOVED:
+				{
+					mMousePos.X = env.MouseInput.X;
+					mMousePos.Y = env.MouseInput.Y;
+
+					XPLICIT_INFO("LocalHumanoid:MouseMove [EVENT]");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:MouseMove()");
+
+					break;
+				}
+
+				default:
+					break;
+				}
+			}
+
+			return mGwenInput.HandleEvents(env);
+		}
+
+	private:
+		struct MouseEventTraits
+		{
+			int32_t X;
+			int32_t Y;
+
+			bool Down;
+		};
+
+	public:
+		explicit InputReceiver()
+			:
+			mMouseLeft(),
+			mMouseRight(),
+			mMousePos(),
+			mLayout()
+		{
+			for (irr::u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
+				mKeys[i] = 0;
+		}
+
+		virtual ~InputReceiver() = default;
+
+		InputReceiver& operator=(const InputReceiver&) = default;
+		InputReceiver(const InputReceiver&) = default;
+
+		bool right_down() noexcept { return mMouseRight.Down; }
+		bool left_down() noexcept { return mMouseLeft.Down; }
+
+		bool key_down(const char key) const
+		{
+			return mKeys[key];
+		}
+
+		bool key_down() const
+		{
+			for (u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
+			{
+				if (mKeys[i])
+					return true;
+			}
+
+			return false;
+		}
+
+		MouseEventTraits& get_pos() noexcept { return mMousePos; }
+
+	public:
+		struct MovementTraits final
+		{
+		public:
+			MovementTraits() = default;
+			~MovementTraits() = default;
+
+			char mBackward{ -1 };
+			char mForward{ -1 };
+			char mRight{ -1 };
+			char mLeft{ -1 };
+		};
+
+		MovementTraits& get_layout() noexcept
+		{
+			CHAR layout[KL_NAMELENGTH];
+			GetKeyboardLayoutNameA(layout);
+
+			String frFr = "0000040C"; // fr-FR
+
+			auto str = String(layout);
+
+			if (str == frFr)
+			{
+				mLayout.mForward = KEY_KEY_Z;
+				mLayout.mRight = KEY_KEY_D;
+				mLayout.mLeft = KEY_KEY_Q;
+				mLayout.mBackward = KEY_KEY_S;
+			}
+			else
+			{
+				mLayout.mForward = KEY_KEY_W;
+				mLayout.mRight = KEY_KEY_D;
+				mLayout.mLeft = KEY_KEY_A;
+				mLayout.mBackward = KEY_KEY_S;
+			}
+
+			return mLayout;
+		}
+
+	private:
+		MovementTraits mLayout;
+		bool mKeys[KEY_KEY_CODES_COUNT];
+
+	private:
+		Gwk::Input::Irrlicht mGwenInput;
+		MouseEventTraits mMouseRight;
+		MouseEventTraits mMouseLeft;
+		MouseEventTraits mMousePos;
+
+	};
+
+	namespace Player
+	{
+		extern Vector<float> XPLICIT_DIM;
+	}
 } // namespace Xplicit::Player
 
 namespace Xplicit::Bites
@@ -60,12 +228,22 @@ namespace Xplicit::Bites
 
 		};
 
+	public:
+		GWENComponentManager* leak_gwen() const noexcept { return mGwenManager.get(); }
+		SettingsManager* leak_settings() const noexcept { return mSettings.get(); }
+
 	private:
-		void create_context();
+		void create_and_set_contexts();
 		
+	private:
+		std::unique_ptr<GWENComponentManager> mGwenManager;
 		std::unique_ptr<SettingsManager> mSettings;
+
+	private:
 		String mPath;
 
+
+	private:
 #ifdef XPLICIT_WINDOWS
 		// WinSock data
 		WSADATA mWsa;

@@ -100,7 +100,7 @@
   <ItemGroup>
     <ClInclude Include="XplicitPlayer\Source\Application.h" />
     <ClInclude Include="XplicitPlayer\Source\GameMenuUI.h" />
-    <ClInclude Include="XplicitPlayer\Source\GwenComponent.h" />
+    <ClInclude Include="XplicitPlayer\Source\GWEN.h" />
     <ClInclude Include="XplicitPlayer\Source\LoadingComponent.h" />
     <ClInclude Include="XplicitPlayer\Source\LocalCameraComponent.h" />
     <ClInclude Include="XplicitPlayer\Source\LocalHTTPManager.h" />
@@ -117,7 +117,7 @@
     <ClCompile Include="XplicitPlayer\Source\Application.cpp" />
     <ClCompile Include="XplicitPlayer\Source\GameClientAPI.cpp" />
     <ClCompile Include="XplicitPlayer\Source\GameMenuUI.cpp" />
-    <ClCompile Include="XplicitPlayer\Source\GwenComponent.cpp" />
+    <ClCompile Include="XplicitPlayer\Source\GWEN.cpp" />
     <ClCompile Include="XplicitPlayer\Source\LoadingComponent.cpp" />
     <ClCompile Include="XplicitPlayer\Source\LocalCameraComponent.cpp" />
     <ClCompile Include="XplicitPlayer\Source\LocalHTTPManager.cpp" />

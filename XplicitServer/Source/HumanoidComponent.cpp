@@ -41,6 +41,9 @@ namespace Xplicit
 
 	void HumanoidComponent::update() 
 	{
+		if (this->get_peer() == nullptr)
+			return;
+
 		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
 			State = HUMANOID_STATE::ALIVE;
 		else if (mHealth < 1)
