@@ -1,0 +1,57 @@
+Brainstorm: Xplicit Engine Editor.
+
+- MFC
+- Qt
+- wxWidgets
+- GWEN
+- FLTK
+- Nuklear
+- ImGUI
+- WTL.
+
+MFC:
+Pros:
+	- Easy.
+	- C++
+	- Close to Windows API.
+
+Cons:
+	- End Of Line.
+	- Requires additional DLLS.
+	- Bad reputation
+
+
+Qt:
+Pros:
+	- C++
+	- Very advanced toolkit.
+	- Has it's own editor
+
+Cons:
+	- Messy
+	- Has it's own editor
+	- Require MinGW by default.
+	- Over-engineered.
+
+wxWidgets:
+Pros:
+	- C++
+	- Lightweight.
+	- Good API.
+
+Cons:
+	- Bad reputation
+
+
+ImGUI and Nulkear and bad for editors because they immediate mode guis.
+
+WTL:
+Pros:
+	- C++
+	- ATL based.
+	- No MFC
+	- Complete
+	- Maintained by MSFT.
+
+Cons:
+	- None.

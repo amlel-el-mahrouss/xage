@@ -33,6 +33,8 @@ static int lua_SetHealth(lua_State* L)
 			break;
 		}
 	}
+
+	return 0;
 }
 
 static int lua_GetHealth(lua_State* L)
@@ -86,6 +88,8 @@ static int lua_TakeDamage(lua_State* L)
 			break;
 		}
 	}
+
+	return 0;
 }
 
 static int lua_PlaySound(lua_State* L)
