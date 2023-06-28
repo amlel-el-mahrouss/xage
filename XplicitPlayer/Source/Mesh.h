@@ -42,7 +42,7 @@ namespace Xplicit::Player
 	public:
 		StaticBundleMesh() = delete;
 
-		explicit StaticBundleMesh(const char* head, const char* torso, const char* arm, const char* leg);
+		explicit StaticBundleMesh(const char* head, const char* torso, const char* arm, const char* leg, const char* face);
 		virtual ~StaticBundleMesh() noexcept;
 
 		StaticBundleMesh& operator=(const StaticBundleMesh&) = default;
@@ -84,11 +84,6 @@ namespace Xplicit::Player
 
 		void render() override
 		{
-			this->setVisible(RENDER->getVideoDriver()->getOcclusionQueryResult(this) < 0);
-
-			if (!this->isVisible())
-				return;
-
 			IVideoDriver* driver = SceneManager->getVideoDriver();
 
 			driver->setMaterial(Material);

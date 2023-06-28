@@ -84,13 +84,14 @@ namespace Xplicit::Player
 			ComponentManager::get_singleton_ptr()->add<LocalHudComponent>(public_hash);
 			
 			const auto cam = ComponentManager::get_singleton_ptr()->add<LocalCameraComponent>();
+			
 			const auto ply = ComponentManager::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash);
 
 			ply->attach(cam);
 			mNetwork->set_hash(hash);
 
 			const auto monitor = EventManager::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
-	
+
 			monitor->Endpoint = packet.buffer;
 			monitor->HTTP = std::make_unique<LocalHTTPManager>();
 
@@ -103,7 +104,6 @@ namespace Xplicit::Player
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");
 
 			mEnabled = false;
-
 			return;
 		}
 		else

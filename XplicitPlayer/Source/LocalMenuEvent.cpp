@@ -81,7 +81,7 @@ namespace Xplicit::Player
 		static float tween_start = LOCAL_MENU_TWEEN_START;
 		static float posOfMenu = 12;
 
-		if (KB->key_down(KEY_ESCAPE) &&
+		if (KB->key_down(KEY_F3) &&
 			mTimeout < 0)
 		{
 			tween_start = LOCAL_MENU_TWEEN_START;
@@ -116,7 +116,7 @@ namespace Xplicit::Player
 
 				std::exit(0);
 			}
-			else if (KB->key_down(KEY_KEY_N))
+			else if (KB->key_down(KEY_ESCAPE))
 			{
 				mEnabled = false;
 			}

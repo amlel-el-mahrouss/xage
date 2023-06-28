@@ -82,9 +82,9 @@ namespace Xplicit::Player
 					return;
 			}
 
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash);
-
 			XPLICIT_INFO("LocalHumanoid:Join [EVENT]");
+
+			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash);
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
 
 			/*! invalidate command right there. */

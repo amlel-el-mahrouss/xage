@@ -47,7 +47,8 @@ namespace Xplicit::Player
 	StaticBundleMesh::StaticBundleMesh(const char* head, 
 		const char* torso, 
 		const char* arm, 
-		const char* leg)
+		const char* leg,
+		const char* face)
 	{
 		String _path = XPLICIT_ENV("APPDATA");
 		_path += "/XplicitNgin/Contents/R6X/";
@@ -123,11 +124,20 @@ namespace Xplicit::Player
 
 		_path = XPLICIT_ENV("APPDATA");
 		_path += "/XplicitNgin/Contents/";
-		_path += "R6Face.png";
+		_path += face;
 
-		/* set origin of model. */
+		/* long pointer checks, stupid shit, but we gotta do it */
+		if (!_leg_left ||
+			!_leg_right ||
+			!_right_arm ||
+			!_left_arm ||
+			!_torso ||
+			!_head_ptr)
+			std::exit(0); // man at this point...
 
 		mesh_head->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture(_path.c_str()));
+
+		/* set origin of model. */
 
 		mesh_torso->setPosition(vector3df(0.f, 2.f, 0.f));
 

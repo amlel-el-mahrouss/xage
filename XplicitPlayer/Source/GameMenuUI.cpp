@@ -86,7 +86,7 @@ namespace Xplicit::Player
 
 		RENDER->getVideoDriver()->draw2DImage(mTex, mPos);
 
-		if (KB->key_down())
+		if (KB->key_down(KEY_RETURN))
 			mClicked();
 	}
 
