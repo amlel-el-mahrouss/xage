@@ -64,9 +64,9 @@ XPLICIT_MAIN()
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
 			return 1;
 
-		Xplicit::Bites::Application* application = new Xplicit::Bites::Application(uri);
+		Xplicit::Bites::Application* pApp = new Xplicit::Bites::Application(uri);
 
-		if (!application) throw Xplicit::EngineError("Could not create application context, quitting!");
+		if (!pApp) throw Xplicit::EngineError("Could not create application context, quitting!");
 
 		/* main game loop */
 		while (RENDER->run() && 
@@ -82,7 +82,7 @@ XPLICIT_MAIN()
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
 
-			application->leak_gwen()->Canvas->RenderCanvas();
+			pApp->leak_gwen()->Canvas->RenderCanvas();
 
 			RENDER->getVideoDriver()->endScene();
 		}

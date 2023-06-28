@@ -15,7 +15,6 @@
 
 // RoXML format
 #include "RoXML.h"
-
 // We need this to connect and download from server.
 #include "LoadingComponent.h"
 
@@ -72,12 +71,12 @@ namespace Xplicit::Bites
 			)
 		);
 
-		mGwenManager = std::make_unique<GWENComponentManager>(Vector<float>(0.0f, 0.0f, 0.0f));
-		Root::get_singleton_ptr()->set(new InputReceiver(mGwenManager->Canvas));
+		// Vector = Size of viewport. Only X and Y and taken into consideration.
+		mGwenManager = std::make_unique<GWENComponentManager>(Vector<float>(Xplicit::Player::XPLICIT_DIM.X, 
+			Xplicit::Player::XPLICIT_DIM.Y, 
+			0.0f));
 
-		Gwk::Controls::Button* button = new Gwk::Controls::Button(mGwenManager->Canvas);
-		button->SetText("XplicitNgin now supports GUI!");
-		button->SetPos(10, 10);
+		Root::get_singleton_ptr()->set(new InputReceiver(mGwenManager->Canvas));
 
 		xplicit_open_skins();
 

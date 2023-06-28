@@ -32,7 +32,7 @@ extern ILightSceneNode* XPLICIT_LIGHT;
 namespace Xplicit::Player
 {
 	// connection timeout, then client quits.
-	constexpr int XPLICIT_TIMEOUT = 18000;
+	constexpr int XPLICIT_TIMEOUT = 28000;
 
 	LoadingComponent::LoadingComponent() 
 		:
@@ -174,7 +174,7 @@ namespace Xplicit::Player
 
 					mNetwork->send(spawn);
 
-					std::this_thread::sleep_for(std::chrono::milliseconds(500));
+					std::this_thread::sleep_for(std::chrono::seconds(1));
 				}
 			});
 

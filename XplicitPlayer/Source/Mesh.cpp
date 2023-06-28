@@ -4,8 +4,8 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: MeshComponent.cpp
- *			Purpose: Custom Mesh Component (.dae or streaming meshes)
+ *			File: Mesh.cpp
+ *			Purpose: Custom Mesh Component (static, bundle or dynamic meshes)
  *
  * =====================================================================
  */

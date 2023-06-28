@@ -4,9 +4,6 @@
  *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
- *			File: LocalActor.cpp
- *			Purpose: Client-side Player Components
- *
  * =====================================================================
  */
 

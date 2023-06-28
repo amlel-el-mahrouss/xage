@@ -107,10 +107,10 @@ end
 func Engine:Connect(Name, Func)
     print('Registering event...');
     
-    Engine.Events[Engine.Counter] = {
+	table.insert(Engine.Events, {
         Name = Name,
         Func = Func,
-    };
+    });
 
     Engine.Counter = Engine.Counter + 1;
 
