@@ -28,7 +28,7 @@ namespace Xplicit
 	public:
 		explicit GWENComponentManager(const Vector<float>& dim) noexcept
 		{
-			Gwk::Platform::RelativeToExecutablePaths local("./");
+			Gwk::Platform::RelativeToExecutablePaths local;
 
 			Renderer = new Gwk::Renderer::Irrlicht(local, RENDER);
 			XPLICIT_ASSERT(Renderer);

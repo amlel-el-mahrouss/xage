@@ -13,10 +13,12 @@
 #include <IEventReceiver.h>
 
 /* common engine macros for Root */
-#define RENDER  Xplicit::Root::get_singleton_ptr()->Dev
+#define RENDER Xplicit::Root::get_singleton_ptr()->Dev
 
 namespace Xplicit
 {
+	class InputReceiver;
+
 	class XPLICIT_API Root final
 	{
 	private:
@@ -53,14 +55,14 @@ namespace Xplicit
 				Dev = dev;
 		}
 
-		void set(IEventReceiver* kb) noexcept
+		void set(InputReceiver* kb) noexcept
 		{
 			if (kb)
 				Keyboard = kb;
 		}
 
 	public:
-		IEventReceiver* Keyboard;
+		InputReceiver* Keyboard;
 		IrrlichtDevice* Dev;
 		bool ShouldExit;
 

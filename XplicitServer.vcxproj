@@ -120,6 +120,14 @@
     <ClCompile Include="XplicitServer\Source\ServerReplicationManager.cpp" />
     <ClCompile Include="XplicitServer\Source\SpawnComponent.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Nplicit.vcxproj">
+      <Project>{f8831d85-6463-9c20-6d7b-27f7d9d90282}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Xplicit.vcxproj">
+      <Project>{82e3e386-eec2-6222-f7da-edf86339c983}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

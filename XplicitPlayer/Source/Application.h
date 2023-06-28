@@ -19,7 +19,7 @@
 #include <Uri.h>
 #include <ini.h>
 
-#define KB		((InputReceiver*)Xplicit::Root::get_singleton_ptr()->Keyboard)
+#define KB Xplicit::Root::get_singleton_ptr()->Keyboard
 
 namespace Xplicit
 {
