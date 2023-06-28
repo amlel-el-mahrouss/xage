@@ -17,6 +17,9 @@ namespace Xplicit
 {
 	void ComponentManager::update() noexcept
 	{
+		if (mComponents.empty())
+			return;
+
 		const std::size_t sz = mComponents.size();
 
 		for (std::size_t i = 0; i < sz; i++)

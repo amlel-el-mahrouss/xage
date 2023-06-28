@@ -12,6 +12,7 @@
  */
 
 #include "LocalCameraComponent.h"
+#include "Application.h"
 #include "GameMenuUI.h"
 
 namespace Xplicit::Player
@@ -19,7 +20,7 @@ namespace Xplicit::Player
 	LocalCameraComponent::LocalCameraComponent()
 		: Component(), mCamera(nullptr)
 	{
-		mCamera = RENDER->getSceneManager()->addCameraSceneNodeMaya();
+		mCamera = RENDER->getSceneManager()->addCameraSceneNode();
 		XPLICIT_ASSERT(mCamera);
 
 		mCamera->setName(this->name());
@@ -41,7 +42,7 @@ namespace Xplicit::Player
 
 	COMPONENT_TYPE LocalCameraComponent::type() noexcept { return COMPONENT_CAMERA; }
 
-	const char* LocalCameraComponent::name() noexcept { return ("CameraComponent"); }
+	const char* LocalCameraComponent::name() noexcept { return ("LocalCameraComponent"); }
 
 	void LocalCameraComponent::update()
 	{
@@ -54,6 +55,9 @@ namespace Xplicit::Player
 			nullptr,
 			SColor(255, 255, 255, 255),
 			true);
+
+		XPLICIT_INFO("LocalCameraComponent:Update");
+
 	}
 
 	ICameraSceneNode* LocalCameraComponent::get() noexcept { return mCamera; }

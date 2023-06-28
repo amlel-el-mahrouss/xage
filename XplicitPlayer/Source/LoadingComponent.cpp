@@ -103,6 +103,8 @@ namespace Xplicit::Player
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");
 
 			mEnabled = false;
+
+			return;
 		}
 		else
 		{

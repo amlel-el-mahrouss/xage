@@ -75,9 +75,9 @@ namespace Xplicit::Bites
 		mGwenManager = std::make_unique<GWENComponentManager>(Vector<float>(0.0f, 0.0f, 0.0f));
 		Root::get_singleton_ptr()->set(new InputReceiver(mGwenManager->Canvas));
 
-		// Gwk::Controls::Button* button = new Gwk::Controls::Button(mGwenManager->Canvas);
-		// button->SetText("XplicitNgin now supports GUI!");
-		// button->SetPos(10, 10);
+		Gwk::Controls::Button* button = new Gwk::Controls::Button(mGwenManager->Canvas);
+		button->SetText("XplicitNgin now supports GUI!");
+		button->SetPos(10, 10);
 
 		xplicit_open_skins();
 

@@ -26,8 +26,6 @@
 
 #ifdef XPLICIT_WINDOWS
 
-extern void xplicit_load_lua();
-
 XPLICIT_MAIN()
 {
 	try

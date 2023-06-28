@@ -50,7 +50,7 @@ namespace Xplicit::Player
 		const char* leg)
 	{
 		String _path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/";
+		_path += "/XplicitNgin/Contents/R6X/";
 		_path += head;
 
 		auto _head_ptr = RENDER->getSceneManager()->getMesh(_path.c_str());
@@ -59,7 +59,8 @@ namespace Xplicit::Player
 		_path.clear();
 
 		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/";
+		_path += "/XplicitNgin/Contents/R6X/";
+		_path += "Left";
 		_path += arm;
 
 		auto _left_arm = RENDER->getSceneManager()->getMesh(_path.c_str());
@@ -68,7 +69,7 @@ namespace Xplicit::Player
 		_path.clear();
 
 		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/";
+		_path += "/XplicitNgin/Contents/R6X/";
 		_path += torso;
 
 		auto _torso = RENDER->getSceneManager()->getMesh(_path.c_str());
@@ -77,8 +78,8 @@ namespace Xplicit::Player
 		_path.clear();
 
 		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/";
-		_path += "right_";
+		_path += "/XplicitNgin/Contents/R6X/";
+		_path += "Right";
 		_path += arm;
 
 		auto _right_arm = RENDER->getSceneManager()->getMesh(_path.c_str());
@@ -87,12 +88,19 @@ namespace Xplicit::Player
 		_path.clear();
 
 		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/";
-		_path += "right_";
+		_path += "/XplicitNgin/Contents/R6X/";
+		_path += "Left";
 		_path += leg;
 
 		auto _leg_left = RENDER->getSceneManager()->getMesh(_path.c_str());
 		mParts.push_back(std::make_pair(RENDER->getSceneManager()->addAnimatedMeshSceneNode(_leg_left), _leg_left));
+
+		_path.clear();
+
+		_path = XPLICIT_ENV("APPDATA");
+		_path += "/XplicitNgin/Contents/R6X/";
+		_path += "Right";
+		_path += leg;
 
 		auto _leg_right = RENDER->getSceneManager()->getMesh(_path.c_str());
 		mParts.push_back(std::make_pair(RENDER->getSceneManager()->addAnimatedMeshSceneNode(_leg_right), _leg_right));
@@ -115,7 +123,7 @@ namespace Xplicit::Player
 
 		_path = XPLICIT_ENV("APPDATA");
 		_path += "/XplicitNgin/Contents/";
-		_path += "face.png";
+		_path += "R6Face.png";
 
 		/* set origin of model. */
 
@@ -138,14 +146,6 @@ namespace Xplicit::Player
 		left_leg->setParent(mesh_torso);
 		left_leg->setPosition(vector3df(-0.5f, 0.f, 0.f));
 
-		mesh_torso->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-
-		left_arm->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-		right_arm->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-
-		right_leg->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-		left_leg->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-
 		left_leg->setRotation(vector3df(90, 0, 0));
 		left_arm->setRotation(vector3df(90, 0, 0));
 		right_leg->setRotation(vector3df(90, 0, 0));
@@ -153,7 +153,6 @@ namespace Xplicit::Player
 
 		mesh_torso->setRotation(vector3df(90, 0, 0));
 		mesh_head->setRotation(vector3df(90, 0, 0));
-
 
 		XPLICIT_INFO("Loaded StaticBundleMesh successfully!");
 	}

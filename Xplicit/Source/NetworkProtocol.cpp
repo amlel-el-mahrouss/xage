@@ -58,6 +58,9 @@ namespace Xplicit
             return;
 
 		Thread timeout([&]() {
+            if (this->status == NETWORK_STAT_STASIS)
+                return;
+
             this->status = NETWORK_STAT_STASIS;
 
 			// Sleep for tirty seconds, let the client be aware of our packet.

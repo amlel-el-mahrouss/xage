@@ -34,6 +34,8 @@ namespace Xplicit
 
 		bool OnEvent(const SEvent& env) override
 		{
+			mWheelEnable = false;
+
 			if (env.EventType == EET_KEY_INPUT_EVENT)
 				mKeys[env.KeyInput.Key] = env.KeyInput.PressedDown;
 
@@ -60,6 +62,14 @@ namespace Xplicit
 					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:RightClick()");
 
 					mMouseRight.Down = true;
+					break;
+				}
+
+				case EMIE_MOUSE_WHEEL:
+				{
+					mWheelEnable = true;
+					mWheel = env.MouseInput.Wheel;
+
 					break;
 				}
 
@@ -114,6 +124,14 @@ namespace Xplicit
 
 		bool right_down() noexcept { return mMouseRight.Down; }
 		bool left_down() noexcept { return mMouseLeft.Down; }
+
+		float mouse_wheel() noexcept 
+		{ 
+			if (mWheelEnable) 
+				return mWheel;
+
+			return 0.f;
+		}
 
 		bool key_down(const char key) const
 		{
@@ -182,6 +200,10 @@ namespace Xplicit
 		MouseEventTraits mMouseRight;
 		MouseEventTraits mMouseLeft;
 		MouseEventTraits mMousePos;
+
+	private:
+		bool mWheelEnable;
+		float mWheel;
 
 	};
 

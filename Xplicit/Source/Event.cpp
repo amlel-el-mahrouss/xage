@@ -20,13 +20,19 @@ namespace Xplicit
 {
 	void EventManager::update() noexcept
 	{
-		for (std::size_t i = 0; i < mEvents.size(); i++)
+		if (mEvents.empty())
+			return;
+
+		const std::size_t sz = mEvents.size();
+
+		for (std::size_t i = 0; i < sz; i++)
 		{
 #ifdef XPLICIT_DEBUG
 			XPLICIT_ASSERT(mEvents[i]);
 #endif // ifdef XPLICIT_DEBUG
 
-			mEvents[i]->update();
+			if (mEvents[i])
+				mEvents[i]->update();
 		}
 	}
 
@@ -50,7 +56,8 @@ namespace Xplicit
 			XPLICIT_ASSERT(mListeners[i]);
 #endif // ifdef XPLICIT_DEBUG
 
-			mListeners[i]->update(this);
+			if (mListeners[i])
+				mListeners[i]->update(this);
 		}
 
 		this->operator()();

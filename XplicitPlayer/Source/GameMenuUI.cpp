@@ -81,11 +81,12 @@ namespace Xplicit::Player
 	
 	void PopupComponent::update()
 	{
+		if (!mTex)
+			return;
+
 		RENDER->getVideoDriver()->draw2DImage(mTex, mPos);
 
-		if (KB->key_down() ||
-			KB->left_down() ||
-			KB->right_down())
+		if (KB->key_down())
 			mClicked();
 	}
 
