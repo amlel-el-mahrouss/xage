@@ -57,7 +57,6 @@ using namespace core;
 #include <tlhelp32.h>
 
 #include <shellapi.h>
-
 #include <CommCtrl.h>
 
 #pragma comment(lib,"comctl32.lib")

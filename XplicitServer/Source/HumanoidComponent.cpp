@@ -21,7 +21,8 @@ namespace Xplicit
 		Component(), 
 		mPeer(nullptr),
 		mHealth(XPLICIT_DEFAULT_HEALTH), 
-		mCanSpawn(true)
+		mCanSpawn(true),
+		Position(0.0f, 0.0f, 0.0f)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("HumanoidComponent::HumanoidComponent");
@@ -72,7 +73,9 @@ namespace Xplicit
 
 	void HumanoidComponent::set_peer(NetworkInstance* peer) noexcept 
 	{
-		State = HUMANOID_STATE::INVALID;
+		if (peer == nullptr)
+			State = HUMANOID_STATE::INVALID;
+		
 		mPeer = peer;
 	}
 
@@ -81,7 +84,7 @@ namespace Xplicit
 		return mCanSpawn;
 	}
 
-	Vector<float>& HumanoidComponent::get_pos() noexcept { return Position.Position; }
+	Vector<float>& HumanoidComponent::get_pos() noexcept { return Position; }
 
 	void HumanoidComponent::should_spawn(const bool enable) noexcept { mCanSpawn = enable; }
 

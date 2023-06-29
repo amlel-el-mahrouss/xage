@@ -21,87 +21,44 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API PositionComponent final
+	class XPLICIT_API Tool final
 	{
 	public:
-		explicit PositionComponent() : Position(0.f, 0.f, 0.f) {}
-		~PositionComponent() = default;
+		typedef std::int64_t ID;
 
-		XPLICIT_COPY_DEFAULT(PositionComponent);
-		
-		String serialize() noexcept
-		{
-			String serialized = "<Vector3 X=\"" 
-				+ std::to_string(Position.X) 
-				+ "\" Y=\"" + std::to_string(Position.Y) 
-				+ "\" Z=\"" + std::to_string(Position.Z) + "\" />";
+		std::int32_t Slot{ 0 };
+		bool Droppable{ false };
+		String Name{ "Tool" };
+		ID Owner{ -1 };
 
-			return serialized;
-		}
-		
+	};
+
+	class XPLICIT_API Sound final
+	{
+	public:
 		Vector<float> Position;
-
-	};
-
-	class XPLICIT_API SizeComponent final
-	{
-	public:
-		explicit SizeComponent() : Size(0.f, 0.f, 0.f) {}
-		~SizeComponent() = default;
-
-		XPLICIT_COPY_DEFAULT(SizeComponent);
-
-		String serialize() noexcept
-		{
-			String serialized = "<Dimension Width=\"" + std::to_string(Size.X) 
-				+ "\" Height=\"" + std::to_string(Size.Y) + "\" />";
-
-			return serialized;
-		}
-		
-		Vector<float> Size;
-
-	};
-
-	class XPLICIT_API RenderableComponent final
-	{
-	public:
-		RenderableComponent() = default;
-		~RenderableComponent() = default;
-		
-		XPLICIT_COPY_DEFAULT(RenderableComponent);
-		
-		PositionComponent Position;
-		SizeComponent Size;
-		ISceneNode* Node{ nullptr };
-
-	};
-
-	class XPLICIT_API ToolComponent final
-	{
-	public:
-		explicit ToolComponent() = default;
-		~ToolComponent() = default;
-		
-		typedef std::int64_t ToolOwner;
-
-		std::int32_t Slot;
-		ToolOwner Owner;
-		bool Droppable;
-		String Name;
-
-	};
-
-	class XPLICIT_API SoundComponent final
-	{
-	public:
-		explicit SoundComponent() = default;
-		~SoundComponent() = default;
-
-	public:
-		PositionComponent Position;
 		String Filename{ "" };
 		bool Looped{ false };
+
+	};
+
+	class XPLICIT_API Particle final
+	{
+	public:
+		Vector<float> Position;
+		String Filename{ "" };
+		bool Looped{ false };
+
+		ISceneNode* Emitter{ nullptr };
+
+	};
+
+	class XPLICIT_API Texture final
+	{
+	public:
+		String Filename{ "" };
+		bool Looped{ false };
+		std::int32_t MatID{ 0 };
 
 	};
 
@@ -112,6 +69,8 @@ namespace Xplicit
 		COMPONENT_ID_SOUND = 2,
 		COMPONENT_ID_PARTICLE = 3,
 		COMPONENT_ID_ROXML = 4,
+		COMPONENT_ID_TEXTURE = 5,
+
 		// Continue here...
 	};
 }

@@ -32,7 +32,7 @@ namespace Xplicit::Player
 
         auto http_hdr = HTTP::HTTP::HTTPHeader{ .Type = HTTP::HTTP::RequestType::GET, .Bytes = const_cast<char*>(assetId.data()), .Size = static_cast<int>(assetId.size()), };
 
-        Ref<HTTP::HTTP::HTTPHeader*> http_hdr_wrapper{ &hdhttp_hdrr };
+        Ref<HTTP::HTTP::HTTPHeader*> http_hdr_wrapper{ &http_hdr };
 
         if (!http_writer.send_from_socket(sock, http_hdr_wrapper))
             return;

@@ -18,7 +18,7 @@
 *		- Server RoXML
 *		- Client RoXML
 *
-*	The Server RoXML is just a way to store lua scripts and world bounding box and it's limits.
+*	The Server RoXML is just a way to store LUA scripts and world bounding box and it's limits.
 *
 */
 
@@ -26,5 +26,12 @@
 
 namespace Xplicit::RoXML
 {
+	using namespace rapidxml;
 
+	class RoXMLDocumentParser final
+	{
+	public:
+
+
+	};
 }

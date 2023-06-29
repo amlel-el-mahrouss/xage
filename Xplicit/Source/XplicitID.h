@@ -28,8 +28,8 @@ namespace Xplicit::Auth
 	public:
 		//! notice pass the public hash here, not the private one!
 		//! otherwise this will leak the private hash of the user!
-		explicit XplicitID(const int32_t& universe, 
-			const int32_t& id) noexcept;
+		explicit XplicitID(const std::int64_t& universe, 
+						   const std::int64_t& id) noexcept;
 
 		~XplicitID() = default;
 
@@ -47,13 +47,15 @@ namespace Xplicit::Auth
 		 * \brief Returns the current XplicitID
 		 * \return This XplicitID as a string.
 		 */
-		const String& as_string()  noexcept;
+		const String& as_string() noexcept;
+
+	public:
+		void generate(const std::int64_t& id) noexcept;
 
 	private:
 		String mXplicitId;
-		
-	private:
-		std::int64_t mConnectionHash;
+
+		std::int64_t mConnectionID;
 		std::int64_t mRegionId;
 
 	};

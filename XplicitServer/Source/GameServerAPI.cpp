@@ -178,14 +178,4 @@ void xplicit_load_lua() noexcept
 	tmp += "xplicit.lua";
 
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run(tmp.c_str());
-
-	tmp.clear();
-
-	tmp = full_path;
-
-	tmp += "Contents/";
-	tmp += "autorun.lua";
-
-	if (std::filesystem::exists(tmp))
-		Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run(tmp.c_str());
 }

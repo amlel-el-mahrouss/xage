@@ -11,14 +11,11 @@
 
 namespace Xplicit::Auth
 {
-	XplicitID::XplicitID(const int32_t& universe, 
-						 const int32_t& id) noexcept
-		: mRegionId(universe), mConnectionHash(id), mXplicitId("")
+	XplicitID::XplicitID(const std::int64_t& universe,
+						 const std::int64_t& id) noexcept
+		: mRegionId(universe), mConnectionID(id), mXplicitId("")
 	{
-		mXplicitId = XPLICIT_UNIVERSE_PREFIX;
-		mXplicitId += std::move(std::to_string(mRegionId));
-		mXplicitId += XPLICIT_UNIVERSE_DELIM;
-		mXplicitId += std::move(std::to_string(mConnectionHash));
+		this->generate(id);
 	}
 
 	const String& XplicitID::as_string() noexcept
@@ -28,7 +25,20 @@ namespace Xplicit::Auth
 
 	const std::int64_t& XplicitID::as_int() const noexcept
 	{
-		static const std::int64_t id = mRegionId | mConnectionHash;
+		static const std::int64_t id = mRegionId | mConnectionID;
 		return id;
+	}
+
+	void XplicitID::generate(const std::int64_t& id) noexcept
+	{
+		if (id == -1)
+			return;
+
+		mConnectionID = id;
+
+		mXplicitId = XPLICIT_UNIVERSE_PREFIX;
+		mXplicitId += std::move(std::to_string(mRegionId));
+		mXplicitId += XPLICIT_UNIVERSE_DELIM;
+		mXplicitId += std::move(std::to_string(mConnectionID));
 	}
 }

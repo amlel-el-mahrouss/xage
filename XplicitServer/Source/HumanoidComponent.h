@@ -58,7 +58,7 @@ namespace Xplicit
 		int64_t id() const noexcept;
 
 	public:
-		PositionComponent Position;
+		Vector<float> Position;
 		HUMANOID_STATE State;
 
 	private:
