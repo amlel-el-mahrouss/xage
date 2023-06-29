@@ -1,0 +1,11 @@
+<Xplicit>
+	<World>
+		<Spawn>
+			<X Value="0.0" />
+			<Y Value="0.0" />
+			<Z Value="0.0" />
+		</Spawn>
+		
+		<Script Asset="xasset://server-api.lua"/>
+	</World>
+</Xplicit>

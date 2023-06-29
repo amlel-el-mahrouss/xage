@@ -105,6 +105,7 @@
     <ClInclude Include="XplicitServer\Source\PlayerMovementEvent.h" />
     <ClInclude Include="XplicitServer\Source\PlayerSpawnDeathEvent.h" />
     <ClInclude Include="XplicitServer\Source\PlayerTimeoutEvent.h" />
+    <ClInclude Include="XplicitServer\Source\RoXML.h" />
     <ClInclude Include="XplicitServer\Source\ServerConfig.h" />
     <ClInclude Include="XplicitServer\Source\ServerReplicationManager.h" />
     <ClInclude Include="XplicitServer\Source\SpawnComponent.h" />

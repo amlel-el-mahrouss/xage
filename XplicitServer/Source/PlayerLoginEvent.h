@@ -12,8 +12,6 @@
 #include "CommonInclude.h"
 #include "HumanoidComponent.h"
 
-#define XPLICIT_XASSET_ENDPOINT ("play-xplicit.com/assets")
-
 namespace Xplicit
 {
 	class PlayerLoginEvent final : public Event

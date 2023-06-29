@@ -14,11 +14,11 @@
 
 #include <Uri.h>
 #include <Event.h>
-#include <CommonEngine.h>
 #include <Xplicit.h>
 #include <GameVar.h>
 #include <Component.h>
 #include <MonoInterop.h>
+#include <CommonEngine.h>
 #include <HelperMacros.h>
 #include <MonoComponent.h>
 #include <SocketWrapper.h>
@@ -37,3 +37,5 @@ extern "C"
 #include <RigidBody.h>
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
+
+#include "ServerConfig.h"

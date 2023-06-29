@@ -30,7 +30,7 @@ namespace Xplicit::Player
 		
 	public:
 		void download(const String& assetId) const noexcept;
-		void set(const String& endpoint) noexcept;
+		void set_endpoint(const String& endpoint) noexcept;
 		
 		const char* protocol() noexcept { return "xasset://"; }
 		float version() const noexcept { return 1.1f; }

@@ -20,9 +20,7 @@ namespace Xplicit
 {
 	GameVar::GameVar(const char* name, const char* default_value, int flags)
 		: mName(name), mValue(default_value), mFlags(flags)
-	{
-	
-	}
+	{}
 
 	GameVar::~GameVar()
 	{

@@ -12,3 +12,5 @@ inline const char* XPLICIT_EVENTS[] = {
 };
 
 #define XPLICIT_EVENT_MAX (6)
+
+#define XPLICIT_XASSET_ENDPOINT ("play-xplicit.com/library")

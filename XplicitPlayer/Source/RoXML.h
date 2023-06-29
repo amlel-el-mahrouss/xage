@@ -10,19 +10,23 @@
 #pragma once
 
 /* RoXML format */
+/* This format describes scene-nodes and stuff like that. */
 
 // external
 #include <rapidxml/rapidxml_utils.hpp>
 #include <rapidxml/rapidxml.hpp>
+
 #include <DataValue.h>
+
 #include <lua/lua.hpp>
+
 #include <Root.h>
 #include <Util.h>
 
 // internal
 #include "RegisteredEventsList.h"
 
-namespace Xplicit::SceneManager
+namespace Xplicit::RoXML
 {
 	constexpr int STUD_WIDTH = 4;
 	constexpr int STUD_HEIGHT = 1;

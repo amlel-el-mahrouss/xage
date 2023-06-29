@@ -22,16 +22,23 @@ namespace Xplicit::Player
         if (!sock)
             return;
 
-        auto hdr = new HTTP::HTTP::HTTPHeader{ .Type = HTTP::HTTP::RequestType::GET, .Bytes = const_cast<char*>(assetId.data()), .Size = static_cast<int>(assetId.size()), };
+        // We don't use MakeReq.exe here, it could be missing.
 
-        Ref<HTTP::HTTP::HTTPHeader*> hdr_wrapper{ hdr };
+        /* 
+            Why is it using 'new' and 'delete' ?
+            Just for optimization, plus the fact that a unique_ptr/shared_ptr is
+            not fitting here.
+        */
 
-        if (!http_writer.send_from_socket(sock, hdr_wrapper))
-        {
-            delete hdr;
+        auto http_hdr = HTTP::HTTP::HTTPHeader{ .Type = HTTP::HTTP::RequestType::GET, .Bytes = const_cast<char*>(assetId.data()), .Size = static_cast<int>(assetId.size()), };
+
+        Ref<HTTP::HTTP::HTTPHeader*> http_hdr_wrapper{ &hdhttp_hdrr };
+
+        if (!http_writer.send_from_socket(sock, http_hdr_wrapper))
             return;
-        }
 
+        // static is added here wtf??
+        // - check the preprocessor value of XPLICIT_GET_DATA_DIR :)
         static XPLICIT_GET_DATA_DIR(full_path);
 
         String http_path;
@@ -42,7 +49,7 @@ namespace Xplicit::Player
 
         std::ofstream file = mWriter->write(http_path.c_str());
 
-        constexpr int64_t MAX_BUF = 100000;
+        constexpr int64_t MAX_BUF = 1000000;
 
         auto bytes = new char[MAX_BUF];
         memset(bytes, 0, MAX_BUF);
@@ -53,10 +60,9 @@ namespace Xplicit::Player
         file.close();
 
         delete bytes;
-        delete hdr;
 	}
 	
-	void LocalHTTPManager::set(const String& endpoint) noexcept
+	void LocalHTTPManager::set_endpoint(const String& endpoint) noexcept
 	{
 		if (!endpoint.empty())
 			mEndpoint = endpoint;
