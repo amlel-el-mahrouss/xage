@@ -21,46 +21,48 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API Tool final
+	/*
+	 * ============================
+	 * 
+	 * Xplicit Replicated structures.
+	 * Use them to create new components client-side.
+	 * 
+	 * E.g: Tool -> ToolComponent->new_tool(humanoid, tool_metadata);
+	 * 
+	 * ============================
+     */
+
+	PACKED_STRUCT(class Tool final
 	{
 	public:
-		typedef std::int64_t ID;
+		typedef int64_t ID;
 
-		std::int32_t Slot{ 0 };
+	public:
 		bool Droppable{ false };
-		String Name{ "Tool" };
+		int32_t Slot{ 0 };
+		int SceneID{ 0 };
 		ID Owner{ -1 };
 
-	};
+	});
 
-	class XPLICIT_API Sound final
+	PACKED_STRUCT(class Sound final
 	{
 	public:
-		Vector<float> Position;
-		String Filename{ "" };
 		bool Looped{ false };
+		int SceneID{ 0 };
+		float X{ 0.0f };
+		float Y{ 0.0f };
+		float Z{ 0.0f };
 
-	};
+	});
 
-	class XPLICIT_API Particle final
+	PACKED_STRUCT(class Texture final
 	{
 	public:
-		Vector<float> Position;
-		String Filename{ "" };
-		bool Looped{ false };
+		int SceneID{ 0 };
+		int MatID{ 0 };
 
-		ISceneNode* Emitter{ nullptr };
-
-	};
-
-	class XPLICIT_API Texture final
-	{
-	public:
-		String Filename{ "" };
-		bool Looped{ false };
-		std::int32_t MatID{ 0 };
-
-	};
+	});
 
 	enum COMPONENT_ID_ENUM : std::int32_t
 	{
