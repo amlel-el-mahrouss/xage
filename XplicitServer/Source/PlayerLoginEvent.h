@@ -19,7 +19,7 @@ namespace Xplicit
 	class PlayerLoginEvent final : public Event
 	{
 	public:
-		PlayerLoginEvent();
+		explicit PlayerLoginEvent();
 		~PlayerLoginEvent() override;
 		
 		PlayerLoginEvent& operator=(const PlayerLoginEvent&) = default;
@@ -34,6 +34,7 @@ namespace Xplicit
 		void handle_leave_event() noexcept;
 		void handle_join_event() noexcept;
 
+	private:
 		std::vector<HumanoidComponent*> mPlayers;
 		NetworkServerComponent* mNetwork;
 		std::size_t mPlayerCount;

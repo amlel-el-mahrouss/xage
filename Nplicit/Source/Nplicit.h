@@ -29,14 +29,13 @@ namespace Xplicit
 		Vector<TypeFloat> Velocity;
 		Vector<TypeFloat> Force;
 
-		// Our mass
+	public:
 		TypeFloat Mass;
-
-		// is it locked?
 		bool Anchored;
-
-		// should we collide with other objects?
 		bool NoCollide;
+
+	public:
+		Vector<TypeFloat> BoundingBox;
 
 	};
 
@@ -44,16 +43,46 @@ namespace Xplicit
 	class NPLICIT_API SolverSystem final
 	{
 	public:
-		SolverSystem() : mComponents(), mGravity(0, -9.81f, 0) {}
+		explicit SolverSystem() : mComponents(), mGravity(0, -9.81f, 0) {}
 		virtual ~SolverSystem() = default;
 
+	public:
 		SolverSystem& operator=(const SolverSystem&) = delete;
 		SolverSystem(const SolverSystem&) = delete;
 
+	public:
 		void step(const int32_t& dt /*delta time*/) noexcept
 		{
 			for (auto* component : mComponents)
 			{
+				if (component->Anchored)
+					continue;
+
+				if (!component->NoCollide)
+				{
+					bool blocked = false;
+
+					for (auto* rhs_component : mComponents)
+					{
+						Vector<TypeFloat> bounding_box_rhs = rhs_component->BoundingBox;
+						Vector<TypeFloat> bounding_box_lhs = component->BoundingBox;
+
+						bounding_box_lhs->X += rhs_component->X - component->X;
+						bounding_box_lhs->Y += rhs_component->Y - component->Y;
+						bounding_box_lhs->Z += rhs_component->Z - component->Z;
+
+						if (bounding_box_lhs > bounding_box_rhs)
+						{
+							blocked = true;
+						
+							break;
+						}
+					}
+
+					if (blocked) continue;
+				}
+
+
 				component->Force.add(mGravity.X * component->Mass, mGravity.Y * component->Mass, mGravity.Z * component->Mass);
 				component->Velocity.add(component->Force.X / component->Mass * dt, component->Force.Y / component->Mass * dt, component->Force.Z / component->Mass * dt);
 				component->Position.add(component->Velocity.X * dt, component->Velocity.Y * dt, component->Velocity.Z * dt);

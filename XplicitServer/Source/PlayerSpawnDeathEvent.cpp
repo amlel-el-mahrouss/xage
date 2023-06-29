@@ -34,15 +34,15 @@ namespace Xplicit
 		{
 			const auto& pos = spawner->get();
 
-			player->pos().X = pos.X;
-			player->pos().Y = pos.Y;
-			player->pos().Z = pos.Z;
+			player->get_pos().X = pos.X;
+			player->get_pos().Y = pos.Y;
+			player->get_pos().Z = pos.Z;
 		}
 		else if (player)
 		{
-			player->pos().X = 0.f;
-			player->pos().Y = 0.f;
-			player->pos().Z = 0.f;
+			player->get_pos().X = 0.f;
+			player->get_pos().Y = 0.f;
+			player->get_pos().Z = 0.f;
 		}
 	}
 
@@ -63,9 +63,9 @@ namespace Xplicit
 			if (peer_ptr->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
 
-			peer_ptr->packet.health = player->health();
+			peer_ptr->packet.health = player->get_health();
 
-			if (!player->alive() && player->can_spawn())
+			if (!player->is_alive() && player->can_spawn())
 			{
 				player->should_spawn(false);
 
@@ -87,7 +87,7 @@ namespace Xplicit
 
 					if (humanoid)
 					{
-						humanoid->health(XPLICIT_DEFAULT_HEALTH);
+						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
 
 						XPLICIT_INFO("Humanoid:Spawn [EVENT]");
 						Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
@@ -111,15 +111,15 @@ namespace Xplicit
 						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
 						peer_ptr->packet.public_hash = player->get_peer()->public_hash;
-						peer_ptr->packet.health = player->health();
+						peer_ptr->packet.health = player->get_health();
 
 						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
 						xplicit_handle_spawn(mSpawner, player);
 
-						peer_ptr->packet.pos[XPLICIT_NETWORK_X] = player->pos().X;
-						peer_ptr->packet.pos[XPLICIT_NETWORK_Y] = player->pos().Y;
-						peer_ptr->packet.pos[XPLICIT_NETWORK_Z] = player->pos().Z;
+						peer_ptr->packet.pos[XPLICIT_NETWORK_X] = player->get_pos().X;
+						peer_ptr->packet.pos[XPLICIT_NETWORK_Y] = player->get_pos().Y;
+						peer_ptr->packet.pos[XPLICIT_NETWORK_Z] = player->get_pos().Z;
 					}
 
 					player->should_spawn(true);

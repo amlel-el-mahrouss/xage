@@ -17,7 +17,7 @@ namespace Xplicit
 	class NPLICIT_API RigidBodyComponent final : public virtual PhysicsComponent<TypeFloat>
 	{
 	public:
-		RigidBodyComponent() = default;
+		explicit RigidBodyComponent() = default;
 		~RigidBodyComponent() override = default;
 
 		RigidBodyComponent& operator=(const RigidBodyComponent&) = default;

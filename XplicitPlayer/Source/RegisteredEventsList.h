@@ -9,7 +9,7 @@
 
 #pragma once
 
-static inline const char* XPLICIT_EVENTS[] = {
+inline const char* XPLICIT_EVENTS[] = {
 	"Move",
 	"Leave",
 	"Join",

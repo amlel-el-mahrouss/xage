@@ -22,7 +22,6 @@ namespace Xplicit
 {
 	PlayerMovementEvent::PlayerMovementEvent() 
 		: 
-		mSolver(std::make_unique<SolverSystem<float>>()),
 		mNetwork(nullptr),
 		mDeltaTime(0UL)
 	{
@@ -63,7 +62,7 @@ namespace Xplicit
 			HumanoidComponent* ply = players[i];
 
 			if (ply == nullptr ||
-				ply->health() < 1 ||
+				ply->get_health() < 1 ||
 				ply->get_peer() == nullptr)
 				continue;
 
@@ -75,20 +74,20 @@ namespace Xplicit
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
 			{
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					ply->pos().Z += speed;
+					ply->get_pos().Z += speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					ply->pos().Z -= speed;
+					ply->get_pos().Z -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					ply->pos().X -= speed;
+					ply->get_pos().X -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					ply->pos().X += speed;
+					ply->get_pos().X += speed;
 
-				peer->packet.pos[XPLICIT_NETWORK_X] = ply->pos().X;
-				peer->packet.pos[XPLICIT_NETWORK_Y] = ply->pos().Y;
-				peer->packet.pos[XPLICIT_NETWORK_Z] = ply->pos().Z;
+				peer->packet.pos[XPLICIT_NETWORK_X] = ply->get_pos().X;
+				peer->packet.pos[XPLICIT_NETWORK_Y] = ply->get_pos().Y;
+				peer->packet.pos[XPLICIT_NETWORK_Z] = ply->get_pos().Z;
 
 				/* send server delta to player, so that he is not out of touch. */
 				peer->packet.pos[XPLICIT_NETWORK_DELTA] = mDeltaTime;
@@ -104,6 +103,4 @@ namespace Xplicit
 
 		mDeltaTime += (mDeltaVar->as_float() / 1000.f);
 	}
-
-	std::shared_ptr<SolverSystem<float>> PlayerMovementEvent::get_solver() noexcept { return mSolver; }
 }

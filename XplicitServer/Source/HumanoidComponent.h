@@ -45,17 +45,16 @@ namespace Xplicit
 		bool can_collide() noexcept override;
 		bool has_physics() noexcept override;
 
-		Vector<float>& pos() noexcept;
+		Vector<float>& get_pos() noexcept;
 
 	public:
-		void health(const int32_t& health) noexcept;
+		void set_health(const int32_t& health) noexcept;
+		int64_t get_health() const noexcept;
+		bool is_alive() const noexcept;
 
+	public:
 		void should_spawn(const bool enable) noexcept;
 		bool can_spawn() const noexcept;
-
-		int64_t health() const noexcept;
-		bool alive() const noexcept;
-
 		int64_t id() const noexcept;
 
 	public:

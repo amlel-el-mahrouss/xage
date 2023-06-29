@@ -27,19 +27,16 @@ namespace Xplicit
 	class PlayerMovementEvent : public Event
 	{
 	public:
-		PlayerMovementEvent();
+		explicit PlayerMovementEvent();
 		~PlayerMovementEvent() override;
 
+	public:
 		PlayerMovementEvent& operator=(const PlayerMovementEvent&) = default;
 		PlayerMovementEvent(const PlayerMovementEvent&) = default;
 		
+	public:
 		const char* name() noexcept override;
 		void operator()() override;
-
-		std::shared_ptr<SolverSystem<float>> get_solver() noexcept;
-
-	private:
-		std::shared_ptr<SolverSystem<float>> mSolver;
 
 	private:
 		NetworkServerComponent* mNetwork;

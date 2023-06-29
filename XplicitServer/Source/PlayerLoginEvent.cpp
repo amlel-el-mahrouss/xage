@@ -112,19 +112,23 @@ namespace Xplicit
 				if (HumanoidComponent* player = mPlayers[mPlayerCount]; 
 					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
 				{
-					memcpy(mNetwork->get(peer_idx)->packet.buffer, XPLICIT_XASSET_ENDPOINT, strlen(XPLICIT_XASSET_ENDPOINT));
+					// copy asset delivery service to client.
+					memcpy(mNetwork->get(peer_idx)->packet.buffer, 
+						XPLICIT_XASSET_ENDPOINT,
+						strlen(XPLICIT_XASSET_ENDPOINT));
 
 					mNetwork->get(peer_idx)->ip_address = address_to_string(mNetwork->get(peer_idx));
 					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
-					
-					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
-					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 					
 					++mPlayerCount;
 
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
+					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
+					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
+
 					XPLICIT_INFO("Humanoid:Login [EVENT]");
+
 					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
 				}
 			}

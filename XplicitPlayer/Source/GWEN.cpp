@@ -8,3 +8,8 @@
  */
 
 #include "GWEN.h"
+
+namespace Xplicit
+{
+
+}

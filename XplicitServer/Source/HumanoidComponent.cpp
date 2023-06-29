@@ -51,19 +51,14 @@ namespace Xplicit
 
 		if (this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
 		{
-			this->mHealth -= this->get_peer()->packet.health;
-			this->get_peer()->packet.health = this->mHealth;
-
-			this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] = NETWORK_CMD_INVALID;
-
 			XPLICIT_INFO("Humanoid:Damage [EVENT]");
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Damage()");
 		}
 	}
 
-	void HumanoidComponent::health(const int32_t& health) noexcept { this->mHealth = health; }
+	void HumanoidComponent::set_health(const int32_t& health) noexcept { this->mHealth = health; }
 
-	int64_t HumanoidComponent::health() const noexcept { return this->mHealth; }
+	int64_t HumanoidComponent::get_health() const noexcept { return this->mHealth; }
 
 	bool HumanoidComponent::can_collide() noexcept { return true; }
 
@@ -86,11 +81,11 @@ namespace Xplicit
 		return mCanSpawn;
 	}
 
-	Vector<float>& HumanoidComponent::pos() noexcept { return Position.Position; }
+	Vector<float>& HumanoidComponent::get_pos() noexcept { return Position.Position; }
 
 	void HumanoidComponent::should_spawn(const bool enable) noexcept { mCanSpawn = enable; }
 
-	bool HumanoidComponent::alive() const noexcept { return mHealth > 0; }
+	bool HumanoidComponent::is_alive() const noexcept { return mHealth > 0; }
 
 	int64_t HumanoidComponent::id() const noexcept { return mId; }
 }

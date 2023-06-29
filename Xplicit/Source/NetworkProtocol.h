@@ -74,7 +74,7 @@ namespace Xplicit
         NETWORK_CMD_BEGIN = 500, // start network, handshake
         NETWORK_CMD_STOP, // abort connection
         NETWORK_CMD_DEAD,
-        NETWORK_CMD_DAMAGE, // server to client, reports damage to the player.
+        NETWORK_CMD_DAMAGE, // Notify client with damage.
         NETWORK_CMD_SPAWN,
         NETWORK_CMD_FORWARD,
         NETWORK_CMD_BACKWARD,
@@ -82,11 +82,11 @@ namespace Xplicit
         NETWORK_CMD_RIGHT,
         NETWORK_CMD_SHUTDOWN,
         NETWORK_CMD_POS,
-        NETWORK_CMD_ACCEPT, // handshake has been accepted.
+        NETWORK_CMD_ACCEPT, // Handshake accept.
         NETWORK_CMD_BAN,
-        NETWORK_CMD_ACK, // acknowledge
+        NETWORK_CMD_ACK, // Acknowledge
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
-        NETWORK_CMD_REPL, // replication call, download from website
+        NETWORK_CMD_REPL, // replication call
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 17,
     };

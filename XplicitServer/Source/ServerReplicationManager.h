@@ -24,10 +24,7 @@ namespace Xplicit
 		explicit ServerReplicationManager()
 			:
 			mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
-		{
-			
-		}
-
+		{}
 
 	public:
 		~ServerReplicationManager() = default;

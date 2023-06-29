@@ -14,9 +14,9 @@
 
 static int lua_SetHumanoidHealth(lua_State* L)
 {
-	const auto players = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+	const auto humanoid = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
-	if (players.empty())
+	if (humanoid.empty())
 		return 0;
 
 	const int64_t id = lua_tointeger(L, 1);
@@ -25,11 +25,11 @@ static int lua_SetHumanoidHealth(lua_State* L)
 	if (id == -1)
 		return 0;
 
-	for (std::size_t index = 0; index < players.size(); index++)
+	for (std::size_t index = 0; index < humanoid.size(); index++)
 	{
-		if (players[index]->id() == id)
+		if (humanoid[index]->id() == id)
 		{
-			players[index]->health(dmg);
+			humanoid[index]->set_health(dmg);
 			break;
 		}
 	}
@@ -39,9 +39,9 @@ static int lua_SetHumanoidHealth(lua_State* L)
 
 static int lua_GetHumanoidHealth(lua_State* L)
 {
-	const auto players = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+	const auto humanoid = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
-	if (players.empty())
+	if (humanoid.empty())
 		return 0;
 
 	const int64_t id = lua_tointeger(L, 1);
@@ -50,11 +50,11 @@ static int lua_GetHumanoidHealth(lua_State* L)
 	if (id == -1)
 		return 0;
 
-	for (std::size_t index = 0; index < players.size(); index++)
+	for (std::size_t index = 0; index < humanoid.size(); index++)
 	{
-		if (players[index]->id() == id)
+		if (humanoid[index]->id() == id)
 		{
-			lua_pushinteger(L, players[index]->health());
+			lua_pushinteger(L, humanoid[index]->get_health());
 			return 1;
 		}
 	}
@@ -65,9 +65,9 @@ static int lua_GetHumanoidHealth(lua_State* L)
 
 static int lua_HurtHumanoid(lua_State* L)
 {
-	const auto players = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+	const auto humanoid = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
-	if (players.empty())
+	if (humanoid.empty())
 		return 0;
 
 	const int64_t id = lua_tointeger(L, 1);
@@ -76,14 +76,14 @@ static int lua_HurtHumanoid(lua_State* L)
 	if (id == -1)
 		return 0;
 
-	for (std::size_t index = 0; index < players.size(); index++)
+	for (std::size_t index = 0; index < humanoid.size(); index++)
 	{
-		if (players[index]->id() == id)
+		if (humanoid[index]->id() == id)
 		{
-			auto health = players[index]->health();
+			auto health = humanoid[index]->get_health();
 			health -= dmg;
 
-			players[index]->health(health);
+			humanoid[index]->set_health(health);
 
 			break;
 		}
@@ -111,21 +111,21 @@ static int lua_LoadScript(lua_State* L)
 
 static int lua_KillHumanoid(lua_State* L)
 {
-	const auto players = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+	const auto humanoid = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
-	if (players.empty())
+	if (humanoid.empty())
 		return 0;
 
 	const int64_t id = lua_tointeger(L, 1);
 
-	for (std::size_t index = 0; index < players.size(); index++)
+	for (std::size_t index = 0; index < humanoid.size(); index++)
 	{
-		if (players[index]->id() == id)
+		if (humanoid[index]->id() == id)
 		{
-			auto health = players[index]->health();
+			auto health = humanoid[index]->get_health();
 			health -= INT64_MAX;
 
-			players[index]->health(health);
+			humanoid[index]->set_health(health);
 
 			break;
 		}
@@ -134,7 +134,7 @@ static int lua_KillHumanoid(lua_State* L)
 	return 0;
 }
 
-static int lua_NetworkGetXplicitID(lua_State* L)
+static int lua_GetXplicitID(lua_State* L)
 {
 	const auto server = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
@@ -149,27 +149,27 @@ static int lua_NetworkGetXplicitID(lua_State* L)
 
 void xplicit_load_lua() noexcept
 {
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Humanoid = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Humanoid = {}");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_GetHumanoidHealth);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Humanoid:GetHealth");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Humanoid:GetHealth");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetHumanoidHealth);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Humanoid:SetHealth");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Humanoid:SetHealth");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_HurtHumanoid);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Humanoid:Hurt");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Humanoid:Hurt");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_KillHumanoid);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Humanoid:Kill");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Humanoid:Kill");
 
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("Game = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game = {}");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_LoadScript);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Game:LoadScript");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Game:LoadScript");
 
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_NetworkGetXplicitID);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Game:GetID");
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_GetXplicitID);
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Game:GetXplicitID");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 
