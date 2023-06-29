@@ -78,11 +78,11 @@ XPLICIT_MAIN()
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
 
+			pApp->leak_gwen()->Canvas->RenderCanvas();
+
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
-
-			pApp->leak_gwen()->Canvas->RenderCanvas();
 
 			RENDER->getVideoDriver()->endScene();
 		}
