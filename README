@@ -1,10 +1,10 @@
-XplicitNgin
-===========
+XplicitNgine
+============
 
 NOTICE:
 =======
 
-There is already sln projects.
+There is already sln projects if you happen to target Windows.
 If you want, generate one, but you gotta enable AVX support and set floating point precesion to fast.
 
 SSE2 is already enabled by default if the cpu is running in 64-bit long mode.
