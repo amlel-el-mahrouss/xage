@@ -124,11 +124,14 @@ namespace Xplicit
 
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
+#ifdef XPLICIT_DEBUG
+
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
-					XPLICIT_INFO("Humanoid:Login [EVENT]");
+#endif
 
+					XPLICIT_INFO("Humanoid:Login [EVENT]");
 					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
 				}
 			}
@@ -138,7 +141,7 @@ namespace Xplicit
 
 	void PlayerLoginEvent::handle_leave_event() noexcept
 	{
-		if (this->size() <= 0) 
+		if (this->size() < 1) 
 			return;
 		
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
@@ -163,12 +166,17 @@ namespace Xplicit
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
 
+#ifdef XPLICIT_DEBUG
+
 					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
+#endif
+
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
-					mNetwork->get(peer_idx)->reset();
+					mNetwork->get(peer_idx)->reset(); // reset peer.
+					mNetwork->get(peer_idx)->xplicit_id.generate(~0); // invalidate player id.
 
 					for (std::size_t player = 0; player < mPlayers.size(); ++player)
 					{

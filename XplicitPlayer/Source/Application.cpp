@@ -52,6 +52,9 @@ namespace Xplicit::Bites
 		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::LoadingComponent>();
 		XPLICIT_ASSERT(splash_screen);
 
+		// pass this
+		splash_screen->set_data(mGwenManager->Canvas);
+		
 		splash_screen->connect(xconnect_to);
 	}
 
@@ -75,14 +78,6 @@ namespace Xplicit::Bites
 		mGwenManager = std::make_unique<GWENComponentManager>(Vector<float>(Xplicit::Player::XPLICIT_DIM.X, 
 			Xplicit::Player::XPLICIT_DIM.Y, 
 			0.0f));
-
-#ifdef XPLICIT_DEBUG
-
-		Gwk::Controls::Button* pDebugButton = new Gwk::Controls::Button(mGwenManager->Canvas);
-		pDebugButton->SetPos(10, 10);
-		pDebugButton->SetText("Xplicit Team was here...");
-
-#endif
 
 		Root::get_singleton_ptr()->set(new InputReceiver(mGwenManager->Canvas));
 

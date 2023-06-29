@@ -22,16 +22,18 @@ namespace Xplicit::Player
 {
 	constexpr int XPLICIT_TIMEOUT_MENU = 2000;
 
-	LocalMenuEvent::LocalMenuEvent(const std::int64_t& hash)
+	LocalMenuEvent::LocalMenuEvent(Gwk::Controls::Canvas* pCanvas) noexcept
 		:
 			mNetwork(nullptr),
 			mButtonNoHover(nullptr),
 			mButtonHover(nullptr),
-			mHash(hash),
 			mTimeout(0UL),
 			mMenu(nullptr),
-			mEnabled(false)
+			mEnabled(false),
+			mChatBox(new Gwk::Controls::TextBoxMultiline(pCanvas)),
+			mInputChat(new Gwk::Controls::TextBox(pCanvas))
 	{
+		/* resource loading */
 		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
 
@@ -40,16 +42,25 @@ namespace Xplicit::Player
 		mMenu = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
-
 		frame_path += "menu_hover.png";
 
 		mButtonHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
-
 		frame_path += "menu_no_hover.png";
 
 		mButtonNoHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
+
+		mInputChat->SetPos(10, 10);
+		mInputChat->SetSize(300, 20);
+		mInputChat->SetTextColor(Gwk::Color(255, 255, 255, 255));
+
+		mChatBox->SetPos(10, 30);
+		mChatBox->SetSize(300, 300);
+		mChatBox->SetText("Press / to chat.");
+		mChatBox->SetTextColor(Gwk::Color(255, 255, 255, 255));
+
+		mChatBox->SetEditable(false);
 	}
 
 	LocalMenuEvent::~LocalMenuEvent() 
@@ -62,9 +73,20 @@ namespace Xplicit::Player
 
 		if (mButtonNoHover)
 			(void)mButtonNoHover->drop();
+	
+		if (mChatBox)
+			delete mChatBox;
+
+		if (mInputChat)
+			delete mInputChat;
 	}
 
 	const char* LocalMenuEvent::name() noexcept { return ("LocalMenuEvent"); }
+
+	bool LocalMenuEvent::in_chat() const noexcept
+	{
+		return mInputChat->IsFocussed();
+	}
 
 	void LocalMenuEvent::enable(const bool enable) noexcept
 	{

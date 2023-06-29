@@ -12,6 +12,7 @@
  */
 
 #include "LocalHumanoidComponent.h"
+#include "LocalMenuEvent.h"
 #include "Application.h"
 #include "GameMenuUI.h"
 
@@ -128,6 +129,12 @@ namespace Xplicit::Player
 	void LocalHumanoidMoveEvent::operator()()
 	{
 		if (mNetwork == nullptr)
+			return;
+
+		static LocalMenuEvent* menu = EventManager::get_singleton_ptr()->get<LocalMenuEvent>("LocalMenuEvent");
+
+		if (menu->in_chat() ||
+			menu->enabled())
 			return;
 
 		auto traits = KB->get_layout();

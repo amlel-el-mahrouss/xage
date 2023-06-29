@@ -47,6 +47,8 @@ namespace Xplicit::Player
 	private:
 		NetworkComponent* mNetwork;
 		LocalCameraComponent* mCam;
+
+	private:
 		std::int64_t mPublicHash;
 		NetworkPacket mPacket;
 		vector3df mPos;
