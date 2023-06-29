@@ -39,7 +39,7 @@ namespace Xplicit::Player
 		PopupComponent() = delete;
 		
 		PopupComponent(const std::function<void()>& on_click, const vector2di pos = vector2di(0, 0), 
-			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, const char* id = "Popup") noexcept;
+			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, const char* id = "EnginePopup") noexcept;
 
 		~PopupComponent() override;
 		
@@ -71,7 +71,7 @@ namespace Xplicit::Player
 		LocalHudComponent& operator=(const LocalHudComponent&) = default;
 		LocalHudComponent(const LocalHudComponent&) = default;
 
-		const char* name() noexcept override { return "HUD"; }
+		const char* name() noexcept override { return "LocalHudComponent"; }
 		COMPONENT_TYPE type() noexcept override { return COMPONENT_GUI; }
 		
 		void update() override;
@@ -84,36 +84,4 @@ namespace Xplicit::Player
 		ITexture* mOverlay;
 
 	};
-
-	namespace NixxonUI
-	{
-		class UIThemeSchemeManager final
-		{
-		public:
-			UIThemeSchemeManager() = default;
-			~UIThemeSchemeManager() = default;
-
-			XPLICIT_COPY_DEFAULT(UIThemeSchemeManager);
-
-			static std::tuple<std::vector<Color<float>>,
-				std::vector<Vector<float>>> get_white_scheme() noexcept;
-
-			static std::tuple<std::vector<Color<float>>,
-				std::vector<Vector<float>>> get_dark_scheme() noexcept;
-
-		};
-
-		class UIWidget
-		{
-		public:
-			UIWidget() = default;
-			virtual ~UIWidget() = default;
-
-			XPLICIT_COPY_DEFAULT(UIWidget);
-
-			virtual const char* name() = 0;
-			virtual void update() = 0;
-
-		};
-	}
 }

@@ -8,11 +8,17 @@
 xcuserdata/
 *.xcworkspace
 *.xcodeproj
+
 ## Xcode 8 and earlier
 *.xcscmblueprint
 *.xccheckout
 
 *.d
+
+*.vcxproj
+*.sln
+
+packages.config
 
 *.cso
 

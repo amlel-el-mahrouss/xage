@@ -48,20 +48,22 @@ namespace Xplicit
 	class XPLICIT_API Event
 	{
 	public:
-		Event() = default;
+		explicit Event() = default;
 		virtual ~Event() = default;
 
+	public:
 		Event& operator=(const Event&) = default;
 		Event(const Event&) = default;
 
+	public:
 		virtual void operator()();
+		virtual const char* name() noexcept;
 
+	public:
 		void update() noexcept;
 
 		bool remove(const EventListener* listener);
 		void add(EventListener* listener);
-
-		virtual const char* name() noexcept;
 
 	protected:
 		std::vector<EventListener*> mListeners;
@@ -80,17 +82,15 @@ namespace Xplicit
 	public:
 		using EventPtr = void*;
 		
-		EventListener() = default;
+	public:
+		explicit EventListener() = default;
 		virtual ~EventListener() = default;
 		
+	public:
 		EventListener& operator=(const EventListener&) = default;
 		EventListener(const EventListener&) = default;
 		
-		/// <summary>
-		/// Update function
-		/// </summary>
-		/// <param name="env">The Event* class</param>
-		 
+	public: 
 		virtual void update(EventPtr env) {}
 		virtual const char* name() noexcept { return ("EventListener"); }
 

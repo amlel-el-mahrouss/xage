@@ -48,11 +48,11 @@ namespace Xplicit
 
 	enum COMPONENT_TYPE : uint8_t
 	{
-		COMPONENT_HUMANOID, // Player
-		COMPONENT_LOGIC, // Generic Component
+		COMPONENT_HUMANOID, // Humanoid (Player and NPC)
+		COMPONENT_LOGIC, // Logic Component
 		COMPONENT_CAMERA, // Camera instance
-		COMPONENT_SCRIPT, // Script instance
-		COMPONENT_RENDER, // An instance which can be rendered
+		COMPONENT_SCRIPT, // Script instance (C#, Lua)
+		COMPONENT_RENDER, // Grpahics Instance (Shader, Particles...)
 		COMPONENT_NETWORK, // Network instance
 		COMPONENT_PHYSICS, // Physics instance
 		COMPONENT_GUI, // GUI instance
