@@ -111,7 +111,7 @@ namespace Xplicit
 		COMPONENT_ID_SCRIPT = 1,
 		COMPONENT_ID_SOUND = 2,
 		COMPONENT_ID_PARTICLE = 3,
-
+		COMPONENT_ID_ROXML = 4,
 		// Continue here...
 	};
 }
