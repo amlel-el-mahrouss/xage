@@ -18,7 +18,15 @@ namespace Xplicit
 	class NPLICIT_API PhysicsComponent
 	{
 	public:
-		explicit PhysicsComponent() : Position(0, 0, 0), Velocity(0, 0, 0), Force(0, 0, 0) {}
+		explicit PhysicsComponent() : 
+			Position(0, 0, 0), 
+			Velocity(0, 0, 0), 
+			Force(0, 0, 0), 
+			Anchored(false), 
+			NoCollide(false), 
+			Blocked(false) 
+		{}
+
 		virtual ~PhysicsComponent() {}
 
 		PhysicsComponent& operator=(const PhysicsComponent&) = default;
@@ -33,9 +41,7 @@ namespace Xplicit
 		TypeFloat Mass;
 		bool Anchored;
 		bool NoCollide;
-
-	public:
-		Vector<TypeFloat> BoundingBox;
+		bool Blocked;
 
 	};
 
@@ -51,43 +57,48 @@ namespace Xplicit
 		SolverSystem(const SolverSystem&) = delete;
 
 	public:
-		void step(const int32_t& dt /*delta time*/) noexcept
+		void step(const int64_t& dt /*delta time*/) noexcept
 		{
 			for (auto* component : mComponents)
 			{
-				if (component->Anchored)
+				if (component->Anchored ||
+					component->Blocked)
 					continue;
 
-				if (!component->NoCollide)
+				bool blocked = false;
+
+				for (auto* rhs_component : mComponents)
 				{
-					bool blocked = false;
+					if (rhs_component->NoCollide ||
+						rhs_component == component)
+						continue;
 
-					for (auto* rhs_component : mComponents)
+					Vector<TypeFloat> bounding_box_rhs = rhs_component->Position;
+					Vector<TypeFloat> bounding_box_lhs = component->Position;
+
+					Vector<TypeFloat> addition_lhs_rhs(0.0f, 0.0f, 0.0f);
+
+					addition_lhs_rhs.add(bounding_box_rhs.X * bounding_box_lhs.X,
+						bounding_box_rhs.Y * bounding_box_lhs.Y,
+						bounding_box_rhs.Z * bounding_box_lhs.Z);
+
+					if (addition_lhs_rhs.X >= bounding_box_rhs.X &
+						addition_lhs_rhs.Z >= bounding_box_rhs.Z &&
+						addition_lhs_rhs.Y >= bounding_box_rhs.Y)
 					{
-						Vector<TypeFloat> bounding_box_rhs = rhs_component->BoundingBox;
-						Vector<TypeFloat> bounding_box_lhs = component->BoundingBox;
+						rhs_component->Blocked = true;
+						component->Blocked = true;
 
-						bounding_box_lhs->X += rhs_component->X - component->X;
-						bounding_box_lhs->Y += rhs_component->Y - component->Y;
-						bounding_box_lhs->Z += rhs_component->Z - component->Z;
-
-						if (bounding_box_lhs > bounding_box_rhs)
-						{
-							blocked = true;
-						
-							break;
-						}
+						break;
 					}
 
-					if (blocked) continue;
+					if (component->Blocked)
+						continue;
 				}
-
 
 				component->Force.add(mGravity.X * component->Mass, mGravity.Y * component->Mass, mGravity.Z * component->Mass);
 				component->Velocity.add(component->Force.X / component->Mass * dt, component->Force.Y / component->Mass * dt, component->Force.Z / component->Mass * dt);
 				component->Position.add(component->Velocity.X * dt, component->Velocity.Y * dt, component->Velocity.Z * dt);
-
-				component->Force = Vector<TypeFloat>(0, 0, 0);
 			}
 		}
 
@@ -131,6 +142,8 @@ namespace Xplicit
 	{
 		Vector<TypeFloat> Position;
 		Vector<TypeFloat> Scale;
+
+	public:
 		Quaternion<TypeFloat> Rotation;
 
 	};
