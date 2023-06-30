@@ -31,10 +31,10 @@ static int lua_PlaySound(lua_State* L)
 	if (path.empty())
 		return 0;
 	
-	auto aud = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(XPLICIT_UTF16_CONV.from_bytes(path).c_str());
+	auto audio_ptr = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(XPLICIT_UTF16_CONV.from_bytes(path).c_str());
 
-	if (aud)
-		aud->play();
+	if (audio_ptr)
+		audio_ptr->play();
 
 	return 0;
 }
@@ -56,7 +56,7 @@ void xplicit_load_lua() noexcept
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Sound = {}");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Sound:PlayLocal");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Sound:Play");
 
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Window = {}");
 

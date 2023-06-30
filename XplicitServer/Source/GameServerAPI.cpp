@@ -147,6 +147,12 @@ static int lua_GetXplicitID(lua_State* L)
 	return 1;
 }
 
+static int lua_LoadRoXML(lua_State* L)
+{
+
+	return 0;
+}
+
 void xplicit_load_lua() noexcept
 {
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Humanoid = {}");
@@ -167,6 +173,9 @@ void xplicit_load_lua() noexcept
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_LoadScript);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Game:LoadScript");
+
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Game:LoadRoXML");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_GetXplicitID);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Game:GetXplicitID");

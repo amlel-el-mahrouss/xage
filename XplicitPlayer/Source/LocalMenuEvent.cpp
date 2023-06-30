@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			XplicitPlayer
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  * =====================================================================
@@ -14,9 +14,9 @@
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
-#define LOCAL_MENU_TWEEN_START (8)
-#define LOCAL_MENU_TWEEN_END (2)
-#define LOCAL_MENU_TWEENING (0.1f)
+#define LOCAL_MENU_TWEEN_START	(8)
+#define LOCAL_MENU_TWEEN_END	(2)
+#define LOCAL_MENU_TWEENING		(0.1f)
 
 namespace Xplicit::Player
 {

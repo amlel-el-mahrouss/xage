@@ -53,10 +53,9 @@ namespace Xplicit::Auth
 		void generate(const std::int64_t& id) noexcept;
 
 	private:
-		String mXplicitId;
-
 		std::int64_t mConnectionID;
 		std::int64_t mRegionId;
+		String mXplicitId;
 
 	};
 }

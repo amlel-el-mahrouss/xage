@@ -69,7 +69,7 @@ namespace Xplicit
 #endif
 
     // network commands.
-    enum NETWORK_CMD : int16_t
+    enum NETWORK_CMD : std::int16_t
     {
         NETWORK_CMD_BEGIN = 500, // start network, handshake
         NETWORK_CMD_STOP, // abort connection
@@ -92,7 +92,7 @@ namespace Xplicit
     };
 
     /* replication network commands. */
-    enum NETWORK_REPL_CMD : int16_t
+    enum NETWORK_REPL_CMD : std::int16_t
     {
         NETWORK_REPL_CMD_CREATE = NETWORK_CMD_INVALID + 1,
         NETWORK_REPL_CMD_DESTROY,
@@ -100,7 +100,7 @@ namespace Xplicit
         NETWORK_REPL_CMD_COUNT = 3,
     };
 
-    enum NETWORK_STAT : int16_t
+    enum NETWORK_STAT : std::int16_t
     {
         NETWORK_STAT_INVALID      = 255, // 0xFF
 		NETWORK_STAT_CONNECTED    = 400,

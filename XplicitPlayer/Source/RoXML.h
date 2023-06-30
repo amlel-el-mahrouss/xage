@@ -44,7 +44,7 @@ namespace Xplicit::RoXML
 		XPLICIT_COPY_DEFAULT(RoXMLDocumentParser);
 
 	public:
-		void load_scene(String& path) noexcept
+		void load(String& path) noexcept
 		{
 			if (path.empty() ||
 				!std::filesystem::exists(path))
@@ -60,15 +60,11 @@ namespace Xplicit::RoXML
 
 				while (root_node)
 				{
-					String node_name = root_node->name();
 					auto node = root_node;
-
-					std::cout << node_name << std::endl;
-					std::cout << root_node->value() << std::endl;
 
 					while (node)
 					{
-						node_name = node->name();
+						String node_name = node->name();
 
 						if (node_name == "Stud")
 						{

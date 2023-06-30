@@ -16,17 +16,20 @@
 #include "XplicitID.h"
 #include "NetworkServerComponent.h"
 
-static inline Xplicit::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
-static inline Xplicit::Color<float> White(0xFF, 0xFF, 0xFF, 0xFF);
-static inline Xplicit::Color<float> DakrRed(0x8B, 0, 0, 0xFF);
-static inline Xplicit::Color<float> Black(0, 0, 0, 0xFF);
-static inline Xplicit::Color<float> Red(0xFF, 0, 0, 0xFF);
+inline Xplicit::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
+inline Xplicit::Color<float> White(0xFF, 0xFF, 0xFF, 0xFF);
+inline Xplicit::Color<float> DarkRed(0x8B, 0, 0, 0xFF);
+inline Xplicit::Color<float> Black(0, 0, 0, 0xFF);
+inline Xplicit::Color<float> Red(0xFF, 0, 0, 0xFF);
 
-static inline Xplicit::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, 0xFFFFFF);
-static inline Xplicit::Vector<float> XPLICIT_ORIGIN(0.0f, 0.0f, 0.0f);
+inline Xplicit::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, 0xFFFFFF);
+inline Xplicit::Vector<float>   XPLICIT_ORIGIN(0.0f, 0.0f, 0.0f);
 
-static inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
+inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 {
+	if (player_index > Xplicit::XPLICIT_MAX_CONNECTIONS)
+		return XPLICIT_INVALID_ID;
+
 	Xplicit::NetworkServerComponent* network = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 	if (network)

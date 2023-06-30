@@ -10,6 +10,7 @@
 #pragma once
 
 #include "Xplicit.h"
+#include <Nplicit.h>
 
 namespace Xplicit
 {

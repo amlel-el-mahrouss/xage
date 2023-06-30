@@ -13,6 +13,10 @@
 #include <lua.hpp>
 #include <Uri.h>
 
+#ifndef XPLICIT_XASSET_IDENT
+#	define XPLICIT_XASSET_IDENT ("xasset")
+#endif // ifndef XPLICIT_XASSET_IDENT
+
 namespace Xplicit::Player
 {
 	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_REPLICATION; }
@@ -22,8 +26,11 @@ namespace Xplicit::Player
 	bool LocalReplicationComponent::should_update() noexcept { return true; }
 
 	/*
-	 *	This update function takes care of:
-	 *		- replication events (create, remove components)
+	 *	This update function takes care of these 3 events:
+	 * 
+	 *	 - Create
+	 *   - Update
+	 *   - Destroy
 	 */
 
 	void LocalReplicationComponent::update()
@@ -45,8 +52,8 @@ namespace Xplicit::Player
 				auto script = Utils::UriParser(packet.buffer);
 				script /= packet.buffer;
 
-				if (script.protocol() != "xasset")
-					break;
+				if (script.protocol() != XPLICIT_XASSET_IDENT)
+					return;
 
 				break;
 			}
@@ -55,8 +62,8 @@ namespace Xplicit::Player
 				auto sound = Utils::UriParser(packet.buffer);
 				sound /= packet.buffer;
 
-				if (sound.protocol() != "xasset")
-					break;
+				if (sound.protocol() != XPLICIT_XASSET_IDENT)
+					return;
 				
 				break;
 			}

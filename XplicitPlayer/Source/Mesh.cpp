@@ -1,11 +1,8 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			XplicitPlayer
  *			Copyright Xplicit Corporation, all rights reserved.
- *
- *			File: Mesh.cpp
- *			Purpose: Custom Mesh Component (static, bundle or dynamic meshes)
  *
  * =====================================================================
  */
