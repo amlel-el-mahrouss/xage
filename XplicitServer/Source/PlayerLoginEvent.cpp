@@ -186,7 +186,7 @@ namespace Xplicit
 
 					// Create Player table.
 					String fmt = "_G.Game.Players.";
-					fmt += mNetwork->get(peer_idx)->xplicit_id->as_string();
+					fmt += mNetwork->get(peer_idx)->xplicit_id.as_string();
 					fmt += " = nil";
 
 					Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
