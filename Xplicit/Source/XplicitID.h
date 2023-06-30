@@ -11,7 +11,7 @@
 
 #include "Xplicit.h"
 
-#define XPLICIT_UNIVERSE_DELIM ":"
+#define XPLICIT_UNIVERSE_DELIM "_"
 #define XPLICIT_UNIVERSE_PREFIX "XPLICIT_"
 
 namespace Xplicit::Auth

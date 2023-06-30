@@ -36,6 +36,9 @@ namespace Xplicit::Auth
 
 		mConnectionID = id;
 
+		if (mConnectionID < 0)
+			mConnectionID = -mConnectionID;
+
 		mXplicitId = XPLICIT_UNIVERSE_PREFIX;
 		mXplicitId += std::move(std::to_string(mRegionId));
 		mXplicitId += XPLICIT_UNIVERSE_DELIM;

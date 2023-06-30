@@ -49,7 +49,7 @@ namespace Xplicit
 
 	void HumanoidComponent::set_health(const int32_t& health) noexcept { this->mHealth = health; }
 
-	int64_t HumanoidComponent::get_health() const noexcept { return this->mHealth; }
+	const int64_t& HumanoidComponent::get_health() noexcept { return this->mHealth; }
 
 	bool HumanoidComponent::can_collide() noexcept { return true; }
 
@@ -77,7 +77,7 @@ namespace Xplicit
 
 	bool HumanoidComponent::is_alive() const noexcept { return mHealth > 0; }
 
-	int64_t HumanoidComponent::id() const noexcept { return mId; }
+	const int64_t& HumanoidComponent::id() noexcept { return mId; }
 
-	HUMANOID_STATE HumanoidComponent::get_state() const noexcept { return mState; }
+	const HUMANOID_STATE& HumanoidComponent::get_state() noexcept { return mState; }
 }

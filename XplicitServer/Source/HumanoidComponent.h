@@ -49,14 +49,14 @@ namespace Xplicit
 
 	public:
 		void set_health(const int32_t& health) noexcept;
-		int64_t get_health() const noexcept;
+		const int64_t& get_health() const noexcept;
 		bool is_alive() const noexcept;
 
 	public:
 		void should_spawn(const bool enable) noexcept;
-		HUMANOID_STATE get_state() const noexcept;
+		const HUMANOID_STATE& get_state() noexcept;
 		bool can_spawn() const noexcept;
-		int64_t id() const noexcept;
+		const int64_t& id() noexcept;
 
 	private:
 		NetworkInstance* mPeer;

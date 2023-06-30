@@ -156,8 +156,10 @@ namespace Xplicit
             explicit UniqueAddress();
             ~UniqueAddress();
             
+        public:
 			XPLICIT_COPY_DEFAULT(UniqueAddress);
             
+        public:
 			const uuids::uuid& get() noexcept { return mUuid; }
             
 			void invalidate() noexcept
