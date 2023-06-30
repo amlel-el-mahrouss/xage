@@ -169,7 +169,7 @@ namespace Xplicit
 #ifdef XPLICIT_WINDOWS
 			HKL hLocale = GetKeyboardLayout(0);
 
-			switch (hLocale)
+			switch (LOWORD(hLocale))
 			{
 			case LANG_FRENCH:
 			{

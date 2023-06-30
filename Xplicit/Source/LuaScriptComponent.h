@@ -12,7 +12,7 @@
 #include "Component.h"
 #include <lua/lua.hpp>
 
-namespace Xplicit::Lua
+namespace Xplicit
 {
 	/*
 	 * @brief Lua Script Instance.
@@ -32,27 +32,12 @@ namespace Xplicit::Lua
 		XPLICIT_COPY_DEFAULT(LuaScriptComponent);
 
 	public:
-		const char* name() noexcept override { return "LuaScriptComponent"; }
-		COMPONENT_TYPE type() noexcept override { COMPONENT_SCRIPT; }
+		COMPONENT_TYPE type() noexcept override;
+		bool should_update() noexcept override;
+		const char* name() noexcept override;
 
-	public:
-		void operator()() noexcept
-		{
-			Thread job([](String _file) {
-				if (!_file.empty())
-				{
-					if (XLuaStateManager::get_singleton_ptr()->run(_file.c_str()) != 0)
-					{
-						String lua_error_str = "[LuaScriptComponent] error at file: ";
-						lua_error_str += _file;
-
-						XPLICIT_INFO(lua_error_str);
-					}
-				}
-			}, mName);
-
-			job.detach();
-		}
+		void update() noexcept override;
+		void run() noexcept;
 
 	private:
 		String mName;
