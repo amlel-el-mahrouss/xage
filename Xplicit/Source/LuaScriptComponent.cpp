@@ -37,7 +37,7 @@ namespace Xplicit
 
 	bool LuaScriptComponent::should_update() noexcept { return false; }
 
-	const char* LuaScriptComponent::name() noexcept { return "LuaScriptComponent"; }
+	const char* LuaScriptComponent::name() noexcept { return mEventName.c_str(); }
 
 	COMPONENT_TYPE LuaScriptComponent::type() noexcept { return COMPONENT_SCRIPT; }
 }

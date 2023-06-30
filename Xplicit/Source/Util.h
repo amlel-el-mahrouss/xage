@@ -14,6 +14,7 @@
 #include "Root.h"
 #include "Xplicit.h"
 #include "XplicitID.h"
+#include "LuaScriptComponent.h"
 #include "NetworkServerComponent.h"
 
 inline Xplicit::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
@@ -40,19 +41,59 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 
 namespace Xplicit
 {
-	class XPLICIT_API XDataModelComponent
+	class XPLICIT_API XAttribute final
 	{
 	public:
-		XDataModelComponent() = default;
-		virtual ~XDataModelComponent() = default;
+		explicit XAttribute()
+			: mColor(0.0f, 0.0f, 0.0f),
+			  mPos(0.0f, 0.0f, 0.0f), 
+			  mScale(0.0f, 0.0f, 0.0f)
+		{}
+
+		~XAttribute() = default;
 
 	public:
-		XPLICIT_COPY_DEFAULT(XDataModelComponent);
+		XPLICIT_COPY_DEFAULT(XAttribute);
 
 	public:
-		virtual Color<float> color() noexcept = 0;
-		virtual Vector<float> size() noexcept = 0;
-		virtual Vector<float> pos() noexcept = 0;
+		bool insert(void* attribute) noexcept
+		{
+			if (attribute)
+			{
+				mAttributes.push_back(attribute);
+				return true;
+			}
+
+			return false;
+		}
+
+		bool remove(void* attribute) noexcept
+		{
+			auto it = std::find(mAttributes.cbegin(), mAttributes.cend(), attribute);
+
+			if (it != mAttributes.cend())
+			{
+				mAttributes.erase(it);
+				return true;
+			}
+
+			return false;
+		}
+
+	public:
+		Color<float>& color() noexcept { return mColor; }
+		Vector<float>& scale() noexcept { return mScale; }
+		Vector<float>& pos() noexcept { return mPos; }
+		LuaScriptComponent* script() noexcept { return mScript; }
+
+	private:
+		std::vector<void*> mAttributes;
+
+	private:
+		LuaScriptComponent* mScript;
+		Vector<float> mScale;
+		Color<float> mColor;
+		Vector<float> mPos;
 
 	};
 }

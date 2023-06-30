@@ -21,20 +21,10 @@ namespace Xplicit
 		Component(), 
 		mPeer(nullptr),
 		mHealth(XPLICIT_DEFAULT_HEALTH), 
-		mCanSpawn(true),
-		Position(0.0f, 0.0f, 0.0f)
-	{
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("HumanoidComponent::HumanoidComponent");
-#endif
-	}
+		mCanSpawn(true)
+	{}
 
-	HumanoidComponent::~HumanoidComponent() 
-	{
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("HumanoidComponent::~HumanoidComponent");
-#endif
-	}
+	HumanoidComponent::~HumanoidComponent() = default;
 
 	PHYSICS_TYPE HumanoidComponent::physics() noexcept { return PHYSICS_NONE; }
 
@@ -46,9 +36,9 @@ namespace Xplicit
 			return;
 
 		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
-			State = HUMANOID_STATE::ALIVE;
+			mState = HUMANOID_STATE::ALIVE;
 		else if (mHealth < 1)
-			State = HUMANOID_STATE::DEAD;
+			mState = HUMANOID_STATE::DEAD;
 
 		if (this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
 		{
@@ -74,21 +64,20 @@ namespace Xplicit
 	void HumanoidComponent::set_peer(NetworkInstance* peer) noexcept 
 	{
 		if (peer == nullptr)
-			State = HUMANOID_STATE::INVALID;
+			mState = HUMANOID_STATE::INVALID;
 		
 		mPeer = peer;
 	}
 
-	bool HumanoidComponent::can_spawn() const noexcept
-	{
-		return mCanSpawn;
-	}
+	bool HumanoidComponent::can_spawn() const noexcept { return mCanSpawn; }
 
-	Vector<float>& HumanoidComponent::get_pos() noexcept { return Position; }
+	XAttribute& HumanoidComponent::get_attribute() noexcept { return mAttribute; }
 
 	void HumanoidComponent::should_spawn(const bool enable) noexcept { mCanSpawn = enable; }
 
 	bool HumanoidComponent::is_alive() const noexcept { return mHealth > 0; }
 
 	int64_t HumanoidComponent::id() const noexcept { return mId; }
+
+	HUMANOID_STATE HumanoidComponent::get_state() const noexcept { return mState; }
 }

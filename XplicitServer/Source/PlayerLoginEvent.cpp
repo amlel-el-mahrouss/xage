@@ -72,6 +72,8 @@ namespace Xplicit
 
 		player->set_peer(peer);
 		
+		peer->xplicit_id->generate(peer->hash);
+
 		return true;
 	}
 
@@ -125,14 +127,20 @@ namespace Xplicit
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
 #ifdef XPLICIT_DEBUG
-
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
+					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id->as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
-
 #endif
 
 					XPLICIT_INFO("Humanoid:Login [EVENT]");
 					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
+
+					// Create Player table.
+					String fmt = "_G.Game.Players.";
+					fmt += player->get_peer()->xplicit_id->as_string();
+					fmt += " = {}";
+
+					Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 				}
 			}
 		}
@@ -169,11 +177,19 @@ namespace Xplicit
 #ifdef XPLICIT_DEBUG
 
 					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
+					XPLICIT_INFO("[LOGOFF] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id->as_string());
 					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
 #endif
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
+
+					// Create Player table.
+					String fmt = "_G.Game.Players.";
+					fmt += player->get_peer()->xplicit_id->as_string();
+					fmt += " = nil";
+
+					Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					mNetwork->get(peer_idx)->reset(); // reset peer.
 					mNetwork->get(peer_idx)->xplicit_id.generate(~0); // invalidate player id.

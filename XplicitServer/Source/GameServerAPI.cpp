@@ -180,6 +180,8 @@ void xplicit_load_lua() noexcept
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_GetXplicitID);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Game:GetXplicitID");
 
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game.Players = {}");
+
 	XPLICIT_GET_DATA_DIR(full_path);
 
 	Xplicit::String tmp = full_path;

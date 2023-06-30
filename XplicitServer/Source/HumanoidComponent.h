@@ -45,7 +45,7 @@ namespace Xplicit
 		bool can_collide() noexcept override;
 		bool has_physics() noexcept override;
 
-		Vector<float>& get_pos() noexcept;
+		XAttribute& get_attribute() noexcept;
 
 	public:
 		void set_health(const int32_t& health) noexcept;
@@ -54,15 +54,14 @@ namespace Xplicit
 
 	public:
 		void should_spawn(const bool enable) noexcept;
+		HUMANOID_STATE get_state() const noexcept;
 		bool can_spawn() const noexcept;
 		int64_t id() const noexcept;
 
-	public:
-		Vector<float> Position;
-		HUMANOID_STATE State;
-
 	private:
 		NetworkInstance* mPeer;
+		XAttribute mAttribute;
+		HUMANOID_STATE mState;
 		int16_t mHealth;
 		bool mCanSpawn;
 		int64_t mId;

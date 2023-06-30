@@ -34,15 +34,15 @@ namespace Xplicit
 		{
 			const auto& pos = spawner->get();
 
-			player->get_pos().X = pos.X;
-			player->get_pos().Y = pos.Y;
-			player->get_pos().Z = pos.Z;
+			player->get_attribute().pos().X = pos.X;
+			player->get_attribute().pos().Y = pos.Y;
+			player->get_attribute().pos().Z = pos.Z;
 		}
 		else if (player)
 		{
-			player->get_pos().X = 0.f;
-			player->get_pos().Y = 0.f;
-			player->get_pos().Z = 0.f;
+			player->get_attribute().pos().X = 0.f;
+			player->get_attribute().pos().Y = 0.f;
+			player->get_attribute().pos().Z = 0.f;
 		}
 	}
 
@@ -69,6 +69,10 @@ namespace Xplicit
 			{
 				player->should_spawn(false);
 
+				if (player->get_attribute().script() &&
+					player->get_attribute().script()->name() == "Death")
+					player->get_attribute().script()->run();
+
 				XPLICIT_INFO("Humanoid:Death [EVENT]");
 				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Death()");
 
@@ -88,6 +92,10 @@ namespace Xplicit
 					if (humanoid)
 					{
 						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
+
+						if (player->get_attribute().script() &&
+							player->get_attribute().script()->name() == "Spawn")
+							player->get_attribute().script()->run();
 
 						XPLICIT_INFO("Humanoid:Spawn [EVENT]");
 						Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
@@ -113,13 +121,7 @@ namespace Xplicit
 						peer_ptr->packet.public_hash = player->get_peer()->public_hash;
 						peer_ptr->packet.health = player->get_health();
 
-						peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
-
 						xplicit_handle_spawn(mSpawner, player);
-
-						peer_ptr->packet.pos[XPLICIT_NETWORK_X] = player->get_pos().X;
-						peer_ptr->packet.pos[XPLICIT_NETWORK_Y] = player->get_pos().Y;
-						peer_ptr->packet.pos[XPLICIT_NETWORK_Z] = player->get_pos().Z;
 					}
 
 					player->should_spawn(true);

@@ -74,20 +74,20 @@ namespace Xplicit
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
 			{
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					ply->get_pos().Z += speed;
+					ply->get_attribute().pos().Z += speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					ply->get_pos().Z -= speed;
+					ply->get_attribute().pos().Z -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					ply->get_pos().X -= speed;
+					ply->get_attribute().pos().X -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					ply->get_pos().X += speed;
+					ply->get_attribute().pos().X += speed;
 
-				peer->packet.pos[XPLICIT_NETWORK_X] = ply->get_pos().X;
-				peer->packet.pos[XPLICIT_NETWORK_Y] = ply->get_pos().Y;
-				peer->packet.pos[XPLICIT_NETWORK_Z] = ply->get_pos().Z;
+				peer->packet.pos[XPLICIT_NETWORK_X] = ply->get_attribute().pos().X;
+				peer->packet.pos[XPLICIT_NETWORK_Y] = ply->get_attribute().pos().Y;
+				peer->packet.pos[XPLICIT_NETWORK_Z] = ply->get_attribute().pos().Z;
 
 				/* send server delta to player, so that he is not out of touch. */
 				peer->packet.pos[XPLICIT_NETWORK_DELTA] = mDeltaTime;
@@ -97,6 +97,11 @@ namespace Xplicit
 				peer->packet.public_hash = peer->public_hash;
 
 				XPLICIT_INFO("Humanoid:Move [EVENT]");
+
+				if (ply->get_attribute().script() &&
+					ply->get_attribute().script()->name() == "Move")
+					ply->get_attribute().script()->run();
+
 				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Move()");
 			}
 		}

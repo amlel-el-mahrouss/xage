@@ -13,6 +13,7 @@
 #pragma once
 
 #include <Uri.h>
+#include <Util.h>
 #include <Event.h>
 #include <Xplicit.h>
 #include <GameVar.h>
@@ -39,3 +40,5 @@ extern "C"
 #include <rapidxml/rapidxml_utils.hpp>
 
 #include "ServerConfig.h"
+
+inline Xplicit::Vector<float> XPLICIT_LIMIT(100000.f, 100000.f, 100000.f);
