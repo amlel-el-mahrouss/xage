@@ -19,13 +19,13 @@ namespace Xplicit::Lua
 	 * NOTE: only one LuaScriptComponent should be created. you don't need a lot of them.
 	 */
 
-	class XPLICIT_API LuaScriptComponent : public Component
+	class XPLICIT_API LuaScriptComponent final : public Component
 	{
 	public:
 		LuaScriptComponent() = delete;
 
 	public:
-		LuaScriptComponent(const char* name) : Component(), mName(name) {}
+		explicit LuaScriptComponent(const char* name) : Component(), mName(name) {}
 		~LuaScriptComponent() override = default;
 
 	public:
