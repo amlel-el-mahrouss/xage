@@ -72,7 +72,7 @@ namespace Xplicit
 
 		player->set_peer(peer);
 		
-		peer->xplicit_id->generate(peer->hash);
+		peer->xplicit_id.generate(peer->hash);
 
 		return true;
 	}
@@ -128,7 +128,7 @@ namespace Xplicit
 
 #ifdef XPLICIT_DEBUG
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
-					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id->as_string());
+					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif
 
@@ -137,7 +137,7 @@ namespace Xplicit
 
 					// Create Player table.
 					String fmt = "_G.Game.Players.";
-					fmt += player->get_peer()->xplicit_id->as_string();
+					fmt += player->get_peer()->xplicit_id.as_string();
 					fmt += " = {}";
 
 					Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
@@ -177,7 +177,7 @@ namespace Xplicit
 #ifdef XPLICIT_DEBUG
 
 					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
-					XPLICIT_INFO("[LOGOFF] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id->as_string());
+					XPLICIT_INFO("[LOGOFF] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
 #endif
@@ -186,7 +186,7 @@ namespace Xplicit
 
 					// Create Player table.
 					String fmt = "_G.Game.Players.";
-					fmt += player->get_peer()->xplicit_id->as_string();
+					fmt += mNetwork->get(peer_idx)->xplicit_id->as_string();
 					fmt += " = nil";
 
 					Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());

@@ -93,9 +93,9 @@ namespace Xplicit
 					{
 						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
 
-						if (player->get_attribute().script() &&
-							player->get_attribute().script()->name() == "Spawn")
-							player->get_attribute().script()->run();
+						if (humanoid->get_attribute().script() &&
+							humanoid->get_attribute().script()->name() == "Spawn")
+							humanoid->get_attribute().script()->run();
 
 						XPLICIT_INFO("Humanoid:Spawn [EVENT]");
 						Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");

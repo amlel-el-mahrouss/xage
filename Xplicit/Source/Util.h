@@ -45,9 +45,12 @@ namespace Xplicit
 	{
 	public:
 		explicit XAttribute()
-			: mColor(0.0f, 0.0f, 0.0f),
+			: 
+			  mScript(nullptr),
+			  mColor(0.0f, 0.0f, 0.0f),
 			  mPos(0.0f, 0.0f, 0.0f), 
-			  mScale(0.0f, 0.0f, 0.0f)
+			  mScale(0.0f, 0.0f, 0.0f),
+			  mArchivable(false)
 		{}
 
 		~XAttribute() = default;
@@ -84,6 +87,7 @@ namespace Xplicit
 		Color<float>& color() noexcept { return mColor; }
 		Vector<float>& scale() noexcept { return mScale; }
 		Vector<float>& pos() noexcept { return mPos; }
+		bool is_archivable() noexcept { return mArchivable; }
 		LuaScriptComponent* script() noexcept { return mScript; }
 
 	private:
@@ -94,6 +98,7 @@ namespace Xplicit
 		Vector<float> mScale;
 		Color<float> mColor;
 		Vector<float> mPos;
+		bool mArchivable;
 
 	};
 }
