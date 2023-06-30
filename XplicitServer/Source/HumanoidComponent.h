@@ -49,7 +49,7 @@ namespace Xplicit
 
 	public:
 		void set_health(const int32_t& health) noexcept;
-		const int64_t& get_health() const noexcept;
+		const int64_t& get_health() noexcept;
 		bool is_alive() const noexcept;
 
 	public:

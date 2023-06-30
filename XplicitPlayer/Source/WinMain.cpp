@@ -24,6 +24,8 @@
 #include <Bites.h>
 #include <codecvt>
 
+ILightSceneNode* XPLICIT_LIGHT = nullptr;
+
 #ifdef XPLICIT_WINDOWS
 
 XPLICIT_MAIN()

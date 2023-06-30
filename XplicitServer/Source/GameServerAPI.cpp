@@ -70,7 +70,7 @@ static int lua_HurtHumanoid(lua_State* L)
 	if (humanoid.empty())
 		return 0;
 
-	const PlayerID id = lua_tointeger(L, 1);
+	const Xplicit::PlayerID id = lua_tointeger(L, 1);
 	const int64_t dmg = lua_tointeger(L, 2);
 
 	if (id == -1)
@@ -97,7 +97,7 @@ static int lua_LoadScript(lua_State* L)
 	const char* path = lua_tostring(L, 1);
 
 	// player-id because you send this to players.
-	const PlayerID hash = lua_tointeger(L, 1);
+	const int64_t hash = lua_tointeger(L, 1);
 
 	if (path == nullptr)
 		return 1;
@@ -118,7 +118,7 @@ static int lua_KillHumanoid(lua_State* L)
 	if (humanoid.empty())
 		return 0;
 
-	const PlayerID id = lua_tointeger(L, 1);
+	const Xplicit::PlayerID id = lua_tointeger(L, 1);
 
 	for (std::size_t index = 0; index < humanoid.size(); index++)
 	{
