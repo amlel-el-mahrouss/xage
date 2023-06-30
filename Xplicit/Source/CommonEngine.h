@@ -27,7 +27,7 @@ namespace Xplicit
 	 * Xplicit Replicated structures.
 	 * Use them to create new components client-side.
 	 * 
-	 * E.g: Tool -> ToolComponent->new_tool(humanoid, tool_metadata);
+	 * The objective here is let lua access these structs, that can be also modified using C++ code.
 	 * 
 	 * ============================
      */

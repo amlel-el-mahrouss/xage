@@ -37,3 +37,22 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 
 	return XPLICIT_INVALID_ID;
 }
+
+namespace Xplicit
+{
+	class XPLICIT_API XDataModelComponent
+	{
+	public:
+		XDataModelComponent() = default;
+		virtual ~XDataModelComponent() = default;
+
+	public:
+		XPLICIT_COPY_DEFAULT(XDataModelComponent);
+
+	public:
+		virtual Color<float> color() noexcept = 0;
+		virtual Vector<float> size() noexcept = 0;
+		virtual Vector<float> pos() noexcept = 0;
+
+	};
+}
