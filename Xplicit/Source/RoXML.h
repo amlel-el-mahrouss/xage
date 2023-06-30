@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitPlayer
+ *			XplicitNgin
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  * =====================================================================
@@ -12,27 +12,45 @@
 /* RoXML format */
 /* This format describes scene-nodes and stuff like that. */
 
-// external
+// XML
 #include <rapidxml/rapidxml_utils.hpp>
 #include <rapidxml/rapidxml.hpp>
 
-#include <DataValue.h>
+// Engine
+#include "DataValue.h"
+#include "Root.h"
+#include "Util.h"
 
+// CLua
 #include <lua/lua.hpp>
-
-#include <Root.h>
-#include <Util.h>
-
-// internal
-#include "RegisteredEventsList.h"
 
 namespace Xplicit::RoXML
 {
-	constexpr int STUD_WIDTH = 4;
-	constexpr int STUD_HEIGHT = 1;
-	constexpr int STUD_TALL = 2;
-
 	using namespace rapidxml;
+
+	struct RoXMLDocumentParameters
+	{
+		RoXMLDocumentParameters() = default;
+
+		String Path{ "" };
+
+		bool Has3D{ false };
+		bool LuaOnly{ false };
+		bool NoLua{ false };
+
+		struct RoXMLNodeDescription
+		{
+			String ID;
+			String Name;
+			Color<float> Color;
+			Vector<float> Size;
+			Vector<float> Position;
+
+		};
+
+		std::vector<RoXMLNodeDescription> WorldNodes;
+
+	};
 
 	class RoXMLDocumentParser final
 	{
@@ -44,16 +62,16 @@ namespace Xplicit::RoXML
 		XPLICIT_COPY_DEFAULT(RoXMLDocumentParser);
 
 	public:
-		void load(String& path) noexcept
+		void load(RoXMLDocumentParameters& params) noexcept
 		{
-			if (path.empty() ||
-				!std::filesystem::exists(path))
+			if (params.Path.empty() ||
+				!std::filesystem::exists(params.Path))
 				return;
 
-			Thread stream_job([](String _path) {
-				file<> xml_file(_path.c_str()); // Default template is char
+			Thread stream_job([&]() {
+				file<> xml_file(params.Path.c_str()); // Default template is char
 				xml_document<> doc;
-				
+
 				doc.parse<0>(xml_file.data());
 
 				xml_node<>* root_node = doc.first_node();
@@ -66,6 +84,8 @@ namespace Xplicit::RoXML
 					{
 						String node_name = node->name();
 
+						RoXMLDocumentParameters::RoXMLNodeDescription world_node{};
+
 						if (node_name == "Stud")
 						{
 							if (node->first_attribute())
@@ -74,13 +94,44 @@ namespace Xplicit::RoXML
 								{
 									auto node_id = node->first_attribute()->value();
 
-									auto brick_mesh = RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(STUD_WIDTH, STUD_HEIGHT, STUD_TALL));
-									auto brick = RENDER->getSceneManager()->addMeshSceneNode(brick_mesh);
+									if (params.Has3D)
+									{
+										auto brick_mesh = RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh();
+										auto brick = RENDER->getSceneManager()->addMeshSceneNode(brick_mesh);
 
-									brick->setName(node_id);
-									brick->setPosition(vector3df(0.f, 0.f, 0.0f));
+										brick->setName(node_id);
+										brick->setPosition(vector3df(0.f, 0.f, 0.0f));
 
-									brick->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+										brick->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+									}
+
+									world_node.Name = "Stud";
+									world_node.ID = node_id;
+								}
+							}
+						}
+
+						if (node_name == "Ball")
+						{
+							if (node->first_attribute())
+							{
+								if (strncmp(node->first_attribute()->name(), "Id", 2) == 0)
+								{
+									auto node_id = node->first_attribute()->value();
+
+									if (params.Has3D)
+									{
+										auto brick_mesh = RENDER->getSceneManager()->getGeometryCreator()->createSphereMesh();
+										auto brick = RENDER->getSceneManager()->addMeshSceneNode(brick_mesh);
+
+										brick->setName(node_id);
+										brick->setPosition(vector3df(0.f, 0.f, 0.0f));
+
+										brick->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+									}
+
+									world_node.Name = "Ball";
+									world_node.ID = node_id;
 								}
 							}
 						}
@@ -97,6 +148,15 @@ namespace Xplicit::RoXML
 								attr_mat == "Mat")
 							{
 								const auto mat_id = node->first_attribute()->next_attribute()->value();
+								const auto mat_id_cast = std::atoi(node->value());
+
+								world_node.Name = "Color";
+
+								world_node.Color.R = mat_id_cast;
+								world_node.Color.G = mat_id_cast << 8;
+								world_node.Color.B = mat_id_cast << 16;
+								world_node.Color.A = 0xFF;
+
 
 								if (mat_id)
 								{
@@ -106,7 +166,7 @@ namespace Xplicit::RoXML
 									{
 										try
 										{
-											scene_node->getMaterial(std::atoi(mat_id)).AmbientColor.set(std::atoi(node->value()));
+											scene_node->getMaterial(std::atoi(mat_id)).AmbientColor.set(mat_id_cast);
 										}
 										catch (...)
 										{
@@ -118,7 +178,7 @@ namespace Xplicit::RoXML
 							}
 						}
 
-						if (node_name == "Vector3")
+						if (node_name == "Position3")
 						{
 							String attr_x = node->first_attribute()->name();
 							String attr_y = node->first_attribute()->next_attribute()->name();
@@ -138,9 +198,15 @@ namespace Xplicit::RoXML
 									}
 								}
 
+								world_node.Name = "Position3";
+
 								String x = node->first_attribute()->value();
 								String y = node->first_attribute()->next_attribute()->value();
 								String z = node->first_attribute()->next_attribute()->next_attribute()->value();
+
+								world_node.Position.X = std::atof(x.c_str());
+								world_node.Position.Y = std::atof(y.c_str());
+								world_node.Position.Z = std::atof(z.c_str());
 
 								const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
 
@@ -178,9 +244,15 @@ namespace Xplicit::RoXML
 									}
 								}
 
+								world_node.Name = "Size3";
+
 								String x = node->first_attribute()->value();
 								String y = node->first_attribute()->next_attribute()->value();
 								String z = node->first_attribute()->next_attribute()->next_attribute()->value();
+
+								world_node.Size.X = std::atof(x.c_str());
+								world_node.Size.Y = std::atof(y.c_str());
+								world_node.Size.Z = std::atof(z.c_str());
 
 								const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
 
@@ -195,52 +267,62 @@ namespace Xplicit::RoXML
 							}
 						}
 
-						if (node_name == "Event")
+						// equivalent to Engine:Connect but in RoXML
+						if (node_name == "Connect")
 						{
 							String attr = node->first_attribute()->name();
 
 							if (attr == "Name")
 							{
+								world_node.Name = "Connect";
+
 								String name_value = node->first_attribute()->value();
 
-								for (std::size_t event_idx = 0; event_idx < XPLICIT_EVENT_MAX; ++event_idx)
-								{
-									if (strncmp(name_value.c_str(), XPLICIT_EVENTS[event_idx], strlen(XPLICIT_EVENTS[event_idx])))
-									{
-										String func_name = "methodXplicit";
-										func_name += std::to_string(xplicit_get_epoch());
+								world_node.ID = name_value;
 
-										String event_code = "local func ";
-										event_code += func_name;
-										event_code += "()\n";
+								String func_name = "fnXplicit";
+								func_name += std::to_string(xplicit_get_epoch());
 
-										event_code += node->value();
+								String event_code = "local func ";
+								event_code += func_name;
+								event_code += "()\n";
 
-										event_code += "\nend\n";
-										event_code += "Engine:Connect(";
-										event_code += "\"";
-										event_code += name_value;
-										event_code += "\"";
-										event_code += ",";
-										event_code += func_name;
-										event_code += ");";
+								event_code += node->value();
 
-										Lua::XLuaStateManager::get_singleton_ptr()->run_string(event_code.c_str());
+								event_code += "\nend\n";
+								event_code += "Engine:Connect(";
+								event_code += "\"";
+								event_code += name_value;
+								event_code += "\"";
+								event_code += ",";
+								event_code += func_name;
+								event_code += ");";
 
-										break;
-									}
-								}
+								Lua::XLuaStateManager::get_singleton_ptr()->run_string(event_code.c_str());
 							}
 						}
 
+						if (node_name == "Lua")
+						{
+							world_node.Name = "Lua";
+
+							String code = node->value();
+
+							Lua::XLuaStateManager::get_singleton_ptr()->run_string(code.c_str());
+						}
+
+						params.WorldNodes.push_back(world_node);
+
 						node = node->next_sibling();
+
+						params.WorldNodes.push_back(world_node);
 					}
 
 					root_node = root_node->next_sibling();
 				}
-			}, path);
+			});
 
-			stream_job.detach();
+			(!params.Has3D) ? stream_job.join() : stream_job.detach();
 		}
 
 	};

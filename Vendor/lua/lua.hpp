@@ -60,8 +60,12 @@ namespace Xplicit::Lua
 			{
 				const auto ret = luaL_dofile(mL, file);
 
+#ifdef XPLICIT_DEBUG
+
 				if (ret > 0)
 					std::cout << lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
+
+#endif // ifdef XPLICIT_DEBUG
 
 				return ret;
 			}
@@ -75,8 +79,12 @@ namespace Xplicit::Lua
 			{
 				const auto ret = luaL_dostring(mL, file);
 
+#ifdef XPLICIT_DEBUG
+
 				if (ret > 0)
 					std::cout << lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
+
+#endif // ifdef XPLICIT_DEBUG
 
 				return ret;
 			}
