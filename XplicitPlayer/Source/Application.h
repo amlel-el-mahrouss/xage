@@ -166,6 +166,7 @@ namespace Xplicit
 
 		MovementTraits& get_layout() noexcept
 		{
+#ifdef XPLICIT_WINDOWS
 			HKL hLocale = GetKeyboardLayout(0);
 
 			switch (hLocale)
@@ -189,7 +190,14 @@ namespace Xplicit
 				break;
 			}
 			}
+#else
+			mLayout.mForward = KEY_KEY_W;
+			mLayout.mRight = KEY_KEY_D;
+			mLayout.mLeft = KEY_KEY_A;
+			mLayout.mBackward = KEY_KEY_S;
 
+#	error No layout detection, use locale() in UNIX systems.
+#endif
 			return mLayout;
 		}
 
