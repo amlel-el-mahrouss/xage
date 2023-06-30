@@ -72,7 +72,7 @@ namespace Xplicit
 
 		player->set_peer(peer);
 		
-		peer->xplicit_id.generate(peer->hash);
+		peer->xplicit_id.generate(peer->public_hash);
 
 		return true;
 	}
