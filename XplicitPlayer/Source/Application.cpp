@@ -62,16 +62,14 @@ namespace Xplicit::Bites
 
 	void Application::create_and_set_contexts()
 	{
+		SIrrlichtCreationParameters params;
+		params.DriverMultithreaded = true;
+		params.DriverType = EDT_OPENGL;
+		params.Fullscreen = false;
+		params.WindowSize = dimension2d<irr::u32>(Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y);
+
 		Root::get_singleton_ptr()->set(
-			createDevice(
-				EDT_OPENGL,
-				dimension2d<irr::u32>(Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y),
-				32U,
-				false,
-				false,
-				false,
-				nullptr
-			)
+			createDeviceEx(params)
 		);
 
 		// Vector = Size of viewport. Only X and Y and taken into consideration.
