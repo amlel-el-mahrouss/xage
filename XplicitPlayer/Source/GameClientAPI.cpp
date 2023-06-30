@@ -8,22 +8,20 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
+#include "LocalSoundComponent.h"
 #include "Application.h"
 
-#include <LuaScriptComponent.h>
-#include <CommonEngine.h>
 #include <XplicitSound.h>
-#include <DataValue.h>
 #include <lua/lua.hpp>
-#include <Xplicit.h>
 #include <codecvt>
+#include <Util.h>
 #include <Uri.h>
 
 std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_UTF16_CONV;
-ILightSceneNode* XPLICIT_LIGHT = nullptr;
 
 #ifdef XPLICIT_WINDOWS
 
+// not thread safe!
 static int lua_PlaySound(lua_State* L)
 {
 	Xplicit::String path = lua_tostring(L, 1);
@@ -31,10 +29,8 @@ static int lua_PlaySound(lua_State* L)
 	if (path.empty())
 		return 0;
 	
-	auto audio_ptr = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(XPLICIT_UTF16_CONV.from_bytes(path).c_str());
-
-	if (audio_ptr)
-		audio_ptr->play();
+	if (auto snd = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::Player::LocalSoundComponent>("LocalSoundComponent"))
+		snd->play_2d(path);
 
 	return 0;
 }

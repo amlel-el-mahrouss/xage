@@ -10,7 +10,8 @@
  * =====================================================================
  */
 
-#pragma once
+#ifndef __XPLICIT_H__
+#define __XPLICIT_H__
 
 #include "Config.h"
 
@@ -635,3 +636,5 @@ namespace Xplicit
 #define XPLICIT_CRITICAL(...) Xplicit::Logger::get_singleton().get()->critical(__VA_ARGS__)
 #define XPLICIT_ERROR(...) Xplicit::Logger::get_singleton().get()->error(__VA_ARGS__)
 #define XPLICIT_INFO(...) Xplicit::Logger::get_singleton().get()->info(__VA_ARGS__)
+
+#endif // ifndef __XPLICIT_H__

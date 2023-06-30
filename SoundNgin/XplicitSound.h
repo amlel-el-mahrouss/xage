@@ -4,12 +4,16 @@
  *			XplicitNgin (XplicitAudio)
  *			Copyright Xplicit Corporation, all rights reserved.
  * 
- *			Purpose: Xaudio backend for Xplicit.
+ *			Purpose: Xplicit Sound backend.
  *
  * =====================================================================
  */
 
 #pragma once
+
+#ifndef __XPLICIT_H__
+#	error Please include Xplicit.h before XplicitSound!
+#endif // __XPLICIT_H__
 
 #include <iostream>
 #include <string>
@@ -98,17 +102,33 @@ namespace Xplicit
 					mAudio->Play(volume, pitch, pan);
 				}
 
-				void play_3d(const Vector<float>& pos, const bool loop = false) noexcept
+				void play_3d(const Vector<float>& pos, bool* loop = nullptr) noexcept
 				{
 					if (!mAudio)
 						return;
 
 					mSource = mAudio->CreateInstance(DirectX::SoundEffectInstance_Use3D);
-
-					if (!mAudio)
-						return;
+					if (!mAudio) return;
 
 					mSource->Play(loop);
+
+					if (loop && 
+						*loop)
+					{
+						// Let this thread handle sound looping.
+						Thread thread_job([&]() {
+							while (mSource)
+							{
+								if (!loop)
+								{
+									mSource->Stop(true);
+									break;
+								}
+							}
+							});
+
+						thread_job.detach();
+					}
 				}
 
 			private:

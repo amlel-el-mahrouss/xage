@@ -52,11 +52,12 @@ namespace Xplicit
 		COMPONENT_LOGIC, // Logic Component
 		COMPONENT_CAMERA, // Camera instance
 		COMPONENT_SCRIPT, // Script instance (C#, Lua)
-		COMPONENT_RENDER, // Grpahics Instance (Shader, Particles...)
+		COMPONENT_RENDER, // Graphics Instance (Shader, Particles...)
 		COMPONENT_NETWORK, // Network instance
 		COMPONENT_PHYSICS, // Physics instance
 		COMPONENT_GUI, // GUI instance
 		COMPONENT_REPLICATION, // Replicated instance
+		COMPONENT_SOUND, // Sound Instance
 		COMPONENT_COUNT // the number of Instances type we have here!
 	};
 

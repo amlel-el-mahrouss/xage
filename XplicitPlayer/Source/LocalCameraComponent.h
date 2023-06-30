@@ -1,11 +1,8 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			XplicitPlayer
  *			Copyright Xplicit Corporation, all rights reserved.
- *
- *			File: Camera.h
- *			Purpose: Client-side Camera
  *
  * =====================================================================
  */
