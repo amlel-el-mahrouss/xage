@@ -166,26 +166,28 @@ namespace Xplicit
 
 		MovementTraits& get_layout() noexcept
 		{
-			CHAR layout[KL_NAMELENGTH];
-			GetKeyboardLayoutNameA(layout);
+			HKL hLocale = GetKeyboardLayout(0);
 
-			String frFr = "0000040C"; // fr-FR
-
-			auto str = String(layout);
-
-			if (str == frFr)
+			switch (hLocale)
+			{
+			case LANG_FRENCH:
 			{
 				mLayout.mForward = KEY_KEY_Z;
 				mLayout.mRight = KEY_KEY_D;
 				mLayout.mLeft = KEY_KEY_Q;
 				mLayout.mBackward = KEY_KEY_S;
+
+				break;
 			}
-			else
+			default:
 			{
 				mLayout.mForward = KEY_KEY_W;
 				mLayout.mRight = KEY_KEY_D;
 				mLayout.mLeft = KEY_KEY_A;
 				mLayout.mBackward = KEY_KEY_S;
+
+				break;
+			}
 			}
 
 			return mLayout;

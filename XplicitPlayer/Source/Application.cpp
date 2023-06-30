@@ -62,7 +62,11 @@ namespace Xplicit::Bites
 
 	void Application::create_and_set_contexts()
 	{
+		// Do not memset zero this!
+		// It has values set by default.
+
 		SIrrlichtCreationParameters params;
+		
 		params.DriverMultithreaded = true;
 		params.DriverType = EDT_OPENGL;
 		params.Fullscreen = false;
