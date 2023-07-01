@@ -4,6 +4,8 @@ XplicitNgine
 NOTICE:
 =======
 
+Place the Data/ directory as 'XplicitNgin'.
+
 There is already sln projects if you happen to target Windows.
 If you want, generate one, but you gotta enable AVX support and set floating point precesion to fast.
 
