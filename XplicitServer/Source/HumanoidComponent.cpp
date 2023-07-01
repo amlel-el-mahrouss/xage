@@ -54,7 +54,7 @@ namespace Xplicit
 		fmt = XPLICIT_LUA_GLOBAL;
 		fmt += XPLICIT_LUA_NAMESPACE;
 		fmt += this->get_peer()->xplicit_id.as_string();
-		fmt += ".State ";
+		fmt += ".State = ";
 
 		if (mState == HUMANOID_STATE::ALIVE)
 			fmt += "HUMANOID.ALIVE";
@@ -157,34 +157,7 @@ namespace Xplicit
 		String fmt = XPLICIT_LUA_GLOBAL;
 		fmt += XPLICIT_LUA_NAMESPACE;
 		fmt += peer->xplicit_id.as_string();
-		fmt += " = {}";
-
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-		fmt.clear();
-
-		fmt = XPLICIT_LUA_GLOBAL;
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += peer->xplicit_id.as_string();
-		fmt += ".Position = {}";
-
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-		fmt.clear();
-
-		fmt = XPLICIT_LUA_GLOBAL;
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += peer->xplicit_id.as_string();
-		fmt += ".Color = {}";
-
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-		fmt.clear();
-
-		fmt = XPLICIT_LUA_GLOBAL;
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += peer->xplicit_id.as_string();
-		fmt += ".Health = 0";
+		fmt += " = { Position = {}, Color = {}, Health = 0, State = HUMANOID.ALIVE }";
 
 		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}

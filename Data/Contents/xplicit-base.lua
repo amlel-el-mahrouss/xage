@@ -11,3 +11,8 @@ Color = {}
 func Color:New(R, G, B)
     return { Name = "Color", Type = "Color", Red = R, Green = G, Blue = B };
 end
+
+Humanoid = {}
+
+Humanoid.Alive = 0;
+Humanoid.Dead = 1;

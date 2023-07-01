@@ -27,7 +27,7 @@ namespace Xplicit::Player
 		String fmt = XPLICIT_LUA_GLOBAL;
 		fmt += parent;
 		fmt += name;
-		fmt += " = {}";
+		fmt += " = { Mesh = "" }";
 
 		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 

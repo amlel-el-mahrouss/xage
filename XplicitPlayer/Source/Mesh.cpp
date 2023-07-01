@@ -56,7 +56,7 @@ namespace Xplicit::Player
 
 	bool StaticMesh::has_physics() noexcept { return mPhysics == PHYSICS_COMPLEX;  }
 
-	static auto XPLICIT_BUNDLE_PATH = "/XplicitNgin/Contents/Bundles/";
+	static auto XPLICIT_BUNDLE_PATH = "Contents/Bundles/";
 
 	StaticBundleMesh::StaticBundleMesh(const char* head, 
 		const char* torso, 
