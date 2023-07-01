@@ -21,17 +21,22 @@ namespace Xplicit::Player
 	public:
 		LocalNetworkMonitorEvent() = delete;
 		
+	public:
 		LocalNetworkMonitorEvent(const std::int64_t& private_hash, const std::int64_t& public_hash);
 		~LocalNetworkMonitorEvent() override;
 
+	public:
 		LocalNetworkMonitorEvent& operator=(const LocalNetworkMonitorEvent&) = default;
 		LocalNetworkMonitorEvent(const LocalNetworkMonitorEvent&) = default;
 		
+	public:
 		void operator()() override;
 		const char* name() noexcept override;
 
-		std::unique_ptr<LocalHTTPManager> HTTP;
-		String Endpoint;
+	public:
+		std::unique_ptr<LocalHTTPManager> HTTP; // HTTPService
+		String Endpoint; // Asset Delivery service
+		String ID; // XplicitID
 
 	private:
 		NetworkComponent* mNetwork;

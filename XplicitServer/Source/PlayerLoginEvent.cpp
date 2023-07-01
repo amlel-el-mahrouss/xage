@@ -114,10 +114,10 @@ namespace Xplicit
 				if (HumanoidComponent* player = mPlayers[mPlayerCount]; 
 					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
 				{
-					// copy asset delivery service to client.
+					// send XplicitID to client.
 					memcpy(mNetwork->get(peer_idx)->packet.buffer, 
-						XPLICIT_XASSET_ENDPOINT,
-						strlen(XPLICIT_XASSET_ENDPOINT));
+						mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
+						mNetwork->get(peer_idx)->xplicit_id.as_string().size());
 
 					mNetwork->get(peer_idx)->ip_address = address_to_string(mNetwork->get(peer_idx));
 					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
