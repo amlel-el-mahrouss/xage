@@ -95,13 +95,21 @@ namespace Xplicit
 
     NetworkInstance::UniqueAddress::~UniqueAddress() = default;
 
-    XPLICIT_API String address_to_string(NetworkInstance* instance)
+    const UUID& NetworkInstance::UniqueAddress::get() noexcept { return mUuid; }
+
+    void NetworkInstance::UniqueAddress::invalidate() noexcept
     {
-        return inet_ntoa(instance->address.sin_addr);
+        mPublicUuid = UUIDFactory::version<4>();
+        mUuid = UUIDFactory::version<4>();
     }
 
-    bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs)
-    {
-        return lhs.sin_addr.S_un.S_addr == rhs.sin_addr.S_un.S_addr;
-    }
+    const UUID& NetworkInstance::UniqueAddress::get_public_uuid() noexcept { return this->get(); }
+
+    const UUID& NetworkInstance::UniqueAddress::get_private_uuid() noexcept { return mUuid; }
+
+    String address_to_string(const PrivateAddressData& ip) { return inet_ntoa(ip.sin_addr); }
+
+    String address_to_string(NetworkInstance* instance) { return address_to_string(instance->address); }
+
+    const bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs) { return lhs.sin_addr.S_un.S_addr == rhs.sin_addr.S_un.S_addr; }
 }

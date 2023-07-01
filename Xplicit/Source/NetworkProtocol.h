@@ -111,41 +111,34 @@ namespace Xplicit
 
     using NetworkFloat = float;
 
-	/*
-	 *
-	 *  @name NetworkPacket
-	 *  @brief Universe Network packet.
-	 *
-	 */
-
-
-    PACKED_STRUCT(class XPLICIT_API NetworkPacket final
-	{
-	public:
-		char                  magic[XPLICIT_NETWORK_MAG_COUNT];
-        std::int8_t           channel;
-
+    // Xplicit Xconnect packet.
+    struct XPLICIT_API NetworkPacket final
+    {
+        char                  magic[XPLICIT_NETWORK_MAG_COUNT];
         char                  buffer[XPLICIT_NETWORK_BUF_SZ];
-		NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
-		std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
+        std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
+
+        NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
+
+        std::int8_t           channel;
         std::int16_t          version;
         std::int16_t          health;
         std::int16_t          size;
         std::int16_t          id;
 
-		std::int64_t          public_hash;
+        std::int64_t          public_hash;
         std::int64_t          hash;
-        
-	})
 
-    PACKED_STRUCT(class XPLICIT_API NetworkPacketChat final
+    };
+
+    // Xplicit Xconnect Communication packet.
+    struct XPLICIT_API NetworkPacketChat final
     {
-    public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
         std::int8_t           channel;
         char                  buffer[XPLICIT_NETWORK_BUF_CHAT_SZ];
 
-    })
+    };
 
     class XPLICIT_API NetworkInstance final
     {
@@ -160,16 +153,12 @@ namespace Xplicit
 			XPLICIT_COPY_DEFAULT(UniqueAddress);
             
         public:
-			const uuids::uuid& get() noexcept { return mUuid; }
+            const UUID& get() noexcept;
+            void invalidate() noexcept;
             
-			void invalidate() noexcept
-            {
-                mUuid = UUIDFactory::version<4>(); 
-                mPublicUuid = UUIDFactory::version<4>(); 
-            }
-            
-			const UUID& get_public_uuid() noexcept { return this->get(); }
-			const UUID& get_private_uuid() noexcept { return mUuid; }
+        public:
+            const UUID& get_public_uuid() noexcept;
+            const UUID& get_private_uuid() noexcept;
 
         private:
 			UUID mPublicUuid; /* public peer uuid */
@@ -203,7 +192,8 @@ namespace Xplicit
     };
 
     XPLICIT_API String address_to_string(NetworkInstance* instance);
-    XPLICIT_API bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs);
+    XPLICIT_API String address_to_string(const PrivateAddressData& ip);
+    XPLICIT_API const bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs);
 }
 
 #ifdef XPLICIT_WINDOWS
