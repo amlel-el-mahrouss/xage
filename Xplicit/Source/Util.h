@@ -94,6 +94,12 @@ namespace Xplicit
 
 		LuaScriptComponent* script() noexcept { return mScript; }
 
+		void set_script(LuaScriptComponent* pScript) noexcept 
+		{
+			if (pScript)
+				mScript = pScript; 
+		}
+
 	private:
 		std::vector<void*> mAttributes;
 

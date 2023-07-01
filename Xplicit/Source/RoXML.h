@@ -28,25 +28,32 @@ namespace Xplicit::RoXML
 {
 	using namespace rapidxml;
 
+	struct RoXMLNodeDescription final
+	{
+		explicit RoXMLNodeDescription()
+			: 
+			Color(0.0f, 0.0f, 0.0f),
+			Size(0.0f, 0.0f, 0.0f),
+			Position(0.0f, 0.0f, 0.0f),
+			Name(""),
+			ID("")
+		{}
+
+		String ID;
+		String Name;
+		Color<float> Color;
+		Vector<float> Size;
+		Vector<float> Position;
+
+	};
+
 	struct RoXMLDocumentParameters
 	{
-		RoXMLDocumentParameters() = default;
-
 		String Path{ "" };
 
 		bool Has3D{ false };
 		bool LuaOnly{ false };
 		bool NoLua{ false };
-
-		struct RoXMLNodeDescription
-		{
-			String ID;
-			String Name;
-			Color<float> Color;
-			Vector<float> Size;
-			Vector<float> Position;
-
-		};
 
 		std::vector<RoXMLNodeDescription> WorldNodes;
 
@@ -84,7 +91,7 @@ namespace Xplicit::RoXML
 					{
 						String node_name = node->name();
 
-						RoXMLDocumentParameters::RoXMLNodeDescription world_node{};
+						RoXMLNodeDescription world_node;
 
 						if (node_name == "Stud")
 						{
@@ -305,7 +312,7 @@ namespace Xplicit::RoXML
 						if (node_name == "Lua")
 						{
 							world_node.Name = "Lua";
-
+							
 							String code = node->value();
 
 							Lua::XLuaStateManager::get_singleton_ptr()->run_string(code.c_str());
