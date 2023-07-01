@@ -35,6 +35,7 @@ namespace Xplicit::Player
 
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
+		PHYSICS_TYPE physics() noexcept override;
 
 	public:
 		void update() override;

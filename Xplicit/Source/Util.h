@@ -85,9 +85,13 @@ namespace Xplicit
 
 	public:
 		Color<float>& color() noexcept { return mColor; }
+
 		Vector<float>& scale() noexcept { return mScale; }
+
 		Vector<float>& pos() noexcept { return mPos; }
+
 		bool is_archivable() noexcept { return mArchivable; }
+
 		LuaScriptComponent* script() noexcept { return mScript; }
 
 	private:

@@ -48,6 +48,8 @@ namespace Xplicit::Player
 #endif
 	}
 
+	PHYSICS_TYPE LocalHumanoidComponent::physics() noexcept { return PHYSICS_COMPLEX; }
+
 	COMPONENT_TYPE LocalHumanoidComponent::type() noexcept { return COMPONENT_HUMANOID; }
 
 	const char* LocalHumanoidComponent::name() noexcept { return ("LocalHumanoidComponent"); }

@@ -34,7 +34,6 @@ namespace Xplicit::Player
 
 	const char* LocalToolComponent::name() noexcept { return "LocalToolComponent"; }
 	COMPONENT_TYPE LocalToolComponent::type() noexcept { return COMPONENT_LOGIC; }
-	bool LocalToolComponent::should_update() noexcept { return false; }
 	PHYSICS_TYPE LocalToolComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
 	LocalToolComponent::~LocalToolComponent()
@@ -55,5 +54,31 @@ namespace Xplicit::Player
 	XAttribute& LocalToolComponent::get_attribute() noexcept
 	{
 		return mAttribute;
+	}
+
+	bool LocalToolComponent::should_update() noexcept { return true; }
+
+	void LocalToolComponent::update() noexcept
+	{
+		String fmt = "_G.";
+		fmt += mParent;
+		fmt += mName;
+		fmt += ".Mesh";
+
+		lua_pushstring(Lua::XLuaStateManager::get_singleton_ptr()->state(), fmt.c_str());
+		String path = lua_tostring(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		if (path != mMeshPtr->path())
+		{
+			mMeshPtr.reset();
+			mMeshPtr = std::make_unique<StaticMesh>(mMeshPtr->path());
+
+			lua_setglobal(Lua::XLuaStateManager::get_singleton_ptr()->state(), mMeshPtr->path().c_str());
+		}
+
+		if (this->get_attribute().script() &&
+			this->get_attribute().script()->name() == "Update")
+			this->get_attribute().script()->run();
+
 	}
 }

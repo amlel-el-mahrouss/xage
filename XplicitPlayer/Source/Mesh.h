@@ -11,6 +11,16 @@
 
 #include <Root.h>
 #include <Nplicit.h>
+#include <Component.h>
+
+#define XPLICIT_BUNDLE_HEAD		 (0)
+#define XPLICIT_BUNDLE_LEFT_ARM  (1)
+#define XPLICIT_BUNDLE_TORSO     (2)
+#define XPLICIT_BUNDLE_RIGHT_ARM (3)
+#define XPLICIT_BUNDLE_LEFT_LEG  (4)
+#define XPLICIT_BUNDLE_RIGHT_LEG (5)
+
+#define XPLICIT_BUNDLE_MAX (6)
 
 namespace Xplicit::Player
 {
@@ -23,20 +33,29 @@ namespace Xplicit::Player
 		explicit StaticMesh(const char* path);
 		virtual ~StaticMesh() noexcept;
 
+	public:
 		StaticMesh& operator=(const StaticMesh&) = default;
 		StaticMesh(const StaticMesh&) = default;
 		
+	public:
 		IAnimatedMeshSceneNode* node() const { return mNode; }
 		IAnimatedMesh* operator->() const { return mMdl; }
+
+	public:
+		const String& path() noexcept;
+		bool has_physics() noexcept;
 
 	protected:
 		IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic
 		IAnimatedMesh* mMdl; // Model Data pointer, generic
+		String mPath; // Filesystem path (must be)
+		PHYSICS_TYPE mPhysics; // What kind of physics we have here?
 
 	};
 
-	/* this one combines meshes to make a bundle */
+	/* this class combines meshes to make a bundle */
 	/* example: Epic Bundle */
+
 	class StaticBundleMesh
 	{
 	public:
@@ -55,15 +74,6 @@ namespace Xplicit::Player
 		std::vector<std::pair<IAnimatedMeshSceneNode*, IAnimatedMesh*>> mParts;
 		
 	};
-
-#define XPLICIT_BUNDLE_HEAD		 (0)
-#define XPLICIT_BUNDLE_LEFT_ARM  (1)
-#define XPLICIT_BUNDLE_TORSO     (2)
-#define XPLICIT_BUNDLE_RIGHT_ARM (3)
-#define XPLICIT_BUNDLE_LEFT_LEG  (4)
-#define XPLICIT_BUNDLE_RIGHT_LEG (5)
-
-#define XPLICIT_BUNDLE_MAX (6)
 
 	class DynamicMesh : public ISceneNode
 	{

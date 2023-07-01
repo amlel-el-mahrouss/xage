@@ -35,6 +35,12 @@ namespace Xplicit
 		if (this->get_peer() == nullptr)
 			return;
 
+		XPLICIT_INFO("Humanoid:Update [EVENT]");
+
+		if (this->get_attribute().script() &&
+			this->get_attribute().script()->name() == "Update")
+			this->get_attribute().script()->run();
+
 		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
 			mState = HUMANOID_STATE::ALIVE;
 		else if (mHealth < 1)
@@ -42,6 +48,12 @@ namespace Xplicit
 
 		if (this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
 		{
+			XPLICIT_INFO("Humanoid:Damage [EVENT]");
+
+			if (this->get_attribute().script() &&
+				this->get_attribute().script()->name() == "Damage")
+				this->get_attribute().script()->run();
+
 			XPLICIT_INFO("Humanoid:Damage [EVENT]");
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Damage()");
 		}

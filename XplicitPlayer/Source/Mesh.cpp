@@ -11,25 +11,33 @@
  @file
  */
 
+#include <lua/lua.hpp>
 #include <Root.h>
+
 #include "Mesh.h"
 
 namespace Xplicit::Player
 {
 	StaticMesh::StaticMesh(const char* path)
+		: mPath(path), mPhysics(PHYSICS_NONE)
 	{
-		String _path = XPLICIT_ENV("APPDATA");
+		static XPLICIT_GET_DATA_DIR(dir);
+
+		String _path = dir;
 		_path += "/XplicitNgin/Contents/";
 		_path += path;
 
 		mMdl = RENDER->getSceneManager()->getMesh(_path.c_str());
-		XPLICIT_ASSERT(mMdl);
 
-		mNode = RENDER->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
-		XPLICIT_ASSERT(mNode);
-	
+		mPhysics = PHYSICS_NONE;
+
 		if (mMdl)
+		{
 			mMdl->setMaterialFlag(EMF_LIGHTING, false);
+			mNode = RENDER->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
+
+			mPhysics = PHYSICS_COMPLEX;
+		}
 	}
 
 	StaticMesh::~StaticMesh() noexcept
@@ -41,14 +49,25 @@ namespace Xplicit::Player
 			(void)mMdl->drop();
 	}
 
+	const String& StaticMesh::path() noexcept
+	{
+		return mPath;
+	}
+
+	bool StaticMesh::has_physics() noexcept { return mPhysics == PHYSICS_COMPLEX;  }
+
+	static auto XPLICIT_BUNDLE_PATH = "/XplicitNgin/Contents/Bundles/";
+
 	StaticBundleMesh::StaticBundleMesh(const char* head, 
 		const char* torso, 
 		const char* arm, 
 		const char* leg,
 		const char* face)
 	{
-		String _path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/R6X/";
+		static XPLICIT_GET_DATA_DIR(dir);
+
+		String _path = dir;
+		_path += XPLICIT_BUNDLE_PATH;
 		_path += head;
 
 		auto _head_ptr = RENDER->getSceneManager()->getMesh(_path.c_str());
@@ -56,8 +75,8 @@ namespace Xplicit::Player
 
 		_path.clear();
 
-		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/R6X/";
+		_path = dir;
+		_path += XPLICIT_BUNDLE_PATH;
 		_path += "Left";
 		_path += arm;
 
@@ -66,8 +85,8 @@ namespace Xplicit::Player
 
 		_path.clear();
 
-		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/R6X/";
+		_path = dir;
+		_path += XPLICIT_BUNDLE_PATH;
 		_path += torso;
 
 		auto _torso = RENDER->getSceneManager()->getMesh(_path.c_str());
@@ -75,8 +94,8 @@ namespace Xplicit::Player
 
 		_path.clear();
 
-		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/R6X/";
+		_path = dir;
+		_path += XPLICIT_BUNDLE_PATH;
 		_path += "Right";
 		_path += arm;
 
@@ -85,8 +104,8 @@ namespace Xplicit::Player
 
 		_path.clear();
 
-		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/R6X/";
+		_path = dir;
+		_path += XPLICIT_BUNDLE_PATH;
 		_path += "Left";
 		_path += leg;
 
@@ -95,8 +114,8 @@ namespace Xplicit::Player
 
 		_path.clear();
 
-		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/R6X/";
+		_path = dir;
+		_path += XPLICIT_BUNDLE_PATH;
 		_path += "Right";
 		_path += leg;
 
@@ -119,47 +138,19 @@ namespace Xplicit::Player
 
 		_path.clear();
 
-		_path = XPLICIT_ENV("APPDATA");
-		_path += "/XplicitNgin/Contents/";
+		_path = dir;
+		_path += "/XplicitNgin/Contents/Bundles/";
 		_path += face;
 
 		/* long pointer checks, stupid shit, but we gotta do it */
-		if (!_leg_left ||
-			!_leg_right ||
-			!_right_arm ||
-			!_left_arm ||
-			!_torso ||
-			!_head_ptr)
-			std::exit(0); // man at this point...
+		XPLICIT_ASSERT(_leg_left &&
+			_leg_right &&
+			_right_arm &&
+			_left_arm &&
+			_torso &&
+			_head_ptr);
 
 		mesh_head->getMaterial(0).setTexture(0, RENDER->getVideoDriver()->getTexture(_path.c_str()));
-
-		/* set origin of model. */
-
-		mesh_torso->setPosition(vector3df(0.f, 2.f, 0.f));
-
-		mesh_head->setParent(mesh_torso);
-		mesh_head->setPosition(vector3df(0.f, 3.5f, 0.f));
-
-		left_arm->setParent(mesh_torso);
-		left_arm->setPosition(vector3df(-1.5f, 2.f, 0.f));
-
-		right_arm->setParent(mesh_torso);
-		right_arm->setPosition(vector3df(1.5f, 2.f, 0.f));
-
-		right_leg->setParent(mesh_torso);
-		right_leg->setPosition(vector3df(0.5f, 0.f, 0.f));
-
-		left_leg->setParent(mesh_torso);
-		left_leg->setPosition(vector3df(-0.5f, 0.f, 0.f));
-
-		left_leg->setRotation(vector3df(90, 0, 0));
-		left_arm->setRotation(vector3df(90, 0, 0));
-		right_leg->setRotation(vector3df(90, 0, 0));
-		right_arm->setRotation(vector3df(90, 0, 0));
-
-		mesh_torso->setRotation(vector3df(90, 0, 0));
-		mesh_head->setRotation(vector3df(90, 0, 0));
 
 		XPLICIT_INFO("Loaded StaticBundleMesh successfully!");
 	}

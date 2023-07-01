@@ -30,11 +30,16 @@ namespace Xplicit::Player
 	public:
 		const char* name() noexcept override;
 		COMPONENT_TYPE type() noexcept override;
-		bool should_update() noexcept override;
 		PHYSICS_TYPE physics() noexcept override;
+	
+	public:
+		bool should_update() noexcept override;
+		void update() noexcept override;
 
 	public:
-		explicit LocalToolComponent(const char* name, const char* mesh = nullptr, const char* parent = "Game") noexcept;
+		explicit LocalToolComponent(const char* name, 
+			const char* mesh = nullptr,
+			const char* parent = "Game") noexcept;
 
 	public:
 		StaticMesh* get_mesh() const noexcept;
