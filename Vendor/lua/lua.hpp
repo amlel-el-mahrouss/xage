@@ -18,6 +18,10 @@ extern "C" {
 #	include "lauxlib.h"
 }
 
+#ifndef __XPLICIT_H__
+#	include <Xplicit.h>
+#endif // ifndef __XPLICIT_H__
+
 #define XPLICIT_LUA_NAME "XLua"
 #define XPLICIT_LUA_DESCRIPTION "Custom dialect for Xplicit"
 
