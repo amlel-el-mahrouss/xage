@@ -14,6 +14,9 @@
 #include "HumanoidComponent.h"
 #include <lua/lua.hpp>
 
+#define XPLICIT_LUA_GLOBAL "_G."
+#define XPLICIT_LUA_NAMESPACE "Players."
+
 namespace Xplicit
 {
 	HumanoidComponent::HumanoidComponent() 
@@ -34,6 +37,66 @@ namespace Xplicit
 	{
 		if (this->get_peer() == nullptr)
 			return;
+
+		// execute a series of commands for Component.
+
+		String fmt = XPLICIT_LUA_GLOBAL;
+
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += this->get_peer()->xplicit_id.as_string();
+		fmt += ".Health ";
+		fmt += "= " + std::to_string(this->mHealth) + ";";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
+		fmt = XPLICIT_LUA_GLOBAL;
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += this->get_peer()->xplicit_id.as_string();
+		fmt += ".State ";
+
+		if (mState == HUMANOID_STATE::ALIVE)
+			fmt += "HUMANOID.ALIVE";
+
+		if (mState == HUMANOID_STATE::DEAD)
+			fmt += "HUMANOID.DEAD";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
+		static const char* pos[] = { "X", "Y", "Z" };
+		const float pos_raw[] = { mAttribute.pos().X, mAttribute.pos().Y, mAttribute.pos().Z };
+			
+		for (size_t i = 0; i < 3; i++)
+		{
+			String fmt = XPLICIT_LUA_GLOBAL;
+
+			fmt += XPLICIT_LUA_NAMESPACE;
+			fmt += this->get_peer()->xplicit_id.as_string();
+			fmt += ".Position.";
+			fmt += pos[i];
+			fmt += "= " + std::to_string(pos_raw[i]) + ";";
+
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		}
+
+		static const char* clr[] = { "R", "G", "B" };
+		const float clr_raw[] = { mAttribute.color().R, mAttribute.color().G, mAttribute.color().B };
+
+		for (size_t i = 0; i < 3; i++)
+		{
+			String fmt = XPLICIT_LUA_GLOBAL;
+
+			fmt += XPLICIT_LUA_NAMESPACE;
+			fmt += this->get_peer()->xplicit_id.as_string();
+			fmt += ".Color.";
+			fmt += clr[i];
+			fmt += "= " + std::to_string(clr_raw[i]) + ";";
+
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		}
 
 		XPLICIT_INFO("Humanoid:Update [EVENT]");
 
@@ -75,10 +138,55 @@ namespace Xplicit
 
 	void HumanoidComponent::set_peer(NetworkInstance* peer) noexcept 
 	{
+		// invaliate previous instance
+		if (this->get_peer() != nullptr)
+		{
+			String fmt = XPLICIT_LUA_GLOBAL;
+			fmt += XPLICIT_LUA_NAMESPACE;
+			fmt += this->get_peer()->xplicit_id.as_string();
+			fmt += " = nil";
+
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		}
+
 		if (peer == nullptr)
 			mState = HUMANOID_STATE::INVALID;
 		
 		mPeer = peer;
+
+		String fmt = XPLICIT_LUA_GLOBAL;
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += peer->xplicit_id.as_string();
+		fmt += " = {}";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
+		fmt = XPLICIT_LUA_GLOBAL;
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += peer->xplicit_id.as_string();
+		fmt += ".Position = {}";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
+		fmt = XPLICIT_LUA_GLOBAL;
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += peer->xplicit_id.as_string();
+		fmt += ".Color = {}";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
+		fmt = XPLICIT_LUA_GLOBAL;
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += peer->xplicit_id.as_string();
+		fmt += ".Health = 0";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 
 	bool HumanoidComponent::can_spawn() const noexcept { return mCanSpawn; }
@@ -93,3 +201,6 @@ namespace Xplicit
 
 	const HUMANOID_STATE& HumanoidComponent::get_state() noexcept { return mState; }
 }
+
+#undef XPLICIT_LUA_GLOBAL
+#undef XPLICIT_LUA_NAMESPACE

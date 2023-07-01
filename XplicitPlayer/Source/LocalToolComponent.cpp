@@ -10,6 +10,8 @@
 #include "LocalToolComponent.h"
 #include <lua/lua.hpp>
 
+#define XPLICIT_LUA_GLOBAL "_G."
+
 namespace Xplicit::Player
 {
 	LocalToolComponent::LocalToolComponent(const char* name, const char* mesh, const char* parent) noexcept
@@ -22,7 +24,7 @@ namespace Xplicit::Player
 
 		// Create Lua table for current object.
 
-		String fmt = "_G.";
+		String fmt = XPLICIT_LUA_GLOBAL;
 		fmt += parent;
 		fmt += name;
 		fmt += " = {}";
@@ -38,7 +40,7 @@ namespace Xplicit::Player
 
 	LocalToolComponent::~LocalToolComponent()
 	{
-		String fmt = "_G.";
+		String fmt = XPLICIT_LUA_GLOBAL;
 		fmt += mParent;
 		fmt += mName;
 		fmt += " = nil";
@@ -60,7 +62,7 @@ namespace Xplicit::Player
 
 	void LocalToolComponent::update() noexcept
 	{
-		String fmt = "_G.";
+		String fmt = XPLICIT_LUA_GLOBAL;
 		fmt += mParent;
 		fmt += mName;
 		fmt += ".Mesh";
@@ -82,3 +84,5 @@ namespace Xplicit::Player
 
 	}
 }
+
+#undef XPLICIT_LUA_GLOBAL

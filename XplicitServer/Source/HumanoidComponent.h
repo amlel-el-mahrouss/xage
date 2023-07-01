@@ -13,7 +13,7 @@
 
 namespace Xplicit
 {
-	enum class HUMANOID_STATE
+	enum class HUMANOID_STATE : std::int16_t
 	{
 		ALIVE,
 		DEAD,

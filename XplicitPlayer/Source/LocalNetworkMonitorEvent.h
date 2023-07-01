@@ -16,6 +16,12 @@
 
 namespace Xplicit::Player
 {
+	/*
+	* 
+	* @brief This is a network monitoring event
+	* It keeps track of hash, resets and things like that.
+	* if also owns the HTTPManager.
+	*/
 	class XPLICIT_API LocalNetworkMonitorEvent final : public Event
 	{
 	public:
@@ -40,6 +46,8 @@ namespace Xplicit::Player
 
 	private:
 		NetworkComponent* mNetwork;
+
+	private:
 		std::int32_t mResetCount;
 		std::int64_t mPublicHash;
 		std::int64_t mHash;
