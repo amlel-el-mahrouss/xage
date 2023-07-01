@@ -11,10 +11,10 @@
  @file
  */
 
-#include <lua/lua.hpp>
 #include <Root.h>
-
 #include "Mesh.h"
+
+#include <lua/lua.hpp>
 
 namespace Xplicit::Player
 {

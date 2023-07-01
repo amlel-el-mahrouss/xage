@@ -73,7 +73,7 @@ namespace Xplicit::Player
 		if (path != mMeshPtr->path())
 		{
 			mMeshPtr.reset();
-			mMeshPtr = std::make_unique<StaticMesh>(mMeshPtr->path());
+			mMeshPtr = std::make_unique<StaticMesh>(mMeshPtr->path().c_str());
 
 			lua_setglobal(Lua::XLuaStateManager::get_singleton_ptr()->state(), mMeshPtr->path().c_str());
 		}
