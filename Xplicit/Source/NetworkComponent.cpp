@@ -22,7 +22,7 @@ namespace Xplicit
 	}
 	
 	NetworkError::NetworkError(const int what) 
-		: std::runtime_error("Network error, check error-code.")
+		: std::runtime_error("Xplicit did ran into network issues, we're sorry!")
 #ifdef XPLICIT_WINDOWS
 		, mErr(WSAGetLastError())
 #endif

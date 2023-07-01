@@ -72,8 +72,8 @@ namespace Xplicit
 	class XPLICIT_API Component 
 	{
 	public:
-		Component() = default;
-		virtual ~Component() = default;
+		Component();
+		virtual ~Component();
 		
 	public:
 		XPLICIT_COPY_DEFAULT(Component);
@@ -91,5 +91,14 @@ namespace Xplicit
 
 	};
 }
+
+#define XPLICIT_COMPONENT_OVERRIDE()\
+		const char* name() noexcept override;\
+		COMPONENT_TYPE type() noexcept override;\
+		bool should_update() noexcept override;\
+		PHYSICS_TYPE physics() noexcept override;
+
+
+
 
 #include "Component.inl"

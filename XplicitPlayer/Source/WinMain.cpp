@@ -34,26 +34,9 @@ XPLICIT_MAIN()
 	{
 		XPLICIT_INIT_COM;
 
-		// Search and exit if another Xplicit player is open.
-		if (Xplicit::Win32Helper::find_wnd(Xplicit::Bites::XPLICIT_APP_NAME))
-		{
-			Xplicit::DialogHelper::message_box(Xplicit::Bites::XPLICIT_APP_NAME, 
-				L"Cannot open more than one instance of the Xplicit Ngine", 
-				MB_OK);
-
-			return 1;
-		}
-
 #ifdef XPLICIT_DEBUG
 		Xplicit::open_terminal();
 #endif // XPLICIT_DEBUG
-
-#ifdef XPLICIT_WINDOWS
-		WSADATA wsa;
-		RtlZeroMemory(&wsa, sizeof(WSADATA));
-
-		Xplicit::init_winsock(&wsa);
-#endif // ifdef XPLICIT_WINDOWS
 
 		// parse the connection uri.
 		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
@@ -68,7 +51,7 @@ XPLICIT_MAIN()
 
 		Xplicit::Bites::Application* pApp = new Xplicit::Bites::Application(uri);
 
-		if (!pApp) throw Xplicit::EngineError("Could not create application context, quitting!");
+		if (!pApp) throw Xplicit::EngineError("Xplicit had an fatal error, and couldn't continue; we're sorry!");
 
 		/* main game loop */
 		while (RENDER->run() && 

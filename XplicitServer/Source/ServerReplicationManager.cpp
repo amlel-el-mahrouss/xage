@@ -23,10 +23,8 @@ namespace Xplicit
 	}
 
 	/*
-	 *
 	 * These methods handles replication events.
-	 * They fill a buffer to tell what class/asset to load.
-	 *
+	 * It fills a buffer to tell what class/asset to load.
 	 */
 
 	void ServerReplicationManager::create(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept

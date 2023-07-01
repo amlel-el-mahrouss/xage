@@ -140,7 +140,7 @@ static int lua_GetXplicitID(lua_State* L)
 {
 	const auto server = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
-	const PlayerID id = lua_tointeger(L, 1);
+	const Xplicit::PlayerID id = lua_tointeger(L, 1);
 
 	if (id > Xplicit::XPLICIT_MAX_CONNECTIONS)
 		return 0;

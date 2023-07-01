@@ -41,6 +41,8 @@ namespace Xplicit::Bites
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mPath(""), mWsa()
 	{
+		Xplicit::init_winsock(&mWsa);
+
 		this->create_and_set_contexts();
 
 		XPLICIT_GET_DATA_DIR(data_appdata);

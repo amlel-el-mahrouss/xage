@@ -43,6 +43,9 @@ namespace Xplicit
 		return ptr;
 	}
 
+	Component::Component() = default;
+	Component::~Component() = default;
+
 	void Component::update() {}
 
 	bool Component::can_collide() noexcept { return false; }

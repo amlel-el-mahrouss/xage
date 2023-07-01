@@ -72,7 +72,7 @@ namespace Xplicit
 
 	public:
 		int SceneID{ 0 };
-		int TypeOf; // 0 : SMOKE, 1 : FORCE FIELD, 2 : EXPLOSION, 3 : RESERVED
+		int TypeID; // 0 : SMOKE, 1 : FORCE FIELD, 2 : EXPLOSION, 3 : RESERVED
 
 	});
 

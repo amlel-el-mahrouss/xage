@@ -102,6 +102,8 @@ namespace Xplicit
 					ply->get_attribute().script()->name() == "Move")
 					ply->get_attribute().script()->run();
 
+				XPLICIT_INFO("Engine:Move [EVENT]");
+
 				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Move()");
 			}
 		}

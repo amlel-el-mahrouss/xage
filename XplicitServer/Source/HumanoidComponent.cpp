@@ -26,7 +26,7 @@ namespace Xplicit
 
 	HumanoidComponent::~HumanoidComponent() = default;
 
-	PHYSICS_TYPE HumanoidComponent::physics() noexcept { return PHYSICS_NONE; }
+	PHYSICS_TYPE HumanoidComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
 	bool HumanoidComponent::has_physics() noexcept { return false; }
 

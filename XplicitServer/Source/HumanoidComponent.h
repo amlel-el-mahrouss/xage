@@ -26,6 +26,7 @@ namespace Xplicit
 		explicit HumanoidComponent();
 		~HumanoidComponent() override;
 
+	public:
 		XPLICIT_COPY_DEFAULT(HumanoidComponent);
 
 	public:
@@ -35,6 +36,8 @@ namespace Xplicit
 	public:
 		PHYSICS_TYPE physics() noexcept override;
 		COMPONENT_TYPE type() noexcept override;
+
+	public:
 		const char* name() noexcept override;
 
 	public:
@@ -45,6 +48,7 @@ namespace Xplicit
 		bool can_collide() noexcept override;
 		bool has_physics() noexcept override;
 
+	public:
 		XAttribute& get_attribute() noexcept;
 
 	public:

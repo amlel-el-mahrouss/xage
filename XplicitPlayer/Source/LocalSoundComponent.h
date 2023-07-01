@@ -38,6 +38,7 @@ namespace Xplicit::Player
 		PHYSICS_TYPE physics() noexcept override;
 
 		void set_volume(const float volume = 0.5f) noexcept;
+		void set_position(const Vector<float> pos = Vector<float>(0.0f, 0.0f, 0.0f)) noexcept;
 		void should_loop(const bool enable = true) noexcept;
 
 	private:

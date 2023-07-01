@@ -19,6 +19,11 @@ namespace Xplicit::Player
 
 	PHYSICS_TYPE LocalSoundComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
+	void LocalSoundComponent::set_position(const Vector<float> pos) noexcept
+	{
+		Vector<float> mPosition = pos;
+	}
+
 	void LocalSoundComponent::set_volume(const float volume) noexcept
 	{
 		if (volume > 1.0f)

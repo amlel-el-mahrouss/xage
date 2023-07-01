@@ -76,8 +76,6 @@ namespace Xplicit
 				XPLICIT_INFO("Humanoid:Death [EVENT]");
 				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Death()");
 
-				// Place event here (TODO)
-
 				mDeadPlayers.push_back(player);
 
 				for (size_t peer = 0; peer < mNetwork->size(); ++peer)
@@ -93,11 +91,14 @@ namespace Xplicit
 					{
 						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
 
+						XPLICIT_INFO("Humanoid:Spawn [EVENT]");
+
 						if (humanoid->get_attribute().script() &&
 							humanoid->get_attribute().script()->name() == "Spawn")
 							humanoid->get_attribute().script()->run();
 
-						XPLICIT_INFO("Humanoid:Spawn [EVENT]");
+						XPLICIT_INFO("Engine:Spawn [EVENT]");
+
 						Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
 					}
 				}, player);
