@@ -12,7 +12,7 @@ func Color:New(R, G, B)
     return { Name = "Color", Type = "Color", Red = R, Green = G, Blue = B };
 end
 
-Humanoid = {}
+HUMANOID = {}
 
-Humanoid.Alive = 0;
-Humanoid.Dead = 1;
+HUMANOID.ALIVE = 0;
+HUMANOID.DEAD = 1;

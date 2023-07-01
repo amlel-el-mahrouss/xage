@@ -154,12 +154,15 @@ namespace Xplicit
 		
 		mPeer = peer;
 
-		String fmt = XPLICIT_LUA_GLOBAL;
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += peer->xplicit_id.as_string();
-		fmt += " = { Position = {}, Color = {}, Health = 0, State = HUMANOID.ALIVE }";
+		if (mPeer)
+		{
+			String fmt = XPLICIT_LUA_GLOBAL;
+			fmt += XPLICIT_LUA_NAMESPACE;
+			fmt += mPeer->xplicit_id.as_string();
+			fmt += " = { Position = { X = 0, Y = 0, Z = 0, }, Color = { R = 0, G = 0, B = 0, }, Health = 0, State = HUMANOID.ALIVE }";
 
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		}
 	}
 
 	bool HumanoidComponent::can_spawn() const noexcept { return mCanSpawn; }
