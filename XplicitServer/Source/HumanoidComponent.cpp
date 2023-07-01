@@ -15,7 +15,7 @@
 #include <lua/lua.hpp>
 
 #define XPLICIT_LUA_GLOBAL "_G."
-#define XPLICIT_LUA_NAMESPACE "Players."
+#define XPLICIT_LUA_NAMESPACE "Game.Players."
 
 namespace Xplicit
 {

@@ -42,6 +42,10 @@ XPLICIT_MAIN()
 		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
 
 		std::string cmd_line = pCmdLine;
+
+		if (cmd_line.empty())
+			return 1;
+
 		cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
 
 		uri /= cmd_line;
