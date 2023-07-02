@@ -14,14 +14,13 @@
 #include "SpawnComponent.h"
 #include <lua/lua.hpp>
 
-
 #define XPLICIT_LUA_GLOBAL "_G."
 #define XPLICIT_LUA_NAMESPACE "Game."
 
 namespace Xplicit
 {
-	SpawnComponent::SpawnComponent(const Quaternion<float>& vec) 
-		: Component(), mOrigin(vec) 
+	SpawnComponent::SpawnComponent(const Vector<float>& vec) 
+		: Component()
 	{
 		String fmt = XPLICIT_LUA_GLOBAL;
 
@@ -43,14 +42,14 @@ namespace Xplicit
 		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 
-	Quaternion<float>& SpawnComponent::get() noexcept { return mOrigin; }
+	Vector<float>& SpawnComponent::get() noexcept { return mAttribute.pos(); }
 
 	bool SpawnComponent::should_update() noexcept { return true; }
 
 	void SpawnComponent::update() 
 	{
 		static const char* pos[] = { "X", "Y", "Z" };
-		const float pos_raw[] = { mOrigin.X, mOrigin.Y, mOrigin.Z };
+		const float pos_raw[] = { mAttribute.pos().X, mAttribute.pos().Y, mAttribute.pos().Z };
 
 		for (size_t i = 0; i < 3; i++)
 		{
@@ -65,4 +64,6 @@ namespace Xplicit
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 	}
+
+	XAttribute& SpawnComponent::get_attribute() noexcept { return mAttribute; }
 }

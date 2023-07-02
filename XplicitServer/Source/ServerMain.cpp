@@ -96,6 +96,11 @@ int main(int argc, char** argv)
 {
 	try
 	{
+		if (argc < 1)
+			return 1;
+
+		XPLICIT_PLACE_ID = argv[1]; // could one 1 or 10005588.
+
 		Xplicit::Root::get_singleton_ptr()->set(createDevice(EDT_NULL));
 
 #ifdef XPLICIT_WINDOWS
