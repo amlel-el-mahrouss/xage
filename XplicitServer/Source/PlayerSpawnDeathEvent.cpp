@@ -24,8 +24,8 @@ namespace Xplicit
 	/// <summary>
 	/// Handle Spawn at a specific point.
 	/// </summary>
-	/// <param name="spawner">The spawn component</param>
-	/// <param name="player">The targeted player</param>
+	/// <param name="spawner">The Spawn component</param>
+	/// <param name="player">The Targeted Humanoid</param>
 	/// <returns></returns>
 	
 	static void xplicit_handle_spawn(SpawnComponent* spawner, HumanoidComponent* player) noexcept
@@ -63,7 +63,11 @@ namespace Xplicit
 			if (peer_ptr->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
 
-			peer_ptr->packet.health = player->get_health();
+			if (peer_ptr->packet.health != player->get_health() &&
+				peer_ptr->packet.hash == player->get_peer()->hash)
+				player->set_health(peer_ptr->packet.health);
+			else
+				peer_ptr->packet.health = player->get_health();
 
 			if (!player->is_alive() && player->can_spawn())
 			{

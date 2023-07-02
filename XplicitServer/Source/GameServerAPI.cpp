@@ -176,6 +176,28 @@ static int lua_LoadRoXML(lua_State* L)
 	return 0;
 }
 
+static int lua_Kick(lua_State* L)
+{
+	const auto humanoid = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+
+	if (humanoid.empty())
+		return 0;
+
+	auto id = lua_tostring(L, 1);
+
+	for (std::size_t index = 0; index < humanoid.size(); index++)
+	{
+		if (humanoid[index]->get_peer() &&
+			humanoid[index]->get_peer()->xplicit_id.as_string() == id)
+		{
+			humanoid[index]->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = Xplicit::NETWORK_CMD_KICK;
+			return 0;
+		}
+	}
+
+	return 0;
+}
+
 static int lua_AttachScript(lua_State* L)
 {
 	const auto humanoid = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");

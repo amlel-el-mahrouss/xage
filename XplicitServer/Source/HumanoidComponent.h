@@ -52,7 +52,7 @@ namespace Xplicit
 		XAttribute& get_attribute() noexcept;
 
 	public:
-		void set_health(const int32_t& health) noexcept;
+		void set_health(const int64_t& health) noexcept;
 		const int64_t& get_health() noexcept;
 		bool is_alive() const noexcept;
 

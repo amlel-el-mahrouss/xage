@@ -98,6 +98,15 @@ namespace Xplicit
 
 		fmt.clear();
 
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += this->get_peer()->xplicit_id.as_string();
+		fmt += ".ID = ";
+		fmt += "\"" +  mPeer->xplicit_id.as_string() + "\"";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
 		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
 			mState = HUMANOID_STATE::ALIVE;
 		else if (mHealth < 1)
@@ -117,7 +126,7 @@ namespace Xplicit
 		Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Damage()");
 	}
 
-	void HumanoidComponent::set_health(const int32_t& health) noexcept { this->mHealth = health; }
+	void HumanoidComponent::set_health(const int64_t& health) noexcept { this->mHealth = health; }
 
 	const int64_t& HumanoidComponent::get_health() noexcept { return this->mHealth; }
 
@@ -154,7 +163,7 @@ namespace Xplicit
 			String fmt = XPLICIT_LUA_GLOBAL;
 			fmt += XPLICIT_LUA_NAMESPACE;
 			fmt += mPeer->xplicit_id.as_string();
-			fmt += String(" = { Position = { X = 0, Y = 0, Z = 0, }, Color = { R = 0, G = 0, B = 0, }, Health = 0, State = ") + XPLICIT_LUA_GLOBAL + String("HUMANOID.ALIVE") + " }";
+			fmt += String(" = { Position = { X = 0, Y = 0, Z = 0, }, Color = { R = 0, G = 0, B = 0, }, Health = 0, ID = \"\", State = ") + XPLICIT_LUA_GLOBAL + String("HUMANOID.ALIVE") + " }";
 
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
