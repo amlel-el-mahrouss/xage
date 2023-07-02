@@ -11,10 +11,12 @@
  @file
  */
 
+// Application framework.
 #include "Application.h"
 
 // RoXML format
 #include "RoXML.h"
+
 // We need this to connect and download from server.
 #include "LoadingComponent.h"
 
@@ -68,7 +70,7 @@ namespace Xplicit::Bites
 		// It has values set by default.
 
 		SIrrlichtCreationParameters params;
-		
+
 		params.DriverMultithreaded = true;
 		params.DriverType = EDT_OPENGL;
 		params.Fullscreen = false;

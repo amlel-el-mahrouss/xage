@@ -99,27 +99,21 @@ namespace Xplicit::Bites
 
 	int Win32Window::update() noexcept
 	{
-		MSG msg;
-		RtlZeroMemory(&msg, sizeof(MSG));
-		
-		Thread renderingThread([&]() {
-				while (!this->mExit)
-				{
-					if (PeekMessageA(&msg, mTraits.WindowHandle, 0, 0, PM_REMOVE))
-					{
-						TranslateMessage(&msg);
-						DispatchMessageA(&msg);
-					}
+		if (!this->mExit)
+		{
+			static MSG msg{ 0 };
 
-					if (msg.message == WM_QUIT)
-						std::exit(0);
+			if (PeekMessageA(&msg, mTraits.WindowHandle, 0, 0, PM_REMOVE))
+			{
+				TranslateMessage(&msg);
+				DispatchMessageA(&msg);
+			}
 
-				}
-			});
+			if (msg.message == WM_QUIT)
+				return 1;
+		}
 
-		renderingThread.detach();
-
-		return msg.wParam;
+		return 0;
 	}
 
 	void glfw_size_callback(GLFWwindow* window, int width, int height)
@@ -155,18 +149,13 @@ namespace Xplicit::Bites
 
 	int GLFWWindow::update() noexcept
 	{
-		Thread thrd([&]()
-			{
-				while (!glfwWindowShouldClose(mWindow))
-				{
-					if (this->mExit)
-						glfwSetWindowShouldClose(mWindow, GLFW_TRUE);
-				}
-			});
+		if (this->mExit)
+		{
+			glfwSetWindowShouldClose(mWindow, GLFW_TRUE);
+			return 0;
+		}
 
-		thrd.detach();
-
-		return 0;
+		return 1;
 	}
 
 	GLFWwindow* GLFWWindow::get() const noexcept

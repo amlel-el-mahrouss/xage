@@ -19,10 +19,14 @@
 #include "Application.h"
 
 #include <XplicitSound.h>
+#include <DriverD3D11.h>
 #include <Component.h>
 #include <Event.h>
 #include <Bites.h>
 #include <codecvt>
+
+static void xplicit_throw_error(Xplicit::EngineError& err);
+static void xplicit_throw_error(Xplicit::Win32Error& err);
 
 ILightSceneNode* XPLICIT_LIGHT = nullptr;
 
@@ -53,9 +57,10 @@ XPLICIT_MAIN()
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
 			return 1;
 
-		Xplicit::Bites::Application* pApp = new Xplicit::Bites::Application(uri);
+		std::unique_ptr<Xplicit::Bites::Application> pApp = std::make_unique<Xplicit::Bites::Application>(uri);
 
-		if (!pApp) throw Xplicit::EngineError("Xplicit had an fatal error, and couldn't continue; we're sorry!");
+		if (!pApp) 
+			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
 
 		/* main game loop */
 		while (RENDER->run() && 
@@ -74,9 +79,22 @@ XPLICIT_MAIN()
 			RENDER->getVideoDriver()->endScene();
 		}
 	}
-	catch (const std::runtime_error& err)
+	catch (Xplicit::EngineError& err)
 	{
-#ifdef XPLICIT_DEBUG
+		xplicit_throw_error(err);
+	}
+	catch (Xplicit::Win32Error& err)
+	{
+		xplicit_throw_error(err);
+	}
+
+	XPLICIT_FINI_COM;
+	return 0;
+}
+
+static void xplicit_throw_error(Xplicit::EngineError& err)
+{
+	#ifdef XPLICIT_DEBUG
 		XPLICIT_INFO(err.what());
 #endif
 
@@ -87,15 +105,33 @@ XPLICIT_MAIN()
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::DialogHelper::message_box(L"Xplicit Client", 
-			L"Program Exit", 
-			exit.c_str(), 
-			TD_INFORMATION_ICON, 
+		Xplicit::DialogHelper::message_box(L"XplicitNgine",
+			L"Program Exit",
+			exit.c_str(),
+			TD_INFORMATION_ICON,
 			TDCBF_OK_BUTTON);
-	}
+}
 
-	XPLICIT_FINI_COM;
-	return 0;
+static void xplicit_throw_error(Xplicit::Win32Error& err)
+{
+#ifdef XPLICIT_DEBUG
+	XPLICIT_INFO(err.what());
+#endif
+
+	std::wstring exit;
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+	exit += L"What: ";
+	exit += converter.from_bytes(err.what());
+	exit += L"HRESULT: ";
+	exit += std::to_wstring(err.hr());
+	exit += L"\n";
+
+	Xplicit::DialogHelper::message_box(L"XplicitNgine",
+		L"Program Exit",
+		exit.c_str(),
+		TD_INFORMATION_ICON,
+		TDCBF_OK_BUTTON);
 }
 
 #endif

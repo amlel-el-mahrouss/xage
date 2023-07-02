@@ -89,7 +89,7 @@ namespace Xplicit::Player
 					pos.Y += mPos.Y;
 				}
 
-				XPLICIT_INFO("LocalHumanoid:Move [EVENT]");
+				XPLICIT_INFO("Engine:Move [EVENT]");
 				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Move()");
 			}
 		}
@@ -101,7 +101,7 @@ namespace Xplicit::Player
 		{
 			mCam = cam;
 
-			XPLICIT_INFO("Attached (Object: Camera) to (Object: LocalHumanoid )");
+			XPLICIT_INFO("Attached (Object: Camera) to (Object: LocalHumanoidComponent)");
 
 			// these are the origin values, before the server gives us where we spawn.
 			mCam->get()->setPosition(vector3df(-0.137, 4.122, 3.312));

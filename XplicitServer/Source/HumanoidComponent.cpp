@@ -120,10 +120,10 @@ namespace Xplicit
 				this->get_attribute().script()->name() == "Damage")
 				this->get_attribute().script()->run();
 
+			XPLICIT_INFO("Engine:Damage [EVENT]");
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Damage()");
 		}
 
-		XPLICIT_INFO("Engine:Damage [EVENT]");
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Damage()");
 	}
 
 	void HumanoidComponent::set_health(const int64_t& health) noexcept { this->mHealth = health; }

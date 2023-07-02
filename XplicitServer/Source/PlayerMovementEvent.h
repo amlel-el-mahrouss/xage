@@ -40,8 +40,12 @@ namespace Xplicit
 
 	private:
 		NetworkServerComponent* mNetwork;
+
+	private:
 		GameVarPtr mVelocityVar;
 		GameVarPtr mDeltaVar;
+
+	private:
 		float mDeltaTime;
 
 	};
