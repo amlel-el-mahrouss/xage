@@ -70,10 +70,9 @@ namespace Xplicit
 			}
 		}
 
+		peer->xplicit_id.generate(peer->public_hash);
 		player->set_peer(peer);
 		
-		peer->xplicit_id.generate(peer->public_hash);
-
 		return true;
 	}
 
@@ -132,7 +131,7 @@ namespace Xplicit
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif
 
-					XPLICIT_INFO("Humanoid:Login [EVENT]");
+					XPLICIT_INFO("Engine:Join [EVENT]");
 					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
 
 					// Create Player table.
@@ -213,7 +212,7 @@ namespace Xplicit
 						}
 					}
 
-					XPLICIT_INFO("Humanoid:Logoff [EVENT]");
+					XPLICIT_INFO("Engine:Leave [EVENT]");
 					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Leave()");
 				}
 			}

@@ -24,7 +24,8 @@ namespace Xplicit
 		Component(), 
 		mPeer(nullptr),
 		mHealth(XPLICIT_DEFAULT_HEALTH), 
-		mCanSpawn(true)
+		mCanSpawn(true),
+		mState(HUMANOID_STATE::DEAD)
 	{
 		// Don't initialize lua code here, because we got no peer.
 	}
@@ -40,7 +41,7 @@ namespace Xplicit
 		if (this->get_peer() == nullptr)
 			return;
 
-		// execute a series of commands for Component.
+		// execute a series of commands for this humanoid.
 
 		String fmt = XPLICIT_LUA_GLOBAL;
 
@@ -59,52 +60,43 @@ namespace Xplicit
 		fmt += ".State = ";
 
 		if (mState == HUMANOID_STATE::ALIVE)
-			fmt += "HUMANOID.ALIVE";
+			fmt += XPLICIT_LUA_GLOBAL + String("HUMANOID.ALIVE");
 
 		if (mState == HUMANOID_STATE::DEAD)
-			fmt += "HUMANOID.DEAD";
+			fmt += XPLICIT_LUA_GLOBAL + String("HUMANOID.DEAD");
+
+		if (mState == HUMANOID_STATE::INVALID)
+			fmt += XPLICIT_LUA_GLOBAL + String("HUMANOID.INVALID");
 
 		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 		fmt.clear();
 
-		static const char* pos[] = { "X", "Y", "Z" };
-		const float pos_raw[] = { mAttribute.pos().X, mAttribute.pos().Y, mAttribute.pos().Z };
-			
-		for (size_t i = 0; i < 3; i++)
-		{
-			String fmt = XPLICIT_LUA_GLOBAL;
+		fmt = XPLICIT_LUA_GLOBAL;
 
-			fmt += XPLICIT_LUA_NAMESPACE;
-			fmt += this->get_peer()->xplicit_id.as_string();
-			fmt += ".Position.";
-			fmt += pos[i];
-			fmt += "= " + std::to_string(pos_raw[i]) + ";";
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += this->get_peer()->xplicit_id.as_string();
+		fmt += ".Position ";
+		fmt += String("= ") + "{" + std::to_string(mAttribute.pos().X) + "," + 
+									std::to_string(mAttribute.pos().Y) + "," +
+									std::to_string(mAttribute.pos().Z) + "," + "}";
 
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-		}
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
-		static const char* clr[] = { "R", "G", "B" };
-		const float clr_raw[] = { mAttribute.color().R, mAttribute.color().G, mAttribute.color().B };
+		fmt.clear();
 
-		for (size_t i = 0; i < 3; i++)
-		{
-			String fmt = XPLICIT_LUA_GLOBAL;
+		fmt = XPLICIT_LUA_GLOBAL;
 
-			fmt += XPLICIT_LUA_NAMESPACE;
-			fmt += this->get_peer()->xplicit_id.as_string();
-			fmt += ".Color.";
-			fmt += clr[i];
-			fmt += "= " + std::to_string(clr_raw[i]) + ";";
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += this->get_peer()->xplicit_id.as_string();
+		fmt += ".Color ";
+		fmt += String("= ") + "{" + std::to_string(mAttribute.color().R) + "," +
+			std::to_string(mAttribute.color().G) + "," +
+			std::to_string(mAttribute.color().B) + "," + "}";
 
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-		}
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
-		XPLICIT_INFO("Humanoid:Update [EVENT]");
-
-		if (this->get_attribute().script() &&
-			this->get_attribute().script()->name() == "Update")
-			this->get_attribute().script()->run();
+		fmt.clear();
 
 		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
 			mState = HUMANOID_STATE::ALIVE;
@@ -119,9 +111,10 @@ namespace Xplicit
 				this->get_attribute().script()->name() == "Damage")
 				this->get_attribute().script()->run();
 
-			XPLICIT_INFO("Humanoid:Damage [EVENT]");
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Damage()");
 		}
+
+		XPLICIT_INFO("Engine:Damage [EVENT]");
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Damage()");
 	}
 
 	void HumanoidComponent::set_health(const int32_t& health) noexcept { this->mHealth = health; }
@@ -152,7 +145,7 @@ namespace Xplicit
 		}
 
 		if (peer == nullptr)
-			mState = HUMANOID_STATE::INVALID;
+			mState = HUMANOID_STATE::DEAD;
 		
 		mPeer = peer;
 
@@ -161,7 +154,7 @@ namespace Xplicit
 			String fmt = XPLICIT_LUA_GLOBAL;
 			fmt += XPLICIT_LUA_NAMESPACE;
 			fmt += mPeer->xplicit_id.as_string();
-			fmt += " = { Position = { X = 0, Y = 0, Z = 0, }, Color = { R = 0, G = 0, B = 0, }, Health = 0, State = HUMANOID.ALIVE }";
+			fmt += String(" = { Position = { X = 0, Y = 0, Z = 0, }, Color = { R = 0, G = 0, B = 0, }, Health = 0, State = ") + XPLICIT_LUA_GLOBAL + String("HUMANOID.ALIVE") + " }";
 
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}

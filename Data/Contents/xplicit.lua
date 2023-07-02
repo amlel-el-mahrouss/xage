@@ -1,7 +1,26 @@
 -- Copyright Xplicit Corporation
 
-import('xplicit-base.lua');
 print('XplicitNgine');
+
+# Copyright Xplicit Corporation
+
+_G.Vector3 = {}
+
+func _G.Vector3:New(X, Y, Z)
+    return { Name = "Vector3", Type = "Vector", X = X, Y = Y, Z = Z };
+end
+
+_G.Color = {}
+
+func _G.Color:New(R, G, B)
+    return { Name = "Color", Type = "Color", Red = R, Green = G, Blue = B };
+end
+
+_G.HUMANOID = {}
+
+_G.HUMANOID.ALIVE = 0;
+_G.HUMANOID.DEAD = 1;
+_G.HUMANOID.INVALID = 3;
 
 Engine = {};
 Engine.Events = {};

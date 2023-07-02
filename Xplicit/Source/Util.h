@@ -59,31 +59,6 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(XAttribute);
 
 	public:
-		bool insert(void* attribute) noexcept
-		{
-			if (attribute)
-			{
-				mAttributes.push_back(attribute);
-				return true;
-			}
-
-			return false;
-		}
-
-		bool remove(void* attribute) noexcept
-		{
-			auto it = std::find(mAttributes.cbegin(), mAttributes.cend(), attribute);
-
-			if (it != mAttributes.cend())
-			{
-				mAttributes.erase(it);
-				return true;
-			}
-
-			return false;
-		}
-
-	public:
 		Color<float>& color() noexcept { return mColor; }
 
 		Vector<float>& scale() noexcept { return mScale; }
@@ -99,9 +74,6 @@ namespace Xplicit
 			if (pScript)
 				mScript = pScript; 
 		}
-
-	private:
-		std::vector<void*> mAttributes;
 
 	private:
 		LuaScriptComponent* mScript;
