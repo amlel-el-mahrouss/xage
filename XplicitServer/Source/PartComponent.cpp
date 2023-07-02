@@ -14,7 +14,10 @@
 
 namespace Xplicit
 {
-	PartComponent::PartComponent(const Vector<float>& position, const Vector<float>& size, const Color<float>& color, const char* name)
+	PartComponent::PartComponent(const Vector<float>& position, 
+		const Vector<float>& size, 
+		const Color<float>& color, 
+		const char* name)
 		: mName(name)
 	{
 		mAttribute.pos() = position;
