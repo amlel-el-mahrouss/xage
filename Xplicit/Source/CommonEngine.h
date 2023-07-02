@@ -16,7 +16,6 @@
 #include <Nplicit.h>
 
 #define XPLICIT_DEFAULT_HEALTH	(100U)
-
 #define XPLICIT_DEFAULT_NAME	"Humanoid"
 
 namespace Xplicit

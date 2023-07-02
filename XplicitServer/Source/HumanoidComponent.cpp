@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin
+ *			XplicitServer
  *			Copyright Xplicit Corporation, all rights reserved.
  *
  * =====================================================================
@@ -25,7 +25,9 @@ namespace Xplicit
 		mPeer(nullptr),
 		mHealth(XPLICIT_DEFAULT_HEALTH), 
 		mCanSpawn(true)
-	{}
+	{
+		// Don't initialize lua code here, because we got no peer.
+	}
 
 	HumanoidComponent::~HumanoidComponent() = default;
 
