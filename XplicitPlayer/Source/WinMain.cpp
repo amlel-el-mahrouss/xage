@@ -65,8 +65,6 @@ XPLICIT_MAIN()
 			RENDER->getVideoDriver()->beginScene(true, true, SColor(255, 0x87, 0xCE, 0xEB));
 
 			RENDER->getSceneManager()->drawAll();
-			RENDER->getGUIEnvironment()->drawAll();
-
 			pApp->leak_gwen()->Canvas->RenderCanvas();
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
