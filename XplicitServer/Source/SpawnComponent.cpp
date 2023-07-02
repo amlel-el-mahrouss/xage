@@ -65,5 +65,8 @@ namespace Xplicit
 		}
 	}
 
+	COMPONENT_TYPE SpawnComponent::type() noexcept { return (COMPONENT_LOGIC); }
+	const char* SpawnComponent::name() noexcept { return ("SpawnComponent"); }
+
 	XAttribute& SpawnComponent::get_attribute() noexcept { return mAttribute; }
 }

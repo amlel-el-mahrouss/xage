@@ -58,6 +58,7 @@ namespace Xplicit
 		COMPONENT_GUI, // GUI instance
 		COMPONENT_REPLICATION, // Replicated instance
 		COMPONENT_SOUND, // Sound Instance
+		COMPONENT_GENERIC,
 		COMPONENT_COUNT // the number of Instances type we have here!
 	};
 

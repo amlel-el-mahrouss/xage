@@ -23,7 +23,7 @@ namespace Xplicit
 
 	public:
 		explicit SpawnComponent(const Vector<float>& spawn);
-		virtual ~SpawnComponent();
+		~SpawnComponent() override;
 
 	public:
 		SpawnComponent& operator=(const SpawnComponent&) = default;
@@ -31,11 +31,11 @@ namespace Xplicit
 
 		Vector<float>& get() noexcept;
 
-		virtual COMPONENT_TYPE type() noexcept override { return (COMPONENT_LOGIC); }
-		virtual const char* name() noexcept override { return ("SpawnComponent"); }
+		COMPONENT_TYPE type() noexcept override;
+		const char* name() noexcept override;
 
-		virtual bool should_update() noexcept override;
-		virtual void update() override;
+		bool should_update() noexcept override;
+		void update() override;
 
 		XAttribute& get_attribute() noexcept;
 
