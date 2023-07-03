@@ -85,19 +85,6 @@ namespace Xplicit
 
 		fmt.clear();
 
-		fmt = XPLICIT_LUA_GLOBAL;
-
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += this->get_peer()->xplicit_id.as_string();
-		fmt += ".Color ";
-		fmt += String("= ") + "{" + std::to_string(mAttribute.color().R) + "," +
-			std::to_string(mAttribute.color().G) + "," +
-			std::to_string(mAttribute.color().B) + "," + "}";
-
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-		fmt.clear();
-
 		fmt += XPLICIT_LUA_NAMESPACE;
 		fmt += this->get_peer()->xplicit_id.as_string();
 		fmt += ".ID = ";
@@ -163,7 +150,7 @@ namespace Xplicit
 			String fmt = XPLICIT_LUA_GLOBAL;
 			fmt += XPLICIT_LUA_NAMESPACE;
 			fmt += mPeer->xplicit_id.as_string();
-			fmt += String(" = { Position = { X = 0, Y = 0, Z = 0, }, Color = { R = 0, G = 0, B = 0, }, Health = 0, ID = \"\", State = ") + XPLICIT_LUA_GLOBAL + String("HUMANOID.ALIVE") + " }";
+			fmt += String(" = { Position = { X = 0, Y = 0, Z = 0, }, Health = 0, ID = '', State = ") + XPLICIT_LUA_GLOBAL + String("HUMANOID.ALIVE") + " }";
 
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}

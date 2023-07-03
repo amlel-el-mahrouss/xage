@@ -45,7 +45,9 @@ XPLICIT_API void XplicitLoadBaseLua()
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game.Players = {}");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_InstanceNew);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.CoreAPI.New");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "InstanceNew_CoreAPI");
+
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.Create = InstanceNew_CoreAPI");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 

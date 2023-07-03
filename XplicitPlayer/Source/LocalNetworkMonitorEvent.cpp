@@ -59,6 +59,19 @@ namespace Xplicit::Player
 		NetworkPacket packet;
 		if (!mNetwork->read(packet)) return;
 
+		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
+		{
+			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
+			{
+				ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+					if (KB->key_down())
+						RENDER->closeDevice();
+					}, vector2di(XPLICIT_DIM.X / 3.45,
+						XPLICIT_DIM.Y / 4),
+						POPUP_TYPE::KICK, "KickPopup");
+			}
+		}
+
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
 			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("BanPopup"))

@@ -22,7 +22,7 @@ extern "C" {
 #	include <Xplicit.h>
 #endif // ifndef __XPLICIT_H__
 
-#define XPLICIT_LUA_NAME "XLua"
+#define XPLICIT_LUA_NAME "CLua"
 #define XPLICIT_LUA_DESCRIPTION "Custom dialect for Xplicit"
 
 namespace Xplicit::Lua
@@ -36,7 +36,11 @@ namespace Xplicit::Lua
 			: mL(luaL_newstate())
 		{
 			XPLICIT_ASSERT(mL);
-			luaL_openlibs(mL);
+
+			luaopen_base(mL);
+			luaopen_math(mL);
+			luaopen_string(mL);
+			luaopen_table(mL);
 		}
 
 	private:
@@ -77,11 +81,11 @@ namespace Xplicit::Lua
 			return -1;
 		}
 
-		std::int32_t run_string(const char* file) noexcept
+		std::int32_t run_string(const char* str) noexcept
 		{
-			if (file)
+			if (str)
 			{
-				const auto ret = luaL_dostring(mL, file);
+				const auto ret = luaL_dostring(mL, str);
 
 #ifdef XPLICIT_DEBUG
 
@@ -102,4 +106,16 @@ namespace Xplicit::Lua
 		}
 
 	};
+
+	// WiP
+
+	inline bool XLuaCreateClass(const char* name)
+	{
+		return Lua::XLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}", name).c_str());
+	}
+
+	inline bool XLuaAddMethod(const char* klass, const char* symbol, const char* reference)
+	{
+		return Lua::XLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{} = {}", klass, symbol, reference).c_str());
+	}
 }

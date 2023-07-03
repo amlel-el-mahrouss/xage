@@ -21,13 +21,20 @@
 
 static int lua_PlaySound(lua_State* L)
 {
-	Xplicit::String path = lua_tostring(L, 1);
+	try
+	{
+		Xplicit::String path = lua_tostring(L, 1);
 
-	if (path.empty())
-		return 0;
-	
-	if (auto snd = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::Player::LocalSoundComponent>("LocalSoundComponent"))
-		snd->play_2d(path);
+		if (path.empty())
+			return 0;
+
+		if (auto snd = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::Player::LocalSoundComponent>("LocalSoundComponent"))
+			snd->play_2d(path);
+	}
+	catch (...)
+	{
+		XPLICIT_CRITICAL("There was an error executing this procedure!");
+	}
 
 	return 0;
 }
@@ -46,20 +53,18 @@ static int lua_SetTitle(lua_State* L)
 
 void XplicitLoadClientLua() noexcept
 {
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.RenderingService = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.SoundService = {}");
+
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.CoreAPI.PlaySound");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_PlaySound");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.SoundService.Play = CoreAPI_PlaySound");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetTitle);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.CoreAPI.SetWindowCaption");
-
-	XPLICIT_GET_DATA_DIR(full_path);
-
-	full_path += "Contents/";
-	full_path += "xplicit.lua";
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_SetWindowCaption");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.RenderingService.SetWindowCaption = CoreAPI_SetWindowCaption");
 
 	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalSoundComponent>();
-
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run(full_path.c_str());
 }
 
 #endif // ifdef XPLICIT_WINDOWS
