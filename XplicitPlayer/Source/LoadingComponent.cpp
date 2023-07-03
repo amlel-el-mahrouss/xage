@@ -20,10 +20,10 @@
 #include "LocalHumanoidComponent.h"
 #include "LocalCameraComponent.h"
 #include "LoadingComponent.h"
-#include "LocalHTTPManager.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
+#include <XHTTPManager.h>
 #include <CommonEngine.h>
 #include <lua/lua.hpp>
 
@@ -70,7 +70,6 @@ namespace Xplicit::Player
 				POPUP_TYPE::BANNED, "StopPopup");
 
 			mEnabled = false;
-
 			ComponentManager::get_singleton_ptr()->remove(mNetwork);
 
 			return;
@@ -96,7 +95,7 @@ namespace Xplicit::Player
 
 			monitor->ID = packet.buffer;
 			monitor->Endpoint = XPLICIT_XASSET_ENDPOINT;
-			monitor->HTTP = std::make_unique<LocalHTTPManager>();
+			monitor->HTTP = std::make_unique<XHTTPManager>();
 
 			EventManager::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>(XPLICIT_CANVAS);
@@ -152,9 +151,10 @@ namespace Xplicit::Player
 		}
 	}
 
-	void LoadingComponent::set_data(Gwk::Controls::Canvas* pCanvas) noexcept
+	void LoadingComponent::exchange_data(Gwk::Controls::Canvas* canvas_ptr) noexcept
 	{
-		XPLICIT_CANVAS = pCanvas;
+		XPLICIT_ASSERT(canvas_ptr);
+		XPLICIT_CANVAS = canvas_ptr;
 	}
 
 	void LoadingComponent::connect(Utils::UriParser& ip)

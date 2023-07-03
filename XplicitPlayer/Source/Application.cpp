@@ -59,7 +59,7 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(splash_screen);
 
 		// pass this
-		splash_screen->set_data(mGwenManager->Canvas);
+		splash_screen->exchange_data(mGwenManager->Canvas);
 		
 		splash_screen->connect(xconnect_to);
 	}

@@ -8,21 +8,30 @@
  */
 
 #include "LocalSoundComponent.h"
+#include <InstanceComponent.h>
 
 namespace Xplicit::Player
 {
+	LocalSoundComponent::LocalSoundComponent() 
+		: mPosition(0.0f, 0.0f, 0.0f), mVolume(0.5f), mLoop(false) 
+	{
+		String fmt = String(XPLICIT_LUA_GLOBAL);
+		fmt += "Game.";
+		fmt += "SoundMixer ";
+		fmt += " = { Volume = 0.5, Position = { 0, 0, 0 }, Loop = false }";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+	}
+
 	const char* LocalSoundComponent::name() noexcept { return "LocalSoundComponent"; }
 
 	COMPONENT_TYPE LocalSoundComponent::type() noexcept { return COMPONENT_SOUND; }
 
-	bool LocalSoundComponent::should_update() noexcept { return false; }
+	bool LocalSoundComponent::should_update() noexcept { return true; }
 
 	PHYSICS_TYPE LocalSoundComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
-	void LocalSoundComponent::set_position(const Vector<float> pos) noexcept
-	{
-		Vector<float> mPosition = pos;
-	}
+	void LocalSoundComponent::set_position(const Vector<float> pos) noexcept { Vector<float> mPosition = pos; }
 
 	void LocalSoundComponent::set_volume(const float volume) noexcept
 	{
@@ -33,6 +42,44 @@ namespace Xplicit::Player
 		}
 
 		mVolume = volume;
+	}
+
+	void LocalSoundComponent::update()
+	{
+		lua_pushstring(Lua::XLuaStateManager::get_singleton_ptr()->state(),
+			std::format("{}{}{}.Loop;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
+
+		mLoop = lua_toboolean(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		lua_pop(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		lua_pushstring(Lua::XLuaStateManager::get_singleton_ptr()->state(),
+			std::format("{}{}{}.Volume;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
+
+		mLoop = lua_tonumber(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		lua_pop(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		lua_pushstring(Lua::XLuaStateManager::get_singleton_ptr()->state(),
+			std::format("{}{}{}.Position.X;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
+
+		mPosition.X = lua_tonumber(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		lua_pop(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		lua_pushstring(Lua::XLuaStateManager::get_singleton_ptr()->state(),
+			std::format("{}{}{}.Position.Y;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
+
+		mPosition.Y = lua_tonumber(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		lua_pop(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		lua_pushstring(Lua::XLuaStateManager::get_singleton_ptr()->state(),
+			std::format("{}{}{}.Position.Z;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
+
+		mPosition.Z = lua_tonumber(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+
+		lua_pop(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
 	}
 
 	void LocalSoundComponent::should_loop(const bool enable) noexcept

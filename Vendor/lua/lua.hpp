@@ -109,13 +109,31 @@ namespace Xplicit::Lua
 
 	// WiP
 
-	inline bool XLuaCreateClass(const char* name)
+	class XPLICIT_API XLuaClassWizard final
 	{
-		return Lua::XLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}", name).c_str());
-	}
+	public:
+		XLuaClassWizard(const char* klass)
+			: mClass(klass)
+		{
+			XLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}", mClass).c_str());
+		}
 
-	inline bool XLuaAddMethod(const char* klass, const char* symbol, const char* reference)
-	{
-		return Lua::XLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{} = {}", klass, symbol, reference).c_str());
-	}
+		~XLuaClassWizard() = default;
+
+	public:
+		XPLICIT_COPY_DEFAULT(XLuaClassWizard);
+
+	public:
+		bool insert(const char* symbol, const char* reference)
+		{
+			if (symbol && reference)
+				return XLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{} = {}", mClass, symbol, reference).c_str());
+		}
+
+	private:
+		String mClass;
+
+	};
+
+
 }

@@ -7,14 +7,14 @@
  * =====================================================================
  */
 
-// @file LocalHTTPManager.cpp
+// @file XHTTPManager.cpp
 
-#include "LocalHTTPManager.h"
-#include <HelperMacros.h>
+#include "XHTTPManager.h"
+#include "HelperMacros.h"
 
 namespace Xplicit::Player
 {
-	void LocalHTTPManager::download(const String& assetId) const noexcept
+	void XHTTPManager::download(const String& assetId) const noexcept
 	{
         HTTP::HTTPWriter http_writer;
         auto sock = http_writer.create_and_connect(mEndpoint);
@@ -52,17 +52,22 @@ namespace Xplicit::Player
         constexpr int64_t MAX_BUF = 1000000;
 
         auto bytes = new char[MAX_BUF];
-        memset(bytes, 0, MAX_BUF);
+        XPLICIT_ASSERT(bytes);
 
-        http_writer.read_from_socket(sock, bytes, MAX_BUF);
+        if (bytes)
+        {
+            memset(bytes, 0, MAX_BUF);
 
-        file << bytes;
-        file.close();
+            http_writer.read_from_socket(sock, bytes, MAX_BUF);
 
-        delete bytes;
+            file << bytes;
+            file.close();
+
+            delete bytes;
+        }
 	}
 	
-	void LocalHTTPManager::set_endpoint(const String& endpoint) noexcept
+	void XHTTPManager::set_endpoint(const String& endpoint) noexcept
 	{
 		if (!endpoint.empty())
 			mEndpoint = endpoint;

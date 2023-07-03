@@ -10,10 +10,9 @@
 #pragma once
 
 #include <NetworkComponent.h>
-#include <Uri.h>
-
 #include "GameMenuUI.h"
 #include "GWEN.h"
+#include <Uri.h>
 
 namespace Xplicit::Player
 {
@@ -31,7 +30,7 @@ namespace Xplicit::Player
 		void update() override;
 
 	public:
-		void set_data(Gwk::Controls::Canvas* pCanvas) noexcept;
+		void exchange_data(Gwk::Controls::Canvas* canvas_ptr) noexcept;
 
 	public:
 		// starts to connect to specified IP:PORT.

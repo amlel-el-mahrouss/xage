@@ -8,9 +8,8 @@
  */
 
 #include "LocalToolComponent.h"
+#include <InstanceComponent.h>
 #include <lua/lua.hpp>
-
-#define XPLICIT_LUA_GLOBAL "_G."
 
 namespace Xplicit::Player
 {

@@ -9,25 +9,25 @@
 
 #pragma once
 
-#include <Xplicit.h>
-#include <Http.h>
-#include <Uri.h>
+#include "Xplicit.h"
+#include "Http.h"
+#include "Uri.h"
 
 namespace Xplicit::Player
 {
 	/*
-	 *	@brief LocalHTTPManager
+	 *	@brief XHTTPManager
 	 *	@brief Downloads and xasset:// from HTTP/1.1 using Xplicit's own client.
 	 */
 	
-	class LocalHTTPManager final
+	class XPLICIT_API XHTTPManager final
 	{
 	public:
-		LocalHTTPManager() = default;
-		~LocalHTTPManager() = default;
+		XHTTPManager() = default;
+		~XHTTPManager() = default;
 
 	public:
-		XPLICIT_COPY_DEFAULT(LocalHTTPManager);
+		XPLICIT_COPY_DEFAULT(XHTTPManager);
 		
 	public:
 		void download(const String& assetId) const noexcept;

@@ -9,9 +9,6 @@
 
 #include "InstanceComponent.h"
 
-#define XPLICIT_LUA_GLOBAL "_G"
-#define XPLICIT_LUA_NAMESPACE "Game"
-
 namespace Xplicit
 {
 	InstanceComponent::InstanceComponent(

@@ -21,7 +21,7 @@ namespace Xplicit::Player
 	class LocalSoundComponent final : public Component
 	{
 	public:
-		explicit LocalSoundComponent() : mPosition(0.0f, 0.0f, 0.0f), mVolume(0.5f), mLoop(false) {}
+		explicit LocalSoundComponent();
 		~LocalSoundComponent() override = default;
 
 	public:
@@ -32,9 +32,10 @@ namespace Xplicit::Player
 		void play_2d(const String& path) noexcept;
 
 	public:
+		void update() override;
 		const char* name() noexcept override;
-		COMPONENT_TYPE type() noexcept override;
 		bool should_update() noexcept override;
+		COMPONENT_TYPE type() noexcept override;
 		PHYSICS_TYPE physics() noexcept override;
 
 	public:

@@ -9,9 +9,9 @@
 
 #pragma once
 
-#include "LocalHTTPManager.h"
-
 #include <NetworkComponent.h>
+#include <XHTTPManager.h>
+
 #include <Event.h>
 
 namespace Xplicit::Player
@@ -40,7 +40,7 @@ namespace Xplicit::Player
 		const char* name() noexcept override;
 
 	public:
-		std::unique_ptr<LocalHTTPManager> HTTP; // HTTPService
+		std::unique_ptr<XHTTPManager> HTTP; // HTTPService
 		String Endpoint; // Asset Delivery service
 		String ID; // XplicitID
 
