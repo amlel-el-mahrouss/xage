@@ -99,10 +99,14 @@ namespace Xplicit::Player
 
 	void LocalSoundComponent::play_2d(const String& path) noexcept
 	{
-		Thread job([](String _path) {
+		Xplicit::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
+
+		Thread job([&](String _path) {
 			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
 			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
-			audio->play();
+			
+			if (audio)
+				audio->play();
 		}, path);
 
 		job.detach();
@@ -110,10 +114,14 @@ namespace Xplicit::Player
 
 	void LocalSoundComponent::play(const String& path) noexcept
 	{
+		Xplicit::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
+
 		Thread job([&](String _path) {
 			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
 			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
-			audio->play_3d(mPosition, &mLoop);
+			
+			if (audio)
+				audio->play_3d(mPosition, &mLoop);
 		}, path);
 
 		job.detach();

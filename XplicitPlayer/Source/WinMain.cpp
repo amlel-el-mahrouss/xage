@@ -46,7 +46,8 @@ XPLICIT_MAIN()
 
 		std::string cmd_line = pCmdLine;
 
-		if (cmd_line.empty())
+		if (cmd_line.empty() ||
+			cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == std::string::npos)
 			return 1;
 
 		cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));

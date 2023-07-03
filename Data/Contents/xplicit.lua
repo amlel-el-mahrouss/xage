@@ -22,7 +22,6 @@ _G.HUMANOID.ALIVE = 0;
 _G.HUMANOID.DEAD = 1;
 _G.HUMANOID.INVALID = 3;
 
-Engine = {};
 Engine.Events = {};
 
 Engine.Counter = 0;

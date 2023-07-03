@@ -107,26 +107,26 @@ static int lua_Kick(lua_State* L)
 
 void XplicitLoadServerLua() noexcept
 {
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.HumanoidService = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.ScriptService = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.NetworkService = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.RoXMLService = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.HumanoidService = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.ScriptService = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.NetworkService = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RoXMLService = {}");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetHumanoidHealth);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_HumanoidHealth");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.HumanoidService.Health = CoreAPI_HumanoidHealth");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.HumanoidService.Health = CoreAPI_HumanoidHealth");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_LoadScript);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_LoadScript");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.ScriptService.Load = CoreAPI_LoadScript");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.ScriptService.Load = CoreAPI_LoadScript");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_LoadRoXML");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.RoXMLService.Load = CoreAPI_LoadRoXML");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RoXMLService.Load = CoreAPI_LoadRoXML");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_Kick);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_Kick");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.NetworkService.Kick = CoreAPI_Kick");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.NetworkService.Kick = CoreAPI_Kick");
 
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game = {}");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game.Players = {}");

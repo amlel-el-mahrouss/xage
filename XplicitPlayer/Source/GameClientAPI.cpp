@@ -29,7 +29,7 @@ static int lua_PlaySound(lua_State* L)
 			return 0;
 
 		if (auto snd = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::Player::LocalSoundComponent>("LocalSoundComponent"))
-			snd->play_2d(path);
+			snd->play(path);
 	}
 	catch (...)
 	{
@@ -53,16 +53,16 @@ static int lua_SetTitle(lua_State* L)
 
 void XplicitLoadClientLua() noexcept
 {
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.RenderingService = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.SoundService = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RenderingService = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SoundService = {}");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_PlaySound");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.SoundService.Play = CoreAPI_PlaySound");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SoundService.Play = CoreAPI_PlaySound");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetTitle);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_SetWindowCaption");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.CoreAPI.RenderingService.SetWindowCaption = CoreAPI_SetWindowCaption");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RenderingService.SetWindowCaption = CoreAPI_SetWindowCaption");
 
 	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalSoundComponent>();
 }
