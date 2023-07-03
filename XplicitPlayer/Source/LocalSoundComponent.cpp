@@ -16,9 +16,19 @@ namespace Xplicit::Player
 		: mPosition(0.0f, 0.0f, 0.0f), mVolume(0.5f), mLoop(false) 
 	{
 		String fmt = String(XPLICIT_LUA_GLOBAL);
-		fmt += "Game.";
+		fmt += ".Game.";
 		fmt += "SoundMixer ";
 		fmt += " = { Volume = 0.5, Position = { 0, 0, 0 }, Loop = false }";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+	}
+
+	LocalSoundComponent::~LocalSoundComponent()
+	{
+		String fmt = String(XPLICIT_LUA_GLOBAL);
+		fmt += ".Game.";
+		fmt += "SoundMixer ";
+		fmt += " = nil";
 
 		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}

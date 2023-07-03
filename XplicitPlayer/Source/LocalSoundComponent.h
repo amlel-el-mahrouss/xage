@@ -22,7 +22,7 @@ namespace Xplicit::Player
 	{
 	public:
 		explicit LocalSoundComponent();
-		~LocalSoundComponent() override = default;
+		~LocalSoundComponent() override;
 
 	public:
 		XPLICIT_COPY_DEFAULT(LocalSoundComponent);
