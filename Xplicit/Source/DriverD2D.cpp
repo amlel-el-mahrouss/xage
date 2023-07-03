@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin (XplicitRenderer)
- *			Copyright Xplicit Corporation, all rights reserved.
+ *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: DriverD2D.cpp
  *			Purpose: D2D renderer.

@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitServer
- *			Copyright Xplicit Corporation, all rights reserved.
+ *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: CommonInclude.h
  *			Purpose: Server include
@@ -41,4 +41,5 @@ extern "C"
 
 #include "ServerConfig.h"
 
-inline Xplicit::Vector<float> XPLICIT_LIMIT(100000.f, 100000.f, 100000.f);
+inline Xplicit::Vector<float> XPLICIT_LIMIT(0.0f, 0.0f, 0.f); // World Limit, set this to zero if you don't mind about any limit.
+inline float XPLICIT_DESTROY_Y(-1000000.f); // Add which point the Character should be destroyed.

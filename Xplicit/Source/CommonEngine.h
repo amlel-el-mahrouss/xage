@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright Xplicit Corporation, all rights reserved.
+ *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: CommonEngine.h
  *			Purpose: Common Engine Macros/Components/Properties

@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitServer
- *			Copyright Xplicit Corporation, all rights reserved.
+ *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: PlayerSpawnDeathEvent.h
  *			Purpose: Spawn and Death handling

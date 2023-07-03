@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitServer
- *			Copyright Xplicit Corporation, all rights reserved.
+ *			Copyright Xplicit Inc, all rights reserved.
  *
  * =====================================================================
  */
@@ -73,6 +73,13 @@ namespace Xplicit
 
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
 			{
+				// Kill Humanoid on Y position -100000.0f
+				if (XPLICIT_DESTROY_Y >= ply->get_attribute().pos().Y)
+				{
+					ply->set_health(0);
+					continue;
+				}
+
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 					ply->get_attribute().pos().Z += speed;
 
@@ -96,11 +103,12 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 				peer->packet.public_hash = peer->public_hash;
 
-				XPLICIT_INFO("Humanoid:Move [EVENT]");
-
 				if (ply->get_attribute().script() &&
 					ply->get_attribute().script()->name() == "Move")
+				{
+					XPLICIT_INFO("Humanoid:Move [EVENT]");
 					ply->get_attribute().script()->run();
+				}
 
 				XPLICIT_INFO("Engine:Move [EVENT]");
 
