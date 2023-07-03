@@ -16,13 +16,18 @@
 
 static int lua_New(lua_State* L)
 {
-	Xplicit::String name = lua_tostring(L, 1);
-	Xplicit::String parent = lua_tostring(L, 2);
-	Xplicit::String script = lua_tostring(L, 3);
+	Xplicit::String name;
+	Xplicit::String parent;
+	Xplicit::String script;
+
+	name += lua_tostring(L, 1);
+	parent += lua_tostring(L, 2);
+	script += lua_tostring(L, 3);
+	
 	bool rw = lua_toboolean(L, 4);
 
 	if (name.empty() ||
-		parent.empty())
+		script.empty())
 		return 0;
 
 	auto instance = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::InstanceComponent>(
@@ -42,19 +47,22 @@ static int lua_New(lua_State* L)
 
 static int lua_Destroy(lua_State* L)
 {
-	Xplicit::String name = lua_tostring(L, 1);
-	Xplicit::String parent = lua_tostring(L, 2);
+	Xplicit::String name;
+	Xplicit::String parent;
+
+	name += lua_tostring(L, 1);
+	parent += lua_tostring(L, 2);
 
 	if (name.empty())
-		return 0;
-
-	if (parent.empty())
 		return 0;
 
 	if (auto instance = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::InstanceComponent>(name.c_str()))
 	{
 		if (instance->parent() == parent)
+		{
 			Xplicit::ComponentManager::get_singleton_ptr()->remove<Xplicit::InstanceComponent>(instance);
+			return 0;
+		}
 	}
 
 	return 0;

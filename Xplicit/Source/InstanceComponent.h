@@ -40,8 +40,9 @@ namespace Xplicit
 
 	public:
 		COMPONENT_TYPE type() noexcept override { return COMPONENT_GENERIC; }
+
 		const char* name() noexcept override { return mName.c_str(); }
-		const Xplicit::String& parent() noexcept;
+		const char* parent() noexcept;
 
 	public:
 		bool should_update() noexcept override;
