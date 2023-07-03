@@ -123,12 +123,13 @@ func Engine:Init()
     Engine.AutorunClient = "xasset://autorun-client.lua";
 end
 
-func Engine:Connect(Name, Func)
+func Engine:Connect(Name, id, Func)
     print('Registering event...');
     
-	table.insert(Engine.Events, {
+    table.insert(Engine.Events, {
         Name = Name,
         Func = Func,
+	Id = Id,
     });
 
     Engine.Counter = Engine.Counter + 1;
@@ -136,13 +137,12 @@ func Engine:Connect(Name, Func)
     print('Registered!');
 end
 
-func Engine:Disconnect(Name)
+func Engine:Disconnect(Id)
     print('Disconnecting event...');
     
     for _, v in ipairs(Engine.Events) do
-        if (v.Name == Name) then
-            v.Func = nil;
-            v.Name = nil;
+        if (v.Id == Id) then
+            v = {};
 
             Engine.Counter = Engine.Counter - 1;
 

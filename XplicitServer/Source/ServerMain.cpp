@@ -43,8 +43,6 @@ static void xplicit_load_sh()
 
 	while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
 	{
-		std::cout << "> ";
-
 		std::cin.getline(cmd_buf, 1024);
 
 		if (strcmp(cmd_buf, "exit") == 0)
@@ -96,10 +94,16 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		if (argc < 1)
-			return 1;
+		if (argc < 2)
+		{
+			std::cout << "XplicitServer, Self-Hostable XplicitNgin instance.\n";
+			std::cout << "usage: XplicitServer.exe <PlaceID>";
+			std::cin.get();
 
-		XPLICIT_PLACE_ID = argv[1]; // could one 1 or 10005588.
+			return 1;
+		}
+
+		XPLICIT_PLACE_ID = argv[1];
 
 		Xplicit::Root::get_singleton_ptr()->set(createDevice(EDT_NULL));
 
@@ -119,7 +123,10 @@ int main(int argc, char** argv)
 
 		if (!ip4)
 		{
-			XPLICIT_INFO("Please define XPLICIT_SERVER_ADDR.");
+			std::cout << "XplicitServer, Self-Hostable XplicitNgin instance.\n";
+			std::cout << "Please define XPLICIT_SERVER_ADDR, it is needed to bound to a specific address.\n";
+			std::cin.get();
+
 			return 1;
 		}
 

@@ -283,31 +283,41 @@ namespace Xplicit::RoXML
 
 							if (attr == "Name")
 							{
-								world_node.Name = "Connect";
+								if (node->first_attribute()->next_attribute())
+								{
+									String attr_id = node->first_attribute()->next_attribute()->name();
+									String id = node->first_attribute()->next_attribute()->value();
 
-								String name_value = node->first_attribute()->value();
+									world_node.Name = "Connect";
 
-								world_node.ID = name_value;
+									String name_value = node->first_attribute()->value();
 
-								String func_name = "fnXplicit";
-								func_name += std::to_string(xplicit_get_epoch());
+									world_node.ID = name_value;
 
-								String event_code = "local func ";
-								event_code += func_name;
-								event_code += "()\n";
+									String func_name = "fnXplicit";
+									func_name += std::to_string(xplicit_get_epoch());
 
-								event_code += node->value();
+									String event_code = "local func ";
+									event_code += func_name;
+									event_code += "()\n";
 
-								event_code += "\nend\n";
-								event_code += "Engine:Connect(";
-								event_code += "\"";
-								event_code += name_value;
-								event_code += "\"";
-								event_code += ",";
-								event_code += func_name;
-								event_code += ");";
+									event_code += node->value();
 
-								Lua::XLuaStateManager::get_singleton_ptr()->run_string(event_code.c_str());
+									event_code += "\nend\n";
+									event_code += "Engine:Connect(";
+									event_code += "\"";
+									event_code += name_value;
+									event_code += "\"";
+									event_code += ",";
+									event_code += "\"";
+									event_code += id;
+									event_code += "\"";
+									event_code += ",";
+									event_code += func_name;
+									event_code += ");";
+
+									Lua::XLuaStateManager::get_singleton_ptr()->run_string(event_code.c_str());
+								}
 							}
 						}
 
