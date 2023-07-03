@@ -38,12 +38,29 @@ namespace Xplicit
 		}
 	}
 
-	InstanceComponent::~InstanceComponent() = default;
+	InstanceComponent::~InstanceComponent()
+	{
+		String fmt = XPLICIT_LUA_NAMESPACE;
+		fmt += mParent;
+		fmt += ".";
+		fmt += mName;
+		
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+	}
+
+	const Xplicit::String& InstanceComponent::parent() noexcept { return mParent; }
 
 	bool InstanceComponent::should_update() noexcept { return true; }
 	
 	void InstanceComponent::update()
 	{
+		/*
+		 *
+		 * ReadOnly means that CLua can't edit this instance, only C++ can.
+		 * This can be used for FFI.
+		 *
+		 */
+
 		if (this->mReadOnly)
 		{
 			static const char* pos[] = { "X", "Y", "Z" };
@@ -54,9 +71,9 @@ namespace Xplicit
 				String fmt = XPLICIT_LUA_GLOBAL;
 
 				fmt += XPLICIT_LUA_NAMESPACE;
-				fmt += mName;
-				fmt += ".";
 				fmt += mParent;
+				fmt += ".";
+				fmt += mName;
 				fmt += ".Position.";
 				fmt += pos[i];
 				fmt += "= " + std::to_string(pos_raw[i]) + ";";
@@ -72,6 +89,8 @@ namespace Xplicit
 				String fmt = XPLICIT_LUA_GLOBAL;
 
 				fmt += XPLICIT_LUA_NAMESPACE;
+				fmt += mParent;
+				fmt += ".";
 				fmt += mName;
 				fmt += ".Size.";
 				fmt += pos[i];
@@ -88,6 +107,8 @@ namespace Xplicit
 				String fmt = XPLICIT_LUA_GLOBAL;
 
 				fmt += XPLICIT_LUA_NAMESPACE;
+				fmt += mParent;
+				fmt += ".";
 				fmt += mName;
 				fmt += ".Color.";
 				fmt += clr[i];
@@ -99,6 +120,8 @@ namespace Xplicit
 			String fmt = XPLICIT_LUA_GLOBAL;
 
 			fmt += XPLICIT_LUA_NAMESPACE;
+			fmt += mParent;
+			fmt += ".";
 			fmt += mName;
 			fmt += ".Archivable = ";
 			fmt += this->get_attribute().is_archivable() ? "true" : "false";
@@ -110,6 +133,8 @@ namespace Xplicit
 			fmt = XPLICIT_LUA_GLOBAL;
 
 			fmt += XPLICIT_LUA_NAMESPACE;
+			fmt += mParent;
+			fmt += ".";
 			fmt += mName;
 			fmt += ".Locked = ";
 			fmt += this->get_attribute().is_locked() ? "true" : "false";
@@ -121,6 +146,8 @@ namespace Xplicit
 			fmt = XPLICIT_LUA_GLOBAL;
 
 			fmt += XPLICIT_LUA_NAMESPACE;
+			fmt += mParent;
+			fmt += ".";
 			fmt += mName;
 			fmt += ".Anchor = ";
 			fmt += this->get_attribute().is_anchored() ? "true" : "false";
@@ -132,6 +159,8 @@ namespace Xplicit
 			fmt = XPLICIT_LUA_GLOBAL;
 
 			fmt += XPLICIT_LUA_NAMESPACE;
+			fmt += mParent;
+			fmt += ".";
 			fmt += mName;
 			fmt += ".Collide = ";
 			fmt += this->get_attribute().has_no_collide() ? "false" : "true";
@@ -143,6 +172,8 @@ namespace Xplicit
 			fmt = XPLICIT_LUA_GLOBAL;
 
 			fmt += XPLICIT_LUA_NAMESPACE;
+			fmt += mParent;
+			fmt += ".";
 			fmt += mName;
 			fmt += ".Alpha = ";
 			fmt += std::to_string(this->get_attribute().alpha());
