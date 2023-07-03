@@ -14,8 +14,6 @@
 #include <Root.h>
 #include "Mesh.h"
 
-#include <lua/lua.hpp>
-
 namespace Xplicit::Player
 {
 	StaticMesh::StaticMesh(const char* path)

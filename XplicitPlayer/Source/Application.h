@@ -53,8 +53,8 @@ namespace Xplicit
 				{
 				case EMIE_LMOUSE_PRESSED_DOWN:
 				{
-					XPLICIT_INFO("LocalHumanoid:Click [EVENT]");
-					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Click()");
+					XPLICIT_INFO("Engine:LeftClick [EVENT]");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LeftClick()");
 
 					mMouseLeft.Down = true;
 					break;
@@ -66,7 +66,7 @@ namespace Xplicit
 
 				case EMIE_RMOUSE_PRESSED_DOWN:
 				{
-					XPLICIT_INFO("LocalHumanoid:RightClick [EVENT]");
+					XPLICIT_INFO("Engine:RightClick [EVENT]");
 					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:RightClick()");
 
 					mMouseRight.Down = true;
@@ -225,7 +225,7 @@ namespace Xplicit
 
 namespace Xplicit::Bites
 {
-	constexpr const PChar* XPLICIT_APP_NAME = L"Xplicit - [ No Place ]";
+	constexpr const PChar* XPLICIT_APP_NAME = L"Xplicit - [ Joining... ]";
 
 	class Application final
 	{

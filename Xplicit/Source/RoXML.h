@@ -35,12 +35,14 @@ namespace Xplicit::RoXML
 			Color(0.0f, 0.0f, 0.0f),
 			Size(0.0f, 0.0f, 0.0f),
 			Position(0.0f, 0.0f, 0.0f),
+			Value(""),
 			Name(""),
 			ID("")
 		{}
 
 		String ID;
 		String Name;
+		String Value;
 		Color<float> Color;
 		Vector<float> Size;
 		Vector<float> Position;
@@ -309,13 +311,11 @@ namespace Xplicit::RoXML
 							}
 						}
 
-						if (node_name == "Lua")
+						if (node_name == "Instance" && node->first_attribute() && strcmp(node->first_attribute()->name(), "Name") == 0)
 						{
-							world_node.Name = "Lua";
-							
-							String code = node->value();
-
-							Lua::XLuaStateManager::get_singleton_ptr()->run_string(code.c_str());
+							world_node.Name = node_name;
+							world_node.ID = node->first_attribute()->value();
+							world_node.Value = node->value();
 						}
 
 						params.WorldNodes.push_back(world_node);

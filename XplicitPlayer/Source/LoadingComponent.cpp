@@ -104,7 +104,9 @@ namespace Xplicit::Player
 
 			XPLICIT_LIGHT = RENDER->getSceneManager()->addLightSceneNode(nullptr, vector3df(0, 0, 0), SColorf(1.0, 1.0, 1.0, 1.0), 1000.0);
 
-			XPLICIT_INFO("LocalHumanoid:LocalSpawn [EVENT]");
+			RENDER->setWindowCaption(L"Xplicit [ InGame ]");
+
+			XPLICIT_INFO("Engine:LocalSpawn [EVENT]");
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");
 
 			mEnabled = false;

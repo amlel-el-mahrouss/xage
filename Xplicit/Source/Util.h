@@ -26,6 +26,11 @@ inline Xplicit::Color<float> Red(0xFF, 0, 0, 0xFF);
 inline Xplicit::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, 0xFFFFFF);
 inline Xplicit::Vector<float>   XPLICIT_ORIGIN(0.0f, 0.0f, 0.0f);
 
+/// <summary>
+/// Gets the XPLICIT_ID of a specific peer.
+/// </summary>
+/// <param name="player_index">player at index.</param>
+/// <returns></returns>
 inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 {
 	if (player_index > Xplicit::XPLICIT_MAX_CONNECTIONS)
@@ -41,7 +46,10 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 
 namespace Xplicit
 {
-	class XPLICIT_API XAttribute final
+	/// <summary>
+	/// Xplicit Attribute class, reserved for RoXML and Scripting/Engine APIs.
+	/// </summary>
+	class XAttribute final
 	{
 	public:
 		explicit XAttribute()

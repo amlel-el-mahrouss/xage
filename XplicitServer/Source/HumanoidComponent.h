@@ -33,11 +33,9 @@ namespace Xplicit
 		void set_peer(NetworkInstance* peer) noexcept;
 		NetworkInstance* get_peer() const noexcept;
 
-	public:
 		PHYSICS_TYPE physics() noexcept override;
 		COMPONENT_TYPE type() noexcept override;
 
-	public:
 		const char* name() noexcept override;
 
 	public:

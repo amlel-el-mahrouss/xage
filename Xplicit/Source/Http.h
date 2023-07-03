@@ -20,9 +20,9 @@ namespace Xplicit::HTTP
     constexpr int16_t XPLICIT_HTTP_PORT = 443;
 
     class MIMEFactory;
-    class HTTPError;
     class HTTPHelpers;
     class HTTPWriter;
+    class HTTPError;
 
     class MIMEFactory final 
     {

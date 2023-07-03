@@ -17,11 +17,10 @@
 #include <Util.h>
 #include <Uri.h>
 
-std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_UTF16_CONV;
-
 #ifdef XPLICIT_WINDOWS
 
-// not thread safe!
+std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_UTF16_CONV;
+
 static int lua_PlaySound(lua_State* L)
 {
 	Xplicit::String path = lua_tostring(L, 1);

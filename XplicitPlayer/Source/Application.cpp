@@ -103,7 +103,7 @@ namespace Xplicit::Bites
 		XPLICIT_GET_DATA_DIR(dat);
 
 		mSettingsPath = dat;
-		mSettingsPath += "ClientSettings.dat";
+		mSettingsPath += "ClientSettings.ini";
 
 		mIni = std::make_unique<mINI::INIFile>(mSettingsPath);
 	}

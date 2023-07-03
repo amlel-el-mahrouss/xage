@@ -48,9 +48,9 @@ func Engine:Leave()
     end
 end
 
-func Engine:Click()
+func Engine:LeftClick()
     for _, v in ipairs(Engine.Events) do
-        if (v.Name == "Click") then
+        if (v.Name == "LeftClick") then
             v.Func();
         end
     end
