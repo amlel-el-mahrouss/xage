@@ -9,10 +9,10 @@
 
 #pragma once
 
+#include "Xplicit.h"
 #include <Nplicit.h>
 
 #include "Root.h"
-#include "Xplicit.h"
 #include "XplicitID.h"
 #include "LuaScriptComponent.h"
 #include "NetworkServerComponent.h"
@@ -43,6 +43,8 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 
 	return XPLICIT_INVALID_ID;
 }
+
+XPLICIT_API void XplicitLoadBaseLua() noexcept;
 
 namespace Xplicit
 {
@@ -79,7 +81,7 @@ namespace Xplicit
 	public:
 		LuaScriptComponent* script() noexcept { return mScript; }
 		bool is_archivable() noexcept { return mArchivable; }
-		bool has_no_collide() noexcept { return mNoCollide; }
+		bool has_no_collide() noexcept { return !mNoCollide; }
 		bool is_anchored() noexcept { return mAnchored; }
 		bool is_locked() noexcept { return mLocked; }
 		bool alpha() noexcept { return mLocked; }

@@ -44,7 +44,7 @@ static int lua_SetTitle(lua_State* L)
 	return 0;
 }
 
-void xplicit_load_lua() noexcept
+void XplicitLoadClientLua() noexcept
 {
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlaySound");

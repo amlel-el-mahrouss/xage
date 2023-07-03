@@ -68,15 +68,11 @@ using namespace core;
 #define XPLICIT_WINDOWS 1
 #endif // ifdef _MSC_VER
 
-#ifdef __XPLICIT_DLL__
-#   ifdef __EXPORT_XPLICIT__
+#ifdef __EXPORT_XPLICIT__
 #   define XPLICIT_API __declspec(dllexport)
-#   else
-#   define XPLICIT_API __declspec(dllimport)
-#   endif
 #else
-#   define XPLICIT_API
-#endif // ifdef __XPLICIT_DLL__
+#   define XPLICIT_API __declspec(dllimport)
+#endif
 
 #define XPLICIT_MSVC (1)
 #define XPLICIT_GCC (2)

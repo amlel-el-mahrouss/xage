@@ -87,8 +87,6 @@ static void xplicit_load_sh()
 	}
 }
 
-extern void xplicit_load_lua() noexcept;
-
 /* Application main entrypoint */
 int main(int argc, char** argv)
 {
@@ -151,7 +149,7 @@ int main(int argc, char** argv)
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
 		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
 
-		xplicit_load_lua();
+		XplicitLoadBaseLua();
 
 		Xplicit::Thread logic([&]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");

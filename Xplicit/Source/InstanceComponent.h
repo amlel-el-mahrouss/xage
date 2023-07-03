@@ -9,11 +9,15 @@
 
 #pragma once
 
-#include "CommonInclude.h"
+#include "CommonEngine.h"
+#include "Component.h"
+#include "Util.h"
+
+#include <lua/lua.hpp>
 
 namespace Xplicit
 {
-	class InstanceComponent : public Component
+	class XPLICIT_API InstanceComponent : public Component
 	{
 	public:
 		InstanceComponent() = delete;
@@ -23,6 +27,7 @@ namespace Xplicit
 			const Vector<float>& position, 
 			const Vector<float>& size,
 			const Color<float>& color,
+			const char* script = nullptr,
 			const char* parent = "World",
 			const char* name = "Instance",
 			const bool read_only = false);

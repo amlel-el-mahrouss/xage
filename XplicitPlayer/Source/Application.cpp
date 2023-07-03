@@ -20,7 +20,7 @@
 // We need this to connect and download from server.
 #include "LoadingComponent.h"
 
-extern void xplicit_load_lua() noexcept;
+extern void XplicitLoadClientLua() noexcept;
 
 namespace Xplicit::Player
 {
@@ -51,7 +51,8 @@ namespace Xplicit::Bites
 		mPath += data_appdata;
 
 		// register lua calls, such as PlaySound
-		xplicit_load_lua();
+		XplicitLoadClientLua();
+		XplicitLoadBaseLua();
 
 		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::LoadingComponent>();
 		XPLICIT_ASSERT(splash_screen);

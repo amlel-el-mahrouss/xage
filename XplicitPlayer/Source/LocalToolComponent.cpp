@@ -24,7 +24,11 @@ namespace Xplicit::Player
 
 		// Create Lua table for current object.
 
-		String fmt = std::format("{}{}{} = { Mesh = '' }", XPLICIT_LUA_GLOBAL, parent, name);
+		String fmt = String(XPLICIT_LUA_GLOBAL);
+		fmt += mParent;
+		fmt += mName;
+		fmt += " = { Mesh = '' }";
+
 		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 		mMeshPtr = std::make_unique<StaticMesh>(mesh);
