@@ -137,7 +137,7 @@ namespace Xplicit::Player
 		_path.clear();
 
 		_path = dir;
-		_path += "/XplicitNgin/Contents/Bundles/";
+		_path += "Contents/Bundles/";
 		_path += face;
 
 		/* long pointer checks, stupid shit, but we gotta do it */

@@ -17,6 +17,7 @@ namespace Xplicit::Player
 	void XHTTPManager::download(const String& assetId) const noexcept
 	{
         HTTP::HTTPWriter http_writer;
+        
         auto sock = http_writer.create_and_connect(mEndpoint);
 
         if (!sock)

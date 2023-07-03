@@ -5,7 +5,7 @@
  *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: LoadingComponent.cpp
- *			Purpose: 
+ *			Purpose: XplicitPlayer Loading Screen, show something while the player waits.
  *
  * =====================================================================
  */
@@ -26,6 +26,7 @@
 #include <XHTTPManager.h>
 #include <CommonEngine.h>
 #include <lua/lua.hpp>
+#include <codecvt>
 
 extern ILightSceneNode* XPLICIT_LIGHT;
 
@@ -96,6 +97,7 @@ namespace Xplicit::Player
 			monitor->ID = packet.buffer;
 			monitor->Endpoint = XPLICIT_XASSET_ENDPOINT;
 			monitor->HTTP = std::make_unique<XHTTPManager>();
+			monitor->HTTP->set_endpoint(monitor->Endpoint);
 
 			EventManager::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>(XPLICIT_CANVAS);
@@ -104,13 +106,34 @@ namespace Xplicit::Player
 
 			RENDER->setWindowCaption(L"Xplicit [ InGame ]");
 
-			XPLICIT_SLEEP(500);
+			XPLICIT_SLEEP(3000);
 
 			mNetwork->read(packet);
 
-			//
-			String place_id = std::format("LoadRoXML('{}');", packet.buffer);
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string(place_id.c_str());
+			String scene_id;
+			scene_id += packet.buffer;
+			scene_id += ".roxml";
+
+			try
+			{
+				monitor->HTTP->download(scene_id);
+			}
+			catch (const HTTP::HTTPError& err)
+			{
+				std::wstring exit;
+				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+				exit += L"What: ";
+				exit += converter.from_bytes(err.what());
+				exit += L"\n";
+
+				if (Xplicit::DialogHelper::message_box(L"XplicitNgine",
+					L"Program Exit",
+					exit.c_str(),
+					TD_INFORMATION_ICON,
+					TDCBF_OK_BUTTON) == IDOK)
+					std::exit(0);
+			}
 
 			XPLICIT_INFO("Engine:LocalSpawn [EVENT]");
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");

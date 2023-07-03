@@ -217,7 +217,7 @@ namespace Xplicit::HTTP
         HTTPWriter& operator=(const HTTPWriter&) = default;
         HTTPWriter(const HTTPWriter&) = default;
 
-        HTTPSharedPtr create_and_connect(const std::string& dns) 
+        HTTPSharedPtr create_and_connect(const std::string dns) 
         {
             if (dns.empty()) 
                 throw HTTPError(HTTP_DNS_ERROR);
@@ -234,24 +234,26 @@ namespace Xplicit::HTTP
 
             ZeroMemory(&sock->m_Addr, sizeof(struct sockaddr_in));
 
-            sock->m_Addr.sin_family = AF_INET;
             ::inet_pton(AF_INET, dns.c_str(), &sock->m_Addr.sin_addr);
-
             sock->m_Addr.sin_port = ::htons(XPLICIT_HTTP_PORT);
+
             sock->m_Dns = std::string{ dns.data() };
 
-            int result = ::connect(sock->m_Socket, reinterpret_cast<SOCKADDR*>(&sock->m_Addr), sizeof(sock->m_Addr));
+            if (::connect(sock->m_Socket, reinterpret_cast<sockaddr*>(&sock->m_Addr), sizeof(sockaddr_in)) == SOCKET_ERROR)
+                return nullptr;
             
-            if (result == SOCKET_ERROR) 
-                throw HTTPError(HTTP_DNS_ERROR);
 
             SSL_set_fd(m_Ssl, sock->m_Socket);
             auto status = SSL_connect(m_Ssl);
 
             if (status != 1)
             {
+
+#ifdef XPLICIT_DEBUG
+                // this exits the program when it hits.
                 SSL_get_error(m_Ssl, status);
-                ERR_print_errors_fp(stderr); //High probability this doesn't do anything
+                ERR_print_errors_fp(stderr);
+#endif
 
                 return nullptr;
             }

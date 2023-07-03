@@ -2,5 +2,5 @@
 
 #pragma once
 
-#define XPLICIT_XASSET_ENDPOINT ("play-xplicit.com/library")
-#define XPLICIT_PLACE_ENDPOINT ("play-xplicit.com/place")
+#define XPLICIT_XASSET_ENDPOINT ("play-xplicit.com")
+#define XPLICIT_PLACE_ENDPOINT ("play-xplicit.com")
