@@ -98,7 +98,7 @@ namespace Xplicit
 		bool mAnchored;
 		bool mNoCollide;
 		bool mLocked;
-		foat mAlpha;
+		float mAlpha;
 
 	};
 }
