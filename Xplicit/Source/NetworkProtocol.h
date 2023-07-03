@@ -77,6 +77,7 @@ namespace Xplicit
         NETWORK_CMD_DAMAGE, // Notify client with damage.
         NETWORK_CMD_SPAWN,
         NETWORK_CMD_FORWARD,
+        NETWORK_CMD_JUMP,
         NETWORK_CMD_BACKWARD,
         NETWORK_CMD_LEFT,
         NETWORK_CMD_RIGHT,
@@ -88,7 +89,7 @@ namespace Xplicit
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
         NETWORK_CMD_REPL, // replication call
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
-        NETWORK_CMD_COUNT = 17,
+        NETWORK_CMD_COUNT = 18,
     };
 
     /* replication network commands. */

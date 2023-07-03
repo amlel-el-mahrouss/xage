@@ -212,7 +212,7 @@ static int lua_AttachScript(lua_State* L)
 	{
 		if (humanoid[index]->id() == id)
 		{
-			humanoid[index]->get_attribute().set_script(Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::LuaScriptComponent>(script));
+			humanoid[index]->get_attribute().script(Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::LuaScriptComponent>(script));
 			return 0;
 		}
 	}

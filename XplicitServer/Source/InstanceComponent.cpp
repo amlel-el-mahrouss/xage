@@ -14,7 +14,8 @@
 
 namespace Xplicit
 {
-	InstanceComponent::InstanceComponent(const Vector<float>& position, 
+	InstanceComponent::InstanceComponent(
+		const Vector<float>& position, 
 		const Vector<float>& size, 
 		const Color<float>& color, 
 		const char* parent,
@@ -30,10 +31,7 @@ namespace Xplicit
 
 	InstanceComponent::~InstanceComponent() = default;
 
-	bool InstanceComponent::should_update() noexcept
-	{
-		return true;
-	}
+	bool InstanceComponent::should_update() noexcept { return true; }
 	
 	void InstanceComponent::update()
 	{
@@ -86,6 +84,59 @@ namespace Xplicit
 
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
+
+		String fmt = XPLICIT_LUA_GLOBAL;
+
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += mName;
+		fmt += ".Archivable = ";
+		fmt += this->get_attribute().is_archivable() ? "true" : "false";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
+		fmt = XPLICIT_LUA_GLOBAL;
+
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += mName;
+		fmt += ".Locked = ";
+		fmt += this->get_attribute().is_locked() ? "true" : "false";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
+		fmt = XPLICIT_LUA_GLOBAL;
+
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += mName;
+		fmt += ".Anchor = ";
+		fmt += this->get_attribute().is_anchored() ? "true" : "false";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
+		fmt = XPLICIT_LUA_GLOBAL;
+
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += mName;
+		fmt += ".Collide = ";
+		fmt += this->get_attribute().has_no_collide() ? "false" : "true";
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+		fmt.clear();
+
+		fmt = XPLICIT_LUA_GLOBAL;
+
+		fmt += XPLICIT_LUA_NAMESPACE;
+		fmt += mName;
+		fmt += ".Alpha = ";
+		fmt += std::to_string(this->get_attribute().alpha());
+
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 
 	XAttribute& InstanceComponent::get_attribute() noexcept { return mAttribute; }

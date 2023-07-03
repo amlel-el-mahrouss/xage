@@ -71,6 +71,8 @@ namespace Xplicit
 			if (peer->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
 
+			// no need to edit this piece of code, WorldCollisionEvent will take care of this.
+
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
 			{
 				// Kill Humanoid on Y position -100000.0f
@@ -79,6 +81,9 @@ namespace Xplicit
 					ply->set_health(0);
 					continue;
 				}
+
+				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_JUMP)
+					ply->get_attribute().pos().Y += speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 					ply->get_attribute().pos().Z += speed;

@@ -80,8 +80,10 @@ namespace Xplicit::Player
 
 		if (this->get_attribute().script() &&
 			this->get_attribute().script()->name() == "Update")
+		{
+			XPLICIT_INFO("LocalToolComponent:Update()");
 			this->get_attribute().script()->run();
-
+		}
 	}
 }
 

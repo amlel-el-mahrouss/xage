@@ -68,27 +68,37 @@ namespace Xplicit
 
 	public:
 		Color<float>& color() noexcept { return mColor; }
-
 		Vector<float>& scale() noexcept { return mScale; }
-
 		Vector<float>& pos() noexcept { return mPos; }
 
-		bool is_archivable() noexcept { return mArchivable; }
-
+	public:
 		LuaScriptComponent* script() noexcept { return mScript; }
+		bool is_archivable() noexcept { return mArchivable; }
+		bool has_no_collide() noexcept { return mNoCollide; }
+		bool is_anchored() noexcept { return mAnchored; }
+		bool is_locked() noexcept { return mLocked; }
+		bool alpha() noexcept { return mLocked; }
 
-		void set_script(LuaScriptComponent* pScript) noexcept 
-		{
-			if (pScript)
-				mScript = pScript; 
-		}
+	public:
+		void script(LuaScriptComponent* script) noexcept { mScript = script; }
+		void archivable(const bool enable) noexcept { mArchivable = enable; }
+		void collide(const bool enable) noexcept { mNoCollide = enable; }
+		void anchor(const bool enable) noexcept { mAnchored = enable; }
+		void locked(const bool enable) noexcept { mLocked = enable; }
+		void alpha(const float alpha) noexcept { mAlpha = alpha;  }
 
 	private:
 		LuaScriptComponent* mScript;
 		Vector<float> mScale;
 		Color<float> mColor;
 		Vector<float> mPos;
+
+	private:
 		bool mArchivable;
+		bool mAnchored;
+		bool mNoCollide;
+		bool mLocked;
+		foat mAlpha;
 
 	};
 }
