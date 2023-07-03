@@ -44,8 +44,6 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 	return XPLICIT_INVALID_ID;
 }
 
-XPLICIT_API void XplicitLoadBaseLua() noexcept;
-
 namespace Xplicit
 {
 	/// <summary>
@@ -109,3 +107,5 @@ namespace Xplicit
 
 	};
 }
+
+#include "BaseLuaAPI.h"

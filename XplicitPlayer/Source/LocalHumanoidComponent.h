@@ -56,7 +56,7 @@ namespace Xplicit::Player
 
 	};
 
-	class XPLICIT_API LocalHumanoidMoveEvent : public Event
+	class LocalHumanoidMoveEvent : public Event
 	{
 	public:
 		LocalHumanoidMoveEvent() = delete;

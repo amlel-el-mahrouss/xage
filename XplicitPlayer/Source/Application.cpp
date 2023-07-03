@@ -50,9 +50,10 @@ namespace Xplicit::Bites
 		XPLICIT_GET_DATA_DIR(data_appdata);
 		mPath += data_appdata;
 
+		XplicitLoadBaseLua();
+
 		// register lua calls, such as PlaySound
 		XplicitLoadClientLua();
-		XplicitLoadBaseLua();
 
 		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::LoadingComponent>();
 		XPLICIT_ASSERT(splash_screen);

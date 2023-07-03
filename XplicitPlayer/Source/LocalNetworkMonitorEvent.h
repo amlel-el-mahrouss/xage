@@ -22,7 +22,7 @@ namespace Xplicit::Player
 	* It keeps track of hash, resets and things like that.
 	* if also owns the HTTPManager.
 	*/
-	class XPLICIT_API LocalNetworkMonitorEvent final : public Event
+	class LocalNetworkMonitorEvent final : public Event
 	{
 	public:
 		LocalNetworkMonitorEvent() = delete;

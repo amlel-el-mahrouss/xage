@@ -16,7 +16,7 @@
 
 namespace Xplicit::Player
 {
-	class XPLICIT_API LocalMenuEvent final : public Event
+	class LocalMenuEvent final : public Event
 	{
 	public:
 		LocalMenuEvent() = delete;
