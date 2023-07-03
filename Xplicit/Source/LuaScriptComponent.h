@@ -25,9 +25,12 @@ namespace Xplicit
 		LuaScriptComponent() = delete;
 
 	public:
-		explicit LuaScriptComponent(const char* name, const char* event_name = "nil") 
-			: Component(), mName(name), mEventName(event_name)
-		{}
+		explicit LuaScriptComponent(const char* name, const bool run_now = false) 
+			: Component(), mName(name)
+		{
+			if (run_now)
+				this->run();
+		}
 
 		~LuaScriptComponent() override = default;
 
@@ -44,7 +47,6 @@ namespace Xplicit
 		void run() noexcept;
 
 	private:
-		String mEventName;
 		String mName;
 
 	};

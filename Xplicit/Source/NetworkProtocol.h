@@ -28,7 +28,7 @@
 #define XPLICIT_NETWORK_MAG_2 ('X')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
-#define XPLICIT_NETWORK_CMD_MAX (23U)
+#define XPLICIT_NETWORK_CMD_MAX (24U)
 
 #ifndef XPLICIT_INVALID_ADDR
 #   define XPLICIT_INVALID_ADDR INADDR_NONE
@@ -218,12 +218,13 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_SHUTDOWN (14)
 #define XPLICIT_NETWORK_CMD_REPL (15)
 #define XPLICIT_NETWORK_CMD_CHAT (16)
+#define XPLICIT_NETWORK_CMD_JUMP (17)
 
 /*! this is a command reserved by the engine, 
   ! to separate the network and replication commands 
   !*/
 
-#define XPLICIT_LAST_RESERVED_CMD (XPLICIT_NETWORK_CMD_CHAT + 1)
+#define XPLICIT_LAST_RESERVED_CMD (XPLICIT_NETWORK_CMD_JUMP + 1)
 
 #define XPLICIT_REPL_CREATE (18)
 #define XPLICIT_REPL_DESTROY (19)

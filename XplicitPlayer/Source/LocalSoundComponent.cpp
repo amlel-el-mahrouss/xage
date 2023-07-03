@@ -42,20 +42,22 @@ namespace Xplicit::Player
 
 	void LocalSoundComponent::play_2d(const String& path) noexcept
 	{
-		Thread job([&]() {
-			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(mConverter.from_bytes(path).c_str());
-			audio->play(mVolume, 100, 0);
-			});
+		Thread job([](String _path) {
+			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
+			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
+			audio->play();
+		}, path);
 
 		job.detach();
 	}
 
 	void LocalSoundComponent::play(const String& path) noexcept
 	{
-		Thread job([&]() {
-			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(mConverter.from_bytes(path).c_str());
+		Thread job([&](String _path) {
+			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
+			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
 			audio->play_3d(mPosition, &mLoop);
-		});
+		}, path);
 
 		job.detach();
 	}

@@ -21,7 +21,7 @@ namespace Xplicit::Player
 	class LocalSoundComponent final : public Component
 	{
 	public:
-		explicit LocalSoundComponent() = default;
+		explicit LocalSoundComponent() : mPosition(0.0f, 0.0f, 0.0f), mVolume(0.5f), mLoop(false) {}
 		~LocalSoundComponent() override = default;
 
 	public:
@@ -37,12 +37,10 @@ namespace Xplicit::Player
 		bool should_update() noexcept override;
 		PHYSICS_TYPE physics() noexcept override;
 
+	public:
 		void set_volume(const float volume = 0.5f) noexcept;
 		void set_position(const Vector<float> pos = Vector<float>(0.0f, 0.0f, 0.0f)) noexcept;
 		void should_loop(const bool enable = true) noexcept;
-
-	private:
-		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> mConverter;
 
 	private:
 		Vector<float> mPosition;

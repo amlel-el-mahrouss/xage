@@ -47,7 +47,8 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 namespace Xplicit
 {
 	/// <summary>
-	/// Xplicit Attribute class, reserved for RoXML and Scripting/Engine APIs.
+	/// Xplicit Attribute Class.
+	/// Reserved for RoXML and the Scripting/Engine APIs.
 	/// </summary>
 	class XAttribute final
 	{
@@ -58,7 +59,11 @@ namespace Xplicit
 			  mColor(0.0f, 0.0f, 0.0f),
 			  mPos(0.0f, 0.0f, 0.0f), 
 			  mScale(0.0f, 0.0f, 0.0f),
-			  mArchivable(false)
+			  mArchivable(false),
+			  mLocked(false),
+			  mAlpha(1.0f),
+			  mAnchored(false),
+			  mNoCollide(false)
 		{}
 
 		~XAttribute() = default;

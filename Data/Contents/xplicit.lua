@@ -123,13 +123,13 @@ func Engine:Init()
     Engine.AutorunClient = "xasset://autorun-client.lua";
 end
 
-func Engine:Connect(Name, id, Func)
+func Engine:Connect(Name, Id, Func)
     print('Registering event...');
     
     table.insert(Engine.Events, {
         Name = Name,
         Func = Func,
-	Id = Id,
+	    Id = id,
     });
 
     Engine.Counter = Engine.Counter + 1;

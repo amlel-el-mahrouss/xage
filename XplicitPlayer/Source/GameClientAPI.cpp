@@ -19,8 +19,6 @@
 
 #ifdef XPLICIT_WINDOWS
 
-std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_UTF16_CONV;
-
 static int lua_PlaySound(lua_State* L)
 {
 	Xplicit::String path = lua_tostring(L, 1);
@@ -41,27 +39,25 @@ static int lua_SetTitle(lua_State* L)
 	if (path.empty())
 		return 0;
 
-	RENDER->setWindowCaption(XPLICIT_UTF16_CONV.from_bytes(path).c_str());
+	RENDER->setWindowCaption(irr::core::stringw(path.c_str()).c_str());
 
 	return 0;
 }
 
 void xplicit_load_lua() noexcept
 {
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Sound = {}");
-
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Sound:Play");
-
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Window = {}");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PlaySound");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetTitle);
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "_G.Window:SetCaption");
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "SetWindowCaption");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 
 	full_path += "Contents/";
 	full_path += "xplicit.lua";
+
+	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalSoundComponent>();
 
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run(full_path.c_str());
 }

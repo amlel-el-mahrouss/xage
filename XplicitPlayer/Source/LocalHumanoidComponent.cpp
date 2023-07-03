@@ -39,6 +39,10 @@ namespace Xplicit::Player
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("LocalHumanoidComponent::LocalHumanoidComponent");
 #endif
+
+
+		XPLICIT_INFO("Engine:Spawn [EVENT]");
+		Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
 	}
 
 	LocalHumanoidComponent::~LocalHumanoidComponent()

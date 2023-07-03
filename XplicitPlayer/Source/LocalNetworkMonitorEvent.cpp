@@ -46,10 +46,12 @@ namespace Xplicit::Player
 		/* did we lost connection to peer? */
 		if (mNetwork->is_reset())
 		{
-			++mResetCount;
-
-			if (mResetCount > XPLICIT_MAX_RESETS)
-				std::exit(0);
+			ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+				if (KB->key_down())
+					RENDER->closeDevice();
+				}, vector2di(XPLICIT_DIM.X / 3.45,
+					XPLICIT_DIM.Y / 4),
+					POPUP_TYPE::NETWORK, "BanPopup");
 
 			return;
 		}

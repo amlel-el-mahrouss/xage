@@ -177,8 +177,6 @@ namespace Xplicit
 
 	bool HumanoidComponent::is_alive() const noexcept { return mHealth > 0; }
 
-	const int64_t& HumanoidComponent::id() noexcept { return mId; }
-
 	const HUMANOID_STATE& HumanoidComponent::get_state() noexcept { return mState; }
 }
 

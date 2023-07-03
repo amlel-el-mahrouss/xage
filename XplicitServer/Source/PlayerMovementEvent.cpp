@@ -75,14 +75,7 @@ namespace Xplicit
 
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
 			{
-				// Kill Humanoid on Y position -100000.0f
-				if (XPLICIT_DESTROY_Y >= ply->get_attribute().pos().Y)
-				{
-					ply->set_health(0);
-					continue;
-				}
-
-				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_JUMP)
+				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
 					ply->get_attribute().pos().Y += speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
@@ -116,7 +109,6 @@ namespace Xplicit
 				}
 
 				XPLICIT_INFO("Engine:Move [EVENT]");
-
 				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Move()");
 			}
 		}

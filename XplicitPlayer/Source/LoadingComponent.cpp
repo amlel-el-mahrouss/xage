@@ -87,7 +87,6 @@ namespace Xplicit::Player
 			ComponentManager::get_singleton_ptr()->add<LocalHudComponent>(public_hash);
 			
 			const auto cam = ComponentManager::get_singleton_ptr()->add<LocalCameraComponent>();
-			
 			const auto ply = ComponentManager::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash);
 
 			ply->attach(cam);
@@ -105,6 +104,14 @@ namespace Xplicit::Player
 			XPLICIT_LIGHT = RENDER->getSceneManager()->addLightSceneNode(nullptr, vector3df(0, 0, 0), SColorf(1.0, 1.0, 1.0, 1.0), 1000.0);
 
 			RENDER->setWindowCaption(L"Xplicit [ InGame ]");
+
+			XPLICIT_SLEEP(500);
+
+			mNetwork->read(packet);
+
+			//
+			String place_id = std::format("LoadRoXML('{}');", packet.buffer);
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string(place_id.c_str());
 
 			XPLICIT_INFO("Engine:LocalSpawn [EVENT]");
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");
@@ -173,8 +180,6 @@ namespace Xplicit::Player
 					if (!mNetwork)
 						return;
 
-					XPLICIT_INFO("[XCONNECT] Connecting...");
-
 					NetworkPacket spawn{};
 
 					spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
@@ -182,7 +187,7 @@ namespace Xplicit::Player
 
 					mNetwork->send(spawn);
 
-					std::this_thread::sleep_for(std::chrono::seconds(1));
+					std::this_thread::sleep_for(std::chrono::milliseconds(500));
 				}
 			});
 

@@ -24,11 +24,7 @@ namespace Xplicit::Player
 
 		// Create Lua table for current object.
 
-		String fmt = XPLICIT_LUA_GLOBAL;
-		fmt += parent;
-		fmt += name;
-		fmt += " = { Mesh = "" }";
-
+		String fmt = std::format("{}{}{} = { Mesh = '' }", XPLICIT_LUA_GLOBAL, parent, name);
 		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 		mMeshPtr = std::make_unique<StaticMesh>(mesh);
@@ -62,10 +58,7 @@ namespace Xplicit::Player
 
 	void LocalToolComponent::update() noexcept
 	{
-		String fmt = XPLICIT_LUA_GLOBAL;
-		fmt += mParent;
-		fmt += mName;
-		fmt += ".Mesh";
+		String fmt = std::format("{}{}{}.Mesh;", XPLICIT_LUA_GLOBAL, mParent, mName);
 
 		lua_pushstring(Lua::XLuaStateManager::get_singleton_ptr()->state(), fmt.c_str());
 		String path = lua_tostring(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);

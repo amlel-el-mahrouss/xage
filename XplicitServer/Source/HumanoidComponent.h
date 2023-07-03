@@ -58,7 +58,10 @@ namespace Xplicit
 		void should_spawn(const bool enable) noexcept;
 		const HUMANOID_STATE& get_state() noexcept;
 		bool can_spawn() const noexcept;
-		const int64_t& id() noexcept;
+
+	public:
+		void set_id(const int64_t id = 0x0) { mId = id; }
+		const int64_t& id() { return mId; }
 
 	private:
 		NetworkInstance* mPeer;

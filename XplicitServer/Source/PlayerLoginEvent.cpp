@@ -140,6 +140,10 @@ namespace Xplicit
 					fmt += " = {}";
 
 					Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+					// finally send the place we're on.
+					memcpy(mNetwork->get(peer_idx)->packet.buffer, XPLICIT_PLACE_ID.data(), XPLICIT_PLACE_ID.size());
+					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 				}
 			}
 		}
@@ -148,6 +152,9 @@ namespace Xplicit
 
 	void PlayerLoginEvent::handle_leave_event() noexcept
 	{
+		if (this->size() < 1)
+			return;
+
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED ||
