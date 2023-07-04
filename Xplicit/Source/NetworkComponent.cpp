@@ -77,6 +77,8 @@ namespace Xplicit
 
 	bool NetworkComponent::connect(const char* ip, const char* port) noexcept
 	{
+		mSsl = SSL_new(mSslCtx);
+
 		memset(&mTargetAddress, 0, sizeof(sockaddr_in));
 
 		mTargetAddress.sin_addr.S_un.S_addr = inet_addr(ip);

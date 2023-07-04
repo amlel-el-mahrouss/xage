@@ -12,8 +12,9 @@
 #endif
 #else
 #	define NPLICIT_API
-#endif // ifdef __XPLICIT_DLL__
+#endif // ifdef __NPLICIT_DLL__
 
+#ifdef __NPLICIT_DLL__
 #ifndef __XPLICIT_DLL__
 
 #	define __XPLICIT_NO_SSL__ 1
@@ -22,4 +23,5 @@
 #	include <Xplicit.h>
 #	include <Avx.h>
 
+#endif
 #endif

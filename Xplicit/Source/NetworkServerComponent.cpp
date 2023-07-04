@@ -41,8 +41,6 @@ namespace Xplicit
 		mSsl(nullptr),
 		mBio(nullptr)
 	{
-
-
 		XPLICIT_ASSERT(!mDns.empty());
 
 #ifdef XPLICIT_DEBUG
@@ -75,9 +73,6 @@ namespace Xplicit
 
 		mSsl = SSL_new(mSslCtx);
 		SSL_set_bio(mSsl, mBio, mBio);
-
-		/* Enable cookie exchange */
-		SSL_set_options(mSsl, SSL_OP_COOKIE_EXCHANGE);
 
 		// !Let's preallocate the clients.
 		// !So we don't have to allocate them.
@@ -147,27 +142,20 @@ namespace Xplicit
 	void NetworkServerContext::recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		sockaddr rhs;
-
-		if (!DTLSv1_listen(server->mSsl, (BIO_ADDR*)&rhs))
-			return;
-
 		NetworkPacket packet{};
 
+		int from_len = sizeof(sockaddr_in);
 		const sockaddr lhs = *reinterpret_cast<sockaddr*>(&peer->address);
 
-		if (const auto ret = SSL_read(server->mSsl,
+		if (const auto ret = ::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
-			sizeof(NetworkPacket)); ret <= 0)
+			sizeof(NetworkPacket),
+			0,
+			&rhs,
+			&from_len); ret <= 0)
 		{
 			switch (SSL_get_error(server->mSsl, ret))
 			{
-			case SSL_ERROR_WANT_READ:
-			case SSL_ERROR_WANT_WRITE:
-			case SSL_ERROR_WANT_CONNECT:
-			case SSL_ERROR_WANT_ACCEPT:
-			case SSL_ERROR_ZERO_RETURN:
-			case SSL_ERROR_SSL:
-				return;
 			case SSL_ERROR_SYSCALL:
 			{
 				int err = errno;
@@ -271,13 +259,6 @@ namespace Xplicit
 		{
 			switch (SSL_get_error(server->mSsl, ret))
 			{
-			case SSL_ERROR_WANT_READ:
-			case SSL_ERROR_WANT_WRITE:
-			case SSL_ERROR_WANT_CONNECT:
-			case SSL_ERROR_WANT_ACCEPT:
-			case SSL_ERROR_ZERO_RETURN:
-			case SSL_ERROR_SSL:
-				return;
 			case SSL_ERROR_SYSCALL:
 			{
 				int err = errno;
