@@ -92,7 +92,11 @@ namespace Xplicit
 
 			/* Finish handshake */
 			SSL_accept(mSsl);
+
+			return true;
 		}
+
+		return false;
 	}
 
 	bool NetworkComponent::set_hash(const std::int64_t& hash) noexcept
