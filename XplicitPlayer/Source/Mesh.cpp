@@ -68,6 +68,24 @@ namespace Xplicit::Player
 		RoXML::RoXMLDocumentParser parser;
 		parser.load(params);
 
+		const char* parts[6] = { "Head", "LeftLeg", "RightLeg", "Torso", "LeftArm", "RightArm" };
+
+		for (auto& node : params.WorldNodes)
+		{
+			for (size_t i = 0; i < 6; i++)
+			{
+				String part_id(parts[i]);
+
+				if (node.ID == part_id)
+				{
+					auto mesh = RENDER->_getCurrentSceneManager()->getEntity(node.ID);
+
+					if (mesh)
+						mParts.push_back(std::make_pair(mesh->getParentSceneNode(), mesh));
+				}
+			}
+		}
+
 		XPLICIT_INFO("Loaded StaticBundleMesh successfully!");
 	}
 
