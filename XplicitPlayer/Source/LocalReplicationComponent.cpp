@@ -93,8 +93,8 @@ namespace Xplicit::Player
 					{
 						ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 							if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-								RENDER->closeDevice();
-							}, vector2di(XPLICIT_DIM.X / 2.8,
+								RENDER->queueEndRendering();
+							}, Ogre::Vector2(XPLICIT_DIM.X / 2.8,
 								XPLICIT_DIM.Y / 2.8),
 								POPUP_TYPE::CHALLENGE,
 								"ConnChallenge");

@@ -139,7 +139,7 @@ namespace Xplicit::Player
 		if (menu && menu->enabled())
 			return;
 
-		auto traits = KB->get_layout();
+		auto& traits = Bites::ObjectInputSystem::get_singleton_ptr()->Layout;
 
 		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(traits.mForward))
 		{

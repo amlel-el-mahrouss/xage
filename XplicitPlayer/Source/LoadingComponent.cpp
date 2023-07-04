@@ -28,8 +28,6 @@
 #include <lua/lua.hpp>
 #include <codecvt>
 
-extern Ogre::Light* XPLICIT_LIGHT;
-
 namespace Xplicit::Player
 {
 	// connection timeout, then client quits.
@@ -93,8 +91,6 @@ namespace Xplicit::Player
 
 			EventManager::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>();
-
-			XPLICIT_LIGHT = RENDER->getSceneManager()->createLight("Light");
 
 			HWND pHwnd;
 			

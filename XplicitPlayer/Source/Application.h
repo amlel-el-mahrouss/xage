@@ -54,8 +54,23 @@ namespace Xplicit::Bites
 		{
 #ifdef XPLICIT_WINDOWS
 			return GetKeyState(key) & 0x8000;
+#else
+#	error no input to get on!
 #endif // ifdef XPLICIT_windows
 		}
+
+	public:
+		struct InputTraits
+		{
+			int16_t mForward{ L'W' };
+			int16_t mLeft{ L'A' };
+			int16_t mRight{ L'D' };
+			int16_t mBackward{ L'S' };
+			int16_t mJump{ VK_SPACE };
+
+		};
+
+		InputTraits Layout;
 
 	};
 

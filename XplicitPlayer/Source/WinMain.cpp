@@ -27,8 +27,6 @@
 static void xplicit_throw_error(Xplicit::EngineError& err);
 static void xplicit_throw_error(Xplicit::Win32Error& err);
 
-Ogre::Light* XPLICIT_LIGHT = nullptr;
-
 #ifdef XPLICIT_WINDOWS
 
 XPLICIT_MAIN()
@@ -66,6 +64,9 @@ XPLICIT_MAIN()
 		while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr())
 		{
+			if (!RENDER->isInitialised())
+				break;
+
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
