@@ -36,13 +36,17 @@ namespace Xplicit
 		:
 		Component(),
 		mSocket(INVALID_SOCKET), 
-		mDns(ip)
+		mDns(ip),
+		mSslCtx(SSL_CTX_new(DTLSv1_server_method())),
+		mSsl(nullptr),
+		mBio(nullptr)
 	{
+
+
 		XPLICIT_ASSERT(!mDns.empty());
 
 #ifdef XPLICIT_DEBUG
 		/* checks for a	valid ip-4 address. */
-
 		Utils::InternetProtocolChecker checker;
 		XPLICIT_ASSERT(checker(ip));
 #endif // ifdef XPLICIT_DEBUG
@@ -67,6 +71,14 @@ namespace Xplicit
 		if (::bind(mSocket, reinterpret_cast<SOCKADDR*>(&bindAddress), sizeof(bindAddress)) == SOCKET_ERROR)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
+		mBio = BIO_new_dgram(mSocket, BIO_NOCLOSE);
+
+		mSsl = SSL_new(mSslCtx);
+		SSL_set_bio(mSsl, mBio, mBio);
+
+		/* Enable cookie exchange */
+		SSL_set_options(mSsl, SSL_OP_COOKIE_EXCHANGE);
+
 		// !Let's preallocate the clients.
 		// !So we don't have to allocate them.
 
@@ -89,7 +101,14 @@ namespace Xplicit
 
 	bool NetworkServerComponent::should_update() noexcept { return false; }
 
-	NetworkServerComponent::~NetworkServerComponent() {}
+	NetworkServerComponent::~NetworkServerComponent() 
+	{
+		if (XPLICIT_SHUTDOWN(mSocket, SD_BOTH) <= 0)
+			XPLICIT_CLOSE(mSocket);
+
+		SSL_free(mSsl);
+		SSL_CTX_free(mSslCtx);
+	}
 
 	const char* NetworkServerComponent::dns() const noexcept { return mDns.c_str(); }
 
@@ -127,33 +146,41 @@ namespace Xplicit
 
 	void NetworkServerContext::recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
-		std::int32_t from_len = sizeof(PrivateAddressData);
+		sockaddr rhs;
+
+		if (!DTLSv1_listen(server->mSsl, (BIO_ADDR*)&rhs))
+			return;
+
 		NetworkPacket packet{};
 
-		sockaddr rhs;
 		const sockaddr lhs = *reinterpret_cast<sockaddr*>(&peer->address);
 
-		if (const auto ret = ::recvfrom(server->mSocket,
+		if (const auto ret = SSL_read(server->mSsl,
 			reinterpret_cast<char*>(&packet),
-			sizeof(NetworkPacket),
-			0,
-			&rhs,
-			&from_len); ret == SOCKET_ERROR)
+			sizeof(NetworkPacket)); ret <= 0)
 		{
-			switch (WSAGetLastError())
+			switch (SSL_get_error(server->mSsl, ret))
 			{
-			case WSAEWOULDBLOCK:
+			case SSL_ERROR_WANT_READ:
+			case SSL_ERROR_WANT_WRITE:
+			case SSL_ERROR_WANT_CONNECT:
+			case SSL_ERROR_WANT_ACCEPT:
+			case SSL_ERROR_ZERO_RETURN:
+			case SSL_ERROR_SSL:
+				return;
+			case SSL_ERROR_SYSCALL:
 			{
-				fd_set fd;
+				int err = errno;
+				switch (err)
+				{
+				case EWOULDBLOCK:
+				{
+					constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
+					BIO_ctrl(server->mBio, BIO_CTRL_DGRAM_SET_RECV_TIMEOUT, 0, (void*)&XPLICIT_TIME);
 
-				FD_ZERO(&fd);
-				FD_SET(server->mSocket, &fd);
-				
-				constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
-
-				::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
-
-				break;
+					break;
+				}
+				}
 			}
 			default:
 				break;
@@ -239,46 +266,35 @@ namespace Xplicit
 
 		peer->packet.version = XPLICIT_NETWORK_VERSION;
 
-		if (::sendto(server->mSocket, reinterpret_cast<const char*>(&peer->packet),
-			sizeof(NetworkPacket),
-			0,
-			reinterpret_cast<sockaddr*>(&peer->address),
-			sizeof(PrivateAddressData)) == SOCKET_ERROR)
+		if (const auto ret = SSL_write(server->mSsl, reinterpret_cast<const char*>(&peer->packet),
+			sizeof(NetworkPacket)); ret <= 0)
 		{
-			switch (WSAGetLastError())
+			switch (SSL_get_error(server->mSsl, ret))
 			{
-			case WSAEWOULDBLOCK:
+			case SSL_ERROR_WANT_READ:
+			case SSL_ERROR_WANT_WRITE:
+			case SSL_ERROR_WANT_CONNECT:
+			case SSL_ERROR_WANT_ACCEPT:
+			case SSL_ERROR_ZERO_RETURN:
+			case SSL_ERROR_SSL:
+				return;
+			case SSL_ERROR_SYSCALL:
 			{
-				fd_set fd;
+				int err = errno;
+				switch (err)
+				{
+				case EWOULDBLOCK:
+				{
+					constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
+					BIO_ctrl(server->mBio, BIO_CTRL_DGRAM_SET_RECV_TIMEOUT, 0, (void*) &XPLICIT_TIME);
 
-				FD_ZERO(&fd);
-				FD_SET(server->mSocket, &fd);
-				
-				constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
-
-				::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
-				
-				break;
+					break;
+				}
+				}
 			}
 			default:
 				break;
 			}
 		}
-	}
-
-	void NetworkServerContext::recv_from(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept
-	{
-		XPLICIT_ASSERT(peer && server);
-
-		std::int32_t from_len = sizeof(PrivateAddressData);
-
-		::recvfrom(server->mSocket,
-			reinterpret_cast<char*>(&packet),
-			sizeof(NetworkPacket),
-			0,
-			reinterpret_cast<sockaddr*>(&peer->address),
-			&from_len);
-
-		xplicit_register_packet(packet, peer);
 	}
 }

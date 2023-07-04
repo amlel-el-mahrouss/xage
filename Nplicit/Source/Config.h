@@ -16,8 +16,10 @@
 
 #ifndef __XPLICIT_DLL__
 
-#include <functional>
-#include <Xplicit.h>
-#include <Avx.h>
+#	define __XPLICIT_NO_SSL__ 1
+
+#	include <functional>
+#	include <Xplicit.h>
+#	include <Avx.h>
 
 #endif
