@@ -126,7 +126,7 @@ func _G.Engine:Connect(Name, id, Func)
     table.insert(_G.Engine.Events, {
         Name = Name,
         Func = Func,
-	Id = Id,
+	    Id = Id,
     })
 
     _G.Engine.Counter = _G.Engine.Counter + 1
@@ -150,6 +150,7 @@ end
 
 _G.Engine:Init()
 
+## Components ID.
 Engine.INVALID = 0;
 Engine.SCRIPT = 1;
 Engine.SOUND = 2;

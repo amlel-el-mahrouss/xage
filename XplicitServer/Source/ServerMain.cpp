@@ -104,16 +104,6 @@ int main(int argc, char** argv)
 			return 1;
 		}
 
-		XPLICIT_PLACE_ID = argv[1];
-
-		Xplicit::RoXML::RoXMLDocumentParameters params;
-		params.Has3D = false;
-		params.NoLua = true;
-		params.Path = XPLICIT_PLACE_ID;
-
-		Xplicit::RoXML::RoXMLDocumentParser parser;
-		parser.load(params);
-
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
 		RtlZeroMemory(&wsa, sizeof(WSADATA));
@@ -160,6 +150,16 @@ int main(int argc, char** argv)
 
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();
+
+		XPLICIT_PLACE_ID = argv[1];
+
+		Xplicit::RoXML::RoXMLDocumentParameters params;
+		params.Has3D = false;
+		params.NoLua = true;
+		params.Path = XPLICIT_PLACE_ID;
+
+		Xplicit::RoXML::RoXMLDocumentParser parser;
+		parser.load(params);
 
 		Xplicit::Thread logic([&]() {
 			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");

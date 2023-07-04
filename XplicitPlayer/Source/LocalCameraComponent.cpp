@@ -23,6 +23,8 @@ namespace Xplicit::Player
 		mCamera = RENDER->_getCurrentSceneManager()->createCamera("Camera");
 		XPLICIT_ASSERT(mCamera);
 
+		Xplicit::Root::get_singleton_ptr()->Ogre3D_Window->addViewport(mCamera);
+
 		mCursor = RENDER->getTextureManager()->load("cursor.png", XPLICIT_RES_GROUP, Ogre::TEX_TYPE_2D, -1, 1.0F, Ogre::PF_UNKNOWN, true);
 	}
 

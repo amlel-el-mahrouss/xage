@@ -34,40 +34,7 @@ namespace Xplicit::Player
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
 
-		String path = "";
-
-		switch (popup_type)
-		{
-		case POPUP_TYPE::KICK:
-			path = "network_kick.png";
-			break;
-		case POPUP_TYPE::NETWORK:
-			path = "network_timeout.png";
-			break;
-		case POPUP_TYPE::SHUTDOWN:
-			path = "network_shutdown.png";
-			break;
-		case POPUP_TYPE::TELEPORTING:
-			path = "network_teleport.png";
-			break;
-		case POPUP_TYPE::BANNED:
-			path = "network_ban.png";
-			break;
-		case POPUP_TYPE::CHALLENGE:
-			path = "network_challenge.png";
-			break;
-		default:
-			break;
-		}
-
-		if (!path.empty())
-		{
-		}
-		else
-		{
-			XPLICIT_INFO("Invalid popup! destroying current instance...");
-			ComponentManager::get_singleton_ptr()->remove(this);
-		}
+		// TODO: Popup with text according to type.
 	}
 	
 	PopupComponent::~PopupComponent()
@@ -98,10 +65,8 @@ namespace Xplicit::Player
 		  mHealth(0),
 		  mTimeout(0)
 	{
-		// verify hash.
+		// verify hash and network component.
 		XPLICIT_ASSERT(mPublicHash != XPLICIT_INVALID_HASH);
-
-		// verify textures.
 		XPLICIT_ASSERT(mNetwork);
 	}
 

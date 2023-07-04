@@ -85,119 +85,115 @@ namespace Xplicit::RoXML
 			}
 
 			Thread stream_job([&]() {
-				xml_document<> doc;
+				std::unique_ptr<xml_document<>> doc = std::make_unique<xml_document<>>();
 
 				if (!params.Inline)
 				{
-					file<> xml_file(params.Path.c_str()); // Default template is char
+					file<char> xml_file(params.Path.c_str()); // Default template is char
 					
-					doc.parse<0>(xml_file.data());
+					doc->parse<0>(xml_file.data());
 				}
 				else
 				{
-					doc.parse<0>(params.Path.data());
+					doc->parse<0>(params.Path.data());
 				}
 
-				xml_node<>* root_node = doc.first_node();
+				xml_node<>* root_node = doc->first_node();
+				xml_node<>* node = root_node->first_node();
 
-				while (root_node)
+				while (node)
 				{
-					auto node = root_node;
+					const String node_name = node->name();
+					RoXMLNodeDescription world_node;
 
-					while (node)
+					if (node_name == "Instance")
 					{
-						String node_name = node->name();
-
-						RoXMLNodeDescription world_node;
-
-						if (node_name == "Instance")
+						if (node->first_attribute())
 						{
-							if (node->first_attribute())
+							auto klass = node->last_attribute();
+							String klass_to_instanciate;
+
+							if (klass &&
+								strcmp(klass->name(), "Class") == 0)
+								klass_to_instanciate = klass->value();
+
+							// Here is the list of run-time components { "Light", "Mesh", "Sound", "Particle" };
+
+							if (strcmp(node->first_attribute()->name(), "Id") == 0)
 							{
-								auto klass = node->last_attribute();
-								String klass_to_instanciate;
+								auto node_id = node->first_attribute()->value();
 
-								if (klass && 
-									strcmp(klass->name(), "Class") == 0)
-									klass_to_instanciate = klass->value();
+								const char* script_id = "";
+								const char* parent_id = "";
 
-								// Here is the list of run-time components { "Light", "Mesh", "Sound", "Particle" };
+								// For for a lua attribute!
+								if (node->first_attribute()->next_attribute() &&
+									strcmp(node->first_attribute()->next_attribute()->name(), "Lua") == 0)
+									script_id = node->first_attribute()->next_attribute()->value();
 
-								if (strcmp(node->first_attribute()->name(), "Id") == 0)
+								// now check for a parent!
+								if (node->first_attribute()->next_attribute() &&
+									strcmp(node->first_attribute()->next_attribute()->name(), "Parent") == 0)
+									parent_id = node->first_attribute()->next_attribute()->value();
+
+								auto component = ComponentManager::get_singleton_ptr()->add<InstanceComponent>(
+									Vector<float>(0, 0, 0),
+									Vector<float>(0, 0, 0),
+									Color<float>(0, 0, 0),
+									params.NoLua ? script_id : nullptr,
+									parent_id,
+									node_id);
+
+								if (params.Has3D)
 								{
-									auto node_id = node->first_attribute()->value();
+									void* object = nullptr;
 
-									const char* script_id = "";
-									const char* parent_id = "";
-
-									// For for a lua attribute!
-									if (node->first_attribute()->next_attribute() &&
-										strcmp(node->first_attribute()->next_attribute()->name(), "Lua") == 0)
-										script_id = node->first_attribute()->next_attribute()->value();
-
-									// now check for a parent!
-									if (node->first_attribute()->next_attribute() &&
-										strcmp(node->first_attribute()->next_attribute()->name(), "Parent") == 0)
-										parent_id = node->first_attribute()->next_attribute()->value();
-
-									auto component = ComponentManager::get_singleton_ptr()->add<InstanceComponent>(
-										Vector<float>(0, 0, 0),
-										Vector<float>(0, 0, 0),
-										Color<float>(0, 0, 0),
-										params.NoLua ? script_id : nullptr,
-										parent_id,
-										node_id);
-
-									if (params.Has3D)
+									if (klass_to_instanciate == "Light")
 									{
-										void* object = nullptr;
+										object = RENDER->_getCurrentSceneManager()->createLight(node_id);
+									}
 
-										if (klass_to_instanciate == "Light")
+									if (klass_to_instanciate == "Stud")
+									{
+										RENDER->_getCurrentSceneManager()->createEntity("Stud", "Prefab_Cube");
+									}
+
+									if (klass_to_instanciate == "Mesh")
+									{
+										object = RENDER->_getCurrentSceneManager()->createEntity(node_id);
+									}
+
+									if (klass_to_instanciate == "Particle")
+									{
+										RENDER->_getCurrentSceneManager()->createParticleSystem(node_id);
+										object = RENDER->_getCurrentSceneManager()->getParticleSystem(node_id)->createParticle();
+									}
+
+									if (object)
+									{
+										Ogre::SceneNode* node = nullptr;
+
+										if (node = RENDER->_getCurrentSceneManager()->getSceneNode(parent_id, false); !node)
 										{
-											object = RENDER->_getCurrentSceneManager()->createLight(node_id);
+											ComponentManager::get_singleton_ptr()->remove<InstanceComponent>(component);
 										}
-
-										if (klass_to_instanciate == "Stud")
+										else
 										{
-											RENDER->_getCurrentSceneManager()->createEntity("Stud", "Prefab_Cube");
-										}
-
-										if (klass_to_instanciate == "Mesh")
-										{
-											object = RENDER->_getCurrentSceneManager()->createEntity(node_id);
-										}
-
-										if (klass_to_instanciate == "Particle")
-										{
-											RENDER->_getCurrentSceneManager()->createParticleSystem(node_id);
-											object = RENDER->_getCurrentSceneManager()->getParticleSystem(node_id)->createParticle();
-										}
-
-										if (object)
-										{
-											Ogre::SceneNode* node = nullptr;
-
-											if (node = RENDER->_getCurrentSceneManager()->getSceneNode(parent_id, false); !node)
-											{
-												ComponentManager::get_singleton_ptr()->remove<InstanceComponent>(component);
-												break;
-											}
-
 											node->addChild(node->getParent());
 										}
 									}
-
-									world_node.Name = node_name;
-									world_node.ID = node_id;
 								}
+
+								world_node.Name = node_name;
+								world_node.ID = node_id;
 							}
 						}
+					}
 
-						if (node_name == "Color3")
+					if (node_name == "Color3")
+					{
+						if (node->first_attribute())
 						{
-							if (!node->first_attribute())
-								break;
-
 							String attr_who = node->first_attribute()->name();
 							String attr_mat = node->first_attribute()->next_attribute()->name();
 
@@ -231,68 +227,65 @@ namespace Xplicit::RoXML
 								}
 							}
 						}
+					}
 
-						if (node_name == "Rotate3")
+					if (node_name == "Rotate3")
+					{
+						if (!node->first_attribute() ||
+							!node->first_attribute()->next_attribute() ||
+							!node->first_attribute()->next_attribute()->next_attribute() ||
+							!node->first_attribute()->next_attribute()->next_attribute()->next_attribute())
 						{
-							if (!node->first_attribute() ||
-								!node->first_attribute()->next_attribute() ||
-								!node->first_attribute()->next_attribute()->next_attribute() ||
-								!node->first_attribute()->next_attribute()->next_attribute()->next_attribute())
-							{
-								XPLICIT_CRITICAL("RoXML: Bad Rotate3!");
-								break;
-							}
-
-							String attr_x = node->first_attribute()->name();
-							String attr_y = node->first_attribute()->next_attribute()->name();
-							String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
-							String attr_w = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->name();
-
-							if (attr_x == "X" &&
-								attr_y == "Y" &&
-								attr_z == "Z" &&
-								attr_w == "W")
-							{
-								String id;
-
-								for (std::size_t i = 0; i < strlen(node->value()); i++)
-								{
-									if (isalnum(node->value()[i]))
-									{
-										id += node->value()[i];
-									}
-								}
-
-								String x = node->first_attribute()->value();
-								String y = node->first_attribute()->next_attribute()->value();
-								String z = node->first_attribute()->next_attribute()->next_attribute()->value();
-								String w = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->value();
-
-								world_node.Rotation.X = std::atof(x.c_str());
-								world_node.Rotation.Y = std::atof(y.c_str());
-								world_node.Rotation.Z = std::atof(z.c_str());
-								world_node.Rotation.W = std::atof(w.c_str());
-
-								if (params.Has3D)
-								{
-									const auto scene_node = RENDER->_getCurrentSceneManager()->getSceneNode(id, false);
-
-									if (scene_node)
-										scene_node->rotate(Ogre::Quaternion(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()), std::atof(w.c_str())));
-								}
-							}
+							XPLICIT_CRITICAL("RoXML: Bad Rotate3!");
+							break;
 						}
 
-						if (node_name == "Position3")
+						String attr_x = node->first_attribute()->name();
+						String attr_y = node->first_attribute()->next_attribute()->name();
+						String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
+						String attr_w = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->name();
+
+						if (attr_x == "X" &&
+							attr_y == "Y" &&
+							attr_z == "Z" &&
+							attr_w == "W")
 						{
-							if (!node->first_attribute() ||
-								!node->first_attribute()->next_attribute() ||
-								!node->first_attribute()->next_attribute()->next_attribute())
+							String id;
+
+							for (std::size_t i = 0; i < strlen(node->value()); i++)
 							{
-								XPLICIT_CRITICAL("RoXML: Bad Position3!");
-								break;
+								if (isalnum(node->value()[i]))
+								{
+									id += node->value()[i];
+								}
 							}
 
+							String x = node->first_attribute()->value();
+							String y = node->first_attribute()->next_attribute()->value();
+							String z = node->first_attribute()->next_attribute()->next_attribute()->value();
+							String w = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->value();
+
+							world_node.Rotation.X = std::atof(x.c_str());
+							world_node.Rotation.Y = std::atof(y.c_str());
+							world_node.Rotation.Z = std::atof(z.c_str());
+							world_node.Rotation.W = std::atof(w.c_str());
+
+							if (params.Has3D)
+							{
+								const auto scene_node = RENDER->_getCurrentSceneManager()->getSceneNode(id, false);
+
+								if (scene_node)
+									scene_node->rotate(Ogre::Quaternion(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()), std::atof(w.c_str())));
+							}
+						}
+					}
+
+					if (node_name == "Position3")
+					{
+						if (node->first_attribute() &&
+							node->first_attribute()->next_attribute() &&
+							node->first_attribute()->next_attribute()->next_attribute())
+						{
 							String attr_x = node->first_attribute()->name();
 							String attr_y = node->first_attribute()->next_attribute()->name();
 							String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
@@ -327,20 +320,17 @@ namespace Xplicit::RoXML
 									if (scene_node)
 										scene_node->setPosition(Ogre::Vector3f(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 								}
-		
+
 							}
 						}
+					}
 
-						if (node_name == "Scale3")
+					if (node_name == "Scale3")
+					{
+						if (node->first_attribute() &&
+							node->first_attribute()->next_attribute() &&
+							node->first_attribute()->next_attribute()->next_attribute())
 						{
-							if (!node->first_attribute() ||
-								!node->first_attribute()->next_attribute() ||
-								!node->first_attribute()->next_attribute()->next_attribute())
-							{
-								XPLICIT_CRITICAL("RoXML: Bad Scale3!");
-								break;
-							}
-
 							String attr_x = node->first_attribute()->name();
 							String attr_y = node->first_attribute()->next_attribute()->name();
 							String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
@@ -374,75 +364,28 @@ namespace Xplicit::RoXML
 								}
 							}
 						}
-
-						// equivalent to Engine:Connect but in RoXML
-						if (node_name == "Connect")
-						{
-							String attr = node->first_attribute()->name();
-
-							if (attr == "Name")
-							{
-								if (node->first_attribute()->next_attribute())
-								{
-									String attr_id = node->first_attribute()->next_attribute()->name();
-									String id = node->first_attribute()->next_attribute()->value();
-
-									String name_value = node->first_attribute()->value();
-
-									world_node.ID = name_value;
-
-									String func_name = "fnXplicit";
-									func_name += std::to_string(xplicit_get_epoch());
-
-									String event_code = "local func ";
-									event_code += func_name;
-									event_code += "()\n";
-
-									event_code += node->value();
-
-									event_code += "\nend\n";
-									event_code += "Engine:Connect(";
-									event_code += "\"";
-									event_code += name_value;
-									event_code += "\"";
-									event_code += ",";
-									event_code += "\"";
-									event_code += id;
-									event_code += "\"";
-									event_code += ",";
-									event_code += func_name;
-									event_code += ");";
-
-									Lua::XLuaStateManager::get_singleton_ptr()->run_string(event_code.c_str());
-								}
-							}
-						}
-
-						if (!params.NoLua)
-						{
-							// if it is a CLua snippet
-							if (node_name == "CLua" &&
-								node->first_attribute() && // and if it has a name attribute
-								strcmp(node->first_attribute()->name(), "Name") == 0) // and it is really what we think it is.
-							{
-								// go on and include that!
-								world_node.ID = node->first_attribute()->value();
-								world_node.Value = node->value();
-							}
-						}
-
-						world_node.Name = node_name;
-
-						params.WorldNodes.push_back(world_node);
-
-						node = node->next_sibling();
 					}
 
-					root_node = root_node->next_sibling();
+					// if it is a CLua snippet
+					if (node_name == "CLua") // and it is really what we think it is.
+					{
+						// go on and include that!
+						world_node.ID = node_name;
+						world_node.Value = node->value();
+
+						Lua::XLuaStateManager::get_singleton_ptr()->run_string(world_node.Value.c_str());
+					}
+
+					world_node.Name = node_name;
+
+					if (!world_node.Name.empty())
+						params.WorldNodes.push_back(world_node);
+
+					node = node->next_sibling();
 				}
 			});
 
-			(!params.Has3D) ? stream_job.join() : stream_job.detach();
+			stream_job.detach();
 		}
 
 	};

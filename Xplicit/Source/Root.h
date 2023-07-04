@@ -43,6 +43,10 @@ namespace Xplicit
 
 			Ogre3D_Window = Ogre3D->initialise(true);
 		
+			Ogre::SceneManager* sceneManager = RENDER->createSceneManager();
+
+			Root::get_singleton_ptr()->Ogre3D_Window->setVSyncEnabled(false);
+
 			this->set_title("XplicitNgin [ Place1 ]");
 		}
 

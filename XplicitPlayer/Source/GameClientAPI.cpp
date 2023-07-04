@@ -14,8 +14,12 @@
 #include <XplicitSound.h>
 #include <lua/lua.hpp>
 #include <codecvt>
+#include <RoXML.h>
 #include <Util.h>
 #include <Uri.h>
+
+ // RoXML parser
+Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 #ifdef XPLICIT_WINDOWS
 
@@ -49,16 +53,47 @@ static int lua_SetWindowCaption(lua_State* L)
 	return 0;
 }
 
+static int lua_LoadRoXML(lua_State* L)
+{
+	auto _path = lua_tostring(L, 1);
+
+	Xplicit::RoXML::RoXMLDocumentParameters params;
+
+	params.Has3D = true;
+	params.LuaOnly = false;
+	params.NoLua = false;
+
+	params.Path = _path;
+
+	if (params.Path.empty())
+	{
+		lua_pushnil(L);
+		return 1;
+	}
+
+	XPLICIT_PARSER.load(params);
+
+	return 0;
+}
+
 void XplicitLoadClientLua() noexcept
 {
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RenderingService = {}");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SoundService = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RoXMLService = {}");
+
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
+
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_LoadRoXML");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RoXMLService.Load = CoreAPI_LoadRoXML");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
+
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_PlaySound");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SoundService.Play = CoreAPI_PlaySound");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetWindowCaption);
+
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_SetWindowCaption");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RenderingService.SetWindowCaption = CoreAPI_SetWindowCaption");
 

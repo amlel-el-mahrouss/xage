@@ -8,6 +8,7 @@
  */
 
 #include "LocalToolComponent.h"
+
 #include <InstanceComponent.h>
 #include <lua/lua.hpp>
 
@@ -24,8 +25,7 @@ namespace Xplicit::Player
 	{
 		XPLICIT_ASSERT(name && mesh);
 
-		// Create Lua table for current object.
-
+		// Create Lua table from current object.
 		String fmt = String(XPLICIT_LUA_GLOBAL);
 		fmt += mParent;
 		fmt += mName;

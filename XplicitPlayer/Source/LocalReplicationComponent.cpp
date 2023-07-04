@@ -12,6 +12,7 @@
 #include "GameMenuUI.h"
 
 #include <CommonEngine.h>
+#include <RoXML.h>
 #include <lua.hpp>
 #include <Util.h>
 #include <Uri.h>
@@ -19,6 +20,8 @@
 #ifndef XPLICIT_XASSET_IDENT
 #	define XPLICIT_XASSET_IDENT ("xasset")
 #endif // ifndef XPLICIT_XASSET_IDENT
+
+Xplicit::RoXML::RoXMLDocumentParser parser;
 
 namespace Xplicit::Player
 {
@@ -30,7 +33,7 @@ namespace Xplicit::Player
 
 	/*
 	 *	This update function takes care of these 3 events:
-	 * 
+	 *
 	 *	 - Create
 	 *   - Update
 	 *   - Destroy
@@ -40,16 +43,47 @@ namespace Xplicit::Player
 	{
 		if (!mNetwork)
 			return;
-		
+
 		NetworkPacket packet{};
 
 		if (!mNetwork->read(packet))
 			return;
-		
+
 		if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
 		{
 			switch (packet.id)
 			{
+
+			case COMPONENT_ID_ROXML:
+			{
+				String name = packet.buffer;
+
+				RoXML::RoXMLDocumentParameters params;
+				params.Inline = true;
+				params.Path = name;
+
+				parser.load(params);
+
+				if (name.empty() ||
+					packet.hash != this->mHash)
+				{
+					if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ConnBadChallengeRoXML"))
+					{
+						ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+							if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
+								RENDER->queueEndRendering();
+							}, Ogre::Vector2(XPLICIT_DIM.X / 2.8,
+								XPLICIT_DIM.Y / 2.8),
+								POPUP_TYPE::CHALLENGE,
+								"ConnBadChallengeRoXML");
+
+					}
+
+					ComponentManager::get_singleton_ptr()->remove(mNetwork);
+				}
+
+				break;
+			}
 			case COMPONENT_ID_SCRIPT:
 			{
 				auto script = Utils::UriParser(packet.buffer);
@@ -64,16 +98,6 @@ namespace Xplicit::Player
 
 				break;
 			}
-			case COMPONENT_ID_SOUND:
-			{
-				auto sound = Utils::UriParser(packet.buffer);
-				sound /= packet.buffer;
-
-				if (sound.protocol() != XPLICIT_XASSET_IDENT)
-					return;
-				
-				break;
-			}
 			default:
 				break;
 			}
@@ -85,11 +109,11 @@ namespace Xplicit::Player
 			case COMPONENT_ID_SCRIPT:
 			{
 				String name = packet.buffer;
-				
+
 				if (name.empty() ||
 					packet.hash != this->mHash)
 				{
-					if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
+					if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ConnChallengeScript"))
 					{
 						ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 							if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
@@ -97,7 +121,7 @@ namespace Xplicit::Player
 							}, Ogre::Vector2(XPLICIT_DIM.X / 2.8,
 								XPLICIT_DIM.Y / 2.8),
 								POPUP_TYPE::CHALLENGE,
-								"ConnChallenge");
+								"ConnChallengeScript");
 
 					}
 
@@ -115,10 +139,6 @@ namespace Xplicit::Player
 
 				break;
 			}
-			case COMPONENT_ID_SOUND:
-				break;
-			default:
-				break;
 			}
 		}
 	}

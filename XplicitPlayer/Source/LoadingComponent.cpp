@@ -75,7 +75,7 @@ namespace Xplicit::Player
 			ComponentManager::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
 			ComponentManager::get_singleton_ptr()->add<LocalHudComponent>(public_hash);
 			
-			const auto cam = ComponentManager::get_singleton_ptr()->add<LocalCameraComponent>();
+			const auto cam = ComponentManager::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
 			const auto ply = ComponentManager::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash);
 
 			ply->attach(cam);

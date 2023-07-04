@@ -14,9 +14,10 @@
  @file
  */
 
-#include "NetworkProtocol.h"
+#include "LocalCameraComponent.h"
 #include "Application.h"
 
+#include <NetworkProtocol.h>
 #include <XplicitSound.h>
 #include <DriverD3D11.h>
 #include <Component.h>
@@ -60,16 +61,21 @@ XPLICIT_MAIN()
 		if (!pApp) 
 			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
 
+		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
+
 		/* main game loop */
 		while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr())
 		{
-			if (RENDER->endRenderingQueued())
-				break;
+			if (Xplicit::Root::get_singleton_ptr()->Ogre3D_Window->isClosed()) break;
+
+			Xplicit::Root::get_singleton_ptr()->Ogre3D->getRenderSystem()->_beginFrame();
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
+
+			Xplicit::Root::get_singleton_ptr()->Ogre3D->getRenderSystem()->_endFrame();
 		}
 	}
 	catch (Xplicit::EngineError& err)

@@ -34,7 +34,8 @@ namespace Xplicit::Bites
 
 		String prebuilt = dir;
 		prebuilt += "Textures/DefaultSkin.zip";
-
+		Root::get_singleton_ptr()->Ogre3D_Window->resize(Player::XPLICIT_DIM.X, Player::XPLICIT_DIM.Y);
+			
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dir, "FileSystem", XPLICIT_RES_GROUP);
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(prebuilt, "Zip", XPLICIT_RES_GROUP);
 	}
@@ -43,6 +44,8 @@ namespace Xplicit::Bites
 		: mPath(""), mWsa()
 	{
 		Xplicit::init_winsock(&mWsa);
+
+		Root::get_singleton_ptr()->Ogre3D_Window->resize(Player::XPLICIT_DIM.X, Player::XPLICIT_DIM.Y);
 
 		this->create_and_set_contexts();
 
@@ -59,30 +62,13 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(splash_screen);
 
 		splash_screen->connect(xconnect_to);
-
-		Thread job([]() {
-			RENDER->startRendering();
-
-			while (true)
-			{
-				if (RENDER->getAutoCreatedWindow()->isClosed()) break;
-
-				if (!RENDER->renderOneFrame()) break;
-			}
-		});
-
-		job.detach();
 	}
 
 	Application::~Application() {}
 
 	void Application::create_and_set_contexts()
-	{
-		Ogre::SceneManager* sceneManager = RENDER->createSceneManager();
-
-		Root::get_singleton_ptr()->Ogre3D_Window->resize(Player::XPLICIT_DIM.X, Player::XPLICIT_DIM.Y);
-		Root::get_singleton_ptr()->Ogre3D_Window->setVSyncEnabled(false);
-
+	{Root::get_singleton_ptr()->Ogre3D_Window->resize(Player::XPLICIT_DIM.X, Player::XPLICIT_DIM.Y);
+			
 		xplicit_open_skins();
 
 		mSettings = std::make_unique<SettingsManager>();
