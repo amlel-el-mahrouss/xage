@@ -20,7 +20,7 @@ REQUIREMENTS:
 - GLFW
 - Mono
 - OpenSSL
-- LegacyRenderer
+- Ogre3D (our branch)
 - GwenNext
 - Windows 11.
 - Vulkan SDK 1.3.250.0

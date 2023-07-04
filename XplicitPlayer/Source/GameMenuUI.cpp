@@ -53,6 +53,9 @@ namespace Xplicit::Player
 		case POPUP_TYPE::BANNED:
 			path = "network_ban.png";
 			break;
+		case POPUP_TYPE::CHALLENGE:
+			path = "network_challenge.png";
+			break;
 		default:
 			break;
 		}

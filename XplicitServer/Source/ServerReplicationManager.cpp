@@ -10,8 +10,39 @@
 #include "ServerReplicationManager.h"
 #include <lua/lua.hpp>
 
+static int lua_Fire(lua_State* L)
+{
+	auto string = lua_tostring(L, 1);
+	int32_t repl_id = lua_tointeger(L, 2);
+	int32_t id = lua_tointeger(L, 3);
+
+	if (string == nullptr ||
+		*string == 0 ||
+		repl_id > Xplicit::COMPONENT_ID_COUNT)
+		return 0;
+
+	Xplicit::ServerReplicationManager::get_singleton_ptr()->update(repl_id, string, id);
+
+	return 0;
+}
+
 namespace Xplicit
 {
+	static void XplicitOpenReplicationLua()
+	{
+		lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_Fire);
+		lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Engine_Fire");
+		Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.NetworkService.Fire = Engine_Fire");
+	}
+
+	ServerReplicationManager::ServerReplicationManager()
+		:
+		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
+	{
+		XplicitOpenReplicationLua();
+	}
+
+
 	ServerReplicationManager* ServerReplicationManager::get_singleton_ptr() noexcept
 	{
 		static ServerReplicationManager* manager = nullptr;
@@ -81,7 +112,7 @@ namespace Xplicit
 
 			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
-			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_UPDATE] = NETWORK_REPL_CMD_UPDATE;
+			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_FIRE] = NETWORK_REPL_CMD_FIRE;
 			mNetwork->get(i)->packet.id = id;
 
 			memcpy(mNetwork->get(i)->packet.buffer, path, XPLICIT_NETWORK_BUF_SZ);

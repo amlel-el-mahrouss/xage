@@ -34,9 +34,9 @@
 #   define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif // ifndef XPLICIT_INVALID_ADDR
 
-#define XPLICIT_NETWORK_BUF_SZ      (64U)
+#define XPLICIT_NETWORK_BUF_SZ      (256U)
 #define XPLICIT_NETWORK_BUF_CHAT_SZ (128U)
-#define XPLICIT_NETWORK_VERSION     (1U)
+#define XPLICIT_NETWORK_VERSION     (2U)
 
 #define XPLICIT_NUM_CHANNELS (2)
 
@@ -97,7 +97,7 @@ namespace Xplicit
     {
         NETWORK_REPL_CMD_CREATE = NETWORK_CMD_INVALID + 1,
         NETWORK_REPL_CMD_DESTROY,
-        NETWORK_REPL_CMD_UPDATE,
+        NETWORK_REPL_CMD_FIRE,
         NETWORK_REPL_CMD_COUNT = 3,
     };
 
@@ -228,7 +228,7 @@ typedef int socklen_t;
 
 #define XPLICIT_REPL_CREATE (18)
 #define XPLICIT_REPL_DESTROY (19)
-#define XPLICIT_REPL_UPDATE (20)
+#define XPLICIT_REPL_FIRE (20)
 
 namespace Xplicit::Utils
 {

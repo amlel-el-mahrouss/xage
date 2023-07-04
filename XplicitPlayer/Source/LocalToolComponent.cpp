@@ -13,7 +13,10 @@
 
 namespace Xplicit::Player
 {
-	LocalToolComponent::LocalToolComponent(const char* name, const char* mesh, const char* parent) noexcept
+	LocalToolComponent::LocalToolComponent(
+		const char* name,
+		const char* mesh, 
+		const char* parent) noexcept
 		: 
 		mMeshPtr(nullptr),
 		mName(name),
@@ -34,7 +37,9 @@ namespace Xplicit::Player
 	}
 
 	const char* LocalToolComponent::name() noexcept { return "LocalToolComponent"; }
+
 	COMPONENT_TYPE LocalToolComponent::type() noexcept { return COMPONENT_LOGIC; }
+
 	PHYSICS_TYPE LocalToolComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
 	LocalToolComponent::~LocalToolComponent()

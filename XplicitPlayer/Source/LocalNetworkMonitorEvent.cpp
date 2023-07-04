@@ -124,8 +124,9 @@ namespace Xplicit::Player
 							POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
 
-					mNetwork = nullptr;
 				}
+
+				mNetwork = nullptr;
 			}
 			else
 			{

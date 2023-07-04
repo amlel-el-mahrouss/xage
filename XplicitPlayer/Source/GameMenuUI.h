@@ -24,6 +24,7 @@ namespace Xplicit::Player
 	enum class POPUP_TYPE
 	{
 		NETWORK,
+		CHALLENGE,
 		TELEPORTING,
 		BANNED,
 		SHUTDOWN,
