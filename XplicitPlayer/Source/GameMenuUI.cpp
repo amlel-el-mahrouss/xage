@@ -23,7 +23,7 @@ namespace Xplicit::Player
 	
 	PopupComponent::PopupComponent(
 		const std::function<void()>& on_click, 
-		const vector2di pos, 
+		const Ogre::Vector2 pos, 
 		const POPUP_TYPE popup_type, 
 		const char* id) noexcept
 		:
@@ -62,12 +62,6 @@ namespace Xplicit::Player
 
 		if (!path.empty())
 		{
-			mTex = RENDER->getVideoDriver()->getTexture(path.c_str());
-
-			XPLICIT_ASSERT(mTex);
-
-			if (!mTex)
-				throw EngineError();
 		}
 		else
 		{
@@ -78,16 +72,11 @@ namespace Xplicit::Player
 	
 	PopupComponent::~PopupComponent()
 	{
-		if (mTex)
-			mTex->drop();
+
 	}
 	
 	void PopupComponent::update()
 	{
-		if (!mTex)
-			return;
-
-		RENDER->getVideoDriver()->draw2DImage(mTex, mPos);
 		mClicked();
 	}
 
@@ -107,15 +96,13 @@ namespace Xplicit::Player
 		  mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		  mPublicHash(publicHash),
 		  mHealth(0),
-		  mTimeout(0),
-		  mOverlay(RENDER->getVideoDriver()->getTexture("hit_overlay.png"))
+		  mTimeout(0)
 	{
 		// verify hash.
 		XPLICIT_ASSERT(mPublicHash != XPLICIT_INVALID_HASH);
 
 		// verify textures.
 		XPLICIT_ASSERT(mNetwork);
-		XPLICIT_ASSERT(mOverlay);
 	}
 
 	LocalHudComponent::~LocalHudComponent() = default;
@@ -131,22 +118,12 @@ namespace Xplicit::Player
 		{
 			mHealth = packet.health;
 
-			RENDER->getVideoDriver()->draw2DImage(mOverlay, vector2di(0, 0), rect(0, 0, 1280, 720),
-				nullptr,
-				SColor(255, 255, 255, 255),
-				true);
 
 			mTimeout = 255;
 		}
 
 		if (mTimeout < 1)
 			return;
-
-		RENDER->getVideoDriver()->draw2DImage(mOverlay, vector2di(0, 0), rect(0, 0, 1280, 720),
-			nullptr,
-			SColor(mTimeout, 255, 255, 255),
-			true);
-
 		--mTimeout;
 	}
 }

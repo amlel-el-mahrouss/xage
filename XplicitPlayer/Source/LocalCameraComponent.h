@@ -32,7 +32,7 @@ namespace Xplicit::Player
 
 	private:
 		Ogre::Camera* mCamera;
-		Ogre::Texture* mCursor;
+		Ogre::TexturePtr mCursor;
 
 	};
 }

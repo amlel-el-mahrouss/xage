@@ -33,9 +33,6 @@ namespace Xplicit::Player
 
 	private:
 		NetworkComponent* mNetwork;
-		ITexture* mButtonNoHover;
-		ITexture* mButtonHover;
-		ITexture* mMenu;
 
 	private:
 		std::int64_t mTimeout;

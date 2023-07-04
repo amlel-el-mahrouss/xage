@@ -106,8 +106,6 @@ int main(int argc, char** argv)
 
 		XPLICIT_PLACE_ID = argv[1];
 
-		Xplicit::Root::get_singleton_ptr()->set(createDevice(EDT_NULL));
-
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;
 		RtlZeroMemory(&wsa, sizeof(WSADATA));

@@ -16,27 +16,33 @@
 
 namespace Xplicit
 {
-	class InputReceiver;
-
 	class XPLICIT_API Root final
 	{
 	private:
 		explicit Root()
-			: 
-			Keyboard(nullptr), 
+			:
 			Ogre3D(nullptr)
 		{
 			Ogre3D = new Ogre::Root("plugins.cfg");
+
+#ifdef XPLICIT_DEBUG
+			Ogre3D->loadPlugin("RenderSystem_Direct3D11_d.dll");
+#else
+			Ogre3D->loadPlugin("RenderSystem_Direct3D11.dll");
+#endif
+
+			Ogre::RenderSystemList renderSystems = Ogre3D->getAvailableRenderers();
+			Ogre::RenderSystemList::iterator itr = renderSystems.begin();
+
+			Ogre3D->setRenderSystem((*itr));
+
+			Ogre3D->initialise(false);
 		}
 
 		~Root() noexcept
 		{
 			if (Ogre3D)
 				delete Ogre3D;
-
-			if (Keyboard)
-				delete Keyboard;
-
 		}
 
 		Root& operator=(const Root&) = default;
@@ -54,7 +60,6 @@ namespace Xplicit
 		}
 
 	public:
-		InputReceiver* Keyboard;
 		Ogre::Root* Ogre3D;
 
 	};
@@ -62,3 +67,4 @@ namespace Xplicit
 
 #include "HelperMacros.h"
 
+#define XPLICIT_RES_GROUP "XplicitNgine"

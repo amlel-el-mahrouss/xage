@@ -20,24 +20,16 @@ namespace Xplicit::Player
 	LocalCameraComponent::LocalCameraComponent()
 		: Component(), mCamera(nullptr)
 	{
-		mCamera = RENDER->getSceneManager()->addCameraSceneNode();
+		mCamera = RENDER->_getCurrentSceneManager()->createCamera("Camera");
 		XPLICIT_ASSERT(mCamera);
 
-		mCamera->setName(this->name());
-
-		RENDER->getCursorControl()->setVisible(false);
-
-		mCursor = RENDER->getVideoDriver()->getTexture("cursor.png");
-		XPLICIT_ASSERT(mCursor);
+		mCursor = RENDER->getTextureManager()->load("cursor.png", "EngineResource", Ogre::TEX_TYPE_2D, -1, 1.0F, Ogre::PF_UNKNOWN, true);
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept
 	{
 		if (mCamera)
-			mCamera->drop();
-
-		if (mCursor)
-			mCursor->drop();
+			delete mCamera;
 	}
 
 	COMPONENT_TYPE LocalCameraComponent::type() noexcept { return COMPONENT_CAMERA; }
@@ -46,17 +38,8 @@ namespace Xplicit::Player
 
 	void LocalCameraComponent::update()
 	{
-		if (!mCursor)
-			return;
-
-		RENDER->getVideoDriver()->draw2DImage(mCursor,
-			RENDER->getCursorControl()->getPosition(),
-			rect(0, 0, 38, 38),
-			nullptr,
-			SColor(255, 255, 255, 255),
-			true);
-
+		
 	}
 
-	ICameraSceneNode* LocalCameraComponent::get() noexcept { return mCamera; }
+	Ogre::Camera* LocalCameraComponent::get() noexcept { return mCamera; }
 }

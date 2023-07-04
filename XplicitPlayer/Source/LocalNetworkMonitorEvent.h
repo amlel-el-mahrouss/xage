@@ -20,7 +20,7 @@ namespace Xplicit::Player
 	* 
 	* @brief This is a network monitoring event
 	* It keeps track of hash, resets and things like that.
-	* if also owns the HTTPManager.
+	* if also owns an XHTTPManager.
 	*/
 	class LocalNetworkMonitorEvent final : public Event
 	{

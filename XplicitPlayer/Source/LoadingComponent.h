@@ -11,7 +11,6 @@
 
 #include <NetworkComponent.h>
 #include "GameMenuUI.h"
-#include "GWEN.h"
 #include <Uri.h>
 
 namespace Xplicit::Player
@@ -36,9 +35,6 @@ namespace Xplicit::Player
 		// resets the timeout and run..
 		// in case of a watchdog..
 		void reset() noexcept;
-
-	private:
-		ITexture* mTexture;
 
 	private:
 		NetworkComponent* mNetwork;

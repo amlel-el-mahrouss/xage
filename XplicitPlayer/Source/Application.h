@@ -28,7 +28,36 @@ namespace Xplicit
 
 namespace Xplicit::Bites
 {
-	constexpr const PChar* XPLICIT_APP_NAME = L"Xplicit - [ Loading... ]";
+	constexpr const char* XPLICIT_APP_NAME = "Xplicit - [ Place1 ]";
+
+	class ObjectInputSystem final
+	{
+	public:
+		explicit ObjectInputSystem() = default;
+		~ObjectInputSystem() = default;
+
+	public:
+		XPLICIT_COPY_DEFAULT(ObjectInputSystem);
+
+	public:
+		static ObjectInputSystem* get_singleton_ptr() noexcept
+		{
+			ObjectInputSystem* singleton = nullptr;
+
+			if (!singleton)
+				singleton = new ObjectInputSystem();
+
+			return singleton;
+		}
+
+		bool key_down(const uint16_t& key)
+		{
+#ifdef XPLICIT_WINDOWS
+			return GetKeyState(key) & 0x8000;
+#endif // ifdef XPLICIT_windows
+		}
+
+	};
 
 	class Application final
 	{

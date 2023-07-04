@@ -141,7 +141,7 @@ namespace Xplicit::Player
 
 		auto traits = KB->get_layout();
 
-		if (KB->key_down(traits.mForward))
+		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(traits.mForward))
 		{
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
@@ -156,7 +156,7 @@ namespace Xplicit::Player
 			return;
 		}
 
-		if (KB->key_down(traits.mBackward))
+		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(traits.mBackward))
 		{
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
@@ -171,7 +171,7 @@ namespace Xplicit::Player
 			return;
 		}
 
-		if (KB->key_down(traits.mRight))
+		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(traits.mRight))
 		{
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
@@ -185,7 +185,7 @@ namespace Xplicit::Player
 			return;
 		}
 
-		if (KB->key_down(traits.mLeft))
+		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(traits.mLeft))
 		{
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;

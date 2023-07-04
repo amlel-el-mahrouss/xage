@@ -95,48 +95,17 @@ namespace Xplicit::RoXML
 
 						RoXMLNodeDescription world_node;
 
-						if (node_name == "Stud")
+						if (node_name == "Mesh")
 						{
 							if (node->first_attribute())
 							{
-								if (strncmp(node->first_attribute()->name(), "Id", 2) == 0)
+								if (strncmp(node->first_attribute()->name(), "Name", 2) == 0)
 								{
 									auto node_id = node->first_attribute()->value();
 
 									if (params.Has3D)
 									{
-										auto brick_mesh = RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh();
-										auto brick = RENDER->getSceneManager()->addMeshSceneNode(brick_mesh);
-
-										brick->setName(node_id);
-										brick->setPosition(vector3df(0.f, 0.f, 0.0f));
-
-										brick->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
-									}
-
-									world_node.Name = "Stud";
-									world_node.ID = node_id;
-								}
-							}
-						}
-
-						if (node_name == "Ball")
-						{
-							if (node->first_attribute())
-							{
-								if (strncmp(node->first_attribute()->name(), "Id", 2) == 0)
-								{
-									auto node_id = node->first_attribute()->value();
-
-									if (params.Has3D)
-									{
-										auto brick_mesh = RENDER->getSceneManager()->getGeometryCreator()->createSphereMesh();
-										auto brick = RENDER->getSceneManager()->addMeshSceneNode(brick_mesh);
-
-										brick->setName(node_id);
-										brick->setPosition(vector3df(0.f, 0.f, 0.0f));
-
-										brick->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture("no_texture.png"));
+										auto brick_mesh = RENDER->_getCurrentSceneManager()->createEntity(node_id);
 									}
 
 									world_node.Name = "Ball";
@@ -164,18 +133,18 @@ namespace Xplicit::RoXML
 								world_node.Color.R = mat_id_cast;
 								world_node.Color.G = mat_id_cast << 8;
 								world_node.Color.B = mat_id_cast << 16;
-								world_node.Color.A = 0xFF;
+								world_node.Color.A = mat_id_cast << 22;
 
 
 								if (mat_id)
 								{
-									const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(node->first_attribute()->value());
+									const auto scene_node = RENDER->_getCurrentSceneManager()->getEntity(node->first_attribute()->value());
 
 									if (scene_node)
 									{
 										try
 										{
-											scene_node->getMaterial(std::atoi(mat_id)).AmbientColor.set(mat_id_cast);
+											scene_node->getSubEntity(0)->getMaterial()->setDiffuse(world_node.Color.R, world_node.Color.G, world_node.Color.B, world_node.Color.A);
 										}
 										catch (...)
 										{
@@ -217,14 +186,14 @@ namespace Xplicit::RoXML
 								world_node.Position.Y = std::atof(y.c_str());
 								world_node.Position.Z = std::atof(z.c_str());
 
-								const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+								const auto scene_node = RENDER->_getCurrentSceneManager()->getEntity(id);
 
 								try
 								{
 									if (!scene_node)
 										throw std::runtime_error("Invalid position requested, ignoring...");
 
-									scene_node->setPosition(vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+									scene_node->getParentSceneNode()->setPosition(Ogre::Vector3f(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 								}
 								catch (const std::runtime_error& err)
 								{
@@ -263,11 +232,11 @@ namespace Xplicit::RoXML
 								world_node.Size.Y = std::atof(y.c_str());
 								world_node.Size.Z = std::atof(z.c_str());
 
-								const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+								const auto scene_node = RENDER->_getCurrentSceneManager()->getEntity(id.c_str());
 
 								try
 								{
-									scene_node->setPosition(vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+									scene_node->getParentSceneNode()->setScale(Ogre::Vector3f(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 								}
 								catch (...)
 								{

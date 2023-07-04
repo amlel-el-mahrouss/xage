@@ -27,7 +27,7 @@
 static void xplicit_throw_error(Xplicit::EngineError& err);
 static void xplicit_throw_error(Xplicit::Win32Error& err);
 
-ILightSceneNode* XPLICIT_LIGHT = nullptr;
+Ogre::Light* XPLICIT_LIGHT = nullptr;
 
 #ifdef XPLICIT_WINDOWS
 
@@ -63,20 +63,12 @@ XPLICIT_MAIN()
 			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
 
 		/* main game loop */
-		while (RENDER->run() && 
-			Xplicit::ComponentManager::get_singleton_ptr() && 
+		while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr())
 		{
-			RENDER->getVideoDriver()->beginScene(true, true, SColor(255, 0x87, 0xCE, 0xEB));
-
-			RENDER->getSceneManager()->drawAll();
-			pApp->leak_gwen()->Canvas->RenderCanvas();
-
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventManager::get_singleton_ptr()->update();
 			Xplicit::ComponentManager::get_singleton_ptr()->update();
-
-			RENDER->getVideoDriver()->endScene();
 		}
 	}
 	catch (Xplicit::EngineError& err)

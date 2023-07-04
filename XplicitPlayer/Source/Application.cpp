@@ -36,8 +36,8 @@ namespace Xplicit::Bites
 		String prebuilt = dir;
 		prebuilt += "Textures/DefaultSkin.zip";
 
-		if (!RENDER->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
-			throw std::runtime_error("Missing skin! This pack is needed for the XplicitPlayer to work.");
+		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dir, "FileSystem", XPLICIT_RES_GROUP);
+		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(prebuilt, "Zip", XPLICIT_RES_GROUP);
 	}
 
 	Application::Application(Utils::UriParser& xconnect_to)
@@ -50,6 +50,7 @@ namespace Xplicit::Bites
 		XPLICIT_GET_DATA_DIR(data_appdata);
 		mPath += data_appdata;
 
+		// Load Basic lua calls
 		XplicitLoadBaseLua();
 
 		// register lua calls, such as PlaySound
@@ -59,41 +60,25 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(splash_screen);
 
 		splash_screen->connect(xconnect_to);
+
+		Thread job([]() {
+			RENDER->startRendering();
+		});
+
+		job.detach();
 	}
 
 	Application::~Application() {}
 
 	void Application::create_and_set_contexts()
 	{
-		// Do not memset zero this!
-		// It has values set by default.
-
-		SIrrlichtCreationParameters params;
-
-		params.DriverMultithreaded = true;
-		params.DriverType = EDT_OPENGL;
-		params.Fullscreen = false;
-		params.WindowSize = dimension2d<irr::u32>(Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y);
-
-		Root::get_singleton_ptr()->set(
-			createDeviceEx(params)
-		);
-
-		// Vector = Size of viewport. Only X and Y and taken into consideration.
-		mGwenManager = std::make_unique<GWENManager>(Vector<float>(Xplicit::Player::XPLICIT_DIM.X, 
-			Xplicit::Player::XPLICIT_DIM.Y, 
-			0.0f));
-
-		Root::get_singleton_ptr()->set(new InputReceiver(mGwenManager->Canvas));
+		Ogre::RenderWindow* window = RENDER->createRenderWindow(Xplicit::Bites::XPLICIT_APP_NAME, Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y, false);
+		Ogre::SceneManager* sceneManager = RENDER->createSceneManager();
 
 		xplicit_open_skins();
 
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
-
-		RENDER->setEventReceiver(Root::get_singleton_ptr()->Keyboard);
-
-		RENDER->setWindowCaption(Xplicit::Bites::XPLICIT_APP_NAME);
 	}
 
 	Application::SettingsManager::SettingsManager()

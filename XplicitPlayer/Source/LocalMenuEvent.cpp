@@ -25,10 +25,7 @@ namespace Xplicit::Player
 	LocalMenuEvent::LocalMenuEvent() noexcept
 		:
 			mNetwork(nullptr),
-			mButtonNoHover(nullptr),
-			mButtonHover(nullptr),
 			mTimeout(0UL),
-			mMenu(nullptr),
 			mEnabled(false)
 	{
 		/* resource loading */
@@ -37,29 +34,19 @@ namespace Xplicit::Player
 
 		String frame_path = "network_leave.png";
 
-		mMenu = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
 		frame_path += "menu_hover.png";
 
-		mButtonHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
 		frame_path += "menu_no_hover.png";
 
-		mButtonNoHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 	}
 
 	LocalMenuEvent::~LocalMenuEvent() 
 	{
-		if (mMenu)
-			(void)mMenu->drop();
 
-		if (mButtonHover)
-			(void)mButtonHover->drop();
-
-		if (mButtonNoHover)
-			(void)mButtonNoHover->drop();
 	}
 
 	const char* LocalMenuEvent::name() noexcept { return ("LocalMenuEvent"); }
@@ -73,32 +60,17 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 		
-		static float tween_start = LOCAL_MENU_TWEEN_START;
-		static float posOfMenu = 12;
-
-		if (KB->key_down(KEY_F3) &&
+		/* F3 key down. */
+		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_F3) &&
 			mTimeout < 0)
 		{
-			tween_start = LOCAL_MENU_TWEEN_START;
-
-			mEnabled = !mEnabled;
-			mTimeout = XPLICIT_TIMEOUT_MENU;
+			mEnabled = true;
 		}
 
-		/* menu is being open */
+		/* The menu is open. */
 		if (mEnabled)
 		{
-			RENDER->getVideoDriver()->draw2DImage(mButtonHover,
-				vector2di(30, XPLICIT_DIM.Y / posOfMenu),
-				rect(0, 0, 63, 42),
-				nullptr,
-				SColor(255, 255, 255, 255),
-				true);
-
-			if (tween_start > LOCAL_MENU_TWEEN_END)
-				tween_start -= LOCAL_MENU_TWEENING;
-
-			if (KB->key_down(KEY_RETURN))
+			if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 			{
 				NetworkPacket packet{};
 
@@ -111,32 +83,10 @@ namespace Xplicit::Player
 
 				std::exit(0);
 			}
-			else if (KB->key_down(KEY_ESCAPE))
+			else if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_ESCAPE))
 			{
 				mEnabled = false;
 			}
-		}
-		/*
-			menu is being closed/inactive
-		*/
-		else
-		{
-			RENDER->getVideoDriver()->draw2DImage(mButtonNoHover,
-				vector2di(30, XPLICIT_DIM.Y / posOfMenu),
-				rect(0, 0, 63, 42),
-				nullptr,
-				SColor(255, 255, 255, 255),
-				true);
-
-			if (tween_start < LOCAL_MENU_TWEEN_START)
-				tween_start += LOCAL_MENU_TWEENING;
-		}
-
-		if (tween_start < LOCAL_MENU_TWEEN_START)
-		{
-			RENDER->getVideoDriver()->draw2DImage(mMenu, 
-				vector2di(XPLICIT_DIM.X / 2.8,
-				XPLICIT_DIM.Y / tween_start));
 		}
 
 		--mTimeout;

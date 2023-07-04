@@ -28,7 +28,7 @@
 #include <lua/lua.hpp>
 #include <codecvt>
 
-extern ILightSceneNode* XPLICIT_LIGHT;
+extern Ogre::Light* XPLICIT_LIGHT;
 
 namespace Xplicit::Player
 {
@@ -37,19 +37,12 @@ namespace Xplicit::Player
 
 	LoadingComponent::LoadingComponent() 
 		:
-		mTexture(nullptr),
 		mNetwork(nullptr), 
 		mTimeout(XPLICIT_TIMEOUT),
 		mEnabled(true)
-	{
-		mTexture = RENDER->getVideoDriver()->getTexture("bkg.png");
-	}
+	{}
 
-	LoadingComponent::~LoadingComponent() 
-	{
-		if (mTexture)
-			(void)mTexture->drop();
-	}
+	LoadingComponent::~LoadingComponent() = default;
 
 	void LoadingComponent::update()
 	{
@@ -62,10 +55,10 @@ namespace Xplicit::Player
 		{
 			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>(
 				[]() { 
-					if (KB->key_down(KEY_RETURN))
-						RENDER->closeDevice();
+					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
+						std::exit(0);
 				},
-				vector2di(XPLICIT_DIM.X / 2.8,
+				Ogre::Vector2(XPLICIT_DIM.X / 2.8,
 					XPLICIT_DIM.Y / 2.8),
 				POPUP_TYPE::BANNED, "StopPopup");
 
@@ -101,9 +94,13 @@ namespace Xplicit::Player
 			EventManager::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>();
 
-			XPLICIT_LIGHT = RENDER->getSceneManager()->addLightSceneNode(nullptr, vector3df(0, 0, 0), SColorf(1.0, 1.0, 1.0, 1.0), 1000.0);
+			XPLICIT_LIGHT = RENDER->getSceneManager()->createLight("Light");
 
-			RENDER->setWindowCaption(L"Xplicit [ InGame ]");
+			HWND pHwnd;
+			
+			RENDER->getAutoCreatedWindow()->getCustomAttribute("WINDOW", pHwnd);
+
+			::SetWindowText(pHwnd, L"Xplicit [ InGame ]");
 
 			XPLICIT_INFO("Engine:LocalSpawn [EVENT]");
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");
@@ -120,10 +117,10 @@ namespace Xplicit::Player
 			{
 				ComponentManager::get_singleton_ptr()->add<PopupComponent>(
 					[]() {
-						if (KB->key_down(KEY_RETURN))
-							RENDER->closeDevice(); 
+						if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
+							std::exit(0);
 					}, 
-						vector2di(XPLICIT_DIM.X / 2.8,
+						Ogre::Vector2(XPLICIT_DIM.X / 2.8,
 						XPLICIT_DIM.Y / 2.8),
 						POPUP_TYPE::NETWORK, "StopPopup");
 
@@ -131,15 +128,6 @@ namespace Xplicit::Player
 				mEnabled = false;
 
 				return;
-			}
-			else
-			{
-				RENDER->getVideoDriver()->draw2DImage(mTexture, 
-					vector2di(0, 0),
-					recti(0, 0, 1280, 720), 
-					nullptr,
-					SColor(255, 255, 255, 255), 
-					true);
 			}
 		}
 	}
@@ -185,9 +173,9 @@ namespace Xplicit::Player
 	void LoadingComponent::reset() noexcept
 	{
 		ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
-			if (KB->key_down(KEY_RETURN))
-				RENDER->closeDevice();
-			}, vector2di(XPLICIT_DIM.X / 3.45,
+			if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
+				std::exit(0);
+			}, Ogre::Vector2(XPLICIT_DIM.X / 3.45,
 				XPLICIT_DIM.Y / 4),
 				POPUP_TYPE::NETWORK);
 	}
