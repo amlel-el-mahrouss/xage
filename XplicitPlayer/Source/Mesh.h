@@ -67,7 +67,7 @@ namespace Xplicit::Player
 	public:
 		StaticBundleMesh() = delete;
 
-		explicit StaticBundleMesh(const char* head, const char* torso, const char* arm, const char* leg, const char* face);
+		explicit StaticBundleMesh(const char* character_path);
 		virtual ~StaticBundleMesh() noexcept;
 
 		StaticBundleMesh& operator=(const StaticBundleMesh&) = default;

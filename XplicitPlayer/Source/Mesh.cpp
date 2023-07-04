@@ -11,7 +11,9 @@
  @file
  */
 
+#include <RoXML.h>
 #include <Root.h>
+
 #include "Mesh.h"
 
 namespace Xplicit::Player
@@ -56,111 +58,15 @@ namespace Xplicit::Player
 
 	static auto XPLICIT_BUNDLE_PATH = "Contents/Bundles/";
 
-	StaticBundleMesh::StaticBundleMesh(const char* head, 
-		const char* torso, 
-		const char* arm, 
-		const char* leg,
-		const char* face)
+	StaticBundleMesh::StaticBundleMesh(const char* character_path)
 	{
-		static XPLICIT_GET_DATA_DIR(dir);
+		RoXML::RoXMLDocumentParameters params;
+		params.Has3D = true;
+		params.NoLua = true;
+		params.Path = character_path;
 
-		String _path = dir;
-		_path += XPLICIT_BUNDLE_PATH;
-		_path += head;
-
-		auto ent = RENDER->_getCurrentSceneManager()->createEntity(_path);
-
-		if (ent)
-		{
-			auto node = RENDER->_getCurrentSceneManager()->getRootSceneNode()->createChildSceneNode();
-			node->attachObject(ent);
-
-			mParts.push_back(std::make_pair(node, ent));
-		}
-
-		_path.clear();
-
-		_path = dir;
-		_path += XPLICIT_BUNDLE_PATH;
-		_path += "Left";
-		_path += arm;
-
-		ent = RENDER->_getCurrentSceneManager()->createEntity(_path);
-
-		if (ent)
-		{
-			auto node = RENDER->_getCurrentSceneManager()->getRootSceneNode()->createChildSceneNode();
-			node->attachObject(ent);
-
-			mParts.push_back(std::make_pair(node, ent));
-		}
-
-		_path.clear();
-
-		_path = dir;
-		_path += XPLICIT_BUNDLE_PATH;
-		_path += torso;
-
-		ent = RENDER->_getCurrentSceneManager()->createEntity(_path);
-
-		if (ent)
-		{
-			auto node = RENDER->_getCurrentSceneManager()->getRootSceneNode()->createChildSceneNode();
-			node->attachObject(ent);
-
-			mParts.push_back(std::make_pair(node, ent));
-		}
-
-		_path.clear();
-
-		_path = dir;
-		_path += XPLICIT_BUNDLE_PATH;
-		_path += "Right";
-		_path += arm;
-
-		ent = RENDER->_getCurrentSceneManager()->createEntity(_path);
-
-		if (ent)
-		{
-			auto node = RENDER->_getCurrentSceneManager()->getRootSceneNode()->createChildSceneNode();
-			node->attachObject(ent);
-
-			mParts.push_back(std::make_pair(node, ent));
-		}
-
-		_path.clear();
-
-		_path = dir;
-		_path += XPLICIT_BUNDLE_PATH;
-		_path += "Left";
-		_path += leg;
-
-		ent = RENDER->_getCurrentSceneManager()->createEntity(_path);
-
-		if (ent)
-		{
-			auto node = RENDER->_getCurrentSceneManager()->getRootSceneNode()->createChildSceneNode();
-			node->attachObject(ent);
-
-			mParts.push_back(std::make_pair(node, ent));
-		}
-
-		_path.clear();
-
-		_path = dir;
-		_path += XPLICIT_BUNDLE_PATH;
-		_path += "Right";
-		_path += leg;
-
-		ent = RENDER->_getCurrentSceneManager()->createEntity(_path);
-
-		if (ent)
-		{
-			auto node = RENDER->_getCurrentSceneManager()->getRootSceneNode()->createChildSceneNode();
-			node->attachObject(ent);
-
-			mParts.push_back(std::make_pair(node, ent));
-		}
+		RoXML::RoXMLDocumentParser parser;
+		parser.load(params);
 
 		XPLICIT_INFO("Loaded StaticBundleMesh successfully!");
 	}

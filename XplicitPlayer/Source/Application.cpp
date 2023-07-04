@@ -14,11 +14,13 @@
 // Application framework.
 #include "Application.h"
 
+// We need this to connect and download from server.
+#include "LoadingComponent.h"
+
 // RoXML format
 #include "RoXML.h"
 
-// We need this to connect and download from server.
-#include "LoadingComponent.h"
+#include <OgreWindowEventUtilities.h>
 
 extern void XplicitLoadClientLua() noexcept;
 
@@ -63,6 +65,12 @@ namespace Xplicit::Bites
 
 		Thread job([]() {
 			RENDER->startRendering();
+
+			while (true)
+			{
+				if (RENDER->getAutoCreatedWindow()->isClosed()) break;
+				if (!RENDER->renderOneFrame()) break;
+			}
 		});
 
 		job.detach();

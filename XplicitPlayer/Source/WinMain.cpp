@@ -64,7 +64,7 @@ XPLICIT_MAIN()
 		while (Xplicit::ComponentManager::get_singleton_ptr() && 
 			Xplicit::EventManager::get_singleton_ptr())
 		{
-			if (!RENDER->isInitialised())
+			if (!RENDER->endRenderingQueued())
 				break;
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();

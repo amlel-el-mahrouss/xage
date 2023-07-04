@@ -26,7 +26,7 @@ namespace Xplicit::Player
 
 	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& public_hash)
 		:
-		StaticBundleMesh("head.obj", "Torso.obj", "Arm.obj", "Leg.obj", "Face.png"), // relative to R6X dir.
+		StaticBundleMesh("Character.roxml"), // relative to contents dir
 		mPublicHash(public_hash),
 		mCam(nullptr), 
 		mPacket(),
