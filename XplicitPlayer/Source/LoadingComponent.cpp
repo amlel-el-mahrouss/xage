@@ -105,35 +105,6 @@ namespace Xplicit::Player
 
 			RENDER->setWindowCaption(L"Xplicit [ InGame ]");
 
-			XPLICIT_SLEEP(3000);
-
-			mNetwork->read(packet);
-
-			String scene_id;
-			scene_id += packet.buffer;
-			scene_id += ".roxml";
-
-			try
-			{
-				monitor->HTTP->download(scene_id);
-			}
-			catch (const HTTP::HTTPError& err)
-			{
-				std::wstring exit;
-				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-
-				exit += L"What: ";
-				exit += converter.from_bytes(err.what());
-				exit += L"\n";
-
-				if (Xplicit::DialogHelper::message_box(L"XplicitNgine",
-					L"Program Exit",
-					exit.c_str(),
-					TD_INFORMATION_ICON,
-					TDCBF_OK_BUTTON) == IDOK)
-					std::exit(0);
-			}
-
 			XPLICIT_INFO("Engine:LocalSpawn [EVENT]");
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");
 

@@ -104,10 +104,6 @@ namespace Xplicit
 							XPLICIT_INFO("Humanoid:Spawn [EVENT]");
 							humanoid->get_attribute().script()->run();
 						}
-
-						XPLICIT_INFO("Engine:Spawn [EVENT]");
-
-						Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
 					}
 				}, player);
 			}
@@ -134,6 +130,9 @@ namespace Xplicit
 					}
 
 					player->should_spawn(true);
+
+					XPLICIT_INFO("Engine:Spawn [EVENT]");
+					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
 				}
 			}
 		}

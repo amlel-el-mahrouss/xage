@@ -141,10 +141,6 @@ namespace Xplicit
 
 					Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
-					// finally send the place we're on.
-					memset(mNetwork->get(peer_idx)->packet.buffer, 0, player->get_peer()->xplicit_id.as_string().size());
-					memcpy(mNetwork->get(peer_idx)->packet.buffer, XPLICIT_PLACE_ID.data(), XPLICIT_PLACE_ID.size());
-					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 				}
 			}
 		}

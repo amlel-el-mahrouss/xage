@@ -17,9 +17,6 @@ namespace Xplicit::Player
 	class LocalMenuEvent final : public Event
 	{
 	public:
-		LocalMenuEvent() = delete;
-
-	public:
 		explicit LocalMenuEvent() noexcept;
 		~LocalMenuEvent() override;
 

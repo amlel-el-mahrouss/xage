@@ -11,6 +11,7 @@
  @file
  */
 
+#include <Http.h>
 #include <Root.h>
 #include <codecvt>
 #include <XplicitID.h>
