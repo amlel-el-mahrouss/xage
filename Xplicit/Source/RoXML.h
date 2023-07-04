@@ -106,7 +106,7 @@ namespace Xplicit::RoXML
 								String klass_to_instanciate;
 
 								if (klass && 
-									strcmp(node->last_attribute()->name(), "Class") == 0)
+									strcmp(klass->name(), "Class") == 0)
 									klass_to_instanciate = klass->value();
 
 								// Here is the list of run-time components { "Light", "Mesh", "Sound", "Particle" };
@@ -115,8 +115,8 @@ namespace Xplicit::RoXML
 								{
 									auto node_id = node->first_attribute()->value();
 
-									const char* script_id = nullptr;
-									const char* parent_id = nullptr;
+									const char* script_id = "";
+									const char* parent_id = "";
 
 									// For for a lua attribute!
 									if (node->first_attribute()->next_attribute() &&
@@ -133,8 +133,8 @@ namespace Xplicit::RoXML
 										Vector<float>(0, 0, 0),
 										Color<float>(0, 0, 0),
 										params.NoLua ? script_id : nullptr,
-										node_id,
-										parent_id);
+										parent_id,
+										node_id);
 
 									if (params.Has3D)
 									{
@@ -200,15 +200,23 @@ namespace Xplicit::RoXML
 								world_node.Color.B = mat_id_cast << 16;
 								world_node.Color.A = mat_id_cast << 22;
 
-
-								if (mat_id)
+								if (params.Has3D)
 								{
-									const auto scene_node = RENDER->_getCurrentSceneManager()->getEntity(node->first_attribute()->value());
+									if (mat_id)
+									{
+										try
+										{
+											const auto scene_node = RENDER->_getCurrentSceneManager()->getEntity(node->first_attribute()->value());
 
-									if (scene_node)
-										scene_node->getSubEntity(0)->getMaterial()->setDiffuse(world_node.Color.R, world_node.Color.G, world_node.Color.B, world_node.Color.A);
+											if (scene_node)
+												scene_node->getSubEntity(0)->getMaterial()->setDiffuse(world_node.Color.R, world_node.Color.G, world_node.Color.B, world_node.Color.A);
+										}
+										catch (...)
+										{
+											XPLICIT_INFO("No such Entity had been found!");
+										}
+									}
 								}
-
 							}
 						}
 
@@ -253,10 +261,13 @@ namespace Xplicit::RoXML
 								world_node.Rotation.Z = std::atof(z.c_str());
 								world_node.Rotation.W = std::atof(w.c_str());
 
-								const auto scene_node = RENDER->_getCurrentSceneManager()->getEntity(id);
+								if (params.Has3D)
+								{
+									const auto scene_node = RENDER->_getCurrentSceneManager()->getSceneNode(id, false);
 
-								if (scene_node)
-									scene_node->getParentSceneNode()->rotate(Ogre::Quaternion(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()), std::atof(w.c_str())));
+									if (scene_node)
+										scene_node->rotate(Ogre::Quaternion(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()), std::atof(w.c_str())));
+								}
 							}
 						}
 
@@ -296,10 +307,15 @@ namespace Xplicit::RoXML
 								world_node.Position.Y = std::atof(y.c_str());
 								world_node.Position.Z = std::atof(z.c_str());
 
-								const auto scene_node = RENDER->_getCurrentSceneManager()->getEntity(id);
 
-								if (scene_node)
-									scene_node->getParentSceneNode()->setPosition(Ogre::Vector3f(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+								if (params.Has3D)
+								{
+									const auto scene_node = RENDER->_getCurrentSceneManager()->getSceneNode(id, false);
+
+									if (scene_node)
+										scene_node->setPosition(Ogre::Vector3f(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+								}
+		
 							}
 						}
 
@@ -339,15 +355,10 @@ namespace Xplicit::RoXML
 								world_node.Size.Y = std::atof(y.c_str());
 								world_node.Size.Z = std::atof(z.c_str());
 
-								const auto scene_node = RENDER->_getCurrentSceneManager()->getEntity(id.c_str());
-
-								try
+								if (params.Has3D)
 								{
-									scene_node->getParentSceneNode()->setScale(Ogre::Vector3f(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
-								}
-								catch (...)
-								{
-									XPLICIT_INFO("Invalid Size requested, ignoring...");
+									const auto scene_node = RENDER->_getCurrentSceneManager()->getSceneNode(id.c_str(), false);
+									scene_node->setScale(Ogre::Vector3f(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 								}
 							}
 						}
