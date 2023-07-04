@@ -50,9 +50,7 @@ namespace Xplicit
 		mSocket(Network::SOCKET_TYPE::UDP),
 		mTargetAddress(),
 		mPacket(),
-		mHash(-1),
-		mSslCtx(SSL_CTX_new(DTLSv1_client_method())),
-		mSsl(nullptr)
+		mHash(-1)
 	{
 		if (!mSocket)
 			throw NetworkError(NETWORK_ERR_BAD_CHALLENGE);
@@ -64,9 +62,6 @@ namespace Xplicit
 	{
 		if (XPLICIT_SHUTDOWN(mSocket.PublicSocket, SD_BOTH) == SOCKET_ERROR)
 			XPLICIT_CLOSE(mSocket.PublicSocket);
-
-		SSL_free(mSsl);
-		SSL_CTX_free(mSslCtx);
 	}
 
 	const char* NetworkComponent::name() noexcept { return ("NetworkComponent"); }
@@ -77,28 +72,13 @@ namespace Xplicit
 
 	bool NetworkComponent::connect(const char* ip, const char* port) noexcept
 	{
-		mSsl = SSL_new(mSslCtx);
-
 		memset(&mTargetAddress, 0, sizeof(sockaddr_in));
 
 		mTargetAddress.sin_addr.S_un.S_addr = inet_addr(ip);
 		mTargetAddress.sin_family = AF_INET;
 		mTargetAddress.sin_port = htons(std::atoi(port));
 		
-		if (::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mTargetAddress), sizeof(sockaddr_in)) != SOCKET_ERROR)
-		{
-			/* Set new fd and set BIO to connected */
-			mBio = SSL_get_rbio(mSsl);
-			BIO_set_fd(mBio, mSocket.PublicSocket, BIO_NOCLOSE);
-			BIO_ctrl(mBio, BIO_CTRL_DGRAM_SET_CONNECTED, 0, &mTargetAddress);
-
-			/* Finish handshake */
-			SSL_accept(mSsl);
-
-			return true;
-		}
-
-		return false;
+		return ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mTargetAddress), sizeof(sockaddr_in)) != SOCKET_ERROR;
 	}
 
 	bool NetworkComponent::set_hash(const std::int64_t& hash) noexcept
@@ -126,21 +106,33 @@ namespace Xplicit
 	{
 		packet.hash = mHash;
 		packet.channel = mChannelID;
-
 		packet.size = sizeof(NetworkPacket);
-
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		packet.magic[2] = XPLICIT_NETWORK_MAG_2;
-
 		packet.version = XPLICIT_NETWORK_VERSION;
-
 		packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 		
-		if (SSL_write(mSsl,
+		if (::sendto(mSocket.PublicSocket,
 			reinterpret_cast<const char*>(&packet), 
-			sizeof(NetworkPacket)) <= 0)
+			sizeof(NetworkPacket), 
+			0,
+			reinterpret_cast<sockaddr*>(&mTargetAddress),
+			sizeof(PrivateAddressData)) == SOCKET_ERROR)
 		{
+			const auto err = WSAGetLastError();
+
+			if (err == WSAEWOULDBLOCK)
+			{
+				fd_set fd;
+				FD_ZERO(&fd);
+				FD_SET(mSocket.PublicSocket, &fd);
+
+				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 100000 };
+
+				::select(0, &fd, nullptr, nullptr, &timeout);
+			}
+
 			return false;
 		}
 		
@@ -157,13 +149,31 @@ namespace Xplicit
 	{
 		mReset = false;
 
+		std::int32_t len = sizeof(PrivateAddressData);
+
+		const std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
+			reinterpret_cast<char*>(&mPacket), 
+			sizeof(NetworkPacket), 
+			0,
+			reinterpret_cast<sockaddr*>(&mTargetAddress),
+			&len);
 		
-		
-		if (const std::int32_t err = SSL_read(mSsl,
-			reinterpret_cast<char*>(&mPacket),
-			sizeof(NetworkPacket)); err <= 0)
+		if (err == SOCKET_ERROR)
 		{
-			return false;
+			switch (WSAGetLastError())
+			{
+			case WSAECONNRESET:
+			{
+				mReset = true;
+				break;
+			}
+			case WSAEWOULDBLOCK:
+			{
+				break;
+			}
+			default:
+				return false;
+			}
 		}
 
 		if (mPacket.magic[0] == XPLICIT_NETWORK_MAG_0 && 

@@ -81,11 +81,9 @@ namespace Xplicit
 
         bool set_channel(const std::uint32_t& channelId) noexcept;
         
-    public:
         bool send(NetworkPacket& packet);
         bool read(NetworkPacket& packet);
 
-    public:
         NetworkPacket& get() noexcept;
         bool is_reset() const noexcept;
 
@@ -96,12 +94,6 @@ namespace Xplicit
 		NetworkPacket mPacket;
         std::int64_t mHash;
         bool mReset;
-
-    private:
-        SSL_CTX* mSslCtx;
-        BIO* mBio;
-        SSL* mSsl;
-
 
         friend class NetworkEvent;
 

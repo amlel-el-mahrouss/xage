@@ -12,9 +12,6 @@
 #include "Config.h"
 #include "NMath.h" /* Nplicit Math Library */
 
-#include <vector>
-#include <cstdint>
-
 namespace Xplicit
 {
 	template <typename TypeFloat = float>

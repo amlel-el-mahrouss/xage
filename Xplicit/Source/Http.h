@@ -11,6 +11,10 @@
 
 #include "Xplicit.h"
 
+// OpenSSL
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
 namespace Xplicit::HTTP
 {
     constexpr int16_t XPLICIT_HTTP_PORT = 443;

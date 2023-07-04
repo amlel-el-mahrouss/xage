@@ -56,21 +56,19 @@ namespace Xplicit::Player
 			return;
 		}
 
-		static NetworkPacket packet;
-
+		NetworkPacket packet;
 		if (!mNetwork->read(packet)) return;
 
-		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK ||
-			packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN)
+		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 		{
-			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("NetworkPopup"))
+			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
 			{
 				ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 					if (KB->key_down())
 						RENDER->closeDevice();
 					}, vector2di(XPLICIT_DIM.X / 3.45,
 						XPLICIT_DIM.Y / 4),
-						packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ? POPUP_TYPE::SHUTDOWN : POPUP_TYPE::KICK, "NetworkPopup");
+						POPUP_TYPE::KICK, "KickPopup");
 			}
 		}
 
@@ -100,7 +98,7 @@ namespace Xplicit::Player
 					return;
 			}
 
-			XPLICIT_INFO("Engine:Join [EVENT]");
+			XPLICIT_INFO("LocalHumanoid:Join [EVENT]");
 
 			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash);
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
@@ -109,19 +107,40 @@ namespace Xplicit::Player
 			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_INVALID;
 		}
 
-		if (packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
+		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||
+			packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK ||
+			packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
 		{
-			const auto players = ComponentManager::get_singleton_ptr()->all_of<LocalHumanoidComponent>("LocalHumanoidComponent");
-
-			for (int ply = 0; ply < players.size(); ++ply)
+			if (packet.hash == mHash ||
+				packet.public_hash == mPublicHash)
 			{
-				if (packet.public_hash == players[ply]->id())
+				if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
 				{
-					XPLICIT_INFO("Engine:Leave [EVENT]");
-					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Leave()");
+					ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+						if (KB->key_down())
+							RENDER->closeDevice();
+					}, vector2di(XPLICIT_DIM.X / 2.8,
+							XPLICIT_DIM.Y / 2.8),
+							POPUP_TYPE::SHUTDOWN,
+							"ConnShutdown");
 
-					ComponentManager::get_singleton_ptr()->remove(players[ply]);
-					break;
+					mNetwork = nullptr;
+				}
+			}
+			else
+			{
+				const auto players = ComponentManager::get_singleton_ptr()->all_of<LocalHumanoidComponent>("LocalHumanoidComponent");
+
+				for (int ply = 0; ply < players.size(); ++ply)
+				{
+					if (packet.public_hash == players[ply]->id())
+					{
+						XPLICIT_INFO("LocalHumanoid:Leave [EVENT]");
+						Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Leave()");
+
+						ComponentManager::get_singleton_ptr()->remove(players[ply]);
+						break;
+					}
 				}
 			}
 		}

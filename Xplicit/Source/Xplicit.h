@@ -15,14 +15,6 @@
 
 #include "Config.h"
 
-#ifndef __XPLICIT_NO_SSL__
-
-#include <openssl/bio.h>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
-
-#endif
-
 #ifdef XPLICIT_END_OF_BUFFER
 #undef XPLICIT_END_OF_BUFFER
 #endif // XPLICIT_END_OF_BUFFER
@@ -332,14 +324,6 @@ namespace Xplicit
 		if (WSAStartup(MAKEWORD(2, 2), dat) == 0)
 		{
 			std::atexit(fini_winsock);
-
-#ifndef __XPLICIT_NO_SSL__
-
-			SSL_load_error_strings(); /* readable error messages */
-			SSL_library_init(); /* initialize library */
-
-#endif
-
 			return true;
 		}
 

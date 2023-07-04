@@ -174,6 +174,13 @@ namespace Xplicit
 			return *this;
 		}
 
+		size_t operator()(const Vector<TypeFloat>& key) const 
+		{
+			return std::hash<TypeFloat>(key.X) ^
+				std::hash<TypeFloat>(key.Y) ^
+				std::hash<TypeFloat>(key.Z);
+		}
+
 		bool operator<(const Vector<TypeFloat>& vec) const
 		{
 			return vec.X < X && vec.Y < Y && vec.Z < Z;
@@ -266,6 +273,13 @@ namespace Xplicit
 			return *this;
 		}
 
+		size_t operator()(const Quaternion<TypeFloat>& key) const 
+		{ 
+			return std::hash<TypeFloat>(key.X) ^
+			std::hash<TypeFloat>(key.Y) ^
+			std::hash<TypeFloat>(key.Z) ^
+			std::hash<TypeFloat>(key.W); }
+
 		bool operator<(const Quaternion<TypeFloat>& quat) const
 		{
 			return quat.X < X && quat.Y < Y && quat.Z < Z && quat.W < W;
@@ -346,6 +360,13 @@ namespace Xplicit
 
 			return *this;
 		}
+
+		size_t operator()(const Color<TypeFloat>& key) const 
+		{ 
+			return std::hash<TypeFloat>(key.A) ^ 
+			std::hash<TypeFloat>(key.G) ^ 
+			std::hash<TypeFloat>(key.B) ^
+			std::hash<TypeFloat>(key.R); }
 
 		bool operator<(const Color<TypeFloat>& clr) const
 		{

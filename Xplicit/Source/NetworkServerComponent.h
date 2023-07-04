@@ -59,11 +59,6 @@ namespace Xplicit
 		String mDns;
 
 	private:
-		SSL_CTX* mSslCtx;
-		BIO* mBio;
-		SSL* mSsl;
-
-	private:
 		friend class NetworkServerContext;
 
 	};
@@ -75,6 +70,7 @@ namespace Xplicit
 		static void send_all(const NetworkServerComponent* server) noexcept;
 		static void recv_all(const NetworkServerComponent* server) noexcept;
 		
+		static void recv_from(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept;
 		static void recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 		static void send(const NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 		
