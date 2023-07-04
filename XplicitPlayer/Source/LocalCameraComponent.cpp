@@ -23,7 +23,7 @@ namespace Xplicit::Player
 		mCamera = RENDER->_getCurrentSceneManager()->createCamera("Camera");
 		XPLICIT_ASSERT(mCamera);
 
-		mCursor = RENDER->getTextureManager()->load("cursor.png", "EngineResource", Ogre::TEX_TYPE_2D, -1, 1.0F, Ogre::PF_UNKNOWN, true);
+		mCursor = RENDER->getTextureManager()->load("cursor.png", XPLICIT_RES_GROUP, Ogre::TEX_TYPE_2D, -1, 1.0F, Ogre::PF_UNKNOWN, true);
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept

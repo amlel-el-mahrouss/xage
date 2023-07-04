@@ -21,9 +21,11 @@ namespace Xplicit
 	private:
 		explicit Root()
 			:
-			Ogre3D(nullptr)
+			Ogre3D(nullptr),
+			Ogre3D_Scene(nullptr),
+			Ogre3D_Window(nullptr)
 		{
-			Ogre3D = new Ogre::Root("plugins.cfg");
+			Ogre3D = new Ogre::Root();
 
 #ifdef XPLICIT_DEBUG
 			Ogre3D->loadPlugin("RenderSystem_Direct3D11_d.dll");
@@ -36,7 +38,12 @@ namespace Xplicit
 
 			Ogre3D->setRenderSystem((*itr));
 
-			Ogre3D->initialise(false);
+			Ogre3D_Scene = Ogre3D->createSceneManager();
+			Ogre3D->_setCurrentSceneManager(Ogre3D_Scene);
+
+			Ogre3D_Window = Ogre3D->initialise(true);
+		
+			this->set_title("XplicitNgin [ Place1 ]");
 		}
 
 		~Root() noexcept
@@ -60,6 +67,24 @@ namespace Xplicit
 		}
 
 	public:
+		bool set_title(const char* title) noexcept
+		{
+			if (!Ogre3D_Window)
+				return false;
+
+			if (title == nullptr)
+				title = "XplicitNgine";
+
+			int64_t hwnd = 0;
+			Ogre3D_Window->getCustomAttribute("WINDOW", &hwnd);
+			::SetWindowTextA((HWND)hwnd, title);
+
+			return true;
+		}
+
+	public:
+		Ogre::RenderWindow* Ogre3D_Window;
+		Ogre::SceneManager* Ogre3D_Scene;
 		Ogre::Root* Ogre3D;
 
 	};

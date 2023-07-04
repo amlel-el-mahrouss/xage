@@ -17,6 +17,7 @@
 #include <rapidxml/rapidxml.hpp>
 
 // Engine
+#include "InstanceComponent.h"
 #include "DataValue.h"
 #include "Root.h"
 #include "Util.h"
@@ -97,18 +98,84 @@ namespace Xplicit::RoXML
 
 						RoXMLNodeDescription world_node;
 
-						if (node_name == "Mesh" &&
-							!params.LuaOnly &&
-							params.Has3D)
+						if (node_name == "Instance")
 						{
 							if (node->first_attribute())
 							{
-								if (strncmp(node->first_attribute()->name(), "Name", 2) == 0)
+								auto klass = node->last_attribute();
+								String klass_to_instanciate;
+
+								if (klass && 
+									strcmp(node->last_attribute()->name(), "Class") == 0)
+									klass_to_instanciate = klass->value();
+
+								// Here is the list of run-time components { "Light", "Mesh", "Sound", "Particle" };
+
+								if (strcmp(node->first_attribute()->name(), "Id") == 0)
 								{
 									auto node_id = node->first_attribute()->value();
-									auto brick_mesh = RENDER->_getCurrentSceneManager()->createEntity(node_id);
 
-									world_node.Name = "Mesh";
+									const char* script_id = nullptr;
+									const char* parent_id = nullptr;
+
+									// For for a lua attribute!
+									if (node->first_attribute()->next_attribute() &&
+										strcmp(node->first_attribute()->next_attribute()->name(), "Lua") == 0)
+										script_id = node->first_attribute()->next_attribute()->value();
+
+									// now check for a parent!
+									if (node->first_attribute()->next_attribute() &&
+										strcmp(node->first_attribute()->next_attribute()->name(), "Parent") == 0)
+										parent_id = node->first_attribute()->next_attribute()->value();
+
+									auto component = ComponentManager::get_singleton_ptr()->add<InstanceComponent>(
+										Vector<float>(0, 0, 0),
+										Vector<float>(0, 0, 0),
+										Color<float>(0, 0, 0),
+										params.NoLua ? script_id : nullptr,
+										node_id,
+										parent_id);
+
+									if (params.Has3D)
+									{
+										void* object = nullptr;
+
+										if (klass_to_instanciate == "Light")
+										{
+											object = RENDER->_getCurrentSceneManager()->createLight(node_id);
+										}
+
+										if (klass_to_instanciate == "Stud")
+										{
+											RENDER->_getCurrentSceneManager()->createEntity("Stud", "Prefab_Cube");
+										}
+
+										if (klass_to_instanciate == "Mesh")
+										{
+											object = RENDER->_getCurrentSceneManager()->createEntity(node_id);
+										}
+
+										if (klass_to_instanciate == "Particle")
+										{
+											RENDER->_getCurrentSceneManager()->createParticleSystem(node_id);
+											object = RENDER->_getCurrentSceneManager()->getParticleSystem(node_id)->createParticle();
+										}
+
+										if (object)
+										{
+											Ogre::SceneNode* node = nullptr;
+
+											if (node = RENDER->_getCurrentSceneManager()->getSceneNode(parent_id, false); !node)
+											{
+												ComponentManager::get_singleton_ptr()->remove<InstanceComponent>(component);
+												break;
+											}
+
+											node->addChild(node->getParent());
+										}
+									}
+
+									world_node.Name = node_name;
 									world_node.ID = node_id;
 								}
 							}
@@ -127,8 +194,6 @@ namespace Xplicit::RoXML
 							{
 								const auto mat_id = node->first_attribute()->next_attribute()->value();
 								const auto mat_id_cast = std::atoi(node->value());
-
-								world_node.Name = "Color3";
 
 								world_node.Color.R = mat_id_cast;
 								world_node.Color.G = mat_id_cast << 8;
@@ -178,8 +243,6 @@ namespace Xplicit::RoXML
 									}
 								}
 
-								world_node.Name = "Rotate3";
-
 								String x = node->first_attribute()->value();
 								String y = node->first_attribute()->next_attribute()->value();
 								String z = node->first_attribute()->next_attribute()->next_attribute()->value();
@@ -225,8 +288,6 @@ namespace Xplicit::RoXML
 									}
 								}
 
-								world_node.Name = "Position3";
-
 								String x = node->first_attribute()->value();
 								String y = node->first_attribute()->next_attribute()->value();
 								String z = node->first_attribute()->next_attribute()->next_attribute()->value();
@@ -270,8 +331,6 @@ namespace Xplicit::RoXML
 									}
 								}
 
-								world_node.Name = "Scale3";
-
 								String x = node->first_attribute()->value();
 								String y = node->first_attribute()->next_attribute()->value();
 								String z = node->first_attribute()->next_attribute()->next_attribute()->value();
@@ -304,8 +363,6 @@ namespace Xplicit::RoXML
 								{
 									String attr_id = node->first_attribute()->next_attribute()->name();
 									String id = node->first_attribute()->next_attribute()->value();
-
-									world_node.Name = "Connect";
 
 									String name_value = node->first_attribute()->value();
 
@@ -346,11 +403,12 @@ namespace Xplicit::RoXML
 								strcmp(node->first_attribute()->name(), "Name") == 0) // and it is really what we think it is.
 							{
 								// go on and include that!
-								world_node.Name = node_name;
 								world_node.ID = node->first_attribute()->value();
 								world_node.Value = node->value();
 							}
 						}
+
+						world_node.Name = node_name;
 
 						params.WorldNodes.push_back(world_node);
 

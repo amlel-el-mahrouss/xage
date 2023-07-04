@@ -13,6 +13,7 @@
 
 #include <Http.h>
 #include <Root.h>
+#include <RoXML.h>
 #include <codecvt>
 #include <XplicitID.h>
 
@@ -39,7 +40,6 @@ static void xplicit_print_help()
 static void xplicit_load_sh()
 {
 	char cmd_buf[1024];
-
 	const auto network = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 	while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
@@ -105,6 +105,14 @@ int main(int argc, char** argv)
 		}
 
 		XPLICIT_PLACE_ID = argv[1];
+
+		Xplicit::RoXML::RoXMLDocumentParameters params;
+		params.Has3D = false;
+		params.NoLua = true;
+		params.Path = XPLICIT_PLACE_ID;
+
+		Xplicit::RoXML::RoXMLDocumentParser parser;
+		parser.load(params);
 
 #ifdef XPLICIT_WINDOWS
 		WSADATA wsa;

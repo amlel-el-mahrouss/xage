@@ -29,8 +29,7 @@ namespace Xplicit
 			const Color<float>& color,
 			const char* script = nullptr,
 			const char* parent = "World",
-			const char* name = "Instance",
-			const bool read_only = false);
+			const char* name = "Instance");
 
 		~InstanceComponent() override;
 
@@ -54,7 +53,6 @@ namespace Xplicit
 	private:
 		XAttribute mAttribute;
 		String mParent;
-		bool mReadOnly;
 		String mName;
 
 	};

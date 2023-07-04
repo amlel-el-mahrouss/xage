@@ -17,12 +17,10 @@ namespace Xplicit
 		const Color<float>& color,
 		const char* script,
 		const char* parent,
-		const char* name,
-		const bool read_only)
+		const char* name)
 		: 
 		mName(name),
-		mParent(parent),
-		mReadOnly(read_only)
+		mParent(parent)
 	{
 		mAttribute.pos() = position;
 		mAttribute.scale() = size;

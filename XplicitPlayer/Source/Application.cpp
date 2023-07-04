@@ -66,6 +66,7 @@ namespace Xplicit::Bites
 			while (true)
 			{
 				if (RENDER->getAutoCreatedWindow()->isClosed()) break;
+
 				if (!RENDER->renderOneFrame()) break;
 			}
 		});
@@ -77,8 +78,10 @@ namespace Xplicit::Bites
 
 	void Application::create_and_set_contexts()
 	{
-		Ogre::RenderWindow* window = RENDER->createRenderWindow(Xplicit::Bites::XPLICIT_APP_NAME, Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y, false);
 		Ogre::SceneManager* sceneManager = RENDER->createSceneManager();
+
+		Root::get_singleton_ptr()->Ogre3D_Window->resize(Player::XPLICIT_DIM.X, Player::XPLICIT_DIM.Y);
+		Root::get_singleton_ptr()->Ogre3D_Window->setVSyncEnabled(false);
 
 		xplicit_open_skins();
 

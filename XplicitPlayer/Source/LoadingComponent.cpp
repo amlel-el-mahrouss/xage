@@ -14,7 +14,6 @@
  @file
  */
 
-
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalHumanoidComponent.h"
@@ -92,11 +91,7 @@ namespace Xplicit::Player
 			EventManager::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventManager::get_singleton_ptr()->add<LocalMenuEvent>();
 
-			HWND pHwnd;
-			
-			RENDER->getAutoCreatedWindow()->getCustomAttribute("WINDOW", pHwnd);
-
-			::SetWindowText(pHwnd, L"Xplicit [ InGame ]");
+			Root::get_singleton_ptr()->set_title("Xplicit [ InGame ]");
 
 			XPLICIT_INFO("Engine:LocalSpawn [EVENT]");
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");
@@ -125,6 +120,8 @@ namespace Xplicit::Player
 
 				return;
 			}
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 	}
 

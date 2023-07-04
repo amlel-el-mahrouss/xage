@@ -24,8 +24,6 @@ static int lua_New(lua_State* L)
 	parent += lua_tostring(L, 2);
 	script += lua_tostring(L, 3);
 	
-	bool rw = lua_toboolean(L, 4);
-
 	if (name.empty() ||
 		script.empty())
 		return 0;
@@ -36,8 +34,7 @@ static int lua_New(lua_State* L)
 		Xplicit::Color<float>(0, 0, 0),
 		script.c_str(),
 		parent.c_str(),
-		name.c_str(),
-		rw
+		name.c_str()
 	);
 
 	XPLICIT_ASSERT(instance);
