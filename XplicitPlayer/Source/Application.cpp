@@ -16,11 +16,8 @@
 
 // We need this to connect and download from server.
 #include "LoadingComponent.h"
-
 // RoXML format
 #include "RoXML.h"
-
-#include <OgreWindowEventUtilities.h>
 
 extern void XplicitLoadClientLua() noexcept;
 
