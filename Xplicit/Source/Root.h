@@ -10,10 +10,9 @@
 #pragma once
 
 #include "Xplicit.h"
-#include <IEventReceiver.h>
 
 /* common engine macros for Root */
-#define RENDER Xplicit::Root::get_singleton_ptr()->Dev
+#define RENDER Xplicit::Root::get_singleton_ptr()->Ogre3D
 
 namespace Xplicit
 {
@@ -23,15 +22,21 @@ namespace Xplicit
 	{
 	private:
 		explicit Root()
-			: Keyboard(nullptr), ShouldExit(false), Dev(nullptr)
-		{}
+			: 
+			Keyboard(nullptr), 
+			Ogre3D(nullptr)
+		{
+			Ogre3D = new Ogre::Root("plugins.cfg");
+		}
 
 		~Root() noexcept
 		{
-			if (Dev)
-				Dev->drop();
+			if (Ogre3D)
+				delete Ogre3D;
 
-			ShouldExit = true;
+			if (Keyboard)
+				delete Keyboard;
+
 		}
 
 		Root& operator=(const Root&) = default;
@@ -49,22 +54,8 @@ namespace Xplicit
 		}
 
 	public:
-		void set(irr::IrrlichtDevice* dev) noexcept
-		{
-			if (dev)
-				Dev = dev;
-		}
-
-		void set(InputReceiver* kb) noexcept
-		{
-			if (kb)
-				Keyboard = kb;
-		}
-
-	public:
 		InputReceiver* Keyboard;
-		IrrlichtDevice* Dev;
-		bool ShouldExit;
+		Ogre::Root* Ogre3D;
 
 	};
 }

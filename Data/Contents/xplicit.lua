@@ -1,6 +1,6 @@
 -- Copyright Xplicit Corporation
 
-print('XplicitNgine');
+PrintLn('XplicitNgine');
 
 # Copyright Xplicit Corporation
 
@@ -112,7 +112,7 @@ func Engine:Spawn()
 end
 
 func Engine:Init()
-    print('Registering engine...');
+    PrintLn('Registering engine...');
 
     Engine.Name = "Xplicit";
     Engine.Description = "GameNgine";
@@ -123,7 +123,7 @@ func Engine:Init()
 end
 
 func Engine:Connect(Name, Id, Func)
-    print('Registering event...');
+    PrintLn('Registering event...');
     
     table.insert(Engine.Events, {
         Name = Name,
@@ -133,11 +133,11 @@ func Engine:Connect(Name, Id, Func)
 
     Engine.Counter = Engine.Counter + 1;
 
-    print('Registered!');
+    PrintLn('Registered!');
 end
 
 func Engine:Disconnect(Id)
-    print('Disconnecting event...');
+    PrintLn('Disconnecting event...');
     
     for _, v in ipairs(Engine.Events) do
         if (v.Id == Id) then
@@ -145,9 +145,24 @@ func Engine:Disconnect(Id)
 
             Engine.Counter = Engine.Counter - 1;
 
-            print('Event Disconnected...');
+            PrintLn('Event Disconnected...');
         end
     end
 end
 
 Engine:Init();
+
+Engine.INVALID = 0;
+Engine.SCRIPT = 1;
+Engine.SOUND = 2;
+Engine.PARTICLE = 3;
+Engine.ROXML = 4;
+Engine.TEXTURE = 5;
+Engine.TOOL = 6;
+Engine.SMOKE = 7;
+Engine.FORCEFIELD = 8;
+Engine.EXPLOSION = 9;
+Engine.SKYBOX = 10;
+Engine.UNLOAD = 11;
+Engine.LOAD = 12;
+Engine.COUNT;

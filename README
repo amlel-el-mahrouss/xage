@@ -20,8 +20,7 @@ REQUIREMENTS:
 - GLFW
 - Mono
 - OpenSSL
-- Ogre3D (our branch)
-- GwenNext
+- Ogre3D (fork)
 - Windows 11.
 - Vulkan SDK 1.3.250.0
 - Visual Studio 2019.

@@ -77,20 +77,22 @@ namespace Xplicit::Player
 				const float zSpeed = mPacket.pos[XPLICIT_NETWORK_Z] * delta;
 				const float ySpeed = mPacket.pos[XPLICIT_NETWORK_Y] * delta;
 
-				mPos.Z = zSpeed;
-				mPos.X = xSpeed;
-				mPos.Y = ySpeed;
+				mPos.z = zSpeed;
+				mPos.x = xSpeed;
+				mPos.y = ySpeed;
 
 				for (size_t i = 0; i < XPLICIT_BUNDLE_MAX; ++i)
 				{
 					if (!this->node(i))
 						continue;
 
-					auto pos = this->node(i)->getAbsolutePosition();
+					auto pos = this->node(i)->getPosition();
 
-					pos.Z += mPos.Z;
-					pos.X += mPos.X;
-					pos.Y += mPos.Y;
+					pos.z += mPos.z;
+					pos.x += mPos.x;
+					pos.y += mPos.y;
+
+					this->node(i)->setPosition(pos);
 				}
 
 				XPLICIT_INFO("Engine:Move [EVENT]");
@@ -104,16 +106,11 @@ namespace Xplicit::Player
 		if (cam)
 		{
 			mCam = cam;
-
-			XPLICIT_INFO("Attached (Object: Camera) to (Object: LocalHumanoidComponent)");
-
-			// these are the origin values, before the server gives us where we spawn.
-			mCam->get()->setPosition(vector3df(-0.137, 4.122, 3.312));
-			mCam->get()->setRotation(vector3df(-7.032, -0.522, 0));
+			this->node(XPLICIT_BUNDLE_HEAD)->attachObject(mCam->get());
 		}
 	}
 
-	vector3df LocalHumanoidComponent::get_pos() noexcept { return mPos; }
+	Ogre::Vector3f LocalHumanoidComponent::get_pos() noexcept { return mPos; }
 
 	LocalHumanoidMoveEvent::LocalHumanoidMoveEvent(const std::int64_t& public_hash)
 		: 

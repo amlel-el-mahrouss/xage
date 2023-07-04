@@ -28,11 +28,11 @@ namespace Xplicit::Player
 
 		void update() override;
 		 
-		ICameraSceneNode* get() noexcept;
+		Ogre::Camera* get() noexcept;
 
 	private:
-		ICameraSceneNode* mCamera;
-		ITexture* mCursor;
+		Ogre::Camera* mCamera;
+		Ogre::Texture* mCursor;
 
 	};
 }

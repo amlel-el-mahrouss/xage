@@ -42,7 +42,7 @@ namespace Xplicit::Player
 
 	public:
 		void attach(LocalCameraComponent* cam) noexcept;
-		vector3df get_pos() noexcept;
+		Ogre::Vector3f get_pos() noexcept;
 		const int64_t& id() noexcept;
 
 	private:
@@ -52,7 +52,7 @@ namespace Xplicit::Player
 	private:
 		std::int64_t mPublicHash;
 		NetworkPacket mPacket;
-		vector3df mPos;
+		Ogre::Vector3f mPos;
 
 	};
 

@@ -30,7 +30,7 @@ namespace Xplicit::Player
 	public:
 		StaticMesh() = delete;
 		
-		explicit StaticMesh(const char* path);
+		explicit StaticMesh(const char* path, const char* name, const char* group);
 		virtual ~StaticMesh() noexcept;
 
 	public:
@@ -38,18 +38,24 @@ namespace Xplicit::Player
 		StaticMesh(const StaticMesh&) = default;
 		
 	public:
-		IAnimatedMeshSceneNode* node() const { return mNode; }
-		IAnimatedMesh* operator->() const { return mMdl; }
+		Ogre::SceneNode* node() const { return mNode; }
+		Ogre::Entity* operator->() const { return mMdl; }
 
 	public:
 		const String& path() noexcept;
 		bool has_physics() noexcept;
 
 	protected:
-		IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic
-		IAnimatedMesh* mMdl; // Model Data pointer, generic
-		String mPath; // Filesystem path (must be)
+		Ogre::SceneNode* mNode; // Model Data pointer, generic
+		Ogre::Entity* mMdl; // Model Data pointer, generic
+
+	private:
 		PHYSICS_TYPE mPhysics; // What kind of physics we have here?
+
+	private:
+		String mGroup;
+		String mName;
+		String mPath; // Filesystem path (must be)
 
 	};
 
@@ -67,92 +73,11 @@ namespace Xplicit::Player
 		StaticBundleMesh& operator=(const StaticBundleMesh&) = default;
 		StaticBundleMesh(const StaticBundleMesh&) = default;
 
-		IAnimatedMeshSceneNode* node(const std::size_t& index) const { return mParts[index].first; }
-		IAnimatedMesh* model(const std::size_t& index) const { return mParts[index].second; }
+		Ogre::SceneNode* node(const std::size_t& index) const { return mParts[index].first; }
+		Ogre::Entity* model(const std::size_t& index) const { return mParts[index].second; }
 
 	protected:
-		std::vector<std::pair<IAnimatedMeshSceneNode*, IAnimatedMesh*>> mParts;
+		std::vector<std::pair<Ogre::SceneNode*, Ogre::Entity*>> mParts;
 		
-	};
-
-	class DynamicMesh : public ISceneNode
-	{
-	public:
-		DynamicMesh(ISceneNode* parent, ISceneManager* mgr, s32 id)
-			: ISceneNode(parent, mgr, id)
-		{}
-
-		~DynamicMesh() override = default;
-		
-		void OnRegisterSceneNode() override
-		{
-			if (IsVisible)
-				SceneManager->registerNodeForRendering(this);
-
-			ISceneNode::OnRegisterSceneNode();
-		}
-
-		void render() override
-		{
-			IVideoDriver* driver = SceneManager->getVideoDriver();
-
-			driver->setMaterial(Material);
-			driver->setTransform(ETS_WORLD, AbsoluteTransformation);
-			driver->drawVertexPrimitiveList(&
-				Vertices.data()[0], 
-				4, 
-				&Indices.data()[0], 
-				4, 
-				EVT_STANDARD, 
-				EPT_TRIANGLES, 
-				EIT_32BIT);
-		}
-		
-		void add(const u16& indice) noexcept
-		{
-			Indices.push_back(indice);
-		}
-
-		void add(const video::S3DVertex& vert) noexcept
-		{
-			Vertices.push_back(vert);
-
-			Box.reset(Vertices[0].Pos);
-
-			for (s32 i = 1; i < Vertices.size(); ++i)
-				Box.addInternalPoint(Vertices[i].Pos);
-		}
-
-		enum
-		{
-			TOGGLE_WIREFRAME,
-			TOGGLE_LIGHTING,
-			TOGGLE_SHINY,
-		};
-
-		void toggle(const std::int32_t& toggleWhat) noexcept
-		{
-			switch (toggleWhat)
-			{
-			case TOGGLE_LIGHTING:
-				this->Material.Lighting = !this->Material.Lighting;
-			case TOGGLE_WIREFRAME:
-				this->Material.Wireframe = !this->Material.Wireframe;
-			case TOGGLE_SHINY:
-				this->Material.Shininess = !this->Material.Shininess;
-			default:
-				break;
-			}
-
-		}
-		
-		DynamicMesh& operator=(const DynamicMesh&) = default;
-		DynamicMesh(const DynamicMesh&) = default;
-		
-		std::vector<S3DVertex> Vertices;
-		std::vector<u16> Indices;
-		SMaterial Material;
-		aabbox3d<f32> Box;
-
 	};
 }

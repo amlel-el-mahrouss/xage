@@ -68,12 +68,25 @@ static int lua_Destroy(lua_State* L)
 	return 0;
 }
 
+static int lua_PrintLn(lua_State* L)
+{
+	const Xplicit::String msg = lua_tostring(L, 1);
+
+	if (!msg.empty())
+		XPLICIT_INFO(msg);
+
+	return 0;
+}
+
 XPLICIT_API void XplicitLoadBaseLua()
 {
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game = {}");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine = {}");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SceneService = {}");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game.Players = {}");
+
+	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PrintLn);
+	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "PrintLn");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_New);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "New_CoreAPI");

@@ -22,15 +22,7 @@
 
 #include <uuid/uuid.h>
 
-#define _IRR_STATIC_LIB_
-
-#include <irrlicht.h>
-
-using namespace irr;
-using namespace video;
-using namespace gui;
-using namespace scene;
-using namespace core;
+#include <Ogre.h>
 
 #ifdef _WIN32
 #   define SPDLOG_WCHAR_TO_UTF8_SUPPORT
@@ -78,7 +70,7 @@ using namespace core;
 #define XPLICIT_GCC (2)
 
 #ifdef _MSC_VER
-#   define XPLICIT_CXX_COMPILER "Visual C++"
+#   define XPLICIT_CXX_COMPILER "Microsoft Visual C++"
 #   define XPLICIT_CXX (1)
 #endif // ifdef _MSC_VER
 
