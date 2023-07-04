@@ -56,6 +56,7 @@ namespace Xplicit::RoXML
 	{
 		String Path{ "" };
 
+		bool Inline{ false };
 		bool Has3D{ false };
 		bool LuaOnly{ false };
 		bool NoLua{ false };
@@ -76,15 +77,26 @@ namespace Xplicit::RoXML
 	public:
 		void load(RoXMLDocumentParameters& params) noexcept
 		{
-			if (params.Path.empty() ||
-				!std::filesystem::exists(params.Path))
-				return;
+			if (!params.Inline)
+			{
+				if (params.Path.empty() ||
+					!std::filesystem::exists(params.Path))
+					return;
+			}
 
 			Thread stream_job([&]() {
-				file<> xml_file(params.Path.c_str()); // Default template is char
 				xml_document<> doc;
 
-				doc.parse<0>(xml_file.data());
+				if (!params.Inline)
+				{
+					file<> xml_file(params.Path.c_str()); // Default template is char
+					
+					doc.parse<0>(xml_file.data());
+				}
+				else
+				{
+					doc.parse<0>(params.Path.data());
+				}
 
 				xml_node<>* root_node = doc.first_node();
 
