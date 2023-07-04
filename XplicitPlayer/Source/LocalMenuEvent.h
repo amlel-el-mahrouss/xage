@@ -12,8 +12,6 @@
 #include <NetworkComponent.h>
 #include <Event.h>
 
-#include "GWEN.h"
-
 namespace Xplicit::Player
 {
 	class LocalMenuEvent final : public Event
@@ -22,7 +20,7 @@ namespace Xplicit::Player
 		LocalMenuEvent() = delete;
 
 	public:
-		explicit LocalMenuEvent(Gwk::Controls::Canvas* pCanvas) noexcept;
+		explicit LocalMenuEvent() noexcept;
 		~LocalMenuEvent() override;
 
 		LocalMenuEvent& operator=(const LocalMenuEvent&) = default;
@@ -36,17 +34,8 @@ namespace Xplicit::Player
 		void operator()() override;
 		const char* name() noexcept;
 
-	public:
-		bool in_chat() const noexcept;
-
 	private:
-		Gwk::Controls::TextBoxMultiline* mChatBox;
-		Gwk::Controls::TextBox* mInputChat;
-		
-	public:
 		NetworkComponent* mNetwork;
-
-	private:
 		ITexture* mButtonNoHover;
 		ITexture* mButtonHover;
 		ITexture* mMenu;

@@ -34,7 +34,7 @@ namespace Xplicit::Bites
 		XPLICIT_GET_DATA_DIR(dir);
 
 		String prebuilt = dir;
-		prebuilt += "\\Textures\\DefaultSkin.zip";
+		prebuilt += "Textures/DefaultSkin.zip";
 
 		if (!RENDER->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
 			throw std::runtime_error("Missing skin! This pack is needed for the XplicitPlayer to work.");
@@ -58,9 +58,6 @@ namespace Xplicit::Bites
 		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::LoadingComponent>();
 		XPLICIT_ASSERT(splash_screen);
 
-		// pass this
-		splash_screen->exchange_data(mGwenManager->Canvas);
-		
 		splash_screen->connect(xconnect_to);
 	}
 
@@ -83,7 +80,7 @@ namespace Xplicit::Bites
 		);
 
 		// Vector = Size of viewport. Only X and Y and taken into consideration.
-		mGwenManager = std::make_unique<GWENComponentManager>(Vector<float>(Xplicit::Player::XPLICIT_DIM.X, 
+		mGwenManager = std::make_unique<GWENManager>(Vector<float>(Xplicit::Player::XPLICIT_DIM.X, 
 			Xplicit::Player::XPLICIT_DIM.Y, 
 			0.0f));
 

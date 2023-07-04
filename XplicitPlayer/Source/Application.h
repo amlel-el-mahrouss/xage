@@ -261,14 +261,14 @@ namespace Xplicit::Bites
 		};
 
 	public:
-		GWENComponentManager* leak_gwen() const noexcept { return mGwenManager.get(); }
+		GWENManager* leak_gwen() const noexcept { return mGwenManager.get(); }
 		SettingsManager* leak_settings() const noexcept { return mSettings.get(); }
 
 	private:
 		void create_and_set_contexts();
 		
 	private:
-		std::unique_ptr<GWENComponentManager> mGwenManager;
+		std::unique_ptr<GWENManager> mGwenManager;
 		std::unique_ptr<SettingsManager> mSettings;
 
 	private:

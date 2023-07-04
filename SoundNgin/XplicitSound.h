@@ -84,9 +84,9 @@ namespace Xplicit
 				XAudioHandle(DirectX::AudioEngine* engine, const wchar_t* path)
 					: 
 					mAudio(std::make_unique<DirectX::SoundEffect>(engine, path)),
+					mPos(0.f, 0.0f, 0.0f),
 					mEmitter(),
-					mListener(),
-					mPos(0.f, 0.0f, 0.0f)
+					mListener()
 				{
 					assert(mAudio);
 				}

@@ -23,44 +23,14 @@
 
 namespace Xplicit
 {
-	class GWENComponentManager final
+	class GWENManager final
 	{
 	public:
-		explicit GWENComponentManager(const Vector<float>& dim) noexcept
-		{
-			Gwk::Platform::RelativeToExecutablePaths local;
-
-			Renderer = new Gwk::Renderer::Irrlicht(local, RENDER);
-			XPLICIT_ASSERT(Renderer);
-
-			Skin = new Gwk::Skin::TexturedBase(Renderer);
-			XPLICIT_ASSERT(Skin);
-
-			Skin->Init("Res/default.png");
-			Skin->SetDefaultFont("Res/urbanist.ttf", 11);
-
-			Canvas = new Gwk::Controls::Canvas(Skin);
-			XPLICIT_ASSERT(Canvas);
-
-			Canvas->SetSize(dim.X, dim.Y);
-			Canvas->SetDrawBackground(true);
-			Canvas->SetBackgroundColor(Gwk::Color(255, 255, 255, 255));
-		}
-
-		~GWENComponentManager()
-		{
-			if (Skin)
-				delete Skin;
-
-			if (Renderer)
-				delete Renderer;
-			
-			if (Canvas)
-				delete Canvas;
-		}
+		explicit GWENManager(const Vector<float>& dim) noexcept;
+		~GWENManager();
 
 	public:
-		XPLICIT_COPY_DEFAULT(GWENComponentManager);
+		XPLICIT_COPY_DEFAULT(GWENManager);
 
 	public:
 		Gwk::Renderer::Irrlicht* Renderer;

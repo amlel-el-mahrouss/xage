@@ -30,9 +30,6 @@ namespace Xplicit::Player
 		void update() override;
 
 	public:
-		void exchange_data(Gwk::Controls::Canvas* canvas_ptr) noexcept;
-
-	public:
 		// starts to connect to specified IP:PORT.
 		void connect(Utils::UriParser& ip);
 

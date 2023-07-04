@@ -34,7 +34,6 @@ namespace Xplicit::Player
 {
 	// connection timeout, then client quits.
 	constexpr int XPLICIT_TIMEOUT = 28000;
-	static Gwk::Controls::Canvas* XPLICIT_CANVAS;
 
 	LoadingComponent::LoadingComponent() 
 		:
@@ -100,7 +99,7 @@ namespace Xplicit::Player
 			monitor->HTTP->set_endpoint(monitor->Endpoint);
 
 			EventManager::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
-			EventManager::get_singleton_ptr()->add<LocalMenuEvent>(XPLICIT_CANVAS);
+			EventManager::get_singleton_ptr()->add<LocalMenuEvent>();
 
 			XPLICIT_LIGHT = RENDER->getSceneManager()->addLightSceneNode(nullptr, vector3df(0, 0, 0), SColorf(1.0, 1.0, 1.0, 1.0), 1000.0);
 
@@ -172,12 +171,6 @@ namespace Xplicit::Player
 					true);
 			}
 		}
-	}
-
-	void LoadingComponent::exchange_data(Gwk::Controls::Canvas* canvas_ptr) noexcept
-	{
-		XPLICIT_ASSERT(canvas_ptr);
-		XPLICIT_CANVAS = canvas_ptr;
 	}
 
 	void LoadingComponent::connect(Utils::UriParser& ip)

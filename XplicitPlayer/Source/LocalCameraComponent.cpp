@@ -56,8 +56,6 @@ namespace Xplicit::Player
 			SColor(255, 255, 255, 255),
 			true);
 
-		XPLICIT_INFO("LocalCameraComponent:Update");
-
 	}
 
 	ICameraSceneNode* LocalCameraComponent::get() noexcept { return mCamera; }

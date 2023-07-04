@@ -11,11 +11,8 @@
 
 #include <Root.h>
 #include <NMath.h>
-
 #include <Component.h>
 #include <NetworkComponent.h>
-
-/* Xplicit Engine default skin */
 
 namespace Xplicit::Player
 {
@@ -78,10 +75,12 @@ namespace Xplicit::Player
 
 	private:
 		NetworkComponent* mNetwork;
+		ITexture* mOverlay;
+
+	private:
 		std::int64_t mPublicHash;
 		std::int64_t mTimeout;
 		std::int64_t mHealth;
-		ITexture* mOverlay;
 
 	};
 }

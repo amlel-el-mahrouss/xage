@@ -136,7 +136,7 @@ namespace Xplicit::HTTP
 
             std::string request = "GET " + path + " HTTP/1.1\r\n";
             request += "Host: " + host + "\r\n";
-            request += "Connection: close\r\n";
+            request += "Connection: keep-alive\r\n";
             request += "\r\n\r\n";
 
             return request;
@@ -201,14 +201,18 @@ namespace Xplicit::HTTP
 
         ~HTTPWriter() noexcept 
         {
-            if (shutdown(m_Socket->m_Socket, SD_BOTH) == SOCKET_ERROR)
-                closesocket(m_Socket->m_Socket);
+            if (m_Socket)
+            {
+                if (shutdown(m_Socket->m_Socket, SD_BOTH) == SOCKET_ERROR)
+                    closesocket(m_Socket->m_Socket);
 
-            char buf[256];
-            vsprintf_s<256U>(buf, "[SERVER] %s has been closed!", m_Socket->m_Dns.data());
 
-            XPLICIT_INFO(buf);
-            xplicit_log(buf);
+                char buf[256];
+                vsprintf_s<256U>(buf, "[SERVER] %s has been closed!", m_Socket->m_Dns.data());
+
+                XPLICIT_INFO(buf);
+                xplicit_log(buf);
+            }
 
             SSL_free(m_Ssl);
             SSL_CTX_free(m_SslCtx);
@@ -234,7 +238,24 @@ namespace Xplicit::HTTP
 
             ZeroMemory(&sock->m_Addr, sizeof(struct sockaddr_in));
 
-            ::inet_pton(AF_INET, dns.c_str(), &sock->m_Addr.sin_addr);
+            sock->m_Addr.sin_addr.s_addr = inet_addr(dns.c_str());
+
+            if (sock->m_Addr.sin_addr.s_addr == INADDR_NONE)
+            {
+                struct hostent* host = gethostbyname(dns.c_str());
+                if (!host)
+                {
+                    closesocket(sock->m_Socket);
+                    
+                    xplicit_log("Invalid hostname! returning nullptr...");
+                    xplicit_log(dns.c_str());
+
+                    return nullptr;
+                }
+
+                sock->m_Addr.sin_addr.s_addr = *((u_long*)host->h_addr);
+            }
+
             sock->m_Addr.sin_port = ::htons(XPLICIT_HTTP_PORT);
 
             sock->m_Dns = std::string{ dns.data() };
@@ -242,7 +263,6 @@ namespace Xplicit::HTTP
             if (::connect(sock->m_Socket, reinterpret_cast<sockaddr*>(&sock->m_Addr), sizeof(sockaddr_in)) == SOCKET_ERROR)
                 return nullptr;
             
-
             SSL_set_fd(m_Ssl, sock->m_Socket);
             auto status = SSL_connect(m_Ssl);
 
@@ -265,8 +285,10 @@ namespace Xplicit::HTTP
 
         int64_t send_from_socket(HTTPSharedPtr& sock, Ref<HTTP::HTTPHeader*>& hdr) 
         {
-            XPLICIT_ASSERT(sock);
-            XPLICIT_ASSERT(hdr);
+            if (!sock ||
+                !hdr)
+                return -1;
+
             XPLICIT_ASSERT(!sock->m_Dns.empty());
 
             return SSL_write(m_Ssl, hdr->Bytes, hdr->Size);
@@ -274,8 +296,10 @@ namespace Xplicit::HTTP
 
         int64_t read_from_socket(HTTPSharedPtr& sock, char* bytes, int len) 
         {
-            XPLICIT_ASSERT(sock);
-            XPLICIT_ASSERT(bytes);
+            if (!sock ||
+                !bytes)
+                return -1;
+
             XPLICIT_ASSERT(len > 0);
 
             return SSL_read(m_Ssl, bytes, len);

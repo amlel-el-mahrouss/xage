@@ -137,10 +137,9 @@ namespace Xplicit::Player
 		if (mNetwork == nullptr)
 			return;
 
-		static LocalMenuEvent* menu = EventManager::get_singleton_ptr()->get<LocalMenuEvent>("LocalMenuEvent");
+		LocalMenuEvent* menu = EventManager::get_singleton_ptr()->get<LocalMenuEvent>("LocalMenuEvent");
 
-		if (menu->in_chat() ||
-			menu->enabled())
+		if (menu && menu->enabled())
 			return;
 
 		auto traits = KB->get_layout();
