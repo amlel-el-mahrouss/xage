@@ -13,7 +13,7 @@
 
 #include <CommonEngine.h>
 #include <RoXML.h>
-#include <lua.hpp>
+#include <CLua.hpp>
 #include <Util.h>
 #include <Uri.h>
 

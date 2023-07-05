@@ -10,7 +10,7 @@
 #pragma once
 
 #include "Component.h"
-#include <lua/lua.hpp>
+#include <lua/CLua.hpp>
 
 namespace Xplicit
 {

@@ -14,17 +14,18 @@
 #include <Util.h>
 #include <Component.h>
 #include <CommonEngine.h>
+#include <InstanceComponent.h>
 
 namespace Xplicit::Player
 {
-	class LocalToolComponent final : public Component
+	class GearComponent final : public InstanceComponent
 	{
 	public:
-		LocalToolComponent() = delete;
-		~LocalToolComponent() override;
+		GearComponent() = delete;
+		~GearComponent() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(LocalToolComponent);
+		XPLICIT_COPY_DEFAULT(GearComponent);
 
 	public:
 		const char* name() noexcept override;
@@ -36,17 +37,15 @@ namespace Xplicit::Player
 		void update() noexcept override;
 
 	public:
-		explicit LocalToolComponent(const char* name, 
+		explicit GearComponent(const char* name, 
 			const char* mesh = nullptr,
 			const char* parent = "Game") noexcept;
 
 	public:
 		StaticMesh* get_mesh() const noexcept;
-		XAttribute& get_attribute() noexcept;
 
 	private:
 		std::unique_ptr<StaticMesh> mMeshPtr;
-		XAttribute mAttribute;
 
 	private:
 		String mParent;

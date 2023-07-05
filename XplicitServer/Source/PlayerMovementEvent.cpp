@@ -15,7 +15,7 @@
 
 #include "PlayerMovementEvent.h"
 
-#include <lua/lua.hpp>
+#include <lua/CLua.hpp>
 #include <Root.h>
 
 namespace Xplicit

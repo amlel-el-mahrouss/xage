@@ -155,7 +155,7 @@ int main(int argc, char** argv)
 
 		Xplicit::RoXML::RoXMLDocumentParameters params;
 		params.Has3D = false;
-		params.NoLua = true;
+		params.NoLua = false;
 		params.Path = XPLICIT_PLACE_ID;
 
 		Xplicit::RoXML::RoXMLDocumentParser parser;

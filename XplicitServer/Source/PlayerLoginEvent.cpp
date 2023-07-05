@@ -14,7 +14,7 @@
  */
 
 #include "PlayerLoginEvent.h"
-#include <lua/lua.hpp>
+#include <lua/CLua.hpp>
 
 namespace Xplicit
 {

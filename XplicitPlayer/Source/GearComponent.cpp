@@ -7,21 +7,20 @@
  * =====================================================================
  */
 
-#include "LocalToolComponent.h"
-
 #include <InstanceComponent.h>
-#include <lua/lua.hpp>
+#include <lua/CLua.hpp>
+
+#include "GearComponent.h"
 
 namespace Xplicit::Player
 {
-	LocalToolComponent::LocalToolComponent(
+	GearComponent::GearComponent(
 		const char* name,
 		const char* mesh, 
 		const char* parent) noexcept
-		: 
-		mMeshPtr(nullptr),
-		mName(name),
-		mParent(parent)
+		:
+		InstanceComponent(Vector<float>(0, 0, 0), Vector<float>(0, 0, 0), Color<float>(0, 0, 0), nullptr, parent, name),
+		mMeshPtr(nullptr)
 	{
 		XPLICIT_ASSERT(name && mesh);
 
@@ -36,42 +35,32 @@ namespace Xplicit::Player
 		mMeshPtr = std::make_unique<StaticMesh>(mesh, mName.c_str(), mParent.c_str());
 	}
 
-	const char* LocalToolComponent::name() noexcept { return "LocalToolComponent"; }
+	const char* GearComponent::name() noexcept { return "GearComponent"; }
 
-	COMPONENT_TYPE LocalToolComponent::type() noexcept { return COMPONENT_LOGIC; }
+	COMPONENT_TYPE GearComponent::type() noexcept { return COMPONENT_LOGIC; }
 
-	PHYSICS_TYPE LocalToolComponent::physics() noexcept { return PHYSICS_SIMPLE; }
+	PHYSICS_TYPE GearComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
-	LocalToolComponent::~LocalToolComponent()
-	{
-		String fmt = XPLICIT_LUA_GLOBAL;
-		fmt += mParent;
-		fmt += mName;
-		fmt += " = nil";
+	GearComponent::~GearComponent() = default;
 
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-	}
-
-	StaticMesh* LocalToolComponent::get_mesh() const noexcept
+	StaticMesh* GearComponent::get_mesh() const noexcept
 	{
 		return mMeshPtr.get();
 	}
 
-	XAttribute& LocalToolComponent::get_attribute() noexcept
-	{
-		return mAttribute;
-	}
+	bool GearComponent::should_update() noexcept { return true; }
 
-	bool LocalToolComponent::should_update() noexcept { return true; }
-
-	void LocalToolComponent::update() noexcept
+	void GearComponent::update() noexcept
 	{
+		InstanceComponent::update();
+
 		String fmt = std::format("{}{}{}.Mesh;", XPLICIT_LUA_GLOBAL, mParent, mName);
 
 		lua_pushstring(Lua::XLuaStateManager::get_singleton_ptr()->state(), fmt.c_str());
 		String path = lua_tostring(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
 
-		if (auto _path = mMeshPtr->path(); path != _path)
+		if (auto _path = mMeshPtr->path(); 
+			path != _path)
 		{
 			mMeshPtr.reset();
 			mMeshPtr = std::make_unique<StaticMesh>(_path.c_str(), mName.c_str(), mParent.c_str());
@@ -82,7 +71,7 @@ namespace Xplicit::Player
 		if (this->get_attribute().script() &&
 			this->get_attribute().script()->name() == "Update")
 		{
-			XPLICIT_INFO("LocalToolComponent:Update()");
+			XPLICIT_INFO("GearComponent:Update()");
 			this->get_attribute().script()->run();
 		}
 	}

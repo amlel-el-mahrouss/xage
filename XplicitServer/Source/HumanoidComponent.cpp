@@ -12,7 +12,7 @@
  */
 
 #include "HumanoidComponent.h"
-#include <lua/lua.hpp>
+#include <lua/CLua.hpp>
 
 #define XPLICIT_LUA_GLOBAL "_G."
 #define XPLICIT_LUA_NAMESPACE "Game.Players."

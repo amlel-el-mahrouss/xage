@@ -12,7 +12,7 @@
 #include "Application.h"
 
 #include <XplicitSound.h>
-#include <lua/lua.hpp>
+#include <lua/CLua.hpp>
 #include <codecvt>
 #include <RoXML.h>
 #include <Util.h>
@@ -60,8 +60,8 @@ static int lua_LoadRoXML(lua_State* L)
 	Xplicit::RoXML::RoXMLDocumentParameters params;
 
 	params.Has3D = true;
+	params.NoLua = true;
 	params.LuaOnly = false;
-	params.NoLua = false;
 
 	params.Path = _path;
 

@@ -33,7 +33,7 @@ namespace Xplicit
 
 	};
 
-	inline Vector<float> to_float(DataValue& pos_or_size)
+	inline Vector<float> ToFloat(DataValue& pos_or_size)
 	{
 		try
 		{
@@ -51,7 +51,7 @@ namespace Xplicit
 		}
 	}
 
-	inline bool to_bool(DataValue& boolean_type)
+	inline bool ToBool(DataValue& boolean_type)
 	{
 		if (boolean_type.Values.empty())
 			return false;
@@ -66,7 +66,7 @@ namespace Xplicit
 		return false;
 	}
 
-	inline long to_integer(DataValue& integer_type)
+	inline long ToInteger(DataValue& integer_type)
 	{
 		try
 		{

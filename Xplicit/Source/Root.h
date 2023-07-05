@@ -10,9 +10,13 @@
 #pragma once
 
 #include "Xplicit.h"
+#include "HelperMacros.h"
 
 /* common engine macros for Root */
 #define RENDER Xplicit::Root::get_singleton_ptr()->Ogre3D
+
+/* resource group for XplicitPlayer */
+#define XPLICIT_RES_GROUP "Ngine"
 
 namespace Xplicit
 {
@@ -27,11 +31,10 @@ namespace Xplicit
 		{
 			Ogre3D = new Ogre::Root();
 
-#ifdef XPLICIT_DEBUG
-			Ogre3D->loadPlugin("RenderSystem_Direct3D11_d.dll");
-#else
 			Ogre3D->loadPlugin("RenderSystem_Direct3D11.dll");
-#endif
+			Ogre3D->loadPlugin("Plugin_ParticleFX.dll");
+			Ogre3D->loadPlugin("Plugin_OctreeZone.dll");
+			Ogre3D->loadPlugin("Plugin_OctreeSceneManager.dll");
 
 			Ogre::RenderSystemList renderSystems = Ogre3D->getAvailableRenderers();
 			Ogre::RenderSystemList::iterator itr = renderSystems.begin();
@@ -93,7 +96,3 @@ namespace Xplicit
 
 	};
 }
-
-#include "HelperMacros.h"
-
-#define XPLICIT_RES_GROUP "XplicitNgine"

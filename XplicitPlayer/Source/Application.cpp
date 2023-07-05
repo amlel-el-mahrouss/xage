@@ -14,9 +14,8 @@
 // Application framework.
 #include "Application.h"
 
-// We need this to connect and download from server.
+// We need this to connect and download from server. And also the RoXML header.
 #include "LoadingComponent.h"
-// RoXML format
 #include "RoXML.h"
 
 extern void XplicitLoadClientLua() noexcept;
@@ -28,7 +27,7 @@ namespace Xplicit::Player
 
 namespace Xplicit::Bites
 {
-	static void xplicit_open_skins()
+	static void XplicitOpenResource()
 	{
 		XPLICIT_GET_DATA_DIR(dir);
 
@@ -46,7 +45,7 @@ namespace Xplicit::Bites
 		Xplicit::init_winsock(&mWsa);
 
 		Root::get_singleton_ptr()->Ogre3D_Window->resize(Player::XPLICIT_DIM.X, Player::XPLICIT_DIM.Y);
-
+		
 		this->create_and_set_contexts();
 
 		XPLICIT_GET_DATA_DIR(data_appdata);
@@ -67,9 +66,8 @@ namespace Xplicit::Bites
 	Application::~Application() {}
 
 	void Application::create_and_set_contexts()
-	{Root::get_singleton_ptr()->Ogre3D_Window->resize(Player::XPLICIT_DIM.X, Player::XPLICIT_DIM.Y);
-			
-		xplicit_open_skins();
+	{	
+		XplicitOpenResource();
 
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
