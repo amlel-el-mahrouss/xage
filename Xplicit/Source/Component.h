@@ -13,18 +13,34 @@
 
 namespace Xplicit 
 {
-	class ComponentManager;
-	class Component;
+	namespace Detail
+	{
+		struct ComponentAccessor final
+		{
+			explicit ComponentAccessor()
+				: _Pointee(0)
+			{}
+
+			std::uintptr_t _Pointee;
+
+			template <typename T>
+			T as_type() noexcept
+			{
+				return reinterpret_cast<T>(_Pointee);
+			}
+		};
+	}
 
 	class XPLICIT_API ComponentManager final 
 	{
-		ComponentManager() = default;
-
 	public:
+		ComponentManager() = default;
 		~ComponentManager() = default;
 		
+	public:
 		XPLICIT_COPY_DEFAULT(ComponentManager);
 		
+	public:
 		template <typename T>
 		std::vector<T*> all_of(const char* name);
 		
@@ -36,13 +52,15 @@ namespace Xplicit
 		
 		template <typename T>
 		T* get(const char* name) noexcept;
-		
+	
+	public:
 		void update() noexcept;
 		
+	public:
 		static ComponentManager* get_singleton_ptr() noexcept;
 
 	private:
-		std::vector<Component*> mComponents;
+		std::vector<Detail::ComponentAccessor> mComponents;
 
 	};
 
@@ -50,16 +68,16 @@ namespace Xplicit
 	{
 		COMPONENT_HUMANOID, // Humanoid (Player and NPC)
 		COMPONENT_LOGIC, // Logic Component
-		COMPONENT_CAMERA, // Camera instance
-		COMPONENT_SCRIPT, // Script instance (C#, Lua)
-		COMPONENT_RENDER, // Graphics Instance (Shader, Particles...)
-		COMPONENT_NETWORK, // Network instance
-		COMPONENT_PHYSICS, // Physics instance
-		COMPONENT_GUI, // GUI instance
-		COMPONENT_REPLICATION, // Replicated instance
-		COMPONENT_SOUND, // Sound Instance
+		COMPONENT_CAMERA, // Camera component
+		COMPONENT_SCRIPT, // Script component (C#, Lua)
+		COMPONENT_RENDER, // Graphics component (Shader, Particles...)
+		COMPONENT_NETWORK, // Network component
+		COMPONENT_PHYSICS, // Physics component
+		COMPONENT_GUI, // GUI component
+		COMPONENT_REPLICATION, // Replicated component
+		COMPONENT_SOUND, // Sound component
 		COMPONENT_GENERIC,
-		COMPONENT_COUNT // the number of Instances type we have here!
+		COMPONENT_COUNT // the number of components type we have registered here!
 	};
 
 	enum PHYSICS_TYPE : uint8_t
@@ -70,6 +88,13 @@ namespace Xplicit
 		PHYSICS_COUNT,
 	};
 
+	/*
+	* ----------------------------------------------------------------------------
+	* @name Component
+	* @brief Component Interface, use this class to get all of the needed methods.
+	* Last Edit: 7/5/2023
+	* ----------------------------------------------------------------------------
+	*/
 	class XPLICIT_API Component 
 	{
 	public:

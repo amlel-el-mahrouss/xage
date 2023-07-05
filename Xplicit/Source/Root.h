@@ -29,26 +29,20 @@ namespace Xplicit
 			Ogre3D_Scene(nullptr),
 			Ogre3D_Window(nullptr)
 		{
-			Ogre3D = new Ogre::Root();
+			Ogre3D = new Ogre::Root("Plugins.cfg", "XplicitNgine.cfg", "XplicitNgine.log");
 
 			Ogre3D->loadPlugin("RenderSystem_Direct3D11.dll");
 			Ogre3D->loadPlugin("Plugin_ParticleFX.dll");
-			Ogre3D->loadPlugin("Plugin_OctreeZone.dll");
-			Ogre3D->loadPlugin("Plugin_OctreeSceneManager.dll");
 
 			Ogre::RenderSystemList renderSystems = Ogre3D->getAvailableRenderers();
 			Ogre::RenderSystemList::iterator itr = renderSystems.begin();
 
 			Ogre3D->setRenderSystem((*itr));
 
+			Ogre3D_Window = Ogre3D->initialise(true);
+
 			Ogre3D_Scene = Ogre3D->createSceneManager();
 			Ogre3D->_setCurrentSceneManager(Ogre3D_Scene);
-
-			Ogre3D_Window = Ogre3D->initialise(true);
-		
-			Ogre::SceneManager* sceneManager = RENDER->createSceneManager();
-
-			Root::get_singleton_ptr()->Ogre3D_Window->setVSyncEnabled(false);
 
 			this->set_title("XplicitNgin [ Place1 ]");
 		}

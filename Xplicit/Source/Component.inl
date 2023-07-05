@@ -7,6 +7,9 @@
  * =====================================================================
  */
 
+#ifdef XPLICIT_USE_VECTOR
+#	include "Avx.h"
+#endif
 
 template <typename T, typename... Args>
 T* Xplicit::ComponentManager::add(Args&&... args)
@@ -22,7 +25,10 @@ T* Xplicit::ComponentManager::add(Args&&... args)
 		XPLICIT_INFO(fmt);
 #endif
 
-		mComponents.push_back(reinterpret_cast<Component*>(ptr));
+		Detail::ComponentAccessor accessor;
+		accessor._Pointee = reinterpret_cast<std::uintptr_t>(ptr);
+
+		mComponents.push_back(accessor);
 		return ptr;
 	}
 
@@ -37,15 +43,15 @@ T* Xplicit::ComponentManager::get(const char* name) noexcept
 
 	for (std::size_t i = 0; i < mComponents.size(); ++i)
 	{
-		if (!mComponents[i])
+		if (!mComponents[i].as_type<T*>())
 			continue;
 
 #ifdef XPLICIT_USE_VECTOR
-		if (avx_strequals(name, mComponents[i]->name()))
+		if (avx_strequals(name, mComponents[i].as_type<T>()->name()))
 #else
-		if (strcmp(name, mComponents[i]->name()) == 0)
+		if (strcmp(name, mComponents[i].as_type<T*>()->name()) == 0)
 #endif
-			return static_cast<T*>(mComponents[i]);
+			return mComponents[i].as_type<T*>();
 	}
 
 	return nullptr;
@@ -61,18 +67,17 @@ std::vector<T*> Xplicit::ComponentManager::all_of(const char* name)
 
 	for (std::size_t i = 0; i < mComponents.size(); ++i)
 	{
-		if (!mComponents[i])
+		if (!mComponents[i].as_type<T*>())
 			continue;
 
 		// move that to upper file if you happen to use that in eveyr part of the file.
 #ifdef XPLICIT_USE_VECTOR
-#	include "Avx.h"
-		if (avx_strequals(name, mComponents[i]->name()))
+		if (avx_strequals(name, mComponents[i].as_type<T>()->name()))
 #else
-		if (strcmp(name, mComponents[i]->name()) == 0)
+		if (strcmp(name, mComponents[i].as_type<T*>()->name()) == 0)
 #endif
 		{
-			list.push_back(static_cast<T*>(mComponents[i]));
+			list.push_back(mComponents[i].as_type<T*>());
 		}
 	}
 
@@ -85,9 +90,11 @@ bool Xplicit::ComponentManager::remove(T* ptr)
 	if (!ptr)
 		return false;
 
-	auto iterator = std::find(mComponents.cbegin(), mComponents.cend(), ptr);
+	auto iterator = std::find_if(mComponents.begin(), mComponents.end(), [&](Detail::ComponentAccessor& accessor) -> bool {
+		return accessor.as_type<T*>() == ptr;
+	});
 
-	if (iterator != mComponents.cend())
+	if (iterator != mComponents.end())
 	{
 #ifdef XPLICIT_DEBUG
 		String fmt = "Destroyed component: ";
@@ -97,7 +104,6 @@ bool Xplicit::ComponentManager::remove(T* ptr)
 #endif
 
 		mComponents.erase(iterator);
-
 		delete ptr;
 
 		return true;

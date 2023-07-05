@@ -25,11 +25,11 @@ namespace Xplicit
 		for (std::size_t i = 0; i < sz; i++)
 		{
 #ifdef XPLICIT_DEBUG
-			XPLICIT_ASSERT(mComponents[i]);
+			XPLICIT_ASSERT(mComponents[i].as_type<Component*>());
 #endif // ifdef XPLICIT_DEBUG
 
-			if (mComponents[i]->should_update())
-				mComponents[i]->update();
+			if (mComponents[i].as_type<Component*>()->should_update())
+				mComponents[i].as_type<Component*>()->update();
 		}
 	}
 
