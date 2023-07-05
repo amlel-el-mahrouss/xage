@@ -61,14 +61,14 @@ XPLICIT_MAIN()
 			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
 
 		/* main game loop */
-		while (Xplicit::ComponentManager::get_singleton_ptr() && 
-			Xplicit::EventManager::get_singleton_ptr())
+		while (Xplicit::ComponentSystem::get_singleton_ptr() && 
+			Xplicit::EventSystem::get_singleton_ptr())
 		{
 			if (Xplicit::Root::get_singleton_ptr()->Ogre3D_Window->isClosed()) break;
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
-			Xplicit::EventManager::get_singleton_ptr()->update();
-			Xplicit::ComponentManager::get_singleton_ptr()->update();
+			Xplicit::EventSystem::get_singleton_ptr()->update();
+			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 			Xplicit::Root::get_singleton_ptr()->Ogre3D->renderOneFrame();
 		}

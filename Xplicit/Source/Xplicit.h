@@ -55,7 +55,7 @@ namespace Xplicit
 	class EngineError : public std::runtime_error
 	{
 	public:
-		EngineError(const char* error = "Unidentified Engine Error") : std::runtime_error(error) {}
+		EngineError(const char* error = "Unidentified Error") : std::runtime_error(error) {}
 		~EngineError() = default; // let the ABI define that.
 
 		EngineError& operator=(const EngineError&) = default;

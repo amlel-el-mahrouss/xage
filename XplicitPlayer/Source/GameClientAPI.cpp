@@ -32,7 +32,7 @@ static int lua_PlaySound(lua_State* L)
 		if (path.empty())
 			return 0;
 
-		if (auto snd = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::Player::LocalSoundComponent>("LocalSoundComponent"))
+		if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::Player::LocalSoundComponent>("LocalSoundComponent"))
 			snd->play(path);
 	}
 	catch (...)
@@ -97,7 +97,7 @@ void XplicitLoadClientLua() noexcept
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_SetWindowCaption");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RenderingService.SetWindowCaption = CoreAPI_SetWindowCaption");
 
-	Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalSoundComponent>();
+	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalSoundComponent>();
 }
 
 #endif // ifdef XPLICIT_WINDOWS

@@ -29,7 +29,7 @@ namespace Xplicit::Player
 			mEnabled(false)
 	{
 		/* resource loading */
-		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
 
 		String frame_path = "network_leave.png";

@@ -12,7 +12,7 @@
 #endif
 
 template <typename T, typename... Args>
-T* Xplicit::ComponentManager::add(Args&&... args)
+T* Xplicit::ComponentSystem::add(Args&&... args)
 {
 	T* ptr = new T(std::forward<Args>(args)...);
 
@@ -36,7 +36,7 @@ T* Xplicit::ComponentManager::add(Args&&... args)
 }
 
 template <typename T>
-T* Xplicit::ComponentManager::get(const char* name) noexcept
+T* Xplicit::ComponentSystem::get(const char* name) noexcept
 {
 	if (!name || *name == 0)
 		return nullptr;
@@ -58,7 +58,7 @@ T* Xplicit::ComponentManager::get(const char* name) noexcept
 }
 
 template <typename T>
-std::vector<T*> Xplicit::ComponentManager::all_of(const char* name)
+std::vector<T*> Xplicit::ComponentSystem::all_of(const char* name)
 {
 	std::vector<T*> list;
 
@@ -85,7 +85,7 @@ std::vector<T*> Xplicit::ComponentManager::all_of(const char* name)
 }
 
 template <typename T>
-bool Xplicit::ComponentManager::remove(T* ptr)
+bool Xplicit::ComponentSystem::remove(T* ptr)
 {
 	if (!ptr)
 		return false;

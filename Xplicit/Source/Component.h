@@ -13,6 +13,10 @@
 
 namespace Xplicit 
 {
+	///! do that so that we don't deal with any errors.
+	class ComponentSystem;
+	class Component;
+
 	namespace Detail
 	{
 		struct ComponentAccessor final
@@ -31,14 +35,14 @@ namespace Xplicit
 		};
 	}
 
-	class XPLICIT_API ComponentManager final 
+	class XPLICIT_API ComponentSystem final 
 	{
 	public:
-		ComponentManager() = default;
-		~ComponentManager() = default;
+		explicit ComponentSystem() = default;
+		~ComponentSystem() = default;
 		
 	public:
-		XPLICIT_COPY_DEFAULT(ComponentManager);
+		XPLICIT_COPY_DELETE(ComponentSystem);
 		
 	public:
 		template <typename T>
@@ -57,7 +61,7 @@ namespace Xplicit
 		void update() noexcept;
 		
 	public:
-		static ComponentManager* get_singleton_ptr() noexcept;
+		static ComponentSystem* get_singleton_ptr() noexcept;
 
 	private:
 		std::vector<Detail::ComponentAccessor> mComponents;

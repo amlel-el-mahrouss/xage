@@ -51,7 +51,7 @@ namespace Xplicit
 		if (!mNetwork)
 			return;
 
-		for (const auto players = ComponentManager::get_singleton_ptr()->all_of<HumanoidComponent>("Player"); 
+		for (const auto players = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("Player"); 
 			HumanoidComponent* player : players)
 		{
 			if (player == nullptr ||

@@ -131,6 +131,7 @@ namespace Xplicit
 		explicit Root()
 			:
 			Ogre3D(nullptr),
+			Ogre3D_RTSS(nullptr),
 			Ogre3D_Scene(nullptr),
 			Ogre3D_Window(nullptr),
 			OgreBites::ApplicationContext("XplicitNgin [ Place1 ]")
@@ -140,13 +141,20 @@ namespace Xplicit
 			Ogre3D = this->getRoot();
 			XPLICIT_ASSERT(Ogre3D);
 
-			Ogre3D_Scene = Ogre3D->createSceneManager();
-			Ogre3D_RTSS = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-			Ogre3D_Window = Ogre3D->getAutoCreatedWindow();
-			Ogre3D_RTSS->addSceneManager(Ogre3D_Scene);
+			if (Ogre::RTShader::ShaderGenerator::initialize())
+				Ogre3D_RTSS = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 
 			XPLICIT_ASSERT(Ogre3D_RTSS);
+
+			Ogre3D_Scene = Ogre3D->createSceneManager();
+			Ogre3D_Window = Ogre3D->getAutoCreatedWindow();
+
+			// Barrier of asserts.
+			XPLICIT_ASSERT(Ogre3D_Scene);
 			XPLICIT_ASSERT(Ogre3D_Window);
+
+			Ogre3D_RTSS->addSceneManager(Ogre3D_Scene);
+
 		}
 
 		~Root() noexcept

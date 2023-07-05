@@ -67,9 +67,9 @@ namespace Xplicit::Player
 				if (name.empty() ||
 					packet.hash != this->mHash)
 				{
-					if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ConnBadChallengeRoXML"))
+					if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnBadChallengeRoXML"))
 					{
-						ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+						ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 							if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 								RENDER->queueEndRendering();
 							}, Ogre::Vector2(XPLICIT_DIM.X / 2.8,
@@ -79,7 +79,7 @@ namespace Xplicit::Player
 
 					}
 
-					ComponentManager::get_singleton_ptr()->remove(mNetwork);
+					ComponentSystem::get_singleton_ptr()->remove(mNetwork);
 				}
 
 				break;
@@ -94,7 +94,7 @@ namespace Xplicit::Player
 
 				// TODO: download stuff
 				// String full_download_path = mMonitor->HTTP->download(script.get());
-				// ComponentManager::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str(), true);
+				// ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str(), true);
 
 				break;
 			}
@@ -113,9 +113,9 @@ namespace Xplicit::Player
 				if (name.empty() ||
 					packet.hash != this->mHash)
 				{
-					if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ConnChallengeScript"))
+					if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnChallengeScript"))
 					{
-						ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+						ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 							if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 								RENDER->queueEndRendering();
 							}, Ogre::Vector2(XPLICIT_DIM.X / 2.8,
@@ -125,16 +125,16 @@ namespace Xplicit::Player
 
 					}
 
-					ComponentManager::get_singleton_ptr()->remove(mNetwork);
+					ComponentSystem::get_singleton_ptr()->remove(mNetwork);
 				}
 
-				if (auto script = ComponentManager::get_singleton_ptr()->get<LuaScriptComponent>(name.c_str()))
+				if (auto script = ComponentSystem::get_singleton_ptr()->get<LuaScriptComponent>(name.c_str()))
 				{
 #ifdef XPLICIT_DEBUG
 					XPLICIT_INFO("Removing Script with success!");
 #endif
 
-					ComponentManager::get_singleton_ptr()->remove(script);
+					ComponentSystem::get_singleton_ptr()->remove(script);
 				}
 
 				break;

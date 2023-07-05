@@ -122,3 +122,15 @@ KLASS(KLASS&&) = default;\
 #   error You need a sleep function
 #   endif
 #endif /* ifndef */
+
+namespace Xplicit
+{
+    typedef double Double;
+    typedef float Real;
+
+    typedef std::int32_t Int32;
+    typedef std::uint32_t UInt32;
+    
+    typedef std::int64_t Int64;
+    typedef std::uint64_t UInt64;
+}

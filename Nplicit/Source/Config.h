@@ -21,3 +21,8 @@
 #include <Avx.h>
 
 #endif
+
+namespace Xplicit
+{
+
+}

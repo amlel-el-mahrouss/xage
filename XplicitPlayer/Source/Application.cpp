@@ -52,12 +52,12 @@ namespace Xplicit::Bites
 		// register lua calls, such as PlaySound
 		XplicitLoadClientLua();
 
-		const auto splash_screen = ComponentManager::get_singleton_ptr()->add<Player::LoadingComponent>();
+		const auto splash_screen = ComponentSystem::get_singleton_ptr()->add<Player::LoadingComponent>();
 		XPLICIT_ASSERT(splash_screen);
 
 		splash_screen->connect(xconnect_to);
 
-		Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
+		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
 	}
 
 	Application::~Application() {}

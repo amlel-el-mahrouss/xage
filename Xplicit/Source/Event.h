@@ -13,20 +13,21 @@
 
 namespace Xplicit 
 {
+	///! do that so that we don't deal with any errors.
 	class EventListener;
-	class EventManager;
+	class EventSystem;
 	class Event;
 	
-	class XPLICIT_API EventManager final 
+	class XPLICIT_API EventSystem final 
 	{
-		EventManager() = default;
+	public:
+		explicit EventSystem() = default;
+		~EventSystem() = default;
+		
+	public:
+		XPLICIT_COPY_DELETE(EventSystem);
 
 	public:
-		~EventManager() = default;
-		
-		EventManager& operator=(const EventManager&) = delete;
-		EventManager(const EventManager&) = delete;
-		
 		template <typename T, typename... Args>
 		T* add(Args&&...   args);
 
@@ -38,7 +39,7 @@ namespace Xplicit
 		
 		void update() noexcept;
 		
-		static EventManager* get_singleton_ptr() noexcept;
+		static EventSystem* get_singleton_ptr() noexcept;
 
 	private:
 		std::vector<Event*> mEvents;
@@ -68,7 +69,7 @@ namespace Xplicit
 	protected:
 		std::vector<EventListener*> mListeners;
 
-		friend EventManager;
+		friend EventSystem;
 
 	};
 

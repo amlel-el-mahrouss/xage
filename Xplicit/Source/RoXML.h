@@ -16,7 +16,7 @@
 #include <rapidxml/rapidxml_utils.hpp>
 #include <rapidxml/rapidxml.hpp>
 
-// Engine
+// Common includes
 #include "InstanceComponent.h"
 #include "DataValue.h"
 #include "Root.h"
@@ -133,7 +133,7 @@ namespace Xplicit::RoXML
 									strcmp(node->first_attribute()->next_attribute()->name(), "Parent") == 0)
 									parent_id = node->first_attribute()->next_attribute()->value();
 
-								auto component = ComponentManager::get_singleton_ptr()->add<InstanceComponent>(
+								auto component = ComponentSystem::get_singleton_ptr()->add<InstanceComponent>(
 									Vector<float>(0, 0, 0),
 									Vector<float>(0, 0, 0),
 									Color<float>(0, 0, 0),
@@ -172,7 +172,7 @@ namespace Xplicit::RoXML
 
 										if (node = RENDER->_getCurrentSceneManager()->getSceneNode(parent_id, false); !node)
 										{
-											ComponentManager::get_singleton_ptr()->remove<InstanceComponent>(component);
+											ComponentSystem::get_singleton_ptr()->remove<InstanceComponent>(component);
 										}
 										else
 										{

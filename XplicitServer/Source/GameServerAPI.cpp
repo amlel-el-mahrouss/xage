@@ -18,7 +18,7 @@ Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 static int lua_SetHumanoidHealth(lua_State* L)
 {
-	const auto humanoid = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+	const auto humanoid = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
 	if (humanoid.empty())
 		return 0;
@@ -85,7 +85,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 static int lua_Kick(lua_State* L)
 {
-	const auto humanoid = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+	const auto humanoid = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
 	if (humanoid.empty())
 		return 0;
@@ -116,7 +116,7 @@ static int lua_Fire(lua_State* L)
 		repl_id > Xplicit::COMPONENT_ID_COUNT)
 		return 0;
 
-	const auto humanoids = Xplicit::ComponentManager::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+	const auto humanoids = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
 	for (size_t i = 0; i < humanoids.size(); ++i)
 	{

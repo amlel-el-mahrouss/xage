@@ -40,9 +40,9 @@ static void xplicit_print_help()
 static void xplicit_load_sh()
 {
 	char cmd_buf[1024];
-	const auto network = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+	const auto network = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
-	while (Xplicit::ComponentManager::get_singleton_ptr() && Xplicit::EventManager::get_singleton_ptr())
+	while (Xplicit::ComponentSystem::get_singleton_ptr() && Xplicit::EventSystem::get_singleton_ptr())
 	{
 		std::cin.getline(cmd_buf, 1024);
 
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
 			return 1;
 		}
 
-		const auto network = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
+		const auto network = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
 
 #ifdef XPLICIT_WINDOWS
 
@@ -143,10 +143,10 @@ int main(int argc, char** argv)
 
 #endif // XPLICIT_WINDOWS
 
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
-		Xplicit::EventManager::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
 
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();
@@ -162,15 +162,15 @@ int main(int argc, char** argv)
 		parser.load(params);
 
 		Xplicit::Thread logic([&]() {
-			const auto net = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+			const auto net = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
-			while (Xplicit::ComponentManager::get_singleton_ptr() &&
-				Xplicit::EventManager::get_singleton_ptr())
+			while (Xplicit::ComponentSystem::get_singleton_ptr() &&
+				Xplicit::EventSystem::get_singleton_ptr())
 			{
 				Xplicit::NetworkServerContext::recv_all(net);
 
-				Xplicit::ComponentManager::get_singleton_ptr()->update();
-				Xplicit::EventManager::get_singleton_ptr()->update();
+				Xplicit::ComponentSystem::get_singleton_ptr()->update();
+				Xplicit::EventSystem::get_singleton_ptr()->update();
 
 				Xplicit::NetworkServerContext::send_all(net);
 			};

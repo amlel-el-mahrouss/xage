@@ -32,7 +32,7 @@ namespace Xplicit::Player
 		mPacket(),
 		mPos(0.f, 2.f, 0.f)
 	{
-		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);
 
@@ -118,7 +118,7 @@ namespace Xplicit::Player
 		mNetwork(nullptr),
 		mPublicHash(public_hash)
 	{
-		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
 	}
 
@@ -134,7 +134,7 @@ namespace Xplicit::Player
 		if (mNetwork == nullptr)
 			return;
 
-		LocalMenuEvent* menu = EventManager::get_singleton_ptr()->get<LocalMenuEvent>("LocalMenuEvent");
+		LocalMenuEvent* menu = EventSystem::get_singleton_ptr()->get<LocalMenuEvent>("LocalMenuEvent");
 
 		if (menu && menu->enabled())
 			return;

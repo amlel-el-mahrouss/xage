@@ -50,7 +50,7 @@ namespace Xplicit::Player
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
-			ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>(
+			ComponentSystem::get_singleton_ptr()->add<Player::PopupComponent>(
 				[]() { 
 					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 						std::exit(0);
@@ -60,7 +60,7 @@ namespace Xplicit::Player
 				POPUP_TYPE::BANNED, "StopPopup");
 
 			mEnabled = false;
-			ComponentManager::get_singleton_ptr()->remove(mNetwork);
+			ComponentSystem::get_singleton_ptr()->remove(mNetwork);
 
 			return;
 		}
@@ -72,24 +72,24 @@ namespace Xplicit::Player
 
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
-			ComponentManager::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
-			ComponentManager::get_singleton_ptr()->add<LocalHudComponent>(public_hash);
+			ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
+			ComponentSystem::get_singleton_ptr()->add<LocalHudComponent>(public_hash);
 			
-			const auto cam = ComponentManager::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
-			const auto ply = ComponentManager::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash);
+			const auto cam = ComponentSystem::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
+			const auto ply = ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash);
 
 			ply->attach(cam);
 			mNetwork->set_hash(hash);
 
-			const auto monitor = EventManager::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
+			const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
 
 			monitor->ID = packet.buffer;
 			monitor->Endpoint = XPLICIT_XASSET_ENDPOINT;
 			monitor->HTTP = std::make_unique<XHTTPManager>();
 			monitor->HTTP->set_endpoint(monitor->Endpoint);
 
-			EventManager::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
-			EventManager::get_singleton_ptr()->add<LocalMenuEvent>();
+			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
+			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
 			Root::get_singleton_ptr()->set_title("Xplicit [ InGame ]");
 
@@ -106,7 +106,7 @@ namespace Xplicit::Player
 			// peek after the ++timeout, or retry
 			if (mTimeout < 0)
 			{
-				ComponentManager::get_singleton_ptr()->add<PopupComponent>(
+				ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 					[]() {
 						if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 							std::exit(0);
@@ -115,7 +115,7 @@ namespace Xplicit::Player
 						XPLICIT_DIM.Y / 2.8),
 						POPUP_TYPE::NETWORK, "StopPopup");
 
-				ComponentManager::get_singleton_ptr()->remove(mNetwork);
+				ComponentSystem::get_singleton_ptr()->remove(mNetwork);
 				mEnabled = false;
 
 				return;
@@ -127,11 +127,11 @@ namespace Xplicit::Player
 
 	void LoadingComponent::connect(Utils::UriParser& ip)
 	{
-		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		if (mNetwork == nullptr)
 		{
-			mNetwork = ComponentManager::get_singleton_ptr()->add<NetworkComponent>();
+			mNetwork = ComponentSystem::get_singleton_ptr()->add<NetworkComponent>();
 			XPLICIT_ASSERT(mNetwork);
 
 #ifdef XPLICIT_DEBUG
@@ -165,7 +165,7 @@ namespace Xplicit::Player
 
 	void LoadingComponent::reset() noexcept
 	{
-		ComponentManager::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
+		ComponentSystem::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 			if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 				std::exit(0);
 			}, Ogre::Vector2(XPLICIT_DIM.X / 3.45,

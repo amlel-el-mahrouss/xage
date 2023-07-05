@@ -177,7 +177,7 @@ func _G.Engine:Spawn()
 end
 
 _G.Engine.Name = "Xplicit"
-_G.Engine.Description = "Game Engine API"
+_G.Engine.Description = "Engine Engine API"
 _G.Engine.Version = "1.0.2"
 
 # Given by server to initialize UI and stuff...

@@ -28,7 +28,7 @@ namespace Xplicit
 
 		if (script)
 		{
-			mAttribute.script(ComponentManager::get_singleton_ptr()->add<LuaScriptComponent>(script, true));
+			mAttribute.script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script, true));
 			XPLICIT_ASSERT(mAttribute.script());
 		}
 

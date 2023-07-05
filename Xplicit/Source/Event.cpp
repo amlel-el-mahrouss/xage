@@ -18,7 +18,7 @@
 
 namespace Xplicit
 {
-	void EventManager::update() noexcept
+	void EventSystem::update() noexcept
 	{
 		if (mEvents.empty())
 			return;
@@ -36,12 +36,12 @@ namespace Xplicit
 		}
 	}
 
-	EventManager* EventManager::get_singleton_ptr() noexcept
+	EventSystem* EventSystem::get_singleton_ptr() noexcept
 	{
-		static EventManager* ptr = nullptr;
+		static EventSystem* ptr = nullptr;
 
 		if (!ptr)
-			ptr = new EventManager();
+			ptr = new EventSystem();
 
 		return ptr;
 	}

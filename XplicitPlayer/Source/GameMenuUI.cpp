@@ -60,7 +60,7 @@ namespace Xplicit::Player
 	/* Heads up display */
 	LocalHudComponent::LocalHudComponent(const std::int64_t& publicHash)
 		:
-		  mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
+		  mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		  mPublicHash(publicHash),
 		  mHealth(0),
 		  mTimeout(0)

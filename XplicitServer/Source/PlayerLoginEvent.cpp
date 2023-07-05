@@ -78,12 +78,12 @@ namespace Xplicit
 
 	PlayerLoginEvent::PlayerLoginEvent()
 		:
-		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
+		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0)
 	{
 		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
 		{
-			HumanoidComponent* component = ComponentManager::get_singleton_ptr()->add<HumanoidComponent>();
+			HumanoidComponent* component = ComponentSystem::get_singleton_ptr()->add<HumanoidComponent>();
 			XPLICIT_ASSERT(component);
 
 			mPlayers.push_back(component);

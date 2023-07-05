@@ -29,7 +29,7 @@ namespace Xplicit::Player
 			mPublicHash(publ),
 			mHash(priv)
 	{
-		mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
+		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		// just in case.
 		XPLICIT_ASSERT(mNetwork);
@@ -46,7 +46,7 @@ namespace Xplicit::Player
 		/* did we lost connection to peer? */
 		if (mNetwork->is_reset())
 		{
-			ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+			ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 				if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 					RENDER->queueEndRendering();
 				}, Ogre::Vector2(XPLICIT_DIM.X / 3.45,
@@ -61,9 +61,9 @@ namespace Xplicit::Player
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 		{
-			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
+			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
 			{
-				ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 						RENDER->queueEndRendering();
 					}, Ogre::Vector2(XPLICIT_DIM.X / 3.45,
@@ -74,9 +74,9 @@ namespace Xplicit::Player
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
-			if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
+			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
 			{
-				ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 						RENDER->queueEndRendering();
 					}, Ogre::Vector2(XPLICIT_DIM.X / 3.45,
@@ -90,7 +90,7 @@ namespace Xplicit::Player
 			NetworkPacket packet{};
 			packet = mNetwork->get();
 
-			const auto players = ComponentManager::get_singleton_ptr()->all_of<Xplicit::Player::LocalHumanoidComponent>("LocalHumanoidComponent");
+			const auto players = ComponentSystem::get_singleton_ptr()->all_of<Xplicit::Player::LocalHumanoidComponent>("LocalHumanoidComponent");
 
 			for (std::size_t index = 0UL; index < players.size(); ++index)
 			{
@@ -100,7 +100,7 @@ namespace Xplicit::Player
 
 			XPLICIT_INFO("LocalHumanoid:Join [EVENT]");
 
-			ComponentManager::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash);
+			ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash);
 			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
 
 			/*! invalidate command right there. */
@@ -114,9 +114,9 @@ namespace Xplicit::Player
 			if (packet.hash == mHash ||
 				packet.public_hash == mPublicHash)
 			{
-				if (!ComponentManager::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
+				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
 				{
-					ComponentManager::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+					ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 						if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 							RENDER->queueEndRendering();
 					}, Ogre::Vector2(XPLICIT_DIM.X / 2.8,
@@ -130,7 +130,7 @@ namespace Xplicit::Player
 			}
 			else
 			{
-				const auto players = ComponentManager::get_singleton_ptr()->all_of<LocalHumanoidComponent>("LocalHumanoidComponent");
+				const auto players = ComponentSystem::get_singleton_ptr()->all_of<LocalHumanoidComponent>("LocalHumanoidComponent");
 
 				for (int ply = 0; ply < players.size(); ++ply)
 				{
@@ -139,7 +139,7 @@ namespace Xplicit::Player
 						XPLICIT_INFO("LocalHumanoid:Leave [EVENT]");
 						Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Leave()");
 
-						ComponentManager::get_singleton_ptr()->remove(players[ply]);
+						ComponentSystem::get_singleton_ptr()->remove(players[ply]);
 						break;
 					}
 				}

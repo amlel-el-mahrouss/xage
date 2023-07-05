@@ -17,7 +17,7 @@ namespace Xplicit
 {
 	PlayerTimeoutEvent::PlayerTimeoutEvent()
 		:
-		mNetwork(ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
+		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mCounter(0UL)
 	{}
 

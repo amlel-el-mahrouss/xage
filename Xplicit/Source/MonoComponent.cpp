@@ -30,7 +30,7 @@ namespace Xplicit
 
 		if (_namespase && _klass)
 		{
-			ComponentManager::get_singleton_ptr()->add<MonoClassComponent>(_namespase, _klass);
+			ComponentSystem::get_singleton_ptr()->add<MonoClassComponent>(_namespase, _klass);
 			return true;
 		}
 
@@ -263,7 +263,7 @@ namespace Xplicit
 	MonoScriptComponent::MonoScriptComponent(const char* filename, bool can_fail)
 		: m_filename(filename), m_assembly(nullptr)
 	{
-		this->m_engine_ref = ComponentManager::get_singleton_ptr()->get<MonoEngineComponent>("MonoEngineComponent");
+		this->m_engine_ref = ComponentSystem::get_singleton_ptr()->get<MonoEngineComponent>("MonoEngineComponent");
 		assert(this->m_engine_ref);
 
 		// Get the C# assembly.
@@ -277,7 +277,7 @@ namespace Xplicit
 	MonoScriptComponent::~MonoScriptComponent() 
 	{
 		if (this->m_engine_ref.count() < 1)
-			ComponentManager::get_singleton_ptr()->remove<MonoEngineComponent>(this->m_engine_ref.get());
+			ComponentSystem::get_singleton_ptr()->remove<MonoEngineComponent>(this->m_engine_ref.get());
 	}
 
 	COMPONENT_TYPE MonoScriptComponent::type() noexcept

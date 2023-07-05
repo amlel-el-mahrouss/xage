@@ -36,7 +36,7 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 	if (player_index > Xplicit::XPLICIT_MAX_CONNECTIONS)
 		return XPLICIT_INVALID_ID;
 
-	Xplicit::NetworkServerComponent* network = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+	Xplicit::NetworkServerComponent* network = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
 
 	if (network)
 		return network->get(player_index)->xplicit_id;
@@ -48,7 +48,7 @@ namespace Xplicit
 {
 	/// <summary>
 	/// Xplicit Attribute Class.
-	/// Reserved for RoXML and the Scripting/Engine APIs.
+	/// Reserved for RoXML and scripting API.
 	/// </summary>
 	class XAttribute final
 	{

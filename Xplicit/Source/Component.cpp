@@ -15,7 +15,7 @@
 
 namespace Xplicit 
 {
-	void ComponentManager::update() noexcept
+	void ComponentSystem::update() noexcept
 	{
 		if (mComponents.empty())
 			return;
@@ -33,12 +33,12 @@ namespace Xplicit
 		}
 	}
 
-	ComponentManager* ComponentManager::get_singleton_ptr() noexcept
+	ComponentSystem* ComponentSystem::get_singleton_ptr() noexcept
 	{
-		static ComponentManager* ptr = nullptr;
+		static ComponentSystem* ptr = nullptr;
 
 		if (!ptr)
-			ptr = new ComponentManager();
+			ptr = new ComponentSystem();
 
 		return ptr;
 	}

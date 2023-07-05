@@ -28,7 +28,7 @@ static int lua_New(lua_State* L)
 		script.empty())
 		return 0;
 
-	auto instance = Xplicit::ComponentManager::get_singleton_ptr()->add<Xplicit::InstanceComponent>(
+	auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::InstanceComponent>(
 		Xplicit::Vector<float>(0, 0, 0),
 		Xplicit::Vector<float>(0, 0, 0),
 		Xplicit::Color<float>(0, 0, 0),
@@ -53,11 +53,11 @@ static int lua_Destroy(lua_State* L)
 	if (name.empty())
 		return 0;
 
-	if (auto instance = Xplicit::ComponentManager::get_singleton_ptr()->get<Xplicit::InstanceComponent>(name.c_str()))
+	if (auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::InstanceComponent>(name.c_str()))
 	{
 		if (instance->parent() == parent)
 		{
-			Xplicit::ComponentManager::get_singleton_ptr()->remove<Xplicit::InstanceComponent>(instance);
+			Xplicit::ComponentSystem::get_singleton_ptr()->remove<Xplicit::InstanceComponent>(instance);
 			return 0;
 		}
 	}
@@ -79,7 +79,7 @@ XPLICIT_API void XplicitLoadBaseLua()
 {
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game = {}");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SceneService = {}");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.ComponentService = {}");
 	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game.Players = {}");
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PrintLn);
@@ -87,11 +87,11 @@ XPLICIT_API void XplicitLoadBaseLua()
 
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_New);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "New_CoreAPI");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SceneService.New = New_CoreAPI");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.ComponentService.New = New_CoreAPI");
 	
 	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_Destroy);
 	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Destroy_CoreAPI");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SceneService.Destroy = Destroy_CoreAPI");
+	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.ComponentService.Destroy = Destroy_CoreAPI");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 

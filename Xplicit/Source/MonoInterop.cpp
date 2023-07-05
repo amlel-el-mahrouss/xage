@@ -24,7 +24,7 @@ namespace Xplicit
 
 		if (name)
 		{
-			EventManager::get_singleton_ptr()->add<MonoEvent>(name);
+			EventSystem::get_singleton_ptr()->add<MonoEvent>(name);
 			return true;
 		}
 
@@ -57,7 +57,7 @@ namespace Xplicit
 		 * FIXME: Let MonoScriptComponent have it's own name -> get_all<MonoScriptComponent>("MyScript.dll");
 		 */
 
-		auto scripts = ComponentManager::get_singleton_ptr()->all_of<MonoScriptComponent>("MonoScriptComponent");
+		auto scripts = ComponentSystem::get_singleton_ptr()->all_of<MonoScriptComponent>("MonoScriptComponent");
 
 		for (size_t i = 0; i < scripts.size(); i++)
 		{
@@ -157,7 +157,7 @@ namespace Xplicit
 		if (m_name.empty())
 			return;
 
-		auto components = ComponentManager::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
+		auto components = ComponentSystem::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
 
 		for (size_t i = 0; i < components.size(); ++i)
 		{
@@ -189,7 +189,7 @@ namespace Xplicit
 	{
 		(void)eventPtr;
 
-		auto components = ComponentManager::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
+		auto components = ComponentSystem::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
 
 		for (size_t i = 0; i < components.size(); ++i)
 		{

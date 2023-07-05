@@ -65,37 +65,6 @@ namespace Xplicit
 					component->Blocked)
 					continue;
 
-				bool blocked = false;
-
-				for (auto* rhs_component : mComponents)
-				{
-					if (rhs_component->NoCollide ||
-						rhs_component == component)
-						continue;
-
-					Vector<TypeFloat> bounding_box_rhs = rhs_component->Position;
-					Vector<TypeFloat> bounding_box_lhs = component->Position;
-
-					Vector<TypeFloat> addition_lhs_rhs(0.0f, 0.0f, 0.0f);
-
-					addition_lhs_rhs.add(bounding_box_rhs.X * bounding_box_lhs.X,
-						bounding_box_rhs.Y * bounding_box_lhs.Y,
-						bounding_box_rhs.Z * bounding_box_lhs.Z);
-
-					if (addition_lhs_rhs.X >= bounding_box_rhs.X &
-						addition_lhs_rhs.Z >= bounding_box_rhs.Z &&
-						addition_lhs_rhs.Y >= bounding_box_rhs.Y)
-					{
-						rhs_component->Blocked = true;
-						component->Blocked = true;
-
-						break;
-					}
-
-					if (component->Blocked)
-						continue;
-				}
-
 				component->Force.add(mGravity.X * component->Mass, mGravity.Y * component->Mass, mGravity.Z * component->Mass);
 				component->Velocity.add(component->Force.X / component->Mass * dt, component->Force.Y / component->Mass * dt, component->Force.Z / component->Mass * dt);
 				component->Position.add(component->Velocity.X * dt, component->Velocity.Y * dt, component->Velocity.Z * dt);

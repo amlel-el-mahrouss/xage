@@ -52,21 +52,21 @@ namespace Xplicit
 	void PlayerMovementEvent::operator()()
 	{
 		if (!mNetwork)
-			mNetwork = ComponentManager::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+			mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
-		const auto players = ComponentManager::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 		NetworkFloat speed = mVelocityVar->as_float();
 		
-		for (std::size_t i = 0; i < players.size(); ++i)
+		for (std::size_t i = 0; i < humanoids.size(); ++i)
 		{
-			HumanoidComponent* ply = players[i];
+			HumanoidComponent* humanoid = humanoids[i];
 
-			if (ply == nullptr ||
-				ply->get_health() < 1 ||
-				ply->get_peer() == nullptr)
+			if (humanoid == nullptr ||
+				humanoid->get_health() < 1 ||
+				humanoid->get_peer() == nullptr)
 				continue;
 
-			NetworkInstance* peer = ply->get_peer();
+			NetworkInstance* peer = humanoid->get_peer();
 
 			if (peer->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
@@ -76,23 +76,23 @@ namespace Xplicit
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
 			{
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
-					ply->get_attribute().pos().Y += speed;
+					humanoid->get_attribute().pos().Y += speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					ply->get_attribute().pos().Z += speed;
+					humanoid->get_attribute().pos().Z += speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					ply->get_attribute().pos().Z -= speed;
+					humanoid->get_attribute().pos().Z -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					ply->get_attribute().pos().X -= speed;
+					humanoid->get_attribute().pos().X -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					ply->get_attribute().pos().X += speed;
+					humanoid->get_attribute().pos().X += speed;
 
-				peer->packet.pos[XPLICIT_NETWORK_X] = ply->get_attribute().pos().X;
-				peer->packet.pos[XPLICIT_NETWORK_Y] = ply->get_attribute().pos().Y;
-				peer->packet.pos[XPLICIT_NETWORK_Z] = ply->get_attribute().pos().Z;
+				peer->packet.pos[XPLICIT_NETWORK_X] = humanoid->get_attribute().pos().X;
+				peer->packet.pos[XPLICIT_NETWORK_Y] = humanoid->get_attribute().pos().Y;
+				peer->packet.pos[XPLICIT_NETWORK_Z] = humanoid->get_attribute().pos().Z;
 
 				/* send server delta to player, so that he is not out of touch. */
 				peer->packet.pos[XPLICIT_NETWORK_DELTA] = mDeltaTime;
@@ -101,11 +101,11 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 				peer->packet.public_hash = peer->public_hash;
 
-				if (ply->get_attribute().script() &&
-					ply->get_attribute().script()->name() == "Move")
+				if (humanoid->get_attribute().script() &&
+					humanoid->get_attribute().script()->name() == "Move")
 				{
 					XPLICIT_INFO("Humanoid:Move [EVENT]");
-					ply->get_attribute().script()->run();
+					humanoid->get_attribute().script()->run();
 				}
 
 				XPLICIT_INFO("Engine:Move [EVENT]");
