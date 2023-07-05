@@ -23,7 +23,7 @@ namespace Xplicit
 		: 
 		Component(), 
 		mPeer(nullptr),
-		mHealth(XPLICIT_DEFAULT_HEALTH), 
+		mHealth(0), 
 		mCanSpawn(true),
 		mState(HUMANOID_STATE::DEAD)
 	{

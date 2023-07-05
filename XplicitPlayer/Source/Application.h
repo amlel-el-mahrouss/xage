@@ -50,13 +50,10 @@ namespace Xplicit::Bites
 			return singleton;
 		}
 
-		bool key_down(const uint16_t& key)
+		bool key_down(const char key) noexcept
 		{
-#ifdef XPLICIT_WINDOWS
-			return GetKeyState(key) & 0x8000;
-#else
-#	error no input to get on!
-#endif // ifdef XPLICIT_windows
+			XPLICIT_ASSERT(Root::get_singleton_ptr());
+			return Root::get_singleton_ptr()->KeyboardEvent.keysym.sym == key;
 		}
 
 	public:

@@ -12,6 +12,9 @@
 #include "Xplicit.h"
 #include "HelperMacros.h"
 
+#include <lua/CLua.hpp>
+#include <OgreApplicationContext.h>
+
 /* common engine macros for Root */
 #define RENDER Xplicit::Root::get_singleton_ptr()->Ogre3D
 
@@ -20,30 +23,130 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API Root final
+	class OgreInputListener : public OgreBites::InputListener
+	{
+	private:
+		bool keyPressed(const OgreBites::KeyboardEvent& evt) override
+		{
+			KeyboardEvent = evt;
+			return true;
+		}
+
+		bool keyReleased(const OgreBites::KeyboardEvent& evt) override
+		{
+			KeyboardEvent = evt;
+			return true;
+		}
+
+		bool touchMoved(const OgreBites::TouchFingerEvent& evt)
+		{
+			FingerEvent = evt;
+			return true;
+		}
+
+		bool touchPressed(const OgreBites::TouchFingerEvent& evt)
+		{
+			FingerEvent = evt;
+			return true;
+		}
+
+		bool touchReleased(const OgreBites::TouchFingerEvent& evt)
+		{
+			FingerEvent = evt;
+			return true;
+		}
+
+		bool mouseMoved(const OgreBites::MouseMotionEvent& evt)
+		{
+			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:MouseMove()");
+			MouseMotionEvent = evt;
+			return true;
+		}
+
+		bool mouseWheelRolled(const OgreBites::MouseWheelEvent& evt)
+		{
+			MouseWheelEvent = evt;
+			return true;
+		}
+
+		bool mousePressed(const OgreBites::MouseButtonEvent& evt)
+		{
+			// TODO: do not hardcode that, make something much more scalable, as we are planning to work
+			// on our own renderer.
+			if (evt.type == OgreBites::BUTTON_LEFT)
+				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LeftClick()");
+
+			if (evt.type == OgreBites::BUTTON_RIGHT)
+				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:RightClick()");
+
+			MouseButtonEvent = evt;
+			return true;
+		}
+
+		bool mouseReleased(const OgreBites::MouseButtonEvent& evt)
+		{
+			MouseButtonEvent = evt;
+			return true;
+		}
+
+		bool textInput(const OgreBites::TextInputEvent& evt) 
+		{
+			TextInputEvent = evt;
+			return true;
+		}
+
+		bool axisMoved(const OgreBites::AxisEvent& evt) 
+		{
+			AxisEvent = evt;
+			return true;
+		}
+
+		bool buttonPressed(const OgreBites::ButtonEvent& evt) 
+		{
+			ButtonEvent = evt;
+			return true;
+		}
+
+		bool buttonReleased(const OgreBites::ButtonEvent& evt) 
+		{
+			ButtonEvent = evt;
+			return true;
+		}
+
+	public:
+		OgreBites::MouseButtonEvent MouseButtonEvent;
+		OgreBites::MouseMotionEvent MouseMotionEvent;
+		OgreBites::MouseWheelEvent MouseWheelEvent;
+		OgreBites::TextInputEvent TextInputEvent;
+		OgreBites::TouchFingerEvent FingerEvent;
+		OgreBites::KeyboardEvent KeyboardEvent;
+		OgreBites::ButtonEvent ButtonEvent;
+		OgreBites::AxisEvent AxisEvent;
+
+	};
+
+	class XPLICIT_API Root final : public OgreBites::ApplicationContext, public OgreInputListener
 	{
 	private:
 		explicit Root()
 			:
 			Ogre3D(nullptr),
 			Ogre3D_Scene(nullptr),
-			Ogre3D_Window(nullptr)
+			Ogre3D_Window(nullptr),
+			OgreBites::ApplicationContext("XplicitNgin [ Place1 ]")
 		{
-			Ogre3D = new Ogre::Root();
+			this->initApp();
 
-			Ogre3D->loadPlugin("RenderSystem_Direct3D11.dll");
-			Ogre3D->loadPlugin("Plugin_ParticleFX.dll");
-
-			Ogre::RenderSystemList renderSystems = Ogre3D->getAvailableRenderers();
-			Ogre::RenderSystemList::iterator itr = renderSystems.begin();
-
-			Ogre3D->setRenderSystem((*itr));
-
-			Ogre3D_Window = Ogre3D->initialise(true);
+			Ogre3D = this->getRoot();
+			XPLICIT_ASSERT(Ogre3D);
 
 			Ogre3D_Scene = Ogre3D->createSceneManager();
-			Ogre3D->_setCurrentSceneManager(Ogre3D_Scene);
+			Ogre3D_RTSS = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+			Ogre3D_Window = Ogre3D->getAutoCreatedWindow();
+			Ogre3D_RTSS->addSceneManager(Ogre3D_Scene);
 
+			XPLICIT_ASSERT(Ogre3D_RTSS);
+			XPLICIT_ASSERT(Ogre3D_Window);
 		}
 
 		~Root() noexcept
@@ -73,7 +176,7 @@ namespace Xplicit
 				return false;
 
 			if (title == nullptr)
-				title = "XplicitNgine";
+				title = "XplicitNgine [ Place1 ]";
 
 			int64_t hwnd = 0;
 
@@ -84,6 +187,7 @@ namespace Xplicit
 		}
 
 	public:
+		Ogre::RTShader::ShaderGenerator* Ogre3D_RTSS;
 		Ogre::RenderWindow* Ogre3D_Window;
 		Ogre::SceneManager* Ogre3D_Scene;
 		Ogre::Root* Ogre3D;

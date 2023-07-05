@@ -13,7 +13,6 @@
 
 // Application framework.
 #include "Application.h"
-
 #include "LocalCameraComponent.h"
 
 // We need this to connect and download from server. And also the RoXML header.
@@ -33,17 +32,8 @@ namespace Xplicit::Bites
 	{
 		XPLICIT_GET_DATA_DIR(dir);
 
-		String prebuilt = dir;
-		prebuilt += "Textures/DefaultSkin.zip";
-
-		Root::get_singleton_ptr()->Ogre3D_Window = Root::get_singleton_ptr()->Ogre3D->createRenderWindow(
-			"XpliciNgine [ Place1 ]", 
-			Player::XPLICIT_DIM.X, 
-			Player::XPLICIT_DIM.Y,
-			false);
-
-		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dir, "FileSystem", XPLICIT_RES_GROUP);
-		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(prebuilt, "Zip", XPLICIT_RES_GROUP);
+		if (Ogre::ResourceGroupManager::getSingletonPtr())
+			Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(dir, "FileSystem", XPLICIT_RES_GROUP);
 	}
 
 	Application::Application(Utils::UriParser& xconnect_to)
