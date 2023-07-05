@@ -55,6 +55,9 @@ XPLICIT_MAIN()
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
 			return 1;
 
+		Xplicit::Root::get_singleton_ptr()->initApp();
+		Xplicit::Root::get_singleton_ptr()->initPostSetup();
+
 		std::unique_ptr<Xplicit::Bites::Application> pApp = std::make_unique<Xplicit::Bites::Application>(uri);
 
 		if (!pApp) 
@@ -64,7 +67,7 @@ XPLICIT_MAIN()
 		while (Xplicit::ComponentSystem::get_singleton_ptr() && 
 			Xplicit::EventSystem::get_singleton_ptr())
 		{
-			if (Xplicit::Root::get_singleton_ptr()->Ogre3D_Window->isClosed()) break;
+			if (Xplicit::Root::get_singleton_ptr()->getRenderWindow()->isClosed()) break;
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();

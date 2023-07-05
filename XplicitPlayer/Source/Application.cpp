@@ -28,14 +28,6 @@ namespace Xplicit::Player
 
 namespace Xplicit::Bites
 {
-	static void XplicitOpenResource()
-	{
-		XPLICIT_GET_DATA_DIR(dir);
-
-		if (Ogre::ResourceGroupManager::getSingletonPtr())
-			Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(dir, "FileSystem", XPLICIT_RES_GROUP);
-	}
-
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mPath(""), mWsa()
 	{
@@ -63,9 +55,7 @@ namespace Xplicit::Bites
 	Application::~Application() {}
 
 	void Application::create_and_set_contexts()
-	{	
-		XplicitOpenResource();
-
+	{
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
 	}

@@ -20,12 +20,15 @@ namespace Xplicit::Player
 	LocalCameraComponent::LocalCameraComponent()
 		: Component(), mCamera(nullptr)
 	{
-		mCamera = RENDER->_getCurrentSceneManager()->createCamera("Cameraa");
+		mCamera = Root::get_singleton_ptr()->Ogre3D_Scene->createCamera("Camera");
 		XPLICIT_ASSERT(mCamera);
 
-		Xplicit::Root::get_singleton_ptr()->Ogre3D_Window->addViewport(mCamera);
+		mCamera->setNearClipDistance(5); // specific to this sample
+		mCamera->setAutoAspectRatio(true);
+		mCamera->setDebugColour(Ogre::ColourValue(255, 40, 40, 40));
 
-		mCursor = RENDER->getTextureManager()->load("cursor.png", XPLICIT_RES_GROUP, Ogre::TEX_TYPE_2D, -1, 1.0F, Ogre::PF_UNKNOWN, true);
+		Root::get_singleton_ptr()->getRenderWindow()->addViewport(mCamera);
+		
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept
@@ -38,9 +41,7 @@ namespace Xplicit::Player
 
 	const char* LocalCameraComponent::name() noexcept { return ("LocalCameraComponent"); }
 
-	void LocalCameraComponent::update()
-	{
-	}
+	void LocalCameraComponent::update() {}
 
 	Ogre::Camera* LocalCameraComponent::get() noexcept { return mCamera; }
 }

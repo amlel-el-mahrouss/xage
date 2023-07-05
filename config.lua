@@ -32,7 +32,6 @@ XPLICIT_CONFIG = {
 	  "opengl32",
 	  "C:/VulkanSDK/1.3.250.0/Lib/vulkan-1",
       "Library/glfw3",
-      "Library/OgreMain",
 	  "Library/lua",
       "C:/Program Files/OpenSSL-Win64/lib/libssl",
       "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
@@ -74,7 +73,6 @@ XPLICIT_SERVER_CONFIG = {
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
     	"Library/Xplicit",
 	    "Library/lua",
-        "Library/OgreMain",
 	    "ws2_32",
 	    "winmm",
         "C:/Program Files/OpenSSL-Win64/lib/libssl",
@@ -126,7 +124,6 @@ XPLICIT_CLIENT_CONFIG = {
         "opengl32",
 	    "ws2_32",
 	    "winmm",
-        "Library/OgreMain",
         "Library/RenderSystem_Direct3D11",
         "Library/Plugin_ParticleFX",
         "Library/Plugin_OctreeSceneManager",
@@ -196,4 +193,6 @@ NPLICIT_CONFIG = {
 
 -- END OF CONFIG
 
+print('Please define Ogre3D exports! e.g: C:/Users/amlal/Desktop/include')
+print('Please define Ogre3D exports! e.g: C:/Users/amlal/Desktop/include')
 print('Please define Ogre3D exports! e.g: C:/Users/amlal/Desktop/include')
