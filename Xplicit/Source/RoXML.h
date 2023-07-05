@@ -87,16 +87,13 @@ namespace Xplicit::RoXML
 			Thread stream_job([&]() {
 				std::unique_ptr<xml_document<>> doc = std::make_unique<xml_document<>>();
 
+				//
+				file<char> xml_file(params.Path.c_str());
+
 				if (!params.Inline)
-				{
-					file<char> xml_file(params.Path.c_str()); // Default template is char
-					
 					doc->parse<0>(xml_file.data());
-				}
 				else
-				{
 					doc->parse<0>(params.Path.data());
-				}
 
 				xml_node<>* root_node = doc->first_node();
 				xml_node<>* node = root_node->first_node();
