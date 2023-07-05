@@ -1,0 +1,15 @@
+
+material head.objHead1Mtl
+{
+	technique
+	{
+		pass 
+		{
+			ambient 0.827726 0.487765 0.293216 1
+			diffuse 0.827726 0.487765 0.293216 1
+			specular 0.0519357 0.0306049 0.0183979 1 0
+		}
+
+	}
+
+}

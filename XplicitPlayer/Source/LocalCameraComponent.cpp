@@ -20,7 +20,7 @@ namespace Xplicit::Player
 	LocalCameraComponent::LocalCameraComponent()
 		: Component(), mCamera(nullptr)
 	{
-		mCamera = RENDER->_getCurrentSceneManager()->createCamera("Camera");
+		mCamera = RENDER->_getCurrentSceneManager()->createCamera("Cameraa");
 		XPLICIT_ASSERT(mCamera);
 
 		Xplicit::Root::get_singleton_ptr()->Ogre3D_Window->addViewport(mCamera);
@@ -40,7 +40,6 @@ namespace Xplicit::Player
 
 	void LocalCameraComponent::update()
 	{
-		
 	}
 
 	Ogre::Camera* LocalCameraComponent::get() noexcept { return mCamera; }

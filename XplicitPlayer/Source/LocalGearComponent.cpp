@@ -7,10 +7,8 @@
  * =====================================================================
  */
 
-#include <InstanceComponent.h>
-#include <lua/CLua.hpp>
-
-#include "GearComponent.h"
+// The component itself 
+#include "LocalGearComponent.h"
 
 namespace Xplicit::Player
 {

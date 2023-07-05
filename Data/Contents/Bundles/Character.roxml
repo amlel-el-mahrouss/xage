@@ -1,0 +1,49 @@
+<Xplicit xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+	<Instance Id="LeftArm" Class="Mesh">
+		LeftArm.mesh
+	</Instance>
+
+	<Instance Id="RightArm" Class="Mesh">
+		RightArm.mesh
+	</Instance>
+
+	<Instance Id="Torso" Class="Mesh">
+		Torso.mesh
+	</Instance>
+
+	<Instance Id="LeftLeg" Class="Mesh">
+		LeftLeg.mesh
+	</Instance>
+
+	<Instance Id="RightLeg" Class="Mesh">
+		RightLeg.mesh
+	</Instance>
+
+	<Position3 X="-10.9" Y="3" Z="-6.119">
+		LeftArm
+	</Position3>
+
+	<Position3 X="-7.9" Y="3" Z="-6.119">
+		RightArm
+	</Position3>
+
+	<Position3 X="-9.9" Y="1" Z="-6.119">
+		LeftLeg
+	</Position3>
+
+	<Position3 X="-8.9" Y="1" Z="-6.119">
+		RightLeg
+	</Position3>
+
+	<Position3 X="-9.4" Y="3" Z="-6.119">
+		Torso
+	</Position3>
+
+	<Position3 X="-10.64" Y="4.551" Z="0.62">
+		Camera
+	</Position3>
+
+	<Rotate3 X="-4.332" Y="0.277" Z="0" W="0">
+		Camera
+	</Rotate3>
+</Xplicit>

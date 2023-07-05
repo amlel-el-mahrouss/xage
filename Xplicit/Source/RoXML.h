@@ -152,12 +152,12 @@ namespace Xplicit::RoXML
 
 									if (klass_to_instanciate == "Stud")
 									{
-										RENDER->_getCurrentSceneManager()->createEntity("Stud", "Prefab_Cube");
+										RENDER->_getCurrentSceneManager()->createEntity(node_id, "Prefab_Cube");
 									}
 
 									if (klass_to_instanciate == "Mesh")
 									{
-										object = RENDER->_getCurrentSceneManager()->createEntity(node_id);
+										object = RENDER->_getCurrentSceneManager()->createEntity(node_id, node->value());
 									}
 
 									if (klass_to_instanciate == "Particle")

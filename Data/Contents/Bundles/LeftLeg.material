@@ -1,0 +1,15 @@
+
+material LeftLeg.objLeftLeg1Mtl
+{
+	technique
+	{
+		pass 
+		{
+			ambient 1 0.632043 0.190463 1
+			diffuse 1 0.632043 0.190463 1
+			specular 0.0627451 0.0396576 0.0119506 1 0
+		}
+
+	}
+
+}
