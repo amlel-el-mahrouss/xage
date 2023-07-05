@@ -36,7 +36,11 @@ namespace Xplicit::Bites
 		String prebuilt = dir;
 		prebuilt += "Textures/DefaultSkin.zip";
 
-		Root::get_singleton_ptr()->Ogre3D_Window->resize(Player::XPLICIT_DIM.X, Player::XPLICIT_DIM.Y);
+		Root::get_singleton_ptr()->Ogre3D_Window = Root::get_singleton_ptr()->Ogre3D->createRenderWindow(
+			"XpliciNgine [ Place1 ]", 
+			Player::XPLICIT_DIM.X, 
+			Player::XPLICIT_DIM.Y,
+			false);
 
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dir, "FileSystem", XPLICIT_RES_GROUP);
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(prebuilt, "Zip", XPLICIT_RES_GROUP);

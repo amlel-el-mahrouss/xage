@@ -29,7 +29,7 @@ namespace Xplicit
 			Ogre3D_Scene(nullptr),
 			Ogre3D_Window(nullptr)
 		{
-			Ogre3D = new Ogre::Root("Plugins.cfg", "XplicitNgine.cfg", "XplicitNgine.log");
+			Ogre3D = new Ogre::Root();
 
 			Ogre3D->loadPlugin("RenderSystem_Direct3D11.dll");
 			Ogre3D->loadPlugin("Plugin_ParticleFX.dll");
@@ -44,7 +44,6 @@ namespace Xplicit
 			Ogre3D_Scene = Ogre3D->createSceneManager();
 			Ogre3D->_setCurrentSceneManager(Ogre3D_Scene);
 
-			this->set_title("XplicitNgin [ Place1 ]");
 		}
 
 		~Root() noexcept
@@ -77,6 +76,7 @@ namespace Xplicit
 				title = "XplicitNgine";
 
 			int64_t hwnd = 0;
+
 			Ogre3D_Window->getCustomAttribute("WINDOW", &hwnd);
 			::SetWindowTextA((HWND)hwnd, title);
 
