@@ -177,8 +177,6 @@ namespace Xplicit::RoXML
 										}
 
 										auto scn_mgr = Root::get_singleton_ptr()->getRoot()->_getCurrentSceneManager();
-										XPLICIT_ASSERT(node->value()); //! gotta be sure about this one.
-
 										object = scn_mgr->createEntity(node_id, mesh_path, XPLICIT_RES_GROUP);
 									}
 

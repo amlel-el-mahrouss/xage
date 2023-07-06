@@ -81,6 +81,8 @@ static void xplicit_setup_ogre3d()
 	Ogre::RTShader::ShaderGenerator* shadergen = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 	shadergen->addSceneManager(scnMgr);
 
+	root->_setCurrentSceneManager(scnMgr);
+
 	// without light we would just get a black screen, this makes sense, as nothing in refracted to our eye.
 	Ogre::Light* light = scnMgr->createLight("MainLight");
 
