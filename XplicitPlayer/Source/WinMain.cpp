@@ -25,6 +25,43 @@
 #include <Bites.h>
 #include <codecvt>
 
+namespace Xplicit
+{
+	namespace Ogre
+	{
+		class OgreListener final : public ::Ogre::FrameListener
+		{
+		public:
+			explicit OgreListener()
+				: ::Ogre::FrameListener()
+			{
+			}
+
+			~OgreListener() override = default;
+
+		public:
+			XPLICIT_COPY_DEFAULT(OgreListener);
+
+		public:
+			bool frameStarted(const ::Ogre::FrameEvent& evt) override
+			{
+				Audio::XAudioEngine::get_singleton_ptr()->update();
+
+				return true;
+			}
+
+			bool frameEnded(const ::Ogre::FrameEvent& evt) override
+			{
+				EventSystem::get_singleton_ptr()->update();
+				ComponentSystem::get_singleton_ptr()->update();
+
+				return true;
+			}
+
+		};
+	}
+}
+
 static void xplicit_throw_error(Ogre::InvalidParametersException& err);
 static void xplicit_throw_error(Ogre::RuntimeAssertionException& err);
 static void xplicit_throw_error(Ogre::ItemIdentityException& err);
@@ -86,25 +123,15 @@ XPLICIT_MAIN()
 
 		xplicit_setup_ogre3d();
 
+		Xplicit::Root::get_singleton_ptr()->getRoot()->addFrameListener(new Xplicit::Ogre::OgreListener());
+		Xplicit::Root::get_singleton_ptr()->getRoot()->startRendering();
+
 		std::unique_ptr<Xplicit::Bites::Application> pApp = std::make_unique<Xplicit::Bites::Application>(uri);
 
-		if (!pApp) 
+		if (!pApp)
 			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
 
-		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>("Camera");
-
-		/* main game loop */
-		while (Xplicit::ComponentSystem::get_singleton_ptr() && 
-			Xplicit::EventSystem::get_singleton_ptr())
-		{
-			if (Xplicit::Root::get_singleton_ptr()->getRenderWindow()->isClosed()) break;
-
-			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
-			Xplicit::EventSystem::get_singleton_ptr()->update();
-			Xplicit::ComponentSystem::get_singleton_ptr()->update();
-
-			Xplicit::Root::get_singleton_ptr()->getRenderWindow()->update();
-		}
+		Xplicit::Root::get_singleton_ptr()->closeApp();
 	}
 	catch (Xplicit::EngineError& err)
 	{

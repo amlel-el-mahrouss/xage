@@ -37,7 +37,9 @@ namespace Xplicit::Player
 		mNetwork(nullptr), 
 		mTimeout(XPLICIT_TIMEOUT),
 		mEnabled(true)
-	{}
+	{
+		ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>("Camera");
+	}
 
 	LoadingComponent::~LoadingComponent() = default;
 
@@ -91,7 +93,7 @@ namespace Xplicit::Player
 			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
-			Root::get_singleton_ptr()->set_title("Xplicit [ InGame ]");
+			Root::get_singleton_ptr()->set_title("Xplicit [ Place1 ]");
 
 			XPLICIT_INFO("Game:LocalSpawn [EVENT]");
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:LocalSpawn()");

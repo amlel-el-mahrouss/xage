@@ -1,13 +1,13 @@
 
 Vector3 = {}
 
-func Vector3:New(X, Y, Z)
+function Vector3:New(X, Y, Z)
     return { X = X, Y = Y, Z = Z }
 end
 
 Color = {}
 
-func Color:New(R, G, B)
+function Color:New(R, G, B)
     return { Red = R, Green = G, Blue = B }
 end
 
@@ -17,92 +17,92 @@ HUMANOID.ALIVE = 0
 HUMANOID.DEAD = 1
 HUMANOID.INVALID = 3
 
-local func __addEvent(Tbl, Func)
+local function __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })
 end
 
-local func __rmEvent(Tbl, Index)
+local function __rmEvent(Tbl, Index)
     Tbl[Index] = nil;
 end
 
 Game.Slot = {
     Login = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
             return __addEvent(Game.Slot.Login, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     Logoff = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
         return __addEvent(Game.Slot.Logoff, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     LeftClick = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
             return __addEvent(Game.Slot.LeftClick, Func); 
         end,
-        Disconnect = func(self, Index)
+        Disconnect = function(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     RightClick = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
             return __addEvent(Game.Slot.RightClick, Func); 
         end,
-        Disconnect = func(Iself, ndex)
+        Disconnect = function(Iself, ndex)
             __rmEvent(self, Index); 
         end 
     },
     MouseMove = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
         return __addEvent(Game.Slot.MouseMove, Func); 
         end,
-        Disconnect = func(self, Index)
+        Disconnect = function(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     LocalSpawn = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
         return __addEvent(Game.Slot.LocalSpawn, Func); 
         end,
-        Disconnect = func(self, Index)
+        Disconnect = function(self, Index)
             __rmEvent(self, Index); 
         end  
     },
     Move = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
         return __addEvent(Game.Slot.Move, Func); 
         end,
-        Disconnect = func(self, Index)
+        Disconnect = function(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     Damage = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
         return __addEvent(Game.Slot.Damage, Func); 
         end,
-        Disconnect = func(self, Index)
+        Disconnect = function(self, Index)
             __rmEvent(self, Index); 
         end  
     },
     Spawn = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
         return __addEvent(Game.Slot.Spawn, Func); 
         end,
-        Disconnect = func(self, Index)
+        Disconnect = function(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     Death = { 
-        Connect = func(self, Func)
+        Connect = function(self, Func)
         return __addEvent(Game.Slot.Death, Func); 
         end,
-        Disconnect = func(self, Index)
+        Disconnect = function(self, Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -111,7 +111,7 @@ Game.Slot = {
 Game.Counter = 0
 Game.PlayerCount = 0
 
-func Game:Login(id)
+function Game:Login(id)
     Game.PlayerCount = Game.PlayerCount + 1
 
     for _, v in ipairs(Game.Slot.Login) do
@@ -119,7 +119,7 @@ func Game:Login(id)
     end
 end
 
-func Game:Logoff(id)
+function Game:Logoff(id)
     Game.PlayerCount = Game.PlayerCount - 1
 
     for _, v in ipairs(Game.Slot.Logoff) do
@@ -127,49 +127,49 @@ func Game:Logoff(id)
     end
 end
 
-func Game:LeftClick()
+function Game:LeftClick()
     for _, v in ipairs(Game.Slot.LeftClick) do
         v.Func()
     end
 end
 
-func Game:RightClick()
+function Game:RightClick()
     for _, v in ipairs(Game.Slot.RightClick) do
         v.Func()
     end
 end
 
-func Game:MouseMove(x, y)
+function Game:MouseMove()
     for _, v in ipairs(Game.Slot.MouseMove) do
-        v.Func(x, y)
+        v.Func()
     end
 end
 
-func Game:LocalSpawn()
+function Game:LocalSpawn()
     for _, v in ipairs(Game.Slot.LocalSpawn) do
         v.Func()
     end
 end
 
-func Game:Move(x, y, z)
+function Game:Move(x, y, z)
     for _, v in ipairs(Game.Slot.Move) do
         v.Func()
     end
 end
 
-func Game:Damage()
+function Game:Damage()
     for _, v in ipairs(Game.Slot.Damage) do
         v.Func()
     end
 end
 
-func Game:Death()
+function Game:Death()
     for _, v in ipairs(Game.Slot.Death) do
         v.Func()
     end
 end
 
-func Game:Spawn()
+function Game:Spawn()
     for _, v in ipairs(Game.Slot.Spawn) do
         v.Func()
     end
@@ -179,10 +179,10 @@ Game.Name = "Xplicit"
 Game.Description = "Game Engine API"
 Game.Version = "1.0.2"
 
-# Given by server to initialize UI and stuff...
+-- Given by server to initialize UI and stuff...
 Game.AutorunClient = "xasset://autorun-client.lua"
 
-## Components ID.
+-- Components ID.
 Game.INVALID = 0;
 Game.SCRIPT = 1;
 Game.SOUND = 2;

@@ -41,10 +41,7 @@ namespace Xplicit::Player
 
 	GearComponent::~GearComponent() = default;
 
-	StaticMesh* GearComponent::get_mesh() const noexcept
-	{
-		return mMeshPtr.get();
-	}
+	StaticMesh* GearComponent::get_mesh() const noexcept { return mMeshPtr.get(); }
 
 	bool GearComponent::should_update() noexcept { return true; }
 
