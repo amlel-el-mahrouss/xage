@@ -17,10 +17,12 @@
 
 namespace Xplicit::Player
 {
-	LocalCameraComponent::LocalCameraComponent()
+	LocalCameraComponent::LocalCameraComponent(const char* name)
 		: Component(), mCamera(nullptr)
 	{
-		mCamera = Root::get_singleton_ptr()->Ogre3D_Scene->createCamera("Camera");
+		auto ptr = Root::get_singleton_ptr();
+
+		mCamera = ptr->Ogre3D_Scene->createCamera(name);
 		XPLICIT_ASSERT(mCamera);
 
 		mCamera->setNearClipDistance(5); // specific to this sample
@@ -28,7 +30,6 @@ namespace Xplicit::Player
 		mCamera->setDebugColour(Ogre::ColourValue(255, 40, 40, 40));
 
 		Root::get_singleton_ptr()->getRenderWindow()->addViewport(mCamera);
-		
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept

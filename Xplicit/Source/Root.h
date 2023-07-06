@@ -137,13 +137,9 @@ namespace Xplicit
 			Ogre3D_RTSS(nullptr),
 			Ogre3D_Scene(nullptr),
 			Ogre3D_Window(nullptr),
+			Ogre3D_Light(nullptr),
 			OgreBites::ApplicationContext("XplicitNgin [ Place1 ]")
 		{}
-
-		void setup() override
-		{
-			OgreBites::ApplicationContext::setup();
-		}
 
 	public:
 		~Root() noexcept
@@ -154,22 +150,6 @@ namespace Xplicit
 
 		Root& operator=(const Root&) = default;
 		Root(const Root&) = default;
-
-		void initPostSetup() noexcept
-		{
-			Ogre3D = this->getRoot();
-			XPLICIT_ASSERT(Ogre3D);
-
-			Ogre3D_Scene = Ogre3D->createSceneManager();
-			XPLICIT_ASSERT(Ogre3D_Scene);
-
-			Ogre3D_RTSS = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-			XPLICIT_ASSERT(Ogre3D_RTSS);
-
-			Ogre3D_RTSS->addSceneManager(Ogre3D_Scene);
-		
-			Ogre3D_Window = this->getRenderWindow();
-		}
 
 		static Root* get_singleton_ptr() noexcept
 		{
@@ -182,6 +162,11 @@ namespace Xplicit
 		}
 
 	public:
+		void setup() override
+		{
+			OgreBites::ApplicationContext::setup();
+		}
+
 		bool set_title(const char* title) noexcept
 		{
 			if (!getRenderWindow())
@@ -200,6 +185,7 @@ namespace Xplicit
 
 	public:
 		Ogre::RTShader::ShaderGenerator* Ogre3D_RTSS;
+		Ogre::SceneNode* Ogre3D_Light;
 		Ogre::RenderWindow* Ogre3D_Window;
 		Ogre::SceneManager* Ogre3D_Scene;
 		Ogre::Root* Ogre3D;

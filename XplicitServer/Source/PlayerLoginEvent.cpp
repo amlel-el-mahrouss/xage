@@ -125,24 +125,23 @@ namespace Xplicit
 
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 
-#ifdef XPLICIT_DEBUG
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
-#endif
 
-					XPLICIT_INFO("Game:Join [EVENT]");
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Join()");
+					XPLICIT_INFO("Game:Login [EVENT]");
+
+					String fmt = std::format("Game:Login('{}')", mNetwork->get(peer_idx)->xplicit_id.as_string());
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					//! Create the Lua Player table.
 					//! Make these constexpr.
 					constexpr const char* table = "_G.Game.Players.{}{}";
 					constexpr const char* eq_table = " = {}";
 
-					String fmt = std::format(table, player->get_peer()->xplicit_id.as_string(), eq_table);
+					fmt = std::format(table, player->get_peer()->xplicit_id.as_string(), eq_table);
 
 					Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
 				}
 			}
 		}
@@ -176,18 +175,17 @@ namespace Xplicit
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
 
-#ifdef XPLICIT_DEBUG
-
 					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGOFF] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
-#endif
+					String fmt = std::format("Game:Logoff('{}')", mNetwork->get(peer_idx)->xplicit_id.as_string());
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
 					// Create Player table.
-					String fmt = "_G.Game.Players.";
+					fmt = "_G.Game.Players.";
 					fmt += mNetwork->get(peer_idx)->xplicit_id.as_string();
 					fmt += " = nil";
 
@@ -214,9 +212,6 @@ namespace Xplicit
 							mNetwork->get(index)->packet.public_hash = public_hash;
 						}
 					}
-
-					XPLICIT_INFO("Game:Leave [EVENT]");
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Leave()");
 				}
 			}
 		}

@@ -13,7 +13,6 @@
 
 // Application framework.
 #include "Application.h"
-#include "LocalCameraComponent.h"
 
 // We need this to connect and download from server. And also the RoXML header.
 #include "LoadingComponent.h"
@@ -48,8 +47,6 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(splash_screen);
 
 		splash_screen->connect(xconnect_to);
-
-		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
 	}
 
 	Application::~Application() {}

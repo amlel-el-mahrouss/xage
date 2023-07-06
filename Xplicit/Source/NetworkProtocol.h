@@ -13,7 +13,7 @@
 #include "XplicitID.h"
 
 #ifndef XPLICIT_NETWORK_PORT
-#   define XPLICIT_NETWORK_PORT (60001)
+#   define XPLICIT_NETWORK_PORT (3061)
 #endif // ifndef XPLICIT_NETWORK_PORT
 
 #define XPLICIT_INVALID_HASH (0xDEEBEEF)

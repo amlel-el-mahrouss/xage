@@ -101,15 +101,14 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 				peer->packet.public_hash = peer->public_hash;
 
-				if (humanoid->get_attribute().script() &&
-					humanoid->get_attribute().script()->name() == "Move")
-				{
-					XPLICIT_INFO("Humanoid:Move [EVENT]");
-					humanoid->get_attribute().script()->run();
-				}
-
 				XPLICIT_INFO("Game:Move [EVENT]");
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Move()");
+
+				String fmt = std::format("Game:Move({}, {}, {})",
+					std::to_string(humanoid->get_attribute().pos().X),
+					std::to_string(humanoid->get_attribute().pos().Y),
+					std::to_string(humanoid->get_attribute().pos().Z));
+
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
 		}
 

@@ -27,17 +27,17 @@ local func __rmEvent(Tbl, Index)
 end
 
 Game.Slot = {
-    Join = { 
+    Login = { 
         Connect = func(Func)
-            return __addEvent(Game.Slot.Join, Func); 
+            return __addEvent(Game.Slot.Login, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
         end 
     },
-    Leave = { 
+    Logoff = { 
         Connect = func(Func)
-        return __addEvent(Game.Slot.Leave, Func); 
+        return __addEvent(Game.Slot.Logoff, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -112,19 +112,19 @@ Game.Slot = {
 Game.Counter = 0
 Game.PlayerCount = 0
 
-func Game:Join()
+func Game:Login(id)
     Game.PlayerCount = Game.PlayerCount + 1
 
-    for _, v in ipairs(Game.Slot.Join) do
-        v.Func()
+    for _, v in ipairs(Game.Slot.Login) do
+        v.Func(id)
     end
 end
 
-func Game:Leave()
+func Game:Logoff(id)
     Game.PlayerCount = Game.PlayerCount - 1
 
-    for _, v in ipairs(Game.Slot.Leave) do
-        v.Func()
+    for _, v in ipairs(Game.Slot.Logoff) do
+        v.Func(id)
     end
 end
 
@@ -140,9 +140,9 @@ func Game:RightClick()
     end
 end
 
-func Game:MouseMove()
+func Game:MouseMove(x, y)
     for _, v in ipairs(Game.Slot.MouseMove) do
-        v.Func()
+        v.Func(x, y)
     end
 end
 
@@ -152,7 +152,7 @@ func Game:LocalSpawn()
     end
 end
 
-func Game:Move()
+func Game:Move(x, y, z)
     for _, v in ipairs(Game.Slot.Move) do
         v.Func()
     end
@@ -177,7 +177,7 @@ func Game:Spawn()
 end
 
 Game.Name = "Xplicit"
-Game.Description = "Game Game API"
+Game.Description = "Game Engine API"
 Game.Version = "1.0.2"
 
 # Given by server to initialize UI and stuff...

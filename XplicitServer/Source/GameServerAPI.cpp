@@ -114,7 +114,7 @@ static int lua_NetworkService_Kick(lua_State* L)
 	return 0;
 }
 
-static int lua_NetworkService_Fire(lua_State* L)
+static int lua_NetworkService_Create(lua_State* L)
 {
 	auto string = lua_tostring(L, 1);
 	int32_t repl_id = lua_tointeger(L, 2);
@@ -168,7 +168,7 @@ void XplicitLoadServerLua() noexcept
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_Kick");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.NetworkService.Kick = GameAPI_Kick");
 	
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NetworkService_Fire);
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NetworkService_Create);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Engine_Create");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.NetworkService.Create = Engine_Create");

@@ -52,7 +52,7 @@ namespace Xplicit
 		mPacket(),
 		mHash(-1)
 	{
-		if (!mSocket)
+		if (mSocket.PublicSocket <= 0)
 			throw NetworkError(NETWORK_ERR_BAD_CHALLENGE);
 		
 		xplicit_set_ioctl(mSocket.PublicSocket);
@@ -72,13 +72,17 @@ namespace Xplicit
 
 	bool NetworkComponent::connect(const char* ip, const char* port) noexcept
 	{
+		if (!ip ||
+			!port)
+			return false;
+
 		memset(&mTargetAddress, 0, sizeof(sockaddr_in));
 
 		mTargetAddress.sin_addr.S_un.S_addr = inet_addr(ip);
 		mTargetAddress.sin_family = AF_INET;
 		mTargetAddress.sin_port = htons(std::atoi(port));
-		
-		return ::connect(mSocket.PublicSocket, reinterpret_cast<struct sockaddr*>(&mTargetAddress), sizeof(sockaddr_in)) != SOCKET_ERROR;
+
+		return true;
 	}
 
 	bool NetworkComponent::set_hash(const std::int64_t& hash) noexcept
