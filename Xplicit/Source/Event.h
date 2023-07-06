@@ -37,8 +37,10 @@ namespace Xplicit
 		template <typename T>
 		T* get(const char* name);
 		
+	public:
 		void update() noexcept;
 		
+	public:
 		static EventSystem* get_singleton_ptr() noexcept;
 
 	private:

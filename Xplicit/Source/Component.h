@@ -11,6 +11,8 @@
 
 #include "Xplicit.h"
 
+//! This file handles the engine component system stuff.
+
 namespace Xplicit 
 {
 	///! do that so that we don't deal with any errors.

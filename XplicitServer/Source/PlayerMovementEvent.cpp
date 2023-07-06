@@ -108,8 +108,8 @@ namespace Xplicit
 					humanoid->get_attribute().script()->run();
 				}
 
-				XPLICIT_INFO("Engine:Move [EVENT]");
-				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Move()");
+				XPLICIT_INFO("Game:Move [EVENT]");
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Move()");
 			}
 		}
 

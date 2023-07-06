@@ -9,6 +9,13 @@
 
 #pragma once
 
+#ifdef _WIN32
+#   define NOMINMAX
+#   define WIN32_LEAN_AND_MEAN
+
+#   define SPDLOG_WCHAR_TO_UTF8_SUPPORT
+#endif // ifdef _WIN32
+
 #include <ctime>
 #include <cstdio>
 #include <clocale>
@@ -17,18 +24,8 @@
 #include <cstdlib>
 #include <cstdint>
 
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-
-#include <uuid/uuid.h>
-
-#include <Ogre.h>
-
-#ifdef _WIN32
-#   define SPDLOG_WCHAR_TO_UTF8_SUPPORT
-#endif // ifdef _WIN32
-
 #include <spdlog/spdlog.h>
+#include <uuid/uuid.h>
 
 #include <WinSock2.h>
 #include <ws2tcpip.h>
@@ -44,6 +41,8 @@
 #include <stdexcept>
 #include <algorithm>
 #include <filesystem>
+
+#ifdef _WIN32
 
 #include <Windows.h>
 #include <tlhelp32.h>
@@ -66,13 +65,14 @@
 #   define XPLICIT_API __declspec(dllimport)
 #endif
 
-#define XPLICIT_MSVC (1)
-#define XPLICIT_GCC (2)
 
 #ifdef _MSC_VER
+#   define XPLICIT_MSVC (1)
 #   define XPLICIT_CXX_COMPILER "Microsoft Visual C++"
 #   define XPLICIT_CXX (1)
 #endif // ifdef _MSC_VER
+
+#endif
 
 #ifndef _NDEBUG
 #   define XPLICIT_DEBUG (1)

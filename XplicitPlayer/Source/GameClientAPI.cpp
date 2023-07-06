@@ -78,24 +78,24 @@ static int lua_LoadRoXML(lua_State* L)
 
 void XplicitLoadClientLua() noexcept
 {
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RenderingService = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SoundService = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RoXMLService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.RenderingService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.SoundService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.RoXMLService = {}");
 
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
 
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_LoadRoXML");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RoXMLService.Load = CoreAPI_LoadRoXML");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_LoadRoXML");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.RoXMLService.Load = GameAPI_LoadRoXML");
 
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_PlaySound");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.SoundService.Play = CoreAPI_PlaySound");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_PlaySound");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.SoundService.Play = GameAPI_PlaySound");
 
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetWindowCaption);
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_SetWindowCaption);
 
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_SetWindowCaption");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RenderingService.SetWindowCaption = CoreAPI_SetWindowCaption");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_SetWindowCaption");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.RenderingService.SetWindowCaption = GameAPI_SetWindowCaption");
 
 	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalSoundComponent>();
 }

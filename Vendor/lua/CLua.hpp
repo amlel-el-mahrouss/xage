@@ -10,7 +10,7 @@
 #pragma once
 
 /* Author: Amlal El Mahrouss */
-/* XLua for the XplicitNgine. */
+/* CLua for the XplicitNgine. */
 
 extern "C" {
 #	include "lua.h"
@@ -23,16 +23,16 @@ extern "C" {
 #endif // ifndef __XPLICIT_H__
 
 #define XPLICIT_LUA_NAME "CLua"
-#define XPLICIT_LUA_DESCRIPTION "Custom dialect for Xplicit"
+#define XPLICIT_LUA_DESCRIPTION "Custom lua dialect for Xplicit"
 
 namespace Xplicit::Lua
 {
-	typedef lua_State* XLuaStatePtr;
+	typedef lua_State* CLuaStatePtr;
 
-	class XPLICIT_API XLuaStateManager final
+	class XPLICIT_API CLuaStateManager final
 	{
 	private:
-		explicit XLuaStateManager()
+		explicit CLuaStateManager()
 			: mL(luaL_newstate())
 		{
 			XPLICIT_ASSERT(mL);
@@ -47,17 +47,17 @@ namespace Xplicit::Lua
 		lua_State* mL;
 
 	public:
-		~XLuaStateManager() = default;
+		~CLuaStateManager() = default;
 
-		XPLICIT_COPY_DEFAULT(XLuaStateManager);
+		XPLICIT_COPY_DEFAULT(CLuaStateManager);
 
 	public:
-		static XLuaStateManager* get_singleton_ptr() noexcept
+		static CLuaStateManager* get_singleton_ptr() noexcept
 		{
-			static XLuaStateManager* state = nullptr;
+			static CLuaStateManager* state = nullptr;
 
 			if (state == nullptr)
-				state = new XLuaStateManager();
+				state = new CLuaStateManager();
 
 			return state;
 		}
@@ -71,7 +71,7 @@ namespace Xplicit::Lua
 #ifdef XPLICIT_DEBUG
 
 				if (ret > 0)
-					std::cout << lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
+					std::cout << lua_tostring(CLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
 
 #endif // ifdef XPLICIT_DEBUG
 
@@ -90,7 +90,7 @@ namespace Xplicit::Lua
 #ifdef XPLICIT_DEBUG
 
 				if (ret > 0)
-					std::cout << lua_tostring(XLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
+					std::cout << lua_tostring(CLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
 
 #endif // ifdef XPLICIT_DEBUG
 
@@ -109,25 +109,27 @@ namespace Xplicit::Lua
 
 	// WiP
 
-	class XPLICIT_API XLuaClassWizard final
+	class XPLICIT_API CLuaClassWizard final
 	{
 	public:
-		XLuaClassWizard(const char* klass)
+		explicit CLuaClassWizard(const char* klass) noexcept
 			: mClass(klass)
 		{
-			XLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}", mClass).c_str());
+			CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}", mClass).c_str());
 		}
 
-		~XLuaClassWizard() = default;
+		~CLuaClassWizard() = default;
 
 	public:
-		XPLICIT_COPY_DEFAULT(XLuaClassWizard);
+		XPLICIT_COPY_DEFAULT(CLuaClassWizard);
 
 	public:
 		bool insert(const char* symbol, const char* reference)
 		{
 			if (symbol && reference)
-				return XLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{} = {}", mClass, symbol, reference).c_str());
+				return CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{} = {}", mClass, symbol, reference).c_str());
+		
+			return false;
 		}
 
 	private:

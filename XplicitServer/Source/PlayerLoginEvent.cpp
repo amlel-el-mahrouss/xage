@@ -113,7 +113,7 @@ namespace Xplicit
 				if (HumanoidComponent* player = mPlayers[mPlayerCount]; 
 					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
 				{
-					// send XplicitID to client.
+					// Send XplicitID to the matching client.
 					memcpy(mNetwork->get(peer_idx)->packet.buffer, 
 						mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
 						mNetwork->get(peer_idx)->xplicit_id.as_string().size());
@@ -131,15 +131,17 @@ namespace Xplicit
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 #endif
 
-					XPLICIT_INFO("Engine:Join [EVENT]");
-					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Join()");
+					XPLICIT_INFO("Game:Join [EVENT]");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Join()");
 
-					// Create Player table.
-					String fmt = "_G.Game.Players.";
-					fmt += player->get_peer()->xplicit_id.as_string();
-					fmt += " = {}";
+					//! Create the Lua Player table.
+					//! Make these constexpr.
+					constexpr const char* table = "_G.Game.Players.{}{}";
+					constexpr const char* eq_table = " = {}";
 
-					Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+					String fmt = std::format(table, player->get_peer()->xplicit_id.as_string(), eq_table);
+
+					Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 				}
 			}
@@ -189,7 +191,7 @@ namespace Xplicit
 					fmt += mNetwork->get(peer_idx)->xplicit_id.as_string();
 					fmt += " = nil";
 
-					Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+					Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					mNetwork->get(peer_idx)->reset(); // reset peer.
 					mNetwork->get(peer_idx)->xplicit_id.generate(~0); // invalidate player id.
@@ -213,8 +215,8 @@ namespace Xplicit
 						}
 					}
 
-					XPLICIT_INFO("Engine:Leave [EVENT]");
-					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Leave()");
+					XPLICIT_INFO("Game:Leave [EVENT]");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Leave()");
 				}
 			}
 		}

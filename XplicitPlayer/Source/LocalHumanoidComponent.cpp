@@ -41,8 +41,8 @@ namespace Xplicit::Player
 #endif
 
 
-		XPLICIT_INFO("Engine:Spawn [EVENT]");
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
+		XPLICIT_INFO("Game:Spawn [EVENT]");
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Spawn()");
 	}
 
 	LocalHumanoidComponent::~LocalHumanoidComponent()
@@ -95,8 +95,8 @@ namespace Xplicit::Player
 					this->node(i)->setPosition(pos);
 				}
 
-				XPLICIT_INFO("Engine:Move [EVENT]");
-				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Move()");
+				XPLICIT_INFO("Game:Move [EVENT]");
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Move()");
 			}
 		}
 	}

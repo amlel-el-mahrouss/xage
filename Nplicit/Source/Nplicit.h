@@ -109,11 +109,9 @@ namespace Xplicit
 	template <typename TypeFloat = float>
 	struct NPLICIT_API Transform
 	{
+		Quaternion<TypeFloat> Rotation;
 		Vector<TypeFloat> Position;
 		Vector<TypeFloat> Scale;
-
-	public:
-		Quaternion<TypeFloat> Rotation;
-
+		
 	};
 }

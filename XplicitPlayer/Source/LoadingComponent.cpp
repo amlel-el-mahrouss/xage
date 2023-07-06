@@ -93,8 +93,8 @@ namespace Xplicit::Player
 
 			Root::get_singleton_ptr()->set_title("Xplicit [ InGame ]");
 
-			XPLICIT_INFO("Engine:LocalSpawn [EVENT]");
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LocalSpawn()");
+			XPLICIT_INFO("Game:LocalSpawn [EVENT]");
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:LocalSpawn()");
 
 			mEnabled = false;
 			return;

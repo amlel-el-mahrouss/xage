@@ -370,7 +370,7 @@ namespace Xplicit::RoXML
 						world_node.ID = node_name;
 						world_node.Value = node->value();
 
-						Lua::XLuaStateManager::get_singleton_ptr()->run_string(world_node.Value.c_str());
+						Lua::CLuaStateManager::get_singleton_ptr()->run_string(world_node.Value.c_str());
 					}
 
 					world_node.Name = node_name;

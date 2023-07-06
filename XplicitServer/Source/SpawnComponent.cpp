@@ -28,7 +28,7 @@ namespace Xplicit
 		fmt += "Spawn";
 		fmt += "= {};";
 
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 
 	SpawnComponent::~SpawnComponent()
@@ -39,7 +39,7 @@ namespace Xplicit
 		fmt += "Spawn";
 		fmt += "= nil;";
 
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 
 	Vector<float>& SpawnComponent::get() noexcept { return mAttribute.pos(); }
@@ -61,7 +61,7 @@ namespace Xplicit
 			fmt += pos[i];
 			fmt += "= " + std::to_string(pos_raw[i]) + ";";
 
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 	}
 

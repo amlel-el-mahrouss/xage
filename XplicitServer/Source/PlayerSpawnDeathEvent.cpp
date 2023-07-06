@@ -80,8 +80,8 @@ namespace Xplicit
 					XPLICIT_INFO("Humanoid:Death [EVENT]");
 				}
 
-				XPLICIT_INFO("Engine:Death [EVENT]");
-				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Death()");
+				XPLICIT_INFO("Game:Death [EVENT]");
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Death()");
 
 				mDeadPlayers.push_back(player);
 
@@ -131,8 +131,8 @@ namespace Xplicit
 
 					player->should_spawn(true);
 
-					XPLICIT_INFO("Engine:Spawn [EVENT]");
-					Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Spawn()");
+					XPLICIT_INFO("Game:Spawn [EVENT]");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Spawn()");
 				}
 			}
 		}

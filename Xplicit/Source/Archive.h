@@ -16,7 +16,7 @@
 
 constexpr auto AR_MAGIC = 0xBADF00D;
 
-#define AR_EXTENSION ".xplicit.ar"
+#define AR_EXTENSION ".xar"
 #define AR_MAKE_EXTENSION(NAME) NAME AR_EXTENSION
 
 struct ar_extension_table;

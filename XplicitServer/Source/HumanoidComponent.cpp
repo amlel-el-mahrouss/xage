@@ -50,7 +50,7 @@ namespace Xplicit
 		fmt += ".Health ";
 		fmt += "= " + std::to_string(this->mHealth) + ";";
 
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 		fmt.clear();
 
@@ -68,7 +68,7 @@ namespace Xplicit
 		if (mState == HUMANOID_STATE::INVALID)
 			fmt += XPLICIT_LUA_GLOBAL + String("HUMANOID.INVALID");
 
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 		fmt.clear();
 
@@ -81,7 +81,7 @@ namespace Xplicit
 									std::to_string(mAttribute.pos().Y) + "," +
 									std::to_string(mAttribute.pos().Z) + "," + "}";
 
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 		fmt.clear();
 
@@ -90,7 +90,7 @@ namespace Xplicit
 		fmt += ".ID = ";
 		fmt += "\"" +  mPeer->xplicit_id.as_string() + "\"";
 
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 		fmt.clear();
 
@@ -107,8 +107,8 @@ namespace Xplicit
 				this->get_attribute().script()->name() == "Damage")
 				this->get_attribute().script()->run();
 
-			XPLICIT_INFO("Engine:Damage [EVENT]");
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:Damage()");
+			XPLICIT_INFO("Game:Damage [EVENT]");
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Damage()");
 		}
 
 	}
@@ -137,7 +137,7 @@ namespace Xplicit
 			fmt += this->get_peer()->xplicit_id.as_string();
 			fmt += " = nil";
 
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 
 		if (peer == nullptr)
@@ -152,7 +152,7 @@ namespace Xplicit
 			fmt += mPeer->xplicit_id.as_string();
 			fmt += String(" = { Position = { X = 0, Y = 0, Z = 0, }, Health = 0, ID = '', State = ") + XPLICIT_LUA_GLOBAL + String("HUMANOID.ALIVE") + " }";
 
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 	}
 

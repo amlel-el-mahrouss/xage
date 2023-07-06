@@ -28,7 +28,7 @@ namespace Xplicit::Player
 		fmt += mName;
 		fmt += " = { Mesh = '' }";
 
-		Lua::XLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 		mMeshPtr = std::make_unique<StaticMesh>(mesh, mName.c_str(), mParent.c_str());
 	}
@@ -54,8 +54,8 @@ namespace Xplicit::Player
 
 		String fmt = std::format("{}{}{}.Mesh;", XPLICIT_LUA_GLOBAL, mParent, mName);
 
-		lua_pushstring(Lua::XLuaStateManager::get_singleton_ptr()->state(), fmt.c_str());
-		String path = lua_tostring(Lua::XLuaStateManager::get_singleton_ptr()->state(), -1);
+		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), fmt.c_str());
+		String path = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
 		if (auto _path = mMeshPtr->path(); 
 			path != _path)
@@ -63,7 +63,7 @@ namespace Xplicit::Player
 			mMeshPtr.reset();
 			mMeshPtr = std::make_unique<StaticMesh>(_path.c_str(), mName.c_str(), mParent.c_str());
 
-			lua_setglobal(Lua::XLuaStateManager::get_singleton_ptr()->state(), mMeshPtr->path().c_str());
+			lua_setglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), mMeshPtr->path().c_str());
 		}
 
 		if (this->get_attribute().script() &&

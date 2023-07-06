@@ -1,21 +1,21 @@
 
-_G.Vector3 = {}
+Vector3 = {}
 
-func _G.Vector3:New(X, Y, Z)
-    return { Name = "Vector3", Type = "Vector", X = X, Y = Y, Z = Z }
+func Vector3:New(X, Y, Z)
+    return { X = X, Y = Y, Z = Z }
 end
 
-_G.Color = {}
+Color = {}
 
-func _G.Color:New(R, G, B)
-    return { Name = "Color", Type = "Color", Red = R, Green = G, Blue = B }
+func Color:New(R, G, B)
+    return { Red = R, Green = G, Blue = B }
 end
 
-_G.HUMANOID = {}
+HUMANOID = {}
 
-_G.HUMANOID.ALIVE = 0
-_G.HUMANOID.DEAD = 1
-_G.HUMANOID.INVALID = 3
+HUMANOID.ALIVE = 0
+HUMANOID.DEAD = 1
+HUMANOID.INVALID = 3
 
 local func __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })
@@ -26,10 +26,10 @@ local func __rmEvent(Tbl, Index)
     Tbl[Index] = nil;
 end
 
-_G.Engine.Events = {
+Game.Slot = {
     Join = { 
         Connect = func(Func)
-            return __addEvent(_G.Engine.Events.Join, Func); 
+            return __addEvent(Game.Slot.Join, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -37,7 +37,7 @@ _G.Engine.Events = {
     },
     Leave = { 
         Connect = func(Func)
-        return __addEvent(_G.Engine.Events.Leave, Func); 
+        return __addEvent(Game.Slot.Leave, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -45,7 +45,7 @@ _G.Engine.Events = {
     },
     LeftClick = { 
         Connect = func(Func)
-            return __addEvent(_G.Engine.Events.LeftClick, Func); 
+            return __addEvent(Game.Slot.LeftClick, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -53,7 +53,7 @@ _G.Engine.Events = {
     },
     RightClick = { 
         Connect = func(Func)
-            return __addEvent(_G.Engine.Events.RightClick, Func); 
+            return __addEvent(Game.Slot.RightClick, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -61,7 +61,7 @@ _G.Engine.Events = {
     },
     MouseMove = { 
         Connect = func(Func)
-        return __addEvent(_G.Engine.Events.MouseMove, Func); 
+        return __addEvent(Game.Slot.MouseMove, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -69,7 +69,7 @@ _G.Engine.Events = {
     },
     LocalSpawn = { 
         Connect = func(Func)
-        return __addEvent(_G.Engine.Events.LocalSpawn, Func); 
+        return __addEvent(Game.Slot.LocalSpawn, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -77,7 +77,7 @@ _G.Engine.Events = {
     },
     Move = { 
         Connect = func(Func)
-        return __addEvent(_G.Engine.Events.Move, Func); 
+        return __addEvent(Game.Slot.Move, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -85,7 +85,7 @@ _G.Engine.Events = {
     },
     Damage = { 
         Connect = func(Func)
-        return __addEvent(_G.Engine.Events.Damage, Func); 
+        return __addEvent(Game.Slot.Damage, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -93,7 +93,7 @@ _G.Engine.Events = {
     },
     Spawn = { 
         Connect = func(Func)
-        return __addEvent(_G.Engine.Events.Spawn, Func); 
+        return __addEvent(Game.Slot.Spawn, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -101,7 +101,7 @@ _G.Engine.Events = {
     },
     Death = { 
         Connect = func(Func)
-        return __addEvent(_G.Engine.Events.Death, Func); 
+        return __addEvent(Game.Slot.Death, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -109,92 +109,92 @@ _G.Engine.Events = {
     },
 }
 
-_G.Engine.Counter = 0
-_G.Engine.PlayerCount = 0
+Game.Counter = 0
+Game.PlayerCount = 0
 
-func _G.Engine:Join()
-    _G.Engine.PlayerCount = _G.Engine.PlayerCount + 1
+func Game:Join()
+    Game.PlayerCount = Game.PlayerCount + 1
 
-    for _, v in ipairs(_G.Engine.Events.Join) do
+    for _, v in ipairs(Game.Slot.Join) do
         v.Func()
     end
 end
 
-func _G.Engine:Leave()
-    _G.Engine.PlayerCount = _G.Engine.PlayerCount - 1
+func Game:Leave()
+    Game.PlayerCount = Game.PlayerCount - 1
 
-    for _, v in ipairs(_G.Engine.Events.Leave) do
+    for _, v in ipairs(Game.Slot.Leave) do
         v.Func()
     end
 end
 
-func _G.Engine:LeftClick()
-    for _, v in ipairs(_G.Engine.Events.LeftClick) do
+func Game:LeftClick()
+    for _, v in ipairs(Game.Slot.LeftClick) do
         v.Func()
     end
 end
 
-func _G.Engine:RightClick()
-    for _, v in ipairs(_G.Engine.Events.RightClick) do
+func Game:RightClick()
+    for _, v in ipairs(Game.Slot.RightClick) do
         v.Func()
     end
 end
 
-func _G.Engine:MouseMove()
-    for _, v in ipairs(_G.Engine.Events.MouseMove) do
+func Game:MouseMove()
+    for _, v in ipairs(Game.Slot.MouseMove) do
         v.Func()
     end
 end
 
-func _G.Engine:LocalSpawn()
-    for _, v in ipairs(_G.Engine.Events.LocalSpawn) do
+func Game:LocalSpawn()
+    for _, v in ipairs(Game.Slot.LocalSpawn) do
         v.Func()
     end
 end
 
-func _G.Engine:Move()
-    for _, v in ipairs(_G.Engine.Events.Move) do
+func Game:Move()
+    for _, v in ipairs(Game.Slot.Move) do
         v.Func()
     end
 end
 
-func _G.Engine:Damage()
-    for _, v in ipairs(_G.Engine.Events.Damage) do
+func Game:Damage()
+    for _, v in ipairs(Game.Slot.Damage) do
         v.Func()
     end
 end
 
-func _G.Engine:Death()
-    for _, v in ipairs(_G.Engine.Events.Death) do
+func Game:Death()
+    for _, v in ipairs(Game.Slot.Death) do
         v.Func()
     end
 end
 
-func _G.Engine:Spawn()
-    for _, v in ipairs(_G.Engine.Events.Spawn) do
+func Game:Spawn()
+    for _, v in ipairs(Game.Slot.Spawn) do
         v.Func()
     end
 end
 
-_G.Engine.Name = "Xplicit"
-_G.Engine.Description = "Engine Engine API"
-_G.Engine.Version = "1.0.2"
+Game.Name = "Xplicit"
+Game.Description = "Game Game API"
+Game.Version = "1.0.2"
 
 # Given by server to initialize UI and stuff...
-_G.Engine.AutorunClient = "xasset://autorun-client.lua"
+Game.AutorunClient = "xasset://autorun-client.lua"
 
 ## Components ID.
-Engine.INVALID = 0;
-Engine.SCRIPT = 1;
-Engine.SOUND = 2;
-Engine.PARTICLE = 3;
-Engine.ROXML = 4;
-Engine.TEXTURE = 5;
-Engine.TOOL = 6;
-Engine.SMOKE = 7;
-Engine.FORCEFIELD = 8;
-Engine.EXPLOSION = 9;
-Engine.SKYBOX = 10;
-Engine.UNLOAD = 11;
-Engine.LOAD = 12;
-Engine.COUNT = 13;
+Game.INVALID = 0;
+Game.SCRIPT = 1;
+Game.SOUND = 2;
+Game.PARTICLE = 3;
+Game.ROXML = 4;
+Game.TEXTURE = 5;
+Game.TOOL = 6;
+Game.SMOKE = 7;
+Game.FORCEFIELD = 8;
+Game.EXPLOSION = 9;
+Game.SKYBOX = 10;
+Game.UNLOAD = 11;
+Game.LOAD = 12;
+Game.COUNT = 13;

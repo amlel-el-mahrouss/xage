@@ -10,6 +10,7 @@
 #pragma once
 
 #include <Component.h>
+#include <Ogre.h>
 
 namespace Xplicit::Player
 {

@@ -12,7 +12,9 @@
 #include "Xplicit.h"
 #include "HelperMacros.h"
 
+#include <Ogre.h>
 #include <lua/CLua.hpp>
+#include <OgreRTShaderSystem.h>
 #include <OgreApplicationContext.h>
 
 /* common engine macros for Root */
@@ -58,7 +60,8 @@ namespace Xplicit
 
 		bool mouseMoved(const OgreBites::MouseMotionEvent& evt)
 		{
-			Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:MouseMove()");
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:MouseMove()");
+
 			MouseMotionEvent = evt;
 			return true;
 		}
@@ -74,10 +77,10 @@ namespace Xplicit
 			// TODO: do not hardcode that, make something much more scalable, as we are planning to work
 			// on our own renderer.
 			if (evt.type == OgreBites::BUTTON_LEFT)
-				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:LeftClick()");
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:LeftClick()");
 
 			if (evt.type == OgreBites::BUTTON_RIGHT)
-				Lua::XLuaStateManager::get_singleton_ptr()->run_string("Engine:RightClick()");
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:RightClick()");
 
 			MouseButtonEvent = evt;
 			return true;
@@ -164,6 +167,8 @@ namespace Xplicit
 			XPLICIT_ASSERT(Ogre3D_RTSS);
 
 			Ogre3D_RTSS->addSceneManager(Ogre3D_Scene);
+		
+			Ogre3D_Window = this->getRenderWindow();
 		}
 
 		static Root* get_singleton_ptr() noexcept
@@ -179,15 +184,15 @@ namespace Xplicit
 	public:
 		bool set_title(const char* title) noexcept
 		{
-			if (!Ogre3D_Window)
+			if (!getRenderWindow())
 				return false;
 
 			if (title == nullptr)
 				title = "XplicitNgine [ Place1 ]";
 
-			int64_t hwnd = 0;
+			std::int64_t hwnd = 0;
 
-			Ogre3D_Window->getCustomAttribute("WINDOW", &hwnd);
+			getRenderWindow()->getCustomAttribute("WINDOW", &hwnd);
 			::SetWindowTextA((HWND)hwnd, title);
 
 			return true;

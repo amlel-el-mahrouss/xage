@@ -46,16 +46,25 @@ static int lua_LoadScript(lua_State* L)
 	const char* path = lua_tostring(L, 1);
 
 	// player-id because you send this to players.
-	const int64_t hash = lua_tointeger(L, 1);
+	const auto id = lua_tostring(L, 1);
 
-	if (path == nullptr)
+	if (path == nullptr ||
+		id == nullptr)
 		return 1;
 
-	if (hash == XPLICIT_INVALID_HASH)
-		return 1;
+	const auto humanoids = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
-	// must be an xasset://
-	Xplicit::ServerReplicationManager::get_singleton_ptr()->create(Xplicit::COMPONENT_ID_SCRIPT, path, hash);
+	for (size_t i = 0; i < humanoids.size(); ++i)
+	{
+		if (humanoids[i]->get_peer() &&
+			humanoids[i]->get_peer()->xplicit_id.as_string() == id)
+		{
+			// must be an xasset:// !
+			Xplicit::ServerReplicationManager::get_singleton_ptr()->create(Xplicit::COMPONENT_ID_SCRIPT, path, humanoids[i]->get_peer()->hash);
+
+			return 0;
+		}
+	}
 
 	return 0;
 }
@@ -83,7 +92,7 @@ static int lua_LoadRoXML(lua_State* L)
 	return 0;
 }
 
-static int lua_Kick(lua_State* L)
+static int lua_NetworkService_Kick(lua_State* L)
 {
 	const auto humanoid = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
@@ -105,7 +114,7 @@ static int lua_Kick(lua_State* L)
 	return 0;
 }
 
-static int lua_Fire(lua_State* L)
+static int lua_NetworkService_Fire(lua_State* L)
 {
 	auto string = lua_tostring(L, 1);
 	int32_t repl_id = lua_tointeger(L, 2);
@@ -124,6 +133,7 @@ static int lua_Fire(lua_State* L)
 			humanoids[i]->get_peer()->xplicit_id.as_string() == id)
 		{
 			Xplicit::ServerReplicationManager::get_singleton_ptr()->create(repl_id, string, humanoids[i]->get_peer()->hash);
+
 			return 0;
 		}
 	}
@@ -133,36 +143,33 @@ static int lua_Fire(lua_State* L)
 
 void XplicitLoadServerLua() noexcept
 {
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.HumanoidService = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.ScriptService = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.NetworkService = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RoXMLService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.HumanoidService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.ScriptService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.NetworkService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.RoXMLService = {}");
 
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_SetHumanoidHealth);
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_SetHumanoidHealth);
 
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_HumanoidHealth");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.HumanoidService.Health = CoreAPI_HumanoidHealth");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_HumanoidHealth");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.HumanoidService.Health = GameAPI_HumanoidHealth");
 
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_LoadScript);
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadScript);
 
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_LoadScript");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.ScriptService.Load = CoreAPI_LoadScript");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_LoadScript");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.ScriptService.Load = GameAPI_LoadScript");
 
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
 
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_LoadRoXML");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.RoXMLService.Load = CoreAPI_LoadRoXML");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_LoadRoXML");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.RoXMLService.Load = GameAPI_LoadRoXML");
 
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_Kick);
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NetworkService_Kick);
 
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "CoreAPI_Kick");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.NetworkService.Kick = CoreAPI_Kick");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_Kick");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.NetworkService.Kick = GameAPI_Kick");
 	
-	lua_pushcfunction(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), lua_Fire);
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NetworkService_Fire);
 
-	lua_setglobal(Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->state(), "Engine_Send");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Engine.NetworkService.Send = Engine_Send");
-
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game = {}");
-	Xplicit::Lua::XLuaStateManager::get_singleton_ptr()->run_string("_G.Game.Players = {}");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Engine_Create");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.NetworkService.Create = Engine_Create");
 }

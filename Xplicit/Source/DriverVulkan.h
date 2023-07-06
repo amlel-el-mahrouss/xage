@@ -69,6 +69,8 @@ namespace Xplicit::Renderer::Vk
 	private:
 		Details::VulkanSwapChainSupportDetails m_SwapChainSupport;
 		Details::VulkanFamilyIndices m_GraphicsFamily;
+
+	private:
 		VkWin32SurfaceCreateInfoKHR m_WindowCreateInfo;
 		VkPhysicalDevice m_PhysCurrent;
 		VkSwapchainKHR m_SwapChain;

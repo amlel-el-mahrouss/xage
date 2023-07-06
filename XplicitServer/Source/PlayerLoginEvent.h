@@ -20,12 +20,15 @@ namespace Xplicit
 		explicit PlayerLoginEvent();
 		~PlayerLoginEvent() override;
 		
+	public:
 		PlayerLoginEvent& operator=(const PlayerLoginEvent&) = default;
 		PlayerLoginEvent(const PlayerLoginEvent&) = default;
 		
+	public:
 		const char* name() noexcept override;
 		void operator()() override;
 		
+	public:
 		const size_t& size() const noexcept;
 
 	private:
