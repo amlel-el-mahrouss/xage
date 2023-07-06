@@ -25,6 +25,8 @@
 #include <Bites.h>
 #include <codecvt>
 
+static void xplicit_setup_ogre3d();
+
 namespace Xplicit
 {
 	namespace Ogre
@@ -35,6 +37,8 @@ namespace Xplicit
 			explicit OgreListener(Utils::UriParser& uri)
 				: ::Ogre::FrameListener()
 			{
+				xplicit_setup_ogre3d();
+
 				std::unique_ptr<Xplicit::Bites::Application> pApp = std::make_unique<Xplicit::Bites::Application>(uri);
 
 				if (!pApp)
@@ -66,9 +70,7 @@ namespace Xplicit
 	}
 }
 
-static void xplicit_throw_error(Ogre::InvalidParametersException& err);
-static void xplicit_throw_error(Ogre::RuntimeAssertionException& err);
-static void xplicit_throw_error(Ogre::ItemIdentityException& err);
+static void xplicit_throw_error(Ogre::Exception& err);
 static void xplicit_throw_error(Xplicit::EngineError& err);
 static void xplicit_throw_error(Xplicit::Win32Error& err);
 
@@ -125,11 +127,10 @@ XPLICIT_MAIN()
 			return 1;
 
 		Xplicit::Root::get_singleton_ptr()->initApp();
+
 		Xplicit::Root::get_singleton_ptr()->addInputListener(new Xplicit::OgreInputListener());
-
-		xplicit_setup_ogre3d();
-
 		Xplicit::Root::get_singleton_ptr()->getRoot()->addFrameListener(new Xplicit::Ogre::OgreListener(uri));
+
 		Xplicit::Root::get_singleton_ptr()->getRoot()->startRendering();
 
 		Xplicit::Root::get_singleton_ptr()->closeApp();
@@ -142,15 +143,7 @@ XPLICIT_MAIN()
 	{
 		xplicit_throw_error(err);
 	}
-	catch (Ogre::RuntimeAssertionException& err)
-	{
-		xplicit_throw_error(err);
-	}
-	catch (Ogre::ItemIdentityException& err)
-	{
-		xplicit_throw_error(err);
-	}
-	catch (Ogre::InvalidParametersException& err)
+	catch (Ogre::Exception& err)
 	{
 		xplicit_throw_error(err);
 	}
@@ -203,51 +196,7 @@ static void xplicit_throw_error(Xplicit::Win32Error& err)
 		TDCBF_OK_BUTTON);
 }
 
-static void xplicit_throw_error(Ogre::InvalidParametersException& err)
-{
-#ifdef XPLICIT_DEBUG
-	XPLICIT_INFO(err.what());
-#endif
-
-	std::wstring exit;
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-
-	exit += L"What: ";
-	exit += converter.from_bytes(err.what());
-	exit += L"Descrption: ";
-	exit += converter.from_bytes(err.getFullDescription());
-	exit += L"\n";
-
-	Xplicit::DialogHelper::message_box(L"XplicitNgine",
-		L"Program Exit",
-		exit.c_str(),
-		TD_INFORMATION_ICON,
-		TDCBF_OK_BUTTON);
-}
-
-static void xplicit_throw_error(Ogre::RuntimeAssertionException& err)
-{
-#ifdef XPLICIT_DEBUG
-	XPLICIT_INFO(err.what());
-#endif
-
-	std::wstring exit;
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-
-	exit += L"What: ";
-	exit += converter.from_bytes(err.what());
-	exit += L"Descrption: ";
-	exit += converter.from_bytes(err.getFullDescription());
-	exit += L"\n";
-
-	Xplicit::DialogHelper::message_box(L"XplicitNgine",
-		L"Program Exit",
-		exit.c_str(),
-		TD_INFORMATION_ICON,
-		TDCBF_OK_BUTTON);
-}
-
-static void xplicit_throw_error(Ogre::ItemIdentityException& err)
+static void xplicit_throw_error(Ogre::Exception& err)
 {
 #ifdef XPLICIT_DEBUG
 	XPLICIT_INFO(err.what());

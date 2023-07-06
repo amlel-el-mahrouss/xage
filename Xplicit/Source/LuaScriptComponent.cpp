@@ -13,24 +13,20 @@ namespace Xplicit
 {
 	void LuaScriptComponent::run() noexcept
 	{
-		Thread job([](String _file) {
-			if (!_file.empty())
+		if (!this->mName.empty())
+		{
+			if (Lua::CLuaStateManager::get_singleton_ptr()->run(this->mName.c_str()) != 0)
 			{
-				if (Lua::CLuaStateManager::get_singleton_ptr()->run(_file.c_str()) != 0)
-				{
-					String lua_error_str = "[LuaScriptComponent] error at file: ";
-					
-					lua_error_str += _file;
-					lua_error_str += ", ";
-					lua_error_str += lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-						-1);
+				String lua_error_str = "[LuaScriptComponent] error at file: ";
 
-					XPLICIT_INFO(lua_error_str);
-				}
+				lua_error_str += this->mName;
+				lua_error_str += ", ";
+				lua_error_str += lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
+					-1);
+
+				XPLICIT_INFO(lua_error_str);
 			}
-			}, mName);
-
-		job.detach();
+		}
 	}
 
 	void LuaScriptComponent::update() noexcept {}

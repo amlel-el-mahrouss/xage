@@ -60,14 +60,6 @@ namespace Xplicit::Bites
 	{
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
-
-		Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(mPath, "FileSystem");
-		Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(mPath + "Plugins/", "FileSystem");
-		Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(mPath + "Textures/", "FileSystem");
-		Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(mPath + "Contents/", "FileSystem");
-		Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(mPath + "Contents/Bundles", "FileSystem");
-
-		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 	}
 
 	Application::SettingsManager::SettingsManager()

@@ -112,12 +112,12 @@ namespace Xplicit::RoXML
 							String klass_to_instanciate;
 
 							if (klass &&
-								strcmp(klass->name(), "Class") == 0)
+								strcmp(klass->name(), "Object") == 0)
 								klass_to_instanciate = klass->value();
 
 							// Here is the list of run-time components { "Light", "Mesh", "Sound", "Particle" };
 
-							if (strcmp(node->first_attribute()->name(), "Id") == 0)
+							if (strcmp(node->first_attribute()->name(), "Name") == 0)
 							{
 								auto node_id = node->first_attribute()->value();
 
@@ -176,8 +176,7 @@ namespace Xplicit::RoXML
 												mesh_path += node->value()[i];
 										}
 
-										auto scn_mgr = Root::get_singleton_ptr()->getRoot()->_getCurrentSceneManager();
-										object = scn_mgr->createEntity(node_id, mesh_path, XPLICIT_RES_GROUP);
+										Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, mesh_path);
 									}
 
 									if (klass_to_instanciate == "Particle")
