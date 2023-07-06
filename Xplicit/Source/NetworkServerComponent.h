@@ -32,7 +32,7 @@ namespace Xplicit
 		NetworkServerComponent() = delete;
 		
 	public:
-		explicit NetworkServerComponent(const char* ip);
+		explicit NetworkServerComponent(const char* ip, const char* port);
 		~NetworkServerComponent() override;
 		
 	public:
@@ -71,7 +71,7 @@ namespace Xplicit
 		static void recv_all(const NetworkServerComponent* server) noexcept;
 		
 		static void recv_from(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept;
-		static void recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept;
+		static bool recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 		static void send(const NetworkServerComponent* server, NetworkInstance* peer) noexcept;
 		
 	};

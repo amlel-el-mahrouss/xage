@@ -19,24 +19,6 @@ namespace Xplicit
 	class ComponentSystem;
 	class Component;
 
-	namespace Detail
-	{
-		struct ComponentAccessor final
-		{
-			explicit ComponentAccessor()
-				: _Pointee(0)
-			{}
-
-			std::uintptr_t _Pointee;
-
-			template <typename T>
-			T as_type() noexcept
-			{
-				return reinterpret_cast<T>(_Pointee);
-			}
-		};
-	}
-
 	class XPLICIT_API ComponentSystem final 
 	{
 	public:
@@ -66,7 +48,7 @@ namespace Xplicit
 		static ComponentSystem* get_singleton_ptr() noexcept;
 
 	private:
-		std::vector<Detail::ComponentAccessor> mComponents;
+		std::vector<Component*> mComponents;
 
 	};
 

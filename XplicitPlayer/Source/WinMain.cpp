@@ -90,7 +90,7 @@ XPLICIT_MAIN()
 		if (!pApp) 
 			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
 
-		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>("Cam3D");
+		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>("Camera");
 
 		/* main game loop */
 		while (Xplicit::ComponentSystem::get_singleton_ptr() && 

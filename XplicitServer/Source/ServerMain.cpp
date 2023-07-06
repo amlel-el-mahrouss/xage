@@ -127,7 +127,9 @@ int main(int argc, char** argv)
 			return 1;
 		}
 
-		const auto network = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4);
+		const char* port4 = argv[1];
+
+		const auto network = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4, port4);
 
 #ifdef XPLICIT_WINDOWS
 
@@ -151,7 +153,7 @@ int main(int argc, char** argv)
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();
 
-		XPLICIT_PLACE_ID = argv[1];
+		XPLICIT_PLACE_ID = argv[2];
 
 		Xplicit::RoXML::RoXMLDocumentParameters params;
 		params.Has3D = false;

@@ -32,7 +32,7 @@ namespace Xplicit
 #endif
 	}
 
-	NetworkServerComponent::NetworkServerComponent(const char* ip)
+	NetworkServerComponent::NetworkServerComponent(const char* ip, const char* port)
 		:
 		Component(),
 		mSocket(INVALID_SOCKET), 
@@ -60,7 +60,7 @@ namespace Xplicit
 		inet_pton(AF_INET, this->mDns.c_str(), &bindAddress.sin_addr.S_un.S_addr);
 
 		bindAddress.sin_family = AF_INET;
-		bindAddress.sin_port = htons(XPLICIT_NETWORK_PORT);
+		bindAddress.sin_port = htons(std::atoi(port));
 
 		mPort = ntohs(bindAddress.sin_port);
 
@@ -72,7 +72,7 @@ namespace Xplicit
 
 		for (std::size_t index = 0; index < XPLICIT_MAX_CONNECTIONS; index++)
 		{
-			auto inst = new NetworkInstance(Auth::XplicitID(index, xplicit_get_epoch()));
+			auto inst = new NetworkInstance(Auth::XplicitID(index, 0));
 			XPLICIT_ASSERT(inst);
 
 			mPeers.push_back(inst);
@@ -125,18 +125,20 @@ namespace Xplicit
 		return false;
 	}
 
-	void NetworkServerContext::recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept
+	bool NetworkServerContext::recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept
 	{
 		std::int32_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
 
-		sockaddr rhs;
+		auto sock = SOCKET_ERROR;
+
+		struct sockaddr rhs;
 		const sockaddr lhs = *reinterpret_cast<sockaddr*>(&peer->address);
 
 		if (const auto ret = ::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),
 			sizeof(NetworkPacket),
-			0,
+			0, 
 			&rhs,
 			&from_len); ret == SOCKET_ERROR)
 		{
@@ -156,7 +158,7 @@ namespace Xplicit
 				break;
 			}
 			default:
-				break;
+				return false;
 			}
 		}
 
@@ -174,14 +176,13 @@ namespace Xplicit
 
 					if (memcmp(_lhs.sa_data, rhs.sa_data, 14) == 0)
 					{
-						(void)xplicit_register_packet(packet, peer_lhs);
-						return;
+						return xplicit_register_packet(packet, peer_lhs);
 					}
 				}
 			}
 			else
 			{
-				(void)xplicit_register_packet(packet, peer);
+				return xplicit_register_packet(packet, peer);
 			}
 		}
 		else
@@ -198,8 +199,7 @@ namespace Xplicit
 
 				if (memcmp(_lhs.sa_data, rhs.sa_data, 14) == 0)
 				{
-					(void)xplicit_register_packet(packet, peer_lhs);
-					return;
+					return xplicit_register_packet(packet, peer_lhs);;
 				}
 			}
 
@@ -207,8 +207,12 @@ namespace Xplicit
 			{
 				const sockaddr_in in = *reinterpret_cast<sockaddr_in*>(&rhs);
 				peer->address = in;
+
+				return true;
 			}
 		}
+
+		return false;
 	}
 	
 	void NetworkServerContext::recv_all(const NetworkServerComponent* server) noexcept
@@ -217,7 +221,8 @@ namespace Xplicit
 		
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
-			recv(server, server->get(i));
+			if (!recv(server, server->get(i)))
+				break;
 		}
 	}
 	

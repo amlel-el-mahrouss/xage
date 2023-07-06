@@ -25,11 +25,11 @@ namespace Xplicit
 		for (std::size_t i = 0; i < sz; i++)
 		{
 #ifdef XPLICIT_DEBUG
-			XPLICIT_ASSERT(mComponents[i].as_type<Component*>());
+			XPLICIT_ASSERT(mComponents[i]);
 #endif // ifdef XPLICIT_DEBUG
 
-			if (mComponents[i].as_type<Component*>()->should_update())
-				mComponents[i].as_type<Component*>()->update();
+			if (mComponents[i]->should_update())
+				mComponents[i]->update();
 		}
 	}
 
@@ -49,6 +49,7 @@ namespace Xplicit
 	void Component::update() {}
 
 	bool Component::can_collide() noexcept { return false; }
+
 	bool Component::has_physics() noexcept { return false; }
 
 	bool Component::should_update() noexcept { return true; }
