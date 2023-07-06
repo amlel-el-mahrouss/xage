@@ -76,13 +76,13 @@ namespace Xplicit
 			!port)
 			return false;
 
-		memset(&mTargetAddress, 0, sizeof(sockaddr_in));
+		memset(&mTargetAddress, 0, sizeof(PrivateAddressData));
 
 		mTargetAddress.sin_addr.S_un.S_addr = inet_addr(ip);
 		mTargetAddress.sin_family = AF_INET;
 		mTargetAddress.sin_port = htons(std::atoi(port));
 
-		return true;
+		return ::connect(mSocket.PublicSocket, (sockaddr*)&mTargetAddress, sizeof(PrivateAddressData)) != SOCKET_ERROR;
 	}
 
 	bool NetworkComponent::set_hash(const std::int64_t& hash) noexcept
@@ -126,7 +126,9 @@ namespace Xplicit
 		{
 			const auto err = WSAGetLastError();
 
-			if (err == WSAEWOULDBLOCK)
+			switch (err)
+			{
+			case WSAEWOULDBLOCK:
 			{
 				fd_set fd;
 				FD_ZERO(&fd);
@@ -135,9 +137,13 @@ namespace Xplicit
 				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 100000 };
 
 				::select(0, &fd, nullptr, nullptr, &timeout);
+
+				return true;
+			}
+			default:
+				return false;
 			}
 
-			return false;
 		}
 		
 		return true;

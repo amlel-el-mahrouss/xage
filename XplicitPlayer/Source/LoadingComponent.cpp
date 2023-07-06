@@ -30,7 +30,7 @@
 namespace Xplicit::Player
 {
 	// connection timeout, then client quits.
-	constexpr int XPLICIT_TIMEOUT = 28000;
+	constexpr int XPLICIT_TIMEOUT = 18000;
 
 	LoadingComponent::LoadingComponent() 
 		:

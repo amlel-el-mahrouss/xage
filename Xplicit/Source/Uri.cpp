@@ -45,7 +45,7 @@ namespace Xplicit::Utils
 			return (m_protocol + "invalid");
 
 		std::string uri;
-
+		
 		for (size_t i = 0; i < m_data.size(); i++)
 		{
 			if (m_data[i] == URI_SEPARATOR)
@@ -53,6 +53,8 @@ namespace Xplicit::Utils
 
 			uri.push_back(m_data[i]);
 		}
+
+		uri += '\0';
 
 		return uri;
 	}
