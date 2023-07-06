@@ -32,9 +32,13 @@ namespace Xplicit
 		class OgreListener final : public ::Ogre::FrameListener
 		{
 		public:
-			explicit OgreListener()
+			explicit OgreListener(Utils::UriParser& uri)
 				: ::Ogre::FrameListener()
 			{
+				std::unique_ptr<Xplicit::Bites::Application> pApp = std::make_unique<Xplicit::Bites::Application>(uri);
+
+				if (!pApp)
+					throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
 			}
 
 			~OgreListener() override = default;
@@ -52,8 +56,8 @@ namespace Xplicit
 
 			bool frameEnded(const ::Ogre::FrameEvent& evt) override
 			{
-				EventSystem::get_singleton_ptr()->update();
 				ComponentSystem::get_singleton_ptr()->update();
+				EventSystem::get_singleton_ptr()->update();
 
 				return true;
 			}
@@ -123,13 +127,8 @@ XPLICIT_MAIN()
 
 		xplicit_setup_ogre3d();
 
-		Xplicit::Root::get_singleton_ptr()->getRoot()->addFrameListener(new Xplicit::Ogre::OgreListener());
+		Xplicit::Root::get_singleton_ptr()->getRoot()->addFrameListener(new Xplicit::Ogre::OgreListener(uri));
 		Xplicit::Root::get_singleton_ptr()->getRoot()->startRendering();
-
-		std::unique_ptr<Xplicit::Bites::Application> pApp = std::make_unique<Xplicit::Bites::Application>(uri);
-
-		if (!pApp)
-			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
 
 		Xplicit::Root::get_singleton_ptr()->closeApp();
 	}

@@ -1,23 +1,23 @@
 <Xplicit xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
-	<Instance Id="LeftArm" Class="Mesh">
+	<Class Id="LeftArm" Class="Mesh">
 		LeftArm.mesh
-	</Instance>
+	</Class>
 
-	<Instance Id="RightArm" Class="Mesh">
+	<Class Id="RightArm" Class="Mesh">
 		RightArm.mesh
-	</Instance>
+	</Class>
 
-	<Instance Id="Torso" Class="Mesh">
+	<Class Id="Torso" Class="Mesh">
 		Torso.mesh
-	</Instance>
+	</Class>
 
-	<Instance Id="LeftLeg" Class="Mesh">
+	<Class Id="LeftLeg" Class="Mesh">
 		LeftLeg.mesh
-	</Instance>
+	</Class>
 
-	<Instance Id="RightLeg" Class="Mesh">
+	<Class Id="RightLeg" Class="Mesh">
 		RightLeg.mesh
-	</Instance>
+	</Class>
 
 	<Position3 X="-10.9" Y="3" Z="-6.119">
 		LeftArm

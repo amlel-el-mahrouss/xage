@@ -1,21 +1,20 @@
 
-Vector3 = {}
+Game.Vector3 = {}
 
-function Vector3:New(X, Y, Z)
+function Game.Vector3:New(X, Y, Z)
     return { X = X, Y = Y, Z = Z }
 end
 
-Color = {}
+Game.ColorRGB = {}
 
-function Color:New(R, G, B)
+function Game.ColorRGB:New(R, G, B)
     return { Red = R, Green = G, Blue = B }
 end
 
-HUMANOID = {}
-
-HUMANOID.ALIVE = 0
-HUMANOID.DEAD = 1
-HUMANOID.INVALID = 3
+Game.HumanoidState = {}
+Game.HumanoidState.ALIVE = 0
+Game.HumanoidState.DEAD = 1
+Game.HumanoidState.INVALID = 3
 
 local function __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })

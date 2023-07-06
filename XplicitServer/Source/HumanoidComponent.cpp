@@ -60,13 +60,13 @@ namespace Xplicit
 		fmt += ".State = ";
 
 		if (mState == HUMANOID_STATE::ALIVE)
-			fmt += XPLICIT_LUA_GLOBAL + String("HUMANOID.ALIVE");
+			fmt += XPLICIT_LUA_GLOBAL + String("Game.HumanoidState.Alive");
 
 		if (mState == HUMANOID_STATE::DEAD)
-			fmt += XPLICIT_LUA_GLOBAL + String("HUMANOID.DEAD");
+			fmt += XPLICIT_LUA_GLOBAL + String("Game.HumanoidState.Dead");
 
 		if (mState == HUMANOID_STATE::INVALID)
-			fmt += XPLICIT_LUA_GLOBAL + String("HUMANOID.INVALID");
+			fmt += XPLICIT_LUA_GLOBAL + String("Game.HumanoidState.Invalid");
 
 		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
@@ -150,7 +150,7 @@ namespace Xplicit
 			String fmt = XPLICIT_LUA_GLOBAL;
 			fmt += XPLICIT_LUA_NAMESPACE;
 			fmt += mPeer->xplicit_id.as_string();
-			fmt += String(" = { Position = { X = 0, Y = 0, Z = 0, }, Health = 0, ID = '', State = ") + XPLICIT_LUA_GLOBAL + String("HUMANOID.ALIVE") + " }";
+			fmt += String(" = { Position = { X = 0, Y = 0, Z = 0, }, Health = 0, ID = '', State = ") + XPLICIT_LUA_GLOBAL + String("Game.HumanoidState.Dead") + " }";
 
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
