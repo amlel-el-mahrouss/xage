@@ -7,7 +7,7 @@
  * =====================================================================
  */
 
-#include "InstanceComponent.h"
+#include "ClassComponent.h"
 #include "HelperMacros.h"
 #include "Xplicit.h"
 
@@ -28,7 +28,7 @@ static int lua_New(lua_State* L)
 		script.empty())
 		return 0;
 
-	auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::InstanceComponent>(
+	auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::ClassComponent>(
 		Xplicit::Vector<float>(0, 0, 0),
 		Xplicit::Vector<float>(0, 0, 0),
 		Xplicit::Color<float>(0, 0, 0),
@@ -53,11 +53,11 @@ static int lua_Destroy(lua_State* L)
 	if (name.empty())
 		return 0;
 
-	if (auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::InstanceComponent>(name.c_str()))
+	if (auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::ClassComponent>(name.c_str()))
 	{
 		if (instance->parent() == parent)
 		{
-			Xplicit::ComponentSystem::get_singleton_ptr()->remove<Xplicit::InstanceComponent>(instance);
+			Xplicit::ComponentSystem::get_singleton_ptr()->remove<Xplicit::ClassComponent>(instance);
 			return 0;
 		}
 	}

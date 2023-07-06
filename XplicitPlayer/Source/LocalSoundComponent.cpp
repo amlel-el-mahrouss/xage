@@ -8,7 +8,7 @@
  */
 
 #include "LocalSoundComponent.h"
-#include <InstanceComponent.h>
+#include <ClassComponent.h>
 
 namespace Xplicit::Player
 {

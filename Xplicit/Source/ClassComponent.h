@@ -17,25 +17,25 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API InstanceComponent : public Component
+	class XPLICIT_API ClassComponent : public Component
 	{
 	public:
-		InstanceComponent() = delete;
+		ClassComponent() = delete;
 
 	public:
-		explicit InstanceComponent(
+		explicit ClassComponent(
 			const Vector<float>& position, 
 			const Vector<float>& size,
 			const Color<float>& color,
 			const char* script = nullptr,
-			const char* parent = "World",
-			const char* name = "Instance");
+			const char* parent = "Game",
+			const char* name = "Class");
 
-		~InstanceComponent() override;
+		~ClassComponent() override;
 
 	public:
-		InstanceComponent& operator=(const InstanceComponent&) = default;
-		InstanceComponent(const InstanceComponent&) = default;
+		ClassComponent& operator=(const ClassComponent&) = default;
+		ClassComponent(const ClassComponent&) = default;
 
 	public:
 		COMPONENT_TYPE type() noexcept override { return COMPONENT_GENERIC; }

@@ -21,9 +21,9 @@ namespace Xplicit::Player
 	StaticMesh::StaticMesh(const char* path, const char* name, const char* group)
 		: mPath(path), mPhysics(PHYSICS_NONE), mGroup(group), mName(name)
 	{
-		static XPLICIT_GET_DATA_DIR(dir);
+		static XPLICIT_GET_DATA_DIR(XPLICIT_DIR);
 
-		String _path = dir;
+		String _path = XPLICIT_DIR;
 		_path += "/XplicitNgin/Contents/";
 		_path += path;
 
@@ -60,14 +60,28 @@ namespace Xplicit::Player
 
 	StaticBundleMesh::StaticBundleMesh(const char* character_path)
 	{
+		static XPLICIT_GET_DATA_DIR(XPLICIT_DIR);
+
 		RoXML::RoXMLDocumentParameters params;
-		params.Has3D = true;
-		params.NoLua = true;
-		params.Path = character_path;
+
+		params.Has3D = true; //! We're delaing with 3D Graphics...
+		params.NoLua = true; //! No Lua, we don't want RCE...
+
+		//! This is needed, since we aim for convinience.
+		//! So we get the XplicitNgin/ absolute filesystem path.
+		//! We get the Bundles directory.
+		//! Load a specific character and show it to screen.
+		
+		params.Path = XPLICIT_DIR;
+		params.Path += XPLICIT_BUNDLE_PATH;
+		params.Path += character_path;
+		params.WaitFor = true;
 
 		RoXML::RoXMLDocumentParser parser;
 		parser.load(params);
 
+		//! RoXML provides uses cusotmization of these characters.
+		//! So that the user can express himself.
 		const char* parts[6] = { "Head", "LeftLeg", "RightLeg", "Torso", "LeftArm", "RightArm" };
 
 		for (auto& node : params.WorldNodes)

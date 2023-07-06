@@ -14,11 +14,11 @@
 #include <Util.h>
 #include <Component.h>
 #include <CommonEngine.h>
-#include <InstanceComponent.h>
+#include <ClassComponent.h>
 
 namespace Xplicit::Player
 {
-	class GearComponent final : public InstanceComponent
+	class GearComponent final : public ClassComponent
 	{
 	public:
 		GearComponent() = delete;

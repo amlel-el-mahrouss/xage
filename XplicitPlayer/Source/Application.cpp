@@ -32,6 +32,9 @@ namespace Xplicit::Bites
 	{
 		Xplicit::init_winsock(&mWsa);
 
+		XPLICIT_GET_DATA_DIR(path);
+		mPath = path;
+
 		this->create_and_set_contexts();
 
 		XPLICIT_GET_DATA_DIR(data_appdata);
@@ -57,6 +60,8 @@ namespace Xplicit::Bites
 	{
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
+
+		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 	}
 
 	Application::SettingsManager::SettingsManager()

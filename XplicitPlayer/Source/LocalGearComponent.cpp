@@ -17,7 +17,7 @@ namespace Xplicit::Player
 		const char* mesh, 
 		const char* parent) noexcept
 		:
-		InstanceComponent(Vector<float>(0, 0, 0), Vector<float>(0, 0, 0), Color<float>(0, 0, 0), nullptr, parent, name),
+		ClassComponent(Vector<float>(0, 0, 0), Vector<float>(0, 0, 0), Color<float>(0, 0, 0), nullptr, parent, name),
 		mMeshPtr(nullptr)
 	{
 		XPLICIT_ASSERT(name && mesh);
@@ -50,7 +50,7 @@ namespace Xplicit::Player
 
 	void GearComponent::update() noexcept
 	{
-		InstanceComponent::update();
+		ClassComponent::update();
 
 		String fmt = std::format("{}{}{}.Mesh;", XPLICIT_LUA_GLOBAL, mParent, mName);
 

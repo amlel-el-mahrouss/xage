@@ -7,11 +7,11 @@
  * =====================================================================
  */
 
-#include "InstanceComponent.h"
+#include "ClassComponent.h"
 
 namespace Xplicit
 {
-	InstanceComponent::InstanceComponent(
+	ClassComponent::ClassComponent(
 		const Vector<float>& position, 
 		const Vector<float>& size, 
 		const Color<float>& color,
@@ -47,7 +47,7 @@ namespace Xplicit
 		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 
-	InstanceComponent::~InstanceComponent()
+	ClassComponent::~ClassComponent()
 	{
 		String fmt = XPLICIT_LUA_GLOBAL;
 
@@ -64,11 +64,11 @@ namespace Xplicit
 		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 
-	const char* InstanceComponent::parent() noexcept { return mParent.c_str(); }
+	const char* ClassComponent::parent() noexcept { return mParent.c_str(); }
 
-	bool InstanceComponent::should_update() noexcept { return true; }
+	bool ClassComponent::should_update() noexcept { return true; }
 	
-	void InstanceComponent::update()
+	void ClassComponent::update()
 	{
 		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
 			std::format("{}{}{}.Alpha;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
@@ -189,5 +189,5 @@ namespace Xplicit
 		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 	}
 
-	XAttribute& InstanceComponent::get_attribute() noexcept { return mAttribute; }
+	XAttribute& ClassComponent::get_attribute() noexcept { return mAttribute; }
 }

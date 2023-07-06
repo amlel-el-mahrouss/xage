@@ -145,7 +145,7 @@ void XplicitLoadServerLua() noexcept
 {
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.HumanoidService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.ScriptService = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.NetworkService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.ReplicationService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.RoXMLService = {}");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_SetHumanoidHealth);
@@ -166,10 +166,10 @@ void XplicitLoadServerLua() noexcept
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NetworkService_Kick);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_Kick");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.NetworkService.Kick = GameAPI_Kick");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.ReplicationService.Kick = GameAPI_Kick");
 	
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NetworkService_Create);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Engine_Create");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.NetworkService.Create = Engine_Create");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.ReplicationService.Create = Engine_Create");
 }
