@@ -19,7 +19,6 @@ HUMANOID.INVALID = 3
 
 local func __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })
-    
 end
 
 local func __rmEvent(Tbl, Index)
@@ -28,7 +27,7 @@ end
 
 Game.Slot = {
     Login = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
             return __addEvent(Game.Slot.Login, Func); 
         end,
         Disconnect = func(Index)
@@ -36,7 +35,7 @@ Game.Slot = {
         end 
     },
     Logoff = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Logoff, Func); 
         end,
         Disconnect = func(Index)
@@ -44,66 +43,66 @@ Game.Slot = {
         end 
     },
     LeftClick = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
             return __addEvent(Game.Slot.LeftClick, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     RightClick = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
             return __addEvent(Game.Slot.RightClick, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = func(Iself, ndex)
             __rmEvent(self, Index); 
         end 
     },
     MouseMove = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.MouseMove, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     LocalSpawn = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.LocalSpawn, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end  
     },
     Move = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Move, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     Damage = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Damage, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end  
     },
     Spawn = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Spawn, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     Death = { 
-        Connect = func(Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Death, Func); 
         end,
-        Disconnect = func(Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
