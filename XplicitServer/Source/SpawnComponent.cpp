@@ -20,27 +20,13 @@
 namespace Xplicit
 {
 	SpawnComponent::SpawnComponent(const Vector<float>& vec) 
-		: Component()
+		: Component(), mClass(std::make_unique<Lua::CLuaClass>("SpawnLocation"))
 	{
-		String fmt = XPLICIT_LUA_GLOBAL;
-
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += "Spawn";
-		fmt += "= {};";
-
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		XPLICIT_ASSERT(mClass);
+		mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 	}
 
-	SpawnComponent::~SpawnComponent()
-	{
-		String fmt = XPLICIT_LUA_GLOBAL;
-
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += "Spawn";
-		fmt += "= nil;";
-
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-	}
+	SpawnComponent::~SpawnComponent() = default;
 
 	Vector<float>& SpawnComponent::get() noexcept { return mAttribute.pos(); }
 
@@ -48,21 +34,11 @@ namespace Xplicit
 
 	void SpawnComponent::update() 
 	{
-		static const char* pos[] = { "X", "Y", "Z" };
-		const float pos_raw[] = { mAttribute.pos().X, mAttribute.pos().Y, mAttribute.pos().Z };
+		auto str = "{" + std::to_string(mAttribute.pos().X) + "," +
+			std::to_string(mAttribute.pos().Y) + "," +
+			std::to_string(mAttribute.pos().Z) + "," + "}";
 
-		for (size_t i = 0; i < 3; i++)
-		{
-			String fmt = XPLICIT_LUA_GLOBAL;
-
-			fmt += XPLICIT_LUA_NAMESPACE;
-			fmt += "Spawn";
-			fmt += ".Position.";
-			fmt += pos[i];
-			fmt += "= " + std::to_string(pos_raw[i]) + ";";
-
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-		}
+		mClass->assign("Position", str.c_str());
 	}
 
 	COMPONENT_TYPE SpawnComponent::type() noexcept { return (COMPONENT_LOGIC); }

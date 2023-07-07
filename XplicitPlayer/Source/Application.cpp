@@ -82,7 +82,7 @@ namespace Xplicit::Bites
 		XPLICIT_GET_DATA_DIR(dir);
 
 		String prebuilt = dir;
-		prebuilt += "\\Textures\\DefaultSkin.zip";
+		prebuilt += "/Textures/DefaultSkin.zip";
 
 		if (!RENDER->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
 			throw EngineError("Missing Textures! This pack is needed for the XplicitPlayer to work.");

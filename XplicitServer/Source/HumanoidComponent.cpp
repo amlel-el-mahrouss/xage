@@ -24,7 +24,7 @@ namespace Xplicit
 		mPeer(nullptr),
 		mHealth(100), 
 		mCanSpawn(true),
-		mState(HUMANOID_STATE::DEAD),
+		mState(HUMANOID_STATE::ALIVE),
 		mClass(nullptr)
 	{
 		//! Don't initialize lua code here, because we got no peer.
@@ -41,32 +41,43 @@ namespace Xplicit
 		if (this->get_peer() == nullptr)
 			return;
 
+		if (mHealth > 0)
+		{
+			mState = HUMANOID_STATE::ALIVE;
+
+			if (mHealth >= 100 && !mCanSpawn)
+				mCanSpawn = true;
+
+		}
+
 		// execute a series of commands for this humanoid.
 
 		if (mState == HUMANOID_STATE::ALIVE)
+		{
+			mCanSpawn = true;
 			mClass->assign("State", "Game.HumanoidState.Alive");
+		}
 
 		if (mState == HUMANOID_STATE::DEAD)
+		{
+			mCanSpawn = false;
 			mClass->assign("State", "Game.HumanoidState.Dead");
+		}
 
 		if (mState == HUMANOID_STATE::INVALID)
-			mClass->assign("State", "Game.HumanoidState.Invalid");
+		{
+			mCanSpawn = false;
+			mHealth = 0;
 
-		auto str = "{" + std::to_string(mAttribute.pos().X) + "," + 
-									std::to_string(mAttribute.pos().Y) + "," +
-									std::to_string(mAttribute.pos().Z) + "," + "}";
+			mClass->assign("State", "Game.HumanoidState.Invalid");
+		}
+
+		String str = "{" + std::to_string(mAttribute.pos().X) + "," + 
+						 std::to_string(mAttribute.pos().Y) + "," +
+						 std::to_string(mAttribute.pos().Z) + "," + "}";
 
 		mClass->assign("Position", str.c_str());
-
-		if (auto health_value = mClass->index_as_number("Health"); health_value > 0)
-			mHealth = health_value;
-
-		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
-			mState = HUMANOID_STATE::ALIVE;
-		else if (mHealth < 1)
-			mState = HUMANOID_STATE::DEAD;
-		else if (!this->get_peer())
-			mState = HUMANOID_STATE::INVALID;
+		mHealth = mClass->index_as_number("Health");
 
 		if (this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
 		{
@@ -90,7 +101,7 @@ namespace Xplicit
 
 	const char* HumanoidComponent::name() noexcept { return "HumanoidComponent"; }
 
-	bool HumanoidComponent::should_update() noexcept { return true;  }
+	bool HumanoidComponent::should_update() noexcept { return true; }
 
 	NetworkInstance* HumanoidComponent::get_peer() const noexcept { return mPeer; }
 
@@ -98,19 +109,22 @@ namespace Xplicit
 	{	
 		mPeer = peer;
 
-		if (mClass)
-			mClass.reset();
-
 		if (mPeer)
 		{
+			if (mClass)
+				mClass.reset();
+
 			mClass = std::make_unique<Lua::CLuaClass>(("Game.Players." + mPeer->xplicit_id.as_string()).c_str());
 
 			//! Reset Humanoid information
+			mClass->insert("Name", "\""
+									XPLICIT_DEFAULT_NAME
+									"\"");
+
 			mClass->insert("Position", "{ X = 0, Y = 0, Z = 0, }");
 			mClass->insert("State", "Game.HumanoidState.Alive");
 			mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
-			mClass->insert("Health", "100");
-			mClass->insert("Name", XPLICIT_DEFAULT_NAME);
+			mClass->insert("Health", std::to_string(mHealth).c_str());
 			mClass->insert("Parent", "{}");
 		}
 	}

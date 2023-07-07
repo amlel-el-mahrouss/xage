@@ -46,11 +46,12 @@ namespace Xplicit::Lua
 		}
 
 	private:
-		lua_State* mL;
+		CLuaStatePtr mL;
 
 	public:
 		~CLuaStateManager() = default;
 
+	public:
 		XPLICIT_COPY_DEFAULT(CLuaStateManager);
 
 	public:
@@ -141,19 +142,16 @@ namespace Xplicit::Lua
 
 		const double index_as_number(const char* lhs)
 		{
-			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-				LUA_GLOBALSINDEX,
-				std::format("{}.{}", mClass, lhs).c_str());
+			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), mClass.c_str());
+			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), lhs);
+			
+			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
-			if (lua_isnumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1))
-			{
-				auto ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-				lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+			auto ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
-				return ret;
-			}
+			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
-			return -1;
+			return ret;
 		}
 
 		const String index_as_string(const char* lhs) { return operator[](lhs); }
@@ -161,19 +159,16 @@ namespace Xplicit::Lua
 	public:
 		const String operator[](const char* lhs) noexcept
 		{
-			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-				LUA_GLOBALSINDEX,
-				std::format("{}.{}", mClass, lhs).c_str());
+			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), mClass.c_str());
+			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), lhs);
 
-			if (lua_isstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1))
-			{
-				String str = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-				lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
-				return str;
-			}
+			String ret = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
-			return "";
+			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+
+			return ret;
 		}
 
 		bool operator()(const char* lhs) noexcept

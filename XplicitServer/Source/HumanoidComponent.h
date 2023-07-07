@@ -64,8 +64,6 @@ namespace Xplicit
 
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;
-
-	private:
 		NetworkInstance* mPeer;
 		XAttribute mAttribute;
 		HUMANOID_STATE mState;

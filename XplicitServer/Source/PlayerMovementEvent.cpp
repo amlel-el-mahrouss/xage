@@ -67,9 +67,8 @@ namespace Xplicit
 			if (peer->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
 
-			// no need to edit this piece of code, WorldCollisionEvent will take care of this.
-
-			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) // here, we check if pos command is set.
+			//! No need to edit this piece of code, WorldCollisionEvent will take care of this.
+			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) //! Here we check if pos command is set.
 			{
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
 					humanoid->get_attribute().pos().Y += speed;

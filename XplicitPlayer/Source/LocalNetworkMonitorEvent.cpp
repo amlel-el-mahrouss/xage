@@ -138,14 +138,13 @@ namespace Xplicit::Player
 				{
 					if (packet.public_hash == players[ply]->id())
 					{
-
 #ifdef XPLICIT_DEBUG
 						XPLICIT_INFO("Game:Logoff [EVENT]");
 #endif
 
 						Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Logoff()");
-
 						ComponentSystem::get_singleton_ptr()->remove(players[ply]);
+
 						break;
 					}
 				}

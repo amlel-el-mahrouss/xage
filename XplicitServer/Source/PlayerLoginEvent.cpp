@@ -23,7 +23,7 @@ namespace Xplicit
 	 * \return the hashed GUID.
 	 */
 
-	static size_t xplicit_hash()
+	static size_t XplicitHash() noexcept
 	{
 		const auto tim = xplicit_get_epoch();
 		const auto hash = std::hash<time_t>();
@@ -39,7 +39,9 @@ namespace Xplicit
 	 * \param server Server component
 	 */
 
-	static bool xplicit_on_join(NetworkInstance* peer, HumanoidComponent* player, const NetworkServerComponent* server)
+	static bool XplicitHandleJoin(NetworkInstance* peer, 
+		HumanoidComponent* player, 
+		const NetworkServerComponent* server) noexcept
 	{
 		if (!server ||
 			!peer ||
@@ -47,8 +49,8 @@ namespace Xplicit
 			player->get_peer() != nullptr)
 			return false;
 		
-		peer->public_hash = xplicit_hash();
-		peer->hash = xplicit_hash();
+		peer->public_hash = XplicitHash();
+		peer->hash = XplicitHash();
 
 		peer->status = NETWORK_STAT_CONNECTED;
 		
@@ -114,7 +116,7 @@ namespace Xplicit
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
 				if (HumanoidComponent* player = mPlayers[mPlayerCount]; 
-					xplicit_on_join(mNetwork->get(peer_idx), player, mNetwork))
+					XplicitHandleJoin(mNetwork->get(peer_idx), player, mNetwork))
 				{
 					// Send XplicitID to the matching client.
 					memcpy(mNetwork->get(peer_idx)->packet.buffer, 

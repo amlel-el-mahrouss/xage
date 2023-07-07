@@ -28,11 +28,11 @@ namespace Xplicit
 	/// <param name="player">The Targeted Humanoid</param>
 	/// <returns></returns>
 	
-	static void xplicit_handle_spawn(SpawnComponent* spawner, HumanoidComponent* player) noexcept
+	static void XplicitHandleSpawn(SpawnComponent* spawner, HumanoidComponent* player) noexcept
 	{
 		if (player && spawner)
 		{
-			const auto& pos = spawner->get();
+			const auto pos = spawner->get();
 
 			player->get_attribute().pos().X = pos.X;
 			player->get_attribute().pos().Y = pos.Y;
@@ -113,7 +113,7 @@ namespace Xplicit
 						peer_ptr->packet.public_hash = player->get_peer()->public_hash;
 						peer_ptr->packet.health = player->get_health();
 
-						xplicit_handle_spawn(mSpawner, player);
+						XplicitHandleSpawn(mSpawner, player);
 					}
 
 					player->should_spawn(true);

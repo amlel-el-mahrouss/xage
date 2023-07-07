@@ -40,6 +40,7 @@ namespace Xplicit
 		XAttribute& get_attribute() noexcept;
 
 	private:
+		std::unique_ptr<Lua::CLuaClass> mClass;
 		XAttribute mAttribute;
 
 	};
