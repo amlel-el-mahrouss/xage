@@ -38,16 +38,16 @@ namespace Xplicit::Player
 		StaticMesh(const StaticMesh&) = default;
 		
 	public:
-		Ogre::SceneNode* node() const { return mNode; }
-		Ogre::Entity* operator->() const { return mMdl; }
+		irr::scene::IMeshSceneNode* node() const { return mNode; }
+		irr::scene::IMesh* operator->() const { return mMdl; }
 
 	public:
 		const String& path() noexcept;
 		bool has_physics() noexcept;
 
 	protected:
-		Ogre::SceneNode* mNode; // Model Data pointer, generic
-		Ogre::Entity* mMdl; // Model Data pointer, generic
+		irr::scene::IMeshSceneNode* mNode; // Model Data pointer, generic
+		irr::scene::IMesh* mMdl; // Model Data pointer, generic
 
 	private:
 		PHYSICS_TYPE mPhysics; // What kind of physics we have here?
@@ -73,11 +73,11 @@ namespace Xplicit::Player
 		StaticBundleMesh& operator=(const StaticBundleMesh&) = default;
 		StaticBundleMesh(const StaticBundleMesh&) = default;
 
-		Ogre::SceneNode* node(const std::size_t& index) const { return mParts[index].first; }
-		Ogre::Entity* model(const std::size_t& index) const { return mParts[index].second; }
+		irr::scene::IMeshSceneNode* node(const std::size_t& index) const { return mParts[index].first; }
+		irr::scene::IMesh* model(const std::size_t& index) const { return mParts[index].second; }
 
 	protected:
-		std::vector<std::pair<Ogre::SceneNode*, Ogre::Entity*>> mParts;
+		std::vector<std::pair<irr::scene::IMeshSceneNode*, irr::scene::IMesh*>> mParts;
 		
 	};
 }

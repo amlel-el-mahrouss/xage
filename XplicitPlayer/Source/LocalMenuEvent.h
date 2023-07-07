@@ -11,6 +11,7 @@
 
 #include <NetworkComponent.h>
 #include <Event.h>
+#include <Root.h>
 
 namespace Xplicit::Player
 {
@@ -33,6 +34,11 @@ namespace Xplicit::Player
 
 	private:
 		NetworkComponent* mNetwork;
+	
+	private:
+		irr::video::ITexture* mButtonNoHover;
+		irr::video::ITexture* mButtonHover;
+		irr::video::ITexture* mMenu;
 
 	private:
 		std::int64_t mTimeout;

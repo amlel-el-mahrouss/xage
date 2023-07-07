@@ -23,6 +23,8 @@ Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 #ifdef XPLICIT_WINDOWS
 
+std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
+
 static int lua_PlaySound(lua_State* L)
 {
 	try
@@ -48,7 +50,7 @@ static int lua_SetWindowCaption(lua_State* L)
 	auto title = lua_tostring(L, -1);
 
 	if (title)
-		Xplicit::Root::get_singleton_ptr()->set_title(title);
+		RENDER->setWindowCaption(XPLICIT_TO_WCHAR.from_bytes(title).c_str());
 
 	return 0;
 }

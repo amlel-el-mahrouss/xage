@@ -151,32 +151,20 @@ namespace Xplicit::RoXML
 
 									if (klass_to_instanciate == "Light")
 									{
-										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
-										object = Root::get_singleton_ptr()->Ogre3D_Scene->createLight(node_id);
+										irr::scene::ILightSceneNode* light = nullptr;
+										object = light = RENDER->getSceneManager()->addLightSceneNode();
+										light->setName(node_id);
 									}
 
 									if (klass_to_instanciate == "Stud")
 									{
-										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
-										object = Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, Ogre::SceneManager::PT_CUBE);
-									}
-
-									if (klass_to_instanciate == "Plane")
-									{
-										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
-										object = Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, Ogre::SceneManager::PT_PLANE);
-									}
-
-									if (klass_to_instanciate == "Ball")
-									{
-										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
-										object = Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, Ogre::SceneManager::PT_SPHERE);
+										irr::scene::ISceneNode* stud = nullptr;
+										object = stud = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh());
+										stud->setName(node_id);
 									}
 
 									if (klass_to_instanciate == "Mesh")
 									{
-										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
-
 										XPLICIT_GET_DATA_DIR(mesh_path);
 
 										for (size_t i = 0; i < strlen(node->value()); i++)
@@ -188,36 +176,31 @@ namespace Xplicit::RoXML
 												mesh_path += node->value()[i];
 										}
 
-										try
-										{
-											auto mesh_ptr = Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, mesh_path);
-											object = mesh_ptr;
-										}
-										catch (Ogre::RuntimeAssertionException& err)
-										{
-											XPLICIT_INFO(err.getFullDescription());
-										}
+										auto mesh_ptr = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getMesh(mesh_path.c_str()));
+										mesh_ptr->setName(node_id);
+
+										object = mesh_ptr;
 									}
 
 									if (klass_to_instanciate == "Particle")
 									{
-										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
+										auto emitter = RENDER->getSceneManager()->addParticleSystemSceneNode(true);
+										emitter->setName(node_id);
 
-										Root::get_singleton_ptr()->Ogre3D_Scene->createParticleSystem(node_id);
-										object = Root::get_singleton_ptr()->Ogre3D_Scene->getParticleSystem(node_id)->createParticle();
+										object = emitter;
 									}
 
 									if (object)
 									{
-										Ogre::Node* node = nullptr;
+										irr::scene::ISceneNode* node = nullptr;
 
-										if (node = Root::get_singleton_ptr()->Ogre3D_Scene->getRootSceneNode()->getChild(parent_id); !node)
+										if (node = RENDER->getSceneManager()->getSceneNodeFromName(parent_id); !node)
 										{
 											ComponentSystem::get_singleton_ptr()->remove<ClassComponent>(component);
 										}
 										else
 										{
-											node->addChild(node->getParent());
+											node->addChild(node);
 										}
 									}
 								}
@@ -238,21 +221,16 @@ namespace Xplicit::RoXML
 								const auto mat_id = node->first_attribute()->next_attribute()->value();
 								const auto mat_id_cast = std::atoi(node->value());
 
-								world_node.Color.R = mat_id_cast;
-								world_node.Color.G = mat_id_cast << 8;
-								world_node.Color.B = mat_id_cast << 16;
-								world_node.Color.A = mat_id_cast << 22;
-
 								if (params.Has3D)
 								{
 									if (mat_id)
 									{
 										try
 										{
-											const auto scene_node = Root::get_singleton_ptr()->Ogre3D_Scene->getEntity(node->first_attribute()->value());
+											const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(node->first_attribute()->value());
 
 											if (scene_node)
-												scene_node->getSubEntity(0)->getMaterial()->setDiffuse(world_node.Color.R, world_node.Color.G, world_node.Color.B, world_node.Color.A);
+												scene_node->getMaterial(0).DiffuseColor.color = mat_id_cast;
 										}
 										catch (...)
 										{
@@ -278,12 +256,10 @@ namespace Xplicit::RoXML
 						String attr_x = node->first_attribute()->name();
 						String attr_y = node->first_attribute()->next_attribute()->name();
 						String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
-						String attr_w = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->name();
 
 						if (attr_x == "X" &&
 							attr_y == "Y" &&
-							attr_z == "Z" &&
-							attr_w == "W")
+							attr_z == "Z")
 						{
 							String id;
 
@@ -298,19 +274,17 @@ namespace Xplicit::RoXML
 							String x = node->first_attribute()->value();
 							String y = node->first_attribute()->next_attribute()->value();
 							String z = node->first_attribute()->next_attribute()->next_attribute()->value();
-							String w = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->value();
 
 							world_node.Rotation.X = std::atof(x.c_str());
 							world_node.Rotation.Y = std::atof(y.c_str());
 							world_node.Rotation.Z = std::atof(z.c_str());
-							world_node.Rotation.W = std::atof(w.c_str());
 
 							if (params.Has3D)
 							{
-								const auto scene_node = Root::get_singleton_ptr()->Ogre3D_Scene->getRootSceneNode()->getChild(id);
+								const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
 
 								if (scene_node)
-									scene_node->rotate(Ogre::Quaternion(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()), std::atof(w.c_str())));
+									scene_node->setRotation(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 							}
 						}
 					}
@@ -350,10 +324,10 @@ namespace Xplicit::RoXML
 
 								if (params.Has3D)
 								{
-									const auto scene_node = Root::get_singleton_ptr()->Ogre3D_Scene->getRootSceneNode()->getChild(id);
+									const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
 
 									if (scene_node)
-										scene_node->setPosition(Ogre::Vector3f(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+										scene_node->setPosition(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 								}
 
 							}
@@ -394,8 +368,8 @@ namespace Xplicit::RoXML
 
 								if (params.Has3D)
 								{
-									const auto scene_node = Root::get_singleton_ptr()->Ogre3D_Scene->getRootSceneNode()->getChild(id);
-									scene_node->setScale(Ogre::Vector3f(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+									const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+									scene_node->setScale(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 								}
 							}
 						}

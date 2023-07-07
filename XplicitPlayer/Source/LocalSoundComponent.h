@@ -9,9 +9,13 @@
 
 #pragma once
 
+//! Xplicit ECS API
+
 #include <Component.h>
 #include <codecvt>
 #include <Util.h>
+
+//! Xplicit Sound API
 
 #include <Xplicit.h>
 #include <XplicitSound.h>

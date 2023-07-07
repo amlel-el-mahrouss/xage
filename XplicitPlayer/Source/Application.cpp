@@ -14,7 +14,9 @@
 // Application framework.
 #include "Application.h"
 
-// We need this to connect and download from server. And also the RoXML header.
+//! We need this to connect and download from server. 
+//! We also need the RoXML header.
+
 #include "LoadingComponent.h"
 #include "RoXML.h"
 
@@ -51,6 +53,22 @@ namespace Xplicit::Bites
 
 	void Application::setup()
 	{
+		SIrrlichtCreationParameters params;
+
+		params.DriverMultithreaded = true;
+		params.DriverType = EDT_OPENGL;
+		params.Fullscreen = false;
+		params.WindowSize = dimension2d<irr::u32>(Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y);
+
+		Root::get_singleton_ptr()->set(
+			createDeviceEx(params)
+		);
+
+		RENDER->setWindowCaption(L"Xplicit [ Loading... ]");
+
+		Root::get_singleton_ptr()->set(new InputReceiver());
+		RENDER->setEventReceiver(Root::get_singleton_ptr()->Keyboard);
+
 		Xplicit::init_winsock(&mWsa);
 
 		//! Setup program contents path.
@@ -60,6 +78,14 @@ namespace Xplicit::Bites
 		//! Setup SettingsManager
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
+
+		XPLICIT_GET_DATA_DIR(dir);
+
+		String prebuilt = dir;
+		prebuilt += "\\Textures\\DefaultSkin.zip";
+
+		if (!RENDER->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
+			throw EngineError("Missing Textures! This pack is needed for the XplicitPlayer to work.");
 	}
 
 	Application::SettingsManager::SettingsManager()

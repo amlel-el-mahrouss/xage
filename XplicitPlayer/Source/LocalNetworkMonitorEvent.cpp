@@ -48,8 +48,8 @@ namespace Xplicit::Player
 		{
 			ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 				if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-					RENDER->queueEndRendering();
-				}, Ogre::Vector2(XPLICIT_DIM.X / 3.45,
+					RENDER->closeDevice();
+				}, Vector<float>(XPLICIT_DIM.X / 3.45,
 					XPLICIT_DIM.Y / 4),
 					POPUP_TYPE::NETWORK, "BanPopup");
 
@@ -65,8 +65,8 @@ namespace Xplicit::Player
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-						RENDER->queueEndRendering();
-					}, Ogre::Vector2(XPLICIT_DIM.X / 3.45,
+						RENDER->closeDevice();
+					}, Vector<float>(XPLICIT_DIM.X / 3.45,
 						XPLICIT_DIM.Y / 4),
 						POPUP_TYPE::KICK, "KickPopup");
 			}
@@ -78,8 +78,8 @@ namespace Xplicit::Player
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-						RENDER->queueEndRendering();
-					}, Ogre::Vector2(XPLICIT_DIM.X / 3.45,
+						RENDER->closeDevice();
+					}, Vector<float>(XPLICIT_DIM.X / 3.45,
 						XPLICIT_DIM.Y / 4),
 						POPUP_TYPE::BANNED, "BanPopup");
 			}
@@ -118,8 +118,8 @@ namespace Xplicit::Player
 				{
 					ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 						if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-							RENDER->queueEndRendering();
-					}, Ogre::Vector2(XPLICIT_DIM.X / 2.8,
+							RENDER->closeDevice();
+					}, Vector<float>(XPLICIT_DIM.X / 2.8,
 							XPLICIT_DIM.Y / 2.8),
 							POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");

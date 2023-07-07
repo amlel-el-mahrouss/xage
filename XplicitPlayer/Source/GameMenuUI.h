@@ -36,7 +36,8 @@ namespace Xplicit::Player
 	public:
 		PopupComponent() = delete;
 		
-		PopupComponent(const std::function<void()>& on_click, const Ogre::Vector2 pos = Ogre::Vector2(0, 0),
+	public:
+		explicit PopupComponent(const std::function<void()>& on_click, const Vector<float> pos = Vector<float>(0, 0, 0),
 			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, const char* id = "POPUP") noexcept;
 
 		~PopupComponent() override;
@@ -52,7 +53,7 @@ namespace Xplicit::Player
 		using FunctionPopup = std::function<void()>;
 		
 		FunctionPopup mClicked;
-		Ogre::Vector2 mPos;
+		Vector<float> mPos;
 		String mPopupId;
 
 	};

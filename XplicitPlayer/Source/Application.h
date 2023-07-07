@@ -18,8 +18,206 @@
 #include <Uri.h>
 #include <ini.h>
 
+#define KB Xplicit::Root::get_singleton_ptr()->Keyboard
+
 namespace Xplicit
 {
+	using namespace irr;
+	using namespace core;
+	using namespace gui;
+	using namespace video;
+	using namespace scene;
+
+	class InputReceiver final : public irr::IEventReceiver
+	{
+	public:
+		explicit InputReceiver()
+			:
+			mMouseLeft(),
+			mMouseRight(),
+			mMousePos(),
+			mLayout()
+		{
+			for (irr::u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
+				mKeys[i] = 0;
+		}
+
+		bool OnEvent(const SEvent& env) override
+		{
+			mWheelEnable = false;
+
+			if (env.EventType == EET_KEY_INPUT_EVENT)
+				mKeys[env.KeyInput.Key] = env.KeyInput.PressedDown;
+
+			if (env.EventType == EET_MOUSE_INPUT_EVENT)
+			{
+				switch (env.MouseInput.Event)
+				{
+				case EMIE_LMOUSE_PRESSED_DOWN:
+				{
+					XPLICIT_INFO("LocalHumanoid:Click [EVENT]");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Click()");
+
+					mMouseLeft.Down = true;
+					break;
+				}
+
+				case EMIE_LMOUSE_LEFT_UP:
+					mMouseLeft.Down = false;
+					break;
+
+				case EMIE_RMOUSE_PRESSED_DOWN:
+				{
+					XPLICIT_INFO("LocalHumanoid:RightClick [EVENT]");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:RightClick()");
+
+					mMouseRight.Down = true;
+					break;
+				}
+
+				case EMIE_MOUSE_WHEEL:
+				{
+					mWheelEnable = true;
+					mWheel = env.MouseInput.Wheel;
+
+					break;
+				}
+
+				case EMIE_RMOUSE_LEFT_UP:
+					mMouseRight.Down = false;
+					break;
+
+				case EMIE_MOUSE_MOVED:
+				{
+					mMousePos.X = env.MouseInput.X;
+					mMousePos.Y = env.MouseInput.Y;
+
+					XPLICIT_INFO("LocalHumanoid:MouseMove [EVENT]");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:MouseMove()");
+
+					break;
+				}
+
+				default:
+					break;
+				}
+			}
+
+			return true;
+		}
+
+	private:
+		struct MouseEventTraits
+		{
+			int32_t X;
+			int32_t Y;
+
+			bool Down;
+		};
+
+	public:
+		virtual ~InputReceiver() = default;
+
+	public:
+		InputReceiver& operator=(const InputReceiver&) = default;
+		InputReceiver(const InputReceiver&) = default;
+
+	public:
+		bool right_down() noexcept { return mMouseRight.Down; }
+		bool left_down() noexcept { return mMouseLeft.Down; }
+
+	public:
+		float mouse_wheel() noexcept
+		{
+			if (mWheelEnable)
+				return mWheel;
+
+			return 0.f;
+		}
+
+		bool key_down(const char key) const
+		{
+			return mKeys[key];
+		}
+
+		bool key_down() const
+		{
+			for (u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
+			{
+				if (mKeys[i])
+					return true;
+			}
+
+			return false;
+		}
+
+		MouseEventTraits& get_pos() noexcept { return mMousePos; }
+
+	public:
+		struct MovementTraits final
+		{
+		public:
+			MovementTraits() = default;
+			~MovementTraits() = default;
+
+			char mBackward{ -1 };
+			char mForward{ -1 };
+			char mRight{ -1 };
+			char mLeft{ -1 };
+		};
+
+		MovementTraits& get_layout() noexcept
+		{
+#ifdef XPLICIT_WINDOWS
+			HKL hLocale = GetKeyboardLayout(0);
+
+			switch (LOWORD(hLocale))
+			{
+			case LANG_FRENCH:
+			{
+				mLayout.mForward = KEY_KEY_Z;
+				mLayout.mRight = KEY_KEY_D;
+				mLayout.mLeft = KEY_KEY_Q;
+				mLayout.mBackward = KEY_KEY_S;
+
+				break;
+			}
+			default:
+			{
+				mLayout.mForward = KEY_KEY_W;
+				mLayout.mRight = KEY_KEY_D;
+				mLayout.mLeft = KEY_KEY_A;
+				mLayout.mBackward = KEY_KEY_S;
+
+				break;
+			}
+			}
+#else
+			mLayout.mForward = KEY_KEY_W;
+			mLayout.mRight = KEY_KEY_D;
+			mLayout.mLeft = KEY_KEY_A;
+			mLayout.mBackward = KEY_KEY_S;
+
+#	error No layout detection, use locale() in UNIX systems.
+#endif
+			return mLayout;
+		}
+
+	private:
+		MovementTraits mLayout;
+		bool mKeys[KEY_KEY_CODES_COUNT];
+
+	private:
+		MouseEventTraits mMouseRight;
+		MouseEventTraits mMouseLeft;
+		MouseEventTraits mMousePos;
+
+	private:
+		bool mWheelEnable;
+		float mWheel;
+
+	};
+
 	namespace Player
 	{
 		extern Vector<float> XPLICIT_DIM;
@@ -52,21 +250,26 @@ namespace Xplicit::Bites
 
 		bool key_down(const char key) noexcept
 		{
-			XPLICIT_ASSERT(Root::get_singleton_ptr());
-			return Root::get_singleton_ptr()->KeyboardEvent.keysym.sym == key;
+			return KB->key_down(key);
+		}
+
+		bool key_down() noexcept
+		{
+			return KB->key_down();
 		}
 
 	public:
 		struct InputTraits
 		{
-			int16_t mForward{ L'W' };
-			int16_t mLeft{ L'A' };
-			int16_t mRight{ L'D' };
-			int16_t mBackward{ L'S' };
-			int16_t mJump{ VK_SPACE };
+			char mForward{ KEY_KEY_W };
+			char mLeft{ KEY_KEY_A };
+			char mRight{ KEY_KEY_D };
+			char mBackward{ KEY_KEY_S };
+			char mJump{ KEY_SPACE };
 
 		};
 
+	public:
 		InputTraits Layout;
 
 	};

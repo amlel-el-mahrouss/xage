@@ -26,26 +26,40 @@ namespace Xplicit::Player
 		:
 			mNetwork(nullptr),
 			mTimeout(0UL),
-			mEnabled(false)
+			mEnabled(false),
+			mButtonNoHover(nullptr),
+			mButtonHover(nullptr),
+			mMenu(nullptr)
 	{
 		/* resource loading */
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
 
 		String frame_path = "network_leave.png";
-
+		
+		mMenu = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
 		frame_path += "menu_hover.png";
 
+		mButtonHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
 		frame_path += "menu_no_hover.png";
 
+		mButtonNoHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
 	}
 
 	LocalMenuEvent::~LocalMenuEvent() 
 	{
+		if (mMenu)
+			(void)mMenu->drop();
+
+		if (mButtonHover)
+			(void)mButtonHover->drop();
+
+		if (mButtonNoHover)
+			(void)mButtonNoHover->drop();
 
 	}
 
@@ -59,18 +73,33 @@ namespace Xplicit::Player
 	{
 		if (!mNetwork)
 			return;
-		
-		/* F3 key down. */
-		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_F3) &&
+
+		static float tween_start = LOCAL_MENU_TWEEN_START;
+		static float pos_menu = 12;
+
+		if (KB->key_down(KEY_F3) &&
 			mTimeout < 0)
 		{
-			mEnabled = true;
+			tween_start = LOCAL_MENU_TWEEN_START;
+
+			mEnabled = !mEnabled;
+			mTimeout = XPLICIT_TIMEOUT_MENU;
 		}
 
-		/* The menu is open. */
+		/* menu is being open */
 		if (mEnabled)
 		{
-			if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
+			RENDER->getVideoDriver()->draw2DImage(mButtonHover,
+				vector2di(30, XPLICIT_DIM.Y / pos_menu),
+				rect(0, 0, 63, 42),
+				nullptr,
+				SColor(255, 255, 255, 255),
+				true);
+
+			if (tween_start > LOCAL_MENU_TWEEN_END)
+				tween_start -= LOCAL_MENU_TWEENING;
+
+			if (KB->key_down(KEY_RETURN))
 			{
 				NetworkPacket packet{};
 
@@ -78,15 +107,34 @@ namespace Xplicit::Player
 				mNetwork->set_channel(XPLICIT_CHANNEL_DATA);
 
 				mNetwork->send(packet);
-				
+
 				mEnabled = false;
 
 				std::exit(0);
 			}
-			else if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_ESCAPE))
+			else if (KB->key_down(KEY_ESCAPE))
 			{
 				mEnabled = false;
 			}
+		}
+		else
+		{
+			RENDER->getVideoDriver()->draw2DImage(mButtonNoHover,
+				vector2di(30, XPLICIT_DIM.Y / pos_menu),
+				rect(0, 0, 63, 42),
+				nullptr,
+				SColor(255, 255, 255, 255),
+				true);
+
+			if (tween_start < LOCAL_MENU_TWEEN_START)
+				tween_start += LOCAL_MENU_TWEENING;
+		}
+
+		if (tween_start < LOCAL_MENU_TWEEN_START)
+		{
+			RENDER->getVideoDriver()->draw2DImage(mMenu,
+				vector2di(XPLICIT_DIM.X / 2.8,
+					XPLICIT_DIM.Y / tween_start));
 		}
 
 		--mTimeout;

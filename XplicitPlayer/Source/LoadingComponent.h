@@ -10,8 +10,10 @@
 #pragma once
 
 #include <NetworkComponent.h>
-#include "GameMenuUI.h"
+#include <Root.h>
 #include <Uri.h>
+
+#include "GameMenuUI.h"
 
 namespace Xplicit::Player
 {
@@ -35,6 +37,9 @@ namespace Xplicit::Player
 		// resets the timeout and run..
 		// in case of a watchdog..
 		void reset() noexcept;
+
+	private:
+		irr::video::ITexture* mTexture;
 
 	private:
 		NetworkComponent* mNetwork;

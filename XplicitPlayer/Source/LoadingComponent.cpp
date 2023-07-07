@@ -39,9 +39,14 @@ namespace Xplicit::Player
 		mEnabled(true)
 	{
 		ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>("Camera");
+		mTexture = RENDER->getVideoDriver()->getTexture("bkg.png");
 	}
 
-	LoadingComponent::~LoadingComponent() = default;
+	LoadingComponent::~LoadingComponent()
+	{
+		if (mTexture)
+			mTexture->drop();
+	}
 
 	void LoadingComponent::update()
 	{
@@ -57,7 +62,7 @@ namespace Xplicit::Player
 					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 						std::exit(0);
 				},
-				Ogre::Vector2(XPLICIT_DIM.X / 2.8,
+				Vector<float>(XPLICIT_DIM.X / 2.8,
 					XPLICIT_DIM.Y / 2.8),
 				POPUP_TYPE::BANNED, "StopPopup");
 
@@ -93,7 +98,7 @@ namespace Xplicit::Player
 			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
-			Root::get_singleton_ptr()->set_title("Xplicit [ Place1 ]");
+			RENDER->setWindowCaption(L"Xplicit [ Place1 ]");
 
 			XPLICIT_INFO("Game:LocalSpawn [EVENT]");
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:LocalSpawn()");
@@ -113,7 +118,7 @@ namespace Xplicit::Player
 						if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 							std::exit(0);
 					}, 
-						Ogre::Vector2(XPLICIT_DIM.X / 2.8,
+						Vector<float>(XPLICIT_DIM.X / 2.8,
 						XPLICIT_DIM.Y / 2.8),
 						POPUP_TYPE::NETWORK, "StopPopup");
 
@@ -121,6 +126,15 @@ namespace Xplicit::Player
 				mEnabled = false;
 
 				return;
+			}
+			else
+			{
+				RENDER->getVideoDriver()->draw2DImage(mTexture,
+					vector2di(0, 0),
+					recti(0, 0, 1280, 720),
+					nullptr,
+					SColor(255, 255, 255, 255),
+					true);
 			}
 		}
 	}
@@ -168,7 +182,7 @@ namespace Xplicit::Player
 		ComponentSystem::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
 			if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
 				std::exit(0);
-			}, Ogre::Vector2(XPLICIT_DIM.X / 3.45,
+			}, Vector<float>(XPLICIT_DIM.X / 3.45,
 				XPLICIT_DIM.Y / 4),
 				POPUP_TYPE::NETWORK);
 	}

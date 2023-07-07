@@ -27,14 +27,13 @@ namespace Xplicit::Player
 		_path += "/XplicitNgin/Contents/";
 		_path += path;
 
-		mMdl = RENDER->_getCurrentSceneManager()->createEntity(_path);
+		mMdl = RENDER->getSceneManager()->getMesh(_path.c_str());
 
 		mPhysics = PHYSICS_NONE;
 
 		if (mMdl)
 		{
-			mNode = RENDER->_getCurrentSceneManager()->getRootSceneNode()->createChildSceneNode();
-			mNode->attachObject(mMdl);
+			mNode = RENDER->getSceneManager()->addMeshSceneNode(mMdl);
 
 			mPhysics = PHYSICS_COMPLEX;
 		}
@@ -43,10 +42,10 @@ namespace Xplicit::Player
 	StaticMesh::~StaticMesh() noexcept
 	{
 		if (mNode)
-			delete mNode;
+			mNode->drop();
 
 		if (mMdl)
-			delete mMdl;
+			mMdl->drop();
 	}
 
 	const String& StaticMesh::path() noexcept
@@ -92,10 +91,10 @@ namespace Xplicit::Player
 
 				if (node.ID == part_id)
 				{
-					auto mesh = RENDER->_getCurrentSceneManager()->getEntity(node.ID);
+					irr::scene::IMeshSceneNode* mesh = static_cast<irr::scene::IMeshSceneNode*>(RENDER->getSceneManager()->getSceneNodeFromName(node.ID.c_str()));
 
 					if (mesh)
-						mParts.push_back(std::make_pair(mesh->getParentSceneNode(), mesh));
+						mParts.push_back(std::make_pair(mesh, mesh->getMesh()));
 				}
 			}
 		}
@@ -108,10 +107,10 @@ namespace Xplicit::Player
 		for (auto& part : mParts)
 		{
 			if (part.first)
-				delete part.first;
+				part.first->drop();
 
 			if (part.second)
-				delete part.second;
+				part.second->drop();
 		}
 	}
 }

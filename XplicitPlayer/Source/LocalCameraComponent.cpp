@@ -11,10 +11,6 @@
  @file
  */
 
-#include <Overlay/OgreOverlayContainer.h>
-#include <Overlay/OgreOverlay.h>
-#include <Overlay/OgreOverlayManager.h>
-
 #include "LocalCameraComponent.h"
 #include "Application.h"
 #include "GameMenuUI.h"
@@ -24,22 +20,15 @@ namespace Xplicit::Player
 	LocalCameraComponent::LocalCameraComponent(const char* name)
 		: Component(), mCamera(nullptr)
 	{
-		auto ptr = Root::get_singleton_ptr();
+		mCamera = RENDER->getSceneManager()->addCameraSceneNode();
 
-		mCamera = ptr->Ogre3D_Scene->createCamera(name);
 		XPLICIT_ASSERT(mCamera);
-
-		mCamera->setNearClipDistance(5); // specific to this sample
-		mCamera->setAutoAspectRatio(true);
-		mCamera->setDebugColour(Ogre::ColourValue(255, 40, 40, 40));
-
-		Root::get_singleton_ptr()->getRenderWindow()->addViewport(mCamera);
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept
 	{
 		if (mCamera)
-			delete mCamera;
+			mCamera->drop();
 	}
 
 	COMPONENT_TYPE LocalCameraComponent::type() noexcept { return COMPONENT_CAMERA; }
@@ -48,5 +37,5 @@ namespace Xplicit::Player
 
 	void LocalCameraComponent::update() {}
 
-	Ogre::Camera* LocalCameraComponent::get() noexcept { return mCamera; }
+	irr::scene::ICameraSceneNode* LocalCameraComponent::get() noexcept { return mCamera; }
 }

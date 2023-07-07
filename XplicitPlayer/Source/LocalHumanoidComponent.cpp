@@ -77,9 +77,9 @@ namespace Xplicit::Player
 				const float zSpeed = mPacket.pos[XPLICIT_NETWORK_Z] * delta;
 				const float ySpeed = mPacket.pos[XPLICIT_NETWORK_Y] * delta;
 
-				mPos.z = zSpeed;
-				mPos.x = xSpeed;
-				mPos.y = ySpeed;
+				mPos.Z = zSpeed;
+				mPos.X = xSpeed;
+				mPos.Y = ySpeed;
 
 				for (size_t i = 0; i < XPLICIT_BUNDLE_MAX; ++i)
 				{
@@ -88,9 +88,9 @@ namespace Xplicit::Player
 
 					auto pos = this->node(i)->getPosition();
 
-					pos.z += mPos.z;
-					pos.x += mPos.x;
-					pos.y += mPos.y;
+					pos.Z += mPos.Z;
+					pos.X += mPos.X;
+					pos.Y += mPos.Y;
 
 					this->node(i)->setPosition(pos);
 				}
@@ -106,11 +106,11 @@ namespace Xplicit::Player
 		if (cam)
 		{
 			mCam = cam;
-			this->node(XPLICIT_BUNDLE_HEAD)->attachObject(mCam->get());
+			this->node(XPLICIT_BUNDLE_HEAD)->addChild(mCam->get());
 		}
 	}
 
-	Ogre::Vector3f LocalHumanoidComponent::get_pos() noexcept { return mPos; }
+	Vector<float> LocalHumanoidComponent::get_pos() noexcept { return mPos; }
 
 	LocalHumanoidMoveEvent::LocalHumanoidMoveEvent(const std::int64_t& public_hash)
 		: 

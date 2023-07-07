@@ -10,7 +10,7 @@
 #pragma once
 
 #include <Component.h>
-#include <Ogre.h>
+#include <cad-engine/irrlicht.h>
 
 namespace Xplicit::Player
 {
@@ -24,15 +24,17 @@ namespace Xplicit::Player
 		LocalCameraComponent& operator=(const LocalCameraComponent&) = default;
 		LocalCameraComponent(const LocalCameraComponent&) = default;
 
+	public:
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 
 		void update() override;
-		 
-		Ogre::Camera* get() noexcept;
+
+	public:
+		irr::scene::ICameraSceneNode* get() noexcept;
 
 	private:
-		Ogre::Camera* mCamera;
+		irr::scene::ICameraSceneNode* mCamera;
 
 	};
 }

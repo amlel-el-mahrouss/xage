@@ -23,7 +23,7 @@ namespace Xplicit::Player
 	
 	PopupComponent::PopupComponent(
 		const std::function<void()>& on_click, 
-		const Ogre::Vector2 pos, 
+		const Vector<float> pos,
 		const POPUP_TYPE popup_type, 
 		const char* id) noexcept
 		:
