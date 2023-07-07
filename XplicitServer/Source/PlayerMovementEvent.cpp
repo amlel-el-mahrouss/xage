@@ -97,7 +97,9 @@ namespace Xplicit
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 				peer->packet.public_hash = peer->public_hash;
 
+#ifdef XPLICIT_DEBUG
 				XPLICIT_INFO("Game:Move [EVENT]");
+#endif // ifdef XPLICIT_DEBUG
 
 				String fmt = std::format("Game:Move({}, {}, {})",
 					std::to_string(humanoid->get_attribute().pos().X),

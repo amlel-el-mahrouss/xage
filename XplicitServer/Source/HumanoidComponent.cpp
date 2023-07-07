@@ -27,7 +27,7 @@ namespace Xplicit
 		mState(HUMANOID_STATE::DEAD),
 		mClass(nullptr)
 	{
-		// Don't initialize lua code here, because we got no peer.
+		//! Don't initialize lua code here, because we got no peer.
 	}
 
 	HumanoidComponent::~HumanoidComponent() = default;
@@ -58,7 +58,8 @@ namespace Xplicit
 
 		mClass->assign("Position", str.c_str());
 
-		mHealth = mClass->index_as_number("Health");
+		if (auto health_value = mClass->index_as_number("Health"); health_value > 0)
+			mHealth = health_value;
 
 		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
 			mState = HUMANOID_STATE::ALIVE;
@@ -69,10 +70,14 @@ namespace Xplicit
 
 		if (this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
 		{
+			mHealth -= this->get_peer()->packet.health;
+		
+#ifdef XPLICIT_DEBUG
 			XPLICIT_INFO("Game:Damage [EVENT]");
+#endif // ifdef XPLICIT_DEBUG
+
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Damage()");
 		}
-
 	}
 
 	void HumanoidComponent::set_health(const int64_t& health) noexcept { this->mHealth = health; }
@@ -102,13 +107,11 @@ namespace Xplicit
 
 			//! Reset Humanoid information
 			mClass->insert("Position", "{ X = 0, Y = 0, Z = 0, }");
-			mClass->insert("State", "Game.HumanoidState.Dead");
+			mClass->insert("State", "Game.HumanoidState.Alive");
 			mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
-			mClass->insert("Health", std::to_string(mHealth).c_str());
+			mClass->insert("Health", "100");
 			mClass->insert("Name", XPLICIT_DEFAULT_NAME);
 			mClass->insert("Parent", "{}");
-
-			std::cout << mClass->index_as_number("Health");
 		}
 	}
 

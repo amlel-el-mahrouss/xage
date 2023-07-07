@@ -141,34 +141,55 @@ namespace Xplicit::Lua
 
 		const double index_as_number(const char* lhs)
 		{
-			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-				std::format("_G.{}.{};", mClass, lhs).c_str());
+			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(),
+				LUA_GLOBALSINDEX,
+				std::format("{}.{}", mClass, lhs).c_str());
 
-			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -2);
+			if (lua_isnumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1))
+			{
+				auto ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+				lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
-			return lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+				return ret;
+			}
+
+			return -1;
 		}
 
-		const char* index_as_string(const char* lhs) { return operator[](lhs); }
+		const String index_as_string(const char* lhs) { return operator[](lhs); }
 
 	public:
-		const char* operator[](const char* lhs) noexcept
+		const String operator[](const char* lhs) noexcept
 		{
-			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-				std::format("_G.{}.{};", mClass, lhs).c_str());
+			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(),
+				LUA_GLOBALSINDEX,
+				std::format("{}.{}", mClass, lhs).c_str());
 
-			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -2);
+			if (lua_isstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1))
+			{
+				String str = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+				lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
-			return lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+				return str;
+			}
+
+			return "";
 		}
 
 		bool operator()(const char* lhs) noexcept
 		{
+			if (!lhs)
+				return false;
+
 			return Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{};", mClass, lhs).c_str());
 		}
 
 		bool operator()(const char* lhs, const char* rhs) noexcept
 		{
+			if (!lhs ||
+				!rhs)
+				return false;
+
 			return Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{} = {};", mClass, lhs, rhs).c_str());
 		}
 

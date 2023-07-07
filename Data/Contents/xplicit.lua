@@ -107,7 +107,7 @@ Game.Slot = {
     },
     Tick = { 
         Connect = func(self, Func)
-        return __addEvent(Game.Slot.Death, Func); 
+        return __addEvent(Game.Slot.Tick, Func); 
         end,
         Disconnect = func(self, Index)
             __rmEvent(self, Index); 

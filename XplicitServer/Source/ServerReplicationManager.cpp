@@ -17,7 +17,7 @@ namespace Xplicit
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
 	{}
 
-
+	//! get_singleton_ptr takes the singleton of this class.
 	ServerReplicationManager* ServerReplicationManager::get_singleton_ptr() noexcept
 	{
 		static ServerReplicationManager* manager = nullptr;

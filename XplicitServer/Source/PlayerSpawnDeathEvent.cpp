@@ -73,7 +73,10 @@ namespace Xplicit
 			{
 				player->should_spawn(false);
 
+#ifdef XPLICIT_DEBUG
 				XPLICIT_INFO("Game:Death [EVENT]");
+#endif // ifdef XPLICIT_DEBUG
+
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Death()");
 
 				mDeadPlayers.push_back(player);
@@ -115,7 +118,11 @@ namespace Xplicit
 
 					player->should_spawn(true);
 
+#ifdef XPLICIT_DEBUG
 					XPLICIT_INFO("Game:Spawn [EVENT]");
+#endif // ifdef XPLICIT_DEBUG
+
+
 					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Spawn()");
 				}
 			}

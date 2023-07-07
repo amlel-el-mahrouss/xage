@@ -62,10 +62,6 @@ namespace Xplicit
 		const HUMANOID_STATE& get_state() noexcept;
 		bool can_spawn() const noexcept;
 
-	public:
-		void set_id(const int64_t id = 0x0) { mId = id; }
-		const int64_t& id() { return mId; }
-
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;
 
@@ -75,7 +71,6 @@ namespace Xplicit
 		HUMANOID_STATE mState;
 		int64_t mHealth;
 		bool mCanSpawn;
-		int64_t mId;
 
 	};
 

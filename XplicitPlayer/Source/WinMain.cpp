@@ -74,8 +74,6 @@ XPLICIT_MAIN()
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 			RENDER->getVideoDriver()->endScene();
-
-			Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Tick()");
 		}
 	}
 	catch (Xplicit::EngineError& err)
