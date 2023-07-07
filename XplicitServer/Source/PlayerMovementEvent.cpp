@@ -22,7 +22,6 @@ namespace Xplicit
 {
 	PlayerMovementEvent::PlayerMovementEvent() 
 		: 
-		mNetwork(nullptr),
 		mDeltaTime(0UL)
 	{
 		mVelocityVar = GameVarManager::get_singleton_ptr()->get("Velocity");
@@ -51,9 +50,6 @@ namespace Xplicit
 
 	void PlayerMovementEvent::operator()()
 	{
-		if (!mNetwork)
-			mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
-
 		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 		NetworkFloat speed = mVelocityVar->as_float();
 		

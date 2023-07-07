@@ -36,7 +36,8 @@ namespace Xplicit
 			mMouseLeft(),
 			mMouseRight(),
 			mMousePos(),
-			mLayout()
+			mWheelEnable(false),
+			mWheel(0.0f)
 		{
 			for (irr::u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
 				mKeys[i] = 0;
@@ -55,8 +56,11 @@ namespace Xplicit
 				{
 				case EMIE_LMOUSE_PRESSED_DOWN:
 				{
-					XPLICIT_INFO("LocalHumanoid:Click [EVENT]");
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Click()");
+#ifdef XPLICIT_DEBUG
+					XPLICIT_INFO("Game:LeftClick [EVENT]");
+#endif // XPLICIT_DEBUG
+
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:LeftClick()");
 
 					mMouseLeft.Down = true;
 					break;
@@ -68,7 +72,10 @@ namespace Xplicit
 
 				case EMIE_RMOUSE_PRESSED_DOWN:
 				{
-					XPLICIT_INFO("LocalHumanoid:RightClick [EVENT]");
+#ifdef XPLICIT_DEBUG
+					XPLICIT_INFO("Game:RightClick [EVENT]");
+#endif // XPLICIT_DEBUG
+
 					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:RightClick()");
 
 					mMouseRight.Down = true;
@@ -92,7 +99,10 @@ namespace Xplicit
 					mMousePos.X = env.MouseInput.X;
 					mMousePos.Y = env.MouseInput.Y;
 
-					XPLICIT_INFO("LocalHumanoid:MouseMove [EVENT]");
+#ifdef XPLICIT_DEBUG
+					XPLICIT_INFO("Game:MouseMove [EVENT]");
+#endif // XPLICIT_DEBUG
+
 					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:MouseMove()");
 
 					break;
@@ -166,45 +176,7 @@ namespace Xplicit
 			char mLeft{ -1 };
 		};
 
-		MovementTraits& get_layout() noexcept
-		{
-#ifdef XPLICIT_WINDOWS
-			HKL hLocale = GetKeyboardLayout(0);
-
-			switch (LOWORD(hLocale))
-			{
-			case LANG_FRENCH:
-			{
-				mLayout.mForward = KEY_KEY_Z;
-				mLayout.mRight = KEY_KEY_D;
-				mLayout.mLeft = KEY_KEY_Q;
-				mLayout.mBackward = KEY_KEY_S;
-
-				break;
-			}
-			default:
-			{
-				mLayout.mForward = KEY_KEY_W;
-				mLayout.mRight = KEY_KEY_D;
-				mLayout.mLeft = KEY_KEY_A;
-				mLayout.mBackward = KEY_KEY_S;
-
-				break;
-			}
-			}
-#else
-			mLayout.mForward = KEY_KEY_W;
-			mLayout.mRight = KEY_KEY_D;
-			mLayout.mLeft = KEY_KEY_A;
-			mLayout.mBackward = KEY_KEY_S;
-
-#	error No layout detection, use locale() in UNIX systems.
-#endif
-			return mLayout;
-		}
-
 	private:
-		MovementTraits mLayout;
 		bool mKeys[KEY_KEY_CODES_COUNT];
 
 	private:
@@ -226,7 +198,7 @@ namespace Xplicit
 
 namespace Xplicit::Bites
 {
-	constexpr const char* XPLICIT_APP_NAME = "Xplicit - [ Place1 ]";
+	constexpr const PChar* XPLICIT_APP_NAME = L"Xplicit - [ Place1 ]";
 
 	class ObjectInputSystem final
 	{

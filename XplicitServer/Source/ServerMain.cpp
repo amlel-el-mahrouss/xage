@@ -52,26 +52,26 @@ static void xplicit_load_sh()
 			break;
 		}
 
-		if (strcmp(cmd_buf, "help") == 0)
+		if (strcmp(cmd_buf, "man") == 0)
 			xplicit_print_help();
 
-		if (strcmp(cmd_buf, "list") == 0)
+		if (strcmp(cmd_buf, "ls") == 0)
 		{
 			for (int index = 0; index < network->size(); ++index)
 			{
 				if (network->get(index)->status == Xplicit::NETWORK_STAT_CONNECTED)
-					std::cout << "Connected, ";
+					std::cout << "CONNECTED, ";
 
 				if (network->get(index)->status == Xplicit::NETWORK_STAT_DISCONNECTED)
-					std::cout << "Disconnected, ";
+					std::cout << "DISCONNECTED, ";
 
 				if (network->get(index)->status == Xplicit::NETWORK_STAT_INVALID)
-					std::cout << "Invalid, ";
+					std::cout << "INVALID, ";
 
 				if (network->get(index)->status == Xplicit::NETWORK_STAT_STASIS)
-					std::cout << "Check, ";
+					std::cout << "IN-CHECK, ";
 
-				std::cout << "Address: " << network->get(index)->ip_address << std::endl;
+				std::cout << "INET: " << network->get(index)->ip_address << std::endl;
 			}
 		}
 
@@ -83,7 +83,7 @@ static void xplicit_load_sh()
 				XPLICIT_CRITICAL("xconnect: address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
 			XPLICIT_INFO(Xplicit::String("IP: ") + (ip4 ? ip4 : "?"));
-			XPLICIT_INFO(Xplicit::String("Protocol version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
+			XPLICIT_INFO(Xplicit::String("Version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
 		}
 	}
 }
@@ -175,6 +175,8 @@ int main(int argc, char** argv)
 				Xplicit::EventSystem::get_singleton_ptr()->update();
 
 				Xplicit::NetworkServerContext::send_all(net);
+
+				Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Tick()");
 			};
 		});
 

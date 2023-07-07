@@ -51,7 +51,8 @@ namespace Xplicit::Player
 		
 	private:
 		using FunctionPopup = std::function<void()>;
-		
+
+		irr::video::ITexture* mTex;
 		FunctionPopup mClicked;
 		Vector<float> mPos;
 		String mPopupId;

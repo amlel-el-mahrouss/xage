@@ -13,13 +13,13 @@
 #include <Nplicit.h>
 #include <Component.h>
 
+//! Player bundle
 #define XPLICIT_BUNDLE_HEAD		 (0)
 #define XPLICIT_BUNDLE_LEFT_ARM  (1)
 #define XPLICIT_BUNDLE_TORSO     (2)
 #define XPLICIT_BUNDLE_RIGHT_ARM (3)
 #define XPLICIT_BUNDLE_LEFT_LEG  (4)
 #define XPLICIT_BUNDLE_RIGHT_LEG (5)
-
 #define XPLICIT_BUNDLE_MAX (6)
 
 namespace Xplicit::Player
@@ -73,8 +73,10 @@ namespace Xplicit::Player
 		StaticBundleMesh& operator=(const StaticBundleMesh&) = default;
 		StaticBundleMesh(const StaticBundleMesh&) = default;
 
-		irr::scene::IMeshSceneNode* node(const std::size_t& index) const { return mParts[index].first; }
-		irr::scene::IMesh* model(const std::size_t& index) const { return mParts[index].second; }
+		irr::scene::IMeshSceneNode* node_at(const std::size_t& index) const { return mParts[index].first; }
+		irr::scene::IMesh* model_at(const std::size_t& index) const { return mParts[index].second; }
+
+		std::size_t count_parts() const { return mParts.size(); }
 
 	protected:
 		std::vector<std::pair<irr::scene::IMeshSceneNode*, irr::scene::IMesh*>> mParts;

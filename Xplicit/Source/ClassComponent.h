@@ -17,7 +17,7 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API ClassComponent : public Component
+	class XPLICIT_API ClassComponent : public Component, public Lua::CLuaClass
 	{
 	public:
 		ClassComponent() = delete;

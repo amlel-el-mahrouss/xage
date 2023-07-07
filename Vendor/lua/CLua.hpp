@@ -107,7 +107,7 @@ namespace Xplicit::Lua
 
 	// WiP
 
-	class XPLICIT_API CLuaClass final
+	class XPLICIT_API CLuaClass
 	{
 	public:
 		explicit CLuaClass(const char* klass) noexcept
@@ -119,7 +119,7 @@ namespace Xplicit::Lua
 			CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 
-		~CLuaClass() noexcept
+		virtual ~CLuaClass() noexcept
 		{
 			CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{} = nil", mClass).c_str());
 		}
@@ -138,13 +138,26 @@ namespace Xplicit::Lua
 
 		bool assign(const char* lhs, const char* rhs) { return operator()(lhs, rhs); }
 		bool call(const char* lhs) { return operator()(lhs); }
-		const char* index(const char* lhs) { return operator[](lhs); }
+
+		const double index_as_number(const char* lhs)
+		{
+			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
+				std::format("_G.{}.{};", mClass, lhs).c_str());
+
+			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -2);
+
+			return lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+		}
+
+		const char* index_as_string(const char* lhs) { return operator[](lhs); }
 
 	public:
 		const char* operator[](const char* lhs) noexcept
 		{
 			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
 				std::format("_G.{}.{};", mClass, lhs).c_str());
+
+			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -2);
 
 			return lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 		}

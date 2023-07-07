@@ -169,17 +169,28 @@ namespace Xplicit::RoXML
 
 										for (size_t i = 0; i < strlen(node->value()); i++)
 										{
-											if (isalnum(node->value()[i]) ||
-												node->value()[i] == '.' ||
-												node->value()[i] == '/' ||
-												node->value()[i] == '\\')
-												mesh_path += node->value()[i];
+											if (node->value()[i] == '\r' ||
+												node->value()[i] == '\n')
+												continue;
+
+											mesh_path += node->value()[i];
 										}
 
-										auto mesh_ptr = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getMesh(mesh_path.c_str()));
-										mesh_ptr->setName(node_id);
+										auto mesh = RENDER->getSceneManager()->getMesh(mesh_path.c_str());
+										
+										if (mesh)
+										{
+											auto mesh_ptr = RENDER->getSceneManager()->addMeshSceneNode(mesh);
 
-										object = mesh_ptr;
+											if (mesh_ptr)
+												mesh_ptr->setName(node_id);
+
+											object = mesh_ptr;
+										}
+										else
+										{
+											object = nullptr;
+										}
 									}
 
 									if (klass_to_instanciate == "Particle")

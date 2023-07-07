@@ -19,6 +19,7 @@ namespace Xplicit
 		const char* parent,
 		const char* name)
 		: 
+		Lua::CLuaClass((String(parent) + name).c_str()),
 		mName(name),
 		mParent(parent)
 	{
@@ -32,37 +33,16 @@ namespace Xplicit
 			XPLICIT_ASSERT(mAttribute.script());
 		}
 
-		String fmt = XPLICIT_LUA_GLOBAL;
-
-		if (!mParent.empty())
-		{
-			fmt += ".";
-			fmt += mParent;
-		}
-
-		fmt += ".";
-		fmt += mName;
-		fmt += " = { Size = { X = 0, Y = 0, Z = 0 }, Position = { X = 0, Y = 0, Z = 0 }, Color = { R = 0, G = 0, B = 0 } }";
-
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		this->insert("Scale", "{ X = 0, Y = 0, Z = 0 }");
+		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
+		this->insert("Color", "{ R = 0, G = 0, B = 0 }");
+		this->insert("Anchored", "true");
+		this->insert("Archivable", "true");
+		this->insert("Locked", "true");
+		this->insert("Collide", "true");
 	}
 
-	ClassComponent::~ClassComponent()
-	{
-		String fmt = XPLICIT_LUA_GLOBAL;
-
-		if (!mParent.empty())
-		{
-			fmt += ".";
-			fmt += mParent;
-		}
-
-		fmt += ".";
-		fmt += mName;
-		fmt += " = nil";
-
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-	}
+	ClassComponent::~ClassComponent() = default;
 
 	const char* ClassComponent::parent() noexcept { return mParent.c_str(); }
 
@@ -70,123 +50,26 @@ namespace Xplicit
 	
 	void ClassComponent::update()
 	{
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Alpha;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
+		this->get_attribute().anchor((bool)this->index_as_number("Anchored"));
 
-		get_attribute().alpha(lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
+		if (this->get_attribute().is_locked())
+			return;
 
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+		this->get_attribute().locked((bool)this->index_as_number("Locked"));
+		this->get_attribute().archivable((bool)this->index_as_number("Archivable"));
+		this->get_attribute().collide((bool)this->index_as_number("Collide"));
 
-		// Anchored?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Anchor;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
+		this->get_attribute().pos().X = this->index_as_number("Position.X");
+		this->get_attribute().pos().Y = this->index_as_number("Position.Y");
+		this->get_attribute().pos().Z = this->index_as_number("Position.Z");
 
-		get_attribute().anchor(lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
+		this->get_attribute().scale().X = this->index_as_number("Scale.X");
+		this->get_attribute().scale().Y = this->index_as_number("Scale.Y");
+		this->get_attribute().scale().Z = this->index_as_number("Scale.Z");
 
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Locked?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Lock;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().locked(lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Archived?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Archivable;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().archivable(lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Colliding?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Collide;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().collide(lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Pos X?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Position.X;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().pos().X = (lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Pos Y?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Position.Y;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().pos().Y = (lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Pos Z?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Position.Z;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().pos().Z = (lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Color (red)?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Color.R;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().color().R = (lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Color (green)?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Color.G;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().color().G = (lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Color (blue)?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Color.B;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().color().B = (lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Size X?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Size.X;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().scale().X = (lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Size Y?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Size.Y;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().scale().Y = (lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		// Size Z?
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Size.Z;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().scale().Z = (lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Alpha;", XPLICIT_LUA_GLOBAL, mParent, mName).c_str());
-
-		get_attribute().alpha((lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1)));
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+		this->get_attribute().color().R = this->index_as_number("Color.R");
+		this->get_attribute().color().G = this->index_as_number("Color.G");
+		this->get_attribute().color().B = this->index_as_number("Color.B");
 	}
 
 	XAttribute& ClassComponent::get_attribute() noexcept { return mAttribute; }

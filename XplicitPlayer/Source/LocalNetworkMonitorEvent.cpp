@@ -98,10 +98,12 @@ namespace Xplicit::Player
 					return;
 			}
 
-			XPLICIT_INFO("LocalHumanoid:Join [EVENT]");
+#ifdef XPLICIT_DEBUG
+			XPLICIT_INFO("Game:Login [EVENT]");
+#endif
 
 			ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash);
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Join()");
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Login()");
 
 			/*! invalidate command right there. */
 			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_INVALID;
@@ -136,8 +138,12 @@ namespace Xplicit::Player
 				{
 					if (packet.public_hash == players[ply]->id())
 					{
-						XPLICIT_INFO("LocalHumanoid:Leave [EVENT]");
-						Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Leave()");
+
+#ifdef XPLICIT_DEBUG
+						XPLICIT_INFO("Game:Logoff [EVENT]");
+#endif
+
+						Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Logoff()");
 
 						ComponentSystem::get_singleton_ptr()->remove(players[ply]);
 						break;

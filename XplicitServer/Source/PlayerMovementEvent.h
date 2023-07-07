@@ -39,9 +39,6 @@ namespace Xplicit
 		void operator()() override;
 
 	private:
-		NetworkServerComponent* mNetwork;
-
-	private:
 		GameVarPtr mVelocityVar;
 		GameVarPtr mDeltaVar;
 

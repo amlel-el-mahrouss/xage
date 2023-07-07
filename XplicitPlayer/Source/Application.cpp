@@ -64,7 +64,7 @@ namespace Xplicit::Bites
 			createDeviceEx(params)
 		);
 
-		RENDER->setWindowCaption(L"Xplicit [ Loading... ]");
+		RENDER->setWindowCaption(XPLICIT_APP_NAME);
 
 		Root::get_singleton_ptr()->set(new InputReceiver());
 		RENDER->setEventReceiver(Root::get_singleton_ptr()->Keyboard);

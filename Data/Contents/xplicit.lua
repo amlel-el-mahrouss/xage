@@ -1,13 +1,13 @@
 
 Game.Vector3 = {}
 
-function Game.Vector3:New(X, Y, Z)
+func Game.Vector3:New(X, Y, Z)
     return { X = X, Y = Y, Z = Z }
 end
 
 Game.ColorRGB = {}
 
-function Game.ColorRGB:New(R, G, B)
+func Game.ColorRGB:New(R, G, B)
     return { Red = R, Green = G, Blue = B }
 end
 
@@ -16,92 +16,100 @@ Game.HumanoidState.ALIVE = 0
 Game.HumanoidState.DEAD = 1
 Game.HumanoidState.INVALID = 3
 
-local function __addEvent(Tbl, Func)
+local func __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })
 end
 
-local function __rmEvent(Tbl, Index)
+local func __rmEvent(Tbl, Index)
     Tbl[Index] = nil;
 end
 
 Game.Slot = {
     Login = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
             return __addEvent(Game.Slot.Login, Func); 
         end,
-        Disconnect = function(Index)
+        Disconnect = func(Index)
             __rmEvent(self, Index); 
         end 
     },
     Logoff = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Logoff, Func); 
         end,
-        Disconnect = function(Index)
+        Disconnect = func(Index)
             __rmEvent(self, Index); 
         end 
     },
     LeftClick = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
             return __addEvent(Game.Slot.LeftClick, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     RightClick = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
             return __addEvent(Game.Slot.RightClick, Func); 
         end,
-        Disconnect = function(Iself, ndex)
+        Disconnect = func(Iself, ndex)
             __rmEvent(self, Index); 
         end 
     },
     MouseMove = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.MouseMove, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     LocalSpawn = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.LocalSpawn, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end  
     },
     Move = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Move, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     Damage = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Damage, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end  
     },
     Spawn = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Spawn, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
     Death = { 
-        Connect = function(self, Func)
+        Connect = func(self, Func)
         return __addEvent(Game.Slot.Death, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = func(self, Index)
+            __rmEvent(self, Index); 
+        end 
+    },
+    Tick = { 
+        Connect = func(self, Func)
+        return __addEvent(Game.Slot.Death, Func); 
+        end,
+        Disconnect = func(self, Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -110,7 +118,7 @@ Game.Slot = {
 Game.Counter = 0
 Game.PlayerCount = 0
 
-function Game:Login(id)
+func Game:Login(id)
     Game.PlayerCount = Game.PlayerCount + 1
 
     for _, v in ipairs(Game.Slot.Login) do
@@ -118,7 +126,7 @@ function Game:Login(id)
     end
 end
 
-function Game:Logoff(id)
+func Game:Logoff(id)
     Game.PlayerCount = Game.PlayerCount - 1
 
     for _, v in ipairs(Game.Slot.Logoff) do
@@ -126,49 +134,55 @@ function Game:Logoff(id)
     end
 end
 
-function Game:LeftClick()
+func Game:Tick()
+    for _, v in ipairs(Game.Slot.Tick) do
+        v.Func()
+    end
+end
+
+func Game:LeftClick()
     for _, v in ipairs(Game.Slot.LeftClick) do
         v.Func()
     end
 end
 
-function Game:RightClick()
+func Game:RightClick()
     for _, v in ipairs(Game.Slot.RightClick) do
         v.Func()
     end
 end
 
-function Game:MouseMove()
+func Game:MouseMove()
     for _, v in ipairs(Game.Slot.MouseMove) do
         v.Func()
     end
 end
 
-function Game:LocalSpawn()
+func Game:LocalSpawn()
     for _, v in ipairs(Game.Slot.LocalSpawn) do
         v.Func()
     end
 end
 
-function Game:Move(x, y, z)
+func Game:Move(x, y, z)
     for _, v in ipairs(Game.Slot.Move) do
         v.Func(x, y, z)
     end
 end
 
-function Game:Damage()
+func Game:Damage()
     for _, v in ipairs(Game.Slot.Damage) do
         v.Func()
     end
 end
 
-function Game:Death()
+func Game:Death()
     for _, v in ipairs(Game.Slot.Death) do
         v.Func()
     end
 end
 
-function Game:Spawn()
+func Game:Spawn()
     for _, v in ipairs(Game.Slot.Spawn) do
         v.Func()
     end

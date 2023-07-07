@@ -115,7 +115,7 @@ namespace Xplicit::Player
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 					[]() {
-						if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
+						if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(KEY_RETURN))
 							std::exit(0);
 					}, 
 						Vector<float>(XPLICIT_DIM.X / 2.8,

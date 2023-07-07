@@ -81,18 +81,18 @@ namespace Xplicit::Player
 				mPos.X = xSpeed;
 				mPos.Y = ySpeed;
 
-				for (size_t i = 0; i < XPLICIT_BUNDLE_MAX; ++i)
+				for (size_t i = 0; i < this->count_parts(); ++i)
 				{
-					if (!this->node(i))
+					if (!this->node_at(i))
 						continue;
 
-					auto pos = this->node(i)->getPosition();
+					auto pos = this->node_at(i)->getPosition();
 
 					pos.Z += mPos.Z;
 					pos.X += mPos.X;
 					pos.Y += mPos.Y;
 
-					this->node(i)->setPosition(pos);
+					this->node_at(i)->setPosition(pos);
 				}
 
 				XPLICIT_INFO("Game:Move [EVENT]");
@@ -106,7 +106,14 @@ namespace Xplicit::Player
 		if (cam)
 		{
 			mCam = cam;
-			this->node(XPLICIT_BUNDLE_HEAD)->addChild(mCam->get());
+			const std::size_t cnt = this->count_parts();
+
+			for (std::size_t i = 0; i < cnt; ++i)
+			{
+				//! use BasicString, so that we can safely get input here.
+				if (this->node_at(i)->getName() == String("Head"))
+					this->node_at(i)->addChild(mCam->get());
+			}
 		}
 	}
 

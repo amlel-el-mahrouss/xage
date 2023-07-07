@@ -22,7 +22,7 @@ namespace Xplicit
 		: 
 		Component(), 
 		mPeer(nullptr),
-		mHealth(0), 
+		mHealth(100), 
 		mCanSpawn(true),
 		mState(HUMANOID_STATE::DEAD),
 		mClass(nullptr)
@@ -58,14 +58,7 @@ namespace Xplicit
 
 		mClass->assign("Position", str.c_str());
 
-		try
-		{
-			mHealth = std::atol(mClass->index("Health"));
-		}
-		catch (...)
-		{
-			mHealth = 0UL;
-		}
+		mHealth = mClass->index_as_number("Health");
 
 		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
 			mState = HUMANOID_STATE::ALIVE;
@@ -109,9 +102,13 @@ namespace Xplicit
 
 			//! Reset Humanoid information
 			mClass->insert("Position", "{ X = 0, Y = 0, Z = 0, }");
-			mClass->insert("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
 			mClass->insert("State", "Game.HumanoidState.Dead");
 			mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
+			mClass->insert("Health", std::to_string(mHealth).c_str());
+			mClass->insert("Name", XPLICIT_DEFAULT_NAME);
+			mClass->insert("Parent", "{}");
+
+			std::cout << mClass->index_as_number("Health");
 		}
 	}
 

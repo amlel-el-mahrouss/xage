@@ -1,22 +1,26 @@
 <Xplicit xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
-	<Class Id="LeftArm" Class="Mesh">
-		LeftArm.mesh
+	<Class Name="LeftArm" Object="Mesh">
+		Contents/Bundles/leftarm.obj
 	</Class>
 
-	<Class Id="RightArm" Class="Mesh">
-		RightArm.mesh
+	<Class Name="RightArm" Object="Mesh">
+		Contents/Bundles/rightarm.obj
 	</Class>
 
-	<Class Id="Torso" Class="Mesh">
-		Torso.mesh
+	<Class Name="Torso" Object="Mesh">
+		Contents/Bundles/torso.obj
 	</Class>
 
-	<Class Id="LeftLeg" Class="Mesh">
-		LeftLeg.mesh
+	<Class Name="LeftLeg" Object="Mesh">
+		Contents/Bundles/leftleg.obj
 	</Class>
 
-	<Class Id="RightLeg" Class="Mesh">
-		RightLeg.mesh
+	<Class Name="RightLeg" Object="Mesh">
+		Contents/Bundles/rightleg.obj
+	</Class>
+
+	<Class Name="Head" Object="Mesh">
+		Contents/Bundles/head.obj
 	</Class>
 
 	<Position3 X="-10.9" Y="3" Z="-6.119">
@@ -37,6 +41,10 @@
 
 	<Position3 X="-9.4" Y="3" Z="-6.119">
 		Torso
+	</Position3>
+
+	<Position3 X="0" Y="3.5" Z="0">
+		Head
 	</Position3>
 
 	<Position3 X="-10.64" Y="4.551" Z="0.62">
