@@ -152,7 +152,7 @@ end
 
 function Game:Move(x, y, z)
     for _, v in ipairs(Game.Slot.Move) do
-        v.Func()
+        v.Func(x, y, z)
     end
 end
 
@@ -174,12 +174,9 @@ function Game:Spawn()
     end
 end
 
-Game.Name = "Xplicit"
-Game.Description = "Game Engine API"
-Game.Version = "1.0.2"
-
--- Given by server to initialize UI and stuff...
-Game.AutorunClient = "xasset://autorun-client.lua"
+Game.Name = "XplicitNgine"
+Game.Description = "Xplicit Engine instance"
+Game.Version = "1.1.3"
 
 -- Components ID.
 Game.INVALID = 0;

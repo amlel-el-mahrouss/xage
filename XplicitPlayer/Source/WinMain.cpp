@@ -78,23 +78,14 @@ static void xplicit_throw_error(Xplicit::Win32Error& err);
 static void xplicit_setup_ogre3d()
 {
 	Ogre::Root* root = Xplicit::Root::get_singleton_ptr()->getRoot();
-	Ogre::SceneManager* scnMgr = root->createSceneManager();
+	Ogre::SceneManager* scn_mgr = root->createSceneManager();
 
-	Ogre::RTShader::ShaderGenerator* shadergen = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-	shadergen->addSceneManager(scnMgr);
+	Ogre::RTShader::ShaderGenerator* shader_gen = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 
-	root->_setCurrentSceneManager(scnMgr);
+	shader_gen->addSceneManager(scn_mgr);
 
-	// without light we would just get a black screen, this makes sense, as nothing in refracted to our eye.
-	Ogre::Light* light = scnMgr->createLight("MainLight");
-
-	Xplicit::Root::get_singleton_ptr()->Ogre3D_Light = scnMgr->getRootSceneNode()->createChildSceneNode();
-
-	Xplicit::Root::get_singleton_ptr()->Ogre3D_Light->setPosition(0, 10, 15);
-	Xplicit::Root::get_singleton_ptr()->Ogre3D_Light->attachObject(light);
-
-	Xplicit::Root::get_singleton_ptr()->Ogre3D_Scene = scnMgr;
-	Xplicit::Root::get_singleton_ptr()->Ogre3D_RTSS = shadergen;
+	Xplicit::Root::get_singleton_ptr()->Ogre3D_Scene = scn_mgr;
+	Xplicit::Root::get_singleton_ptr()->Ogre3D_RTSS = shader_gen;
 	Xplicit::Root::get_singleton_ptr()->Ogre3D_Window = Xplicit::Root::get_singleton_ptr()->getRenderWindow();
 }
 
@@ -127,10 +118,8 @@ XPLICIT_MAIN()
 			return 1;
 
 		Xplicit::Root::get_singleton_ptr()->initApp();
-
-		Xplicit::Root::get_singleton_ptr()->addInputListener(new Xplicit::OgreInputListener());
+;
 		Xplicit::Root::get_singleton_ptr()->getRoot()->addFrameListener(new Xplicit::Ogre::OgreListener(uri));
-
 		Xplicit::Root::get_singleton_ptr()->getRoot()->startRendering();
 
 		Xplicit::Root::get_singleton_ptr()->closeApp();

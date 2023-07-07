@@ -5,7 +5,7 @@
  *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: Xplicit.h
- *			Purpose: 
+ *			Purpose: Xplicit Base Header
  *
  * =====================================================================
  */

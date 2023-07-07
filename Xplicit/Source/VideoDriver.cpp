@@ -14,7 +14,8 @@
 
 namespace Xplicit::Renderer
 {
-	VideoBuffer::VideoBuffer() : m_resource_desc(), m_resource_data() {}
+	VideoBuffer::VideoBuffer() 
+		: m_resource_desc(), m_resource_data() {}
 
 	VideoBuffer::~VideoBuffer()
 	{

@@ -26,7 +26,7 @@ namespace Xplicit::Renderer::DX11
 		void ThrowIfFailed(const HRESULT hr)
 		{
 			if (FAILED(hr))
-				throw Win32Error("[ThrowIfFailed] Fatal DirectX error!");
+				throw Win32Error("[ThrowIfFailed] Fatal DirectX error! Check HRESULT.");
 		}
 	}
 

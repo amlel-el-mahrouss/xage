@@ -18,7 +18,7 @@
 namespace Xplicit::Bites
 {
 	Win32Window::Win32Window(const char* wndName, const char* wndClass, HINSTANCE hInstance)
-		: mTraits()
+		: mTraits(), mExit(false)
 	{
 		RtlZeroMemory(&mTraits.WndClass, sizeof(WNDCLASSEXA));
 

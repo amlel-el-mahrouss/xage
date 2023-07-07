@@ -73,13 +73,6 @@ namespace Xplicit
 			{
 				player->should_spawn(false);
 
-				if (player->get_attribute().script() &&
-					player->get_attribute().script()->name() == "Death")
-				{
-					player->get_attribute().script()->run();
-					XPLICIT_INFO("Humanoid:Death [EVENT]");
-				}
-
 				XPLICIT_INFO("Game:Death [EVENT]");
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Death()");
 
@@ -95,16 +88,7 @@ namespace Xplicit
 					std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_DEATH_DELAY));
 
 					if (humanoid)
-					{
 						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
-
-						if (humanoid->get_attribute().script() &&
-							humanoid->get_attribute().script()->name() == "Spawn")
-						{
-							XPLICIT_INFO("Humanoid:Spawn [EVENT]");
-							humanoid->get_attribute().script()->run();
-						}
-					}
 				}, player);
 			}
 			else

@@ -165,6 +165,9 @@ namespace Xplicit
 		void setup() override
 		{
 			OgreBites::ApplicationContext::setup();
+
+			//! as we inherit of Xplicit::OgreInputListener, we must add ourself to the inputListener
+			addInputListener(this);
 		}
 
 		bool set_title(const char* title) noexcept
@@ -185,9 +188,9 @@ namespace Xplicit
 
 	public:
 		Ogre::RTShader::ShaderGenerator* Ogre3D_RTSS;
-		Ogre::SceneNode* Ogre3D_Light;
 		Ogre::RenderWindow* Ogre3D_Window;
 		Ogre::SceneManager* Ogre3D_Scene;
+		Ogre::SceneNode* Ogre3D_Light;
 		Ogre::Root* Ogre3D;
 
 	};

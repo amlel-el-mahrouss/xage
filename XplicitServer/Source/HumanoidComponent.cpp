@@ -12,7 +12,6 @@
  */
 
 #include "HumanoidComponent.h"
-#include <lua/CLua.hpp>
 
 #define XPLICIT_LUA_GLOBAL "_G."
 #define XPLICIT_LUA_NAMESPACE "Game.Players."
@@ -25,7 +24,8 @@ namespace Xplicit
 		mPeer(nullptr),
 		mHealth(0), 
 		mCanSpawn(true),
-		mState(HUMANOID_STATE::DEAD)
+		mState(HUMANOID_STATE::DEAD),
+		mClass(nullptr)
 	{
 		// Don't initialize lua code here, because we got no peer.
 	}
@@ -43,70 +43,39 @@ namespace Xplicit
 
 		// execute a series of commands for this humanoid.
 
-		String fmt = XPLICIT_LUA_GLOBAL;
-
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += this->get_peer()->xplicit_id.as_string();
-		fmt += ".Health ";
-		fmt += "= " + std::to_string(this->mHealth) + ";";
-
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-		fmt.clear();
-
-		fmt = XPLICIT_LUA_GLOBAL;
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += this->get_peer()->xplicit_id.as_string();
-		fmt += ".State = ";
-
 		if (mState == HUMANOID_STATE::ALIVE)
-			fmt += XPLICIT_LUA_GLOBAL + String("Game.HumanoidState.Alive");
+			mClass->assign("State", "Game.HumanoidState.Alive");
 
 		if (mState == HUMANOID_STATE::DEAD)
-			fmt += XPLICIT_LUA_GLOBAL + String("Game.HumanoidState.Dead");
+			mClass->assign("State", "Game.HumanoidState.Dead");
 
 		if (mState == HUMANOID_STATE::INVALID)
-			fmt += XPLICIT_LUA_GLOBAL + String("Game.HumanoidState.Invalid");
+			mClass->assign("State", "Game.HumanoidState.Invalid");
 
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-		fmt.clear();
-
-		fmt = XPLICIT_LUA_GLOBAL;
-
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += this->get_peer()->xplicit_id.as_string();
-		fmt += ".Position ";
-		fmt += String("= ") + "{" + std::to_string(mAttribute.pos().X) + "," + 
+		auto str = "{" + std::to_string(mAttribute.pos().X) + "," + 
 									std::to_string(mAttribute.pos().Y) + "," +
 									std::to_string(mAttribute.pos().Z) + "," + "}";
 
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		mClass->assign("Position", str.c_str());
 
-		fmt.clear();
-
-		fmt += XPLICIT_LUA_NAMESPACE;
-		fmt += this->get_peer()->xplicit_id.as_string();
-		fmt += ".ID = ";
-		fmt += "\"" +  mPeer->xplicit_id.as_string() + "\"";
-
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-		fmt.clear();
+		try
+		{
+			mHealth = std::atol(mClass->index("Health"));
+		}
+		catch (...)
+		{
+			mHealth = 0UL;
+		}
 
 		if (mHealth >= XPLICIT_DEFAULT_HEALTH)
 			mState = HUMANOID_STATE::ALIVE;
 		else if (mHealth < 1)
 			mState = HUMANOID_STATE::DEAD;
+		else if (!this->get_peer())
+			mState = HUMANOID_STATE::INVALID;
 
 		if (this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
 		{
-			XPLICIT_INFO("Humanoid:Damage [EVENT]");
-
-			if (this->get_attribute().script() &&
-				this->get_attribute().script()->name() == "Damage")
-				this->get_attribute().script()->run();
-
 			XPLICIT_INFO("Game:Damage [EVENT]");
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Damage()");
 		}
@@ -128,31 +97,21 @@ namespace Xplicit
 	NetworkInstance* HumanoidComponent::get_peer() const noexcept { return mPeer; }
 
 	void HumanoidComponent::set_peer(NetworkInstance* peer) noexcept 
-	{
-		// invaliate previous instance
-		if (this->get_peer() != nullptr)
-		{
-			String fmt = XPLICIT_LUA_GLOBAL;
-			fmt += XPLICIT_LUA_NAMESPACE;
-			fmt += this->get_peer()->xplicit_id.as_string();
-			fmt += " = nil";
-
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-		}
-
-		if (peer == nullptr)
-			mState = HUMANOID_STATE::DEAD;
-		
+	{	
 		mPeer = peer;
+
+		if (mClass)
+			mClass.reset();
 
 		if (mPeer)
 		{
-			String fmt = XPLICIT_LUA_GLOBAL;
-			fmt += XPLICIT_LUA_NAMESPACE;
-			fmt += mPeer->xplicit_id.as_string();
-			fmt += String(" = { Position = { X = 0, Y = 0, Z = 0, }, Health = 0, ID = '', State = ") + XPLICIT_LUA_GLOBAL + String("Game.HumanoidState.Dead") + " }";
+			mClass = std::make_unique<Lua::CLuaClass>(("Game.Players." + mPeer->xplicit_id.as_string()).c_str());
 
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+			//! Reset Humanoid information
+			mClass->insert("Position", "{ X = 0, Y = 0, Z = 0, }");
+			mClass->insert("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
+			mClass->insert("State", "Game.HumanoidState.Dead");
+			mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
 		}
 	}
 
@@ -166,6 +125,3 @@ namespace Xplicit
 
 	const HUMANOID_STATE& HumanoidComponent::get_state() noexcept { return mState; }
 }
-
-#undef XPLICIT_LUA_GLOBAL
-#undef XPLICIT_LUA_NAMESPACE

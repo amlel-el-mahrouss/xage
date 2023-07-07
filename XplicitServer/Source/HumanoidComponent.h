@@ -10,6 +10,7 @@
 #pragma once
 
 #include "CommonInclude.h"
+#include <lua/CLua.hpp>
 
 namespace Xplicit
 {
@@ -66,10 +67,13 @@ namespace Xplicit
 		const int64_t& id() { return mId; }
 
 	private:
+		std::unique_ptr<Lua::CLuaClass> mClass;
+
+	private:
 		NetworkInstance* mPeer;
 		XAttribute mAttribute;
 		HUMANOID_STATE mState;
-		int16_t mHealth;
+		int64_t mHealth;
 		bool mCanSpawn;
 		int64_t mId;
 

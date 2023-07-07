@@ -25,21 +25,21 @@ namespace Xplicit
 		mNetwork(nullptr),
 		mDeltaTime(0UL)
 	{
-		mVelocityVar = GameVarManager::get_singleton_ptr()->get("Server-Velocity");
+		mVelocityVar = GameVarManager::get_singleton_ptr()->get("Velocity");
 		
 		if (!mVelocityVar)
 		{
-			mVelocityVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-Velocity",
+			mVelocityVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Velocity",
 				"0.035f",
 				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
 
 		}
 
-		mDeltaVar = GameVarManager::get_singleton_ptr()->get("Server-DeltaTime");
+		mDeltaVar = GameVarManager::get_singleton_ptr()->get("DeltaTime");
 
 		if (!mDeltaVar)
 		{
-			mDeltaVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Server-DeltaTime",
+			mDeltaVar = Xplicit::GameVarManager::get_singleton_ptr()->create("DeltaTime",
 				"0.01",
 				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
 		}

@@ -16,31 +16,6 @@
  // RoXML parser
 Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
-static int lua_SetHumanoidHealth(lua_State* L)
-{
-	const auto humanoid = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
-
-	if (humanoid.empty())
-		return 0;
-
-	const int64_t id = lua_tointeger(L, 1);
-	const int64_t dmg = lua_tointeger(L, 2);
-
-	if (id == -1)
-		return 0;
-
-	for (std::size_t index = 0; index < humanoid.size(); index++)
-	{
-		if (humanoid[index]->id() == id)
-		{
-			humanoid[index]->set_health(dmg);
-			break;
-		}
-	}
-
-	return 0;
-}
-
 static int lua_LoadScript(lua_State* L)
 {
 	const char* path = lua_tostring(L, 1);
@@ -143,15 +118,9 @@ static int lua_NetworkService_Create(lua_State* L)
 
 void XplicitLoadServerLua() noexcept
 {
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.HumanoidService = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.ScriptService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.ReplicationService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.ScriptService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.RoXMLService = {}");
-
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_SetHumanoidHealth);
-
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_HumanoidHealth");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Game.HumanoidService.Health = GameAPI_HumanoidHealth");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadScript);
 

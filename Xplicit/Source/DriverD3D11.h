@@ -197,20 +197,32 @@ namespace Xplicit::Renderer::DX11
 
 	};
 
+	/*
+     *
+	 * RenderComponentD3D11
+	 * 
+	 * @brief Rendering Component, takes care of rendering a specific component in the scene.
+	 * NOTE: don't add this to the main ComponentSystem, use the SceneTree class instead.
+	 * 
+	 */
+
 	class XPLICIT_API RenderComponentD3D11 final : public Component
 	{
 	public:
 		RenderComponentD3D11();
 		~RenderComponentD3D11() override;
 
-		RenderComponentD3D11& operator=(const RenderComponentD3D11&) = default;
-		RenderComponentD3D11(const RenderComponentD3D11&) = default;
-		
+	public:
+		XPLICIT_COPY_DEFAULT(RenderComponentD3D11);
+
+	public:
 		void push(const Vector<float>& vert);
 		void push_shader(ShaderSystemD3D11* system) noexcept;
 
+	public:
 		void set_driver(DriverSystemD3D11* dx11) noexcept;
 
+	public:
 		size_t size() noexcept;
 		void create();
 

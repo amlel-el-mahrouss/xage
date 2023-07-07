@@ -20,7 +20,7 @@ namespace Xplicit::Renderer::Vk
 
 			appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 
-			appInfo.pApplicationName = "XplicitVkClient";
+			appInfo.pApplicationName = "XplicitNgine";
 			appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 			appInfo.pEngineName = "XplicitNgine";
 			appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
