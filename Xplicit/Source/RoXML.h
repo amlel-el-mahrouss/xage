@@ -158,14 +158,26 @@ namespace Xplicit::RoXML
 									if (klass_to_instanciate == "Stud")
 									{
 										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
-										Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, "Prefab_Cube");
+										object = Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, Ogre::SceneManager::PT_CUBE);
+									}
+
+									if (klass_to_instanciate == "Plane")
+									{
+										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
+										object = Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, Ogre::SceneManager::PT_PLANE);
+									}
+
+									if (klass_to_instanciate == "Ball")
+									{
+										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
+										object = Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, Ogre::SceneManager::PT_SPHERE);
 									}
 
 									if (klass_to_instanciate == "Mesh")
 									{
 										XPLICIT_ASSERT(Root::get_singleton_ptr()->Ogre3D_Scene);
 
-										String mesh_path = "";
+										XPLICIT_GET_DATA_DIR(mesh_path);
 
 										for (size_t i = 0; i < strlen(node->value()); i++)
 										{
@@ -176,7 +188,15 @@ namespace Xplicit::RoXML
 												mesh_path += node->value()[i];
 										}
 
-										Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, mesh_path);
+										try
+										{
+											auto mesh_ptr = Root::get_singleton_ptr()->Ogre3D_Scene->createEntity(node_id, mesh_path);
+											object = mesh_ptr;
+										}
+										catch (Ogre::RuntimeAssertionException& err)
+										{
+											XPLICIT_INFO(err.getFullDescription());
+										}
 									}
 
 									if (klass_to_instanciate == "Particle")

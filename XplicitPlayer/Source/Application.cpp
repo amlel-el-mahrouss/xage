@@ -30,20 +30,13 @@ namespace Xplicit::Bites
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mPath(""), mWsa()
 	{
-		Xplicit::init_winsock(&mWsa);
+		//! Setup Engine
+		this->setup();
 
-		XPLICIT_GET_DATA_DIR(path);
-		mPath = path;
-
-		this->create_and_set_contexts();
-
-		XPLICIT_GET_DATA_DIR(data_appdata);
-		mPath += data_appdata;
-
-		// Load Basic lua calls
+		//! Load Basic lua calls
 		XplicitLoadBaseLua();
 
-		// register lua calls, such as PlaySound
+		//! Register clientside Lua calls, such as PlaySound
 		XplicitLoadClientLua();
 
 		ComponentSystem::get_singleton_ptr()->add<NetworkComponent>();
@@ -56,8 +49,15 @@ namespace Xplicit::Bites
 
 	Application::~Application() {}
 
-	void Application::create_and_set_contexts()
+	void Application::setup()
 	{
+		Xplicit::init_winsock(&mWsa);
+
+		//! Setup program contents path.
+		XPLICIT_GET_DATA_DIR(path);
+		mPath = path;
+
+		//! Setup SettingsManager
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
 	}

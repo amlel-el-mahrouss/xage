@@ -4,7 +4,7 @@
 
 #include <string>
 
-#define XPLICIT_XASSET_ENDPOINT ("play-xplicit.com")
-#define XPLICIT_PLACE_ENDPOINT ("play-xplicit.com")
+#define XPLICIT_XASSET_ENDPOINT "play-xplicit.com"
+#define XPLICIT_PLACE_ENDPOINT "play-xplicit.com"
 
 inline std::string XPLICIT_PLACE_ID = "";

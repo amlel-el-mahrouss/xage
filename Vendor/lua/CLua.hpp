@@ -113,7 +113,10 @@ namespace Xplicit::Lua
 		explicit CLuaClass(const char* klass) noexcept
 			: mClass(klass)
 		{
-			CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}", mClass).c_str());
+			String fmt = std::format("_G.{}", mClass);
+			fmt += " = {}";
+
+			CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 
 		~CLuaClass() noexcept

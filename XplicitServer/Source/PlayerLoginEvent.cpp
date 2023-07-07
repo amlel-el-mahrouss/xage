@@ -92,6 +92,9 @@ namespace Xplicit
 
 	PlayerLoginEvent::~PlayerLoginEvent() = default;
 
+	//! @brief Handle player log-in event
+	//! @brief setup humanoid and more...
+	
 	void PlayerLoginEvent::handle_join_event() noexcept
 	{
 		if (this->size() >= XPLICIT_MAX_CONNECTIONS)
@@ -186,13 +189,6 @@ namespace Xplicit
 					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
-
-					// Create Player table.
-					fmt = "_G.Game.Players.";
-					fmt += mNetwork->get(peer_idx)->xplicit_id.as_string();
-					fmt += " = nil";
-
-					Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					mNetwork->get(peer_idx)->reset(); // reset peer.
 					mNetwork->get(peer_idx)->xplicit_id.generate(~0); // invalidate player id.

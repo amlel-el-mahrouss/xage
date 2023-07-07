@@ -108,7 +108,7 @@ namespace Xplicit::Bites
 		SettingsManager* leak_settings() const noexcept { return mSettings.get(); }
 
 	private:
-		void create_and_set_contexts();
+		void setup();
 		
 	private:
 		std::unique_ptr<SettingsManager> mSettings;
