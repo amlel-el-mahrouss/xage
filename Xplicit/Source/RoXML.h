@@ -262,11 +262,11 @@ namespace Xplicit::RoXML
 								Vector<float>(0, 0, 0),
 								Color<float>(0, 0, 0),
 								nullptr,
-								"Game",
+								"World",
 								node->value());
 
 							component->insert("Path", node->first_attribute()->value());
-							component->insert("Play", "func(self) _G.Game.SoundService.Play(self.Path); end");
+							component->insert("Play", "func(self) _G.World.SoundService.Play(self.Path); end");
 						}
 					}
 

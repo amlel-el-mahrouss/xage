@@ -12,8 +12,8 @@
 #include "GameMenuUI.h"
 
 #include <CommonEngine.h>
-#include <RoXML.h>
 #include <CLua.hpp>
+#include <RoXML.h>
 #include <Util.h>
 #include <Uri.h>
 
@@ -39,14 +39,16 @@ namespace Xplicit::Player
 	 *   - Destroy
 	 */
 
-	void LocalReplicationComponent::update()
+	void LocalReplicationComponent::update(void* class_ptr)
 	{
-		if (!mNetwork)
+		LocalReplicationComponent* _this = (LocalReplicationComponent*)class_ptr;
+
+		if (!_this->mNetwork)
 			return;
 
 		NetworkPacket packet{};
 
-		if (!mNetwork->read(packet))
+		if (!_this->mNetwork->read(packet))
 			return;
 
 		if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
@@ -65,7 +67,7 @@ namespace Xplicit::Player
 				parser.load(params);
 
 				if (name.empty() ||
-					packet.hash != this->mHash)
+					packet.hash != _this->mHash)
 				{
 					if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnBadChallengeRoXML"))
 					{
@@ -79,7 +81,7 @@ namespace Xplicit::Player
 
 					}
 
-					ComponentSystem::get_singleton_ptr()->remove(mNetwork);
+					ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
 				}
 
 				break;
@@ -111,7 +113,7 @@ namespace Xplicit::Player
 				String name = packet.buffer;
 
 				if (name.empty() ||
-					packet.hash != this->mHash)
+					packet.hash != _this->mHash)
 				{
 					if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnChallengeScript"))
 					{
@@ -125,7 +127,7 @@ namespace Xplicit::Player
 
 					}
 
-					ComponentSystem::get_singleton_ptr()->remove(mNetwork);
+					ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
 				}
 
 				if (auto script = ComponentSystem::get_singleton_ptr()->get<LuaScriptComponent>(name.c_str()))

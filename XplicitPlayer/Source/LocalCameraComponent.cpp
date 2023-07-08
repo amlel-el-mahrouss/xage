@@ -36,7 +36,11 @@ namespace Xplicit::Player
 
 	const char* LocalCameraComponent::name() noexcept { return ("LocalCameraComponent"); }
 
-	void LocalCameraComponent::update() {}
+	void LocalCameraComponent::update(void* class_ptr) 
+	{
+		LocalCameraComponent* cam = (LocalCameraComponent*)class_ptr;
+		(void)cam;
+	}
 
 	irr::scene::ICameraSceneNode* LocalCameraComponent::get() noexcept { return mCamera; }
 }

@@ -74,10 +74,10 @@ namespace Xplicit
 				humanoid->set_state(HUMANOID_STATE::DEAD);
 
 #ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("Game:Death [EVENT]");
+				XPLICIT_INFO("World:Death [EVENT]");
 #endif // ifdef XPLICIT_DEBUG
 
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Death()");
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Death()");
 
 				for (std::size_t peer = 0UL; peer < mNetwork->size(); ++peer)
 				{
@@ -97,10 +97,10 @@ namespace Xplicit
 						XplicitHandleSpawn(mSpawner, humanoid);
 
 #ifdef XPLICIT_DEBUG
-						XPLICIT_INFO("Game:Spawn [EVENT]");
+						XPLICIT_INFO("World:Spawn [EVENT]");
 #endif // ifdef XPLICIT_DEBUG
 
-						Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Spawn()");
+						Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Spawn()");
 					}
 				}, humanoid);
 

@@ -8,7 +8,7 @@
  */
 
 // The component itself 
-#include "LocalGearComponent.h"
+#include "GearComponent.h"
 
 namespace Xplicit::Player
 {
@@ -45,29 +45,22 @@ namespace Xplicit::Player
 
 	bool GearComponent::should_update() noexcept { return true; }
 
-	void GearComponent::update() noexcept
+	void GearComponent::update(void* class_ptr)
 	{
-		ClassComponent::update();
+		GearComponent* _this = (GearComponent*)class_ptr;
 
-		String fmt = std::format("{}{}{}.Mesh;", XPLICIT_LUA_GLOBAL, mParent, mName);
+		String fmt = std::format("{}{}{}.Mesh;", XPLICIT_LUA_GLOBAL, _this->mParent, _this->mName);
 
 		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), fmt.c_str());
 		String path = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
-		if (auto _path = mMeshPtr->path(); 
+		if (auto _path = _this->mMeshPtr->path();
 			path != _path)
 		{
-			mMeshPtr.reset();
-			mMeshPtr = std::make_unique<StaticMesh>(_path.c_str(), mName.c_str(), mParent.c_str());
+			_this->mMeshPtr.reset();
+			_this->mMeshPtr = std::make_unique<StaticMesh>(_path.c_str(), _this->mName.c_str(), _this->mParent.c_str());
 
-			lua_setglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), mMeshPtr->path().c_str());
-		}
-
-		if (this->get_attribute().script() &&
-			this->get_attribute().script()->name() == "Update")
-		{
-			XPLICIT_INFO("GearComponent:Update()");
-			this->get_attribute().script()->run();
+			lua_setglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), _this->mMeshPtr->path().c_str());
 		}
 	}
 }

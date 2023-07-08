@@ -54,13 +54,13 @@ namespace Xplicit
 		if (_this->mState == HUMANOID_STATE::ALIVE)
 		{
 			_this->mCanSpawn = true;
-			_this->mClass->insert("State", "Game.HumanoidState.Alive");
+			_this->mClass->insert("State", "World.HumanoidState.Alive");
 		}
 
 		if (_this->mState == HUMANOID_STATE::DEAD)
 		{
 			_this->mCanSpawn = false;
-			_this->mClass->insert("State", "Game.HumanoidState.Dead");
+			_this->mClass->insert("State", "World.HumanoidState.Dead");
 		}
 
 		if (_this->mState == HUMANOID_STATE::INVALID)
@@ -68,7 +68,7 @@ namespace Xplicit
 			_this->mCanSpawn = false;
 			_this->mHealth = 0;
 
-			_this->mClass->insert("State", "Game.HumanoidState.Invalid");
+			_this->mClass->insert("State", "World.HumanoidState.Invalid");
 		}
 
 		String str = "{" + std::to_string(_this->mAttribute.pos().X) + "," +
@@ -105,7 +105,7 @@ namespace Xplicit
 
 		if (mPeer)
 		{
-			String path("Game.Players.");
+			String path("World.Players.");
 			path += mPeer->xplicit_id.as_string();
 
 			if (!mClass)
@@ -118,7 +118,7 @@ namespace Xplicit
 					XPLICIT_DEFAULT_NAME
 					"\"");
 
-				mClass->insert("State", "Game.HumanoidState.Alive");
+				mClass->insert("State", "World.HumanoidState.Alive");
 
 				mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
 

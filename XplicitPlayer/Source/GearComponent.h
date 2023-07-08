@@ -33,13 +33,13 @@ namespace Xplicit::Player
 		PHYSICS_TYPE physics() noexcept override;
 	
 	public:
-		bool should_update() noexcept override;
-		void update() noexcept override;
+		static bool should_update() noexcept;
+		static void update(void* class_ptr);
 
 	public:
 		explicit GearComponent(const char* name, 
 			const char* mesh = nullptr,
-			const char* parent = "Game") noexcept;
+			const char* parent = "World") noexcept;
 
 	public:
 		StaticMesh* get_mesh() const noexcept;

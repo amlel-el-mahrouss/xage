@@ -13,24 +13,18 @@
 namespace Xplicit::Player
 {
 	LocalSoundComponent::LocalSoundComponent() 
-		: mPosition(0.0f, 0.0f, 0.0f), mVolume(0.5f), mLoop(false) 
+		: ClassComponent(Vector<float>(0.0f, 0.0f, 0.0f),
+			Vector<float>(0.0f, 0.0f, 0.0f), 
+			Color<float>(0.0f, 0.0f, 0.0f), 
+			nullptr,
+			"World.",
+			"SoundMixer"),
+		mVolume(0.5f), mLoop(false)
 	{
-		String fmt = String(XPLICIT_LUA_GLOBAL);
-		fmt += ".Game.";
-		fmt += "SoundMixer ";
-		fmt += " = { Volume = 0.5, Position = { 0, 0, 0 }, Loop = false }";
-
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 
 	LocalSoundComponent::~LocalSoundComponent()
 	{
-		String fmt = String(XPLICIT_LUA_GLOBAL);
-		fmt += ".Game.";
-		fmt += "SoundMixer ";
-		fmt += " = nil";
-
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 
 	const char* LocalSoundComponent::name() noexcept { return "LocalSoundComponent"; }
@@ -54,42 +48,12 @@ namespace Xplicit::Player
 		mVolume = volume;
 	}
 
-	void LocalSoundComponent::update()
+	void LocalSoundComponent::update(void* class_ptr)
 	{
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Loop;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
+		LocalSoundComponent* _this = (LocalSoundComponent*)class_ptr;
 
-		mLoop = lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Volume;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
-
-		mLoop = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Position.X;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
-
-		mPosition.X = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Position.Y;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
-
-		mPosition.Y = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-			std::format("{}{}{}.Position.Z;", XPLICIT_LUA_GLOBAL, XPLICIT_LUA_NAMESPACE, "Sound").c_str());
-
-		mPosition.Z = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-		lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+		_this->mLoop = _this->index_as_number("Loop");
+		_this->mVolume = _this->index_as_number("Volume");
 	}
 
 	void LocalSoundComponent::should_loop(const bool enable) noexcept
@@ -121,7 +85,7 @@ namespace Xplicit::Player
 			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
 			
 			if (audio)
-				audio->play_3d(mPosition, &mLoop);
+				audio->play_3d(this->get_attribute().pos(), &mLoop);
 		}, path);
 
 		job.detach();

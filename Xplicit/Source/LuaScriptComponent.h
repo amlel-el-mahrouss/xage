@@ -42,7 +42,7 @@ namespace Xplicit
 		const char* name() noexcept override;
 
 	public:
-		static void update(void* class_ptr) noexcept;
+		static void update(void* class_ptr);
 		static bool should_update() noexcept;
 
 

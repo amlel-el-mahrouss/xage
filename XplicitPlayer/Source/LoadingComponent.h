@@ -27,8 +27,8 @@ namespace Xplicit::Player
 		XPLICIT_COPY_DEFAULT(LoadingComponent);
 
 	public:
-		bool should_update() noexcept override { return mEnabled; }
-		void update() override;
+		static bool should_update() noexcept { return mEnabled; }
+		static void update(void* class_ptr);
 
 	public:
 		// starts to connect to specified IP:PORT.
@@ -44,7 +44,9 @@ namespace Xplicit::Player
 	private:
 		NetworkComponent* mNetwork;
 		std::int64_t mTimeout; /* Network Timeout, incremented on each connection failure. */
-		bool mEnabled; /* Should we seek for a connection? */
+
+	private:
+		static bool mEnabled; /* Should we seek for a connection? */
 
 	};
 }

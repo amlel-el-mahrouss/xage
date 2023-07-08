@@ -22,7 +22,7 @@
 
 namespace Xplicit::Player
 {
-	class LocalSoundComponent final : public Component
+	class LocalSoundComponent final : public Component, public ClassComponent
 	{
 	public:
 		explicit LocalSoundComponent();
@@ -36,9 +36,10 @@ namespace Xplicit::Player
 		void play_2d(const String& path) noexcept;
 
 	public:
-		void update() override;
+		static void update(void* class_ptr);
+		static bool should_update() noexcept;
+
 		const char* name() noexcept override;
-		bool should_update() noexcept override;
 		COMPONENT_TYPE type() noexcept override;
 		PHYSICS_TYPE physics() noexcept override;
 
@@ -48,7 +49,6 @@ namespace Xplicit::Player
 		void should_loop(const bool enable = true) noexcept;
 
 	private:
-		Vector<float> mPosition;
 		float mVolume{ 0.5f };
 		bool mLoop{ false };
 

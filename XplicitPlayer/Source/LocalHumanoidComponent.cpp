@@ -41,8 +41,8 @@ namespace Xplicit::Player
 #endif
 
 
-		XPLICIT_INFO("Game:Spawn [EVENT]");
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Spawn()");
+		XPLICIT_INFO("World:Spawn [EVENT]");
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Spawn()");
 	}
 
 	LocalHumanoidComponent::~LocalHumanoidComponent()
@@ -58,45 +58,47 @@ namespace Xplicit::Player
 
 	const char* LocalHumanoidComponent::name() noexcept { return ("LocalHumanoidComponent"); }
 
-	void LocalHumanoidComponent::update()
+	void LocalHumanoidComponent::update(void* class_ptr)
 	{
-		if (mNetwork == nullptr) return;
-		if (!mNetwork->read(mPacket)) return;
+		LocalHumanoidComponent* _this = (LocalHumanoidComponent*)class_ptr;
 
-		if (mPublicHash == 0)
-			mPublicHash = mPacket.public_hash;
+		if (_this->mNetwork == nullptr) return;
+		if (!_this->mNetwork->read(_this->mPacket)) return;
 
-		if (mPacket.public_hash == mPublicHash)
+		if (_this->mPublicHash == 0)
+			_this->mPublicHash = _this->mPacket.public_hash;
+
+		if (_this->mPacket.public_hash == _this->mPublicHash)
 		{
-			if (mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
-				mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
+			if (_this->mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
+				_this->mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{
-				const float delta = mPacket.pos[XPLICIT_NETWORK_DELTA];
+				const float delta = _this->mPacket.pos[XPLICIT_NETWORK_DELTA];
 
-				const float xSpeed = mPacket.pos[XPLICIT_NETWORK_X] * delta;
-				const float zSpeed = mPacket.pos[XPLICIT_NETWORK_Z] * delta;
-				const float ySpeed = mPacket.pos[XPLICIT_NETWORK_Y] * delta;
+				const float xSpeed = _this->mPacket.pos[XPLICIT_NETWORK_X] * delta;
+				const float zSpeed = _this->mPacket.pos[XPLICIT_NETWORK_Z] * delta;
+				const float ySpeed = _this->mPacket.pos[XPLICIT_NETWORK_Y] * delta;
 
-				mPos.Z = zSpeed;
-				mPos.X = xSpeed;
-				mPos.Y = ySpeed;
+				_this->mPos.Z = zSpeed;
+				_this->mPos.X = xSpeed;
+				_this->mPos.Y = ySpeed;
 
-				for (size_t i = 0; i < this->count_parts(); ++i)
+				for (size_t i = 0; i < _this->count_parts(); ++i)
 				{
-					if (!this->node_at(i))
+					if (!_this->node_at(i))
 						continue;
 
-					auto pos = this->node_at(i)->getPosition();
+					auto pos = _this->node_at(i)->getPosition();
 
-					pos.Z += mPos.Z;
-					pos.X += mPos.X;
-					pos.Y += mPos.Y;
+					pos.Z += _this->mPos.Z;
+					pos.X += _this->mPos.X;
+					pos.Y += _this->mPos.Y;
 
-					this->node_at(i)->setPosition(pos);
+					_this->node_at(i)->setPosition(pos);
 				}
 
-				XPLICIT_INFO("Game:Move [EVENT]");
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Move()");
+				XPLICIT_INFO("World:Move [EVENT]");
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Move()");
 			}
 		}
 	}

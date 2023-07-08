@@ -31,10 +31,10 @@ bool XPLICIT_EXIT_REQUESTED = false;
 
 static void xplicit_print_help()
 {
-	XPLICIT_INFO("\a+-------------- Xplicit Game Server Manual --------------+");
+	XPLICIT_INFO("\a+-------------- Xplicit Server Manual --------------+");
 	XPLICIT_INFO("exit: Exits the current server.");
 	XPLICIT_INFO("xconnect: Get Xconnect network info.");
-	XPLICIT_INFO("+-------------- Xplicit Game Server Manual --------------+");
+	XPLICIT_INFO("+-------------- Xplicit Server Manual --------------+");
 }
 
 static void xplicit_load_sh()
@@ -204,7 +204,7 @@ int main(int argc, char** argv)
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::DialogHelper::message_box(L"Xplicit Game Server", 
+		Xplicit::DialogHelper::message_box(L"Xplicit World Server", 
 			L"Program Exit", 
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 

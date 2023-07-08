@@ -105,7 +105,7 @@ namespace Xplicit
 		return ("MonoClassComponent");
 	}
 
-	void MonoClassComponent::update() {}
+	void MonoClassComponent::update(void* class_ptr) {}
 
 	// C# should_update method
 	bool MonoClassComponent::script_should_update() noexcept
@@ -137,6 +137,14 @@ namespace Xplicit
 		if (obj) return *((bool*)mono_object_unbox(obj));
 
 		return false;
+	}
+
+	PHYSICS_TYPE MonoClassComponent::physics() noexcept
+	{
+		MonoObject* obj = xplicit_mono_call(":Physics()", m_klass);
+		if (obj) return *((PHYSICS_TYPE*)mono_object_unbox(obj));
+
+		return PHYSICS_NONE;
 	}
 
 	bool MonoClassComponent::should_update() noexcept { return false; }

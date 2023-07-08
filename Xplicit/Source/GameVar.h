@@ -5,7 +5,7 @@
  *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: GameVar.h
- *			Purpose: C++ Game Variable Implementation
+ *			Purpose: C++ World Variable Implementation
  *
  * =====================================================================
  */

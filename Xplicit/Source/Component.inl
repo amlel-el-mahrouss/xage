@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin C++ Game Engine
+ *			XplicitNgin C++ World Engine
  *			Copyright Xplicit Inc, all rights reserved.
  *
  * =====================================================================

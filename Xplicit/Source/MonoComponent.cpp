@@ -39,8 +39,8 @@ namespace Xplicit
 
 	static void xplicit_register_events() noexcept
 	{
-		mono_add_internal_call("XplicitNgine.Game::RegisterEvent", xplicit_register_event);
-		mono_add_internal_call("XplicitNgine.Game::RegisterClass", xplicit_register_class);
+		mono_add_internal_call("XplicitNgine.World::RegisterEvent", xplicit_register_event);
+		mono_add_internal_call("XplicitNgine.World::RegisterClass", xplicit_register_class);
 	}
 
 	static std::string mono_to_cxx(MonoString* str)
@@ -262,6 +262,21 @@ namespace Xplicit
 
 	MonoDomain* MonoEngineComponent::domain() noexcept { return m_app_domain; }
 
+	PHYSICS_TYPE MonoEngineComponent::physics() noexcept
+	{
+		return PHYSICS_NONE;
+	}
+
+	bool MonoEngineComponent::can_collide() noexcept
+	{
+		return false;
+	}
+
+	bool MonoEngineComponent::has_physics() noexcept
+	{
+		return false;
+	}
+
 	// Script Component constructor
 	MonoScriptComponent::MonoScriptComponent(const char* filename, bool can_fail)
 		: m_filename(filename), m_assembly(nullptr)
@@ -316,4 +331,19 @@ namespace Xplicit
 	}
 
 	Ref<MonoEngineComponent*>& MonoScriptComponent::get() { return m_engine_ref; }
+
+	bool MonoScriptComponent::can_collide() noexcept
+	{
+		return false;
+	}
+
+	bool MonoScriptComponent::has_physics() noexcept
+	{
+		return false;
+	}
+
+	PHYSICS_TYPE MonoScriptComponent::physics() noexcept
+	{
+		return PHYSICS_NONE;
+	}
 }

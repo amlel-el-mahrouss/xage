@@ -41,7 +41,7 @@ namespace Xplicit
 		this->insert("Locked", "false");
 		this->insert("Collide", "true");
 
-		String func_proto = "func() Game.ComponentService.Destroy(";
+		String func_proto = "func() World.ComponentService.Destroy(";
 		func_proto += "\"";
 		func_proto += mName;
 		func_proto += "\"";

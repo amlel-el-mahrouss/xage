@@ -15,7 +15,7 @@
 #include <lua/CLua.hpp>
 
 #define XPLICIT_LUA_GLOBAL "_G."
-#define XPLICIT_LUA_NAMESPACE "Game."
+#define XPLICIT_LUA_NAMESPACE "World."
 
 namespace Xplicit
 {
@@ -29,8 +29,6 @@ namespace Xplicit
 	SpawnComponent::~SpawnComponent() = default;
 
 	Vector<float>& SpawnComponent::get() noexcept { return mAttribute.pos(); }
-
-	bool SpawnComponent::should_update() noexcept { return true; }
 
 	void SpawnComponent::update(void* class_ptr) 
 	{

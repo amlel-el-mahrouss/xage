@@ -97,10 +97,10 @@ namespace Xplicit
 				peer->packet.public_hash = peer->public_hash;
 
 #ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("Game:Move [EVENT]");
+				XPLICIT_INFO("World:Move [EVENT]");
 #endif // ifdef XPLICIT_DEBUG
 
-				String fmt = std::format("Game:Move({}, {}, {})",
+				String fmt = std::format("World:Move({}, {}, {})",
 					std::to_string(humanoid->get_attribute().pos().X),
 					std::to_string(humanoid->get_attribute().pos().Y),
 					std::to_string(humanoid->get_attribute().pos().Z));

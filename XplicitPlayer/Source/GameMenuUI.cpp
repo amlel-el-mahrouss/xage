@@ -80,13 +80,15 @@ namespace Xplicit::Player
 			mTex->drop();
 	}
 	
-	void PopupComponent::update()
+	void PopupComponent::update(void* class_ptr)
 	{
-		if (!mTex)
+		PopupComponent* _this = (PopupComponent*)class_ptr;
+
+		if (!_this->mTex)
 			return;
 
-		RENDER->getVideoDriver()->draw2DImage(mTex, irr::core::position2di(mPos.X, mPos.Y));
-		mClicked();
+		RENDER->getVideoDriver()->draw2DImage(_this->mTex, irr::core::position2di(_this->mPos.X, _this->mPos.Y));
+		_this->mClicked();
 	}
 
 	const char* PopupComponent::name() noexcept
@@ -114,22 +116,24 @@ namespace Xplicit::Player
 
 	LocalHudComponent::~LocalHudComponent() = default;
 
-	void LocalHudComponent::update()
+	void LocalHudComponent::update(void* class_ptr)
 	{
-		if (!mNetwork)
+		LocalHudComponent* _this = (LocalHudComponent*)class_ptr;
+
+		if (!_this->mNetwork)
 			return;
 
-		auto& packet = mNetwork->get();
+		auto& packet = _this->mNetwork->get();
 	
-		if (packet.health != mHealth)
+		if (packet.health != _this->mHealth)
 		{
-			mHealth = packet.health;
-
-			mTimeout = 255;
+			_this->mHealth = packet.health;
+			_this->mTimeout = 255;
 		}
 
-		if (mTimeout < 1)
+		if (_this->mTimeout < 1)
 			return;
-		--mTimeout;
+
+		--_this->mTimeout;
 	}
 }

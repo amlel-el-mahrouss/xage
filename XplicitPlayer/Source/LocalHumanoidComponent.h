@@ -38,7 +38,8 @@ namespace Xplicit::Player
 		PHYSICS_TYPE physics() noexcept override;
 
 	public:
-		void update() override;
+		static void update(void* class_ptr);
+		static bool should_upate() noexcept { return true; }
 
 	public:
 		void attach(LocalCameraComponent* cam) noexcept;

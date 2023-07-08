@@ -35,8 +35,7 @@ namespace Xplicit::Player
 	LoadingComponent::LoadingComponent() 
 		:
 		mNetwork(nullptr), 
-		mTimeout(XPLICIT_TIMEOUT),
-		mEnabled(true)
+		mTimeout(XPLICIT_TIMEOUT)
 	{
 		ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>("Camera");
 		mTexture = RENDER->getVideoDriver()->getTexture("bkg.png");
@@ -48,12 +47,16 @@ namespace Xplicit::Player
 			mTexture->drop();
 	}
 
-	void LoadingComponent::update()
+	bool LoadingComponent::mEnabled = true;
+
+	void LoadingComponent::update(void* class_ptr)
 	{
-		if (!mNetwork) return;
+		LoadingComponent* _this = (LoadingComponent*)class_ptr;
+
+		if (!_this->mNetwork) return;
 
 		NetworkPacket packet;
-		mNetwork->read(packet);
+		_this->mNetwork->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
@@ -67,7 +70,7 @@ namespace Xplicit::Player
 				POPUP_TYPE::BANNED, "StopPopup");
 
 			mEnabled = false;
-			ComponentSystem::get_singleton_ptr()->remove(mNetwork);
+			ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
 
 			return;
 		}
@@ -86,7 +89,7 @@ namespace Xplicit::Player
 			const auto ply = ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash);
 
 			ply->attach(cam);
-			mNetwork->set_hash(hash);
+			_this->mNetwork->set_hash(hash);
 
 			const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
 
@@ -100,18 +103,18 @@ namespace Xplicit::Player
 
 			RENDER->setWindowCaption(L"Xplicit [ Place1 ]");
 
-			XPLICIT_INFO("Game:LocalSpawn [EVENT]");
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:LocalSpawn()");
+			XPLICIT_INFO("World:LocalSpawn [EVENT]");
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
 
 			mEnabled = false;
 			return;
 		}
 		else
 		{
-			--mTimeout;
+			--_this->mTimeout;
 
 			// peek after the ++timeout, or retry
-			if (mTimeout < 0)
+			if (_this->mTimeout < 0)
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 					[]() {
@@ -122,14 +125,14 @@ namespace Xplicit::Player
 						XPLICIT_DIM.Y / 2.8),
 						POPUP_TYPE::NETWORK, "StopPopup");
 
-				ComponentSystem::get_singleton_ptr()->remove(mNetwork);
+				ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
 				mEnabled = false;
 
 				return;
 			}
 			else
 			{
-				RENDER->getVideoDriver()->draw2DImage(mTexture,
+				RENDER->getVideoDriver()->draw2DImage(_this->mTexture,
 					vector2di(0, 0),
 					recti(0, 0, 1280, 720),
 					nullptr,

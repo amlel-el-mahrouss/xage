@@ -42,10 +42,11 @@ namespace Xplicit
 	/*
 	* ----------------------------------------------------------------------------
 	* @name Component
-	* @brief Component Interface, use this class to get all of the needed methods.
+	* @brief Generic C++ interface, use this class to conform with Xplicit Component contract.
 	* Last Edit: 7/5/2023
 	* ----------------------------------------------------------------------------
 	*/
+
 	class XPLICIT_API Component
 	{
 	public:
@@ -56,10 +57,9 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(Component);
 
 	public:
+		virtual PHYSICS_TYPE physics() noexcept;
 		virtual COMPONENT_TYPE type() noexcept;
 		virtual const char* name() noexcept;
-
-		virtual PHYSICS_TYPE physics() noexcept;
 		virtual bool can_collide() noexcept;
 		virtual bool has_physics() noexcept;
 
@@ -84,6 +84,8 @@ namespace Xplicit
 
 		public:
 			ComponentData _Pointee;
+
+		public:
 			ComponentUpdateAccessor _Update;
 			ComponentUpdateEvalAccessor _Eval;
 
@@ -110,12 +112,15 @@ namespace Xplicit
 		template <typename T>
 		std::vector<T*> all_of(const char* name);
 
+	public:
 		template <typename T, typename... Args>
 		T* add(Args&&... args);
 
+	public:
 		template <typename T>
 		bool remove(T* ptr);
 
+	public:
 		template <typename T>
 		T* get(const char* name) noexcept;
 
@@ -131,12 +136,22 @@ namespace Xplicit
 	};
 }
 
+#define XPLICIT_COMPONENT_UPDATE_IMPL(T) void T::update(void* class_ptr)
+#define XPLICIT_COMPONENT_SHOULD_UPDATE_IMPL(T) void T::should_update(void* class_ptr)
+
+#define XPLICIT_COMPONENT_UPDATE() static void update(void* class_ptr)
+#define XPLICIT_COMPONENT_SHOULD_UPDATE() static void should_update(void* class_ptr)
+
+
+
 #define XPLICIT_COMPONENT_OVERRIDE()\
 		const char* name() noexcept override;\
 		COMPONENT_TYPE type() noexcept override;\
 		static bool should_update() noexcept;\
 		static void update(void* class_ptr);\
-		PHYSICS_TYPE physics() noexcept override;
+		PHYSICS_TYPE physics() noexcept override;\
+		bool has_physics() noexcept override;\
+		bool can_collide() noexcept override;
 
 
 

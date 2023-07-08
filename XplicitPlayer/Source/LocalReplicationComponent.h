@@ -28,11 +28,10 @@ namespace Xplicit::Player
 		~LocalReplicationComponent() override = default;
 		
 		COMPONENT_TYPE type() noexcept override;
-		 const char* name() noexcept override;
+		const char* name() noexcept override;
 
-		bool should_update() noexcept override;
-
-		void update() override;
+		static bool should_update() noexcept;
+		static void update(void* class_ptr);
 		
 		XPLICIT_COPY_DEFAULT(LocalReplicationComponent);
 		

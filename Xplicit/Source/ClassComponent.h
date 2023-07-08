@@ -15,7 +15,7 @@
 
 #include <lua/CLua.hpp>
 
-#define XPLICIT_CLASS_NAMESPACE "Game."
+#define XPLICIT_CLASS_NAMESPACE "World."
 
 namespace Xplicit
 {
