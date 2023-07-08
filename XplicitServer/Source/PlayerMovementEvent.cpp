@@ -62,7 +62,7 @@ namespace Xplicit
 				humanoid->get_peer() == nullptr)
 				continue;
 
-			NetworkInstance* peer = humanoid->get_peer();
+			NetworkPeer* peer = humanoid->get_peer();
 
 			if (peer->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;

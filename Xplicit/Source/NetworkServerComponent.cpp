@@ -18,7 +18,7 @@ namespace Xplicit
 	/// <summary>
 	/// Utility function which removes the peer and actor from the server.
 	/// </summary>
-	/// <param name="sock">The NetworkInstance being targeted.</param>
+	/// <param name="sock">The NetworkPeer being targeted.</param>
 	
 	static void xplicit_set_ioctl(Socket sock)
 	{
@@ -72,7 +72,7 @@ namespace Xplicit
 
 		for (std::size_t index = 0; index < XPLICIT_MAX_CONNECTIONS; index++)
 		{
-			auto inst = new NetworkInstance(Auth::XplicitID(index, 0));
+			auto inst = new NetworkPeer(Auth::XplicitID(index, 0));
 			XPLICIT_ASSERT(inst);
 
 			mPeers.push_back(inst);
@@ -93,7 +93,7 @@ namespace Xplicit
 
 	const char* NetworkServerComponent::dns() const noexcept { return mDns.c_str(); }
 
-	NetworkInstance* NetworkServerComponent::get(const std::size_t& idx) const noexcept 
+	NetworkPeer* NetworkServerComponent::get(const std::size_t& idx) const noexcept 
 	{ 
 		if (mPeers.empty())
 			return nullptr;
@@ -103,7 +103,7 @@ namespace Xplicit
 
 	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
 
-	static bool xplicit_register_packet(const NetworkPacket& packet, NetworkInstance* peer)
+	static bool xplicit_register_packet(const NetworkPacket& packet, NetworkPeer* peer)
 	{
 		if (packet.magic[0] != XPLICIT_NETWORK_MAG_0 ||
 			packet.magic[1] != XPLICIT_NETWORK_MAG_1 ||
@@ -125,7 +125,7 @@ namespace Xplicit
 		return false;
 	}
 
-	bool NetworkServerContext::recv(const NetworkServerComponent* server, NetworkInstance* peer) noexcept
+	bool NetworkServerContext::recv(const NetworkServerComponent* server, NetworkPeer* peer) noexcept
 	{
 		std::int32_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
@@ -236,7 +236,7 @@ namespace Xplicit
 		}
 	}
 	
-	void NetworkServerContext::send(const NetworkServerComponent* server, NetworkInstance* peer) noexcept
+	void NetworkServerContext::send(const NetworkServerComponent* server, NetworkPeer* peer) noexcept
 	{
 		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		peer->packet.magic[1] = XPLICIT_NETWORK_MAG_1;
@@ -271,7 +271,7 @@ namespace Xplicit
 		}
 	}
 
-	void NetworkServerContext::recv_from(const NetworkServerComponent* server, NetworkInstance* peer, NetworkPacket& packet) noexcept
+	void NetworkServerContext::recv_from(const NetworkServerComponent* server, NetworkPeer* peer, NetworkPacket& packet) noexcept
 	{
 		XPLICIT_ASSERT(peer && server);
 

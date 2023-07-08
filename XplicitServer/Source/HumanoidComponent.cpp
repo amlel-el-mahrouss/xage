@@ -25,10 +25,10 @@ namespace Xplicit
 		mHealth(100), 
 		mCanSpawn(true),
 		mState(HUMANOID_STATE::ALIVE),
-		mClass(nullptr)
-	{
-		//! Don't initialize lua code here, because we got no peer.
-	}
+		mClass(nullptr),
+		mJumpPower(1),
+		mMaxHealth(100)
+	{}
 
 	HumanoidComponent::~HumanoidComponent() = default;
 
@@ -77,23 +77,15 @@ namespace Xplicit
 						 std::to_string(mAttribute.pos().Z) + "," + "}";
 
 		mClass->assign("Position", str.c_str());
+
 		mHealth = mClass->index_as_number("Health");
-
-		if (this->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
-		{
-			mHealth -= this->get_peer()->packet.health;
-		
-#ifdef XPLICIT_DEBUG
-			XPLICIT_INFO("Game:Damage [EVENT]");
-#endif // ifdef XPLICIT_DEBUG
-
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Damage()");
-		}
+		mMaxHealth = mClass->index_as_number("MaxHealth");
+		mJumpPower = mClass->index_as_number("JumpPower");
 	}
 
 	void HumanoidComponent::set_health(const int64_t& health) noexcept { this->mHealth = health; }
 
-	const int64_t& HumanoidComponent::get_health() noexcept { return this->mHealth; }
+	const int64_t HumanoidComponent::get_health() noexcept { return this->mHealth; }
 
 	bool HumanoidComponent::can_collide() noexcept { return true; }
 
@@ -103,9 +95,9 @@ namespace Xplicit
 
 	bool HumanoidComponent::should_update() noexcept { return true; }
 
-	NetworkInstance* HumanoidComponent::get_peer() const noexcept { return mPeer; }
+	NetworkPeer* HumanoidComponent::get_peer() const noexcept { return mPeer; }
 
-	void HumanoidComponent::set_peer(NetworkInstance* peer) noexcept 
+	void HumanoidComponent::set_peer(NetworkPeer* peer) noexcept 
 	{	
 		mPeer = peer;
 
@@ -121,11 +113,13 @@ namespace Xplicit
 									XPLICIT_DEFAULT_NAME
 									"\"");
 
-			mClass->insert("Position", "{ X = 0, Y = 0, Z = 0, }");
 			mClass->insert("State", "Game.HumanoidState.Alive");
+
 			mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
+
 			mClass->insert("Health", std::to_string(mHealth).c_str());
-			mClass->insert("Parent", "{}");
+			mClass->insert("MaxHealth", "100");
+			mClass->insert("JumpPower", "5");
 		}
 	}
 
@@ -137,5 +131,7 @@ namespace Xplicit
 
 	bool HumanoidComponent::is_alive() const noexcept { return mHealth > 0; }
 
-	const HUMANOID_STATE& HumanoidComponent::get_state() noexcept { return mState; }
+	const HUMANOID_STATE HumanoidComponent::get_state() noexcept { return mState; }
+
+	void HumanoidComponent::set_state(const HUMANOID_STATE state) noexcept { mState = state; }
 }

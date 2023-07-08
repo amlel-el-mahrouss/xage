@@ -145,6 +145,8 @@ namespace Xplicit::RoXML
 									parent_id,
 									node_id);
 
+								XPLICIT_ASSERT(component);
+
 								if (params.Has3D)
 								{
 									void* object = nullptr;
@@ -153,6 +155,7 @@ namespace Xplicit::RoXML
 									{
 										irr::scene::ILightSceneNode* light = nullptr;
 										object = light = RENDER->getSceneManager()->addLightSceneNode();
+										
 										light->setName(node_id);
 									}
 
@@ -160,6 +163,7 @@ namespace Xplicit::RoXML
 									{
 										irr::scene::ISceneNode* stud = nullptr;
 										object = stud = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh());
+										
 										stud->setName(node_id);
 									}
 
@@ -193,12 +197,41 @@ namespace Xplicit::RoXML
 										}
 									}
 
+									if (klass_to_instanciate == "Sky")
+									{
+										irr::scene::ISceneNode* nod = nullptr;
+										nod = RENDER->getSceneManager()->addSkyDomeSceneNode(RENDER->getVideoDriver()->getTexture(node->value()));
+										object = nod;
+
+										nod->setName(node_id);
+									}
+
 									if (klass_to_instanciate == "Particle")
 									{
-										auto emitter = RENDER->getSceneManager()->addParticleSystemSceneNode(true);
-										emitter->setName(node_id);
+										auto particle_scene_node = RENDER->getSceneManager()->addParticleSystemSceneNode(true);
+										particle_scene_node->setName(node_id);
 
-										object = emitter;
+										particle_scene_node->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture(node->value()));
+										particle_scene_node->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
+										particle_scene_node->setPosition(irr::core::vector3df(0, 0, 0));
+										particle_scene_node->setScale(irr::core::vector3df(2, 2, 2));
+										particle_scene_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+										particle_scene_node->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE, false);
+
+										// TODO: let people edit that shit
+										irr::scene::IParticleEmitter* em = particle_scene_node->createBoxEmitter(
+											irr::core::aabbox3d<irr::f32>(-7, 0, -7, 7, 1, 7), // emitter size
+											irr::core::vector3df(0.0f, 0.06f, 0.0f),   // initial direction
+											80, 100,                             // emit rate
+											irr::video::SColor(0, 255, 255, 255),       // darkest color
+											irr::video::SColor(0, 255, 255, 255),       // brightest color
+											800, 2000, 0,                         // min and max age, angle
+											irr::core::dimension2df(10.f, 10.f),         // min size
+											irr::core::dimension2df(20.f, 20.f));        // max size
+
+										particle_scene_node->setEmitter(em);
+
+										object = particle_scene_node;
 									}
 
 									if (object)
@@ -216,6 +249,24 @@ namespace Xplicit::RoXML
 									}
 								}
 							}
+						}
+					}
+
+					if (node_name == "Sound")
+					{
+						if (node->first_attribute() &&
+							strcmp(node->first_attribute()->name(), "Path") == 0)
+						{
+							auto component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(
+								Vector<float>(0, 0, 0),
+								Vector<float>(0, 0, 0),
+								Color<float>(0, 0, 0),
+								nullptr,
+								"Game",
+								node->value());
+
+							component->insert("Path", node->first_attribute()->value());
+							component->insert("Play", "func(self) _G.Game.SoundService.Play(self.Path); end");
 						}
 					}
 

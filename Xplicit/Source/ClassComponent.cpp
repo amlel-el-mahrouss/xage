@@ -40,6 +40,12 @@ namespace Xplicit
 		this->insert("Archivable", "true");
 		this->insert("Locked", "true");
 		this->insert("Collide", "true");
+
+		String func_proto = "func(self) _G.Game.ComponentService.Destroy(\"";
+		func_proto += mName;
+		func_proto += "\"); end";
+
+		this->insert("Destroy", func_proto.c_str());
 	}
 
 	ClassComponent::~ClassComponent() = default;

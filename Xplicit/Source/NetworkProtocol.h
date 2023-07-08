@@ -137,7 +137,7 @@ namespace Xplicit
 
     };
 
-    class XPLICIT_API NetworkInstance final
+    class XPLICIT_API NetworkPeer final
     {
     public:
         class XPLICIT_API UniqueAddress final
@@ -161,7 +161,7 @@ namespace Xplicit
 			UUID mPublicUuid; /* public peer uuid */
             UUID mUuid; /* private peer uuid */
 
-            friend NetworkInstance;
+            friend NetworkPeer;
 
         };
 
@@ -177,18 +177,18 @@ namespace Xplicit
         int64_t hash;
         
     public:
-        explicit NetworkInstance(const Xplicit::Auth::XplicitID& id);
-        ~NetworkInstance();
+        explicit NetworkPeer(const Xplicit::Auth::XplicitID& id);
+        ~NetworkPeer();
         
     public:
-        XPLICIT_COPY_DEFAULT(NetworkInstance);
+        XPLICIT_COPY_DEFAULT(NetworkPeer);
 
         void timeout() noexcept;
         void reset() noexcept;
         
     };
 
-    XPLICIT_API String address_to_string(NetworkInstance* instance);
+    XPLICIT_API String address_to_string(NetworkPeer* instance);
     XPLICIT_API String address_to_string(const PrivateAddressData& ip);
     XPLICIT_API const bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs);
 }

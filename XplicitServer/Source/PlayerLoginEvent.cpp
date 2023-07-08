@@ -39,7 +39,7 @@ namespace Xplicit
 	 * \param server Server component
 	 */
 
-	static bool XplicitHandleJoin(NetworkInstance* peer, 
+	static bool XplicitHandleJoin(NetworkPeer* peer, 
 		HumanoidComponent* player, 
 		const NetworkServerComponent* server) noexcept
 	{

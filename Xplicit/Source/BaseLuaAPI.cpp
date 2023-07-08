@@ -67,10 +67,13 @@ static int lua_Destroy(lua_State* L)
 
 static int lua_PrintLn(lua_State* L)
 {
-	const Xplicit::String msg = lua_tostring(L, 1);
+	if (lua_isstring(L, 1))
+	{
+		const Xplicit::String msg = lua_tostring(L, 1);
 
-	if (!msg.empty())
-		XPLICIT_INFO(msg);
+		if (!msg.empty())
+			XPLICIT_INFO(msg);
+	}
 
 	return 0;
 }

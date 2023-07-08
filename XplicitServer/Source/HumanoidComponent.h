@@ -31,8 +31,8 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(HumanoidComponent);
 
 	public:
-		void set_peer(NetworkInstance* peer) noexcept;
-		NetworkInstance* get_peer() const noexcept;
+		void set_peer(NetworkPeer* peer) noexcept;
+		NetworkPeer* get_peer() const noexcept;
 
 	public:
 		PHYSICS_TYPE physics() noexcept override;
@@ -54,19 +54,22 @@ namespace Xplicit
 
 	public:
 		void set_health(const int64_t& health) noexcept;
-		const int64_t& get_health() noexcept;
+		const int64_t get_health() noexcept;
 		bool is_alive() const noexcept;
 
 	public:
+		void set_state(const HUMANOID_STATE state) noexcept;
 		void should_spawn(const bool enable) noexcept;
-		const HUMANOID_STATE& get_state() noexcept;
+		const HUMANOID_STATE get_state() noexcept;
 		bool can_spawn() const noexcept;
 
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;
-		NetworkInstance* mPeer;
 		XAttribute mAttribute;
 		HUMANOID_STATE mState;
+		int64_t mMaxHealth;
+		int64_t mJumpPower;
+		NetworkPeer* mPeer;
 		int64_t mHealth;
 		bool mCanSpawn;
 

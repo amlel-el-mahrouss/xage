@@ -16,7 +16,7 @@
 
 namespace Xplicit
 {
-    NetworkInstance::NetworkInstance(const Xplicit::Auth::XplicitID& id)
+    NetworkPeer::NetworkPeer(const Xplicit::Auth::XplicitID& id)
 	:
         address(),
         xplicit_id(id),
@@ -30,9 +30,9 @@ namespace Xplicit
         memset(&this->address, 0, sizeof(PrivateAddressData));
     }
 
-    NetworkInstance::~NetworkInstance() = default;
+    NetworkPeer::~NetworkPeer() = default;
 
-    void NetworkInstance::reset() noexcept
+    void NetworkPeer::reset() noexcept
     {
         for (size_t cmd_index = 0; cmd_index < XPLICIT_NETWORK_CMD_MAX; ++cmd_index)
         {
@@ -51,7 +51,7 @@ namespace Xplicit
 
     constexpr std::int32_t XPLICIT_MAX_TIMEOUT = 5;
 
-    void NetworkInstance::timeout() noexcept
+    void NetworkPeer::timeout() noexcept
     {
         if (this->status == NETWORK_STAT_STASIS ||
             this->status == NETWORK_STAT_DISCONNECTED)
@@ -89,27 +89,27 @@ namespace Xplicit
         timeout.detach();
     }
 
-    NetworkInstance::UniqueAddress::UniqueAddress()
+    NetworkPeer::UniqueAddress::UniqueAddress()
 		: mUuid(UUIDFactory::version<4>())
 	{}
 
-    NetworkInstance::UniqueAddress::~UniqueAddress() = default;
+    NetworkPeer::UniqueAddress::~UniqueAddress() = default;
 
-    const UUID& NetworkInstance::UniqueAddress::get() noexcept { return mUuid; }
+    const UUID& NetworkPeer::UniqueAddress::get() noexcept { return mUuid; }
 
-    void NetworkInstance::UniqueAddress::invalidate() noexcept
+    void NetworkPeer::UniqueAddress::invalidate() noexcept
     {
         mPublicUuid = UUIDFactory::version<4>();
         mUuid = UUIDFactory::version<4>();
     }
 
-    const UUID& NetworkInstance::UniqueAddress::get_public_uuid() noexcept { return this->get(); }
+    const UUID& NetworkPeer::UniqueAddress::get_public_uuid() noexcept { return this->get(); }
 
-    const UUID& NetworkInstance::UniqueAddress::get_private_uuid() noexcept { return mUuid; }
+    const UUID& NetworkPeer::UniqueAddress::get_private_uuid() noexcept { return mUuid; }
 
     String address_to_string(const PrivateAddressData& ip) { return inet_ntoa(ip.sin_addr); }
 
-    String address_to_string(NetworkInstance* instance) { return address_to_string(instance->address); }
+    String address_to_string(NetworkPeer* instance) { return address_to_string(instance->address); }
 
     const bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs) { return lhs.sin_addr.S_un.S_addr == rhs.sin_addr.S_un.S_addr; }
 }
