@@ -20,15 +20,9 @@ namespace Xplicit::Player
 		ClassComponent(Vector<float>(0, 0, 0), Vector<float>(0, 0, 0), Color<float>(0, 0, 0), nullptr, parent, name),
 		mMeshPtr(nullptr)
 	{
-		XPLICIT_ASSERT(name && mesh);
+		XPLICIT_ASSERT(mesh);
 
-		// Create Lua table from current object.
-		String fmt = String(XPLICIT_LUA_GLOBAL);
-		fmt += mParent;
-		fmt += mName;
-		fmt += " = { Mesh = '' }";
-
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		this->insert("Mesh", mesh);
 
 		mMeshPtr = std::make_unique<StaticMesh>(mesh, mName.c_str(), mParent.c_str());
 	}
@@ -47,20 +41,16 @@ namespace Xplicit::Player
 
 	void GearComponent::update(void* class_ptr)
 	{
+		ClassComponent::update(class_ptr);
 		GearComponent* _this = (GearComponent*)class_ptr;
 
-		String fmt = std::format("{}{}{}.Mesh;", XPLICIT_LUA_GLOBAL, _this->mParent, _this->mName);
-
-		lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), fmt.c_str());
-		String path = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+		String path = _this->index_as_string("Mesh", 8);
 
 		if (auto _path = _this->mMeshPtr->path();
 			path != _path)
 		{
 			_this->mMeshPtr.reset();
 			_this->mMeshPtr = std::make_unique<StaticMesh>(_path.c_str(), _this->mName.c_str(), _this->mParent.c_str());
-
-			lua_setglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), _this->mMeshPtr->path().c_str());
 		}
 	}
 }

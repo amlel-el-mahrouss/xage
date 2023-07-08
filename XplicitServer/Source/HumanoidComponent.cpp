@@ -77,9 +77,9 @@ namespace Xplicit
 
 		_this->mClass->assign("Position", str.c_str());
 
-		_this->mHealth = _this->mClass->index_as_number<int64_t>("Health");
-		_this->mMaxHealth = _this->mClass->index_as_number<int64_t>("MaxHealth");
-		_this->mJumpPower = _this->mClass->index_as_number<int64_t>("JumpPower");
+		_this->mHealth = _this->mClass->index_as_number<int64_t>("Health", 4);
+		_this->mMaxHealth = _this->mClass->index_as_number<int64_t>("MaxHealth", 5);
+		_this->mJumpPower = _this->mClass->index_as_number<int64_t>("JumpPower", 6);
 	}
 
 	void HumanoidComponent::set_health(const int64_t& health) noexcept { this->mHealth = health; }

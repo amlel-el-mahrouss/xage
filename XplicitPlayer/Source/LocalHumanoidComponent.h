@@ -39,7 +39,7 @@ namespace Xplicit::Player
 
 	public:
 		static void update(void* class_ptr);
-		static bool should_upate() noexcept { return true; }
+		static bool should_update() noexcept { return true; }
 
 	public:
 		void attach(LocalCameraComponent* cam) noexcept;

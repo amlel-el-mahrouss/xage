@@ -39,10 +39,7 @@ namespace Xplicit::Lua
 		{
 			XPLICIT_ASSERT(mL);
 
-			luaopen_base(mL);
-			luaopen_math(mL);
-			luaopen_string(mL);
-			luaopen_table(mL);
+			luaL_openlibs(mL);
 		}
 
 	private:
@@ -146,30 +143,27 @@ namespace Xplicit::Lua
 		bool call(const char* lhs) { return operator()(lhs); }
 
 		template <typename T = double>
-		const T index_as_number(const char* lhs)
+		const T index_as_number(const char* lhs, const int index)
 		{
-			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{}.{}", mClass, lhs).c_str());
-			
-			T ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, std::format("_G.{}.{}", mClass, lhs).c_str());
+			T ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -index);
+
 			return ret;
 		}
 
-		const bool index_as_bool(const char* lhs)
+		const bool index_as_bool(const char* lhs, const int index)
 		{
-			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{}.{}", mClass, lhs).c_str());
+			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, std::format("_G.{}.{}", mClass, lhs).c_str());
+			const bool ret = lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -index);
 
-			const bool ret = lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 			return ret;
 		}
 
-		const String index_as_string(const char* lhs) { return operator[](lhs); }
+		const String index_as_string(const char* lhs, const int index)
+		{ 
+			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, std::format("_G.{}.{}", mClass, lhs).c_str());
+			String ret = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -index);
 
-	public:
-		const String operator[](const char* lhs) noexcept
-		{
-			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{}.{}", mClass, lhs).c_str());
-
-			String ret = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 			return ret;
 		}
 

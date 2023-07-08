@@ -19,10 +19,11 @@
 
 #include <Xplicit.h>
 #include <XplicitSound.h>
+#include <ClassComponent.h>
 
 namespace Xplicit::Player
 {
-	class LocalSoundComponent final : public Component, public ClassComponent
+	class LocalSoundComponent final : public ClassComponent
 	{
 	public:
 		explicit LocalSoundComponent();

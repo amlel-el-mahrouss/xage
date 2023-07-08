@@ -60,28 +60,28 @@ namespace Xplicit
 	
 	void ClassComponent::update(void* _this)
 	{
-		ClassComponent* this_ptr = (ClassComponent*)_this;
+		ClassComponent* this_ptr = static_cast<ClassComponent*>(_this);
 
-		this_ptr->get_attribute().locked(this_ptr->index_as_bool("Locked"));
+		this_ptr->get_attribute().locked(this_ptr->index_as_bool("Locked", 6));
 
 		if (this_ptr->get_attribute().is_locked())
 			return;
 
-		this_ptr->get_attribute().anchor(this_ptr->index_as_bool("Anchored"));
-		this_ptr->get_attribute().archivable(this_ptr->index_as_bool("Archivable"));
-		this_ptr->get_attribute().collide(this_ptr->index_as_bool("Collide"));
+		this_ptr->get_attribute().anchor(this_ptr->index_as_bool("Anchored", 4));
+		this_ptr->get_attribute().archivable(this_ptr->index_as_bool("Archivable", 5));
+		this_ptr->get_attribute().collide(this_ptr->index_as_bool("Collide", 7));
 
-		this_ptr->get_attribute().pos().X = this_ptr->index_as_number("Position.X");
-		this_ptr->get_attribute().pos().Y = this_ptr->index_as_number("Position.Y");
-		this_ptr->get_attribute().pos().Z = this_ptr->index_as_number("Position.Z");
+		this_ptr->get_attribute().pos().X = this_ptr->index_as_number("Position.X", 2);
+		this_ptr->get_attribute().pos().Y = this_ptr->index_as_number("Position.Y", 2);
+		this_ptr->get_attribute().pos().Z = this_ptr->index_as_number("Position.Z", 2);
 
-		this_ptr->get_attribute().scale().X = this_ptr->index_as_number("Scale.X");
-		this_ptr->get_attribute().scale().Y = this_ptr->index_as_number("Scale.Y");
-		this_ptr->get_attribute().scale().Z = this_ptr->index_as_number("Scale.Z");
+		this_ptr->get_attribute().scale().X = this_ptr->index_as_number("Scale.X", 1);
+		this_ptr->get_attribute().scale().Y = this_ptr->index_as_number("Scale.Y", 1);
+		this_ptr->get_attribute().scale().Z = this_ptr->index_as_number("Scale.Z", 1);
 
-		this_ptr->get_attribute().color().R = this_ptr->index_as_number("Color.R");
-		this_ptr->get_attribute().color().G = this_ptr->index_as_number("Color.G");
-		this_ptr->get_attribute().color().B = this_ptr->index_as_number("Color.B");
+		this_ptr->get_attribute().color().R = this_ptr->index_as_number("Color.R", 3);
+		this_ptr->get_attribute().color().G = this_ptr->index_as_number("Color.G", 3);
+		this_ptr->get_attribute().color().B = this_ptr->index_as_number("Color.B", 3);
 	}
 
 	XAttribute& ClassComponent::get_attribute() noexcept { return mAttribute; }

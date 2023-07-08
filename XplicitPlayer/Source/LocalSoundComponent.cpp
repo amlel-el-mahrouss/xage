@@ -21,6 +21,8 @@ namespace Xplicit::Player
 			"SoundMixer"),
 		mVolume(0.5f), mLoop(false)
 	{
+		this->insert("Loop", "false");
+		this->insert("Volume", "0.5");
 	}
 
 	LocalSoundComponent::~LocalSoundComponent()
@@ -50,10 +52,11 @@ namespace Xplicit::Player
 
 	void LocalSoundComponent::update(void* class_ptr)
 	{
+		ClassComponent::update(class_ptr);
 		LocalSoundComponent* _this = (LocalSoundComponent*)class_ptr;
 
-		_this->mLoop = _this->index_as_number("Loop");
-		_this->mVolume = _this->index_as_number("Volume");
+		_this->mLoop = _this->index_as_number<float>("Loop", 7);
+		_this->mVolume = _this->index_as_number<float>("Volume", 8);
 	}
 
 	void LocalSoundComponent::should_loop(const bool enable) noexcept
