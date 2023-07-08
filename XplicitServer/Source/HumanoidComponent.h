@@ -59,7 +59,7 @@ namespace Xplicit
 
 	public:
 		void set_state(const HUMANOID_STATE state) noexcept;
-		void should_spawn(const bool enable) noexcept;
+		void can_spawn(const bool enable) noexcept;
 		const HUMANOID_STATE get_state() noexcept;
 		bool can_spawn() const noexcept;
 

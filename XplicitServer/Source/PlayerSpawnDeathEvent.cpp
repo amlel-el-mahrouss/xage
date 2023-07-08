@@ -56,7 +56,7 @@ namespace Xplicit
 		{
 			if (humanoid == nullptr ||
 				humanoid->get_peer() == nullptr ||
-				humanoid->get_state() == HUMANOID_STATE::DEAD)
+				!humanoid->can_spawn())
 				continue;
 			
 			auto* peer_ptr = humanoid->get_peer();
@@ -66,9 +66,10 @@ namespace Xplicit
 
 			peer_ptr->packet.health = humanoid->get_health();
 
-			if (!humanoid->is_alive())
+			if (!humanoid->is_alive() &&
+				humanoid->can_spawn())
 			{
-				humanoid->should_spawn(false);
+				humanoid->can_spawn(false);
 				humanoid->set_state(HUMANOID_STATE::DEAD);
 
 #ifdef XPLICIT_DEBUG
@@ -76,8 +77,6 @@ namespace Xplicit
 #endif // ifdef XPLICIT_DEBUG
 
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Death()");
-
-				mDeadPlayers.push_back(humanoid);
 
 				for (size_t peer = 0; peer < mNetwork->size(); ++peer)
 				{
@@ -92,36 +91,18 @@ namespace Xplicit
 					{
 						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
 						humanoid->set_state(HUMANOID_STATE::ALIVE);
+
+						XplicitHandleSpawn(mSpawner, humanoid);
+
+#ifdef XPLICIT_DEBUG
+						XPLICIT_INFO("Game:Spawn [EVENT]");
+#endif // ifdef XPLICIT_DEBUG
+
+						Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Spawn()");
 					}
 				}, humanoid);
 
 				respawn_job.detach();
-			}
-			else
-			{
-				auto it = std::find(mDeadPlayers.cbegin(), mDeadPlayers.cend(), humanoid);
-
-				if (it != mDeadPlayers.cend())
-				{
-					mDeadPlayers.erase(it);
-					
-					for (size_t peer = 0; peer < mNetwork->size(); ++peer)
-					{
-						peer_ptr->packet.public_hash = humanoid->get_peer()->public_hash;
-						peer_ptr->packet.health = humanoid->get_health();
-					}
-
-					XplicitHandleSpawn(mSpawner, humanoid);
-
-					humanoid->should_spawn(true);
-
-#ifdef XPLICIT_DEBUG
-					XPLICIT_INFO("Game:Spawn [EVENT]");
-#endif // ifdef XPLICIT_DEBUG
-
-
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Spawn()");
-				}
 			}
 		}
 	}

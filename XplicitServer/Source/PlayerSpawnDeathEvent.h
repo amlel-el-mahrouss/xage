@@ -37,7 +37,6 @@ namespace Xplicit
 		virtual void operator()() override;
 
 	private:
-		std::vector<HumanoidComponent*> mDeadPlayers;
 		NetworkServerComponent* mNetwork;
 		SpawnComponent* mSpawner;
 

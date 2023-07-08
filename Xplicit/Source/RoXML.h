@@ -125,7 +125,7 @@ namespace Xplicit::RoXML
 								world_node.ID = node_id;
 
 								const char* script_id = "";
-								const char* parent_id = "Game";
+								const char* parent_id = XPLICIT_CLASS_NAMESPACE;
 
 								// For for a lua attribute!
 								if (node->first_attribute()->next_attribute() &&

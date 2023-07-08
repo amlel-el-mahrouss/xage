@@ -15,6 +15,8 @@
 
 #include <lua/CLua.hpp>
 
+#define XPLICIT_CLASS_NAMESPACE "Game."
+
 namespace Xplicit
 {
 	class XPLICIT_API ClassComponent : public Component, public Lua::CLuaClass
@@ -28,7 +30,7 @@ namespace Xplicit
 			const Vector<float>& size,
 			const Color<float>& color,
 			const char* script = nullptr,
-			const char* parent = "Game",
+			const char* parent = XPLICIT_CLASS_NAMESPACE,
 			const char* name = "Class");
 
 		~ClassComponent() override;
