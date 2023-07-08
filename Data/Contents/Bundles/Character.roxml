@@ -1,26 +1,27 @@
 <Xplicit xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
-	<Class Name="LeftArm" Object="Mesh">
-		Contents/Bundles/leftarm.obj
-	</Class>
-
-	<Class Name="RightArm" Object="Mesh">
-		Contents/Bundles/rightarm.obj
-	</Class>
-
-	<Class Name="Torso" Object="Mesh">
-		Contents/Bundles/torso.obj
-	</Class>
-
-	<Class Name="LeftLeg" Object="Mesh">
-		Contents/Bundles/leftleg.obj
-	</Class>
-
-	<Class Name="RightLeg" Object="Mesh">
-		Contents/Bundles/rightleg.obj
-	</Class>
 
 	<Class Name="Head" Object="Mesh">
 		Contents/Bundles/head.obj
+	</Class>
+
+	<Class Name="LeftArm" Parent="Head" Object="Mesh">
+		Contents/Bundles/leftarm.obj
+	</Class>
+
+	<Class Name="RightArm" Parent="Head" Object="Mesh">
+		Contents/Bundles/rightarm.obj
+	</Class>
+
+	<Class Name="Torso" Parent="Head" Object="Mesh">
+		Contents/Bundles/torso.obj
+	</Class>
+
+	<Class Name="LeftLeg" Parent="Head" Object="Mesh">
+		Contents/Bundles/leftleg.obj
+	</Class>
+
+	<Class Name="RightLeg" Parent="Head" Object="Mesh">
+		Contents/Bundles/rightleg.obj
 	</Class>
 
 	<Position3 X="-10.9" Y="3" Z="-6.119">
@@ -54,4 +55,10 @@
 	<Rotate3 X="-4.332" Y="0.277" Z="0" W="0">
 		Camera
 	</Rotate3>
+
+	<CLua>
+		Game.Slot.Spawn:Connect(func(ID)
+			Game.RightLeg:Destroy();
+		end)
+	</CLua>
 </Xplicit>

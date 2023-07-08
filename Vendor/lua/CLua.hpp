@@ -145,10 +145,19 @@ namespace Xplicit::Lua
 			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{} = nil", mClass).c_str());
 			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), lhs);
 			
-			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-			lua_rawgeti(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, 1);
-
 			auto ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+
+			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), 1);
+
+			return ret;
+		}
+
+		const bool index_as_bool(const char* lhs)
+		{
+			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{} = nil", mClass).c_str());
+			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), lhs);
+
+			auto ret = lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
 			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), 1);
 
@@ -164,8 +173,7 @@ namespace Xplicit::Lua
 			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), lhs);
 
 			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-			lua_rawgeti(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, 1);
-
+			
 			String ret = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
 			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), 1);

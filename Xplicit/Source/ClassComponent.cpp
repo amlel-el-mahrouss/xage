@@ -38,7 +38,7 @@ namespace Xplicit
 		this->insert("Color", "{ R = 0, G = 0, B = 0 }");
 		this->insert("Anchored", "true");
 		this->insert("Archivable", "true");
-		this->insert("Locked", "true");
+		this->insert("Locked", "false");
 		this->insert("Collide", "true");
 
 		String func_proto = "func(self) _G.Game.ComponentService.Destroy(\"";
@@ -56,14 +56,14 @@ namespace Xplicit
 	
 	void ClassComponent::update()
 	{
-		this->get_attribute().anchor((bool)this->index_as_number("Anchored"));
+		this->get_attribute().locked(this->index_as_bool("Locked"));
 
 		if (this->get_attribute().is_locked())
 			return;
 
-		this->get_attribute().locked((bool)this->index_as_number("Locked"));
-		this->get_attribute().archivable((bool)this->index_as_number("Archivable"));
-		this->get_attribute().collide((bool)this->index_as_number("Collide"));
+		this->get_attribute().anchor(this->index_as_bool("Anchored"));
+		this->get_attribute().archivable(this->index_as_bool("Archivable"));
+		this->get_attribute().collide(this->index_as_bool("Collide"));
 
 		this->get_attribute().pos().X = this->index_as_number("Position.X");
 		this->get_attribute().pos().Y = this->index_as_number("Position.Y");
