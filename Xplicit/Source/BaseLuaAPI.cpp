@@ -27,7 +27,7 @@ static int lua_New(lua_State* L)
 	if (name.empty() ||
 		script.empty())
 	{
-		lua_settop(L, 0);
+		
 		lua_pushboolean(L, false);
 
 		return 1;
@@ -44,7 +44,7 @@ static int lua_New(lua_State* L)
 
 	XPLICIT_ASSERT(instance);
 
-	lua_settop(L, 0);
+	
 	lua_pushboolean(L, true);
 
 	return 1;
@@ -60,7 +60,7 @@ static int lua_Destroy(lua_State* L)
 
 	if (name.empty())
 	{
-		lua_settop(L, 0);
+		
 		lua_pushboolean(L, true);
 
 		return 1;
@@ -74,7 +74,7 @@ static int lua_Destroy(lua_State* L)
 		}
 	}
 
-	lua_settop(L, 0);
+	
 	lua_pushboolean(L, true);
 
 	return 1;
@@ -90,7 +90,7 @@ static int lua_PrintLn(lua_State* L)
 			XPLICIT_INFO(msg);
 	}
 
-	lua_settop(L, 0);
+	
 	return 0;
 }
 

@@ -25,12 +25,6 @@ namespace Xplicit::Player
 
         // We don't use MakeReq.exe here, it could be missing.
 
-        /* 
-            Why is it using 'new' and 'delete' ?
-            Just for optimization, plus the fact that a unique_ptr/shared_ptr is
-            not fitting here.
-        */
-
         auto http_hdr = HTTP::HTTP::HTTPHeader{ .Type = HTTP::HTTP::RequestType::GET, .Bytes = const_cast<char*>(assetId.data()), .Size = static_cast<int>(assetId.size()), };
 
         Ref<HTTP::HTTP::HTTPHeader*> http_hdr_wrapper{ &http_hdr };
@@ -48,7 +42,7 @@ namespace Xplicit::Player
         http_path += "Contents/";
         http_path += assetId;
 
-        std::ofstream file = mWriter->write(http_path.c_str());
+        std::ofstream file = mWriter.write(http_path.c_str());
 
         constexpr int64_t MAX_BUF = 1000000;
 

@@ -33,11 +33,15 @@ namespace Xplicit::Player
 		void download(const String& assetId) const noexcept;
 		void set_endpoint(const String& endpoint) noexcept;
 		
+	public:
 		const char* protocol() noexcept { return XPLICIT_XASSET_PROTOCOL; }
 		float version() const noexcept { return 1.1f; }
 		
 	private:
-		std::unique_ptr<FilesystemWrapper> mWriter;
+		//! Filesystem wrapper, create, open, delete!
+		FilesystemWrapper mWriter;
+
+		//! HTTP endpoint
 		String mEndpoint;
 	
 	};

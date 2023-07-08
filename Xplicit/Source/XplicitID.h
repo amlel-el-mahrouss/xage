@@ -41,13 +41,13 @@ namespace Xplicit::Auth
 		 * \brief Returns the current XplicitID as an integer.
 		 * \return This XplicitID as a 64-bit long integer.
 		 */
-		const std::int64_t as_int() const noexcept;
+		const std::int64_t& as_int() const noexcept;
 
 		/**
 		 * \brief Returns the current XplicitID
 		 * \return This XplicitID as a string.
 		 */
-		const String as_string() noexcept;
+		const String& as_string() noexcept;
 
 	public:
 		void generate(const std::int64_t& id) noexcept;

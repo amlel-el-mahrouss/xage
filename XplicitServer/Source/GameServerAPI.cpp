@@ -44,7 +44,7 @@ static int lua_LoadScript(lua_State* L)
 		}
 	}
 
-	lua_settop(L, 0);
+	
 	return 0;
 }
 
@@ -68,7 +68,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 	XPLICIT_PARSER.load(params);
 
-	lua_settop(L, 0);
+	
 	return 0;
 }
 
@@ -91,7 +91,7 @@ static int lua_NetworkService_Kick(lua_State* L)
 		}
 	}
 
-	lua_settop(L, 0);
+	
 	return 0;
 }
 
@@ -122,7 +122,7 @@ static int lua_NetworkService_Create(lua_State* L)
 		}
 	}
 
-	lua_settop(L, 0);
+	
 	lua_pushboolean(L, true);
 
 	return 1;

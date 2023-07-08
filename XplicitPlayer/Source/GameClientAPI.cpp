@@ -42,7 +42,7 @@ static int lua_PlaySound(lua_State* L)
 		XPLICIT_CRITICAL("There was an error executing this procedure!");
 	}
 
-	lua_settop(L, 0);
+	
 	return 0;
 }
 
@@ -53,7 +53,6 @@ static int lua_SetWindowCaption(lua_State* L)
 	if (title)
 		RENDER->setWindowCaption(XPLICIT_TO_WCHAR.from_bytes(title).c_str());
 
-	lua_settop(L, 0);
 	return 0;
 }
 
@@ -71,14 +70,14 @@ static int lua_LoadRoXML(lua_State* L)
 
 	if (params.Path.empty())
 	{
-		lua_pushnil(L);
+		lua_pushboolean(L, false);
 		return 1;
 	}
 
 	XPLICIT_PARSER.load(params);
 
-	lua_settop(L, 0);
-	return 0;
+	lua_pushboolean(L, true);
+	return 1;
 }
 
 void XplicitLoadClientLua() noexcept

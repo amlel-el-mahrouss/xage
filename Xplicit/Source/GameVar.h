@@ -56,7 +56,7 @@ namespace Xplicit
 
 	};
 
-	using GameVarPtr = std::shared_ptr<GameVar>;
+	using GameVarPtr = GameVar*;
 
 	class XPLICIT_API GameVarManager final
 	{

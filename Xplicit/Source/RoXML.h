@@ -265,8 +265,8 @@ namespace Xplicit::RoXML
 								"Game",
 								node->value());
 
-							component->insert("Path", node->first_attribute()->value());
-							component->insert("Play", "func(self) _G.Game.SoundService.Play(self.Path); end");
+							component->get()->insert("Path", node->first_attribute()->value());
+							component->get()->insert("Play", "func(self) _G.Game.SoundService.Play(self.Path); end");
 						}
 					}
 

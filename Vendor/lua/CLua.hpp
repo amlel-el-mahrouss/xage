@@ -154,8 +154,6 @@ namespace Xplicit::Lua
 			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
 			T ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), 1);
-
 			return ret;
 		}
 
@@ -167,8 +165,6 @@ namespace Xplicit::Lua
 			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
 			const bool ret = lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), 1);
-
 			return ret;
 		}
 
@@ -183,9 +179,6 @@ namespace Xplicit::Lua
 			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
 			String ret = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-
-			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), 1);
-
 			return ret;
 		}
 

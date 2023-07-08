@@ -103,7 +103,12 @@ namespace Xplicit
 
 		if (mPeer)
 		{
-			mClass = std::make_unique<Lua::CLuaClass>(("Game.Players." + mPeer->xplicit_id.as_string()).c_str());
+			String path("Game.Players.");
+
+			path += mPeer->xplicit_id.as_string();
+
+			if (!mClass)
+				mClass = std::make_unique<Lua::CLuaClass>(path);
 
 			//! Reset Humanoid information
 			mClass->insert("Name", "\""
