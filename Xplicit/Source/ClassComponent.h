@@ -19,7 +19,7 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API ClassComponent : public Component
+	class XPLICIT_API ClassComponent : public Component, public Lua::CLuaClass
 	{
 	public:
 		ClassComponent() = delete;
@@ -42,21 +42,18 @@ namespace Xplicit
 	public:
 		COMPONENT_TYPE type() noexcept override { return COMPONENT_GENERIC; }
 
+	public:
 		const char* name() noexcept override { return mName.c_str(); }
 		const char* parent() noexcept;
 
-		Lua::CLuaClass* operator->() noexcept;
-		Lua::CLuaClass* get() noexcept;
-
 	public:
-		bool should_update() noexcept override;
-		void update() override;
+		static bool should_update() noexcept { return true; }
+		static void update(void* _this);
 
 	public:
 		XAttribute& get_attribute() noexcept;
 
 	private:
-		std::unique_ptr<Lua::CLuaClass> mCLua;
 		XAttribute mAttribute;
 		String mParent;
 		String mName;

@@ -68,9 +68,8 @@ namespace Xplicit
         const char* name() noexcept override;
         COMPONENT_TYPE type() noexcept override;
 
-        bool should_update() noexcept override;
-
-        void update() override;
+        static bool should_update() noexcept;
+        static void update(void* class_ptr);
         
         bool connect(const char* ip, const char* port) noexcept;
         

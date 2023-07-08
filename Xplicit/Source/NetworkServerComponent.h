@@ -41,10 +41,10 @@ namespace Xplicit
 	public:
 		COMPONENT_TYPE type() noexcept;
 		const char* name() noexcept;
-		void update()  override;
 
 	public:
-		bool should_update() noexcept override;
+		static bool should_update() noexcept { return false; }
+		static void update(void* class_ptr) noexcept { }
 		
 	public:
 		NetworkPeer* get(const std::size_t& idx) const noexcept;

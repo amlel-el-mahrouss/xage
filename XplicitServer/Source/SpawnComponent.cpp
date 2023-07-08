@@ -32,13 +32,15 @@ namespace Xplicit
 
 	bool SpawnComponent::should_update() noexcept { return true; }
 
-	void SpawnComponent::update() 
+	void SpawnComponent::update(void* class_ptr) 
 	{
-		auto str = "{" + std::to_string(mAttribute.pos().X) + "," +
-			std::to_string(mAttribute.pos().Y) + "," +
-			std::to_string(mAttribute.pos().Z) + "," + "}";
+		SpawnComponent* _this = (SpawnComponent*)class_ptr;
 
-		mClass->assign("Position", str.c_str());
+		auto str = "{" + std::to_string(_this->mAttribute.pos().X) + "," +
+			std::to_string(_this->mAttribute.pos().Y) + "," +
+			std::to_string(_this->mAttribute.pos().Z) + "," + "}";
+
+		_this->mClass->assign("Position", str.c_str());
 	}
 
 	COMPONENT_TYPE SpawnComponent::type() noexcept { return (COMPONENT_LOGIC); }

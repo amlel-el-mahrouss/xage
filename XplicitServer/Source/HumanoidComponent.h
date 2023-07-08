@@ -42,8 +42,8 @@ namespace Xplicit
 		const char* name() noexcept override;
 
 	public:
-		bool should_update() noexcept override;
-		void update() override;
+		static bool should_update() noexcept;
+		static void update(void* _this);
 
 	public:
 		bool can_collide() noexcept override;

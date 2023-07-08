@@ -39,11 +39,14 @@ namespace Xplicit
 
 	public:
 		COMPONENT_TYPE type() noexcept override;
-		bool should_update() noexcept override;
 		const char* name() noexcept override;
 
 	public:
-		void update() noexcept override;
+		static void update(void* class_ptr) noexcept;
+		static bool should_update() noexcept;
+
+
+	public:
 		void run() noexcept;
 
 	private:

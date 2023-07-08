@@ -13,7 +13,7 @@
 
 #include "Component.h"
 
-namespace Xplicit 
+namespace Xplicit
 {
 	void ComponentSystem::update() noexcept
 	{
@@ -24,12 +24,10 @@ namespace Xplicit
 
 		for (std::size_t i = 0; i < sz; i++)
 		{
-#ifdef XPLICIT_DEBUG
-			XPLICIT_ASSERT(mComponents[i]);
-#endif // ifdef XPLICIT_DEBUG
+			XPLICIT_ASSERT(mComponents[i]._Pointee);
 
-			if (mComponents[i]->should_update())
-				mComponents[i]->update();
+			if (mComponents[i]._Eval())
+				mComponents[i]._Update(mComponents[i]._Pointee);
 		}
 	}
 
@@ -44,15 +42,11 @@ namespace Xplicit
 	}
 
 	Component::Component() = default;
+
 	Component::~Component() = default;
 
-	void Component::update() {}
-
 	bool Component::can_collide() noexcept { return false; }
-
 	bool Component::has_physics() noexcept { return false; }
-
-	bool Component::should_update() noexcept { return true; }
 
 	const char* Component::name() noexcept { return ("Component"); }
 

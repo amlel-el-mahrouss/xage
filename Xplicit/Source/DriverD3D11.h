@@ -227,10 +227,10 @@ namespace Xplicit::Renderer::DX11
 		void create();
 
 	public:
-		void update() override;
+		static void update(void* _this);
 
 	public:
-		bool should_update() noexcept override;
+		static bool should_update() noexcept { return true; }
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 

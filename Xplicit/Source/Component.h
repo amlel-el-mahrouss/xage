@@ -11,48 +11,10 @@
 
 #include "Xplicit.h"
 
-//! This file handles the engine component system stuff.
+ //! This file handles the engine component system stuff.
 
-namespace Xplicit 
+namespace Xplicit
 {
-	///! do that so that we don't deal with any errors.
-	class ComponentSystem;
-	class Component;
-
-	class XPLICIT_API ComponentSystem final 
-	{
-		explicit ComponentSystem() = default;
-
-	public:
-		~ComponentSystem() = default;
-		
-	public:
-		XPLICIT_COPY_DELETE(ComponentSystem);
-		
-	public:
-		template <typename T>
-		std::vector<T*> all_of(const char* name);
-		
-		template <typename T, typename... Args>
-		T* add(Args&&... args);
-
-		template <typename T>
-		bool remove(T* ptr);
-		
-		template <typename T>
-		T* get(const char* name) noexcept;
-	
-	public:
-		void update() noexcept;
-		
-	public:
-		static ComponentSystem* get_singleton_ptr() noexcept;
-
-	private:
-		std::vector<Component*> mComponents;
-
-	};
-
 	enum COMPONENT_TYPE : uint8_t
 	{
 		COMPONENT_HUMANOID, // Humanoid (Player and NPC)
@@ -84,19 +46,16 @@ namespace Xplicit
 	* Last Edit: 7/5/2023
 	* ----------------------------------------------------------------------------
 	*/
-	class XPLICIT_API Component 
+	class XPLICIT_API Component
 	{
 	public:
 		Component();
 		virtual ~Component();
-		
+
 	public:
 		XPLICIT_COPY_DEFAULT(Component);
-		
+
 	public:
-		virtual bool should_update() noexcept;
-		virtual void update();
-		
 		virtual COMPONENT_TYPE type() noexcept;
 		virtual const char* name() noexcept;
 
@@ -105,12 +64,78 @@ namespace Xplicit
 		virtual bool has_physics() noexcept;
 
 	};
+
+	namespace Details
+	{
+		typedef void* ComponentData;
+
+		typedef void(__cdecl *ComponentUpdateAccessor)(void*);
+		typedef bool(__cdecl *ComponentUpdateEvalAccessor)(void);
+
+		struct ComponentAccessor final
+		{
+		public:
+			explicit ComponentAccessor()
+				: _Pointee(nullptr)
+			{}
+
+		public:
+			String _Name;
+
+		public:
+			ComponentData _Pointee;
+			ComponentUpdateAccessor _Update;
+			ComponentUpdateEvalAccessor _Eval;
+
+		public:
+			template <typename Y>
+			Y as_type() noexcept
+			{
+				return reinterpret_cast<Y>(_Pointee);
+			}
+		};
+	}
+
+	class XPLICIT_API ComponentSystem final
+	{
+		explicit ComponentSystem() = default;
+
+	public:
+		~ComponentSystem() = default;
+
+	public:
+		XPLICIT_COPY_DELETE(ComponentSystem);
+
+	public:
+		template <typename T>
+		std::vector<T*> all_of(const char* name);
+
+		template <typename T, typename... Args>
+		T* add(Args&&... args);
+
+		template <typename T>
+		bool remove(T* ptr);
+
+		template <typename T>
+		T* get(const char* name) noexcept;
+
+	public:
+		void update() noexcept;
+
+	public:
+		static ComponentSystem* get_singleton_ptr() noexcept;
+
+	private:
+		std::vector<Details::ComponentAccessor> mComponents;
+
+	};
 }
 
 #define XPLICIT_COMPONENT_OVERRIDE()\
 		const char* name() noexcept override;\
 		COMPONENT_TYPE type() noexcept override;\
-		bool should_update() noexcept override;\
+		static bool should_update() noexcept;\
+		static void update(void* class_ptr);\
 		PHYSICS_TYPE physics() noexcept override;
 
 

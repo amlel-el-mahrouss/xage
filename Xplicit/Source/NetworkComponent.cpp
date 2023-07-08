@@ -149,10 +149,10 @@ namespace Xplicit
 		return true;
 	}
 
-	void NetworkComponent::update()
+	void NetworkComponent::update(void* _this)
 	{
 		static NetworkPacket ack;
-		this->send(ack);
+		((NetworkComponent*)_this)->send(ack);
 	}
 
 	bool NetworkComponent::read(NetworkPacket& packet)

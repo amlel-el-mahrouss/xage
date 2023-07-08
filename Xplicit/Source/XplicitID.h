@@ -50,6 +50,9 @@ namespace Xplicit::Auth
 		const String& as_string() noexcept;
 
 	public:
+		/**
+		 * \brief Generates a new XplicitID
+		 */
 		void generate(const std::int64_t& id) noexcept;
 
 	private:

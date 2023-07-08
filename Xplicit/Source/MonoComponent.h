@@ -27,7 +27,7 @@ namespace Xplicit
 	/// <summary>
 	/// Mono C# context
 	/// </summary>
-	class XPLICIT_API MonoEngineComponent final : public Component
+	class XPLICIT_API MonoEngineComponent : public Component
 	{
 	public:
 		MonoEngineComponent();
@@ -36,6 +36,7 @@ namespace Xplicit
 		MonoEngineComponent& operator=(const MonoEngineComponent&) = default;
 		MonoEngineComponent(const MonoEngineComponent&) = default;
 
+	public:
 		MonoAssembly* open(const char* assembly_file);
 
 		/// <summary>
@@ -55,10 +56,10 @@ namespace Xplicit
 		/// <returns>error code</returns>
 		int run(MonoAssembly* in, int argc, const char** argv);
 
-		virtual const char* name() noexcept override;
-		virtual COMPONENT_TYPE type() noexcept override;
-		virtual void update() override;
+	public:
+		XPLICIT_COMPONENT_OVERRIDE(MonoEngineComponent);
 
+	public:
 		MonoClass* make(Ref<MonoScriptComponent*>& assembly, const char* namespase, const char* klass);
 		void add_internal_call(const char* name, const void* method) noexcept;
 		MonoDomain* domain() noexcept;
@@ -69,22 +70,20 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API MonoScriptComponent final : public Component
+	class XPLICIT_API MonoScriptComponent : public Component
 	{
 	public:
 		MonoScriptComponent(const char* filename, bool can_fail);
-		virtual ~MonoScriptComponent();
+		~MonoScriptComponent() override;
 
 		MonoScriptComponent& operator=(const MonoScriptComponent&) = default;
 		MonoScriptComponent(const MonoScriptComponent&) = default;
 
+	public:
+		XPLICIT_COMPONENT_OVERRIDE(MonoScriptComponent);
+
+	public:
 		MonoObject* run(const char* method_name);
-		virtual void update() override;
-
-		virtual const char* name() noexcept override;
-		virtual COMPONENT_TYPE type() noexcept override;
-		virtual bool should_update() noexcept override;
-
 		Ref<MonoEngineComponent*>& get();
 
 	private:

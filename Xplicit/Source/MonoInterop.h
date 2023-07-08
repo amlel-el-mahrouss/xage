@@ -20,7 +20,7 @@ namespace Xplicit
 	class MonoEventListener;
 	class MonoEvent;
 
-	class XPLICIT_API MonoClassComponent final : public Component
+	class XPLICIT_API MonoClassComponent : public Component
 	{
 	public:
 		MonoClassComponent() = delete;
@@ -31,15 +31,7 @@ namespace Xplicit
 		MonoClassComponent& operator=(const MonoClassComponent&) = default;
 		MonoClassComponent(const MonoClassComponent&) = default;
 
-		COMPONENT_TYPE type() noexcept override;
-		const char* name() noexcept override;
-
-		void update() override;
-
-		bool can_collide() noexcept override;
-		bool has_physics() noexcept override;
-
-		bool should_update() noexcept override;
+		XPLICIT_COMPONENT_OVERRIDE(MonoClassComponent);
 
 	public:
 		operator bool();
@@ -60,7 +52,7 @@ namespace Xplicit
 	/// <summary>
 	/// Generic Mono Class, written in C++
 	/// </summary>
-	class XPLICIT_API MonoEvent final : public Event
+	class XPLICIT_API MonoEvent : public Event
 	{
 	public:
 		MonoEvent() = delete;

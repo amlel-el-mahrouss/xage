@@ -29,7 +29,7 @@ namespace Xplicit
 		}
 	}
 
-	void LuaScriptComponent::update() noexcept {}
+	void LuaScriptComponent::update(void* class_ptr) {}
 
 	bool LuaScriptComponent::should_update() noexcept { return false; }
 

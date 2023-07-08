@@ -85,10 +85,6 @@ namespace Xplicit
 
 	COMPONENT_TYPE NetworkServerComponent::type() noexcept { return COMPONENT_NETWORK; }
 
-	void NetworkServerComponent::update() {}
-
-	bool NetworkServerComponent::should_update() noexcept { return false; }
-
 	NetworkServerComponent::~NetworkServerComponent() {}
 
 	const char* NetworkServerComponent::dns() const noexcept { return mDns.c_str(); }

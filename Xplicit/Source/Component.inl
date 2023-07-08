@@ -14,7 +14,9 @@
 template <typename T, typename... Args>
 T* Xplicit::ComponentSystem::add(Args&&... args)
 {
-	if (T* ptr = new T(std::forward<Args>(args)...); ptr)
+	T* ptr = new T(std::forward<Args>(args)...);
+
+	if (ptr)
 	{
 #ifdef XPLICIT_DEBUG
 		String fmt = "Created component: ";
@@ -22,8 +24,15 @@ T* Xplicit::ComponentSystem::add(Args&&... args)
 
 		XPLICIT_INFO(fmt);
 #endif
+		Details::ComponentAccessor accessor;
 
-		mComponents.push_back((Component*)ptr);
+		accessor._Name = ptr->name();
+		accessor._Pointee = reinterpret_cast<void*>(ptr);
+		accessor._Update = &T::update;
+		accessor._Eval = &T::should_update;
+
+		mComponents.push_back(accessor);
+
 		return ptr;
 	}
 
@@ -38,11 +47,13 @@ T* Xplicit::ComponentSystem::get(const char* name) noexcept
 
 	for (std::size_t i = 0; i < mComponents.size(); ++i)
 	{
-		if (!mComponents[i])
+		auto& comp = mComponents[i];
+
+		if (!comp.as_type<T*>())
 			continue;
 
-		if (strcmp(name, mComponents[i]->name()) == 0)
-			return (T*)mComponents[i];
+		if (name == comp._Name)
+			return comp.as_type<T*>(); //! __thiscall wants the class at ECX.
 	}
 
 	return nullptr;
@@ -58,14 +69,13 @@ std::vector<T*> Xplicit::ComponentSystem::all_of(const char* name)
 
 	for (std::size_t i = 0; i < mComponents.size(); ++i)
 	{
-		if (!mComponents[i])
+		auto& comp = mComponents[i];
+
+		if (!comp.as_type<T*>())
 			continue;
 
-		// move that to upper file if you happen to use that in eveyr part of the file.
-		if (strcmp(name, mComponents[i]->name()) == 0)
-		{
-			list.push_back((T*)mComponents[i]);
-		}
+		if (name == comp._Name)
+			list.push_back(comp.as_type<T*>());
 	}
 
 	return list;
@@ -77,8 +87,8 @@ bool Xplicit::ComponentSystem::remove(T* ptr)
 	if (!ptr)
 		return false;
 
-	auto iterator = std::find_if(mComponents.begin(), mComponents.end(), [&](Component* component) -> bool {
-		return component == ptr;
+	auto iterator = std::find_if(mComponents.begin(), mComponents.end(), [&](Details::ComponentAccessor& accessor) -> bool {
+		return accessor.as_type<T*>() == ptr;
 	});
 
 	if (iterator != mComponents.end())
@@ -90,9 +100,9 @@ bool Xplicit::ComponentSystem::remove(T* ptr)
 		XPLICIT_INFO(fmt);
 #endif
 
-		mComponents.erase(iterator);
-
 		delete ptr;
+		
+		mComponents.erase(iterator);
 
 		return true;
 	}

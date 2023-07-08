@@ -33,51 +33,53 @@ namespace Xplicit
 
 	bool HumanoidComponent::has_physics() noexcept { return false; }
 
-	void HumanoidComponent::update() 
+	void HumanoidComponent::update(void* _this_ptr)
 	{
-		if (this->get_peer() == nullptr)
+		HumanoidComponent* _this = (HumanoidComponent*)_this_ptr;
+
+		if (_this->get_peer() == nullptr)
 			return;
 
-		if (mHealth > 0)
+		if (_this->mHealth > 0)
 		{
-			mState = HUMANOID_STATE::ALIVE;
+			_this->mState = HUMANOID_STATE::ALIVE;
 
-			if (mHealth >= 100 && !mCanSpawn)
-				mCanSpawn = true;
+			if (_this->mHealth >= 100 && !_this->mCanSpawn)
+				_this->mCanSpawn = true;
 
 		}
 
 		// execute a series of commands for this humanoid.
 
-		if (mState == HUMANOID_STATE::ALIVE)
+		if (_this->mState == HUMANOID_STATE::ALIVE)
 		{
-			mCanSpawn = true;
-			mClass->insert("State", "Game.HumanoidState.Alive");
+			_this->mCanSpawn = true;
+			_this->mClass->insert("State", "Game.HumanoidState.Alive");
 		}
 
-		if (mState == HUMANOID_STATE::DEAD)
+		if (_this->mState == HUMANOID_STATE::DEAD)
 		{
-			mCanSpawn = false;
-			mClass->insert("State", "Game.HumanoidState.Dead");
+			_this->mCanSpawn = false;
+			_this->mClass->insert("State", "Game.HumanoidState.Dead");
 		}
 
-		if (mState == HUMANOID_STATE::INVALID)
+		if (_this->mState == HUMANOID_STATE::INVALID)
 		{
-			mCanSpawn = false;
-			mHealth = 0;
+			_this->mCanSpawn = false;
+			_this->mHealth = 0;
 
-			mClass->insert("State", "Game.HumanoidState.Invalid");
+			_this->mClass->insert("State", "Game.HumanoidState.Invalid");
 		}
 
-		String str = "{" + std::to_string(mAttribute.pos().X) + "," + 
-						 std::to_string(mAttribute.pos().Y) + "," +
-						 std::to_string(mAttribute.pos().Z) + "," + "}";
+		String str = "{" + std::to_string(_this->mAttribute.pos().X) + "," +
+						 std::to_string(_this->mAttribute.pos().Y) + "," +
+						 std::to_string(_this->mAttribute.pos().Z) + "," + "}";
 
-		mClass->assign("Position", str.c_str());
+		_this->mClass->assign("Position", str.c_str());
 
-		mHealth = mClass->index_as_number<int64_t>("Health");
-		mMaxHealth = mClass->index_as_number<int64_t>("MaxHealth");
-		mJumpPower = mClass->index_as_number<int64_t>("JumpPower");
+		_this->mHealth = _this->mClass->index_as_number<int64_t>("Health");
+		_this->mMaxHealth = _this->mClass->index_as_number<int64_t>("MaxHealth");
+		_this->mJumpPower = _this->mClass->index_as_number<int64_t>("JumpPower");
 	}
 
 	void HumanoidComponent::set_health(const int64_t& health) noexcept { this->mHealth = health; }
@@ -104,24 +106,26 @@ namespace Xplicit
 		if (mPeer)
 		{
 			String path("Game.Players.");
-
 			path += mPeer->xplicit_id.as_string();
 
 			if (!mClass)
 				mClass = std::make_unique<Lua::CLuaClass>(path);
 
-			//! Reset Humanoid information
-			mClass->insert("Name", "\""
-									XPLICIT_DEFAULT_NAME
-									"\"");
+			if (mClass)
+			{
+				//! Reset Humanoid information
+				mClass->insert("Name", "\""
+					XPLICIT_DEFAULT_NAME
+					"\"");
 
-			mClass->insert("State", "Game.HumanoidState.Alive");
+				mClass->insert("State", "Game.HumanoidState.Alive");
 
-			mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
+				mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
 
-			mClass->insert("Health", std::to_string(mHealth).c_str());
-			mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
-			mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
+				mClass->insert("Health", std::to_string(mHealth).c_str());
+				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
+				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
+			}
 		}
 	}
 

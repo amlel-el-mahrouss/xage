@@ -133,7 +133,10 @@ namespace Xplicit
 
 	COMPONENT_TYPE MonoEngineComponent::type() noexcept { return COMPONENT_LOGIC; }
 
-	void MonoEngineComponent::update() {}
+	void MonoEngineComponent::update(void* class_ptr) 
+	{
+		(void*)class_ptr;
+	}
 
 	// checks args
 	static bool xplicit_check_args(int argc, const char** argv)
@@ -290,9 +293,9 @@ namespace Xplicit
 		return ("MonoScriptComponent");
 	}
 
-	void MonoScriptComponent::update()
+	void MonoScriptComponent::update(void* class_ptr)
 	{
-		// nothing.
+		(void)class_ptr;
 	}
 
 	bool MonoScriptComponent::should_update() noexcept { return false; }

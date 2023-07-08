@@ -141,7 +141,7 @@ int main(int argc, char** argv)
 		title += std::to_string(XPLICIT_NETWORK_VERSION);
 		title += ")";
 
-		SetConsoleTitleA(title.c_str());
+		::SetConsoleTitleA(title.c_str());
 
 #endif // XPLICIT_WINDOWS
 
