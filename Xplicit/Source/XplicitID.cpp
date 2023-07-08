@@ -18,12 +18,12 @@ namespace Xplicit::Auth
 		this->generate(id);
 	}
 
-	const String& XplicitID::as_string() noexcept
+	const String XplicitID::as_string() noexcept
 	{
 		return mXplicitId;
 	}
 
-	const std::int64_t& XplicitID::as_int() const noexcept
+	const std::int64_t XplicitID::as_int() const noexcept
 	{
 		static const std::int64_t id = mRegionId | mConnectionID;
 		return id;

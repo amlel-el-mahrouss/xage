@@ -79,9 +79,7 @@ namespace Xplicit::Bites
 		mSettings = std::make_unique<SettingsManager>();
 		XPLICIT_ASSERT(mSettings);
 
-		XPLICIT_GET_DATA_DIR(dir);
-
-		String prebuilt = dir;
+		String prebuilt = mPath;
 		prebuilt += "/Textures/DefaultSkin.zip";
 
 		if (!RENDER->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))

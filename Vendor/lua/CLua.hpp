@@ -69,11 +69,11 @@ namespace Xplicit::Lua
 		{
 			if (file)
 			{
-				const auto ret = luaL_dofile(mL, file);
+				const long ret = luaL_dofile(mL, file);
 
 #ifdef XPLICIT_DEBUG
 				if (ret > 0)
-					std::cout << lua_tostring(CLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
+					std::cout << lua_tostring(mL, -1) << "\n";
 #endif // ifdef XPLICIT_DEBUG
 
 				return ret;
@@ -86,11 +86,11 @@ namespace Xplicit::Lua
 		{
 			if (str)
 			{
-				const auto ret = luaL_dostring(mL, str);
+				const long ret = luaL_dostring(mL, str);
 
 #ifdef XPLICIT_DEBUG
 				if (ret > 0)
-					std::cout << lua_tostring(CLuaStateManager::get_singleton_ptr()->state(), -1) << "\n";
+					std::cout << lua_tostring(mL, -1) << "\n";
 #endif // ifdef XPLICIT_DEBUG
 
 				return ret;
@@ -111,7 +111,7 @@ namespace Xplicit::Lua
 	class XPLICIT_API CLuaClass
 	{
 	public:
-		explicit CLuaClass(const char* klass) noexcept
+		explicit CLuaClass(const String& klass) noexcept
 			: mClass(klass)
 		{
 			String fmt = std::format("_G.{}", mClass);
@@ -119,6 +119,10 @@ namespace Xplicit::Lua
 
 			CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
+
+		explicit CLuaClass(const char* klass) noexcept
+			: CLuaClass(String(klass))
+		{}
 
 		virtual ~CLuaClass() noexcept
 		{
@@ -137,16 +141,19 @@ namespace Xplicit::Lua
 			return false;
 		}
 
-		bool assign(const char* lhs, const char* rhs) { return operator()(lhs, rhs); }
+		bool assign(const char* lhs, const char* rhs) { return this->insert(lhs, rhs); }
+
 		bool call(const char* lhs) { return operator()(lhs); }
 
-		const double index_as_number(const char* lhs)
+		template <typename T = double>
+		const T index_as_number(const char* lhs)
 		{
-			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{} = nil", mClass).c_str());
+			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{}", mClass).c_str());
 			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), lhs);
-			
-			auto ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
+			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+
+			T ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), 1);
 
 			return ret;
@@ -154,11 +161,12 @@ namespace Xplicit::Lua
 
 		const bool index_as_bool(const char* lhs)
 		{
-			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{} = nil", mClass).c_str());
+			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{}", mClass).c_str());
 			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), lhs);
 
-			auto ret = lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
+			const bool ret = lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), 1);
 
 			return ret;
@@ -169,11 +177,11 @@ namespace Xplicit::Lua
 	public:
 		const String operator[](const char* lhs) noexcept
 		{
-			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{} = nil", mClass).c_str());
+			lua_getglobal(Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("_G.{}", mClass).c_str());
 			lua_pushstring(Lua::CLuaStateManager::get_singleton_ptr()->state(), lhs);
 
 			lua_gettable(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-			
+
 			String ret = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 
 			lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), 1);
@@ -186,7 +194,7 @@ namespace Xplicit::Lua
 			if (!lhs)
 				return false;
 
-			return Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{}()", mClass, lhs).c_str());
+			return Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{}", mClass, lhs).c_str());
 		}
 
 		bool operator()(const char* lhs, const char* rhs) noexcept

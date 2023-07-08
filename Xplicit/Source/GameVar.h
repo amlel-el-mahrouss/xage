@@ -66,7 +66,7 @@ namespace Xplicit
 	public:
 		~GameVarManager() = default;
 
-		XPLICIT_COPY_DEFAULT(GameVarManager);
+		XPLICIT_COPY_DELETE(GameVarManager);
 
 	public:
 		static GameVarManager* get_singleton_ptr() noexcept;

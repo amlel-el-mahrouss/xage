@@ -13,9 +13,6 @@
 
 #include "HumanoidComponent.h"
 
-#define XPLICIT_LUA_GLOBAL "_G."
-#define XPLICIT_LUA_NAMESPACE "Game.Players."
-
 namespace Xplicit
 {
 	HumanoidComponent::HumanoidComponent() 
@@ -55,13 +52,13 @@ namespace Xplicit
 		if (mState == HUMANOID_STATE::ALIVE)
 		{
 			mCanSpawn = true;
-			mClass->assign("State", "Game.HumanoidState.Alive");
+			mClass->insert("State", "Game.HumanoidState.Alive");
 		}
 
 		if (mState == HUMANOID_STATE::DEAD)
 		{
 			mCanSpawn = false;
-			mClass->assign("State", "Game.HumanoidState.Dead");
+			mClass->insert("State", "Game.HumanoidState.Dead");
 		}
 
 		if (mState == HUMANOID_STATE::INVALID)
@@ -69,7 +66,7 @@ namespace Xplicit
 			mCanSpawn = false;
 			mHealth = 0;
 
-			mClass->assign("State", "Game.HumanoidState.Invalid");
+			mClass->insert("State", "Game.HumanoidState.Invalid");
 		}
 
 		String str = "{" + std::to_string(mAttribute.pos().X) + "," + 
@@ -78,9 +75,9 @@ namespace Xplicit
 
 		mClass->assign("Position", str.c_str());
 
-		mHealth = mClass->index_as_number("Health");
-		mMaxHealth = mClass->index_as_number("MaxHealth");
-		mJumpPower = mClass->index_as_number("JumpPower");
+		mHealth = mClass->index_as_number<int64_t>("Health");
+		mMaxHealth = mClass->index_as_number<int64_t>("MaxHealth");
+		mJumpPower = mClass->index_as_number<int64_t>("JumpPower");
 	}
 
 	void HumanoidComponent::set_health(const int64_t& health) noexcept { this->mHealth = health; }
@@ -101,11 +98,11 @@ namespace Xplicit
 	{	
 		mPeer = peer;
 
+		if (mClass)
+			mClass.reset();
+
 		if (mPeer)
 		{
-			if (mClass)
-				mClass.reset();
-
 			mClass = std::make_unique<Lua::CLuaClass>(("Game.Players." + mPeer->xplicit_id.as_string()).c_str());
 
 			//! Reset Humanoid information
@@ -118,8 +115,8 @@ namespace Xplicit
 			mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
 
 			mClass->insert("Health", std::to_string(mHealth).c_str());
-			mClass->insert("MaxHealth", "100");
-			mClass->insert("JumpPower", "5");
+			mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
+			mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
 		}
 	}
 

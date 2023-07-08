@@ -22,10 +22,10 @@ namespace Xplicit
 	constexpr int16_t XPLICIT_DEATH_DELAY = 5;
 
 	/// <summary>
-	/// Handle Spawn at a specific point.
+	/// Handle spawn location.
 	/// </summary>
-	/// <param name="spawner">The Spawn component</param>
-	/// <param name="humanoid">The Targeted Humanoid</param>
+	/// <param name="spawner">Spawn component</param>
+	/// <param name="humanoid">Target Humanoid</param>
 	/// <returns></returns>
 	
 	static void XplicitHandleSpawn(SpawnComponent* spawner, HumanoidComponent* humanoid) noexcept
@@ -51,8 +51,9 @@ namespace Xplicit
 		if (!mNetwork)
 			return;
 
-		for (const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent"); 
-			HumanoidComponent* humanoid : humanoids)
+		static auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+
+		for (HumanoidComponent* humanoid : humanoids)
 		{
 			if (humanoid == nullptr ||
 				humanoid->get_peer() == nullptr ||
@@ -78,7 +79,7 @@ namespace Xplicit
 
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string("Game:Death()");
 
-				for (size_t peer = 0; peer < mNetwork->size(); ++peer)
+				for (std::size_t peer = 0UL; peer < mNetwork->size(); ++peer)
 				{
 					peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
 					peer_ptr->packet.public_hash = humanoid->get_peer()->public_hash;
@@ -87,7 +88,8 @@ namespace Xplicit
 				Thread respawn_job([&](HumanoidComponent* humanoid) {
 					std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_DEATH_DELAY));
 
-					if (humanoid)
+					if (humanoid &&
+						humanoid->get_peer())
 					{
 						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
 						humanoid->set_state(HUMANOID_STATE::ALIVE);

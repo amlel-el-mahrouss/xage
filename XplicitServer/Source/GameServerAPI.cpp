@@ -25,7 +25,10 @@ static int lua_LoadScript(lua_State* L)
 
 	if (path == nullptr ||
 		id == nullptr)
+	{
+		lua_pushnil(L);
 		return 1;
+	}
 
 	const auto humanoids = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
@@ -37,10 +40,11 @@ static int lua_LoadScript(lua_State* L)
 			// must be an xasset:// !
 			Xplicit::ServerReplicationManager::get_singleton_ptr()->create(Xplicit::COMPONENT_ID_SCRIPT, path, humanoids[i]->get_peer()->hash);
 
-			return 0;
+			break;
 		}
 	}
 
+	lua_settop(L, 0);
 	return 0;
 }
 
@@ -64,6 +68,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 	XPLICIT_PARSER.load(params);
 
+	lua_settop(L, 0);
 	return 0;
 }
 
@@ -82,10 +87,11 @@ static int lua_NetworkService_Kick(lua_State* L)
 			humanoid[index]->get_peer()->xplicit_id.as_string() == id)
 		{
 			humanoid[index]->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = Xplicit::NETWORK_CMD_KICK;
-			return 0;
+			break;
 		}
 	}
 
+	lua_settop(L, 0);
 	return 0;
 }
 
@@ -98,7 +104,10 @@ static int lua_NetworkService_Create(lua_State* L)
 	if (string == nullptr ||
 		*string == 0 ||
 		repl_id > Xplicit::COMPONENT_ID_COUNT)
-		return 0;
+	{
+		lua_pushboolean(L, false);
+		return 1;
+	}
 
 	const auto humanoids = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
@@ -109,11 +118,14 @@ static int lua_NetworkService_Create(lua_State* L)
 		{
 			Xplicit::ServerReplicationManager::get_singleton_ptr()->create(repl_id, string, humanoids[i]->get_peer()->hash);
 
-			return 0;
+			break;
 		}
 	}
 
-	return 0;
+	lua_settop(L, 0);
+	lua_pushboolean(L, true);
+
+	return 1;
 }
 
 void XplicitLoadServerLua() noexcept

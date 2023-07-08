@@ -21,8 +21,9 @@ namespace Xplicit
 
 	class XPLICIT_API ComponentSystem final 
 	{
-	public:
 		explicit ComponentSystem() = default;
+
+	public:
 		~ComponentSystem() = default;
 		
 	public:

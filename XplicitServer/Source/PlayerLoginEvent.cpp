@@ -138,15 +138,6 @@ namespace Xplicit
 
 					String fmt = std::format("Game:Login('{}')", mNetwork->get(peer_idx)->xplicit_id.as_string());
 					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-					//! Create the Lua Player table.
-					//! Make these constexpr.
-					constexpr const char* table = "_G.Game.Players.{}{}";
-					constexpr const char* eq_table = " = {}";
-
-					fmt = std::format(table, player->get_peer()->xplicit_id.as_string(), eq_table);
-
-					Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 				}
 			}
 		}

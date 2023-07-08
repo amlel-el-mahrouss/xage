@@ -26,7 +26,12 @@ static int lua_New(lua_State* L)
 	
 	if (name.empty() ||
 		script.empty())
-		return 0;
+	{
+		lua_settop(L, 0);
+		lua_pushboolean(L, false);
+
+		return 1;
+	}
 
 	auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::ClassComponent>(
 		Xplicit::Vector<float>(0, 0, 0),
@@ -39,7 +44,10 @@ static int lua_New(lua_State* L)
 
 	XPLICIT_ASSERT(instance);
 
-	return 0;
+	lua_settop(L, 0);
+	lua_pushboolean(L, true);
+
+	return 1;
 }
 
 static int lua_Destroy(lua_State* L)
@@ -51,18 +59,25 @@ static int lua_Destroy(lua_State* L)
 	parent += lua_tostring(L, 2);
 
 	if (name.empty())
-		return 0;
+	{
+		lua_settop(L, 0);
+		lua_pushboolean(L, true);
+
+		return 1;
+	}
 
 	if (auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::ClassComponent>(name.c_str()))
 	{
 		if (instance->parent() == parent)
 		{
 			Xplicit::ComponentSystem::get_singleton_ptr()->remove<Xplicit::ClassComponent>(instance);
-			return 0;
 		}
 	}
 
-	return 0;
+	lua_settop(L, 0);
+	lua_pushboolean(L, true);
+
+	return 1;
 }
 
 static int lua_PrintLn(lua_State* L)
@@ -75,6 +90,7 @@ static int lua_PrintLn(lua_State* L)
 			XPLICIT_INFO(msg);
 	}
 
+	lua_settop(L, 0);
 	return 0;
 }
 

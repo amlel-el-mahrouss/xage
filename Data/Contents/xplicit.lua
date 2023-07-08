@@ -1,20 +1,20 @@
 
-Game.Vector3 = {}
+World.Vector3 = {}
 
-func Game.Vector3:New(X, Y, Z)
+func World.Vector3:New(X, Y, Z)
     return { X = X, Y = Y, Z = Z }
 end
 
-Game.ColorRGB = {}
+World.ColorRGB = {}
 
-func Game.ColorRGB:New(R, G, B)
+func World.ColorRGB:New(R, G, B)
     return { Red = R, Green = G, Blue = B }
 end
 
-Game.HumanoidState = {}
-Game.HumanoidState.ALIVE = 0
-Game.HumanoidState.DEAD = 1
-Game.HumanoidState.INVALID = 3
+World.HumanoidState = {}
+World.HumanoidState.ALIVE = 0
+World.HumanoidState.DEAD = 1
+World.HumanoidState.INVALID = 3
 
 local func __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })
@@ -24,10 +24,10 @@ local func __rmEvent(Tbl, Index)
     Tbl[Index] = nil;
 end
 
-Game.Slot = {
+World.Slot = {
     Login = { 
         Connect = func(self, Func)
-            return __addEvent(Game.Slot.Login, Func); 
+            return __addEvent(World.Slot.Login, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -35,7 +35,7 @@ Game.Slot = {
     },
     Logoff = { 
         Connect = func(self, Func)
-        return __addEvent(Game.Slot.Logoff, Func); 
+        return __addEvent(World.Slot.Logoff, Func); 
         end,
         Disconnect = func(Index)
             __rmEvent(self, Index); 
@@ -43,7 +43,7 @@ Game.Slot = {
     },
     LeftClick = { 
         Connect = func(self, Func)
-            return __addEvent(Game.Slot.LeftClick, Func); 
+            return __addEvent(World.Slot.LeftClick, Func); 
         end,
         Disconnect = func(self, Index)
             __rmEvent(self, Index); 
@@ -51,7 +51,7 @@ Game.Slot = {
     },
     RightClick = { 
         Connect = func(self, Func)
-            return __addEvent(Game.Slot.RightClick, Func); 
+            return __addEvent(World.Slot.RightClick, Func); 
         end,
         Disconnect = func(Iself, ndex)
             __rmEvent(self, Index); 
@@ -59,7 +59,7 @@ Game.Slot = {
     },
     MouseMove = { 
         Connect = func(self, Func)
-        return __addEvent(Game.Slot.MouseMove, Func); 
+        return __addEvent(World.Slot.MouseMove, Func); 
         end,
         Disconnect = func(self, Index)
             __rmEvent(self, Index); 
@@ -67,7 +67,7 @@ Game.Slot = {
     },
     LocalSpawn = { 
         Connect = func(self, Func)
-        return __addEvent(Game.Slot.LocalSpawn, Func); 
+        return __addEvent(World.Slot.LocalSpawn, Func); 
         end,
         Disconnect = func(self, Index)
             __rmEvent(self, Index); 
@@ -75,7 +75,7 @@ Game.Slot = {
     },
     Move = { 
         Connect = func(self, Func)
-        return __addEvent(Game.Slot.Move, Func); 
+        return __addEvent(World.Slot.Move, Func); 
         end,
         Disconnect = func(self, Index)
             __rmEvent(self, Index); 
@@ -83,7 +83,7 @@ Game.Slot = {
     },
     Damage = { 
         Connect = func(self, Func)
-        return __addEvent(Game.Slot.Damage, Func); 
+        return __addEvent(World.Slot.Damage, Func); 
         end,
         Disconnect = func(self, Index)
             __rmEvent(self, Index); 
@@ -91,7 +91,7 @@ Game.Slot = {
     },
     Spawn = { 
         Connect = func(self, Func)
-        return __addEvent(Game.Slot.Spawn, Func); 
+        return __addEvent(World.Slot.Spawn, Func); 
         end,
         Disconnect = func(self, Index)
             __rmEvent(self, Index); 
@@ -99,7 +99,7 @@ Game.Slot = {
     },
     Death = { 
         Connect = func(self, Func)
-        return __addEvent(Game.Slot.Death, Func); 
+        return __addEvent(World.Slot.Death, Func); 
         end,
         Disconnect = func(self, Index)
             __rmEvent(self, Index); 
@@ -107,7 +107,7 @@ Game.Slot = {
     },
     Tick = { 
         Connect = func(self, Func)
-        return __addEvent(Game.Slot.Tick, Func); 
+        return __addEvent(World.Slot.Tick, Func); 
         end,
         Disconnect = func(self, Index)
             __rmEvent(self, Index); 
@@ -115,95 +115,95 @@ Game.Slot = {
     },
 }
 
-Game.Counter = 0
-Game.PlayerCount = 0
+World.Counter = 0
+World.PlayerCount = 0
 
-func Game:Login(id)
-    Game.PlayerCount = Game.PlayerCount + 1
+func World:Login(id)
+    World.PlayerCount = World.PlayerCount + 1
 
-    for _, v in ipairs(Game.Slot.Login) do
+    for _, v in ipairs(World.Slot.Login) do
         v.Func(id)
     end
 end
 
-func Game:Logoff(id)
-    Game.PlayerCount = Game.PlayerCount - 1
+func World:Logoff(id)
+    World.PlayerCount = World.PlayerCount - 1
 
-    for _, v in ipairs(Game.Slot.Logoff) do
+    for _, v in ipairs(World.Slot.Logoff) do
         v.Func(id)
     end
 end
 
-func Game:Tick()
-    for _, v in ipairs(Game.Slot.Tick) do
+func World:Tick()
+    for _, v in ipairs(World.Slot.Tick) do
         v.Func()
     end
 end
 
-func Game:LeftClick()
-    for _, v in ipairs(Game.Slot.LeftClick) do
+func World:LeftClick()
+    for _, v in ipairs(World.Slot.LeftClick) do
         v.Func()
     end
 end
 
-func Game:RightClick()
-    for _, v in ipairs(Game.Slot.RightClick) do
+func World:RightClick()
+    for _, v in ipairs(World.Slot.RightClick) do
         v.Func()
     end
 end
 
-func Game:MouseMove()
-    for _, v in ipairs(Game.Slot.MouseMove) do
+func World:MouseMove()
+    for _, v in ipairs(World.Slot.MouseMove) do
         v.Func()
     end
 end
 
-func Game:LocalSpawn()
-    for _, v in ipairs(Game.Slot.LocalSpawn) do
+func World:LocalSpawn()
+    for _, v in ipairs(World.Slot.LocalSpawn) do
         v.Func()
     end
 end
 
-func Game:Move(x, y, z)
-    for _, v in ipairs(Game.Slot.Move) do
+func World:Move(x, y, z)
+    for _, v in ipairs(World.Slot.Move) do
         v.Func(x, y, z)
     end
 end
 
-func Game:Damage()
-    for _, v in ipairs(Game.Slot.Damage) do
+func World:Damage()
+    for _, v in ipairs(World.Slot.Damage) do
         v.Func()
     end
 end
 
-func Game:Death()
-    for _, v in ipairs(Game.Slot.Death) do
+func World:Death()
+    for _, v in ipairs(World.Slot.Death) do
         v.Func()
     end
 end
 
-func Game:Spawn()
-    for _, v in ipairs(Game.Slot.Spawn) do
+func World:Spawn()
+    for _, v in ipairs(World.Slot.Spawn) do
         v.Func()
     end
 end
 
-Game.Name = "XplicitNgine"
-Game.Description = "Xplicit Engine instance"
-Game.Version = "1.1.3"
+World.Name = "WorldLand"
+World.Info = "The first ever world in Xplicit, home sweet home."
+World.Version = "1.0.0"
 
--- Components ID.
-Game.INVALID = 0;
-Game.SCRIPT = 1;
-Game.SOUND = 2;
-Game.PARTICLE = 3;
-Game.ROXML = 4;
-Game.TEXTURE = 5;
-Game.TOOL = 6;
-Game.SMOKE = 7;
-Game.FORCEFIELD = 8;
-Game.EXPLOSION = 9;
-Game.SKYBOX = 10;
-Game.UNLOAD = 11;
-Game.LOAD = 12;
-Game.COUNT = 13;
+-- Class ID
+World.INVALID = 0;
+World.SCRIPT = 1;
+World.SOUND = 2;
+World.PARTICLE = 3;
+World.ROXML = 4;
+World.TEXTURE = 5;
+World.TOOL = 6;
+World.SMOKE = 7;
+World.FORCEFIELD = 8;
+World.EXPLOSION = 9;
+World.SKYBOX = 10;
+World.UNLOAD = 11;
+World.LOAD = 12;
+World.COUNT = 13;

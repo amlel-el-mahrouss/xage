@@ -20,8 +20,9 @@ namespace Xplicit
 	
 	class XPLICIT_API EventSystem final 
 	{
-	public:
 		explicit EventSystem() = default;
+
+	public:
 		~EventSystem() = default;
 		
 	public:
