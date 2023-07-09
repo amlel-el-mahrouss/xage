@@ -148,7 +148,7 @@ void XplicitLoadServerLua() noexcept
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_Kick");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ReplicationService.Kick = GameAPI_Kick");
-	
+
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NetworkService_Create);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Engine_Create");

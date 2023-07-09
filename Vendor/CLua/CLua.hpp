@@ -109,7 +109,7 @@ namespace Xplicit::Lua
 	{
 	public:
 		explicit CLuaClass(const String& klass) noexcept
-			: mClass(klass), mL(lua_newthread(CLuaStateManager::get_singleton_ptr()->state()))
+			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state())
 		{
 			String fmt = std::format("_G.{}", mClass);
 			fmt += " = {}";
@@ -148,50 +148,66 @@ namespace Xplicit::Lua
 		template <typename T = double>
 		const T index_as_number(const char* lhs)
 		{
-			lua_getglobal(mL, std::format("_G.{}.{}", mClass, lhs).c_str());
+			lua_getglobal(mL, std::format("_G.{}", mClass).c_str());
 
-			if (lua_isnumber(mL, -1))
+			if (lua_istable(mL, -1))
 			{
-				const T ret = lua_tonumber(mL, -1);
-				
-				lua_pop(mL, 1);
-				return ret;
+				return 0;
 			}
 
-			lua_pop(mL, 1);
-			return 0;
+			lua_pushstring(mL, lhs);
+
+			T ret = 0;
+			if (lua_isnumber(mL, -2))
+			{
+				ret = lua_tonumber(mL, -2);
+			}
+
+			lua_pop(mL, 2);
+			return ret;
 		}
 
 		const bool index_as_bool(const char* lhs)
 		{
-			lua_getglobal(mL, std::format("_G.{}.{}", mClass, lhs).c_str());
+			lua_getglobal(mL, std::format("_G.{}", mClass).c_str());
 
-			if (lua_isboolean(mL, -1))
+			if (lua_istable(mL, -1))
 			{
-				const bool ret = lua_toboolean(mL, -1);
-
-				lua_pop(mL, 1);
-				return ret;
+				return false;
 			}
 
-			lua_pop(mL, 1);
-			return false;
+			lua_pushstring(mL, lhs);
+
+			bool ret = false;
+			if (lua_isboolean(mL, -2))
+			{
+				ret = lua_toboolean(mL, -2);
+			}
+
+			lua_pop(mL, 2);
+			return ret;
 		}
 
 		const String index_as_string(const char* lhs)
 		{
-			lua_getglobal(mL, std::format("_G.{}.{}", mClass, lhs).c_str());
+			lua_getglobal(mL, std::format("_G.{}", mClass).c_str());
 
-			if (lua_isstring(mL, -1))
+			if (lua_istable(mL, -1))
 			{
-				const String ret = lua_tostring(mL, -1);
-				
-				lua_pop(mL, 1);
-				return ret;
+				return "";
 			}
 
-			lua_pop(mL, 1);
-			return "";
+			lua_pushstring(mL, lhs);
+
+			String ret = "";
+
+			if (lua_isstring(mL, -2))
+			{
+				ret = lua_tostring(mL, -2);
+			}
+
+			lua_pop(mL, 2);
+			return ret;
 		}
 
 		bool operator()(const char* lhs) noexcept

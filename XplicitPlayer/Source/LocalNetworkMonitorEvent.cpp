@@ -46,12 +46,15 @@ namespace Xplicit::Player
 		/* did we lost connection to peer? */
 		if (mNetwork->is_reset())
 		{
-			ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-				if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-					RENDER->closeDevice();
-				}, Vector<float>(XPLICIT_DIM.X / 3.45,
-					XPLICIT_DIM.Y / 4),
-					POPUP_TYPE::NETWORK, "BanPopup");
+			if (ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ResetPopup") == nullptr)
+			{
+				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
+						RENDER->closeDevice();
+					}, Vector<float>(XPLICIT_DIM.X / 3.45,
+						XPLICIT_DIM.Y / 4),
+						POPUP_TYPE::NETWORK, "ResetPopup");
+			}
 
 			return;
 		}

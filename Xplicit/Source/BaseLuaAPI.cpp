@@ -27,9 +27,7 @@ static int lua_New(lua_State* L)
 	if (name.empty() ||
 		script.empty())
 	{
-		
 		lua_pushboolean(L, false);
-
 		return 1;
 	}
 
@@ -46,7 +44,6 @@ static int lua_New(lua_State* L)
 
 	
 	lua_pushboolean(L, true);
-
 	return 1;
 }
 
@@ -60,9 +57,7 @@ static int lua_Destroy(lua_State* L)
 
 	if (name.empty())
 	{
-		
 		lua_pushboolean(L, true);
-
 		return 1;
 	}
 
@@ -76,7 +71,6 @@ static int lua_Destroy(lua_State* L)
 
 	
 	lua_pushboolean(L, true);
-
 	return 1;
 }
 
@@ -90,7 +84,6 @@ static int lua_PrintLn(lua_State* L)
 			XPLICIT_INFO(msg);
 	}
 
-	
 	return 0;
 }
 
@@ -109,7 +102,7 @@ XPLICIT_API void XplicitLoadBaseLua()
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "New_GameAPI");
 
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.New = New_GameAPI");
-	
+
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_Destroy);
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Destroy_GameAPI");
 

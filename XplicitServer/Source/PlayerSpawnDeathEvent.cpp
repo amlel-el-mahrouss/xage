@@ -79,7 +79,7 @@ namespace Xplicit
 
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Death()");
 
-				for (std::size_t peer = 0UL; peer < mNetwork->size(); ++peer)
+				for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)
 				{
 					peer_ptr->packet.cmd[XPLICIT_NETWORK_CMD_DEAD] = NETWORK_CMD_DEAD;
 					peer_ptr->packet.public_hash = humanoid->get_peer()->public_hash;
@@ -93,6 +93,16 @@ namespace Xplicit
 					{
 						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
 						humanoid->set_state(HUMANOID_STATE::ALIVE);
+
+						for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)
+						{
+							if (!humanoids[peer] ||
+								!humanoids[peer]->get_peer())
+								continue;
+
+							humanoids[peer]->get_peer()->packet.health = XPLICIT_DEFAULT_HEALTH;
+							humanoids[peer]->get_peer()->packet.public_hash = humanoid->get_peer()->public_hash;
+						}
 
 						XplicitHandleSpawn(mSpawner, humanoid);
 

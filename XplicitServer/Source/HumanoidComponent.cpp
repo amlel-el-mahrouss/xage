@@ -68,8 +68,6 @@ namespace Xplicit
 		if (_this->mState == HUMANOID_STATE::INVALID)
 		{
 			_this->mCanSpawn = false;
-			_this->mHealth = 0;
-
 			_this->mClass->insert("State", "World.HumanoidState.Invalid");
 		}
 

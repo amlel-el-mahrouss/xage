@@ -1,29 +1,29 @@
 <Xplicit xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
-	<Class Name="LocalPlayer" Parent="Game." Object="">
+	<Class Name="LocalPlayer" Parent="World." Object="">
 
 	</Class>
 
-	<Class Name="Head" Parent="Game.LocalPlayer." Object="Mesh">
+	<Class Name="Head" Parent="World.LocalPlayer." Object="Mesh">
 		Contents/Bundles/head.obj
 	</Class>
 
-	<Class Name="LeftArm" Parent="Game.LocalPlayer." Object="Mesh">
+	<Class Name="LeftArm" Parent="World.LocalPlayer." Object="Mesh">
 		Contents/Bundles/leftarm.obj
 	</Class>
 
-	<Class Name="RightArm" Parent="Game.LocalPlayer." Object="Mesh">
+	<Class Name="RightArm" Parent="World.LocalPlayer." Object="Mesh">
 		Contents/Bundles/rightarm.obj
 	</Class>
 
-	<Class Name="Torso" Parent="Game.LocalPlayer." Object="Mesh">
+	<Class Name="Torso" Parent="World.LocalPlayer." Object="Mesh">
 		Contents/Bundles/torso.obj
 	</Class>
 
-	<Class Name="LeftLeg" Parent="Game.LocalPlayer." Object="Mesh">
+	<Class Name="LeftLeg" Parent="World.LocalPlayer." Object="Mesh">
 		Contents/Bundles/leftleg.obj
 	</Class>
 
-	<Class Name="RightLeg" Parent="Game.LocalPlayer." Object="Mesh">
+	<Class Name="RightLeg" Parent="World.LocalPlayer." Object="Mesh">
 		Contents/Bundles/rightleg.obj
 	</Class>
 
