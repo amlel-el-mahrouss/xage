@@ -112,7 +112,7 @@ namespace Xplicit::Lua
 			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mCnt(0)
 		{
 			String fmt = mClass;
-			fmt += " = { Class = true, }";
+			fmt += " = { CLua = true, }";
 
 			luaL_dostring(mL, fmt.c_str());
 		}
@@ -153,23 +153,14 @@ namespace Xplicit::Lua
 		//! execute instruction
 		//! get it after that
 
-		void i_index_field(const char* lhs) noexcept
+		std::int64_t i_index_field(const char* lhs) noexcept
 		{
 			lua_getglobal(mL, mClass.c_str());
-			
-			//! search for a specific field inside our class.
-			for (size_t i = 1; i < mCnt; i++)
-			{
-				if (lua_isnil(mL, i))
-					continue;
+			lua_pushstring(mL, lhs);
 
-				lua_pushstring(mL, lhs);
-				lua_gettable(mL, i);
+			lua_gettable(mL, -2);
 
-				lua_pop(mL, 1);
-
-				break;
-			}
+			return -1;
 		}
 
 		void i_clean(const std::size_t& cnt) noexcept
@@ -181,10 +172,7 @@ namespace Xplicit::Lua
 		template <typename T = double>
 		const T index_as_number(const char* lhs) noexcept
 		{
-			this->i_index_field(lhs);
-
-			T ret = lua_tonumber(mL, -1);
-
+			T ret = lua_tonumber(mL, this->i_index_field(lhs));
 			this->i_clean(1);
 
 			return ret;
@@ -192,10 +180,7 @@ namespace Xplicit::Lua
 
 		const bool index_as_bool(const char* lhs)
 		{
-			this->i_index_field(lhs);
-
-			bool ret = lua_toboolean(mL, -1);
-
+			bool ret = lua_toboolean(mL, this->i_index_field(lhs));
 			this->i_clean(1);
 
 			return ret;
@@ -203,9 +188,7 @@ namespace Xplicit::Lua
 
 		const String index_as_string(const char* lhs)
 		{
-			this->i_index_field(lhs);
-
-			String ret = lua_tostring(mL, -1);
+			String ret = lua_tostring(mL, this->i_index_field(lhs));
 
 			this->i_clean(1);
 
