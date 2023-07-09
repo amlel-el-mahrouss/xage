@@ -149,18 +149,12 @@ namespace Xplicit::Lua
 		const T index_as_number(const char* lhs)
 		{
 			lua_getglobal(mL, std::format("_G.{}", mClass).c_str());
-
-			if (lua_istable(mL, -1))
-			{
-				return 0;
-			}
-
-			lua_pushstring(mL, lhs);
+			lua_getfield(mL, -1, lhs);
 
 			T ret = 0;
-			if (lua_isnumber(mL, -2))
+			if (lua_isnumber(mL, -1))
 			{
-				ret = lua_tonumber(mL, -2);
+				ret = lua_tonumber(mL, -1);
 			}
 
 			lua_pop(mL, 2);
@@ -170,18 +164,12 @@ namespace Xplicit::Lua
 		const bool index_as_bool(const char* lhs)
 		{
 			lua_getglobal(mL, std::format("_G.{}", mClass).c_str());
-
-			if (lua_istable(mL, -1))
-			{
-				return false;
-			}
-
-			lua_pushstring(mL, lhs);
+			lua_getfield(mL, -1, lhs);
 
 			bool ret = false;
-			if (lua_isboolean(mL, -2))
+			if (lua_isboolean(mL, -1))
 			{
-				ret = lua_toboolean(mL, -2);
+				ret = lua_toboolean(mL, -1);
 			}
 
 			lua_pop(mL, 2);
@@ -191,19 +179,13 @@ namespace Xplicit::Lua
 		const String index_as_string(const char* lhs)
 		{
 			lua_getglobal(mL, std::format("_G.{}", mClass).c_str());
-
-			if (lua_istable(mL, -1))
-			{
-				return "";
-			}
-
-			lua_pushstring(mL, lhs);
+			lua_getfield(mL, -1, lhs);
 
 			String ret = "";
 
-			if (lua_isstring(mL, -2))
+			if (lua_isstring(mL, -1))
 			{
-				ret = lua_tostring(mL, -2);
+				ret = lua_tostring(mL, -1);
 			}
 
 			lua_pop(mL, 2);
