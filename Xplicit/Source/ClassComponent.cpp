@@ -39,7 +39,7 @@ namespace Xplicit
 		this->insert("Alpha", "1.0");
 		this->insert("Anchored", "true");
 		this->insert("Archivable", "true");
-		this->insert("Locked", "false");
+		this->insert("Locked", "true");
 		this->insert("Collide", "true");
 
 		String func_proto = "function() World.ClassService.Destroy(";
@@ -55,7 +55,9 @@ namespace Xplicit
 		this->insert("Destroy", func_proto.c_str());
 	}
 
-	ClassComponent::~ClassComponent() = default;
+	ClassComponent::~ClassComponent()
+	{
+	}
 
 	const char* ClassComponent::parent() noexcept { return mParent.c_str(); }
 	
@@ -63,12 +65,8 @@ namespace Xplicit
 	{
 		ClassComponent* this_ptr = static_cast<ClassComponent*>(_this);
 
-		this_ptr->get_attribute().locked(this_ptr->index_as_bool("Locked"));
-
-		if (this_ptr->get_attribute().is_locked())
-			return;
-
 		this_ptr->get_attribute().collide(this_ptr->index_as_bool("Collide"));
+		this_ptr->get_attribute().locked(this_ptr->index_as_bool("Locked"));
 		this_ptr->get_attribute().archivable(this_ptr->index_as_bool("Archivable"));
 		this_ptr->get_attribute().anchor(this_ptr->index_as_bool("Anchored"));
 

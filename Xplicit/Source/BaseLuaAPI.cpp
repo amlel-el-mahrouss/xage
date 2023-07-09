@@ -22,6 +22,8 @@ static int lua_New(lua_State* L)
 
 	name += lua_tostring(L, 1);
 	parent += lua_tostring(L, 2);
+	parent += ".";
+
 	script += lua_tostring(L, 3);
 	
 	if (name.empty() ||
@@ -57,7 +59,7 @@ static int lua_Destroy(lua_State* L)
 
 	if (name.empty())
 	{
-		lua_pushboolean(L, true);
+		lua_pushboolean(L, false);
 		return 1;
 	}
 
@@ -65,6 +67,9 @@ static int lua_Destroy(lua_State* L)
 	{
 		if (instance->parent() == parent)
 		{
+			if (instance->get_attribute().script())
+				Xplicit::ComponentSystem::get_singleton_ptr()->remove(instance->get_attribute().script());
+
 			Xplicit::ComponentSystem::get_singleton_ptr()->remove<Xplicit::ClassComponent>(instance);
 		}
 	}

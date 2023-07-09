@@ -101,7 +101,6 @@ bool Xplicit::ComponentSystem::remove(T* ptr)
 #endif
 
 		delete ptr;
-		
 		mComponents.erase(iterator);
 
 		return true;

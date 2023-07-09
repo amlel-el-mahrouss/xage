@@ -65,12 +65,14 @@ namespace Xplicit
 
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;
+
 		XAttribute mAttribute;
 		HUMANOID_STATE mState;
-		int64_t mMaxHealth;
-		int64_t mJumpPower;
 		NetworkPeer* mPeer;
-		int64_t mHealth;
+
+		double mMaxHealth;
+		double mJumpPower;
+		double mHealth;
 		bool mCanSpawn;
 
 	};
