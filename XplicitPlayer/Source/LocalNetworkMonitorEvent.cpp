@@ -16,7 +16,7 @@
 #include "Application.h"
 #include "GameMenuUI.h"
 
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 
 namespace Xplicit::Player
 {

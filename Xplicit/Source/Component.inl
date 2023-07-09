@@ -40,7 +40,7 @@ T* Xplicit::ComponentSystem::add(Args&&... args)
 }
 
 template <typename T>
-T* Xplicit::ComponentSystem::get(const char* name) noexcept
+T* Xplicit::ComponentSystem::get(const char* name)
 {
 	if (!name || *name == 0)
 		return nullptr;

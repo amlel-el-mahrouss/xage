@@ -24,7 +24,7 @@
 
 #include <XHTTPManager.h>
 #include <CommonEngine.h>
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 #include <codecvt>
 
 namespace Xplicit::Player

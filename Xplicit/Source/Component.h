@@ -42,8 +42,7 @@ namespace Xplicit
 	/*
 	* ----------------------------------------------------------------------------
 	* @name Component
-	* @brief Generic C++ interface, use this class to conform with Xplicit Component contract.
-	* Last Edit: 7/5/2023
+	* @brief C++ interface.
 	* ----------------------------------------------------------------------------
 	*/
 
@@ -65,6 +64,9 @@ namespace Xplicit
 
 	};
 
+	//! Component Class Ptr
+	typedef void* ClassPtr;
+
 	namespace Details
 	{
 		typedef void* ComponentData;
@@ -76,18 +78,16 @@ namespace Xplicit
 		{
 		public:
 			explicit ComponentAccessor()
-				: _Pointee(nullptr)
+				: _Pointee(nullptr),
+				  _Update(nullptr),
+				  _Eval(nullptr)
 			{}
 
 		public:
-			String _Name;
-
-		public:
-			ComponentData _Pointee;
-
-		public:
-			ComponentUpdateAccessor _Update;
 			ComponentUpdateEvalAccessor _Eval;
+			ComponentUpdateAccessor _Update;
+			ComponentData _Pointee;
+			String _Name;
 
 		public:
 			template <typename Y>
@@ -122,10 +122,10 @@ namespace Xplicit
 
 	public:
 		template <typename T>
-		T* get(const char* name) noexcept;
+		T* get(const char* name);
 
 	public:
-		void update() noexcept;
+		void update();
 
 	public:
 		static ComponentSystem* get_singleton_ptr() noexcept;
@@ -136,14 +136,6 @@ namespace Xplicit
 	};
 }
 
-#define XPLICIT_COMPONENT_UPDATE_IMPL(T) void T::update(void* class_ptr)
-#define XPLICIT_COMPONENT_SHOULD_UPDATE_IMPL(T) void T::should_update(void* class_ptr)
-
-#define XPLICIT_COMPONENT_UPDATE() static void update(void* class_ptr)
-#define XPLICIT_COMPONENT_SHOULD_UPDATE() static void should_update(void* class_ptr)
-
-
-
 #define XPLICIT_COMPONENT_OVERRIDE()\
 		const char* name() noexcept override;\
 		COMPONENT_TYPE type() noexcept override;\
@@ -152,8 +144,6 @@ namespace Xplicit
 		PHYSICS_TYPE physics() noexcept override;\
 		bool has_physics() noexcept override;\
 		bool can_collide() noexcept override;
-
-
 
 
 #include "Component.inl"

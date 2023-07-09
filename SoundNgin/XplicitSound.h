@@ -151,6 +151,8 @@ namespace Xplicit
 
 			void update() noexcept
 			{
+				XPLICIT_ASSERT(mAudioNgin);
+
 				if (!mAudioNgin->Update())
 				{
 					// No audio device is active

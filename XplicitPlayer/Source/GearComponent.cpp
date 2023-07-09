@@ -17,7 +17,12 @@ namespace Xplicit::Player
 		const char* mesh, 
 		const char* parent) noexcept
 		:
-		ClassComponent(Vector<float>(0, 0, 0), Vector<float>(0, 0, 0), Color<float>(0, 0, 0), nullptr, parent, name),
+		ClassComponent(Vector<float>(0, 0, 0), 
+			Vector<float>(0, 0, 0),
+			Color<float>(0, 0, 0),
+			nullptr,
+			parent,
+			name),
 		mMeshPtr(nullptr)
 	{
 		XPLICIT_ASSERT(mesh);
@@ -44,7 +49,7 @@ namespace Xplicit::Player
 		ClassComponent::update(class_ptr);
 		GearComponent* _this = (GearComponent*)class_ptr;
 
-		String path = _this->index_as_string("Mesh", 8);
+		String path = _this->index_as_string("Mesh");
 
 		if (auto _path = _this->mMeshPtr->path();
 			path != _path)

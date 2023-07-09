@@ -10,7 +10,7 @@
 #pragma once
 
 #include "CommonInclude.h"
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 
 namespace Xplicit
 {
@@ -54,13 +54,13 @@ namespace Xplicit
 
 	public:
 		void set_health(const int64_t& health) noexcept;
-		const int64_t get_health() noexcept;
+		const int64_t& get_health() noexcept;
 		bool is_alive() const noexcept;
 
 	public:
 		void set_state(const HUMANOID_STATE state) noexcept;
 		void can_spawn(const bool enable) noexcept;
-		const HUMANOID_STATE get_state() noexcept;
+		const HUMANOID_STATE& get_state() noexcept;
 		bool can_spawn() const noexcept;
 
 	private:

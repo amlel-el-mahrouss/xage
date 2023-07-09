@@ -13,7 +13,7 @@
 #include "Component.h"
 #include "Util.h"
 
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 
 #define XPLICIT_CLASS_NAMESPACE "World."
 

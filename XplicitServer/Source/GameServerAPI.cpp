@@ -10,7 +10,7 @@
 #include "ServerReplicationManager.h"
 #include "HumanoidComponent.h"
 
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 #include <RoXML.h>
 
  // RoXML parser

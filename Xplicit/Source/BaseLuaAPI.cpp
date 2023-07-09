@@ -12,7 +12,7 @@
 #include "Xplicit.h"
 
 #include <Nplicit.h>
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 
 static int lua_New(lua_State* L)
 {

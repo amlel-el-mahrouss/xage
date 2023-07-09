@@ -96,7 +96,7 @@ namespace Xplicit::Lua
 			return -1;
 		}
 
-		lua_State* state() noexcept 
+		CLuaStatePtr state() noexcept
 		{
 			return mL;
 		}
@@ -109,17 +109,20 @@ namespace Xplicit::Lua
 	{
 	public:
 		explicit CLuaClass(const String& klass) noexcept
-			: mClass(klass)
+			: mClass(klass), mL(lua_newthread(CLuaStateManager::get_singleton_ptr()->state()))
 		{
 			String fmt = std::format("_G.{}", mClass);
 			fmt += " = {}";
 
-			CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+			luaL_dostring(mL, fmt.c_str());
 		}
 
 		explicit CLuaClass(const char* klass) noexcept
 			: CLuaClass(String(klass))
-		{}
+		{
+			if (mL)
+				lua_close(mL);
+		}
 
 		virtual ~CLuaClass() noexcept
 		{
@@ -143,28 +146,52 @@ namespace Xplicit::Lua
 		bool call(const char* lhs) { return operator()(lhs); }
 
 		template <typename T = double>
-		const T index_as_number(const char* lhs, const int index)
+		const T index_as_number(const char* lhs)
 		{
-			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, std::format("_G.{}.{}", mClass, lhs).c_str());
-			T ret = lua_tonumber(Lua::CLuaStateManager::get_singleton_ptr()->state(), -index);
+			lua_getglobal(mL, std::format("_G.{}.{}", mClass, lhs).c_str());
 
-			return ret;
+			if (lua_isnumber(mL, -1))
+			{
+				const T ret = lua_tonumber(mL, -1);
+				
+				lua_pop(mL, 1);
+				return ret;
+			}
+
+			lua_pop(mL, 1);
+			return 0;
 		}
 
-		const bool index_as_bool(const char* lhs, const int index)
+		const bool index_as_bool(const char* lhs)
 		{
-			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, std::format("_G.{}.{}", mClass, lhs).c_str());
-			const bool ret = lua_toboolean(Lua::CLuaStateManager::get_singleton_ptr()->state(), -index);
+			lua_getglobal(mL, std::format("_G.{}.{}", mClass, lhs).c_str());
 
-			return ret;
+			if (lua_isboolean(mL, -1))
+			{
+				const bool ret = lua_toboolean(mL, -1);
+
+				lua_pop(mL, 1);
+				return ret;
+			}
+
+			lua_pop(mL, 1);
+			return false;
 		}
 
-		const String index_as_string(const char* lhs, const int index)
-		{ 
-			lua_getfield(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, std::format("_G.{}.{}", mClass, lhs).c_str());
-			String ret = lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -index);
+		const String index_as_string(const char* lhs)
+		{
+			lua_getglobal(mL, std::format("_G.{}.{}", mClass, lhs).c_str());
 
-			return ret;
+			if (lua_isstring(mL, -1))
+			{
+				const String ret = lua_tostring(mL, -1);
+				
+				lua_pop(mL, 1);
+				return ret;
+			}
+
+			lua_pop(mL, 1);
+			return "";
 		}
 
 		bool operator()(const char* lhs) noexcept
@@ -172,7 +199,7 @@ namespace Xplicit::Lua
 			if (!lhs)
 				return false;
 
-			return Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{}", mClass, lhs).c_str());
+			return luaL_dostring(mL, lhs) < 0;
 		}
 
 		bool operator()(const char* lhs, const char* rhs) noexcept
@@ -181,15 +208,16 @@ namespace Xplicit::Lua
 				!rhs)
 				return false;
 
-			return Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.{}.{} = {};", mClass, lhs, rhs).c_str());
+			return luaL_dostring(mL, lhs) < 0;
 		}
 
 	private:
+		CLuaStatePtr mL;
 		String mClass;
 
 	};
 
-	constexpr const char* XPLICIT_ROOT_CLASS = "_G.Game";
+	constexpr const char* XPLICIT_ROOT_CLASS = "_G.World";
 
 	class CLuaListener final
 	{
@@ -206,8 +234,9 @@ namespace Xplicit::Lua
 		//! 0param
 		//!		name the string to listen to.
 		//! @return if the evaluation was succesful, true.
+		//! 		
 		
-		bool operator()(const String name = ":Idle")
+		bool operator()(const String name = ":Tick")
 		{
 			String fmt = XPLICIT_ROOT_CLASS;
 			fmt += name;

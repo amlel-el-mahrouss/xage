@@ -8,11 +8,11 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
-#include "LocalSoundComponent.h"
+#include "SoundComponent.h"
 #include "Application.h"
 
 #include <XplicitSound.h>
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 #include <codecvt>
 #include <RoXML.h>
 #include <Util.h>
@@ -34,7 +34,7 @@ static int lua_PlaySound(lua_State* L)
 		if (path.empty())
 			return 0;
 
-		if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::Player::LocalSoundComponent>("LocalSoundComponent"))
+		if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::Player::SoundComponent>("SoundComponent"))
 			snd->play(path);
 	}
 	catch (...)
@@ -101,7 +101,7 @@ void XplicitLoadClientLua() noexcept
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "GameAPI_SetWindowCaption");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RenderingService.SetWindowCaption = GameAPI_SetWindowCaption");
 
-	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalSoundComponent>();
+	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::SoundComponent>();
 }
 
 #endif // ifdef XPLICIT_WINDOWS

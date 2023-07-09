@@ -8,14 +8,16 @@
  */
 
 #include "ServerReplicationManager.h"
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 
 namespace Xplicit
 {
 	ServerReplicationManager::ServerReplicationManager()
 		:
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
-	{}
+	{
+		XPLICIT_ASSERT(mNetwork);
+	}
 
 	//! get_singleton_ptr takes the singleton of this class.
 	ServerReplicationManager* ServerReplicationManager::get_singleton_ptr() noexcept

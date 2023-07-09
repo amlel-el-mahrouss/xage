@@ -7,39 +7,38 @@
  * =====================================================================
  */
 
-#include "LocalSoundComponent.h"
-#include <ClassComponent.h>
+#include "SoundComponent.h"
 
 namespace Xplicit::Player
 {
-	LocalSoundComponent::LocalSoundComponent() 
+	SoundComponent::SoundComponent() 
 		: ClassComponent(Vector<float>(0.0f, 0.0f, 0.0f),
 			Vector<float>(0.0f, 0.0f, 0.0f), 
 			Color<float>(0.0f, 0.0f, 0.0f), 
 			nullptr,
 			"World.",
 			"SoundMixer"),
-		mVolume(0.5f), mLoop(false)
+		mVolume(1.0f), mLoop(false)
 	{
 		this->insert("Loop", "false");
-		this->insert("Volume", "0.5");
+		this->insert("Volume", "1");
 	}
 
-	LocalSoundComponent::~LocalSoundComponent()
+	SoundComponent::~SoundComponent()
 	{
 	}
 
-	const char* LocalSoundComponent::name() noexcept { return "LocalSoundComponent"; }
+	const char* SoundComponent::name() noexcept { return "SoundComponent"; }
 
-	COMPONENT_TYPE LocalSoundComponent::type() noexcept { return COMPONENT_SOUND; }
+	COMPONENT_TYPE SoundComponent::type() noexcept { return COMPONENT_SOUND; }
 
-	bool LocalSoundComponent::should_update() noexcept { return true; }
+	bool SoundComponent::should_update() noexcept { return true; }
 
-	PHYSICS_TYPE LocalSoundComponent::physics() noexcept { return PHYSICS_SIMPLE; }
+	PHYSICS_TYPE SoundComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
-	void LocalSoundComponent::set_position(const Vector<float> pos) noexcept { Vector<float> mPosition = pos; }
+	void SoundComponent::set_position(const Vector<float> pos) noexcept { Vector<float> mPosition = pos; }
 
-	void LocalSoundComponent::set_volume(const float volume) noexcept
+	void SoundComponent::set_volume(const float volume) noexcept
 	{
 		if (volume > 1.0f)
 		{
@@ -50,21 +49,21 @@ namespace Xplicit::Player
 		mVolume = volume;
 	}
 
-	void LocalSoundComponent::update(void* class_ptr)
+	void SoundComponent::update(void* class_ptr)
 	{
 		ClassComponent::update(class_ptr);
-		LocalSoundComponent* _this = (LocalSoundComponent*)class_ptr;
+		SoundComponent* _this = (SoundComponent*)class_ptr;
 
-		_this->mLoop = _this->index_as_number<float>("Loop", 7);
-		_this->mVolume = _this->index_as_number<float>("Volume", 8);
+		_this->mLoop = _this->index_as_bool("Loop");
+		_this->mVolume = _this->index_as_number<float>("Volume");
 	}
 
-	void LocalSoundComponent::should_loop(const bool enable) noexcept
+	void SoundComponent::should_loop(const bool enable) noexcept
 	{
 		mLoop = enable;
 	}
 
-	void LocalSoundComponent::play_2d(const String& path) noexcept
+	void SoundComponent::play_2d(const String& path) noexcept
 	{
 		Xplicit::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
 
@@ -79,7 +78,7 @@ namespace Xplicit::Player
 		job.detach();
 	}
 
-	void LocalSoundComponent::play(const String& path) noexcept
+	void SoundComponent::play(const String& path) noexcept
 	{
 		Xplicit::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
 

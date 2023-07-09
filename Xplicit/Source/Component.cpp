@@ -15,7 +15,7 @@
 
 namespace Xplicit
 {
-	void ComponentSystem::update() noexcept
+	void ComponentSystem::update()
 	{
 		if (mComponents.empty())
 			return;

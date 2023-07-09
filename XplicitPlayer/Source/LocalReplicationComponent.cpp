@@ -12,7 +12,7 @@
 #include "GameMenuUI.h"
 
 #include <CommonEngine.h>
-#include <CLua.hpp>
+#include <CLua/CLua.hpp>
 #include <RoXML.h>
 #include <Util.h>
 #include <Uri.h>

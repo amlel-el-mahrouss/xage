@@ -55,9 +55,9 @@ XPLICIT_MAIN()
 		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
 			return 1;
 
-		std::unique_ptr<Xplicit::Bites::Application> pApp = std::make_unique<Xplicit::Bites::Application>(uri);
+		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);
 
-		if (!pApp)
+		if (!app_ptr)
 			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
 
 		/* main game loop */

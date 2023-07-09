@@ -23,7 +23,7 @@
 #include "Util.h"
 
 // CLua
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 
 namespace Xplicit::RoXML
 {

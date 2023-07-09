@@ -23,14 +23,14 @@
 
 namespace Xplicit::Player
 {
-	class LocalSoundComponent final : public ClassComponent
+	class SoundComponent final : public ClassComponent
 	{
 	public:
-		explicit LocalSoundComponent();
-		~LocalSoundComponent() override;
+		explicit SoundComponent();
+		~SoundComponent() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(LocalSoundComponent);
+		XPLICIT_COPY_DEFAULT(SoundComponent);
 
 	public:
 		void play(const String& path) noexcept;

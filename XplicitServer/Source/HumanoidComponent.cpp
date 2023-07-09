@@ -53,6 +53,8 @@ namespace Xplicit
 
 		if (_this->mState == HUMANOID_STATE::ALIVE)
 		{
+			_this->mClass->insert("Health", std::to_string(_this->mHealth).c_str());
+
 			_this->mCanSpawn = true;
 			_this->mClass->insert("State", "World.HumanoidState.Alive");
 		}
@@ -77,14 +79,14 @@ namespace Xplicit
 
 		_this->mClass->assign("Position", str.c_str());
 
-		_this->mHealth = _this->mClass->index_as_number<int64_t>("Health", 4);
-		_this->mMaxHealth = _this->mClass->index_as_number<int64_t>("MaxHealth", 5);
-		_this->mJumpPower = _this->mClass->index_as_number<int64_t>("JumpPower", 6);
+		_this->mHealth = _this->mClass->index_as_number<int64_t>("Health");
+		_this->mMaxHealth = _this->mClass->index_as_number<int64_t>("MaxHealth");
+		_this->mJumpPower = _this->mClass->index_as_number<int64_t>("JumpPower");
 	}
 
 	void HumanoidComponent::set_health(const int64_t& health) noexcept { this->mHealth = health; }
 
-	const int64_t HumanoidComponent::get_health() noexcept { return this->mHealth; }
+	const int64_t& HumanoidComponent::get_health() noexcept { return this->mHealth; }
 
 	bool HumanoidComponent::can_collide() noexcept { return true; }
 
@@ -137,7 +139,7 @@ namespace Xplicit
 
 	bool HumanoidComponent::is_alive() const noexcept { return mHealth > 0; }
 
-	const HUMANOID_STATE HumanoidComponent::get_state() noexcept { return mState; }
+	const HUMANOID_STATE& HumanoidComponent::get_state() noexcept { return mState; }
 
 	void HumanoidComponent::set_state(const HUMANOID_STATE state) noexcept { mState = state; }
 }

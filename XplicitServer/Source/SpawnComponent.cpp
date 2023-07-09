@@ -12,7 +12,7 @@
  */
 
 #include "SpawnComponent.h"
-#include <lua/CLua.hpp>
+#include <CLua/CLua.hpp>
 
 #define XPLICIT_LUA_GLOBAL "_G."
 #define XPLICIT_LUA_NAMESPACE "World."
