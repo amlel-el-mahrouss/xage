@@ -148,10 +148,10 @@ namespace Xplicit::Lua
 		template <typename T = double>
 		const T index_as_number(const char* lhs)
 		{
-			lua_getglobal(mL, std::format("_G.{}", mClass).c_str());
-			lua_getfield(mL, -1, lhs);
+			lua_getglobal(mL, std::format("_G.{}.{}", mClass, lhs).c_str());
 
 			T ret = 0;
+			
 			if (lua_isnumber(mL, -1))
 			{
 				ret = lua_tonumber(mL, -1);
@@ -163,9 +163,8 @@ namespace Xplicit::Lua
 
 		const bool index_as_bool(const char* lhs)
 		{
-			lua_getglobal(mL, std::format("_G.{}", mClass).c_str());
-			lua_getfield(mL, -1, lhs);
-
+			lua_getglobal(mL, std::format("_G.{}.{}", mClass, lhs).c_str());
+			
 			bool ret = false;
 			if (lua_isboolean(mL, -1))
 			{
@@ -178,8 +177,7 @@ namespace Xplicit::Lua
 
 		const String index_as_string(const char* lhs)
 		{
-			lua_getglobal(mL, std::format("_G.{}", mClass).c_str());
-			lua_getfield(mL, -1, lhs);
+			lua_getglobal(mL, std::format("_G.{}.{}", mClass, lhs).c_str());
 
 			String ret = "";
 
