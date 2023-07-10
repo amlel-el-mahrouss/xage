@@ -175,9 +175,9 @@ namespace Xplicit::Lua
 			if (this->i_index_field(lhs))
 			{
 				ret = lua_tonumber(mL, -1);
-				this->i_clean(1);
 			}
 
+			this->i_clean(1);
 			return ret;
 		}
 
@@ -188,9 +188,9 @@ namespace Xplicit::Lua
 			if (this->i_index_field(lhs))
 			{
 				ret = lua_toboolean(mL, -1);
-				this->i_clean(1);
 			}
 
+			this->i_clean(1);
 			return ret;
 		}
 
@@ -201,9 +201,9 @@ namespace Xplicit::Lua
 			if (this->i_index_field(lhs))
 			{
 				ret = lua_tostring(mL, -1);
-				this->i_clean(1);
 			}
 
+			this->i_clean(1);
 			return ret;
 		}
 
