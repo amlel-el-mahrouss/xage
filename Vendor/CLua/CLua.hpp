@@ -156,9 +156,27 @@ namespace Xplicit::Lua
 		std::int64_t i_index_field(const char* lhs) noexcept
 		{
 			lua_getglobal(mL, mClass.c_str());
-			lua_pushstring(mL, lhs);
 
-			lua_gettable(mL, -2);
+			lua_pushstring(mL, lhs);
+			lua_gettable(mL, -1);
+
+			lua_pushnil(mL);
+
+			for (std::size_t i = 1; i < mCnt; ++i)
+			{
+				if (lua_isnil(mL, i))
+					continue;
+
+				if (!lua_isnil(mL, -2))
+				{
+					if (strcmp(lua_tostring(mL, -1), lhs) == 0)
+					{
+						return i;
+					}
+				}
+
+				lua_pop(mL, 1);
+			}
 
 			return -1;
 		}
@@ -173,7 +191,7 @@ namespace Xplicit::Lua
 		const T index_as_number(const char* lhs) noexcept
 		{
 			T ret = lua_tonumber(mL, this->i_index_field(lhs));
-			this->i_clean(1);
+			this->i_clean(2);
 
 			return ret;
 		}
@@ -181,7 +199,7 @@ namespace Xplicit::Lua
 		const bool index_as_bool(const char* lhs)
 		{
 			bool ret = lua_toboolean(mL, this->i_index_field(lhs));
-			this->i_clean(1);
+			this->i_clean(2);
 
 			return ret;
 		}
@@ -190,7 +208,7 @@ namespace Xplicit::Lua
 		{
 			String ret = lua_tostring(mL, this->i_index_field(lhs));
 
-			this->i_clean(1);
+			this->i_clean(2);
 
 			return ret;
 		}

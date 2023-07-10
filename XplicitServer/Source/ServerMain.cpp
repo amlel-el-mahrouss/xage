@@ -20,10 +20,10 @@
 #include "ServerConfig.h"
 #include "CommonInclude.h"
 #include "SpawnComponent.h"
-#include "PlayerLoginEvent.h"
-#include "PlayerTimeoutEvent.h"
-#include "PlayerMovementEvent.h"
-#include "PlayerSpawnDeathEvent.h"
+#include "LoginEvent.h"
+#include "TimeoutEvent.h"
+#include "MovementEvent.h"
+#include "HealthMonitorEvent.h"
 #include "ServerReplicationManager.h"
 
 const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
@@ -145,10 +145,10 @@ int main(int argc, char** argv)
 
 #endif // XPLICIT_WINDOWS
 
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::PlayerSpawnDeathEvent>();
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::PlayerTimeoutEvent>();
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::PlayerMovementEvent>();
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::PlayerLoginEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::HealthMonitorEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::TimeoutEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::MovementEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::LoginEvent>();
 
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();

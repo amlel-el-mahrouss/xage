@@ -13,7 +13,7 @@
 
  */
 
-#include "PlayerLoginEvent.h"
+#include "LoginEvent.h"
 #include <CLua/CLua.hpp>
 
 namespace Xplicit
@@ -78,7 +78,7 @@ namespace Xplicit
 		return true;
 	}
 
-	PlayerLoginEvent::PlayerLoginEvent()
+	LoginEvent::LoginEvent()
 		:
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0)
@@ -92,12 +92,12 @@ namespace Xplicit
 		}
 	}
 
-	PlayerLoginEvent::~PlayerLoginEvent() = default;
+	LoginEvent::~LoginEvent() = default;
 
 	//! @brief Handle player log-in event
 	//! @brief setup humanoid and more...
 	
-	void PlayerLoginEvent::handle_join_event() noexcept
+	void LoginEvent::handle_join_event() noexcept
 	{
 		if (this->size() >= XPLICIT_MAX_CONNECTIONS)
 			return;
@@ -144,7 +144,7 @@ namespace Xplicit
 
 	}
 
-	void PlayerLoginEvent::handle_leave_event() noexcept
+	void LoginEvent::handle_leave_event() noexcept
 	{
 		if (this->size() < 1)
 			return;
@@ -209,13 +209,13 @@ namespace Xplicit
 		}
 	}
 
-	void PlayerLoginEvent::operator()()
+	void LoginEvent::operator()()
 	{
 		this->handle_leave_event();
 		this->handle_join_event();
 	}
 
-	const size_t& PlayerLoginEvent::size() const noexcept { return mPlayerCount; }
+	const size_t& LoginEvent::size() const noexcept { return mPlayerCount; }
 
-	const char* PlayerLoginEvent::name() noexcept { return ("PlayerLoginEvent"); }
+	const char* LoginEvent::name() noexcept { return ("LoginEvent"); }
 }

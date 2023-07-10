@@ -13,14 +13,12 @@
  * @file
  */
 
-#include "PlayerMovementEvent.h"
-
+#include "MovementEvent.h"
 #include <CLua/CLua.hpp>
-#include <Root.h>
 
 namespace Xplicit
 {
-	PlayerMovementEvent::PlayerMovementEvent() 
+	MovementEvent::MovementEvent() 
 		: 
 		mDeltaTime(0UL)
 	{
@@ -44,11 +42,11 @@ namespace Xplicit
 		}
 	}
 
-	PlayerMovementEvent::~PlayerMovementEvent() = default;
+	MovementEvent::~MovementEvent() = default;
 
-	const char* PlayerMovementEvent::name() noexcept { return ("PlayerMovementEvent"); }
+	const char* MovementEvent::name() noexcept { return ("MovementEvent"); }
 
-	void PlayerMovementEvent::operator()()
+	void MovementEvent::operator()()
 	{
 		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 		NetworkFloat speed = mVelocityVar->as_float();

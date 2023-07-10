@@ -17,16 +17,16 @@
 
 namespace Xplicit
 {
-	class PlayerTimeoutEvent final : public Event
+	class TimeoutEvent final : public Event
 	{
 	public:
-		explicit PlayerTimeoutEvent();
-		~PlayerTimeoutEvent() override;
+		explicit TimeoutEvent();
+		~TimeoutEvent() override;
 
 		const char* name() noexcept override;
 		void operator()() override;
 
-		XPLICIT_COPY_DEFAULT(PlayerTimeoutEvent);
+		XPLICIT_COPY_DEFAULT(TimeoutEvent);
 
 	private:
 		NetworkServerComponent* mNetwork;

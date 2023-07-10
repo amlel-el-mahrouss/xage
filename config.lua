@@ -14,11 +14,11 @@ XPLICIT_CONFIG = {
     ["_DIALECT"] = "C++",
     ["_FILES"] = {
         ["_INC"] = {
-            "Xplicit/Source/**.h",
-            "Xplicit/Source/**.inl"
+            "XplicitNgin/Source/**.h",
+            "XplicitNgin/Source/**.inl"
         },
         ["_SRC"] = {
-            "Xplicit/Source/**.cpp"
+            "XplicitNgin/Source/**.cpp"
         },
     },
     ["_LIBDIR"] = {
@@ -80,7 +80,7 @@ XPLICIT_SERVER_CONFIG = {
         "Vendor/",
         "Vendor/stb/",
 	    "Vendor/glfw/include/GLFW/",
-    	"Xplicit/Source/",
+    	"XplicitNgin/Source/",
         "Vendor/nuklear/",
     	"Vendor/yaml/include",
     	"Nplicit/Source/",
@@ -115,7 +115,7 @@ XPLICIT_CLIENT_CONFIG = {
         "opengl32",
 	    "ws2_32",
 	    "winmm",
-        "Library/lua54"
+        "Library/lua54",
         "Library/Irrlicht",
         "C:/Program Files/OpenSSL-Win64/lib/libssl",
         "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
@@ -124,8 +124,7 @@ XPLICIT_CLIENT_CONFIG = {
         "C:/Program Files/OpenSSL-Win64/include/",
         "Vendor/",
         "SoundNgin/",
-    	"Xplicit/Source/",
-    	"Xplicit/Vendor/include/",
+    	"XplicitNgin/Source/",
     	"Vendor/irr/include",
         "Vendor/CLua/",
         "Vendor/stb/",
@@ -163,8 +162,7 @@ NPLICIT_CONFIG = {
     },
     ["_INCDIR"] = {
         "Vendor/",
-    	"Xplicit/Source/",
-    	"Xplicit/Vendor/include/",
+    	"XplicitNgin/Source/",
         "Vendor/CLua/",
         "Vendor/stb/",
 	    "Vendor/libzip/lib",

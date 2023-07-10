@@ -4,7 +4,7 @@
  *			XplicitServer
  *			Copyright Xplicit Inc, all rights reserved.
  *
- *			File: PlayerSpawnDeathEvent.h
+ *			File: HealthMonitorEvent.h
  *			Purpose: Spawn and Death handling
  *
  * =====================================================================
@@ -17,22 +17,22 @@
 
 namespace Xplicit
 {
-	class PlayerSpawnDeathEvent : public Event
+	class HealthMonitorEvent : public Event
 	{
 	public:
-		PlayerSpawnDeathEvent() 
+		HealthMonitorEvent() 
 			: mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 			  mSpawner(ComponentSystem::get_singleton_ptr()->get<SpawnComponent>("SpawnComponent"))
 		{
 			XPLICIT_ASSERT(mNetwork);
 		}
 
-		virtual ~PlayerSpawnDeathEvent() = default;
+		virtual ~HealthMonitorEvent() = default;
 
-		PlayerSpawnDeathEvent& operator=(const PlayerSpawnDeathEvent&) = default;
-		PlayerSpawnDeathEvent(const PlayerSpawnDeathEvent&) = default;
+		HealthMonitorEvent& operator=(const HealthMonitorEvent&) = default;
+		HealthMonitorEvent(const HealthMonitorEvent&) = default;
 
-		virtual const char* name() noexcept override { return ("PlayerSpawnDeathEvent"); }
+		virtual const char* name() noexcept override { return ("HealthMonitorEvent"); }
 
 		virtual void operator()() override;
 

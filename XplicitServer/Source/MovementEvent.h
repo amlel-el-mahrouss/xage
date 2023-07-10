@@ -24,15 +24,15 @@ namespace Xplicit
 	///		- Player is inactive
 	/// </summary>
 	
-	class PlayerMovementEvent : public Event
+	class MovementEvent : public Event
 	{
 	public:
-		explicit PlayerMovementEvent();
-		~PlayerMovementEvent() override;
+		explicit MovementEvent();
+		~MovementEvent() override;
 
 	public:
-		PlayerMovementEvent& operator=(const PlayerMovementEvent&) = default;
-		PlayerMovementEvent(const PlayerMovementEvent&) = default;
+		MovementEvent& operator=(const MovementEvent&) = default;
+		MovementEvent(const MovementEvent&) = default;
 		
 	public:
 		const char* name() noexcept override;

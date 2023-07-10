@@ -23,8 +23,7 @@ namespace Xplicit
 			Velocity(0, 0, 0), 
 			Force(0, 0, 0), 
 			Anchored(false), 
-			NoCollide(false), 
-			Blocked(false) 
+			NoCollide(false)
 		{}
 
 		virtual ~PhysicsComponent() {}
@@ -39,9 +38,8 @@ namespace Xplicit
 
 	public:
 		TypeFloat Mass;
-		bool Anchored;
 		bool NoCollide;
-		bool Blocked;
+		bool Anchored;
 
 	};
 
@@ -61,8 +59,7 @@ namespace Xplicit
 		{
 			for (auto* component : mComponents)
 			{
-				if (component->Anchored ||
-					component->Blocked)
+				if (component->Anchored)
 					continue;
 
 				component->Force.add(mGravity.X * component->Mass, mGravity.Y * component->Mass, mGravity.Z * component->Mass);

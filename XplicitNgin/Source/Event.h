@@ -78,7 +78,7 @@ namespace Xplicit
 
 	/// <summary>
 	/// It listens to a specific event.
-	/// For example, PlayerLoginEvent or whatever.
+	/// For example, LoginEvent or whatever.
 	/// </summary>
 	
 	class XPLICIT_API EventListener

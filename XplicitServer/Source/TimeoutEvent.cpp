@@ -11,21 +11,21 @@
  @file
  */
 
-#include "PlayerTimeoutEvent.h"
+#include "TimeoutEvent.h"
 
 namespace Xplicit
 {
-	PlayerTimeoutEvent::PlayerTimeoutEvent()
+	TimeoutEvent::TimeoutEvent()
 		:
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mCounter(0UL)
 	{}
 
-	PlayerTimeoutEvent::~PlayerTimeoutEvent() = default;
+	TimeoutEvent::~TimeoutEvent() = default;
 
-	const char* PlayerTimeoutEvent::name() noexcept { return "PlayerTimeoutEvent"; }
+	const char* TimeoutEvent::name() noexcept { return "TimeoutEvent"; }
 	
-	void PlayerTimeoutEvent::operator()()
+	void TimeoutEvent::operator()()
 	{
 		for (std::size_t index = 0; index < mNetwork->size(); ++index)
 		{

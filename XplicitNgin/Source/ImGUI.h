@@ -23,7 +23,6 @@ namespace Xplicit::ImGui
 
     public:
         XPLICIT_COPY_DEFAULT(ImGuiSingleton);
-        
 
-    }
+    };
 }

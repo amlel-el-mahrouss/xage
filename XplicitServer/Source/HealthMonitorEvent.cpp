@@ -4,7 +4,7 @@
  *			XplicitServer
  *			Copyright Xplicit Inc, all rights reserved.
  *
- *			File: PlayerSpawnDeathEvent.cpp
+ *			File: HealthMonitorEvent.cpp
  *			Purpose: Spawn and Death handling
  *
  * =====================================================================
@@ -14,7 +14,7 @@
  @file
  */
 
-#include "PlayerSpawnDeathEvent.h"
+#include "HealthMonitorEvent.h"
 #include <CLua/CLua.hpp>
 
 namespace Xplicit
@@ -46,7 +46,7 @@ namespace Xplicit
 		}
 	}
 
-	void PlayerSpawnDeathEvent::operator()()
+	void HealthMonitorEvent::operator()()
 	{
 		if (!mNetwork)
 			return;

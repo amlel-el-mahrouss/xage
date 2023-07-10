@@ -8,7 +8,6 @@
  */
 
 #include "ServerReplicationManager.h"
-#include <CLua/CLua.hpp>
 
 namespace Xplicit
 {
