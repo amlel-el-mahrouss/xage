@@ -81,7 +81,7 @@ namespace Xplicit
 		_this->mHealth = _this->mClass->index_as_number<double>("Health");
 		_this->mMaxHealth = _this->mClass->index_as_number<double>("MaxHealth");
 		_this->mJumpPower = _this->mClass->index_as_number<double>("JumpPower");
-		_this->mWalkspeed = _this->mClass->index_as_number<double>("Walkspeed");
+		_this->mWalkspeed = _this->mClass->index_as_number<double>("WalkSpeed");
 	}
 
 	void HumanoidComponent::set_health(const double& health) noexcept { this->mHealth = health; }

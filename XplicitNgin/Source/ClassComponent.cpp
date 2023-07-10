@@ -11,6 +11,15 @@
 
 namespace Xplicit
 {
+	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Func)"
+		"\treturn table.insert(self, { Func = Func })"
+		"end";
+
+	static const char* XPLICIT_DISCONNECT_SNIPPET =
+		"function(self, Index)"
+		"self[Index] = nil;"
+		"end";
+
 	ClassComponent::ClassComponent(
 		const Vector<float>& position, 
 		const Vector<float>& size, 
@@ -42,22 +51,26 @@ namespace Xplicit
 		this->insert("Locked", "true");
 		this->insert("Collide", "true");
 
-		String func_proto = "function() World.ClassService.Destroy(";
-		func_proto += "\"";
+		String func_proto = "function() World.ClassService.Destroy("
+							"\"";
+		
 		func_proto += mName;
-		func_proto += "\"";
-		func_proto += ",";
-		func_proto += "\"";
+		func_proto += ""
+					","
+					"\"";
+
 		func_proto += mParent;
+		
 		func_proto += "\"";
 		func_proto += "); end";
 
 		this->insert("Destroy", func_proto.c_str());
+
+		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
+		this->insert("Disconnect", XPLICIT_DISCONNECT_SNIPPET);
 	}
 
-	ClassComponent::~ClassComponent()
-	{
-	}
+	ClassComponent::~ClassComponent() = default;
 
 	const char* ClassComponent::parent() noexcept { return mParent.c_str(); }
 	
