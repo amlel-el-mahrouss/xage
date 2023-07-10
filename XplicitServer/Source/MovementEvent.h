@@ -39,11 +39,8 @@ namespace Xplicit
 		void operator()() override;
 
 	private:
-		GameVarPtr mVelocityVar;
 		GameVarPtr mDeltaVar;
-
-	private:
-		float mDeltaTime;
+		double mDeltaTime;
 
 	};
 }

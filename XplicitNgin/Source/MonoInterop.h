@@ -20,7 +20,7 @@ namespace Xplicit
 	class MonoEventListener;
 	class MonoEvent;
 
-	class XPLICIT_API MonoClassComponent : public Component
+	class XPLICIT_API MonoClassComponent final : public Component
 	{
 	public:
 		MonoClassComponent() = delete;
@@ -52,7 +52,7 @@ namespace Xplicit
 	/// <summary>
 	/// Generic Mono Class, written in C++
 	/// </summary>
-	class XPLICIT_API MonoEvent : public Event
+	class XPLICIT_API MonoEvent final : public Event
 	{
 	public:
 		MonoEvent() = delete;
@@ -82,7 +82,7 @@ namespace Xplicit
 	/// which listens at a MonoEvent.
 	/// </summary>
 	/// 
-	class XPLICIT_API MonoEventListener : public EventListener
+	class XPLICIT_API MonoEventListener final : public EventListener
 	{
 	public:
 		MonoEventListener() = delete;

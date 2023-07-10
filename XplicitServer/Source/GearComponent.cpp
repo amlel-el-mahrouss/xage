@@ -25,6 +25,8 @@ namespace Xplicit
 			parent,
 			name)
 	{
+		this->insert("Slot", "0");
+
 		this->insert("Enabled", "false");
 		this->insert("CanDrop", "false");
 

@@ -13,10 +13,11 @@
 #pragma once
 
 #include "Xplicit.h"
+#include <CLua/CLua.hpp>
 
 namespace Xplicit
 {
-	class XPLICIT_API GameVar final
+	class XPLICIT_API GameVar final : public Lua::CLuaClass
 	{
 	private:
 		GameVar(const char* name, const char* default_value, int flags);

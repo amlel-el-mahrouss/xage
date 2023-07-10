@@ -23,8 +23,9 @@ namespace Xplicit
 		mCanSpawn(true),
 		mState(HUMANOID_STATE::ALIVE),
 		mClass(nullptr),
-		mJumpPower(1),
-		mMaxHealth(100)
+		mJumpPower(10),
+		mMaxHealth(100),
+		mWalkspeed(16)
 	{}
 
 	HumanoidComponent::~HumanoidComponent() = default;
@@ -80,11 +81,12 @@ namespace Xplicit
 		_this->mHealth = _this->mClass->index_as_number<double>("Health");
 		_this->mMaxHealth = _this->mClass->index_as_number<double>("MaxHealth");
 		_this->mJumpPower = _this->mClass->index_as_number<double>("JumpPower");
+		_this->mWalkspeed = _this->mClass->index_as_number<double>("Walkspeed");
 	}
 
-	void HumanoidComponent::set_health(const int64_t& health) noexcept { this->mHealth = health; }
+	void HumanoidComponent::set_health(const double& health) noexcept { this->mHealth = health; }
 
-	const int64_t& HumanoidComponent::get_health() noexcept { return this->mHealth; }
+	const double& HumanoidComponent::get_health() noexcept { return this->mHealth; }
 
 	bool HumanoidComponent::can_collide() noexcept { return true; }
 
@@ -119,12 +121,11 @@ namespace Xplicit
 					"\"");
 
 				mClass->insert("State", "World.HumanoidState.Alive");
-
 				mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
-
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
+				mClass->insert("WalkSpeed", std::to_string(mWalkspeed).c_str());
 			}
 		}
 	}

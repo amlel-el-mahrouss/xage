@@ -64,36 +64,12 @@ namespace Xplicit::Lua
 
 		std::int32_t run(const char* file) noexcept
 		{
-			if (file)
-			{
-				const long ret = luaL_dofile(mL, file);
-
-#ifdef XPLICIT_DEBUG
-				if (ret > 0)
-					std::cout << lua_tostring(mL, -1) << "\n";
-#endif // ifdef XPLICIT_DEBUG
-
-				return ret;
-			}
-			
-			return -1;
+			return (luaL_dofile(mL, file)) < 0;
 		}
 
 		std::int32_t run_string(const char* str) noexcept
 		{
-			if (str)
-			{
-				const long ret = luaL_dostring(mL, str);
-
-#ifdef XPLICIT_DEBUG
-				if (ret > 0)
-					std::cout << lua_tostring(mL, -1) << "\n";
-#endif // ifdef XPLICIT_DEBUG
-
-				return ret;
-			}
-
-			return -1;
+			return (luaL_dostring(mL, str)) < 0;
 		}
 
 		CLuaStatePtr state() noexcept
@@ -115,13 +91,6 @@ namespace Xplicit::Lua
 			fmt += " = { CLua = true, }";
 
 			luaL_dostring(mL, fmt.c_str());
-		}
-
-		explicit CLuaClass(const char* klass) noexcept
-			: CLuaClass(String(klass))
-		{
-			if (mL)
-				lua_close(mL);
 		}
 
 		virtual ~CLuaClass() noexcept
@@ -153,32 +122,22 @@ namespace Xplicit::Lua
 		//! execute instruction
 		//! get it after that
 
-		std::int64_t i_index_field(const char* lhs) noexcept
+		bool i_index_field(const char* lhs) noexcept
 		{
 			lua_getglobal(mL, mClass.c_str());
 
+			if (!lua_istable(mL, -1))
+				return false;
+
 			lua_pushstring(mL, lhs);
-			lua_gettable(mL, -1);
+			lua_gettable(mL, -2);
 
-			lua_pushnil(mL);
-
-			for (std::size_t i = 1; i < mCnt; ++i)
+			if (lua_istable(mL, -1))
 			{
-				if (lua_isnil(mL, i))
-					continue;
-
-				if (!lua_isnil(mL, -2))
-				{
-					if (strcmp(lua_tostring(mL, -1), lhs) == 0)
-					{
-						return i;
-					}
-				}
-
-				lua_pop(mL, 1);
+				lua_rawgeti(mL, -1, 1);
 			}
 
-			return -1;
+			return true;
 		}
 
 		void i_clean(const std::size_t& cnt) noexcept
@@ -190,25 +149,39 @@ namespace Xplicit::Lua
 		template <typename T = double>
 		const T index_as_number(const char* lhs) noexcept
 		{
-			T ret = lua_tonumber(mL, this->i_index_field(lhs));
-			this->i_clean(2);
+			T ret = 0;
+
+			if (this->i_index_field(lhs))
+			{
+				ret = lua_tonumber(mL, -2);
+				this->i_clean(1);
+			}
 
 			return ret;
 		}
 
 		const bool index_as_bool(const char* lhs)
 		{
-			bool ret = lua_toboolean(mL, this->i_index_field(lhs));
-			this->i_clean(2);
+			bool ret = false;
+
+			if (this->i_index_field(lhs))
+			{
+				ret = lua_toboolean(mL, -2);
+				this->i_clean(1);
+			}
 
 			return ret;
 		}
 
 		const String index_as_string(const char* lhs)
 		{
-			String ret = lua_tostring(mL, this->i_index_field(lhs));
+			String ret = "";
 
-			this->i_clean(2);
+			if (this->i_index_field(lhs))
+			{
+				ret = lua_tostring(mL, -2);
+				this->i_clean(1);
+			}
 
 			return ret;
 		}

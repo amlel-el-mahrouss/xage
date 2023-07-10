@@ -27,7 +27,7 @@ namespace Xplicit
 	/// <summary>
 	/// Mono C# context
 	/// </summary>
-	class XPLICIT_API MonoEngineComponent : public Component
+	class XPLICIT_API MonoEngineComponent final : public Component
 	{
 	public:
 		MonoEngineComponent();
@@ -70,7 +70,7 @@ namespace Xplicit
 
 	};
 
-	class XPLICIT_API MonoScriptComponent : public Component
+	class XPLICIT_API MonoScriptComponent final : public Component
 	{
 	public:
 		MonoScriptComponent(const char* filename, bool can_fail);

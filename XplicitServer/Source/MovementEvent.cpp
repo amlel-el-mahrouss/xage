@@ -18,20 +18,13 @@
 
 namespace Xplicit
 {
+	constexpr const double XPLICIT_DPS = 1000.f;
+
 	MovementEvent::MovementEvent() 
 		: 
-		mDeltaTime(0UL)
+		mDeltaTime(0UL),
+		mDeltaVar(nullptr)
 	{
-		mVelocityVar = GameVarManager::get_singleton_ptr()->get("Velocity");
-		
-		if (!mVelocityVar)
-		{
-			mVelocityVar = Xplicit::GameVarManager::get_singleton_ptr()->create("Velocity",
-				"0.035f",
-				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
-
-		}
-
 		mDeltaVar = GameVarManager::get_singleton_ptr()->get("DeltaTime");
 
 		if (!mDeltaVar)
@@ -42,14 +35,17 @@ namespace Xplicit
 		}
 	}
 
-	MovementEvent::~MovementEvent() = default;
+	MovementEvent::~MovementEvent()
+	{
+		if (mDeltaVar)
+			delete mDeltaVar;
+	}
 
 	const char* MovementEvent::name() noexcept { return ("MovementEvent"); }
 
 	void MovementEvent::operator()()
 	{
 		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
-		NetworkFloat speed = mVelocityVar->as_float();
 		
 		for (std::size_t i = 0; i < humanoids.size(); ++i)
 		{
@@ -68,6 +64,8 @@ namespace Xplicit
 			//! No need to edit this piece of code, WorldCollisionEvent will take care of this.
 			if (peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS) //! Here we check if pos command is set.
 			{
+				NetworkFloat speed = humanoid->get_walk_speed();
+
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
 					humanoid->get_attribute().pos().Y += speed;
 
@@ -107,6 +105,6 @@ namespace Xplicit
 			}
 		}
 
-		mDeltaTime += (mDeltaVar->as_float() / 1000.f);
+		mDeltaTime += (mDeltaVar->as_float() / XPLICIT_DPS);
 	}
 }

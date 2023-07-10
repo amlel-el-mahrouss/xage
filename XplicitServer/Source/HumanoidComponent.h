@@ -53,9 +53,13 @@ namespace Xplicit
 		XAttribute& get_attribute() noexcept;
 
 	public:
-		void set_health(const int64_t& health) noexcept;
-		const int64_t& get_health() noexcept;
+		void set_health(const double& health) noexcept;
+		const double& get_health() noexcept;
 		bool is_alive() const noexcept;
+
+	public:
+		void set_walk_speed(const double& speed) noexcept { mWalkspeed = speed; }
+		const double& get_walk_speed() noexcept { return mWalkspeed; }
 
 	public:
 		void set_state(const HUMANOID_STATE state) noexcept;
@@ -72,6 +76,7 @@ namespace Xplicit
 		NetworkPeer* mPeer;
 
 	private:
+		double mWalkspeed;
 		double mMaxHealth;
 		double mJumpPower;
 		double mHealth;
