@@ -141,7 +141,10 @@ namespace Xplicit::Lua
 				fmt += mClass[i];
 			}
 
-			if (strstr(lhs, ".") == 0)
+			//! Dummy variable to check for fields.
+			String has_field = "";
+
+			if (strstr(lhs, "."))
 			{
 				fmt.clear();
 
@@ -151,6 +154,8 @@ namespace Xplicit::Lua
 						!fmt.empty())
 					{
 						vec.push_back(fmt);
+
+						has_field = fmt;
 						fmt.clear();
 
 						continue;
@@ -172,8 +177,19 @@ namespace Xplicit::Lua
 
 				if (lua_istable(mL, -1))
 				{
-					lua_getfield(mL, -2, lhs);
-					return true;
+					if (!fmt.empty())
+					{
+						if (vec[i] == has_field)
+						{
+							lua_getfield(mL, -2, fmt.c_str());
+							return true;
+						}
+					}
+					else
+					{
+						lua_getfield(mL, -2, lhs);
+						return true;
+					}
 				}
 
 				lua_pop(mL, 1);
@@ -195,7 +211,8 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tonumber(mL, -2);
+				int is_num = 0;
+				ret = lua_tonumberx(mL, -1, &is_num);
 			}
 
 			this->i_clean(1);
@@ -208,7 +225,7 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_toboolean(mL, -2);
+				ret = lua_toboolean(mL, -1);
 			}
 
 			this->i_clean(1);
@@ -221,7 +238,7 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tostring(mL, -2);
+				ret = lua_tostring(mL, -1);
 			}
 
 			this->i_clean(1);

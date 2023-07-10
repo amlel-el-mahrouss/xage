@@ -45,7 +45,7 @@ namespace Xplicit
 		this->insert("Scale", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Color", "{ R = 0, G = 0, B = 0 }");
-		this->insert("Alpha", "1.0");
+		this->insert("Alpha", "1");
 		this->insert("Anchored", "true");
 		this->insert("Archivable", "true");
 		this->insert("Locked", "true");
@@ -74,7 +74,7 @@ namespace Xplicit
 
 	const char* ClassComponent::parent() noexcept { return mParent.c_str(); }
 	
-	void ClassComponent::update(void* _this)
+	void ClassComponent::update(ClassPtr _this)
 	{
 		ClassComponent* this_ptr = static_cast<ClassComponent*>(_this);
 
@@ -89,9 +89,9 @@ namespace Xplicit
 		this_ptr->get_attribute().color().G = this_ptr->index_as_number<float>("Color.G");
 		this_ptr->get_attribute().color().B = this_ptr->index_as_number<float>("Color.B");
 
-		this_ptr->get_attribute().scale().X = this_ptr->index_as_number("Scale.X");
-		this_ptr->get_attribute().scale().Y = this_ptr->index_as_number("Scale.Y");
-		this_ptr->get_attribute().scale().Z = this_ptr->index_as_number("Scale.Z");
+		this_ptr->get_attribute().scale().X = this_ptr->index_as_number<float>("Scale.X");
+		this_ptr->get_attribute().scale().Y = this_ptr->index_as_number<float>("Scale.Y");
+		this_ptr->get_attribute().scale().Z = this_ptr->index_as_number<float>("Scale.Z");
 
 		this_ptr->get_attribute().pos().X = this_ptr->index_as_number<float>("Position.X");
 		this_ptr->get_attribute().pos().Y = this_ptr->index_as_number<float>("Position.Y");
