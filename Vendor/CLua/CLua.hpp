@@ -124,20 +124,41 @@ namespace Xplicit::Lua
 
 		bool i_index_field(const char* lhs) noexcept
 		{
-			lua_getglobal(mL, mClass.c_str());
+			std::vector<String> vec;
+			String fmt;
+
+			for (size_t i = 0UL; i < (mClass.size() + 1); ++i)
+			{
+				if (mClass[i] == '.' &&
+					!fmt.empty())
+				{
+					vec.push_back(fmt);
+					fmt.clear();
+
+					continue;
+				}
+
+				fmt += mClass[i];
+			}
+
+			lua_getglobal(mL, vec[0].c_str());
 
 			if (!lua_istable(mL, -1))
 				return false;
 
-			lua_pushstring(mL, lhs);
-			lua_gettable(mL, -2);
-
-			if (lua_istable(mL, -1))
+			for (size_t i = 1UL; i < vec.size(); ++i)
 			{
-				lua_rawgeti(mL, -1, 1);
-			}
+				lua_pushstring(mL, vec[i].c_str());
+				lua_gettable(mL, -1);
 
-			return true;
+				if (lua_istable(mL, -1))
+				{
+					lua_getfield(mL, -1, lhs);
+					return true;
+				}
+
+				lua_pop(mL, 1);
+			}
 		}
 
 		void i_clean(const std::size_t& cnt) noexcept
@@ -153,7 +174,7 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tonumber(mL, -2);
+				ret = lua_tonumber(mL, -1);
 				this->i_clean(1);
 			}
 
@@ -166,7 +187,7 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_toboolean(mL, -2);
+				ret = lua_toboolean(mL, -1);
 				this->i_clean(1);
 			}
 
@@ -179,7 +200,7 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tostring(mL, -2);
+				ret = lua_tostring(mL, -1);
 				this->i_clean(1);
 			}
 
