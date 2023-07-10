@@ -98,7 +98,7 @@ int main(int argc, char** argv)
 		if (argc < 2)
 		{
 			std::cout << "XplicitServer, Self-Hostable XplicitNgin instance.\n";
-			std::cout << "usage: XplicitServer.exe <PlaceID>";
+			std::cout << "usage: XplicitServer.exe <Port> <PlacePath>";
 			std::cin.get();
 
 			return 1;

@@ -196,6 +196,7 @@ namespace Xplicit::Lua
 			}
 
 			return false;
+
 		}
 
 		void i_clean(const std::size_t& cnt) noexcept
@@ -204,7 +205,7 @@ namespace Xplicit::Lua
 		}
 
 	public:
-		template <typename T = double>
+		template <typename T = double, size_t I = -1>
 		const T index_as_number(const char* lhs) noexcept
 		{
 			T ret = 0;
@@ -212,36 +213,38 @@ namespace Xplicit::Lua
 			if (this->i_index_field(lhs))
 			{
 				int is_num = 0;
-				ret = lua_tonumberx(mL, -1, &is_num);
+				ret = lua_tonumberx(mL, I, &is_num);
+				this->i_clean(1);
 			}
 
-			this->i_clean(1);
 			return ret;
 		}
 
+		template <size_t I = -1>
 		const bool index_as_bool(const char* lhs)
 		{
 			bool ret = false;
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_toboolean(mL, -1);
+				ret = lua_toboolean(mL, I);
+				this->i_clean(1);
 			}
 
-			this->i_clean(1);
 			return ret;
 		}
 
+		template <size_t I = -1>
 		const String index_as_string(const char* lhs)
 		{
 			String ret = "";
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tostring(mL, -1);
+				ret = lua_tostring(mL, I);
+				this->i_clean(1);
 			}
 
-			this->i_clean(1);
 			return ret;
 		}
 

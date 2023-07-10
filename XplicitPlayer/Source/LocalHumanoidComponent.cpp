@@ -106,17 +106,7 @@ namespace Xplicit::Player
 	void LocalHumanoidComponent::attach(LocalCameraComponent* cam) noexcept
 	{ 
 		if (cam)
-		{
 			mCam = cam;
-			const std::size_t cnt = this->count_parts();
-
-			for (std::size_t i = 0; i < cnt; ++i)
-			{
-				//! use BasicString, so that we can safely get input here.
-				if (this->node_at(i)->getName() == String("Head"))
-					this->node_at(i)->addChild(mCam->get());
-			}
-		}
 	}
 
 	Vector<float> LocalHumanoidComponent::get_pos() noexcept { return mPos; }
