@@ -9,8 +9,8 @@
 
 #pragma once
 
-/* Author: Amlal El Mahrouss */
-/* CLua for the XplicitNgine. */
+ /* Author: Amlal El Mahrouss */
+ /* CLua for the XplicitNgine. */
 
 extern "C" {
 #	include "lua.h"
@@ -107,7 +107,7 @@ namespace Xplicit::Lua
 			if (symbol && reference)
 			{
 				++mCnt;
-				return CLuaStateManager::get_singleton_ptr()->run_string(std::format("{}.{} = {}", mClass, symbol, reference).c_str()) < 0;
+				return CLuaStateManager::get_singleton_ptr()->run_string(std::format("{}.{} = {}", mClass, symbol, reference).c_str());
 			}
 
 			return false;
@@ -141,62 +141,24 @@ namespace Xplicit::Lua
 				fmt += mClass[i];
 			}
 
-			//! Dummy variable to check for fields.
-			String has_field = "";
-
-			if (strstr(lhs, "."))
-			{
-				fmt.clear();
-
-				for (size_t i = 0UL; i < strlen(lhs); ++i)
-				{
-					if (lhs[i] == '.' &&
-						!fmt.empty())
-					{
-						vec.push_back(fmt);
-
-						has_field = fmt;
-						fmt.clear();
-
-						continue;
-					}
-
-					fmt += lhs[i];
-				}
-
-			}
-
 			lua_getglobal(mL, vec[0].c_str());
 
 			if (!lua_istable(mL, -1))
 				return false;
 
-			for (size_t i = 0UL; i < vec.size(); ++i)
+			for (size_t i = 1UL; i < vec.size(); ++i)
 			{
-				lua_getglobal(mL, vec[i].c_str());
+				lua_pushstring(mL, vec[i].c_str());
+				lua_gettable(mL, -1);
 
 				if (lua_istable(mL, -1))
 				{
-					if (!fmt.empty())
-					{
-						if (vec[i] == has_field)
-						{
-							lua_getfield(mL, -2, fmt.c_str());
-							return true;
-						}
-					}
-					else
-					{
-						lua_getfield(mL, -2, lhs);
-						return true;
-					}
+					lua_getfield(mL, -1, lhs);
+					return true;
 				}
 
 				lua_pop(mL, 1);
 			}
-
-			return false;
-
 		}
 
 		void i_clean(const std::size_t& cnt) noexcept
@@ -205,43 +167,40 @@ namespace Xplicit::Lua
 		}
 
 	public:
-		template <typename T = double, size_t I = -1>
+		template <typename T = double>
 		const T index_as_number(const char* lhs) noexcept
 		{
 			T ret = 0;
 
 			if (this->i_index_field(lhs))
 			{
-				int is_num = 0;
-				ret = lua_tonumberx(mL, I, &is_num);
+				ret = lua_tonumber(mL, -1);
 				this->i_clean(1);
 			}
 
 			return ret;
 		}
 
-		template <size_t I = -1>
 		const bool index_as_bool(const char* lhs)
 		{
 			bool ret = false;
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_toboolean(mL, I);
+				ret = lua_toboolean(mL, -1);
 				this->i_clean(1);
 			}
 
 			return ret;
 		}
 
-		template <size_t I = -1>
 		const String index_as_string(const char* lhs)
 		{
 			String ret = "";
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tostring(mL, I);
+				ret = lua_tostring(mL, -1);
 				this->i_clean(1);
 			}
 
@@ -292,13 +251,13 @@ namespace Xplicit::Lua
 		//!		name the string to listen to.
 		//! @return if the evaluation was succesful, true.
 		//! 		
-		
+
 		bool operator()(const String name = ":Tick")
 		{
 			String fmt = XPLICIT_ROOT_CLASS;
 			fmt += name;
 			fmt += "()";
-		
+
 			return CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 

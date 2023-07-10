@@ -7,7 +7,8 @@
  * =====================================================================
  */
 
-// The component itself 
+// Include the component class.
+
 #include "GearComponent.h"
 
 //! This file handles Gears (Sword, guns, tools...)
