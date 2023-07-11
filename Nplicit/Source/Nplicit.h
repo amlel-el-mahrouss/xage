@@ -62,9 +62,18 @@ namespace Xplicit
 				if (component->Anchored)
 					continue;
 
-				component->Force.add(mGravity.X * component->Mass, mGravity.Y * component->Mass, mGravity.Z * component->Mass);
-				component->Velocity.add(component->Force.X / component->Mass * dt, component->Force.Y / component->Mass * dt, component->Force.Z / component->Mass * dt);
-				component->Position.add(component->Velocity.X * dt, component->Velocity.Y * dt, component->Velocity.Z * dt);
+				component->Force = Vector<float>(mGravity.X * component->Mass, 
+					mGravity.Y * component->Mass,
+					mGravity.Z * component->Mass);
+
+
+				component->Velocity = Vector<float>(component->Force.X * component->Mass,
+					component->Force.Y * component->Mass,
+					component->Force.Z * component->Mass);
+
+				component->Position = Vector<float>(component->Velocity.X* dt, component->Velocity.Y* dt, component->Velocity.Z* dt);
+
+				component->Force = Vector<float>(0, 0, 0);
 			}
 		}
 
@@ -106,9 +115,112 @@ namespace Xplicit
 	template <typename TypeFloat = float>
 	struct NPLICIT_API Transform
 	{
-		Quaternion<TypeFloat> Rotation;
-		Vector<TypeFloat> Position;
-		Vector<TypeFloat> Scale;
+		Quaternion<TypeFloat> Rotation{ 0, 0, 0 };
+		Vector<TypeFloat> Position{ 0, 0, 0 };
+		Vector<TypeFloat> Scale{ 0, 0, 0 };
 		
 	};
+
+#ifndef __NPLICIT_DETAIL_IEE__
+	typedef float NplicitFloat;
+#else
+	typedef double NplicitFloat;
+#endif
+
+	enum COLLISION_RESOLUTION_STAT
+	{
+		COLLISION_RESOLUTION_STOP,
+		COLLISION_RESOLUTION_RUN,
+	};
+
+	class NPLICIT_API CollisionNode final
+	{
+	public:
+		CollisionNode() = default;
+		~CollisionNode() = default;
+
+	public:
+		XPLICIT_COPY_DEFAULT(CollisionNode);
+
+	public:
+		Transform<NplicitFloat> Entity;
+		COLLISION_RESOLUTION_STAT Stat{ COLLISION_RESOLUTION_STOP };
+
+	public:
+		CollisionNode* Parent{ nullptr };
+		CollisionNode* Child{ nullptr };
+		bool Valid{ true };
+
+	public:
+		void step_zone() noexcept
+		{
+			if (Stat == COLLISION_RESOLUTION_RUN)
+				return;
+
+			//! Start simulation
+			Stat = COLLISION_RESOLUTION_RUN;
+
+			//! Simulate our zone.
+			Thread zone([&]() {
+				if (this)
+				{
+					CollisionNode* entt = this;
+
+					while (entt)
+					{
+						// We are colliding.
+						if (entt->Entity.Position == this->Entity.Position)
+							this->Valid = false;
+
+						entt = entt->Child;
+					}
+				}
+
+				if (this)
+				{
+					CollisionNode* entt_parent = this;
+
+					while (entt_parent)
+					{
+						// We are colliding.
+						if (entt_parent->Entity.Position == this->Entity.Position)
+							this->Valid = false;
+
+						entt_parent = entt_parent->Parent;
+					}
+
+					if (this)
+						this->Stat = COLLISION_RESOLUTION_STOP;
+				}
+			});
+
+			zone.detach();
+		}
+
+		CollisionNode& operator+=(CollisionNode* collision)
+		{
+			if (collision)
+			{
+				CollisionNode* prev = Child;
+				CollisionNode* entt = Child;
+				
+				while (entt)
+				{
+					prev = entt;
+					entt = entt->Child;
+				}
+
+				if (prev)
+				{
+					prev->Child = collision;
+					collision->Parent = prev;
+				}
+			}
+
+			return *this;
+		}
+
+	};
+
+	typedef CollisionNode CollisionNodeRoot;
 }
