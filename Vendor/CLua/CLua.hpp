@@ -130,7 +130,9 @@ namespace Xplicit::Lua
 		{
 			if (symbol && reference)
 			{
+				mSymbols.push_back(std::make_pair(mCnt, symbol));
 				++mCnt;
+
 				return CLuaStateManager::get_singleton_ptr()->run_string(std::format("{}.{} = {}", mClass, symbol, reference).c_str());
 			}
 
@@ -142,66 +144,68 @@ namespace Xplicit::Lua
 		bool call(const char* lhs) { return operator()(lhs); }
 
 	private:
-		//! fast way of fetching a value
-		//! execute instruction
-		//! get it after that
-
+		//! @brief Index field at an array.
 		bool i_index_field(const char* lhs) noexcept
 		{
 			std::vector<String> vec;
-			String fmt;
+			String last_class;
 
 			for (std::size_t i = 0UL; i < (mClass.size() + 1); ++i)
 			{
 				if (mClass[i] == '.')
 				{
-					vec.push_back(fmt);
-					fmt.clear();
+					vec.push_back(last_class);
+					last_class.clear();
 
 					continue;
 				}
 
-				fmt += mClass[i];
+				last_class += mClass[i];
 			}
 
 			if (strstr(lhs, "."))
 			{
-				fmt.clear();
-
 				for (std::size_t i = 0UL; i < strlen(lhs); ++i)
 				{
 					if (lhs[i] == '.')
 					{
-						vec.push_back(fmt);
-						fmt.clear();
+						vec.push_back(last_class);
+						last_class.clear();
 
 						continue;
 					}
 
-					fmt += lhs[i];
+					last_class += lhs[i];
 				}
+
 			}
 
-			lua_getglobal(mL, vec[0].c_str());
+			vec.push_back(last_class);
 
-			if (!lua_istable(mL, -1))
-				return false;
-
-			for (std::size_t i = 1UL; i < vec.size(); ++i)
+			for (std::size_t i = 0UL; i < vec.size(); ++i)
 			{
 				lua_pushstring(mL, vec[i].c_str());
 				lua_gettable(mL, -1);
 
-				if (!lua_istable(mL, -1))
+				if (vec[i] == last_class)
 				{
-					lua_getfield(mL, -2, lhs);
-					return true;
+					for (size_t class_index = 0; class_index < mCnt; ++class_index)
+					{
+						lua_pushstring(mL, mSymbols[class_index].second.c_str());
+						lua_gettable(mL, -1);
+
+						if (mSymbols[class_index].second == lhs)
+							return true;
+
+						lua_pop(mL, 1);
+					}
 				}
 
 				lua_pop(mL, 1);
 			}
 
-			return true;
+
+			return false;
 		}
 
 		void i_clean(const std::size_t& cnt) noexcept
@@ -217,8 +221,8 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tonumber(mL, -1);
-				this->i_clean(1);
+				ret = lua_tonumber(mL, 1);
+				this->i_clean(2);
 
 				return ret;
 			}
@@ -232,8 +236,8 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_toboolean(mL, -1);
-				this->i_clean(1);
+				ret = lua_toboolean(mL, 1);
+				this->i_clean(2);
 			}
 
 			return ret;
@@ -245,8 +249,8 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tostring(mL, -1);
-				this->i_clean(1);
+				ret = lua_tostring(mL, 1);
+				this->i_clean(2);
 			}
 
 			return ret;
@@ -272,7 +276,8 @@ namespace Xplicit::Lua
 		std::int64_t count() { return mCnt; }
 
 	private:
-		std::int64_t mCnt;
+		std::vector<std::pair<std::int64_t, std::string>> mSymbols;
+		std::size_t mCnt;
 		CLuaStatePtr mL;
 		String mClass;
 

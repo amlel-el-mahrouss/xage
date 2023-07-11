@@ -107,7 +107,7 @@ namespace Xplicit
 
 		if (mPeer)
 		{
-			String path("World.Players.");
+			String path("_G.World.Players.");
 			path += mPeer->xplicit_id.as_string();
 
 			if (!mClass)

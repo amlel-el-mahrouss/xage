@@ -145,13 +145,13 @@ int main(int argc, char** argv)
 
 #endif // XPLICIT_WINDOWS
 
+		XplicitLoadBaseLua();
+		XplicitLoadServerLua();
+
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::HealthMonitorEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::TimeoutEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::MovementEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::LoginEvent>();
-
-		XplicitLoadBaseLua();
-		XplicitLoadServerLua();
 
 		XPLICIT_PLACE_ID = argv[2];
 
