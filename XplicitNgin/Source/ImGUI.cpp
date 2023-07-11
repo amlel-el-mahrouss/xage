@@ -34,4 +34,23 @@ namespace Xplicit::ImGUI
 	{
 		return m_pFrame;
 	}
+
+	void UIButton::update() noexcept
+	{
+		if (!m_pFrame)
+			return;
+
+		m_pFrame->update();
+
+		if (m_pFrame->in_region())
+		{
+			if (KB->left_down())
+				LeftClicked();
+
+			if (KB->right_down())
+				RightClicked();
+
+			Hover();
+		}
+	}
 }

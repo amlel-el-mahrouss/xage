@@ -11,6 +11,7 @@
  */
 
 #include <Xplicit.h>
+#include <Nplicit.h>
 
 #include <NetworkProtocol.h>
 #include <XplicitSound.h>

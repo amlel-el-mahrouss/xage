@@ -24,13 +24,17 @@ namespace Xplicit::ImGUI
 	public:
 		XPLICIT_COPY_DEFAULT(UIButton);
 
+	slots:
+		std::function<void()> LeftClicked;
+		std::function<void()> RightClicked;
+		std::function<void()> Hover;
+
 	public:
+		void update() noexcept;
 		UIFrame* operator->() const;
 
 	private:
 		UIFrame* m_pFrame{ nullptr };
-
-	private:
 		String mText;
 
 	};
