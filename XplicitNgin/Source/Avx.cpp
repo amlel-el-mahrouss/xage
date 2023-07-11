@@ -1,11 +1,11 @@
 /*
  * =====================================================================
  *
- *			XplicitNgin C++ Engine
+ *			XplicitNgin
  *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: Avx.cpp
- *			Purpose: Intel AVX C Library
+ *			Purpose: Intel AVX Library
  *
  * =====================================================================
  */

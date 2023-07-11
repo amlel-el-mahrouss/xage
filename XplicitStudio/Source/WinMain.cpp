@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitPlayer
+ *			XplicitStudio
  *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: WinMain.cpp
@@ -10,11 +10,7 @@
  * =====================================================================
  */
 
- /**
- @file
- */
-
-#include "Application.h"
+#include <Xplicit.h>
 
 #include <NetworkProtocol.h>
 #include <XplicitSound.h>
@@ -40,41 +36,6 @@ XPLICIT_MAIN()
 		Xplicit::open_terminal();
 #endif // XPLICIT_DEBUG
 
-		// parse the connection uri.
-		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
-
-		std::string cmd_line = pCmdLine;
-
-		if (cmd_line.empty())
-			return 1;
-
-		cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
-
-		uri /= cmd_line;
-
-		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
-			return 1;
-
-		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);
-
-		if (!app_ptr)
-			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
-
-		//! The Main Logic and Render loop.
-		while (RENDER->run() &&
-			Xplicit::ComponentSystem::get_singleton_ptr() &&
-			Xplicit::EventSystem::get_singleton_ptr())
-		{
-			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x87, 0xCE, 0xEB));
-
-			RENDER->getSceneManager()->drawAll();
-
-			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
-			Xplicit::EventSystem::get_singleton_ptr()->update();
-			Xplicit::ComponentSystem::get_singleton_ptr()->update();
-
-			RENDER->getVideoDriver()->endScene();
-		}
 	}
 	catch (Xplicit::EngineError& err)
 	{
@@ -86,7 +47,6 @@ XPLICIT_MAIN()
 	}
 
 	XPLICIT_FINI_COM;
-	return 0;
 }
 
 static void XplicitThrowException(Xplicit::EngineError& err)

@@ -9,50 +9,29 @@
 
 #pragma once
 
+//! ImGUI Base Classes
 #include "ImGuiUIBase.h"
-#include "Root.h"
+#include <NMath.h>
 
-namespace Xplicit::ImGui
+namespace Xplicit::ImGUI
 {
-    class XPLICIT_API ImGuiSingleton final
-    {
-        explicit ImGuiSingleton() = default;
+	class XPLICIT_API UIButton final
+	{
+	public:
+		UIButton();
+		~UIButton();
 
-    public:
-        ~ImGuiSingleton() = default;
+	public:
+		XPLICIT_COPY_DEFAULT(UIButton);
 
-    public:
-        XPLICIT_COPY_DEFAULT(ImGuiSingleton);
+	public:
+		UIFrame* operator->() const;
 
-    public:
-        UIFrame* createButton(const char* name)
-        {
-            auto* frm = this->createFrame(name);
+	private:
+		UIFrame* m_pFrame{ nullptr };
 
-            //! TODO logic
+	private:
+		String mText;
 
-            return frm;
-        }
-
-        UIFrame* createCheckBox(const char* name)
-        {
-            auto* frm = this->createFrame(name);
-
-            //! TODO logic
-            
-            return frm;
-        }
-
-    private:
-        UIFrame* createFrame(const char* name)
-        {
-            XPLICIT_ASSERT(name);
-            UIFrame* frm = new UIFrame();
-        
-            frm->Name = name;
-            
-            return frm;
-        }
-
-    };
+	};
 }

@@ -21,7 +21,7 @@
 
 namespace Xplicit
 {
-	namespace ImGui
+	namespace ImGUI
 	{
 		class XPLICIT_API UIFrame final
 		{

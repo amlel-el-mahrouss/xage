@@ -109,7 +109,7 @@ namespace Xplicit::Lua
 	{
 	public:
 		explicit CLuaClass(const String& klass) noexcept
-			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mCnt(0)
+			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
 		{
 			String fmt = mClass;
 			fmt += " = { CLua = true, }";
@@ -130,8 +130,10 @@ namespace Xplicit::Lua
 		{
 			if (symbol && reference)
 			{
-				mSymbols.push_back(std::make_pair(mCnt, symbol));
-				++mCnt;
+				//! Just push this symbol to the symbols list!
+				//! So that we're aware of it.
+				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
+				++mSymbolCnt;
 
 				return CLuaStateManager::get_singleton_ptr()->run_string(std::format("{}.{} = {}", mClass, symbol, reference).c_str());
 			}
@@ -230,11 +232,11 @@ namespace Xplicit::Lua
 			return (luaL_dostring(mL, lhs)) < 0;
 		}
 
-		std::int64_t count() { return mCnt; }
+		std::int64_t count() { return mSymbolCnt; }
 
 	private:
 		std::vector<std::pair<std::int64_t, std::string>> mSymbols;
-		std::size_t mCnt;
+		std::size_t mSymbolCnt;
 		CLuaStatePtr mL;
 		String mClass;
 
