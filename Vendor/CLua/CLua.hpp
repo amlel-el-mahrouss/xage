@@ -64,12 +64,32 @@ namespace Xplicit::Lua
 
 		std::int32_t run(const char* file) noexcept
 		{
-			return (luaL_dofile(mL, file)) < 0;
+			if (auto err = (luaL_dofile(mL, file)) > 0)
+			{
+				String _err = "ERROR: ";
+				_err += lua_tostring(mL, -1);
+
+				XPLICIT_ERROR(_err);
+
+				return err;
+			}
+
+			return 0;
 		}
 
 		std::int32_t run_string(const char* str) noexcept
 		{
-			return (luaL_dostring(mL, str)) < 0;
+			if (auto err = (luaL_dostring(mL, str)) > 0)
+			{
+				String _err = "ERROR: ";
+				_err += lua_tostring(mL, -1);
+
+				XPLICIT_ERROR(_err);
+
+				return err;
+			}
+
+			return 0;
 		}
 
 		CLuaStatePtr state() noexcept
@@ -127,10 +147,9 @@ namespace Xplicit::Lua
 			std::vector<String> vec;
 			String fmt;
 
-			for (size_t i = 0UL; i < (mClass.size() + 1); ++i)
+			for (std::size_t i = 0UL; i < (mClass.size() + 1); ++i)
 			{
-				if (mClass[i] == '.' &&
-					!fmt.empty())
+				if (mClass[i] == '.')
 				{
 					vec.push_back(fmt);
 					fmt.clear();
@@ -141,12 +160,30 @@ namespace Xplicit::Lua
 				fmt += mClass[i];
 			}
 
+			if (strstr(lhs, "."))
+			{
+				fmt.clear();
+
+				for (std::size_t i = 0UL; i < strlen(lhs); ++i)
+				{
+					if (lhs[i] == '.')
+					{
+						vec.push_back(fmt);
+						fmt.clear();
+
+						continue;
+					}
+
+					fmt += lhs[i];
+				}
+			}
+
 			lua_getglobal(mL, vec[0].c_str());
 
 			if (!lua_istable(mL, -1))
 				return false;
 
-			for (size_t i = 1UL; i < vec.size(); ++i)
+			for (std::size_t i = 1UL; i < vec.size(); ++i)
 			{
 				lua_pushstring(mL, vec[i].c_str());
 				lua_gettable(mL, -1);
@@ -159,6 +196,8 @@ namespace Xplicit::Lua
 
 				lua_pop(mL, 1);
 			}
+
+			return true;
 		}
 
 		void i_clean(const std::size_t& cnt) noexcept

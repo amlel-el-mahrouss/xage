@@ -425,7 +425,7 @@ namespace Xplicit::Renderer::DX11
 			m_pShader.push_back(shaderSystem);
 	}
 	
-	void RenderComponentD3D11::update(void* _this) 
+	void RenderComponentD3D11::update(ClassPtr _this) 
 	{
 		RenderComponentD3D11* _this_ptr = (RenderComponentD3D11*)_this;
 

@@ -12,3 +12,8 @@
 #include "Xplicit.h"
 #include "Archive.h"
 #include "XHTTPManager.h"
+
+namespace Xplicit
+{
+
+}

@@ -74,7 +74,6 @@ static int lua_Destroy(lua_State* L)
 		}
 	}
 
-	
 	lua_pushboolean(L, true);
 	return 1;
 }

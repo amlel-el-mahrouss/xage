@@ -34,11 +34,7 @@ namespace Xplicit
 		this->insert("Drop", "false");
 		this->insert("Tooltip", "'Gear Component'");
 
-		this->insert("LookAt", "{ 0, 0, 0 }");
-
-		this->insert("Click", "function() end");
-		this->insert("Activate", "function() end");
-		this->insert("Deactivate", "function() end");
+		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 	}
 
 	const char* GearComponent::name() noexcept { return "GearComponent"; }

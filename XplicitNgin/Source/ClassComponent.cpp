@@ -11,14 +11,23 @@
 
 namespace Xplicit
 {
-	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Func)"
-		"\treturn table.insert(self, { Func = Func })"
-		"end";
+	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Name, Func) self[Name] = Func end";
+	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, Name) self[Name] = nil; end";
 
-	static const char* XPLICIT_DISCONNECT_SNIPPET =
-		"function(self, Index)"
-		"self[Index] = nil;"
-		"end";
+	const String XPLICIT_DESTROY_SNIPPET(const String& name, const String& parent) noexcept
+	{
+		String func_proto = "function(self) World.ClassService.Destroy(";
+		func_proto += "\"";
+		func_proto += name;
+		func_proto += "\"";
+		func_proto += ",";
+		func_proto += "\"";
+		func_proto += parent;
+		func_proto += "\"";
+		func_proto += "); end";
+
+		return func_proto;
+	}
 
 	ClassComponent::ClassComponent(
 		const Vector<float>& position, 
@@ -45,27 +54,19 @@ namespace Xplicit
 		this->insert("Scale", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Color", "{ R = 0, G = 0, B = 0 }");
-		this->insert("Alpha", "1");
+
+		this->insert("Alpha", "1.0");
+
 		this->insert("Anchored", "true");
-		this->insert("Archivable", "true");
-		this->insert("Locked", "true");
+		this->insert("Archivable", "false");
+		this->insert("Locked", "false");
 		this->insert("Collide", "true");
 
-		String func_proto = "function() World.ClassService.Destroy("
-							"\"";
-		
-		func_proto += mName;
-		func_proto += ""
-					","
-					"\"";
+		this->insert("Name", std::format("\'{}\'", mName).c_str());
+		this->insert("Destroy", XPLICIT_DESTROY_SNIPPET(mName, mParent).c_str());
 
-		func_proto += mParent;
-		
-		func_proto += "\"";
-		func_proto += "); end";
-
-		this->insert("Destroy", func_proto.c_str());
-
+		//! Connect and disconnect methods
+		//! Use this to connect specific function to this class.
 		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
 		this->insert("Disconnect", XPLICIT_DISCONNECT_SNIPPET);
 	}
@@ -82,7 +83,7 @@ namespace Xplicit
 		this_ptr->get_attribute().locked(this_ptr->index_as_bool("Locked"));
 		this_ptr->get_attribute().archivable(this_ptr->index_as_bool("Archivable"));
 		this_ptr->get_attribute().anchor(this_ptr->index_as_bool("Anchored"));
-
+	
 		this_ptr->get_attribute().alpha(this_ptr->index_as_number<float>("Alpha"));
 
 		this_ptr->get_attribute().color().R = this_ptr->index_as_number<float>("Color.R");
@@ -96,6 +97,7 @@ namespace Xplicit
 		this_ptr->get_attribute().pos().X = this_ptr->index_as_number<float>("Position.X");
 		this_ptr->get_attribute().pos().Y = this_ptr->index_as_number<float>("Position.Y");
 		this_ptr->get_attribute().pos().Z = this_ptr->index_as_number<float>("Position.Z");
+
 	}
 
 	XAttribute& ClassComponent::get_attribute() noexcept { return mAttribute; }

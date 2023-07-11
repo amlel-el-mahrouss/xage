@@ -37,7 +37,7 @@ static void xplicit_print_help()
 	XPLICIT_INFO("+-------------- Xplicit Server Manual --------------+");
 }
 
-static void xplicit_load_sh()
+static void XplicitLoadShell()
 {
 	char cmd_buf[1024];
 	const auto network = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
@@ -180,7 +180,7 @@ int main(int argc, char** argv)
 
 		logic.detach();
 
-		xplicit_load_sh();
+		XplicitLoadShell();
 		
 		return 0;
 	}
