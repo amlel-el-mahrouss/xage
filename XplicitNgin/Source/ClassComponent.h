@@ -47,7 +47,7 @@ namespace Xplicit
 		const char* parent() noexcept;
 
 	public:
-		static bool should_update() noexcept { return true; }
+		static bool should_update() noexcept;
 		static void update(void* _this);
 
 	public:

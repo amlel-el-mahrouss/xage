@@ -19,7 +19,7 @@
 namespace Xplicit
 {
 	GameVar::GameVar(const char* name, const char* default_value, int flags)
-		: mName(name), mValue(default_value), mFlags(flags), Lua::CLuaClass((String("World.Fields.") + name).c_str())
+		: mName(name), mValue(default_value), mFlags(flags), Lua::CLuaClass((String("World.Settings.") + name).c_str())
 	{}
 
 	GameVar::~GameVar()

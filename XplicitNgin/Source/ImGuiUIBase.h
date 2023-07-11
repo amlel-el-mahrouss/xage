@@ -21,7 +21,7 @@
 
 namespace Xplicit
 {
-	namespace ImGUI
+	namespace ImGui
 	{
 		class XPLICIT_API UIFrame final
 		{
@@ -36,6 +36,10 @@ namespace Xplicit
 			std::uint32_t WhiteScheme{ 0xFFFFFF };
 			std::uint32_t DarkScheme{ 0x282121 };
 			std::uint32_t Scheme{ WhiteScheme };
+
+		slots:
+			BasicString<char> Name;
+			std::vector<BasicString<char>> Text;
 
 		slots:
 			std::uint32_t X{ 0 };
