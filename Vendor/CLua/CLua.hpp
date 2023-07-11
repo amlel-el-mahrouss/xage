@@ -147,65 +147,18 @@ namespace Xplicit::Lua
 		//! @brief Index field at an array.
 		bool i_index_field(const char* lhs) noexcept
 		{
-			std::vector<String> vec;
-			String last_class;
+			if (!lhs)
+				return false;
 
-			for (std::size_t i = 0UL; i < (mClass.size() + 1); ++i)
-			{
-				if (mClass[i] == '.')
-				{
-					vec.push_back(last_class);
-					last_class.clear();
+			//! push it to the stack.
+			String str = "return ";
+			str += mClass;
+			str += ".";
+			str += lhs;
 
-					continue;
-				}
+			luaL_dostring(mL, str.c_str());
 
-				last_class += mClass[i];
-			}
-
-			if (strstr(lhs, "."))
-			{
-				for (std::size_t i = 0UL; i < strlen(lhs); ++i)
-				{
-					if (lhs[i] == '.')
-					{
-						vec.push_back(last_class);
-						last_class.clear();
-
-						continue;
-					}
-
-					last_class += lhs[i];
-				}
-
-			}
-
-			vec.push_back(last_class);
-
-			for (std::size_t i = 0UL; i < vec.size(); ++i)
-			{
-				lua_pushstring(mL, vec[i].c_str());
-				lua_gettable(mL, -1);
-
-				if (vec[i] == last_class)
-				{
-					for (size_t class_index = 0; class_index < mCnt; ++class_index)
-					{
-						lua_pushstring(mL, mSymbols[class_index].second.c_str());
-						lua_gettable(mL, -1);
-
-						if (mSymbols[class_index].second == lhs)
-							return true;
-
-						lua_pop(mL, 1);
-					}
-				}
-
-				lua_pop(mL, 1);
-			}
-
-
-			return false;
+			return true;
 		}
 
 		void i_clean(const std::size_t& cnt) noexcept
@@ -217,17 +170,17 @@ namespace Xplicit::Lua
 		template <typename T = double>
 		const T index_as_number(const char* lhs) noexcept
 		{
-			T ret = 0;
+			T ret = -1;
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tonumber(mL, 1);
-				this->i_clean(2);
+				if (lua_isnumber(mL, -1))
+					ret = lua_tonumber(mL, -1);
 
-				return ret;
+				this->i_clean(1);
 			}
 
-			return -1;
+			return ret;
 		}
 
 		const bool index_as_bool(const char* lhs)
@@ -236,8 +189,10 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_toboolean(mL, 1);
-				this->i_clean(2);
+				if (lua_isboolean(mL, -1))
+					ret = lua_toboolean(mL, -1);
+
+				this->i_clean(1);
 			}
 
 			return ret;
@@ -249,8 +204,10 @@ namespace Xplicit::Lua
 
 			if (this->i_index_field(lhs))
 			{
-				ret = lua_tostring(mL, 1);
-				this->i_clean(2);
+				if (lua_isstring(mL, -1))
+					ret = lua_tostring(mL, -1);
+
+				this->i_clean(1);
 			}
 
 			return ret;
