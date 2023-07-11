@@ -161,7 +161,7 @@ namespace Xplicit::Lua
 			return true;
 		}
 
-		void i_clean(const std::size_t& cnt) noexcept
+		void i_clean(const std::int64_t& cnt) noexcept
 		{
 			lua_pop(mL, cnt);
 		}
