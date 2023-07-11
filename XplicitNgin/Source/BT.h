@@ -15,5 +15,13 @@
 
 namespace Xplicit
 {
+	namespace Build
+	{
+		class IGuizmo
+		{
+		public:
+			explicit IGuizmo() = default;
 
+		};
+	}
 }

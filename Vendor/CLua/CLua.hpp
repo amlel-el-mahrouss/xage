@@ -71,6 +71,8 @@ namespace Xplicit::Lua
 
 				XPLICIT_ERROR(_err);
 
+				lua_pop(mL, -1);
+
 				return err;
 			}
 
@@ -85,6 +87,8 @@ namespace Xplicit::Lua
 				_err += lua_tostring(mL, -1);
 
 				XPLICIT_ERROR(_err);
+
+				lua_pop(mL, -1);
 
 				return err;
 			}
