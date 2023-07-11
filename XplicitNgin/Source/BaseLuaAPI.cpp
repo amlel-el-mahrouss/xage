@@ -93,6 +93,7 @@ static int lua_PrintLn(lua_State* L)
 
 XPLICIT_API void XplicitLoadBaseLua()
 {
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Script = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GameVars = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService = {}");

@@ -11,12 +11,13 @@
 
 namespace Xplicit
 {
-	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Name, Func) self[Name] = Func end";
-	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, Name) self[Name] = nil; end";
+	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Name, Func) self.Slots[Name] = Func end";
+	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, Name) self.Slots[Name] = nil; end";
 
 	const String XPLICIT_DESTROY_SNIPPET(const String& name, const String& parent) noexcept
 	{
 		String func_proto = "function(self) World.ClassService.Destroy(";
+
 		func_proto += "\"";
 		func_proto += name;
 		func_proto += "\"";
@@ -45,17 +46,13 @@ namespace Xplicit
 		mAttribute.scale() = size;
 		mAttribute.color() = color;
 
-		if (script)
-		{
-			mAttribute.script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script, true));
-			XPLICIT_ASSERT(mAttribute.script());
-		}
 
 		this->insert("Scale", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Color", "{ R = 0, G = 0, B = 0 }");
 
 		this->insert("Alpha", "1.0");
+		this->insert("Slots", "{ }");
 
 		this->insert("Anchored", "true");
 		this->insert("Archivable", "false");
@@ -69,6 +66,15 @@ namespace Xplicit
 		//! Use this to connect specific function to this class.
 		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
 		this->insert("Disconnect", XPLICIT_DISCONNECT_SNIPPET);
+
+		if (script)
+		{
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{} = {}", mName, "{}").c_str());
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{}.Parent = {}", mName, std::format("_G.{}{}", mParent, mName)).c_str());
+
+			mAttribute.script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script, true));
+			XPLICIT_ASSERT(mAttribute.script());	
+		}
 	}
 
 	ClassComponent::~ClassComponent() = default;

@@ -114,7 +114,7 @@ namespace Xplicit::Lua
 			String fmt = mClass;
 			fmt += " = { CLua = true, }";
 
-			luaL_dostring(mL, fmt.c_str());
+			CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 
 		virtual ~CLuaClass() noexcept
@@ -192,9 +192,9 @@ namespace Xplicit::Lua
 				lua_pushstring(mL, vec[i].c_str());
 				lua_gettable(mL, -1);
 
-				if (lua_istable(mL, -1))
+				if (!lua_istable(mL, -1))
 				{
-					lua_getfield(mL, -1, lhs);
+					lua_getfield(mL, -2, lhs);
 					return true;
 				}
 
@@ -219,9 +219,11 @@ namespace Xplicit::Lua
 			{
 				ret = lua_tonumber(mL, -1);
 				this->i_clean(1);
+
+				return ret;
 			}
 
-			return ret;
+			return -1;
 		}
 
 		const bool index_as_bool(const char* lhs)
