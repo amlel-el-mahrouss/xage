@@ -1,0 +1,13 @@
+// RoCSS Leave Modal
+// play-xplicit.com
+
+Modal {
+    Name: "Leave?";
+    Text: "Are you really sure to leave XPLICIT?";
+    Ok: "World:CloseApp()";
+    Cancel: "self:CloseModal()";
+    Width: 800;
+    Height: 600;
+    Position: Center;
+    Background-Color: #1C1C1C,
+}
