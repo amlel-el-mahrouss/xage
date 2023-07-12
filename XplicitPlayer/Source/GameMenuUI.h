@@ -11,6 +11,7 @@
 
 #include <Root.h>
 #include <NMath.h>
+#include <ImGUI.h>
 #include <Component.h>
 #include <NetworkComponent.h>
 
@@ -37,7 +38,7 @@ namespace Xplicit::Player
 		PopupComponent() = delete;
 		
 	public:
-		explicit PopupComponent(const std::function<void()>& on_click, const Vector<float> pos = Vector<float>(0, 0, 0),
+		explicit PopupComponent(const std::function<void()>& on_click,
 			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, const char* id = "POPUP") noexcept;
 
 		~PopupComponent() override;
@@ -54,9 +55,14 @@ namespace Xplicit::Player
 	private:
 		using FunctionPopup = std::function<void()>;
 
-		irr::video::ITexture* mTex;
+	private:
+		ImGUI::UIFrame* mHudFrame;
+		BasicString<wchar_t> mText;
+		ImGUI::UIButton mCancel;
+		ImGUI::UIButton mOk;
+
+	private:
 		FunctionPopup mClicked;
-		Vector<float> mPos;
 		String mPopupId;
 
 	};
@@ -80,10 +86,10 @@ namespace Xplicit::Player
 
 	private:
 		NetworkComponent* mNetwork;
+		ImGUI::UIFrame* mHudFrame;
 
 	private:
 		std::int64_t mPublicHash;
-		std::int64_t mTimeout;
 		std::int64_t mHealth;
 
 	};

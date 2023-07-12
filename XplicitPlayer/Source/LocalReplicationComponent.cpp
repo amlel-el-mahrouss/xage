@@ -73,11 +73,8 @@ namespace Xplicit::Player
 					if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnBadChallengeRoXML"))
 					{
 						ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-							if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-								RENDER->closeDevice();
-							}, Vector<float>(XPLICIT_DIM.X / 2.8,
-								XPLICIT_DIM.Y / 2.8),
-								POPUP_TYPE::CHALLENGE,
+							RENDER->closeDevice();
+							}, POPUP_TYPE::CHALLENGE,
 								"ConnBadChallengeRoXML");
 
 					}
@@ -134,11 +131,8 @@ namespace Xplicit::Player
 					if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnChallengeScript"))
 					{
 						ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-							if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-								RENDER->closeDevice();
-							}, Vector<float>(XPLICIT_DIM.X / 2.8,
-								XPLICIT_DIM.Y / 2.8),
-								POPUP_TYPE::CHALLENGE,
+							RENDER->closeDevice();
+							},POPUP_TYPE::CHALLENGE,
 								"ConnChallengeScript");
 
 					}

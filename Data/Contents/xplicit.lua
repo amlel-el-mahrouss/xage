@@ -208,6 +208,10 @@ World.UNLOAD = 11;
 World.LOAD = 12;
 World.COUNT = 13;
 
+World.CREATE = 0;
+World.UPDATE = 1;
+World.REMOVE = 2;
+
 Util = {}
 
 function Util.Dump(o)

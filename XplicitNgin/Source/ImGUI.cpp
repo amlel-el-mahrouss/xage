@@ -60,6 +60,7 @@ namespace Xplicit::ImGUI
 			}
 			catch (const std::bad_function_call& err)
 			{
+				XPLICIT_INFO("Bad Funciton call!!! Please check your lambdas");
 			}
 		}
 		else

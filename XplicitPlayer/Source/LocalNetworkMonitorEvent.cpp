@@ -49,11 +49,8 @@ namespace Xplicit::Player
 			if (ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ResetPopup") == nullptr)
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-						RENDER->closeDevice();
-					}, Vector<float>(XPLICIT_DIM.X / 3.45,
-						XPLICIT_DIM.Y / 4),
-						POPUP_TYPE::NETWORK, "ResetPopup");
+					RENDER->closeDevice();
+					}, POPUP_TYPE::NETWORK, "ResetPopup");
 			}
 
 			return;
@@ -67,11 +64,8 @@ namespace Xplicit::Player
 			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-						RENDER->closeDevice();
-					}, Vector<float>(XPLICIT_DIM.X / 3.45,
-						XPLICIT_DIM.Y / 4),
-						POPUP_TYPE::KICK, "KickPopup");
+					RENDER->closeDevice();
+					}, POPUP_TYPE::KICK, "KickPopup");
 			}
 		}
 
@@ -80,11 +74,8 @@ namespace Xplicit::Player
 			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-						RENDER->closeDevice();
-					}, Vector<float>(XPLICIT_DIM.X / 3.45,
-						XPLICIT_DIM.Y / 4),
-						POPUP_TYPE::BANNED, "BanPopup");
+					RENDER->closeDevice();
+					}, POPUP_TYPE::BANNED, "BanPopup");
 			}
 		}
 
@@ -122,11 +113,8 @@ namespace Xplicit::Player
 				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
 				{
 					ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-						if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-							RENDER->closeDevice();
-					}, Vector<float>(XPLICIT_DIM.X / 2.8,
-							XPLICIT_DIM.Y / 2.8),
-							POPUP_TYPE::SHUTDOWN,
+						RENDER->closeDevice();
+					}, POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
 
 				}

@@ -63,12 +63,8 @@ namespace Xplicit::Player
 		{
 			ComponentSystem::get_singleton_ptr()->add<Player::PopupComponent>(
 				[]() { 
-					if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-						std::exit(0);
-				},
-				Vector<float>(XPLICIT_DIM.X / 2.8,
-					XPLICIT_DIM.Y / 2.8),
-				POPUP_TYPE::BANNED, "StopPopup");
+					RENDER->closeDevice();
+				}, POPUP_TYPE::BANNED, "StopPopup");
 
 			mEnabled = false;
 			ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
@@ -119,12 +115,8 @@ namespace Xplicit::Player
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 					[]() {
-						if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(KEY_RETURN))
-							std::exit(0);
-					}, 
-						Vector<float>(XPLICIT_DIM.X / 2.8,
-						XPLICIT_DIM.Y / 2.8),
-						POPUP_TYPE::NETWORK, "StopPopup");
+						RENDER->closeDevice();
+					}, POPUP_TYPE::NETWORK, "StopPopup");
 
 				ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
 				mEnabled = false;
@@ -184,10 +176,7 @@ namespace Xplicit::Player
 	void LoadingComponent::reset() noexcept
 	{
 		ComponentSystem::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
-			if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(VK_RETURN))
-				std::exit(0);
-			}, Vector<float>(XPLICIT_DIM.X / 3.45,
-				XPLICIT_DIM.Y / 4),
-				POPUP_TYPE::NETWORK);
+			RENDER->closeDevice();
+			}, POPUP_TYPE::NETWORK);
 	}
 }
