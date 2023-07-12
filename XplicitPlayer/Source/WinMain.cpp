@@ -24,10 +24,9 @@
 #include <Bites.h>
 #include <codecvt>
 
-static void XplicitThrowException(Xplicit::EngineError& err);
-
 #ifdef XPLICIT_WINDOWS
 
+static void XplicitThrowException(Xplicit::EngineError& err);
 static void XplicitThrowException(Xplicit::Win32Error& err);
 
 XPLICIT_MAIN()
@@ -45,14 +44,17 @@ XPLICIT_MAIN()
 
 		std::string cmd_line = pCmdLine;
 
-		if (cmd_line.empty())
+		if (cmd_line.empty() ||
+			cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == Xplicit::String::npos)
 			return 1;
 
 		cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
 
 		uri /= cmd_line;
 
-		if (inet_addr(uri.get().c_str()) == XPLICIT_INVALID_ADDR)
+		Xplicit::Utils::InternetProtocolChecker checker;
+
+		if (!checker(uri.get().c_str()))
 			return 1;
 
 		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);
@@ -103,8 +105,8 @@ static void XplicitThrowException(Xplicit::EngineError& err)
 	exit += converter.from_bytes(err.what());
 	exit += L"\n";
 
-	Xplicit::DialogHelper::message_box(L"XplicitNgine",
-		L"Program Exit",
+	Xplicit::DialogHelper::message_box(L"XplicitPlayer",
+		L"Program Crash!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);
@@ -125,7 +127,7 @@ static void XplicitThrowException(Xplicit::Win32Error& err)
 	exit += std::to_wstring(err.hr());
 	exit += L"\n";
 
-	Xplicit::DialogHelper::message_box(L"XplicitNgine",
+	Xplicit::DialogHelper::message_box(L"XplicitPlayer",
 		L"Program Crash!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,

@@ -14,14 +14,14 @@
 
 namespace Xplicit::Player
 {
-	void XHTTPManager::download(const String& assetId) const noexcept
+	bool XHTTPManager::download(const String& assetId) const noexcept
 	{
         HTTP::HTTPWriter http_writer;
         
         auto sock = http_writer.create_and_connect(mEndpoint);
 
         if (!sock)
-            return;
+            return false;
 
         // We don't use MakeReq.exe here, it could be missing.
 
@@ -30,7 +30,7 @@ namespace Xplicit::Player
         Ref<HTTP::HTTP::HTTPHeader*> http_hdr_wrapper{ &http_hdr };
 
         if (!http_writer.send_from_socket(sock, http_hdr_wrapper))
-            return;
+            return false;
 
         // static is added here wtf??
         // - check the preprocessor value of XPLICIT_GET_DATA_DIR :)
@@ -59,7 +59,11 @@ namespace Xplicit::Player
             file.close();
 
             delete bytes;
+
+            return true;
         }
+
+        return false;
 	}
 	
 	void XHTTPManager::set_endpoint(const String& endpoint) noexcept

@@ -100,19 +100,19 @@ XPLICIT_API void XplicitLoadBaseLua()
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Players = {}");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_PrintLn);
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Print_GameAPI");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Print_Engine");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Print = Print_GameAPI");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Print = Print_Engine");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_New);
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "New_GameAPI");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "New_Engine");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.New = New_GameAPI");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.New = New_Engine");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_Destroy);
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Destroy_GameAPI");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Destroy_Engine");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.Destroy = Destroy_GameAPI");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.Destroy = Destroy_Engine");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 

@@ -17,14 +17,15 @@
 #include <XplicitSound.h>
 #include <DriverD3D11.h>
 #include <Component.h>
+#include <ImGUI.h>
 #include <Event.h>
 #include <Bites.h>
 #include <codecvt>
-
-static void XplicitThrowException(Xplicit::EngineError& err);
+#include <Root.h>
 
 #ifdef XPLICIT_WINDOWS
 
+static void XplicitThrowException(Xplicit::EngineError& err);
 static void XplicitThrowException(Xplicit::Win32Error& err);
 
 XPLICIT_MAIN()
@@ -37,6 +38,22 @@ XPLICIT_MAIN()
 		Xplicit::open_terminal();
 #endif // XPLICIT_DEBUG
 
+		//! The Main Logic and Render loop.
+		while (RENDER->run() &&
+			Xplicit::ComponentSystem::get_singleton_ptr() &&
+			Xplicit::EventSystem::get_singleton_ptr())
+		{
+			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 255, 255, 255));
+
+			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
+			Xplicit::EventSystem::get_singleton_ptr()->update();
+			Xplicit::ComponentSystem::get_singleton_ptr()->update();
+
+			RENDER->getSceneManager()->drawAll();
+			RENDER->getGUIEnvironment()->drawAll();
+
+			RENDER->getVideoDriver()->endScene();
+		}
 	}
 	catch (Xplicit::EngineError& err)
 	{
@@ -63,8 +80,8 @@ static void XplicitThrowException(Xplicit::EngineError& err)
 	exit += converter.from_bytes(err.what());
 	exit += L"\n";
 
-	Xplicit::DialogHelper::message_box(L"XplicitNgine",
-		L"Program Exit",
+	Xplicit::DialogHelper::message_box(L"XplicitStudio",
+		L"Program Crash!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);

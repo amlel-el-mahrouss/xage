@@ -8,6 +8,7 @@
  */
 
 #include "LocalReplicationComponent.h"
+#include "LocalNetworkMonitorEvent.h"
 #include "Application.h"
 #include "GameMenuUI.h"
 
@@ -94,10 +95,25 @@ namespace Xplicit::Player
 				if (script.protocol() != XPLICIT_XASSET_IDENT)
 					return;
 
-				// TODO: download stuff
-				// String full_download_path = mMonitor->HTTP->download(script.get());
-				// ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str(), true);
+				static LocalNetworkMonitorEvent* monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
+				
+				if (!monitor)
+					monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 
+				if (monitor &&
+					monitor->HTTP->download(script.get().c_str()))
+				{
+					XPLICIT_GET_DATA_DIR(full_path);
+
+					String full_download_path;
+					full_download_path += full_path;
+					full_download_path += "Contents/";
+					full_download_path += script.get().c_str();
+
+					ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str(), true);
+
+				}				
+				
 				break;
 			}
 			default:

@@ -13,8 +13,6 @@
 #include <Root.h>
 #include <Uri.h>
 
-#include "GameMenuUI.h"
-
 namespace Xplicit::Player
 {
 	class LoadingComponent final : public Component
