@@ -21,6 +21,7 @@ REQUIREMENTS:
 - Ogre3D
 - OpenSSL
 - LuaNgine
+- FreeType
 - Windows 11/Mac OS X
 - Vulkan SDK 1.3.250.0 (Vulkan Rendering System)
 - Visual Studio 2022 (C++ Workload)

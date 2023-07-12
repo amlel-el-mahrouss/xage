@@ -58,7 +58,6 @@ namespace Xplicit::Player
 	private:
 		ImGUI::UIFrame* mHudFrame;
 		BasicString<wchar_t> mText;
-		ImGUI::UIButton mCancel;
 		ImGUI::UIButton mOk;
 
 	private:

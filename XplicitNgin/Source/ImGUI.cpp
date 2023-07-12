@@ -48,6 +48,10 @@ namespace Xplicit::ImGUI
 		if (!m_pFrame)
 			return;
 
+		m_pFrame->TextColor.setAlpha(m_iFadeIn);
+		m_pFrame->BackgroundColor.setAlpha(m_iFadeIn);
+		m_pFrame->BackgroundHoverColor.setAlpha(m_iFadeIn);
+
 		if (m_pFrame->in_region())
 		{
 			m_pFrame->update(m_pFrame->BackgroundHoverColor);
@@ -75,5 +79,8 @@ namespace Xplicit::ImGUI
 		//! TODO: SIMD String class
 		m_pFont->draw(mText.c_str(), irr::core::recti(position2di(m_pFrame->X, m_pFrame->Y),
 			dimension2d(m_pFrame->W, m_pFrame->H)), m_pFrame->TextColor, true, true);
+
+		if (m_iFadeIn < 255)
+			++m_iFadeIn;
 	}
 }

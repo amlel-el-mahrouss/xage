@@ -29,8 +29,7 @@ namespace Xplicit::Player
 			mClicked(on_click),
 			mPopupId(id),
 			mHudFrame(new ImGUI::UIFrame()),
-			mOk(L"OK"),
-			mCancel(L"CANCEL")
+			mOk(L"OK")
 	{
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
@@ -38,22 +37,22 @@ namespace Xplicit::Player
 		switch (popup_type)
 		{
 		case POPUP_TYPE::KICK:
-			mText = L"You have been kicked by the server.";
+			mText = L"You have been kicked by the server.\nPress OK to exit client.";
 			break;
 		case POPUP_TYPE::NETWORK:
-			mText = L"The connection has timed-out.";
+			mText = L"The connection has timed-out.\nPress OK to exit client.";
 			break;
 		case POPUP_TYPE::SHUTDOWN:
-			mText = L"The server shut-down.";
+			mText = L"The server shut-down.\nPress OK to exit client.";
 			break;
 		case POPUP_TYPE::CHALLENGE:
-			mText = L"Challenge failed by peer.";
+			mText = L"Challenge failed by peer.\nPress OK to exit client.";
 			break;
 		case POPUP_TYPE::TELEPORTING:
 			mText = L"This place wants to teleport on another game.\nProceed?";
 			break;
 		case POPUP_TYPE::BANNED:
-			mText = L"You have been banned, play-xplicit.com/appeals.";
+			mText = L"You have been banned, play-xplicit.com/appeals.\nPress OK to exit client.";
 			break;
 		default:
 			ComponentSystem::get_singleton_ptr()->remove(this);
@@ -63,7 +62,7 @@ namespace Xplicit::Player
 		mOk.LeftClicked = mClicked;
 
 		mHudFrame->W = 386;
-		mHudFrame->H = 188;
+		mHudFrame->H = 288;
 		
 		mHudFrame->BackgroundColor.setAlpha(255);
 		
@@ -74,7 +73,7 @@ namespace Xplicit::Player
 		mHudFrame->X = XPLICIT_DIM.X / 3;
 		mHudFrame->Y = XPLICIT_DIM.Y / 4;
 
-		mOk->W = 192;
+		mOk->W = 386;
 		mOk->H = 54;
 
 		mOk->X = mHudFrame->X;
@@ -82,21 +81,15 @@ namespace Xplicit::Player
 
 		mOk->BackgroundColor.setAlpha(255);
 
-		mOk->BackgroundColor.setRed(0x1C);
-		mOk->BackgroundColor.setGreen(0x1C);
-		mOk->BackgroundColor.setBlue(0x1C);
+		mOk->BackgroundColor.setRed(0xB9);
+		mOk->BackgroundColor.setGreen(0x1B);
+		mOk->BackgroundColor.setBlue(0x1B);
 
-		mCancel->X = mOk->X + mOk->W + 2;
-		mCancel->Y = mOk->Y;
+		mOk->BackgroundHoverColor.setAlpha(255);
 
-		mCancel->BackgroundColor.setAlpha(255);
-
-		mCancel->BackgroundColor.setRed(0x1C);
-		mCancel->BackgroundColor.setGreen(0x1C);
-		mCancel->BackgroundColor.setBlue(0x1C);
-
-		mCancel->W = 192;
-		mCancel->H = 54;
+		mOk->BackgroundHoverColor.setRed(0xDD);
+		mOk->BackgroundHoverColor.setGreen(0x1E);
+		mOk->BackgroundHoverColor.setBlue(0x1E);
 	}
 	
 	PopupComponent::~PopupComponent()
@@ -114,21 +107,20 @@ namespace Xplicit::Player
 		//! Draw text
 
 		//! Title
-		ImGUI::UIFont::get_title_font()->draw(L"XPLICIT", recti(vector2di(((_this->mHudFrame->X + _this->mHudFrame->W / 2)), _this->mHudFrame->Y + 30),
+		ImGUI::UIFont::get_title_font()->draw(L"NOTICE", recti(vector2di(((_this->mHudFrame->X + _this->mHudFrame->W / 2)), _this->mHudFrame->Y + 30),
 			dimension2d(0, 0)), 
 			_this->mHudFrame->TextColor, 
 			true, 
 			true);
 
 		//! label
-		ImGUI::UIFont::get_label_font()->draw(_this->mText.c_str(), recti(vector2di(((_this->mHudFrame->X + _this->mHudFrame->W / 2)), _this->mHudFrame->Y + 50),
+		ImGUI::UIFont::get_label_font()->draw(_this->mText.c_str(), recti(vector2di(((_this->mHudFrame->X + _this->mHudFrame->W / 2)), _this->mHudFrame->Y + 100),
 			dimension2d(0, 0)),
 			_this->mHudFrame->TextColor,
 			true,
 			true);
 
 		_this->mOk.update();
-		_this->mCancel.update();
 	}
 
 	const char* PopupComponent::name() noexcept

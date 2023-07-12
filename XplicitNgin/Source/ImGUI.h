@@ -34,9 +34,10 @@ namespace Xplicit::ImGUI
 		UIFrame* operator->() const;
 
 	private:
-		UIFrame* m_pFrame{ nullptr };
 		UIFont::FontPtr m_pFont{ nullptr };
-		BasicString<wchar_t> mText;
+		BasicString<wchar_t> mText{ L"" };
+		UIFrame* m_pFrame{ nullptr };
+		std::uint64_t m_iFadeIn{ 0 };
 
 	};
 }
