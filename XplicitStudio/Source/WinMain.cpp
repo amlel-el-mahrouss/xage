@@ -76,45 +76,6 @@ XPLICIT_MAIN()
 		View->BackgroundColor.setBlue(0x1C);
 		View->BackgroundColor.setAlpha(0xFF);
 
-		Xplicit::ImGUI::UIFrame PropertiesHFS;
-
-		PropertiesHFS.X = 1488;
-		PropertiesHFS.Y = 0;
-
-		PropertiesHFS.W = 432;
-		PropertiesHFS.H = 409;
-
-		PropertiesHFS.BackgroundColor.setBlue(0x1C);
-		PropertiesHFS.BackgroundColor.setGreen(0x1C);
-		PropertiesHFS.BackgroundColor.setRed(0x1C);
-		PropertiesHFS.BackgroundColor.setAlpha(255);
-
-		Xplicit::ImGUI::UIFrame PropertiesBox;
-		
-		PropertiesBox.X = 1488;
-		PropertiesBox.Y = 455;
-
-		PropertiesBox.W = 432;
-		PropertiesBox.H = 625;
-
-		PropertiesBox.BackgroundColor.setBlue(0x1C);
-		PropertiesBox.BackgroundColor.setGreen(0x1C);
-		PropertiesBox.BackgroundColor.setRed(0x1C);
-		PropertiesBox.BackgroundColor.setAlpha(255);
-
-		Xplicit::ImGUI::UIFrame PropertiesTitle;
-
-		PropertiesTitle.BackgroundColor.setBlue(0x31);
-		PropertiesTitle.BackgroundColor.setGreen(0x31);
-		PropertiesTitle.BackgroundColor.setRed(0x31);
-		PropertiesTitle.BackgroundColor.setAlpha(255);
-
-		PropertiesTitle.X = 1488;
-		PropertiesTitle.Y = 409;
-
-		PropertiesTitle.W = 432;
-		PropertiesTitle.H = 46;
-
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&
 			Xplicit::ComponentSystem::get_singleton_ptr() &&
@@ -125,14 +86,6 @@ XPLICIT_MAIN()
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
-
-			PropertiesHFS.update(PropertiesHFS.BackgroundColor);
-			PropertiesTitle.update(PropertiesTitle.BackgroundColor);
-			PropertiesBox.update(PropertiesBox.BackgroundColor);
-
-			Xplicit::ImGUI::UIFont::get_label_font()->draw(L"FIELDS", irr::core::recti(irr::core::vector2di(1519, 416),
-				irr::core::dimension2di()),
-				irr::video::SColor(255, 255, 255, 255), false, false);
 
 			Edit.update();
 			View.update();

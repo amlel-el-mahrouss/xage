@@ -48,9 +48,6 @@ namespace Xplicit::Player
 		case POPUP_TYPE::CHALLENGE:
 			mText = L"Challenge failed by peer.\nPress OK to exit client.";
 			break;
-		case POPUP_TYPE::TELEPORTING:
-			mText = L"This place wants to teleport on another game.\nProceed?";
-			break;
 		case POPUP_TYPE::BANNED:
 			mText = L"You have been banned, play-xplicit.com/appeals.\nPress OK to exit client.";
 			break;
@@ -61,7 +58,7 @@ namespace Xplicit::Player
 
 		mOk.LeftClicked = mClicked;
 
-		mHudFrame->W = 386;
+		mHudFrame->W = 504;
 		mHudFrame->H = 288;
 		
 		mHudFrame->BackgroundColor.setAlpha(255);
@@ -70,26 +67,16 @@ namespace Xplicit::Player
 		mHudFrame->BackgroundColor.setGreen(0x0F);
 		mHudFrame->BackgroundColor.setBlue(0x0F);
 
-		mHudFrame->X = XPLICIT_DIM.X / 2;
-		mHudFrame->Y = XPLICIT_DIM.Y / 2;
+		mHudFrame->X = XPLICIT_DIM.X * 0.37;
+		mHudFrame->Y = XPLICIT_DIM.Y * 0.37;
 
-		mOk->W = 386;
-		mOk->H = 54;
+		mOk->W = 504;
+		mOk->H = 41;
 
 		mOk->X = mHudFrame->X;
 		mOk->Y = mHudFrame->Y + mHudFrame->H - mOk->H;
 
 		mOk->BackgroundColor.setAlpha(255);
-
-		mOk->BackgroundColor.setRed(0xB9);
-		mOk->BackgroundColor.setGreen(0x1B);
-		mOk->BackgroundColor.setBlue(0x1B);
-
-		mOk->BackgroundHoverColor.setAlpha(255);
-
-		mOk->BackgroundHoverColor.setRed(0xDD);
-		mOk->BackgroundHoverColor.setGreen(0x1E);
-		mOk->BackgroundHoverColor.setBlue(0x1E);
 	}
 	
 	PopupComponent::~PopupComponent()
@@ -98,9 +85,9 @@ namespace Xplicit::Player
 			delete mHudFrame;
 	}
 	
-	void PopupComponent::update(void* class_ptr)
+	void PopupComponent::update(ClassPtr class_ptr)
 	{
-		PopupComponent* _this = (PopupComponent*)class_ptr;
+		PopupComponent* _this = static_cast<PopupComponent*>(class_ptr);
 
 		_this->mHudFrame->update(_this->mHudFrame->BackgroundColor);
 
