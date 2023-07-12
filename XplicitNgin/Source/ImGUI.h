@@ -18,7 +18,7 @@ namespace Xplicit::ImGUI
 	class XPLICIT_API UIButton final
 	{
 	public:
-		UIButton();
+		explicit UIButton(const wchar_t* text);
 		~UIButton();
 
 	public:
@@ -35,7 +35,8 @@ namespace Xplicit::ImGUI
 
 	private:
 		UIFrame* m_pFrame{ nullptr };
-		String mText;
+		UIFont::FontPtr m_pFont{ nullptr };
+		BasicString<wchar_t> mText;
 
 	};
 }

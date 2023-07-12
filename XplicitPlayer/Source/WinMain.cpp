@@ -65,13 +65,14 @@ XPLICIT_MAIN()
 			Xplicit::ComponentSystem::get_singleton_ptr() &&
 			Xplicit::EventSystem::get_singleton_ptr())
 		{
-			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x87, 0xCE, 0xEB));
-
-			RENDER->getSceneManager()->drawAll();
+			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 255, 255, 255));
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
+
+			RENDER->getSceneManager()->drawAll();
+			RENDER->getGUIEnvironment()->drawAll();
 
 			RENDER->getVideoDriver()->endScene();
 		}

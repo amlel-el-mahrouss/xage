@@ -47,21 +47,6 @@ namespace Xplicit::Bites
 		XPLICIT_ASSERT(splash_screen);
 
 		splash_screen->connect(xconnect_to);
-
-		String path = mPath;
-		path += "/Textures/PlainSky.jpg";
-
-		RENDER->getSceneManager()->addLightSceneNode(nullptr, 
-			irr::core::vector3df(0, 0, 0), 
-			irr::video::SColorf(1.0f, 1.0f, 1.0f), 
-			1000.f);
-
-		RENDER->getSceneManager()->addSkyDomeSceneNode(RENDER->getVideoDriver()->getTexture(path.c_str()), 
-			16, 
-			16, 
-			1.0f, 
-			1.0f);
-
 	}
 
 	Application::~Application() {}

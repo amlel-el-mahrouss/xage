@@ -12,16 +12,20 @@
 namespace Xplicit::ImGUI
 {
 
-	UIButton::UIButton()
+	UIButton::UIButton(const wchar_t* text)
+		: mText(text)
 	{
 		m_pFrame = new UIFrame();
 		XPLICIT_ASSERT(m_pFrame);
+
+		m_pFont = UIFont::get_font(UIFont::get_label_path().c_str());
 
 		m_pFrame->W = 185;
 		m_pFrame->H = 48;
 
 		m_pFrame->X = 0;
 		m_pFrame->Y = 0;
+
 	}
 
 	UIButton::~UIButton()
@@ -40,17 +44,31 @@ namespace Xplicit::ImGUI
 		if (!m_pFrame)
 			return;
 
-		m_pFrame->update();
-
 		if (m_pFrame->in_region())
 		{
-			if (KB->left_down())
-				LeftClicked();
+			m_pFrame->update(m_pFrame->BackgroundHoverColor);
 
-			if (KB->right_down())
-				RightClicked();
+			try
+			{
+				if (KB->left_down())
+					LeftClicked();
 
-			Hover();
+				if (KB->right_down())
+					RightClicked();
+
+				Hover();
+			}
+			catch (const std::bad_function_call& err)
+			{
+			}
 		}
+		else
+		{
+			m_pFrame->update(m_pFrame->BackgroundColor);
+		}
+
+		//! TODO: SIMD String class
+		m_pFont->draw(mText.c_str(), irr::core::recti(position2di(m_pFrame->X, m_pFrame->Y),
+			dimension2d(m_pFrame->W, m_pFrame->H)), m_pFrame->TextColor, true, true);
 	}
 }

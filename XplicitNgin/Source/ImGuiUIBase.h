@@ -5,7 +5,7 @@
  *			Copyright Xplicit Inc, all rights reserved.
  *
  *			File: UIFrameworkBase.h
- *			Purpose: Core UI Component and logic.
+ *			Purpose: Immediate UI Framework
  * 
  * =====================================================================
  */
@@ -23,6 +23,8 @@ namespace Xplicit
 {
 	namespace ImGUI
 	{
+		typedef SColor ImColor;
+
 		class XPLICIT_API UIFrame final
 		{
 		public:
@@ -33,13 +35,9 @@ namespace Xplicit
 			XPLICIT_COPY_DEFAULT(UIFrame);
 
 		slots:
-			std::uint32_t WhiteScheme{ 0xFFFFFF };
-			std::uint32_t DarkScheme{ 0x282121 };
-			std::uint32_t Scheme{ WhiteScheme };
-
-		slots:
-			BasicString<char> Name;
-			std::vector<BasicString<char>> Text;
+			ImColor BackgroundHoverColor{ 0xA7, 0x0C, 0x0C, 0x0C };
+			ImColor BackgroundColor{ 0xA5, 0x26, 0x26, 0x26 };
+			ImColor TextColor{ 0xFF, 0xFF, 0xFF, 0xFF };
 
 		slots:
 			std::uint32_t X{ 0 };
@@ -48,21 +46,21 @@ namespace Xplicit
 			std::uint32_t H{ 0 };
 
 		public:
-			virtual void update() noexcept
+			virtual void update(SColor clr) noexcept
 			{
 #ifdef __RENDERER_IRR__
-				RENDER->getVideoDriver()->draw2DRectangle(irr::video::SColor(this->Scheme),
-					irr::core::recti(X, Y, W, H),
+				RENDER->getVideoDriver()->draw2DRectangle(clr,
+					irr::core::recti(position2di(X, Y), dimension2d(W, H)),
 					nullptr);
-#endif
+#endif // __RENDERER_IRR__
 			}
 
 			virtual bool in_region() noexcept
 			{
 #ifdef __RENDERER_IRR__
-				return RENDER->getCursorControl()->getPosition().X > X &&
-					RENDER->getCursorControl()->getPosition().Y < Y;
-#endif
+				return (RENDER->getCursorControl()->getPosition().X > X && RENDER->getCursorControl()->getPosition().X < W * 1.5) &&
+					(RENDER->getCursorControl()->getPosition().Y > Y && RENDER->getCursorControl()->getPosition().Y < H * 1.5);
+#endif // __RENDERER_IRR__
 			}
 
 			virtual bool in_region(irr::core::vector2di& dim2d) noexcept
@@ -70,7 +68,7 @@ namespace Xplicit
 #ifdef __RENDERER_IRR__
 				return dim2d.X > X &&
 					dim2d.Y < Y;
-#endif
+#endif // __RENDERER_IRR__
 			}
 
 		};
@@ -81,8 +79,55 @@ namespace Xplicit
 #ifdef __RENDERER_IRR__
 			typedef irr::gui::IGUIFont* FontPtr;
 
-			FontPtr get_font(const char* path) { return RENDER->getGUIEnvironment()->getFont(path); }
-#endif
+			static FontPtr get_font(const char* path) { return RENDER->getGUIEnvironment()->getFont(path); }
+
+			static FontPtr get_title_font() noexcept
+			{
+				static FontPtr fnt = nullptr;
+
+				if (!fnt)
+				{
+					XPLICIT_GET_DATA_DIR(dir);
+					dir += "GameFont22.bmp";
+
+					fnt = get_font(dir.c_str());
+				}
+
+				return fnt;
+			}
+
+			static FontPtr get_label_font() noexcept
+			{
+				static FontPtr fnt = nullptr;
+
+				if (!fnt)
+				{
+					XPLICIT_GET_DATA_DIR(dir);
+					dir += "GameFont18.bmp";
+
+					fnt = get_font(dir.c_str());
+				}
+
+				return fnt;
+			}
+
+			static String get_title_path() noexcept
+			{
+				XPLICIT_GET_DATA_DIR(dir);
+				dir += "GameFont22.bmp";
+
+				return dir;
+			}
+
+			static String get_label_path() noexcept
+			{
+				XPLICIT_GET_DATA_DIR(dir);
+				dir += "GameFont18.bmp";
+
+				return dir;
+			}
+
+#endif // __RENDERER_IRR__
 
 		};
 	}
