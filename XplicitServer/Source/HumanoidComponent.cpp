@@ -39,38 +39,17 @@ namespace Xplicit
 		HumanoidComponent* _this = (HumanoidComponent*)_this_ptr;
 
 		if (_this->get_peer() == nullptr)
-			return;
-
-		if (_this->mHealth > 0)
 		{
-			_this->mState = HUMANOID_STATE::ALIVE;
-
-			if (_this->mHealth >= 100 && !_this->mCanSpawn)
-				_this->mCanSpawn = true;
-
+			_this->mState = HUMANOID_STATE::INVALID;
+			return;
 		}
 
 		// execute a series of commands for this humanoid.
 
-		if (_this->mState == HUMANOID_STATE::ALIVE)
-		{
-			_this->mClass->insert("Health", std::to_string(_this->mHealth).c_str());
-
-			_this->mCanSpawn = true;
-			_this->mClass->insert("State", "World.HumanoidState.Alive");
-		}
-
-		if (_this->mState == HUMANOID_STATE::DEAD)
-		{
-			_this->mCanSpawn = false;
-			_this->mClass->insert("State", "World.HumanoidState.Dead");
-		}
-
-		if (_this->mState == HUMANOID_STATE::INVALID)
-		{
-			_this->mCanSpawn = false;
-			_this->mClass->insert("State", "World.HumanoidState.Invalid");
-		}
+		if (_this->mHealth > 0)
+			_this->mState = HUMANOID_STATE::ALIVE;
+		else
+			_this->mState = HUMANOID_STATE::DEAD;
 
 		String str = "{" + std::to_string(_this->mAttribute.pos().X) + "," +
 						 std::to_string(_this->mAttribute.pos().Y) + "," +
@@ -120,6 +99,7 @@ namespace Xplicit
 					XPLICIT_DEFAULT_NAME
 					"\"");
 
+				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");
 				mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
 				mClass->insert("Health", std::to_string(mHealth).c_str());
@@ -141,4 +121,10 @@ namespace Xplicit
 	const HUMANOID_STATE& HumanoidComponent::get_state() noexcept { return mState; }
 
 	void HumanoidComponent::set_state(const HUMANOID_STATE state) noexcept { mState = state; }
+
+	Xplicit::Lua::CLuaClass* HumanoidComponent::get_class() const
+	{
+		XPLICIT_ASSERT(mClass);
+		return mClass.get();
+	}
 }

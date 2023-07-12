@@ -67,8 +67,35 @@ namespace Xplicit::ImGUI
 		bool mShallEdit{ false };
 
 	private:
+		int64_t mCooldown{ 0 };
 		UIFrame* mSelection;
 		UIFrame* mBox;
+
+	};
+
+	class XPLICIT_API UICheckBox final
+	{
+	public:
+		explicit UICheckBox();
+		~UICheckBox();
+
+	public:
+		XPLICIT_COPY_DEFAULT(UICheckBox);
+
+	public:
+		void update();
+
+	public:
+		bool Checked{ true };
+
+		int32_t H{ 41 };
+		int32_t W{ 41 };
+
+		int32_t X{ 0 };
+		int32_t Y{ 0 };
+
+	private:
+		UIFrame* mCheckBox{ nullptr };
 
 	};
 }

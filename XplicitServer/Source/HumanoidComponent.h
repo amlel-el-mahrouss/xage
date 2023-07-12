@@ -67,6 +67,9 @@ namespace Xplicit
 		const HUMANOID_STATE& get_state() noexcept;
 		bool can_spawn() const noexcept;
 
+	public:
+		Xplicit::Lua::CLuaClass* get_class() const;
+
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;
 

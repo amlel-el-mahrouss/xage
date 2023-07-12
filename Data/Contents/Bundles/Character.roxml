@@ -1,61 +1,68 @@
 <Xplicit xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
-	<Class Name="LocalPlayer" Parent="World." Object="">
+	<Class Name="LocalPlayer" Parent="World" Object="">
 
 	</Class>
 
-	<Class Name="Head" Parent="World.LocalPlayer." Object="Mesh">
+	<Class Name="Head" Parent="World.LocalPlayer" Object="Mesh">
 		Contents/Bundles/head.obj
 	</Class>
 
-	<Class Name="LeftArm" Parent="World.LocalPlayer." Object="Mesh">
+	<Class Name="LeftArm" Parent="World.LocalPlayer" Object="Mesh">
 		Contents/Bundles/leftarm.obj
 	</Class>
 
-	<Class Name="RightArm" Parent="World.LocalPlayer." Object="Mesh">
+	<Class Name="RightArm" Parent="World.LocalPlayer" Object="Mesh">
 		Contents/Bundles/rightarm.obj
 	</Class>
 
-	<Class Name="Torso" Parent="World.LocalPlayer." Object="Mesh">
+	<Class Name="Torso" Parent="World.LocalPlayer" Object="Mesh">
 		Contents/Bundles/torso.obj
 	</Class>
 
-	<Class Name="LeftLeg" Parent="World.LocalPlayer." Object="Mesh">
+	<Class Name="LeftLeg" Parent="World.LocalPlayer" Object="Mesh">
 		Contents/Bundles/leftleg.obj
 	</Class>
 
-	<Class Name="RightLeg" Parent="World.LocalPlayer." Object="Mesh">
+	<Class Name="RightLeg" Parent="World.LocalPlayer" Object="Mesh">
 		Contents/Bundles/rightleg.obj
 	</Class>
 
-	<Position3 X="-10.9" Y="3" Z="-6.119">
+	<!-- -8.951, 3, -13.514 -->
+	<Position3 X="-8.951" Y="3" Z="-13.514">
 		LeftArm
 	</Position3>
 
-	<Position3 X="-7.9" Y="3" Z="-6.119">
+	<!-- -5.951, 3, -13.514 -->
+	<Position3 X="-5.951" Y="3" Z="-13.514">
 		RightArm
 	</Position3>
 
-	<Position3 X="-9.9" Y="1" Z="-6.119">
+	<!-- -7.951, 1, -13.514 -->
+	<Position3 X="-7.951" Y="1" Z="-13.514">
 		LeftLeg
 	</Position3>
 
-	<Position3 X="-8.9" Y="1" Z="-6.119">
+	<!-- -6.951, 1, -13.514 -->
+	<Position3 X="-6.951" Y="1" Z="-13.514">
 		RightLeg
 	</Position3>
 
-	<Position3 X="-9.4" Y="3" Z="-6.119">
+	<!-- -7.451, 3, -13.514 -->
+	<Position3 X="-7.451" Y="3" Z="-13.514">
 		Torso
 	</Position3>
 
-	<Position3 X="0" Y="3.5" Z="0">
+	<!-- -7.451, 4.5, -13.514 -->
+	<Position3 X="-7.451" Y="4.5" Z="-13.514">
 		Head
 	</Position3>
 
-	<Position3 X="-10.64" Y="4.551" Z="0.62">
+	<!-- -7.451, 0, -13.514 -->
+	<Position3 X="-7.451" Y="0" Z="-13.514">
 		Camera
 	</Position3>
 
-	<Rotate3 X="-4.332" Y="0.277" Z="0" W="0">
+	<Rotate3 X="0" Y="0" Z="0" W="0">
 		Camera
 	</Rotate3>
 </Xplicit>

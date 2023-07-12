@@ -150,39 +150,44 @@ namespace Xplicit::ImGUI
 		this->mBox->update(this->mBox->BackgroundColor);
 		this->mSelection->update(this->mSelection->BackgroundColor);
 
-		if (this->mBox->in_region())
-		{
-			if (KB->left_down())
-			{
-				this->mShallEdit = !this->mShallEdit;
-			}
-		}
+		if (this->mBox->in_region() &&
+			KB->left_down())
+			this->mShallEdit = !this->mShallEdit;
 
 		if (this->mShallEdit)
 		{
-			if (auto key = KB->key_down(); 
-				key <= 255 && key > 0)
+			if (!mCooldown)
 			{
-				if (key == KEY_BACK)
+				if (auto key = KB->key_down();
+					key <= 255 && key > 0)
 				{
-					if (this->mText.size() > 0)
-						this->mText.erase(this->mText.size() - 1);
+					if (key == KEY_BACK)
+					{
+						if (this->mText.size() > 0)
+						{
+							this->mText.erase(this->mText.size() - 1);
 
-					std::this_thread::sleep_for(std::chrono::milliseconds(120));
+							mCooldown = 150;
+						}
+					}
+
+					if (isxdigit(key) ||
+						isalpha(key) ||
+						isprint(key))
+					{
+						if (this->mText.size() > 23)
+							return;
+
+						this->mText += tolower(key);
+
+						mCooldown = 150;
+					}
 				}
 
-				if (isxdigit(key) || 
-					isalpha(key) ||
-					isprint(key))
-				{
-					if (this->mText.size() > 23)
-						return;
-
-					this->mText += tolower(key);
-
-					//! If anything lags, remember this line FIXME
-					std::this_thread::sleep_for(std::chrono::milliseconds(120));
-				}
+			}
+			else
+			{
+				--mCooldown;
 			}
 		}
 
@@ -190,6 +195,55 @@ namespace Xplicit::ImGUI
 			UIFont::get_label_font()->draw(mText.c_str(), irr::core::recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
 		else
 			UIFont::get_label_font()->draw(mPlaceholder.c_str(), irr::core::recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
+
+	}
+
+	UICheckBox::UICheckBox()
+	{
+		this->mCheckBox = new UIFrame();
+		XPLICIT_ASSERT(mCheckBox);
+	
+		mCheckBox->BackgroundColor.setRed(0x0D);
+		mCheckBox->BackgroundColor.setGreen(0x0D);
+		mCheckBox->BackgroundColor.setBlue(0x0D);
+		mCheckBox->BackgroundColor.setAlpha(255);
+	}
+
+	UICheckBox::~UICheckBox()
+	{
+		if (this->mCheckBox)
+			delete mCheckBox;
+	}
+
+	void UICheckBox::update()
+	{
+		mCheckBox->W = this->W;
+		mCheckBox->H = this->H;
+
+		mCheckBox->Y = this->Y;
+		mCheckBox->X = this->X;
+
+		if (this->mCheckBox->in_region())
+		{
+			if (KB->left_down())
+			{
+				this->Checked = !this->Checked;
+				std::this_thread::sleep_for(std::chrono::milliseconds(250));
+			}
+		}
+
+		mCheckBox->update(mCheckBox->BackgroundColor);
+
+		if (this->Checked)
+		{
+			RENDER->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 12, mCheckBox->Y + 30), 
+				vector2di(mCheckBox->X + 32, mCheckBox->Y + 11),
+				SColor(0xFF, 0x43, 0xA0, 0x47));
+
+			RENDER->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 3, mCheckBox->Y + 21),
+				vector2di(mCheckBox->X + 12, mCheckBox->Y + 30),
+				SColor(0xFF, 0x43, 0xA0, 0x47));
+		}
 
 	}
 }

@@ -56,8 +56,7 @@ namespace Xplicit
 		for (HumanoidComponent* humanoid : humanoids)
 		{
 			if (humanoid == nullptr ||
-				humanoid->get_peer() == nullptr ||
-				!humanoid->can_spawn())
+				humanoid->get_peer() == nullptr)
 				continue;
 			
 			auto* peer_ptr = humanoid->get_peer();
@@ -93,6 +92,9 @@ namespace Xplicit
 					{
 						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
 						humanoid->set_state(HUMANOID_STATE::ALIVE);
+						humanoid->can_spawn(true);
+
+						humanoid->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
 
 						for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)
 						{

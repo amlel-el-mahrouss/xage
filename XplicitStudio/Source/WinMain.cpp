@@ -38,7 +38,7 @@ XPLICIT_MAIN()
 		Xplicit::open_terminal();
 #endif // XPLICIT_DEBUG
 
-		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL, irr::core::dimension2du(1920, 720), 32U, false, true, true));
+		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL, irr::core::dimension2du(1920, 1080), 32U, false, true, true));
 		Xplicit::Root::get_singleton_ptr()->set(new Xplicit::InputReceiver());
 
 		RENDER->setWindowCaption(L"XplicitStudio");
@@ -67,9 +67,9 @@ XPLICIT_MAIN()
 		Run->BackgroundColor.setAlpha(0xFF);
 
 		Xplicit::ImGUI::UIEditBox EditMe(L"");
-		EditMe.set_text(L"xasset://gear.lua");
-
 		EditMe.set_pos(600, 20);
+		Xplicit::ImGUI::UICheckBox CheckBox;
+		CheckBox.Checked = true;
 
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&
@@ -83,8 +83,7 @@ XPLICIT_MAIN()
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 			EditMe.update();
-			Run.update();
-			Insert.update();
+			CheckBox.update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
