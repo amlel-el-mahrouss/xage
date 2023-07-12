@@ -70,8 +70,8 @@ namespace Xplicit::Player
 		mHudFrame->BackgroundColor.setGreen(0x0F);
 		mHudFrame->BackgroundColor.setBlue(0x0F);
 
-		mHudFrame->X = XPLICIT_DIM.X / 3;
-		mHudFrame->Y = XPLICIT_DIM.Y / 4;
+		mHudFrame->X = XPLICIT_DIM.X / 2;
+		mHudFrame->Y = XPLICIT_DIM.Y / 2;
 
 		mOk->W = 386;
 		mOk->H = 54;

@@ -55,10 +55,29 @@ namespace Xplicit::Bites
 	{
 		SIrrlichtCreationParameters params;
 
+		//! Setup program contents path.
+		XPLICIT_GET_DATA_DIR(path);
+		mPath = path;
+
+		//! Setup SettingsManager
+		mSettings = std::make_unique<SettingsManager>();
+		XPLICIT_ASSERT(mSettings);
+
+		SettingsManager::Traits traits;
+
+		(*mSettings) >> traits;
+
+		if (traits.window_height < 600 ||
+			traits.window_width < 800)
+			throw EngineError("The Engine doesn't support high DPI displays.");
+
 		params.DriverMultithreaded = true;
 		params.DriverType = EDT_OPENGL;
 		params.Fullscreen = false;
-		params.WindowSize = dimension2d<irr::u32>(Xplicit::Player::XPLICIT_DIM.X, Xplicit::Player::XPLICIT_DIM.Y);
+		params.WindowSize = dimension2d<irr::u32>(traits.window_width, traits.window_height);
+
+		Player::XPLICIT_DIM.X = traits.window_width;
+		Player::XPLICIT_DIM.Y = traits.window_height;
 
 		Root::get_singleton_ptr()->set(
 			createDeviceEx(params)
@@ -71,16 +90,22 @@ namespace Xplicit::Bites
 
 		Xplicit::init_winsock(&mWsa);
 
-		//! Setup program contents path.
-		XPLICIT_GET_DATA_DIR(path);
-		mPath = path;
+		//! Fetch our file first.
+		String path_ini(path);
+		path_ini += "ClientSettings.ini";
 
-		//! Setup SettingsManager
-		mSettings = std::make_unique<SettingsManager>();
-		XPLICIT_ASSERT(mSettings);
+		//! Check for the existence of this ini file.
+		if (!std::filesystem::exists(path_ini))
+		{
+			traits.window_width = Player::XPLICIT_DIM.X;
+			traits.window_height = Player::XPLICIT_DIM.Y;
+			traits.mouse_sensitivity = 1.0f;
+
+			(*mSettings) << traits;
+		}
 
 		String prebuilt = mPath;
-		prebuilt += "/Textures/DefaultSkin.zip";
+		prebuilt += "Textures/Default.zip";
 
 		if (!RENDER->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
 			throw EngineError("Missing Textures! This pack is needed for the XplicitPlayer to work.");
@@ -114,19 +139,19 @@ namespace Xplicit::Bites
 	/* reads the ClientSettings.dat INI file */
 	Application::SettingsManager& Application::SettingsManager::operator >>(Traits& traits)
 	{
-		mINI::INIStructure ini;
-		mIni->read(ini);
-
 		try
 		{
+			mINI::INIStructure ini;
+			mIni->read(ini);
+
 			const auto width_int = std::atoi(ini["Window"]["Width"].c_str());
 			const auto height_int = std::atoi(ini["Window"]["Height"].c_str());
 
 			traits.window_width = width_int;
 			traits.window_height = height_int;
 
-			if (traits.window_width > 1280 ||
-				traits.window_height > 720)
+			if (traits.window_width < 1280 ||
+				traits.window_height < 720)
 			{
 				traits.window_width = 1280;
 				traits.window_height = 720;

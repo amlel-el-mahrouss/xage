@@ -28,7 +28,7 @@ namespace Xplicit
 
 namespace Xplicit::Bites
 {
-	constexpr const PChar* XPLICIT_APP_NAME = L"Xplicit - [ Place1 ]";
+	constexpr const PChar* XPLICIT_APP_NAME = L"XPLICIT";
 
 	class ObjectInputSystem final
 	{

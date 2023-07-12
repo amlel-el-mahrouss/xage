@@ -41,7 +41,7 @@ XPLICIT_MAIN()
 		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL, irr::core::dimension2du(1920, 1080), 32U, false, true, true));
 		Xplicit::Root::get_singleton_ptr()->set(new Xplicit::InputReceiver());
 
-		RENDER->setWindowCaption(L"XplicitStudio");
+		RENDER->setWindowCaption(L"XPLICIT Studio");
 		RENDER->setEventReceiver(KB);
 
 		Xplicit::ImGUI::UIButton Insert(L"FILE");
@@ -54,36 +54,89 @@ XPLICIT_MAIN()
 		Insert->BackgroundColor.setBlue(0x1C);
 		Insert->BackgroundColor.setAlpha(0xFF);
 
-		//! 194
-		Xplicit::ImGUI::UIButton Run(L"RUN");
+		Xplicit::ImGUI::UIButton Edit(L"EDIT");
 
-		Run->W = 192;
-		Run->H = 40;
-		Run->X = 192;
+		Edit->W = 192;
+		Edit->H = 40;
+		Edit->X = 192;
 
-		Run->BackgroundColor.setRed(0x1C);
-		Run->BackgroundColor.setGreen(0x1C);
-		Run->BackgroundColor.setBlue(0x1C);
-		Run->BackgroundColor.setAlpha(0xFF);
+		Edit->BackgroundColor.setRed(0x1C);
+		Edit->BackgroundColor.setGreen(0x1C);
+		Edit->BackgroundColor.setBlue(0x1C);
+		Edit->BackgroundColor.setAlpha(0xFF);
 
-		Xplicit::ImGUI::UIEditBox EditMe(L"");
-		EditMe.set_pos(600, 20);
-		Xplicit::ImGUI::UICheckBox CheckBox;
-		CheckBox.Checked = true;
+		Xplicit::ImGUI::UIButton View(L"VIEW");
+
+		View->W = 192;
+		View->H = 40;
+		View->X = 192 * 2;
+
+		View->BackgroundColor.setRed(0x1C);
+		View->BackgroundColor.setGreen(0x1C);
+		View->BackgroundColor.setBlue(0x1C);
+		View->BackgroundColor.setAlpha(0xFF);
+
+		Xplicit::ImGUI::UIFrame PropertiesHFS;
+
+		PropertiesHFS.X = 1488;
+		PropertiesHFS.Y = 0;
+
+		PropertiesHFS.W = 432;
+		PropertiesHFS.H = 409;
+
+		PropertiesHFS.BackgroundColor.setBlue(0x1C);
+		PropertiesHFS.BackgroundColor.setGreen(0x1C);
+		PropertiesHFS.BackgroundColor.setRed(0x1C);
+		PropertiesHFS.BackgroundColor.setAlpha(255);
+
+		Xplicit::ImGUI::UIFrame PropertiesBox;
+		
+		PropertiesBox.X = 1488;
+		PropertiesBox.Y = 455;
+
+		PropertiesBox.W = 432;
+		PropertiesBox.H = 625;
+
+		PropertiesBox.BackgroundColor.setBlue(0x1C);
+		PropertiesBox.BackgroundColor.setGreen(0x1C);
+		PropertiesBox.BackgroundColor.setRed(0x1C);
+		PropertiesBox.BackgroundColor.setAlpha(255);
+
+		Xplicit::ImGUI::UIFrame PropertiesTitle;
+
+		PropertiesTitle.BackgroundColor.setBlue(0x31);
+		PropertiesTitle.BackgroundColor.setGreen(0x31);
+		PropertiesTitle.BackgroundColor.setRed(0x31);
+		PropertiesTitle.BackgroundColor.setAlpha(255);
+
+		PropertiesTitle.X = 1488;
+		PropertiesTitle.Y = 409;
+
+		PropertiesTitle.W = 432;
+		PropertiesTitle.H = 46;
 
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&
 			Xplicit::ComponentSystem::get_singleton_ptr() &&
 			Xplicit::EventSystem::get_singleton_ptr())
 		{
-			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x1C, 0x1C, 0x1C));
+			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 10, 10, 10));
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
-			EditMe.update();
-			CheckBox.update();
+			PropertiesHFS.update(PropertiesHFS.BackgroundColor);
+			PropertiesTitle.update(PropertiesTitle.BackgroundColor);
+			PropertiesBox.update(PropertiesBox.BackgroundColor);
+
+			Xplicit::ImGUI::UIFont::get_label_font()->draw(L"FIELDS", irr::core::recti(irr::core::vector2di(1519, 416),
+				irr::core::dimension2di()),
+				irr::video::SColor(255, 255, 255, 255), false, false);
+
+			Edit.update();
+			View.update();
+			Insert.update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
