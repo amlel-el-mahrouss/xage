@@ -16,8 +16,8 @@ namespace Xplicit::Player
 			Vector<float>(0.0f, 0.0f, 0.0f), 
 			Color<float>(0.0f, 0.0f, 0.0f), 
 			nullptr,
-			"World.",
-			"SoundMixer"),
+			"World",
+			"SoundFactory"),
 		mVolume(1.0f), mLoop(false)
 	{
 		this->insert("Loop", "false");

@@ -37,9 +37,6 @@ namespace Xplicit::Player
 		void reset() noexcept;
 
 	private:
-		irr::video::ITexture* mTexture;
-
-	private:
 		NetworkComponent* mNetwork;
 		std::int64_t mTimeout; /* Network Timeout, incremented on each connection failure. */
 

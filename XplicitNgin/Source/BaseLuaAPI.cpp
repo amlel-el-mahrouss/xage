@@ -22,7 +22,6 @@ static int lua_New(lua_State* L)
 
 	name += lua_tostring(L, 1);
 	parent += lua_tostring(L, 2);
-	parent += ".";
 
 	script += lua_tostring(L, 3);
 	

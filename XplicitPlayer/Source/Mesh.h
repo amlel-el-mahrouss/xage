@@ -25,7 +25,7 @@
 namespace Xplicit::Player
 {
 	/* this classes gives an component a model. */
-	class StaticMesh
+	class StaticMesh : Lua::CLuaClass
 	{
 	public:
 		StaticMesh() = delete;

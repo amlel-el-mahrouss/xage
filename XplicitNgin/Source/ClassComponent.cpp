@@ -38,7 +38,7 @@ namespace Xplicit
 		const char* parent,
 		const char* name)
 		: 
-		Lua::CLuaClass((String(parent) + name)),
+		Lua::CLuaClass((String(parent) + "." + name)),
 		mName(name),
 		mParent(parent)
 	{
@@ -62,6 +62,8 @@ namespace Xplicit
 		this->insert("Name", std::format("\'{}\'", mName).c_str());
 		this->insert("Destroy", XPLICIT_DESTROY_SNIPPET(mName, mParent).c_str());
 
+		this->insert("Parent", mParent.c_str());
+
 		//! Connect and disconnect methods
 		//! Use this to connect specific function to this class.
 		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
@@ -70,7 +72,7 @@ namespace Xplicit
 		if (script)
 		{
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{} = {}", mName, "{}").c_str());
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{}.Parent = {}", mName, std::format("_G.{}{}", mParent, mName)).c_str());
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{}.Parent = {}", mName, std::format("_G.{}.{}", mParent, mName)).c_str());
 
 			// Script.Current
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.Current = {}{}", "_G.Script.", mName).c_str());

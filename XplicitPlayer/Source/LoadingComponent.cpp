@@ -39,13 +39,10 @@ namespace Xplicit::Player
 		mTimeout(XPLICIT_TIMEOUT)
 	{
 		ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>("Camera");
-		mTexture = RENDER->getVideoDriver()->getTexture("bkg.png");
 	}
 
 	LoadingComponent::~LoadingComponent()
 	{
-		if (mTexture)
-			mTexture->drop();
 	}
 
 	bool LoadingComponent::mEnabled = true;
@@ -122,15 +119,6 @@ namespace Xplicit::Player
 				mEnabled = false;
 
 				return;
-			}
-			else
-			{
-				RENDER->getVideoDriver()->draw2DImage(_this->mTexture,
-					vector2di(0, 0),
-					recti(0, 0, 1280, 720),
-					nullptr,
-					SColor(255, 255, 255, 255),
-					true);
 			}
 		}
 	}

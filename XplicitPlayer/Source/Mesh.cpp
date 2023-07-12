@@ -19,7 +19,7 @@
 namespace Xplicit::Player
 {
 	StaticMesh::StaticMesh(const char* path, const char* name, const char* group)
-		: mPath(path), mPhysics(PHYSICS_NONE), mGroup(group), mName(name)
+		: mPath(path), mPhysics(PHYSICS_NONE), mGroup(group), mName(name), CLuaClass(String("World") + "." + name)
 	{
 		static XPLICIT_GET_DATA_DIR(XPLICIT_DIR);
 
@@ -28,6 +28,9 @@ namespace Xplicit::Player
 		_path += path;
 
 		mMdl = RENDER->getSceneManager()->getMesh(_path.c_str());
+
+		this->insert("RenderDistance", "1000");
+		this->insert("Visible", "true");
 
 		mPhysics = PHYSICS_NONE;
 
