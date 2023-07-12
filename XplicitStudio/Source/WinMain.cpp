@@ -38,16 +38,47 @@ XPLICIT_MAIN()
 		Xplicit::open_terminal();
 #endif // XPLICIT_DEBUG
 
+		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL, irr::core::dimension2du(1280, 720), 32U, false, true, true));
+		Xplicit::Root::get_singleton_ptr()->set(new Xplicit::InputReceiver());
+
+		RENDER->setWindowCaption(L"XplicitNgine Editor");
+		RENDER->setEventReceiver(KB);
+
+		Xplicit::ImGUI::UIButton Insert(L"INSERT");
+
+		Insert->W = 192;
+		Insert->H = 40;
+
+		Insert->BackgroundColor.setRed(0x1C);
+		Insert->BackgroundColor.setGreen(0x1C);
+		Insert->BackgroundColor.setBlue(0x1C);
+		Insert->BackgroundColor.setAlpha(0xFF);
+
+		//! 194
+		Xplicit::ImGUI::UIButton Run(L"RUN...");
+
+		Run->W = 192;
+		Run->H = 40;
+		Run->X = 194;
+
+		Run->BackgroundColor.setRed(0x1C);
+		Run->BackgroundColor.setGreen(0x1C);
+		Run->BackgroundColor.setBlue(0x1C);
+		Run->BackgroundColor.setAlpha(0xFF);
+
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&
 			Xplicit::ComponentSystem::get_singleton_ptr() &&
 			Xplicit::EventSystem::get_singleton_ptr())
 		{
-			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 255, 255, 255));
+			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x0F, 0x0F, 0x0F));
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
+
+			Insert.update();
+			Run.update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();

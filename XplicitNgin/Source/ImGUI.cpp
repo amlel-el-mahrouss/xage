@@ -26,6 +26,10 @@ namespace Xplicit::ImGUI
 		m_pFrame->X = 0;
 		m_pFrame->Y = 0;
 
+
+		Hover = []() {};
+		LeftClicked = []() {};
+		RightClicked = []() {};
 	}
 
 	UIButton::~UIButton()

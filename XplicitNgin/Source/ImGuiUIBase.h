@@ -58,16 +58,32 @@ namespace Xplicit
 			virtual bool in_region() noexcept
 			{
 #ifdef __RENDERER_IRR__
-				return (RENDER->getCursorControl()->getPosition().X > X && RENDER->getCursorControl()->getPosition().X < (W + X)) &&
-					(RENDER->getCursorControl()->getPosition().Y > Y && RENDER->getCursorControl()->getPosition().Y < (H + Y));
+				if (RENDER->getCursorControl()->getPosition().X > W)
+				{
+					return (RENDER->getCursorControl()->getPosition().X > X && RENDER->getCursorControl()->getPosition().X < (W + X)) &&
+						(RENDER->getCursorControl()->getPosition().Y > Y && RENDER->getCursorControl()->getPosition().Y < (H + Y));
+				}
+				else
+				{
+					return (RENDER->getCursorControl()->getPosition().X > X && RENDER->getCursorControl()->getPosition().X < (W)) &&
+						(RENDER->getCursorControl()->getPosition().Y > Y && RENDER->getCursorControl()->getPosition().Y < (H));
+				}
 #endif // __RENDERER_IRR__
 			}
 
 			virtual bool in_region(irr::core::vector2di& dim2d) noexcept
 			{
 #ifdef __RENDERER_IRR__
-				return (dim2d.X > X && dim2d.X < W) &&
-					(dim2d.Y > Y && dim2d.Y < H);
+				if (dim2d.X > W)
+				{
+					return (dim2d.X > X && dim2d.X < (W + X)) &&
+						(dim2d.Y > Y && dim2d.Y < (H + X));
+				}
+				else
+				{
+					return (dim2d.X > X && dim2d.X < W) &&
+						(dim2d.Y > Y && dim2d.Y < H);
+				}
 #endif // __RENDERER_IRR__
 			}
 

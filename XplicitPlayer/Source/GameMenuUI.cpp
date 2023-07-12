@@ -41,10 +41,10 @@ namespace Xplicit::Player
 			mText = L"You have been kicked by the server.";
 			break;
 		case POPUP_TYPE::NETWORK:
-			mText = L"Conneciton has timed-out.";
+			mText = L"The connection has timed-out.";
 			break;
 		case POPUP_TYPE::SHUTDOWN:
-			mText = L"Server has shutdown.";
+			mText = L"The server shut-down.";
 			break;
 		case POPUP_TYPE::CHALLENGE:
 			mText = L"Challenge failed by peer.";
@@ -60,13 +60,7 @@ namespace Xplicit::Player
 			return;
 		}
 
-		mCancel.LeftClicked = []() {};
-		mCancel.Hover = []() {};
-		mCancel.RightClicked = []() {};
-
 		mOk.LeftClicked = mClicked;
-		mOk.Hover = []() {};
-		mOk.RightClicked = []() {};
 
 		mHudFrame->W = 386;
 		mHudFrame->H = 188;
