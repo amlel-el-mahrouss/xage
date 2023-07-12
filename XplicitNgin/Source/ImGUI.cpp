@@ -43,7 +43,7 @@ namespace Xplicit::ImGUI
 		return m_pFrame;
 	}
 
-	void UIButton::update() noexcept
+	void UIButton::update()
 	{
 		if (!m_pFrame)
 			return;
@@ -82,5 +82,114 @@ namespace Xplicit::ImGUI
 
 		if (m_iFadeIn < 255)
 			++m_iFadeIn;
+	}
+
+	UIEditBox::UIEditBox(const wchar_t* placeHolder)
+		: mPlaceholder(placeHolder ? placeHolder : L"..."), mText(L"")
+	{
+		mBox = new UIFrame();
+
+		mBox->W = 279;
+		mBox->H = 38;
+
+		mBox->BackgroundColor.setRed(0x0D);
+		mBox->BackgroundColor.setGreen(0x0D);
+		mBox->BackgroundColor.setBlue(0x0D);
+		mBox->BackgroundColor.setAlpha(255);
+
+		mBox->BackgroundHoverColor = mBox->BackgroundHoverColor;
+
+		mSelection = new UIFrame();
+
+		mSelection->H = 33;
+		mSelection->W = mPlaceholder.size();
+
+		mSelection->BackgroundColor.setRed(0x00);
+		mSelection->BackgroundColor.setGreen(0x89);
+		mSelection->BackgroundColor.setBlue(0xED);
+		mSelection->BackgroundColor.setAlpha(127);
+
+		mSelection->BackgroundHoverColor = mSelection->BackgroundHoverColor;
+
+		mSelection->X = 2;
+		mSelection->Y = 2;
+	}
+
+	UIEditBox::~UIEditBox()
+	{
+		if (this->mBox)
+			delete mBox;
+
+		if (this->mSelection)
+			delete mSelection;
+	}
+
+	void UIEditBox::set_text(const wchar_t* text)
+	{
+		if (text)
+			mText = text;
+	}
+
+	void UIEditBox::set_pos(const int X, const int Y)
+	{
+		this->mBox->X = X;
+		this->mBox->Y = Y;
+
+		this->mSelection->X = X + 2;
+		this->mSelection->Y = Y + 2;
+	}
+
+	Vector<int> UIEditBox::get_pos() noexcept
+	{
+		return Vector<int>(this->mBox->X, this->mBox->Y);
+	}
+
+
+	void UIEditBox::update()
+	{
+		this->mBox->update(this->mBox->BackgroundColor);
+		this->mSelection->update(this->mSelection->BackgroundColor);
+
+		if (this->mBox->in_region())
+		{
+			if (KB->left_down())
+			{
+				this->mShallEdit = !this->mShallEdit;
+			}
+		}
+
+		if (this->mShallEdit)
+		{
+			if (auto key = KB->key_down(); 
+				key <= 255 && key > 0)
+			{
+				if (key == KEY_BACK)
+				{
+					if (this->mText.size() > 0)
+						this->mText.erase(this->mText.size() - 1);
+
+					std::this_thread::sleep_for(std::chrono::milliseconds(120));
+				}
+
+				if (isxdigit(key) || 
+					isalpha(key) ||
+					isprint(key))
+				{
+					if (this->mText.size() > 23)
+						return;
+
+					this->mText += tolower(key);
+
+					//! If anything lags, remember this line FIXME
+					std::this_thread::sleep_for(std::chrono::milliseconds(120));
+				}
+			}
+		}
+
+		if (!mText.empty())
+			UIFont::get_label_font()->draw(mText.c_str(), irr::core::recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
+		else
+			UIFont::get_label_font()->draw(mPlaceholder.c_str(), irr::core::recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
+
 	}
 }

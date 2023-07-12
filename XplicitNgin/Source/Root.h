@@ -152,15 +152,15 @@ namespace Xplicit
 			return mKeys[key];
 		}
 
-		bool key_down() const
+		char key_down() const
 		{
 			for (u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
 			{
 				if (mKeys[i])
-					return true;
+					return i;
 			}
 
-			return false;
+			return 0;
 		}
 
 		MouseEventTraits& get_pos() noexcept { return mMousePos; }

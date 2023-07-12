@@ -30,7 +30,10 @@ namespace Xplicit::ImGUI
 		std::function<void()> Hover;
 
 	public:
-		void update() noexcept;
+		void update();
+		UIFrame* get() const { return m_pFrame; }
+
+	public:
 		UIFrame* operator->() const;
 
 	private:
@@ -38,6 +41,34 @@ namespace Xplicit::ImGUI
 		BasicString<wchar_t> mText{ L"" };
 		UIFrame* m_pFrame{ nullptr };
 		std::uint64_t m_iFadeIn{ 0 };
+
+	};
+
+	class XPLICIT_API UIEditBox final
+	{
+	public:
+		explicit UIEditBox(const wchar_t* placeHolder);
+		~UIEditBox();
+
+	public:
+		XPLICIT_COPY_DEFAULT(UIEditBox);
+
+	public:
+		void set_text(const wchar_t*);
+		void set_pos(const int X, const int Y);
+		Vector<int> get_pos() noexcept;
+
+	public:
+		void update();
+
+	private:
+		BasicString<wchar_t> mPlaceholder{ L"..." };
+		BasicString<wchar_t> mText{ L"" };
+		bool mShallEdit{ false };
+
+	private:
+		UIFrame* mSelection;
+		UIFrame* mBox;
 
 	};
 }

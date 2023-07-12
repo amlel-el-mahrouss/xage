@@ -38,13 +38,13 @@ XPLICIT_MAIN()
 		Xplicit::open_terminal();
 #endif // XPLICIT_DEBUG
 
-		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL, irr::core::dimension2du(1280, 720), 32U, false, true, true));
+		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL, irr::core::dimension2du(1920, 720), 32U, false, true, true));
 		Xplicit::Root::get_singleton_ptr()->set(new Xplicit::InputReceiver());
 
-		RENDER->setWindowCaption(L"XplicitNgine Editor");
+		RENDER->setWindowCaption(L"XplicitStudio");
 		RENDER->setEventReceiver(KB);
 
-		Xplicit::ImGUI::UIButton Insert(L"INSERT");
+		Xplicit::ImGUI::UIButton Insert(L"FILE");
 
 		Insert->W = 192;
 		Insert->H = 40;
@@ -55,30 +55,36 @@ XPLICIT_MAIN()
 		Insert->BackgroundColor.setAlpha(0xFF);
 
 		//! 194
-		Xplicit::ImGUI::UIButton Run(L"RUN...");
+		Xplicit::ImGUI::UIButton Run(L"RUN");
 
 		Run->W = 192;
 		Run->H = 40;
-		Run->X = 194;
+		Run->X = 192;
 
 		Run->BackgroundColor.setRed(0x1C);
 		Run->BackgroundColor.setGreen(0x1C);
 		Run->BackgroundColor.setBlue(0x1C);
 		Run->BackgroundColor.setAlpha(0xFF);
 
+		Xplicit::ImGUI::UIEditBox EditMe(L"");
+		EditMe.set_text(L"xasset://gear.lua");
+
+		EditMe.set_pos(600, 20);
+
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&
 			Xplicit::ComponentSystem::get_singleton_ptr() &&
 			Xplicit::EventSystem::get_singleton_ptr())
 		{
-			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x0F, 0x0F, 0x0F));
+			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x1C, 0x1C, 0x1C));
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
-			Insert.update();
+			EditMe.update();
 			Run.update();
+			Insert.update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
