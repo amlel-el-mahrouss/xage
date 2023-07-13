@@ -204,7 +204,7 @@ int main(int argc, char** argv)
 		exit += L"\n";
 
 		Xplicit::DialogHelper::message_box(L"Xplicit World Server", 
-			L"Program Exit", 
+			L"XPLICIT Couldn't continue!",
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 
 			TDCBF_OK_BUTTON);

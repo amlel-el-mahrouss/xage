@@ -98,4 +98,26 @@ namespace Xplicit::ImGUI
 		UIFrame* mCheckBox{ nullptr };
 
 	};
+
+	inline std::int32_t CenterOf(const std::int32_t& x)
+	{
+		int _tmp_x = x;
+		int _x_ref = 0;
+
+		for (int _x = 0; _x < _tmp_x; ++_x)
+		{
+			if ((_x + _x_ref) >= _tmp_x)
+				return _x;
+
+			++_x_ref;
+		}
+
+		return 0;
+	}
+
+	template <double Formula>
+	inline std::int32_t JustifyBy(const std::int32_t& x)
+	{
+		return ((x) / (Formula));
+	}
 }

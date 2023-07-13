@@ -106,7 +106,7 @@ static void XplicitThrowException(Xplicit::EngineError& err)
 	exit += L"\n";
 
 	Xplicit::DialogHelper::message_box(L"XplicitPlayer",
-		L"Program Crash!",
+		L"XPLICIT Couldn't continue!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);
@@ -128,7 +128,7 @@ static void XplicitThrowException(Xplicit::Win32Error& err)
 	exit += L"\n";
 
 	Xplicit::DialogHelper::message_box(L"XplicitPlayer",
-		L"Program Crash!",
+		L"XPLICIT Couldn't continue!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);

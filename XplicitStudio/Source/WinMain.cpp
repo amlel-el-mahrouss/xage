@@ -14,6 +14,7 @@
 #include <Nplicit.h>
 
 #include <NetworkProtocol.h>
+#include <BaseLuaAPI.h>
 #include <XplicitSound.h>
 #include <DriverD3D11.h>
 #include <Component.h>
@@ -34,6 +35,11 @@ XPLICIT_MAIN()
 	{
 		XPLICIT_INIT_COM;
 
+		XplicitLoadBaseLua();
+
+		if (Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run("StudioPreload.lua"))
+			throw Xplicit::EngineError("StudioPreload not found, can't launch!");
+
 #ifdef XPLICIT_DEBUG
 		Xplicit::open_terminal();
 #endif // XPLICIT_DEBUG
@@ -41,7 +47,7 @@ XPLICIT_MAIN()
 		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL, irr::core::dimension2du(1920, 1080), 32U, false, true, true));
 		Xplicit::Root::get_singleton_ptr()->set(new Xplicit::InputReceiver());
 
-		RENDER->setWindowCaption(L"XPLICIT Studio");
+		RENDER->setWindowCaption(L"XPLICIT");
 		RENDER->setEventReceiver(KB);
 
 		//! The Main Logic and Render loop.
@@ -87,7 +93,7 @@ static void XplicitThrowException(Xplicit::EngineError& err)
 	exit += L"\n";
 
 	Xplicit::DialogHelper::message_box(L"XplicitStudio",
-		L"Program Crash!",
+		L"XPLICIT Couldn't continue!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);
