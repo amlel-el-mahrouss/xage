@@ -20,6 +20,7 @@
 #include <cstdio>
 #include <clocale>
 #include <cstring>
+#include <codecvt>
 #include <cassert>
 #include <cstdlib>
 #include <cstdint>

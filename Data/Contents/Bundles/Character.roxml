@@ -4,27 +4,27 @@
 	</Class>
 
 	<Class Name="Head" Parent="World.LocalPlayer" Object="Mesh">
-		Contents/Bundles/head.obj
+		Contents/Bundles/Head.mesh
 	</Class>
 
 	<Class Name="LeftArm" Parent="World.LocalPlayer" Object="Mesh">
-		Contents/Bundles/leftarm.obj
+		Contents/Bundles/LeftArm.mesh
 	</Class>
 
 	<Class Name="RightArm" Parent="World.LocalPlayer" Object="Mesh">
-		Contents/Bundles/rightarm.obj
+		Contents/Bundles/RightArm.mesh
 	</Class>
 
 	<Class Name="Torso" Parent="World.LocalPlayer" Object="Mesh">
-		Contents/Bundles/torso.obj
+		Contents/Bundles/Torso.mesh
 	</Class>
 
 	<Class Name="LeftLeg" Parent="World.LocalPlayer" Object="Mesh">
-		Contents/Bundles/leftleg.obj
+		Contents/Bundles/LeftLeg.mesh
 	</Class>
 
 	<Class Name="RightLeg" Parent="World.LocalPlayer" Object="Mesh">
-		Contents/Bundles/rightleg.obj
+		Contents/Bundles/RightLeg.mesh
 	</Class>
 
 	<!-- -8.951, 3, -13.514 -->

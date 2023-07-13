@@ -97,7 +97,7 @@ namespace Xplicit
 	//! @brief Handle player log-in event
 	//! @brief setup humanoid and more...
 	
-	void LoginEvent::handle_join_event() noexcept
+	void LoginEvent::handleJoin() noexcept
 	{
 		if (this->size() >= XPLICIT_MAX_CONNECTIONS)
 			return;
@@ -144,7 +144,7 @@ namespace Xplicit
 
 	}
 
-	void LoginEvent::handle_leave_event() noexcept
+	void LoginEvent::handleLeave() noexcept
 	{
 		if (this->size() < 1)
 			return;
@@ -211,8 +211,8 @@ namespace Xplicit
 
 	void LoginEvent::operator()()
 	{
-		this->handle_leave_event();
-		this->handle_join_event();
+		this->handleLeave();
+		this->handleJoin();
 	}
 
 	const size_t& LoginEvent::size() const noexcept { return mPlayerCount; }

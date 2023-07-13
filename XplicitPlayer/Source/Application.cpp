@@ -11,14 +11,13 @@
  @file
  */
 
-// Application framework.
+#include <BaseLuaAPI.h>
+
+//! Application framework.
 #include "Application.h"
 
-//! We need this to connect and download from server. 
-//! We also need the RoXML header.
-
+//! To connect to peer. 
 #include "LoadingComponent.h"
-#include "RoXML.h"
 
 extern void XplicitLoadClientLua() noexcept;
 

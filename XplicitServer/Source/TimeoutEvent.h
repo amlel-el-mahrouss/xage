@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "CommonInclude.h"
+#include "ServerConfig.h"
 
 namespace Xplicit
 {

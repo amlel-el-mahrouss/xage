@@ -18,7 +18,7 @@ namespace Xplicit::ImGUI
 	class XPLICIT_API UIButton final
 	{
 	public:
-		explicit UIButton(const wchar_t* text);
+		explicit UIButton(const PChar* text);
 		~UIButton();
 
 	public:
@@ -38,7 +38,7 @@ namespace Xplicit::ImGUI
 
 	private:
 		UIFont::FontPtr m_pFont{ nullptr };
-		BasicString<wchar_t> mText{ L"" };
+		BasicString<PChar> mText{ L"" };
 		UIFrame* m_pFrame{ nullptr };
 		std::uint64_t m_iFadeIn{ 0 };
 
@@ -47,14 +47,14 @@ namespace Xplicit::ImGUI
 	class XPLICIT_API UIEditBox final
 	{
 	public:
-		explicit UIEditBox(const wchar_t* placeHolder);
+		explicit UIEditBox(const PChar* placeHolder);
 		~UIEditBox();
 
 	public:
 		XPLICIT_COPY_DEFAULT(UIEditBox);
 
 	public:
-		void set_text(const wchar_t*);
+		void set_text(const PChar*);
 		void set_pos(const int X, const int Y);
 		Vector<int> get_pos() noexcept;
 
@@ -62,8 +62,8 @@ namespace Xplicit::ImGUI
 		void update();
 
 	private:
-		BasicString<wchar_t> mPlaceholder{ L"..." };
-		BasicString<wchar_t> mText{ L"" };
+		BasicString<PChar> mPlaceholder{ L"..." };
+		BasicString<PChar> mText{ L"" };
 		bool mShallEdit{ false };
 
 	private:

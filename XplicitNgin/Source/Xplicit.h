@@ -626,6 +626,13 @@ namespace Xplicit
 		};
 	}
 
+#ifdef XPLICIT_WINDOWS
+	XPLICIT_API inline BasicString<PChar> platform_string(const char* utf8)
+	{
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
+		return cvt.from_bytes(utf8);
+	}
+#endif // ifdef XPLICIT_WINDOWS
 }
 
 #ifdef XPLICIT_WINDOWS

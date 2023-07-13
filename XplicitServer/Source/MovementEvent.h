@@ -9,10 +9,11 @@
 
 #pragma once
 
+#include "ServerConfig.h"
+
 #include <Nplicit.h>
 #include <RigidBody.h>
 
-#include "CommonInclude.h"
 #include "HumanoidComponent.h"
 
 namespace Xplicit

@@ -44,38 +44,6 @@ XPLICIT_MAIN()
 		RENDER->setWindowCaption(L"XPLICIT Studio");
 		RENDER->setEventReceiver(KB);
 
-		Xplicit::ImGUI::UIButton Insert(L"FILE");
-
-		Insert->W = 192;
-		Insert->H = 40;
-
-		Insert->BackgroundColor.setRed(0x1C);
-		Insert->BackgroundColor.setGreen(0x1C);
-		Insert->BackgroundColor.setBlue(0x1C);
-		Insert->BackgroundColor.setAlpha(0xFF);
-
-		Xplicit::ImGUI::UIButton Edit(L"EDIT");
-
-		Edit->W = 192;
-		Edit->H = 40;
-		Edit->X = 192;
-
-		Edit->BackgroundColor.setRed(0x1C);
-		Edit->BackgroundColor.setGreen(0x1C);
-		Edit->BackgroundColor.setBlue(0x1C);
-		Edit->BackgroundColor.setAlpha(0xFF);
-
-		Xplicit::ImGUI::UIButton View(L"VIEW");
-
-		View->W = 192;
-		View->H = 40;
-		View->X = 192 * 2;
-
-		View->BackgroundColor.setRed(0x1C);
-		View->BackgroundColor.setGreen(0x1C);
-		View->BackgroundColor.setBlue(0x1C);
-		View->BackgroundColor.setAlpha(0xFF);
-
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&
 			Xplicit::ComponentSystem::get_singleton_ptr() &&
@@ -86,10 +54,6 @@ XPLICIT_MAIN()
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
-
-			Edit.update();
-			View.update();
-			Insert.update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();

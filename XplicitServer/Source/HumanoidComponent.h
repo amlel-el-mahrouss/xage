@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "CommonInclude.h"
+#include "ServerConfig.h"
 #include <CLua/CLua.hpp>
 
 namespace Xplicit

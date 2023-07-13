@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "CommonInclude.h"
+#include "ServerConfig.h"
 #include "HumanoidComponent.h"
 
 namespace Xplicit
@@ -32,8 +32,8 @@ namespace Xplicit
 		const size_t& size() const noexcept;
 
 	private:
-		void handle_leave_event() noexcept;
-		void handle_join_event() noexcept;
+		void handleLeave() noexcept;
+		void handleJoin() noexcept;
 
 	private:
 		std::vector<HumanoidComponent*> mPlayers;

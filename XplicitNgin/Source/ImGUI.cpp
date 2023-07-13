@@ -12,7 +12,7 @@
 namespace Xplicit::ImGUI
 {
 
-	UIButton::UIButton(const wchar_t* text)
+	UIButton::UIButton(const PChar* text)
 		: mText(text)
 	{
 		m_pFrame = new UIFrame();
@@ -84,7 +84,7 @@ namespace Xplicit::ImGUI
 			++m_iFadeIn;
 	}
 
-	UIEditBox::UIEditBox(const wchar_t* placeHolder)
+	UIEditBox::UIEditBox(const PChar* placeHolder)
 		: mPlaceholder(placeHolder ? placeHolder : L"..."), mText(L"")
 	{
 		mBox = new UIFrame();
@@ -124,7 +124,7 @@ namespace Xplicit::ImGUI
 			delete mSelection;
 	}
 
-	void UIEditBox::set_text(const wchar_t* text)
+	void UIEditBox::set_text(const PChar* text)
 	{
 		if (text)
 			mText = text;

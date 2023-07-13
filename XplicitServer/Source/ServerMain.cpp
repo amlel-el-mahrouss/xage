@@ -18,7 +18,6 @@
 #include <XplicitID.h>
 
 #include "ServerConfig.h"
-#include "CommonInclude.h"
 #include "SpawnComponent.h"
 #include "LoginEvent.h"
 #include "TimeoutEvent.h"

@@ -18,13 +18,13 @@ REQUIREMENTS:
 - Git
 - Mono
 - GLFW
-- Ogre3D
 - OpenSSL
 - LuaNgine
 - FreeType
+- CADEngine
 - Windows 11/Mac OS X
-- Vulkan SDK 1.3.250.0 (Vulkan Rendering System)
 - Visual Studio 2022 (C++ Workload)
+- Vulkan SDK 1.3.250.0 (Vulkan Rendering System)
 - DirectXTK for VS2019 (Install for Xplicit and XplicitPlayer)
 
 INSTALLING:

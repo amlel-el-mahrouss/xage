@@ -37,19 +37,19 @@ namespace Xplicit::Player
 		switch (popup_type)
 		{
 		case POPUP_TYPE::KICK:
-			mText = L"You have been kicked by the server.\nPress OK to exit client.";
+			mText = platform_string("You have been kicked by the server.\nPress OK to exit client.");
 			break;
 		case POPUP_TYPE::NETWORK:
-			mText = L"The connection has timed-out.\nPress OK to exit client.";
+			mText = platform_string("The connection has timed-out.\nPress OK to exit client.");
 			break;
 		case POPUP_TYPE::SHUTDOWN:
-			mText = L"The server shut-down.\nPress OK to exit client.";
+			mText = platform_string("The server shut-down.\nPress OK to exit client.");
 			break;
 		case POPUP_TYPE::CHALLENGE:
-			mText = L"Challenge failed by peer.\nPress OK to exit client.";
+			mText = platform_string("Challenge failed by peer.\nPress OK to exit client.");
 			break;
 		case POPUP_TYPE::BANNED:
-			mText = L"You have been banned, play-xplicit.com/appeals.\nPress OK to exit client.";
+			mText = platform_string("You have been banned, play-xplicit.com/appeals.\nPress OK to exit client.");
 			break;
 		default:
 			ComponentSystem::get_singleton_ptr()->remove(this);

@@ -56,8 +56,8 @@ namespace Xplicit::Player
 		using FunctionPopup = std::function<void()>;
 
 	private:
+		BasicString<PChar> mText;
 		ImGUI::UIFrame* mHudFrame;
-		BasicString<wchar_t> mText;
 		ImGUI::UIButton mOk;
 
 	private:

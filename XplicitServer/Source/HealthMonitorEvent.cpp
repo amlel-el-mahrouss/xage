@@ -26,7 +26,6 @@ namespace Xplicit
 	/// </summary>
 	/// <param name="spawner">Spawn component</param>
 	/// <param name="humanoid">Target Humanoid</param>
-	/// <returns></returns>
 	
 	static void XplicitHandleSpawn(SpawnComponent* spawner, HumanoidComponent* humanoid) noexcept
 	{
