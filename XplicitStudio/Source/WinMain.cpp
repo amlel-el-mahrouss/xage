@@ -37,8 +37,8 @@ XPLICIT_MAIN()
 
 		XplicitLoadBaseLua();
 
-		if (Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run("StudioPreload.lua"))
-			throw Xplicit::EngineError("StudioPreload not found, can't launch!");
+		if (Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run("Studio.lua"))
+			throw Xplicit::EngineError("Studio not found, can't launch!");
 
 #ifdef XPLICIT_DEBUG
 		Xplicit::open_terminal();

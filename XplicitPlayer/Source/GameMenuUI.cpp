@@ -73,6 +73,7 @@ namespace Xplicit::Player
 		mOk->W = 504;
 		mOk->H = 41;
 
+
 		mOk->X = mHudFrame->X;
 		mOk->Y = mHudFrame->Y + mHudFrame->H - mOk->H;
 

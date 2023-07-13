@@ -31,7 +31,6 @@
 #endif // ifndef XPLICIT_INVALID_ADDR
 
 #define XPLICIT_NETWORK_BUF_SZ      (256U)
-#define XPLICIT_NETWORK_BUF_CHAT_SZ (128U)
 #define XPLICIT_NETWORK_VERSION     (2U)
 
 #define XPLICIT_NUM_CHANNELS (2)
@@ -133,7 +132,7 @@ namespace Xplicit
     {
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
         std::int8_t           channel;
-        char                  buffer[XPLICIT_NETWORK_BUF_CHAT_SZ];
+        char                  buffer[XPLICIT_NETWORK_BUF_SZ];
 
     };
 
@@ -195,7 +194,7 @@ namespace Xplicit
 
 #ifdef XPLICIT_WINDOWS
 typedef int socklen_t;
-#endif // XPLICIT_WINDOWS
+#endif // ifdef XPLICIT_WINDOWS
 
 #define XPLICIT_NETWORK_CMD_FORWARD (0)
 #define XPLICIT_NETWORK_CMD_BACKWARD (1)

@@ -3,25 +3,7 @@
 
 Plugin = {}
 
-Plugin.Name = "XPLICIT Plugin";
-Plugin.Description = "XPLICIT Studio Plugin";
+Plugin.Name = "XPLICIT STUDIO";
+Plugin.Description = "XPLICIT Studio, the free editor for Xplicit.";
 Plugin.Version = "1.0.0RC";
-Plugin.Copyright = "<YourNameHere>";
-
-function Plugin:OnLoad()
-
-end
-
-function Plugin:OnUnLoad()
-
-end
-
--- e.g: Save RoXML
-function Plugin:SaveRequested()
-
-end
-
--- e.g: Open RoXML
-function Plugin:OpenRequested()
-
-end
+Plugin.Copyright = "Xplicit Inc";

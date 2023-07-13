@@ -57,6 +57,9 @@ namespace Xplicit
 
 		_this->mClass->assign("Position", str.c_str());
 
+		if (_this->mClass->index_as_bool("Kick"))
+			_this->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+
 		_this->mHealth = _this->mClass->index_as_number<double>("Health");
 		_this->mMaxHealth = _this->mClass->index_as_number<double>("MaxHealth");
 		_this->mJumpPower = _this->mClass->index_as_number<double>("JumpPower");
@@ -101,6 +104,7 @@ namespace Xplicit
 
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");
+				mClass->insert("Kick", "false");
 				mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());

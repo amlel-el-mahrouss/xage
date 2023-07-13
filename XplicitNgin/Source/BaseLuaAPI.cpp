@@ -77,47 +77,31 @@ static int lua_Destroy(lua_State* L)
 	return 1;
 }
 
-static int lua_PrintLn(lua_State* L)
-{
-	if (lua_isstring(L, 1))
-	{
-		const Xplicit::String msg = lua_tostring(L, 1);
-
-		if (!msg.empty())
-			XPLICIT_INFO(msg);
-	}
-
-	return 0;
-}
-
 XPLICIT_API void XplicitLoadBaseLua()
 {
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Script = {}");
+
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World = {}");
+	
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Settings = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Players = {}");
 
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_PrintLn);
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Print_Engine");
-
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Print = Print_Engine");
-
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_New);
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "New_Engine");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Engine_Create");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.New = New_Engine");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.Create = Engine_Create");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_Destroy);
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Destroy_Engine");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Engine_Destroy");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.Destroy = Destroy_Engine");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.Destroy = Engine_Destroy");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 
 	Xplicit::String tmp = full_path;
 	tmp += "Contents/";
-	tmp += "xplicit.lua";
+	tmp += "XplicitPreload.lua";
 
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run(tmp.c_str());
 }

@@ -11,7 +11,7 @@
 
 #include "GearComponent.h"
 
-//! This file handles Gears (Sword, guns, tools...)
+//! This file handles Gears (Sword, Pistol, Build Tools...)
 
 namespace Xplicit
 {
@@ -32,9 +32,9 @@ namespace Xplicit
 		this->insert("CanDrop", "false");
 
 		this->insert("Drop", "false");
-		this->insert("Tooltip", "'Gear Component'");
+		this->insert("Tooltip", "'Gear'");
 
-		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
+		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 	}
 
 	const char* GearComponent::name() noexcept { return "GearComponent"; }
@@ -49,20 +49,10 @@ namespace Xplicit
 
 	void GearComponent::update(ClassPtr _self) { ClassComponent::update(_self); }
 
-	void GearComponent::click() noexcept
-	{
-		this->call("Click");
-	}
-
-	void GearComponent::activate() noexcept
-	{
-		this->call("Activate");
-	}
-
-	void GearComponent::deactivate() noexcept
-	{
-		this->call("Deactivate");
-	}
+	//! event slots.
+	void GearComponent::click() noexcept { this->call("Click"); }
+	void GearComponent::activate() noexcept { this->call("Activate"); }
+	void GearComponent::deactivate() noexcept { this->call("Deactivate"); }
 }
 
 #undef XPLICIT_LUA_GLOBAL
