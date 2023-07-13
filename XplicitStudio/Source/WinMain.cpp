@@ -41,18 +41,20 @@ XPLICIT_MAIN()
 		Xplicit::open_terminal();
 #endif // XPLICIT_DEBUG
 
-		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL, 
+		auto* kb = new Xplicit::InputReceiver();
+
+		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL,
 			irr::core::dimension2du(1280, 720),
-			32U, 
-			false,
-			true, 
-			true));
+			32U,
+			true,
+			true,
+			true,
+			kb));
 
-		Xplicit::Root::get_singleton_ptr()->set(new Xplicit::InputReceiver());
+		KB = kb;
 
-		RENDER->setWindowCaption(L"XPLICIT");
-		RENDER->setEventReceiver(KB);
-
+		RENDER->setWindowCaption(L"XplicitEd");
+		
 		Xplicit::ImGUI::UIWindow ribbon;
 		
 		ribbon.pos(0, 0);

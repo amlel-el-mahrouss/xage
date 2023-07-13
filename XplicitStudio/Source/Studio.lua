@@ -14,12 +14,3 @@ function Plugin.UI:Create(self, Name, Parent)
         Parent = Parent,
     };
 end
-
-function Plugin:Loaded(self)
-    Plugin.UI.Toolbar = Plugin.UI:Create('Toolbar', {});
-    Plugin.UI.Toolbar.File = Plugin.UI:Create('Button', Plugin.UI.Toolbar);
-    
-    Plugin.UI.Toolbar.Height = 41;
-    Plugin.UI.Toolbar.Width = Plugin.GetWindowSize().X;
-end
-
