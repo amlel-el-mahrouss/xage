@@ -120,4 +120,72 @@ namespace Xplicit::ImGUI
 	{
 		return ((x) / (Formula));
 	}
+
+	class XPLICIT_API UIWindow final
+	{
+	public:
+		explicit UIWindow();
+		~UIWindow();
+
+	public:
+		XPLICIT_COPY_DELETE(UIWindow);
+
+	public:
+		class UIContainer
+		{
+		private:
+			UIFrame* mBody{ nullptr };
+			friend UIWindow;
+
+		};
+
+		void pos(const int x, const int y)
+		{
+			if (x < 1 ||
+				y < 1)
+				return;
+
+			mHead.mBody->X = x;
+			mHead.mBody->Y = y;
+			mBody.mBody->X = x;
+			mBody.mBody->Y = y + mHead.mBody->H;
+		}
+
+		void size(const int w, const int bodyH, const int toolbarH)
+		{
+			mBody.mBody->W = w;
+			mBody.mBody->H = bodyH;
+
+			mHead.mBody->W = w;
+			mHead.mBody->H = toolbarH;
+		}
+
+		void set(const char* title)
+		{
+			mTitle = platform_string(title);
+		}
+
+		void update()
+		{
+			if (!mHead.mBody ||
+				!mBody.mBody)
+				return;
+
+			mBody.mBody->update(mBody.mBody->BackgroundColor);
+
+			mHead.mBody->update(mHead.mBody->BackgroundColor);
+
+			UIFont::get_properties_font()->draw(mTitle.c_str(),
+				recti(vector2di(mHead.mBody->X + 5, mHead.mBody->Y - 2), dimension2du(0, 0)),
+				SColor(255, 255, 255, 255),
+				false, false);
+		}
+
+	private:
+		BasicString<PChar> mTitle;
+		UIWindow* mParent;
+		UIContainer mHead;
+		UIContainer mBody;
+
+	};
 }

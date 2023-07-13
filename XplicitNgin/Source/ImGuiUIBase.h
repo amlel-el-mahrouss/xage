@@ -24,6 +24,7 @@ namespace Xplicit
 	namespace ImGUI
 	{
 		typedef SColor ImColor;
+		typedef recti ImRect;
 
 		class XPLICIT_API UIFrame final
 		{
@@ -48,6 +49,10 @@ namespace Xplicit
 		public:
 			virtual void update(SColor clr) noexcept
 			{
+				if (W < 1 ||
+					H < 1)
+					return;
+
 #ifdef __RENDERER_IRR__
 				RENDER->getVideoDriver()->draw2DRectangle(clr,
 					irr::core::recti(position2di(X, Y), dimension2d(W, H)),
@@ -105,6 +110,21 @@ namespace Xplicit
 				{
 					XPLICIT_GET_DATA_DIR(dir);
 					dir += "GameFont22.bmp";
+
+					fnt = get_font(dir.c_str());
+				}
+
+				return fnt;
+			}
+
+			static FontPtr get_properties_font() noexcept
+			{
+				static FontPtr fnt = nullptr;
+
+				if (!fnt)
+				{
+					XPLICIT_GET_DATA_DIR(dir);
+					dir += "GameFont14.bmp";
 
 					fnt = get_font(dir.c_str());
 				}

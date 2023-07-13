@@ -244,6 +244,28 @@ namespace Xplicit::ImGUI
 				vector2di(mCheckBox->X + 12, mCheckBox->Y + 30),
 				SColor(0xFF, 0x43, 0xA0, 0x47));
 		}
+	}
 
+	UIWindow::UIWindow()
+	{
+		mHead.mBody = new UIFrame();
+		mBody.mBody = new UIFrame();
+
+		XPLICIT_ASSERT(mBody.mBody && mHead.mBody);
+	
+		mHead.mBody->BackgroundColor.set(0xFF, 0x31, 0x31, 0x31);
+		mHead.mBody->BackgroundHoverColor.set(0xFF, 0x31, 0x31, 0x31);
+
+		mBody.mBody->BackgroundColor.set(0xFF, 0x1C, 0x1C, 0x1C);
+		mBody.mBody->BackgroundHoverColor.set(0xFF, 0x26, 0x26, 0x26);
+	}
+
+	UIWindow::~UIWindow()
+	{
+		if (mBody.mBody)
+			delete mBody.mBody;
+
+		if (mHead.mBody)
+			delete mHead.mBody;
 	}
 }
