@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 		params.Path = XPLICIT_PLACE_ID;
 
 		Xplicit::RoXML::RoXMLDocumentParser parser;
-		parser.load(params);
+		parser.parse(params);
 
 		Xplicit::Thread logic([&]() {
 			const auto net = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");

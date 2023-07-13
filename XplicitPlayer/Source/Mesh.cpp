@@ -19,7 +19,7 @@
 namespace Xplicit::Player
 {
 	StaticMesh::StaticMesh(const char* path, const char* name, const char* group)
-		: mPath(path), mPhysics(PHYSICS_NONE), mGroup(group), mName(name), CLuaClass(String("World") + "." + name)
+		: mPath(path), mPhysics(PHYSICS_NONE), mGroup(group), mName(name), CLuaClass(String("World") + "." + group + "." + name)
 	{
 		static XPLICIT_GET_DATA_DIR(XPLICIT_DIR);
 
@@ -37,7 +37,6 @@ namespace Xplicit::Player
 		if (mMdl)
 		{
 			mNode = RENDER->getSceneManager()->addMeshSceneNode(mMdl);
-
 			mPhysics = PHYSICS_COMPLEX;
 		}
 	}
@@ -80,7 +79,7 @@ namespace Xplicit::Player
 		params.WaitFor = true;
 
 		RoXML::RoXMLDocumentParser parser;
-		parser.load(params);
+		parser.parse(params);
 
 		//! RoXML provides uses cusotmization of these characters.
 		//! So that the user can express himself.

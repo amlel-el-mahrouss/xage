@@ -66,7 +66,7 @@ static int lua_LoadRoXML(lua_State* L)
 		return 1;
 	}
 
-	XPLICIT_PARSER.load(params);
+	XPLICIT_PARSER.parse(params);
 
 	return 0;
 }

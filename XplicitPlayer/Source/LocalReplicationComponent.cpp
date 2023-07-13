@@ -65,7 +65,7 @@ namespace Xplicit::Player
 				params.Inline = true;
 				params.Path = name;
 
-				parser.load(params);
+				parser.parse(params);
 
 				if (name.empty() ||
 					packet.hash != _this->mHash)

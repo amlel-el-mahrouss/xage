@@ -13,7 +13,7 @@
 #include <Nplicit.h>
 #include <Component.h>
 
-//! Player bundle
+//! generic player bundle offsets.
 #define XPLICIT_BUNDLE_HEAD		 (0)
 #define XPLICIT_BUNDLE_LEFT_ARM  (1)
 #define XPLICIT_BUNDLE_TORSO     (2)
@@ -24,12 +24,16 @@
 
 namespace Xplicit::Player
 {
+	class StaticMesh;
+	class StaticBundleMesh;
+
 	/* this classes gives an component a model. */
-	class StaticMesh : Lua::CLuaClass
+	class StaticMesh : public Lua::CLuaClass
 	{
 	public:
 		StaticMesh() = delete;
-		
+
+	public:
 		explicit StaticMesh(const char* path, const char* name, const char* group);
 		virtual ~StaticMesh() noexcept;
 
@@ -38,7 +42,7 @@ namespace Xplicit::Player
 		StaticMesh(const StaticMesh&) = default;
 		
 	public:
-		irr::scene::IMeshSceneNode* node() const { return mNode; }
+		irr::scene::ISceneNode* node() const { return mNode; }
 		irr::scene::IMesh* operator->() const { return mMdl; }
 
 	public:
@@ -46,7 +50,7 @@ namespace Xplicit::Player
 		bool has_physics() noexcept;
 
 	protected:
-		irr::scene::IMeshSceneNode* mNode; // Model Data pointer, generic
+		irr::scene::ISceneNode* mNode; // Model Data pointer, generic
 		irr::scene::IMesh* mMdl; // Model Data pointer, generic
 
 	private:

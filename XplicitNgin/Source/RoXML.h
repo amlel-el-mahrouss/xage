@@ -76,7 +76,7 @@ namespace Xplicit::RoXML
 		XPLICIT_COPY_DEFAULT(RoXMLDocumentParser);
 
 	public:
-		void load(RoXMLDocumentParameters& params) noexcept
+		void parse(RoXMLDocumentParameters& params) noexcept
 		{
 			if (!params.Inline)
 			{
