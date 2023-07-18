@@ -33,9 +33,7 @@ namespace Xplicit
 		COMPONENT_ID_SMOKE = 7,
 		COMPONENT_ID_FORCEFIELD = 8,
 		COMPONENT_ID_EXPLOSION = 9,
-		COMPONENT_ID_SKYBOX = 10,
-		COMPONENT_ID_UNLOAD = 11,
-		COMPONENT_ID_LOAD = 12,
+		COMPONENT_ID_SKYBOX = 10,	
 		COMPONENT_ID_COUNT,
 		// NOTE: add more here, don't forget you can easily mod the engine with CLua.
 	};
