@@ -50,6 +50,7 @@ namespace Xplicit::Renderer
 
 	enum XPLICIT_SHADER_FORMAT : uint8_t 
 	{
+		FORMAT_SPIRV,
 		FORMAT_GLSL, // Vulkan legacy shader.
 		FORMAT_HLSL, // Direct3D 11 shader type.
 		FORMAT_COUNT,
@@ -97,69 +98,6 @@ namespace Xplicit::Renderer
 		RENDER_PARTICLE_SYSTEM, // Emitter
 		RENDER_LIGHT,
 		RENDER_TYPE_COUNT,
-	};
-
-
-	//! Moddable mesh by Lua, render system generic.
-	//! Only selected when the New Rendering System is choosen.
-
-	template <typename RenderSystemMesh>
-	class XPLICIT_API RenderNode : public RenderSystemMesh
-	{
-	public:
-		RenderNode() = default;
-		~RenderNode() override = default;
-
-	public:
-		XPLICIT_COPY_DELETE(RenderNode);
-
-	public:
-		void update() override
-		{
-			RenderSystemMesh::update();
-
-			if (Parent)
-			{
-				if (IndexState == INDEX_STATE::STOP)
-				{
-					IndexState = INDEX_STATE::RUNNING;
-
-					Thread([&]() {
-						Visible = Parent->index_as_bool("Visible");
-						RenderDistance = Parent->index_as_bool("RenderDistance");
-
-						Scale.X = Parent->index_as_number<float>("Scale.X");
-						Scale.Y = Parent->index_as_number<float>("Scale.Y");
-						Scale.Z = Parent->index_as_number<float>("Scale.Z");
-
-						Position.X = Parent->index_as_number<float>("Position.X");
-						Position.Y = Parent->index_as_number<float>("Position.Y");
-						Position.Z = Parent->index_as_number<float>("Position.Z");
-						});
-				}
-
-			}
-		}
-
-	public:
-		enum class INDEX_STATE
-		{
-			STOP,
-			RUNNING
-		};
-
-		static constexpr int MAX_STATE = 2;
-
-	public:
-		Lua::CLuaClass* Parent; //! Parent Lua context.
-		INDEX_STATE IndexState;
-
-	public:
-		Vector<float> Position;
-		float RenderDistance;
-		Vector<float> Scale;
-		bool Visible;
-
 	};
 }
 
