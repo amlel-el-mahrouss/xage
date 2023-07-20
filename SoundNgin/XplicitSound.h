@@ -71,7 +71,7 @@ namespace Xplicit
 					}
 				}
 
-				mAudioNgin->SetDefaultSampleRate(44100);
+				mAudioNgin->SetDefaultSampleRate(XPLICIT_AUDIO_RATE);
 			}
 
 		public:
@@ -110,25 +110,7 @@ namespace Xplicit
 					mSource = mAudio->CreateInstance(DirectX::SoundEffectInstance_Use3D);
 					if (!mAudio) return;
 
-					mSource->Play(loop);
-
-					if (loop && 
-						*loop)
-					{
-						// Let this thread handle sound looping.
-						Thread thread_job([&]() {
-							while (mSource)
-							{
-								if (!loop)
-								{
-									mSource->Stop(true);
-									break;
-								}
-							}
-							});
-
-						thread_job.detach();
-					}
+					mSource->Play(*loop);
 				}
 
 			private:
