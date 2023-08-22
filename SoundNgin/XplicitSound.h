@@ -11,6 +11,8 @@
 
 #pragma once
 
+#ifdef _WIN32
+
 #ifndef __XPLICIT_H__
 #	error Please include Xplicit.h before XplicitSound!
 #endif // __XPLICIT_H__
@@ -267,3 +269,5 @@ namespace Xplicit
 		};
 	}
 }
+
+#endif

@@ -24,25 +24,37 @@
 #include <Bites.h>
 #include <codecvt>
 
-#ifdef XPLICIT_WINDOWS
-
 static void XplicitThrowException(Xplicit::EngineError& err);
-static void XplicitThrowException(Xplicit::Win32Error& err);
 
+#ifdef _WIN32
+static void XplicitThrowException(Xplicit::Win32Error& err);
+#endif
+
+#ifdef _WIN32
 XPLICIT_MAIN()
+#else
+int main(int argc, char** argv)
+#endif
 {
 	try
 	{
-		XPLICIT_INIT_COM;
+#ifdef _WIN32
+        XPLICIT_INIT_COM;
 
 #ifdef XPLICIT_DEBUG
-		Xplicit::open_terminal();
+        Xplicit::open_terminal();
 #endif // XPLICIT_DEBUG
+#endif
+
 
 		// parse the connection uri.
 		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
 
-		std::string cmd_line = pCmdLine;
+#ifdef _WIN32
+        std::string cmd_line = pCmdLine;
+#else
+        std::string cmd_line = argv[1];
+#endif
 
 		if (cmd_line.empty() ||
 			cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == Xplicit::String::npos)
@@ -69,7 +81,10 @@ XPLICIT_MAIN()
 		{
 			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 50, 50, 50));
 
+#ifdef _WIN32
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
+#endif
+
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
@@ -83,12 +98,17 @@ XPLICIT_MAIN()
 	{
 		XplicitThrowException(err);
 	}
+#ifdef _WIN32
 	catch (Xplicit::Win32Error& err)
 	{
 		XplicitThrowException(err);
 	}
+#endif
 
+
+#ifdef _WIN32
 	XPLICIT_FINI_COM;
+#endif
 	return 0;
 }
 
@@ -105,13 +125,16 @@ static void XplicitThrowException(Xplicit::EngineError& err)
 	exit += converter.from_bytes(err.what());
 	exit += L"\n";
 
+#ifdef _WIN32
 	Xplicit::DialogHelper::message_box(L"XplicitPlayer",
 		L"XPLICIT Couldn't continue!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);
+#endif
 }
 
+#ifdef _WIN32
 static void XplicitThrowException(Xplicit::Win32Error& err)
 {
 #ifdef XPLICIT_DEBUG
@@ -133,5 +156,4 @@ static void XplicitThrowException(Xplicit::Win32Error& err)
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);
 }
-
 #endif
