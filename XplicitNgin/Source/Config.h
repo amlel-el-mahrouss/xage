@@ -28,8 +28,17 @@
 #include <spdlog/spdlog.h>
 #include <uuid/uuid.h>
 
-#include <WinSock2.h>
-#include <ws2tcpip.h>
+#ifdef _WIN32
+
+#   include <WinSock2.h>
+#   include <ws2tcpip.h>
+
+#else
+
+#   include <unistd.h>
+
+#endif
+
 
 #include <tuple>
 #include <array>
@@ -70,9 +79,17 @@
 #ifdef _MSC_VER
 #   define XPLICIT_MSVC (1)
 #   define XPLICIT_CXX_COMPILER "Microsoft Visual C++"
-#   define XPLICIT_CXX (1)
+#   define XPLICIT_CXX XPLICIT_MSVC
 #endif // ifdef _MSC_VER
 
+#else
+
+#ifdef __GNUC__
+#   define XPLICIT_GCC (2)
+#   define XPLICIT_CXX_COMPILER "GNU C++"
+#   define XPLICIT_CXX XPLICIT_GCC
+
+#   define XPLICIT_API
 #endif
 
 #ifndef _NDEBUG
@@ -81,13 +98,13 @@
 #   define XPLICIT_RELEASE (2)
 #endif
 
-#ifdef XPLICIT_DEBUG
+#ifdef _WIN32
 #   define XPLICIT_ASSERT(expression) (void)(                                                \
             (!!(expression)) ||                                                              \
             (_wassert(_CRT_WIDE(#expression), _CRT_WIDE(__FILE__), (unsigned)(__LINE__)), 0) \
         )
 #else
-#   define XPLICIT_ASSERT(expression)
+#   define XPLICIT_ASSERT(expression) assert(expression)
 #endif
 
 #ifndef XPLICIT_ENV
@@ -120,7 +137,7 @@ KLASS(KLASS&&) = default;\
 #   ifdef XPLICIT_WINDOWS
 #   define XPLICIT_SLEEP Sleep
 #   else
-#   error You need a sleep function
+#   define XPLICIT_SLEEP sleep
 #   endif
 #endif /* ifndef */
 

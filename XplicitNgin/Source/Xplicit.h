@@ -37,7 +37,7 @@ namespace Xplicit
 {
 	namespace FS = std::filesystem;
 
-	using Thread = std::jthread;
+    using Thread = std::thread;
 	using String = std::string;
 
 	template <typename CharType>
@@ -341,7 +341,7 @@ namespace Xplicit
 	class DialogHelper
 	{
 	public:
-		static int32_t message_box(LPCWSTR title, LPCWSTR message, int flags = MB_OK)
+        static int32_t message_box(wchar_t* title, wchar_t* message, int flags = 0)
 		{
 			if (!title)
 				return -1;
@@ -354,7 +354,7 @@ namespace Xplicit
 #endif // !XPLICIT_WINDOWS
 		}
 
-		static int32_t message_box(LPCWSTR title, LPCWSTR header, LPCWSTR message, PCWSTR icon, _TASKDIALOG_COMMON_BUTTON_FLAGS buttonFlags)
+        static int32_t message_box(wchar_t title, wchar_t header, wchar_t message, wchar_t icon, int buttonFlags)
 		{
 #ifdef XPLICIT_WINDOWS
 			if (!title)
@@ -384,7 +384,7 @@ namespace Xplicit
 
 	};
 
-	class Logger final
+    class XPLICIT_API Logger final
 	{
 	public:
 		Logger() = default;
@@ -405,16 +405,31 @@ namespace Xplicit
 			static spdlog::logger* LOGGER = nullptr;
 
 			if (!LOGGER)
-			{
-				auto info = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
+            {
+#ifdef _WIN32
+                auto info = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
+#else
+                auto info = std::make_shared<spdlog::sinks::ansicolor_stdout_sink_mt>();
+#endif
+
 				info->set_level(spdlog::level::info);
 				info->set_pattern("[%^Ngine%$] %v");
 
-				auto critical = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
-				critical->set_level(spdlog::level::critical);
-				critical->set_pattern("[%^Ngine%$] %v");
+#ifdef _WIN32
+                auto critical = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
+#else
+                auto critical = std::make_shared<spdlog::sinks::ansicolor_stdout_sink_mt>();
+#endif
 
-				auto err = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
+                critical->set_level(spdlog::level::critical);
+                critical->set_pattern("[%^Ngine%$] %v");
+
+#ifdef _WIN32
+                auto err = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
+#else
+                auto err = std::make_shared<spdlog::sinks::ansicolor_stdout_sink_mt>();
+#endif
+
 				err->set_level(spdlog::level::err);
 				err->set_pattern("[%^Ngine%$] %v");
 
@@ -428,7 +443,7 @@ namespace Xplicit
 
 	};
 
-	class Timer final
+    class XPLICIT_API Timer final
 	{
 	public:
 		Timer() noexcept : mTimer(std::chrono::steady_clock::now()) {}

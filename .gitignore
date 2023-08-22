@@ -4,6 +4,10 @@
 ### C++ ###
 # Prerequisites
 
+premake5
+*.dylib
+*.so
+
 ## User settings
 xcuserdata/
 *.xcworkspace
