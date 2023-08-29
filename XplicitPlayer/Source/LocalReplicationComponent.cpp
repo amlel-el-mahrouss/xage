@@ -56,7 +56,6 @@ namespace Xplicit::Player
 		{
 			switch (packet.id)
 			{
-
 			case COMPONENT_ID_ROXML:
 			{
 				String name = packet.buffer;
@@ -121,6 +120,33 @@ namespace Xplicit::Player
 		{
 			switch (packet.id)
 			{
+			case COMPONENT_ID_ROXML:
+			{
+				String name = packet.buffer;
+
+				RoXML::RoXMLDocumentParameters params;
+				params.Inline = true;
+				params.Path = name;
+
+				parser.parse(params);
+
+				if (name.empty() ||
+					packet.hash != _this->mHash)
+				{
+					if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnBadChallengeRoXML"))
+					{
+						ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+							RENDER->closeDevice();
+							}, POPUP_TYPE::CHALLENGE,
+							"ConnBadChallengeRoXML");
+
+					}
+
+					ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
+				}
+
+				break;
+			}
 			case COMPONENT_ID_SCRIPT:
 			{
 				String name = packet.buffer;

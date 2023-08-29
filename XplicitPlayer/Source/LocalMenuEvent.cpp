@@ -29,17 +29,14 @@ namespace Xplicit::Player
 			mEnabled(false),
 			mButtonNoHover(nullptr),
 			mButtonHover(nullptr),
-			mMenu(nullptr)
+			mPopup(nullptr)
 	{
 		/* resource loading */
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
 
-		String frame_path = "network_leave.png";
-		
-		mMenu = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
+		String frame_path;
 
-		frame_path.clear();
 		frame_path += "menu_hover.png";
 
 		mButtonHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
@@ -52,9 +49,6 @@ namespace Xplicit::Player
 
 	LocalMenuEvent::~LocalMenuEvent() 
 	{
-		if (mMenu)
-			(void)mMenu->drop();
-
 		if (mButtonHover)
 			(void)mButtonHover->drop();
 
@@ -78,12 +72,26 @@ namespace Xplicit::Player
 		static float pos_menu = 12;
 
 		if (KB->key_down(KEY_F3) &&
-			mTimeout < 0)
+			mTimeout < 0 && !mPopup)
 		{
 			tween_start = LOCAL_MENU_TWEEN_START;
 
-			mEnabled = !mEnabled;
+			mEnabled = true;
 			mTimeout = XPLICIT_TIMEOUT_MENU;
+
+			mPopup = ComponentSystem::get_singleton_ptr()->add<Player::PopupComponent>(
+				[&]() {
+					NetworkPacket packet{};
+
+					packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+					mNetwork->set_channel(XPLICIT_CHANNEL_DATA);
+
+					mNetwork->send(packet);
+
+					mEnabled = false;
+
+					std::exit(0);
+			}, POPUP_TYPE::LEAVE, "LeavePopup");
 		}
 
 		/* menu is being open */
@@ -96,24 +104,11 @@ namespace Xplicit::Player
 				SColor(255, 255, 255, 255),
 				true);
 
-			if (tween_start > LOCAL_MENU_TWEEN_END)
-				tween_start -= LOCAL_MENU_TWEENING;
-
-			if (KB->key_down(KEY_RETURN))
+			if (KB->key_down(KEY_ESCAPE))
 			{
-				NetworkPacket packet{};
+				ComponentSystem::get_singleton_ptr()->remove(mPopup);
+				mPopup = nullptr;
 
-				packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-				mNetwork->set_channel(XPLICIT_CHANNEL_DATA);
-
-				mNetwork->send(packet);
-
-				mEnabled = false;
-
-				std::exit(0);
-			}
-			else if (KB->key_down(KEY_ESCAPE))
-			{
 				mEnabled = false;
 			}
 		}
@@ -125,16 +120,6 @@ namespace Xplicit::Player
 				nullptr,
 				SColor(255, 255, 255, 255),
 				true);
-
-			if (tween_start < LOCAL_MENU_TWEEN_START)
-				tween_start += LOCAL_MENU_TWEENING;
-		}
-
-		if (tween_start < LOCAL_MENU_TWEEN_START)
-		{
-			RENDER->getVideoDriver()->draw2DImage(mMenu,
-				vector2di(XPLICIT_DIM.X / 2.8,
-					XPLICIT_DIM.Y / tween_start));
 		}
 
 		--mTimeout;

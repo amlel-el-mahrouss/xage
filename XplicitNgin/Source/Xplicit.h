@@ -354,7 +354,7 @@ namespace Xplicit
 #endif // !XPLICIT_WINDOWS
 		}
 
-        static int32_t message_box(wchar_t title, wchar_t header, wchar_t message, wchar_t icon, int buttonFlags)
+        static int32_t message_box(PCWSTR title, PCWSTR header, PCWSTR message, PCWSTR icon, int buttonFlags)
 		{
 #ifdef XPLICIT_WINDOWS
 			if (!title)

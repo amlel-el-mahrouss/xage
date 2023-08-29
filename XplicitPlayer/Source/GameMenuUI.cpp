@@ -51,6 +51,9 @@ namespace Xplicit::Player
 		case POPUP_TYPE::BANNED:
 			mText = platform_string("You have been banned, play-xplicit.com/appeals.\nPress OK to exit client.");
 			break;
+		case POPUP_TYPE::LEAVE:
+			mText = platform_string("Leave the game?");
+			break;
 		default:
 			ComponentSystem::get_singleton_ptr()->remove(this);
 			return;
@@ -72,7 +75,6 @@ namespace Xplicit::Player
 
 		mOk->W = 504;
 		mOk->H = 41;
-
 
 		mOk->X = mHudFrame->X;
 		mOk->Y = mHudFrame->Y + mHudFrame->H - mOk->H;

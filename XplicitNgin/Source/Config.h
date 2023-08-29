@@ -92,6 +92,8 @@
 #   define XPLICIT_API
 #endif
 
+#endif
+
 #ifndef _NDEBUG
 #   define XPLICIT_DEBUG (1)
 #else
@@ -152,3 +154,4 @@ namespace Xplicit
     typedef std::int64_t Int64;
     typedef std::uint64_t UInt64;
 }
+

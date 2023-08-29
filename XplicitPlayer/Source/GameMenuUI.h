@@ -29,6 +29,7 @@ namespace Xplicit::Player
 		TELEPORTING,
 		BANNED,
 		SHUTDOWN,
+		LEAVE,
 		KICK,
 	};
 

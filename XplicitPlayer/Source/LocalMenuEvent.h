@@ -13,6 +13,8 @@
 #include <Event.h>
 #include <Root.h>
 
+#include "GameMenuUI.h"
+
 namespace Xplicit::Player
 {
 	class LocalMenuEvent final : public Event
@@ -34,11 +36,11 @@ namespace Xplicit::Player
 
 	private:
 		NetworkComponent* mNetwork;
+		PopupComponent* mPopup;
 	
 	private:
 		irr::video::ITexture* mButtonNoHover;
 		irr::video::ITexture* mButtonHover;
-		irr::video::ITexture* mMenu;
 
 	private:
 		std::int64_t mTimeout;
