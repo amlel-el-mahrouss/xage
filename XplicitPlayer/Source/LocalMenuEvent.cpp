@@ -68,14 +68,11 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 
-		static float tween_start = LOCAL_MENU_TWEEN_START;
 		static float pos_menu = 12;
 
 		if (KB->key_down(KEY_F3) &&
 			mTimeout < 0 && !mPopup)
 		{
-			tween_start = LOCAL_MENU_TWEEN_START;
-
 			mEnabled = true;
 			mTimeout = XPLICIT_TIMEOUT_MENU;
 
