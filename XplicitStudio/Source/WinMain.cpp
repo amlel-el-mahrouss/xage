@@ -29,6 +29,9 @@
 static void XplicitThrowException(Xplicit::EngineError& err);
 static void XplicitThrowException(Xplicit::Win32Error& err);
 
+int64_t XPLICIT_FILE_COOLDOWN = 18000;
+bool XPLICIT_FILE_REQ = false;
+
 XPLICIT_MAIN()
 {
 	try
@@ -57,46 +60,39 @@ XPLICIT_MAIN()
 		
 		Xplicit::ImGUI::UIWindow ribbon;
 		
+		Xplicit::ImGUI::UIButton file(L"XplicitEd");
+
+		file.get()->W = 122;
+		file.get()->H = 30;
+
+		file.LeftClicked = []() {
+			XPLICIT_FILE_REQ = !XPLICIT_FILE_REQ;
+			XPLICIT_FILE_COOLDOWN = 18000;
+		};
+
+		Xplicit::ImGUI::UIButton exit_but(L"Quit Studio");
+
+		exit_but.get()->Y = 33;
+
+		exit_but.LeftClicked = []() {
+			XPLICIT_FILE_REQ = false;
+			std::exit(0);
+		};
+
+		exit_but.get()->W = 122;
+		exit_but.get()->H = 30;
+
 		ribbon.pos(0, 0);
 		ribbon.size(1280, 140, 30);
 
-		Xplicit::ImGUI::UIButton butEdit(L"EDIT");
-		butEdit->W = 169;
-		butEdit->H = 30;
-
-		butEdit->X = 169;
-
-		Xplicit::ImGUI::UIButton butInsert(L"INSERT");
-		butInsert->W = 169;
-		butInsert->H = 30;
-
-		butInsert->X = 169 * 2;
-
-		Xplicit::ImGUI::UIButton butImport(L"IMPORT");
-		butImport->W = 169;
-		butImport->H = 30;
-
-		butImport->X = 169 * 3;
-
-		Xplicit::ImGUI::UIButton butExport(L"EXPORT");
-		butExport->W = 169;
-		butExport->H = 30;
-
-		butExport->X = 169 * 3.5;
-
-		Xplicit::ImGUI::UIButton butPublish(L"PUBLISH");
-		butPublish->W = 169;
-		butPublish->H = 30;
-
-		butExport->X = 169 * 4;
-
 		Xplicit::ImGUI::UIWindow worldProperties;
+
 		worldProperties.set("World");
 		worldProperties.pos(970, 140);
 		worldProperties.size(310, 245, 23);
 
-
 		Xplicit::ImGUI::UIWindow classProperties;
+
 		classProperties.pos(970, 385);
 		classProperties.set("Properties");
 		classProperties.size(310, 312, 23);
@@ -126,15 +122,19 @@ XPLICIT_MAIN()
 
 			ribbon.update();
 
+			file.update();
+
 			worldProperties.update();
 			classProperties.update();
 
-			butEdit.update();
-			butInsert.update();
-			butImport.update();
-			butExport.update();
-			butPublish.update();
-
+			if (XPLICIT_FILE_REQ)
+			{
+				exit_but.update();
+		
+				if (XPLICIT_FILE_COOLDOWN)
+					--XPLICIT_FILE_COOLDOWN;
+			}
+		
 			RENDER->getVideoDriver()->endScene();
 		}
 	}
