@@ -46,7 +46,6 @@ namespace Xplicit
 		mAttribute.scale() = size;
 		mAttribute.color() = color;
 
-
 		this->insert("Scale", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Color", "{ R = 0, G = 0, B = 0 }");

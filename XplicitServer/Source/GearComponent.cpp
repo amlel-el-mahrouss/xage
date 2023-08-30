@@ -16,6 +16,18 @@
 
 namespace Xplicit
 {
+	const String XPLICIT_GEAR_DESTROY(const String& name) noexcept
+	{
+		String func_proto = "function(self) World.GearService.Destroy(";
+
+		func_proto += "\"";
+		func_proto += name;
+		func_proto += "\"";
+		func_proto += "); end";
+
+		return func_proto;
+	}
+
 	GearComponent::GearComponent(
 		const char* name,
 		const char* parent) noexcept
@@ -25,7 +37,9 @@ namespace Xplicit
 			Color<float>(0, 0, 0),
 			nullptr,
 			parent,
-			name)
+			name),
+		mParent(parent),
+		mName(name)
 	{
 		this->insert("Owner", "{}");
 		this->insert("Slot", "0");
@@ -34,12 +48,14 @@ namespace Xplicit
 		this->insert("CanDrop", "false");
 
 		this->insert("Drop", "false");
-		this->insert("Tooltip", "'Untitled'");
+		this->insert("Name", "'Untitled'");
 
 		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
+
+		this->insert("Destroy", XPLICIT_GEAR_DESTROY(name).c_str());
 	}
 
-	const char* GearComponent::name() noexcept { return "GearComponent"; }
+	const char* GearComponent::name() noexcept { return mName.c_str(); }
 
 	COMPONENT_TYPE GearComponent::type() noexcept { return COMPONENT_LOGIC; }
 
@@ -54,6 +70,10 @@ namespace Xplicit
 		ClassComponent::update(_self);
 
 		GearComponent* self = (GearComponent*)_self;
+
+		if (!self->index_as_bool("Enabled"))
+			return;
+
 		self->call("Update");
 	}
 
@@ -62,5 +82,3 @@ namespace Xplicit
 	void GearComponent::activate() noexcept { this->call("Activate"); }
 	void GearComponent::deactivate() noexcept { this->call("Deactivate"); }
 }
-
-#undef XPLICIT_LUA_GLOBAL

@@ -13,12 +13,6 @@
 
 namespace Xplicit
 {
-	/*
-	 *
-	 *	Replication Manager for CLua, C#
-	 *
-	 */
-
 	class ServerReplicationManager final
 	{
 		explicit ServerReplicationManager();

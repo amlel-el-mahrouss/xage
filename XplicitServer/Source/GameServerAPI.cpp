@@ -132,10 +132,21 @@ static int lua_CreateGear(lua_State* L)
 	return 0;
 }
 
+static int lua_DestroyGear(lua_State* L)
+{
+	const char* name = lua_tostring(L, 1);
+
+	auto gear = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::GearComponent>(name);
+
+	if (gear)
+		Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
+
+	return 0;
+}
+
 void XplicitLoadServerLua() noexcept
 {
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ReplicationService = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InventoryService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ScriptService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService = {}");
@@ -144,6 +155,10 @@ void XplicitLoadServerLua() noexcept
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineCreateGear");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService.Create = EngineCreateGear");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_DestroyGear);
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineDestroyGear");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService.Destroy = EngineDestroyGear");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadScript);
 

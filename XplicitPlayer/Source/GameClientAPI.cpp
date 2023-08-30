@@ -88,18 +88,18 @@ void XplicitLoadClientLua() noexcept
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
 
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Engine_LoadRoXML");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService.Load = Engine_LoadRoXML");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineLoadRoXML");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService.Load = EngineLoadRoXML");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Engine_PlaySound");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService.Play = Engine_PlaySound");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService.Play = EnginePlaySound");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_SetWindowCaption);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Engine_SetWindowCaption");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RenderingService.SetWindowCaption = Engine_SetWindowCaption");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RenderingService.SetWindowCaption = EngineSetWindowCaption");
 	
 	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::SoundComponent>();
 }
