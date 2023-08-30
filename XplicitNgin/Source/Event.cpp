@@ -50,6 +50,8 @@ namespace Xplicit
 
 	void Event::update() noexcept
 	{
+		this->operator()();
+	
 		for (size_t i = 0; i < mListeners.size(); i++)
 		{
 #ifdef XPLICIT_DEBUG
@@ -59,8 +61,6 @@ namespace Xplicit
 			if (mListeners[i])
 				mListeners[i]->update(this);
 		}
-
-		this->operator()();
 	}
 
 	const char* Event::name() noexcept { return ("Event"); }

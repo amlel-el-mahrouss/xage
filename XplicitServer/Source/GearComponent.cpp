@@ -9,6 +9,7 @@
 
 // Include the component class.
 
+#include "ServerReplicationManager.h"
 #include "GearComponent.h"
 
 //! This file handles Gears (Sword, Pistol, Build Tools...)
@@ -26,13 +27,14 @@ namespace Xplicit
 			parent,
 			name)
 	{
+		this->insert("Owner", "{}");
 		this->insert("Slot", "0");
 
 		this->insert("Enabled", "false");
 		this->insert("CanDrop", "false");
 
 		this->insert("Drop", "false");
-		this->insert("Tooltip", "'Gear'");
+		this->insert("Tooltip", "'Untitled'");
 
 		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 	}
@@ -47,7 +49,13 @@ namespace Xplicit
 
 	bool GearComponent::should_update() noexcept { return true; }
 
-	void GearComponent::update(ClassPtr _self) { ClassComponent::update(_self); }
+	void GearComponent::update(ClassPtr _self) 
+	{ 
+		ClassComponent::update(_self);
+
+		GearComponent* self = (GearComponent*)_self;
+		self->call("Update");
+	}
 
 	//! event slots.
 	void GearComponent::click() noexcept { this->call("Click"); }

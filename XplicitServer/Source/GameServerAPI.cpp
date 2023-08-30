@@ -9,6 +9,7 @@
 
 #include "ServerReplicationManager.h"
 #include "HumanoidComponent.h"
+#include "GearComponent.h"
 
 #include <CLua/CLua.hpp>
 #include <RoXML.h>
@@ -122,12 +123,27 @@ static int lua_NetworkService_Fire(lua_State* L)
 	return 1;
 }
 
+static int lua_CreateGear(lua_State* L)
+{
+	const char* name = lua_tostring(L, 1);
+
+	Xplicit::GearComponent* gear = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::GearComponent>(name, "World");
+
+	return 0;
+}
+
 void XplicitLoadServerLua() noexcept
 {
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ReplicationService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InventoryService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ScriptService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService = {}");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_CreateGear);
+
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineCreateGear");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService.Create = EngineCreateGear");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadScript);
 

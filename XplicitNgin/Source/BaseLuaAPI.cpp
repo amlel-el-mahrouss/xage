@@ -64,7 +64,8 @@ static int lua_Destroy(lua_State* L)
 
 	if (auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::ClassComponent>(name.c_str()))
 	{
-		if (instance->parent() == parent)
+		if (instance->parent() == parent ||
+			instance->name() == name)
 		{
 			if (instance->get_attribute().script())
 				Xplicit::ComponentSystem::get_singleton_ptr()->remove(instance->get_attribute().script());

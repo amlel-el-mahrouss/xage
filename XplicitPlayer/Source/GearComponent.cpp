@@ -25,11 +25,10 @@ namespace Xplicit::Player
 			name),
 		mMeshPtr(nullptr)
 	{
-		XPLICIT_ASSERT(mesh);
+		this->insert("Mesh", mesh ? mesh : "nil");
 
-		this->insert("Mesh", mesh);
-
-		mMeshPtr = std::make_unique<StaticMesh>(mesh, mName.c_str(), mParent.c_str());
+		if (mesh)
+			mMeshPtr = std::make_unique<StaticMesh>(mesh, mName.c_str(), mParent.c_str());
 	}
 
 	const char* GearComponent::name() noexcept { return "GearComponent"; }
@@ -52,7 +51,7 @@ namespace Xplicit::Player
 		String path = _this->index_as_string("Mesh");
 
 		if (auto _path = _this->mMeshPtr->path();
-			path != _path)
+			path != _path && !path.empty())
 		{
 			_this->mMeshPtr.reset();
 			_this->mMeshPtr = std::make_unique<StaticMesh>(_path.c_str(), _this->mName.c_str(), _this->mParent.c_str());

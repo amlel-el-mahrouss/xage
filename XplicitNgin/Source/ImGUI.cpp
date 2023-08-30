@@ -84,6 +84,12 @@ namespace Xplicit::ImGUI
 			++m_iFadeIn;
 	}
 
+	void UIButton::label(const PChar* text)
+	{
+		this->mText = text;
+		XPLICIT_ASSERT(!this->mText.empty());
+	}
+
 	UIEditBox::UIEditBox(const PChar* placeHolder)
 		: mPlaceholder(placeHolder ? placeHolder : L"..."), mText(L"")
 	{

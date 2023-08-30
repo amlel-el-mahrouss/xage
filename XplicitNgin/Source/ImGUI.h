@@ -31,6 +31,7 @@ namespace Xplicit::ImGUI
 
 	public:
 		void update();
+		void label(const PChar* text);
 		UIFrame* get() const { return m_pFrame; }
 
 	public:

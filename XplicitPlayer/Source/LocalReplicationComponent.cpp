@@ -9,6 +9,7 @@
 
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
+#include "GearComponent.h"
 #include "Application.h"
 #include "GameMenuUI.h"
 
@@ -56,6 +57,14 @@ namespace Xplicit::Player
 		{
 			switch (packet.id)
 			{
+			case COMPONENT_ID_GEAR:
+			{
+				String name = packet.buffer;
+				GearComponent* gear = ComponentSystem::get_singleton_ptr()->add<GearComponent>(name.c_str(), "World");
+				XPLICIT_ASSERT(gear);
+
+				break;
+			}
 			case COMPONENT_ID_ROXML:
 			{
 				String name = packet.buffer;
@@ -120,6 +129,13 @@ namespace Xplicit::Player
 		{
 			switch (packet.id)
 			{
+			case COMPONENT_ID_GEAR:
+			{
+				GearComponent* gear = ComponentSystem::get_singleton_ptr()->add<GearComponent>("GearComponent");
+				ComponentSystem::get_singleton_ptr()->remove(gear);
+
+				break;
+			}
 			case COMPONENT_ID_ROXML:
 			{
 				String name = packet.buffer;

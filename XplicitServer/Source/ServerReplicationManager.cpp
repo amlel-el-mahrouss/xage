@@ -49,7 +49,7 @@ namespace Xplicit
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
 			mNetwork->get(i)->packet.id = id;
 
-			memcpy(mNetwork->get(i)->packet.buffer, path, XPLICIT_NETWORK_BUF_SZ);
+			memcpy(mNetwork->get(i)->packet.buffer, path, strlen(path));
 
 			break;
 		}
