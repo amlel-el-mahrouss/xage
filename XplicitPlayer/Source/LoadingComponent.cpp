@@ -36,14 +36,19 @@ namespace Xplicit::Player
 	LoadingComponent::LoadingComponent() 
 		:
 		mNetwork(nullptr), 
-		mTimeout(XPLICIT_TIMEOUT)
+		mTimeout(XPLICIT_TIMEOUT),
+		mLoadingFrame()
 	{
 		ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>("Camera");
+		
+		mLoadingFrame.X = 0;
+		mLoadingFrame.Y = 0;
+
+		mLoadingFrame.W = RENDER->getVideoDriver()->getScreenSize().Width;
+		mLoadingFrame.H = RENDER->getVideoDriver()->getScreenSize().Height;
 	}
 
-	LoadingComponent::~LoadingComponent()
-	{
-	}
+	LoadingComponent::~LoadingComponent() = default;
 
 	bool LoadingComponent::mEnabled = true;
 
@@ -64,6 +69,7 @@ namespace Xplicit::Player
 				}, POPUP_TYPE::BANNED, "StopPopup");
 
 			mEnabled = false;
+
 			ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
 
 			return;
@@ -95,12 +101,22 @@ namespace Xplicit::Player
 			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
-			RENDER->setWindowCaption(L"Xplicit [ Place1 ]");
+			RENDER->setWindowCaption(L"Xplicit [ Loaded ]");
 
 			XPLICIT_INFO("World:LocalSpawn [EVENT]");
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
 
+			XPLICIT_GET_DATA_DIR(XPLICIT_STUDIO_DIRECTORY);
+			Xplicit::String skydome_path = XPLICIT_STUDIO_DIRECTORY;
+			skydome_path += "/Contents/Studio/Skydome.obj";
+
+			irr::scene::IMeshSceneNode* Skydome = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getMesh(skydome_path.c_str()));
+
+			Skydome->setPosition(irr::core::vector3df(0, 0, 0)); 
+			Skydome->setName("DefaultSkyDay");
+
 			mEnabled = false;
+
 			return;
 		}
 		else

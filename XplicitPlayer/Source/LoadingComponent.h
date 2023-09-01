@@ -10,6 +10,7 @@
 #pragma once
 
 #include <NetworkComponent.h>
+#include <ImGUI.h>
 #include <Root.h>
 #include <Uri.h>
 
@@ -37,6 +38,7 @@ namespace Xplicit::Player
 		void reset() noexcept;
 
 	private:
+		ImGUI::UIFrame mLoadingFrame;
 		NetworkComponent* mNetwork;
 		std::int64_t mTimeout; /* Network Timeout, incremented on each connection failure. */
 

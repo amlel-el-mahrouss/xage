@@ -85,11 +85,11 @@ int main(int argc, char** argv)
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 #endif
 
-			Xplicit::EventSystem::get_singleton_ptr()->update();
-			Xplicit::ComponentSystem::get_singleton_ptr()->update();
-
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
+
+			Xplicit::EventSystem::get_singleton_ptr()->update();
+			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 			RENDER->getVideoDriver()->endScene();
 		}

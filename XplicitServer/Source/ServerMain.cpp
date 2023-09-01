@@ -25,15 +25,15 @@
 #include "HealthMonitorEvent.h"
 #include "ServerReplicationManager.h"
 
-const char* XPLICIT_MANIFEST_FILE = "Manifest.xml";
-bool XPLICIT_EXIT_REQUESTED = false;
+static bool XPLICIT_EXIT_REQUESTED = false;
 
 static void xplicit_print_help()
 {
-	XPLICIT_INFO("\a+-------------- Xplicit Server Manual --------------+");
+	XPLICIT_INFO("\a+-------------- Xplicit Manual --------------+");
 	XPLICIT_INFO("exit: Exits the current server.");
-	XPLICIT_INFO("xconnect: Get Xconnect network info.");
-	XPLICIT_INFO("+-------------- Xplicit Server Manual --------------+");
+	XPLICIT_INFO("xconnect: Gets Xconnect network info.");
+	XPLICIT_INFO("ls: Lists players.");
+	XPLICIT_INFO("+-------------- Xplicit Manual --------------+");
 }
 
 static void XplicitLoadShell()

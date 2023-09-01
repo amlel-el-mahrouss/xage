@@ -51,6 +51,8 @@ namespace Xplicit
 
 			memcpy(mNetwork->get(i)->packet.buffer, path, strlen(path));
 
+			NetworkServerContext::send(mNetwork, mNetwork->get(i));
+
 			break;
 		}
 	}
@@ -72,6 +74,8 @@ namespace Xplicit
 			
 			memcpy(mNetwork->get(i)->packet.buffer, path, XPLICIT_NETWORK_BUF_SZ);
 
+			NetworkServerContext::send(mNetwork, mNetwork->get(i));
+
 			break;
 		}
 	}
@@ -92,6 +96,8 @@ namespace Xplicit
 			mNetwork->get(i)->packet.id = id;
 
 			memcpy(mNetwork->get(i)->packet.buffer, path, XPLICIT_NETWORK_BUF_SZ);
+
+			NetworkServerContext::send(mNetwork, mNetwork->get(i));
 
 			break;
 		}

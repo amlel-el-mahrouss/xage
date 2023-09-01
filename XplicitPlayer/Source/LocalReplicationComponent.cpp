@@ -69,12 +69,6 @@ namespace Xplicit::Player
 			{
 				String name = packet.buffer;
 
-				RoXML::RoXMLDocumentParameters params;
-				params.Inline = true;
-				params.Path = name;
-
-				parser.parse(params);
-
 				if (name.empty() ||
 					packet.hash != _this->mHash)
 				{
@@ -89,6 +83,12 @@ namespace Xplicit::Player
 
 					ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
 				}
+
+				RoXML::RoXMLDocumentParameters params;
+				params.Inline = true;
+				params.Path = name;
+
+				parser.parse(params);
 
 				break;
 			}
