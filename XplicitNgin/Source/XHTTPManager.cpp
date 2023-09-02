@@ -14,7 +14,7 @@
 
 namespace Xplicit::Player
 {
-	bool XHTTPManager::download(const String& assetId) const noexcept
+	bool XHTTPManager::download(const String assetId, const String outputFileName) const noexcept
 	{
         HTTP::HTTPWriter http_writer;
         
@@ -25,13 +25,6 @@ namespace Xplicit::Player
 
         // We don't use MakeReq.exe here, it could be missing.
 
-        auto http_hdr = HTTP::HTTP::HTTPHeader{ .Type = HTTP::HTTP::RequestType::GET, .Bytes = const_cast<char*>(assetId.data()), .Size = static_cast<int>(assetId.size()), };
-
-        Ref<HTTP::HTTP::HTTPHeader*> http_hdr_wrapper{ &http_hdr };
-
-        if (!http_writer.send_from_socket(sock, http_hdr_wrapper))
-            return false;
-
         // static is added here wtf??
         // - check the preprocessor value of XPLICIT_GET_DATA_DIR :)
         static XPLICIT_GET_DATA_DIR(full_path);
@@ -40,7 +33,7 @@ namespace Xplicit::Player
 
         http_path += full_path;
         http_path += "Contents/";
-        http_path += assetId;
+        http_path += outputFileName;
 
         std::ofstream file = mWriter.write(http_path.c_str());
 
@@ -51,6 +44,13 @@ namespace Xplicit::Player
 
         if (bytes)
         {
+            auto http_hdr = HTTP::HTTP::HTTPHeader{ .Type = HTTP::HTTP::RequestType::GET, .Bytes = const_cast<char*>(assetId.data()), .Size = static_cast<int>(assetId.size()), };
+
+            Ref<HTTP::HTTP::HTTPHeader*> http_hdr_wrapper{ &http_hdr };
+
+            if (!http_writer.send_from_socket(sock, http_hdr_wrapper))
+                return false;
+
             memset(bytes, 0, MAX_BUF);
 
             http_writer.read_from_socket(sock, bytes, MAX_BUF);
@@ -58,7 +58,7 @@ namespace Xplicit::Player
             file << bytes;
             file.close();
 
-            delete bytes;
+            delete[] bytes;
 
             return true;
         }

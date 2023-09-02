@@ -48,7 +48,7 @@ namespace Xplicit
 
 		this->insert("Scale", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
-		this->insert("Color", "{ R = 0, G = 0, B = 0 }");
+		this->insert("Color", "{ R = 0, G = 0, B = 0, A = 1 }");
 
 		this->insert("Alpha", "1.0");
 		this->insert("Slots", "{ }");

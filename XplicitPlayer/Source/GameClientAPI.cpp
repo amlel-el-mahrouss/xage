@@ -10,6 +10,7 @@
 #include "LocalNetworkMonitorEvent.h"
 #include "SoundComponent.h"
 #include "Application.h"
+#include "Mesh.h"
 
 #include <XplicitSound.h>
 #include <CLua/CLua.hpp>
@@ -42,7 +43,6 @@ static int lua_PlaySound(lua_State* L)
 		XPLICIT_CRITICAL("There was an error executing this procedure!");
 	}
 
-	
 	return 0;
 }
 
@@ -78,6 +78,17 @@ static int lua_LoadRoXML(lua_State* L)
 
 	lua_pushboolean(L, true);
 	return 1;
+}
+
+static int lua_LoadModel(lua_State* L)
+{
+	auto _path = lua_tostring(L, 1);
+	auto _name = lua_tostring(L, 2);
+	auto _parent = lua_tostring(L, 3);
+
+	Xplicit::Player::StaticMesh* mesh = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::StaticMesh>(_path, _name, _parent);
+
+	return 0;
 }
 
 void XplicitLoadClientLua() noexcept

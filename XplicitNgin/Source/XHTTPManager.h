@@ -30,7 +30,7 @@ namespace Xplicit::Player
 		XPLICIT_COPY_DEFAULT(XHTTPManager);
 		
 	public:
-		bool download(const String& assetId) const noexcept;
+		bool download(const String assetId, const String outputFileName) const noexcept;
 		void set_endpoint(const String& endpoint) noexcept;
 		
 	public:

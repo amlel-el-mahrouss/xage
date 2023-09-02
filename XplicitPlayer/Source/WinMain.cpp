@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);
 
 		if (!app_ptr)
-			throw Xplicit::EngineError("XplicitNgine had an fatal error, and couldn't continue; we're sorry!");
+			throw Xplicit::EngineError("XPLICIT couldn't continue; we're sorry!");
 
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&

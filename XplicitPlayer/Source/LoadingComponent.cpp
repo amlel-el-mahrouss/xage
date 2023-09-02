@@ -101,7 +101,7 @@ namespace Xplicit::Player
 			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
-			RENDER->setWindowCaption(L"Xplicit [ Loaded ]");
+			RENDER->setWindowCaption(L"XPLICIT [ Loaded ]");
 
 			XPLICIT_INFO("World:LocalSpawn [EVENT]");
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");

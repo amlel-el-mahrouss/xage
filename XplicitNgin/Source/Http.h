@@ -185,7 +185,7 @@ namespace Xplicit::HTTP
     class HTTPWriter final 
     {
     public:
-        explicit HTTPWriter()
+        HTTPWriter()
         {
             m_SslCtx = init_ssl();
             m_Ssl = SSL_new(m_SslCtx);
@@ -218,11 +218,15 @@ namespace Xplicit::HTTP
             SSL_CTX_free(m_SslCtx);
         }
 
+    public:
         HTTPWriter& operator=(const HTTPWriter&) = default;
         HTTPWriter(const HTTPWriter&) = default;
 
+    public:
         HTTPSharedPtr create_and_connect(const std::string dns) 
         {
+            std::cout << dns << std::endl;
+
             if (dns.empty()) 
                 throw HTTPError(HTTP_DNS_ERROR);
 
@@ -231,22 +235,25 @@ namespace Xplicit::HTTP
             if (!sock)
                 throw HTTPError(HTTP_INTERNAL_ERROR);
             
-            sock->m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+            sock->m_Socket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
             if (sock->m_Socket == INVALID_SOCKET) 
                 throw HTTPError(HTTP_INTERNAL_ERROR);
 
             ZeroMemory(&sock->m_Addr, sizeof(struct sockaddr_in));
 
+            sock->m_Addr.sin_family = AF_INET;
             sock->m_Addr.sin_addr.s_addr = inet_addr(dns.c_str());
+            sock->m_Addr.sin_port = ::htons(XPLICIT_HTTP_PORT);
 
             if (sock->m_Addr.sin_addr.s_addr == INADDR_NONE)
             {
                 struct hostent* host = gethostbyname(dns.c_str());
+
                 if (!host)
                 {
                     closesocket(sock->m_Socket);
-                    
+
                     xplicit_log("Invalid hostname! returning nullptr...");
                     xplicit_log(dns.c_str());
 
@@ -256,13 +263,11 @@ namespace Xplicit::HTTP
                 sock->m_Addr.sin_addr.s_addr = *((u_long*)host->h_addr);
             }
 
-            sock->m_Addr.sin_port = ::htons(XPLICIT_HTTP_PORT);
+            sock->m_Dns = String{ dns.data() };
 
-            sock->m_Dns = std::string{ dns.data() };
+            int result = connect(sock->m_Socket, reinterpret_cast<SOCKADDR*>(&sock->m_Addr), sizeof(sock->m_Addr));
+            if (result == SOCKET_ERROR) return nullptr;
 
-            if (::connect(sock->m_Socket, reinterpret_cast<sockaddr*>(&sock->m_Addr), sizeof(sockaddr_in)) == SOCKET_ERROR)
-                return nullptr;
-            
             SSL_set_fd(m_Ssl, sock->m_Socket);
             auto status = SSL_connect(m_Ssl);
 

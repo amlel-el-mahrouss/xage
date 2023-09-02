@@ -38,6 +38,21 @@ namespace Xplicit::Player
 		{
 			mNode = RENDER->getSceneManager()->addMeshSceneNode(mMdl);
 			mPhysics = PHYSICS_COMPLEX;
+
+			mNode->setPosition(vector3df(0, 0, 0));
+
+			this->assign("Position.X", "0");
+			this->assign("Position.Y", "0");
+			this->assign("Position.Z", "0");
+
+			this->assign("Scale.X", std::to_string(mNode->getScale().X).c_str());
+			this->assign("Scale.Y", std::to_string(mNode->getScale().Y).c_str());
+			this->assign("Scale.Z", std::to_string(mNode->getScale().Z).c_str());
+
+			this->assign("Color.R", std::to_string(mNode->getMaterial(0).AmbientColor.getRed()).c_str());
+			this->assign("Color.G", std::to_string(mNode->getMaterial(0).AmbientColor.getGreen()).c_str());
+			this->assign("Color.B", std::to_string(mNode->getMaterial(0).AmbientColor.getBlue()).c_str());
+			this->assign("Color.A", std::to_string(mNode->getMaterial(0).AmbientColor.getAlpha()).c_str());
 		}
 	}
 
@@ -50,10 +65,31 @@ namespace Xplicit::Player
 			mMdl->drop();
 	}
 
-	const String& StaticMesh::path() noexcept
+	void StaticMesh::update(ClassPtr class_ptr)
 	{
-		return mPath;
+		auto self = (StaticMesh*)class_ptr;
+
+		auto pos = self->mNode->getPosition();
+
+		pos.X = self->index_as_number("Position.X");
+		pos.Y = self->index_as_number("Position.Y");
+		pos.Z = self->index_as_number("Position.Z");
+
+		self->mNode->setPosition(pos);
+
+		auto scale = self->mNode->getScale();
+
+		scale.X = self->index_as_number("Scale.X");
+		scale.Y = self->index_as_number("Scale.Y");
+		scale.Z = self->index_as_number("Scale.Z");
+
+		self->mNode->getMaterial(0).DiffuseColor.setRed(self->index_as_number("Color.R"));
+		self->mNode->getMaterial(0).DiffuseColor.setGreen(self->index_as_number("Color.G"));
+		self->mNode->getMaterial(0).DiffuseColor.setBlue(self->index_as_number("Color.B"));
+		self->mNode->getMaterial(0).DiffuseColor.setAlpha(self->index_as_number("Color.A"));
 	}
+
+	const String& StaticMesh::path() noexcept { return mPath; }
 
 	bool StaticMesh::has_physics() noexcept { return mPhysics == PHYSICS_COMPLEX;  }
 

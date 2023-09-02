@@ -94,29 +94,41 @@ namespace Xplicit::Player
 			}
 			case COMPONENT_ID_SCRIPT:
 			{
-				auto script = Utils::UriParser(packet.buffer);
-				script /= packet.buffer;
+				String url = packet.buffer;
 
-				if (script.protocol() != XPLICIT_XASSET_IDENT)
+				if (url.empty() ||
+					url.find(XPLICIT_XASSET_IDENT) == String::npos)
 					return;
+
+				String substr = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
+
+				url.clear();
+				url = "/";
+				url += substr;
+
+				std::cout << url << std::endl;
 
 				static LocalNetworkMonitorEvent* monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 				
 				if (!monitor)
 					monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 
+				monitor->HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
+
+				auto tmp = std::to_string(xplicit_get_epoch()) + "-tmp.lua";
+
 				if (monitor &&
-					monitor->HTTP->download(script.get().c_str()))
+					monitor->HTTP->download(url, tmp))
 				{
 					XPLICIT_GET_DATA_DIR(full_path);
 
 					String full_download_path;
+
 					full_download_path += full_path;
 					full_download_path += "Contents/";
-					full_download_path += script.get().c_str();
+					full_download_path += tmp;
 
 					ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str(), true);
-
 				}				
 				
 				break;

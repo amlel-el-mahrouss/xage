@@ -42,12 +42,18 @@ namespace Xplicit::Player
 		StaticMesh(const StaticMesh&) = default;
 		
 	public:
+		const char* name() noexcept { return "StaticMesh"; }
+
 		irr::scene::ISceneNode* node() const { return mNode; }
 		irr::scene::IMesh* operator->() const { return mMdl; }
 
 	public:
 		const String& path() noexcept;
 		bool has_physics() noexcept;
+
+	public:
+		static bool should_update() { return true; }
+		static void update(ClassPtr class_ptr);
 
 	protected:
 		irr::scene::ISceneNode* mNode; // Model Data pointer, generic
@@ -74,9 +80,11 @@ namespace Xplicit::Player
 		explicit StaticBundleMesh(const char* character_path);
 		virtual ~StaticBundleMesh() noexcept;
 
+	public:
 		StaticBundleMesh& operator=(const StaticBundleMesh&) = default;
 		StaticBundleMesh(const StaticBundleMesh&) = default;
 
+	public:
 		irr::scene::IMeshSceneNode* node_at(const std::size_t& index) const { return mParts[index].first; }
 		irr::scene::IMesh* model_at(const std::size_t& index) const { return mParts[index].second; }
 

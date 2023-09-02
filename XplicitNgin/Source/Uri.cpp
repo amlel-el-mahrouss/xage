@@ -41,9 +41,6 @@ namespace Xplicit::Utils
 
 	std::string UriParser::get() noexcept
 	{
-		if (m_data.empty())
-			return (m_protocol + "invalid");
-
 		std::string uri;
 		
 		for (size_t i = 0; i < m_data.size(); i++)
