@@ -60,38 +60,38 @@ namespace Xplicit::Player
 
             std::string _bytes = bytes;
 
-            auto pos_bytes = _bytes.find("\r\n\r\n");
+            auto valid_header = _bytes.find("\r\n\r\n");
 
-            if (pos_bytes == std::string::npos)
+            if (valid_header == std::string::npos)
             {
-                pos_bytes = _bytes.find("\n\n");
-                if (pos_bytes == std::string::npos)
+                valid_header = _bytes.find("\n\n");
+                if (valid_header == std::string::npos)
                 {
                     std::cout << "[HTTPS] Fail, invalid http response." << "\n";
                     return false;
                 }
             }
 
-            if (pos_bytes != std::string::npos)
+            if (valid_header != std::string::npos)
             {
-                std::cout << "Content-Length: " << HTTP::HTTPHelpers::content_length<10>(_bytes) << "\n";
-                std::cout << "Body: " << pos_bytes << "\n";
-
                 auto sz = HTTP::HTTPHelpers::content_length<10>(_bytes);
 
-                http_writer.read_from_socket(sock, bytes, sz);
+                delete bytes;
+                bytes = new char[sz];
 
-                _bytes.clear();
-                _bytes = bytes;
+                std::cout << "Content-Length: " << sz << "\n";
 
-                std::string start = _bytes.substr(0, sz);
+                auto _sz = http_writer.read_from_socket(sock, bytes, sz);
 
-                file << start;
+                while (_sz > 0)
+                {
+                    file.write(bytes, _sz);
+                    _sz = http_writer.read_from_socket(sock, bytes, sz);
+                }
 
                 file.flush();
                 file.close();
             }
-
 
             delete[] bytes;
 

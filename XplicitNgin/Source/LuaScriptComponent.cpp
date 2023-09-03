@@ -29,7 +29,6 @@ namespace Xplicit
 			comp->insert("ShouldRun", "false");
 			comp->insert("Run", "function(self) self.ShouldRun = true end");
 
-
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{} = {}", comp->name(), "{}").c_str());
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{}.Parent = {}", comp->name(), std::format("_G.{}.{}", comp->parent(), comp->name())).c_str());
 

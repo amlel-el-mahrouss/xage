@@ -1,0 +1,8 @@
+<RoXML>
+	<CLua>
+		local created = false;
+		World.Slot.Login:Connect(function(id)
+			World.NetworkService.Fire('xasset://Library/Instances.lua', World.SCRIPT, id, World.CREATE);							World.NetworkService.Fire('xasset://Library/Gears.lua', World.SCRIPT, id, World.CREATE);
+		end)
+	</CLua>
+</RoXML>

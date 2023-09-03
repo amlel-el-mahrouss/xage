@@ -146,7 +146,7 @@ static int lua_DestroyGear(lua_State* L)
 
 void XplicitLoadServerLua() noexcept
 {
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ReplicationService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.NetworkService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ScriptService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService = {}");
@@ -173,5 +173,5 @@ void XplicitLoadServerLua() noexcept
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NetworkService_Fire);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineFireServer");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ReplicationService.Fire = EngineFireServer");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.NetworkService.Fire = EngineFireServer");
 }
