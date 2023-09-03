@@ -49,6 +49,7 @@ namespace Xplicit
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
 			mNetwork->get(i)->packet.id = id;
 
+			memset(mNetwork->get(i)->packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
 			memcpy(mNetwork->get(i)->packet.buffer, path, strlen(path));
 
 			NetworkServerContext::send(mNetwork, mNetwork->get(i));
@@ -71,7 +72,8 @@ namespace Xplicit
 
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_DESTROY] = NETWORK_REPL_CMD_DESTROY;
 			mNetwork->get(i)->packet.id = id;
-			
+
+			memset(mNetwork->get(i)->packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
 			memcpy(mNetwork->get(i)->packet.buffer, path, XPLICIT_NETWORK_BUF_SZ);
 
 			NetworkServerContext::send(mNetwork, mNetwork->get(i));
@@ -95,6 +97,7 @@ namespace Xplicit
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_FIRE] = NETWORK_REPL_CMD_FIRE;
 			mNetwork->get(i)->packet.id = id;
 
+			memset(mNetwork->get(i)->packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
 			memcpy(mNetwork->get(i)->packet.buffer, path, XPLICIT_NETWORK_BUF_SZ);
 
 			NetworkServerContext::send(mNetwork, mNetwork->get(i));

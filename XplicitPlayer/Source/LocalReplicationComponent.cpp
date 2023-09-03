@@ -97,6 +97,8 @@ namespace Xplicit::Player
 			{
 				String url = packet.buffer;
 
+				memset(packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
+
 				if (url.empty() ||
 					url.find(XPLICIT_XASSET_IDENT) == String::npos)
 					return;

@@ -24,6 +24,8 @@
 #include <codecvt>
 #include <Root.h>
 
+#include "PropertyGrid.h"
+
 #ifdef XPLICIT_WINDOWS
 
 static void XplicitThrowException(Xplicit::EngineError& err);
@@ -34,9 +36,13 @@ bool XPLICIT_FILE_REQ = false;
 
 XPLICIT_MAIN()
 {
+
 	try
 	{
 		XPLICIT_INIT_COM;
+
+		InitPropertyGrid(hInst);
+
 
 		XplicitLoadBaseLua();
 
@@ -49,7 +55,7 @@ XPLICIT_MAIN()
 		Xplicit::Root::get_singleton_ptr()->set(irr::createDevice(irr::video::EDT_OPENGL,
 			irr::core::dimension2du(1280, 720),
 			32U,
-			true,
+			false,
 			true,
 			true,
 			kb));
