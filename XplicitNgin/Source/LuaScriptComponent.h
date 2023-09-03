@@ -44,11 +44,7 @@ namespace Xplicit
 		explicit LuaScriptComponent(const char* name) 
 			: mName(name), ClassComponent(
 				std::string("World").c_str(), (std::string("CLS_") + std::to_string(xplicit_get_epoch())).c_str())
-		{
-			this->insert("Destroy", this->destroy_snippet().c_str());
-			this->insert("ShouldRun", "false");
-			this->insert("Run", "function(self) self.ShouldRun = true end");
-		}
+		{}
 
 		~LuaScriptComponent() override = default;
 
@@ -57,7 +53,7 @@ namespace Xplicit
 
 	public:
 		COMPONENT_TYPE type() noexcept;
-		const char* name() noexcept;
+		const char* path() noexcept;
 
 	public:
 		static void update(void* class_ptr);
