@@ -7,7 +7,9 @@
  * =====================================================================
  */
 
+#include "LuaScriptComponent.h"
 #include "ClassComponent.h"
+
 #include "HelperMacros.h"
 #include "Xplicit.h"
 
@@ -67,8 +69,8 @@ static int lua_Destroy(lua_State* L)
 		if (instance->parent() == parent ||
 			instance->name() == name)
 		{
-			if (instance->get_attribute().script())
-				Xplicit::ComponentSystem::get_singleton_ptr()->remove(instance->get_attribute().script());
+			if (instance->script())
+				Xplicit::ComponentSystem::get_singleton_ptr()->remove(instance->script());
 
 			Xplicit::ComponentSystem::get_singleton_ptr()->remove<Xplicit::ClassComponent>(instance);
 		}

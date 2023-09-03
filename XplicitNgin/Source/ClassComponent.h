@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XplicitServer
+ *			XplicitNgin
  *			Copyright Xplicit Inc, all rights reserved.
  *
  * =====================================================================
@@ -19,19 +19,23 @@
 
 namespace Xplicit
 {
-	class XPLICIT_API ClassComponent : public Component, public Lua::CLuaClass
+	class XPLICIT_API ClassComponent : public Component, public Lua::CLuaClass, public XAttribute
 	{
 	public:
 		ClassComponent() = delete;
 
 	public:
-		explicit ClassComponent(
+		ClassComponent(
 			const Vector<float>& position, 
 			const Vector<float>& size,
 			const Color<float>& color,
 			const char* script = nullptr,
 			const char* parent = XPLICIT_CLASS_NAMESPACE,
 			const char* name = "Class");
+
+		ClassComponent(
+			const char* parent,
+			const char* name);
 
 		~ClassComponent() override;
 
@@ -48,13 +52,9 @@ namespace Xplicit
 
 	public:
 		static bool should_update() noexcept;
-		static void update(void* _this);
-
-	public:
-		XAttribute& get_attribute() noexcept;
+		static void update(ClassPtr _this);
 
 	private:
-		XAttribute mAttribute;
 		String mParent;
 		String mName;
 

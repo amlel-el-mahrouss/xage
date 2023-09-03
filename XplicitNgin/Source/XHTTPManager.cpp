@@ -77,8 +77,6 @@ namespace Xplicit::Player
                 std::cout << "Content-Length: " << HTTP::HTTPHelpers::content_length<10>(_bytes) << "\n";
                 std::cout << "Body: " << pos_bytes << "\n";
 
-                http_writer.read_from_socket(sock, bytes, HTTP::HTTPHelpers::content_length<10>(_bytes));
-
                 auto sz = HTTP::HTTPHelpers::content_length<10>(_bytes);
 
                 http_writer.read_from_socket(sock, bytes, sz);

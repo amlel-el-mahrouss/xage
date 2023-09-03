@@ -16,7 +16,7 @@
 
 namespace Xplicit
 {
-	const String XPLICIT_GEAR_DESTROY(const String& name) noexcept
+	static const String XPLICIT_GEAR_DESTROY(const String& name) noexcept
 	{
 		String func_proto = "function(self) World.GearService.Destroy(";
 

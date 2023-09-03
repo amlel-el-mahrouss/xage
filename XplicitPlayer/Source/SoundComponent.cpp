@@ -87,7 +87,7 @@ namespace Xplicit::Player
 			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
 			
 			if (audio)
-				audio->play_3d(this->get_attribute().pos(), &mLoop);
+				audio->play_3d(this->pos(), &mLoop);
 		}, path);
 
 		job.detach();

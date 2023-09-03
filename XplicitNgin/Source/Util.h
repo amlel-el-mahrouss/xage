@@ -14,7 +14,6 @@
 
 #include "Root.h"
 #include "XplicitID.h"
-#include "LuaScriptComponent.h"
 #include "NetworkServerComponent.h"
 
 inline Xplicit::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
@@ -46,11 +45,13 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 
 namespace Xplicit
 {
+	class LuaScriptComponent;
+
 	/// <summary>
 	/// Xplicit Attribute Class.
 	/// Reserved for RoXML and scripting API.
 	/// </summary>
-	class XAttribute final
+	class XAttribute
 	{
 	public:
 		explicit XAttribute()
@@ -66,7 +67,7 @@ namespace Xplicit
 			  mNoCollide(false)
 		{}
 
-		~XAttribute() = default;
+		virtual ~XAttribute() = default;
 
 	public:
 		XPLICIT_COPY_DEFAULT(XAttribute);

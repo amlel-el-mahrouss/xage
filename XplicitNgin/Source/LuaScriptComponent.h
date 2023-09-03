@@ -9,8 +9,7 @@
 
 #pragma once
 
-#include "Component.h"
-#include <CLua/CLua.hpp>
+#include "ClassComponent.h"
 
 namespace Xplicit
 {
@@ -19,17 +18,36 @@ namespace Xplicit
 	 * NOTE: only one LuaScriptComponent should be created. you don't need a lot of them.
 	 */
 
-	class XPLICIT_API LuaScriptComponent final : public Component
+	class XPLICIT_API LuaScriptComponent final : public ClassComponent
 	{
 	public:
 		LuaScriptComponent() = delete;
 
-	public:
-		explicit LuaScriptComponent(const char* name, const bool run_now = false) 
-			: Component(), mName(name)
+	private:
+		const String destroy_snippet() noexcept
 		{
-			if (run_now)
-				this->run();
+			String func_proto = "function(self) World.ClassService.Destroy(";
+
+			func_proto += "\"";
+			func_proto += this->name();
+			func_proto += "\"";
+			func_proto += ",";
+			func_proto += "\"";
+			func_proto += "World";
+			func_proto += "\"";
+			func_proto += "); end";
+
+			return func_proto;
+		}
+
+	public:
+		explicit LuaScriptComponent(const char* name) 
+			: mName(name), ClassComponent(
+				std::string("World").c_str(), (std::string("CLS_") + std::to_string(xplicit_get_epoch())).c_str())
+		{
+			this->insert("Destroy", this->destroy_snippet().c_str());
+			this->insert("ShouldRun", "false");
+			this->insert("Run", "function(self) self.ShouldRun = true end");
 		}
 
 		~LuaScriptComponent() override = default;
@@ -38,8 +56,8 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(LuaScriptComponent);
 
 	public:
-		COMPONENT_TYPE type() noexcept override;
-		const char* name() noexcept override;
+		COMPONENT_TYPE type() noexcept;
+		const char* name() noexcept;
 
 	public:
 		static void update(void* class_ptr);

@@ -9,6 +9,7 @@
 
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
+#include "LuaScriptComponent.h"
 #include "GearComponent.h"
 #include "Application.h"
 #include "GameMenuUI.h"
@@ -129,7 +130,8 @@ namespace Xplicit::Player
 					full_download_path += "Contents/";
 					full_download_path += tmp;
 
-					ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str(), true);
+					auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
+					script->run();
 				}
 				
 				break;

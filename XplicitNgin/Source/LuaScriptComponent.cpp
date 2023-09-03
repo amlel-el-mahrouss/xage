@@ -19,9 +19,23 @@ namespace Xplicit
 		}
 	}
 
-	void LuaScriptComponent::update(void* class_ptr) {  }
+	void LuaScriptComponent::update(void* class_ptr) 
+	{
+		LuaScriptComponent* comp = (LuaScriptComponent*)class_ptr;
 
-	bool LuaScriptComponent::should_update() noexcept { return false; }
+		if (comp->index_as_bool("ShouldRun"))
+		{
+			comp->run();
+			comp->assign("ShouldRun", "false");
+
+			if (comp->index_as_bool("Archivable"))
+			{
+				comp->call("Destroy");
+			}
+		}
+	}
+
+	bool LuaScriptComponent::should_update() noexcept { return true; }
 
 	const char* LuaScriptComponent::name() noexcept { return mName.c_str(); }
 
