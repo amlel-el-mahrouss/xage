@@ -91,7 +91,7 @@ namespace Xplicit::HTTP
         struct HTTPHeader final 
         {
             RequestType Type;
-            char* Bytes;
+            char Bytes[4096];
             int Size;
 
         };
@@ -129,14 +129,13 @@ namespace Xplicit::HTTP
     {
     public:
         static std::string make_get(const std::string& path, 
-            const std::string& host
-        ) 
+            const std::string& host) 
         {
             if (path.empty() || host.empty()) return "";
 
             std::string request = "GET " + path + " HTTP/1.1\r\n";
             request += "Host: " + host + "\r\n";
-            request += "Connection: keep-alive\r\n";
+            request += "Connection: close";
             request += "\r\n\r\n";
 
             return request;

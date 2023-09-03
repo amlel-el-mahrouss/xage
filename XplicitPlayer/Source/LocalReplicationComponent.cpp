@@ -109,11 +109,12 @@ namespace Xplicit::Player
 				std::cout << url << std::endl;
 
 				static LocalNetworkMonitorEvent* monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
-				
+
 				if (!monitor)
 					monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 
-				monitor->HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
+				String endpoint = XPLICIT_XASSET_ENDPOINT;
+				monitor->HTTP->set_endpoint(endpoint);
 
 				auto tmp = std::to_string(xplicit_get_epoch()) + "-tmp.lua";
 
@@ -129,7 +130,7 @@ namespace Xplicit::Player
 					full_download_path += tmp;
 
 					ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str(), true);
-				}				
+				}
 				
 				break;
 			}
