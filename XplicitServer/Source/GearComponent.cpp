@@ -74,11 +74,8 @@ namespace Xplicit
 		if (!self->index_as_bool("Enabled"))
 			return;
 
-		self->call("Update");
+		self->assign("LookAt.X", "Parent.LookAt.X or 0");
+		self->assign("LookAt.Y", "Parent.LookAt.Y or 0");
+		self->assign("LookAt.Z", "Parent.LookAt.Z or 0");
 	}
-
-	//! event slots.
-	void GearComponent::click() noexcept { this->call("Click"); }
-	void GearComponent::activate() noexcept { this->call("Activate"); }
-	void GearComponent::deactivate() noexcept { this->call("Deactivate"); }
 }

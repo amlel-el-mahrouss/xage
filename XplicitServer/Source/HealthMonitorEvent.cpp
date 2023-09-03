@@ -75,7 +75,11 @@ namespace Xplicit
 				XPLICIT_INFO("World:Death [EVENT]");
 #endif // ifdef XPLICIT_DEBUG
 
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Death()");
+				String path("_G.World.Players.");
+				path += peer_ptr->xplicit_id.as_string();
+
+				String fmt = std::format("World:Death({})", path);
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 				for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)
 				{
@@ -107,11 +111,14 @@ namespace Xplicit
 
 						XplicitHandleSpawn(mSpawner, humanoid);
 
-#ifdef XPLICIT_DEBUG
 						XPLICIT_INFO("World:Spawn [EVENT]");
-#endif // ifdef XPLICIT_DEBUG
 
-						Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Spawn()");
+						String path("_G.World.Players.");
+						path += peer_ptr->xplicit_id.as_string();
+
+						String fmt = std::format("World:Spawn({})", path);
+						Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
 					}
 				}, humanoid);
 

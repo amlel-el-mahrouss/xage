@@ -102,6 +102,7 @@ namespace Xplicit
 					XPLICIT_DEFAULT_NAME
 					"\"");
 
+				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");
 				mClass->insert("Kick", "false");
@@ -110,6 +111,11 @@ namespace Xplicit
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
 				mClass->insert("WalkSpeed", std::to_string(mWalkspeed).c_str());
+
+				XPLICIT_INFO("World:Login [EVENT]");
+
+				String fmt = std::format("World:Login({})", path);
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
 		}
 	}

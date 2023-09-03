@@ -96,11 +96,10 @@ namespace Xplicit
 				XPLICIT_INFO("World:Move [EVENT]");
 #endif // ifdef XPLICIT_DEBUG
 
-				String fmt = std::format("World:Move({}, {}, {})",
-					std::to_string(humanoid->get_attribute().pos().X),
-					std::to_string(humanoid->get_attribute().pos().Y),
-					std::to_string(humanoid->get_attribute().pos().Z));
+				String path("_G.World.Players.");
+				path += peer->xplicit_id.as_string();
 
+				String fmt = std::format("World:Move({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
 		}

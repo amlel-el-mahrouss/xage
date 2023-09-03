@@ -11,10 +11,10 @@ function World.ColorRGB:New(R, G, B)
     return { Red = R, Green = G, Blue = B }
 end
 
-World.HumanoidState = {}
-World.HumanoidState.ALIVE = 0
-World.HumanoidState.DEAD = 1
-World.HumanoidState.INVALID = 3
+World.HumanotblState = {}
+World.HumanotblState.ALIVE = 0
+World.HumanotblState.DEAD = 1
+World.HumanotblState.INVALtbl = 3
 
 local function __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })
@@ -53,7 +53,7 @@ World.Slot = {
         Connect = function(self, Func)
             return __addEvent(self, Func); 
         end,
-        Disconnect = function(Iself, ndex)
+        Disconnect = function(Iself, Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -118,19 +118,19 @@ World.Slot = {
 World.Counter = 0
 World.PlayerCount = 0
 
-function World:Login(id)
+function World:Login(tbl)
     World.PlayerCount = World.PlayerCount + 1
 
     for _, v in ipairs(World.Slot.Login) do
-        v.Func(id)
+        v.Func(tbl)
     end
 end
 
-function World:Logoff(id)
+function World:Logoff(tbl)
     World.PlayerCount = World.PlayerCount - 1
 
     for _, v in ipairs(World.Slot.Logoff) do
-        v.Func(id)
+        v.Func(tbl)
     end
 end
 
@@ -192,8 +192,8 @@ World.Name = "WorldLand"
 World.Info = "The first ever world in Xplicit, home sweet home."
 World.Version = "1.0.0"
 
--- Class ID
-World.INVALID = 0;
+-- Class tbl
+World.INVALtbl = 0;
 World.SCRIPT = 1;
 World.SOUND = 2;
 World.PARTICLE = 3;

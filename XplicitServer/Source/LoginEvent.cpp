@@ -133,11 +133,6 @@ namespace Xplicit
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
-
-					XPLICIT_INFO("World:Login [EVENT]");
-
-					String fmt = std::format("World:Login('{}')", mNetwork->get(peer_idx)->xplicit_id.as_string());
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 				}
 			}
 		}
@@ -178,7 +173,10 @@ namespace Xplicit
 					XPLICIT_INFO("[LOGOFF] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
-					String fmt = std::format("World:Logoff('{}')", mNetwork->get(peer_idx)->xplicit_id.as_string());
+					String path("_G.World.Players.");
+					path += mNetwork->get(peer_idx)->xplicit_id.as_string();
+
+					String fmt = std::format("World:Logoff({})", path);
 					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;

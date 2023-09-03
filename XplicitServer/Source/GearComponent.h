@@ -19,6 +19,9 @@ namespace Xplicit
 	class GearComponent final : public ClassComponent
 	{
 	public:
+		GearComponent(const char* name, const char* parent = "World") noexcept;
+
+	public:
 		GearComponent() = delete;
 		~GearComponent() override;
 
@@ -31,17 +34,8 @@ namespace Xplicit
 		PHYSICS_TYPE physics() noexcept override;
 	
 	public:
-		//! Slots
-		void click() noexcept;
-		void activate() noexcept;
-		void deactivate() noexcept;
-
-	public:
 		static bool should_update() noexcept;
 		static void update(ClassPtr _self);
-
-	public:
-		explicit GearComponent(const char* name, const char* parent = "World") noexcept;
 
 	private:
 		String mParent;
