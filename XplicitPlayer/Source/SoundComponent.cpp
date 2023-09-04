@@ -21,12 +21,12 @@ namespace Xplicit::Player
 		mVolume(1.0f), mLoop(false)
 	{
 		this->insert("Loop", "false");
+		this->insert("Pitch", "100");
+		this->insert("Pan", "1");
 		this->insert("Volume", "1");
 	}
 
-	SoundComponent::~SoundComponent()
-	{
-	}
+	SoundComponent::~SoundComponent() = default;
 
 	const char* SoundComponent::name() noexcept { return "SoundComponent"; }
 
@@ -55,6 +55,8 @@ namespace Xplicit::Player
 		SoundComponent* _this = (SoundComponent*)class_ptr;
 
 		_this->mLoop = _this->index_as_bool("Loop");
+		_this->mPan = _this->index_as_number<float>("Pan");
+		_this->mPitch = _this->index_as_number<float>("Pitch");
 		_this->mVolume = _this->index_as_number<float>("Volume");
 	}
 
@@ -67,13 +69,13 @@ namespace Xplicit::Player
 	{
 		Xplicit::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
 
-		Thread job([&](String _path) {
+		Thread job([&](String _path, float vol, float pitch, float pan) {
 			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
 			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
 			
 			if (audio)
-				audio->play();
-		}, path);
+				audio->play(vol, pitch, pan);
+		}, path, mVolume, mPitch, mPan);
 
 		job.detach();
 	}
@@ -87,7 +89,7 @@ namespace Xplicit::Player
 			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
 			
 			if (audio)
-				audio->play_3d(this->pos(), &mLoop);
+				audio->play_3d(this->pos(), mVolume, mPitch, mPan, &mLoop);
 		}, path);
 
 		job.detach();

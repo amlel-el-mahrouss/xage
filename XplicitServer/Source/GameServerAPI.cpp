@@ -126,8 +126,40 @@ static int lua_NetworkService_Fire(lua_State* L)
 static int lua_CreateGear(lua_State* L)
 {
 	const char* name = lua_tostring(L, 1);
+	const char* xplicit_id = lua_tostring(L, 2);
 
-	Xplicit::GearComponent* gear = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::GearComponent>(name, "World");
+	if (xplicit_id == nullptr ||
+		name == nullptr)
+		return 0;
+
+	Xplicit::String path_player("World.Players.");
+	path_player += xplicit_id;
+
+	Xplicit::GearComponent* gear = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::GearComponent>(name, path_player.c_str());
+
+	if (gear)
+	{
+		std::vector<Xplicit::HumanoidComponent*> players = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+
+		for (auto i = 0UL; i < players.size(); ++i)
+		{
+			auto player = players[i];
+
+			if (player->get_peer()->xplicit_id.as_string() == xplicit_id)
+			{
+				gear->insert("Owner", path_player.c_str());
+				gear->insert("Parent", "Owner");
+
+				Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("{}.{} = {}", path_player.c_str(), name, name).c_str());
+
+				player->get_gears().push_back(gear);
+
+				return 0;
+			}
+		}
+
+		Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
+	}
 
 	return 0;
 }

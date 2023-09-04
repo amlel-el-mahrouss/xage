@@ -36,34 +36,55 @@ namespace Xplicit
 
 	void HumanoidComponent::update(void* _this_ptr)
 	{
-		HumanoidComponent* _this = (HumanoidComponent*)_this_ptr;
+		HumanoidComponent* self = (HumanoidComponent*)_this_ptr;
 
-		if (_this->get_peer() == nullptr)
+		if (self->get_peer() == nullptr)
 		{
-			_this->mState = HUMANOID_STATE::INVALID;
+			self->mState = HUMANOID_STATE::INVALID;
 			return;
 		}
 
 		// execute a series of commands for this humanoid.
 
-		if (_this->mHealth > 0)
-			_this->mState = HUMANOID_STATE::ALIVE;
+		if (self->mHealth > 0)
+			self->mState = HUMANOID_STATE::ALIVE;
 		else
-			_this->mState = HUMANOID_STATE::DEAD;
+			self->mState = HUMANOID_STATE::DEAD;
 
-		String str = "{" + std::to_string(_this->mAttribute.pos().X) + "," +
-						 std::to_string(_this->mAttribute.pos().Y) + "," +
-						 std::to_string(_this->mAttribute.pos().Z) + "," + "}";
+		String str = "{" + std::to_string(self->mAttribute.pos().X) + "," +
+						 std::to_string(self->mAttribute.pos().Y) + "," +
+						 std::to_string(self->mAttribute.pos().Z) + "," + "}";
 
-		_this->mClass->assign("Position", str.c_str());
+		self->mClass->assign("Position", str.c_str());
 
-		if (_this->mClass->index_as_bool("Kick"))
-			_this->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+		if (self->mClass->index_as_bool("Kick"))
+			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 
-		_this->mHealth = _this->mClass->index_as_number<double>("Health");
-		_this->mMaxHealth = _this->mClass->index_as_number<double>("MaxHealth");
-		_this->mJumpPower = _this->mClass->index_as_number<double>("JumpPower");
-		_this->mWalkspeed = _this->mClass->index_as_number<double>("WalkSpeed");
+		self->mHealth = self->mClass->index_as_number<double>("Health");
+		self->mMaxHealth = self->mClass->index_as_number<double>("MaxHealth");
+		self->mJumpPower = self->mClass->index_as_number<double>("JumpPower");
+		self->mWalkspeed = self->mClass->index_as_number<double>("WalkSpeed");
+
+		for (auto gear : self->mGears)
+		{
+			if (gear == nullptr ||
+				gear->index_as_bool("CanDrop"))
+			{
+				gear->insert("Parent", "World");
+				gear->insert("Owner", "Parent");
+
+				self->get_class()->assign(gear->name(), "nil");
+
+				auto it = std::find(self->mGears.cbegin(), self->mGears.cend(), gear);
+
+				if (it != self->mGears.cend())
+				{
+					self->mGears.erase(it);
+				}
+
+				continue;
+			}
+		}
 	}
 
 	void HumanoidComponent::set_health(const double& health) noexcept { this->mHealth = health; }
@@ -106,7 +127,7 @@ namespace Xplicit
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");
 				mClass->insert("Kick", "false");
-				mClass->insert("ID", mPeer->xplicit_id.as_string().c_str());
+				mClass->insert("ID", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
@@ -136,5 +157,10 @@ namespace Xplicit
 	{
 		XPLICIT_ASSERT(mClass);
 		return mClass.get();
+	}
+
+	std::vector<GearComponent*>& HumanoidComponent::get_gears() noexcept
+	{
+		return mGears;
 	}
 }

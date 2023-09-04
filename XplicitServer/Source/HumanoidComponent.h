@@ -10,6 +10,8 @@
 #pragma once
 
 #include "ServerConfig.h"
+#include "GearComponent.h"
+
 #include <CLua/CLua.hpp>
 
 namespace Xplicit
@@ -69,11 +71,13 @@ namespace Xplicit
 
 	public:
 		Xplicit::Lua::CLuaClass* get_class() const;
+		std::vector<GearComponent*>& get_gears() noexcept;
 
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;
 
 	private:
+		std::vector<GearComponent*> mGears;
 		XAttribute mAttribute;
 		HUMANOID_STATE mState;
 		NetworkPeer* mPeer;

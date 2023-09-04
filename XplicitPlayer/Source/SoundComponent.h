@@ -51,6 +51,8 @@ namespace Xplicit::Player
 
 	private:
 		float mVolume{ 0.5f };
+		float mPitch{ 100.f };
+		float mPan{ 0 };
 		bool mLoop{ false };
 
 	};

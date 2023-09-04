@@ -3,7 +3,7 @@
 
 	</Class>
 
-	<Class Name="HumanoidLight" Class="Light">
+	<Class Name="HumanoidLight" Parent="World" Class="Light">
 	</Class>
 
 	<!-- -7.451, 0, -13.514 -->

@@ -11,10 +11,10 @@ function World.ColorRGB:New(R, G, B)
     return { Red = R, Green = G, Blue = B }
 end
 
-World.HumanotblState = {}
-World.HumanotblState.ALIVE = 0
-World.HumanotblState.DEAD = 1
-World.HumanotblState.INVALtbl = 3
+World.HumanoidState = {}
+World.HumanoidState.ALIVE = 0
+World.HumanoidState.DEAD = 1
+World.HumanoidState.INVALID = 3
 
 local function __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })
@@ -240,3 +240,4 @@ function Util.Dump(o)
        return tostring(o)
     end
 end
+

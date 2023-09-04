@@ -41,14 +41,14 @@ namespace Xplicit
 		mParent(parent),
 		mName(name)
 	{
-		this->insert("Owner", "{}");
+		this->insert("Owner", parent);
 		this->insert("Slot", "0");
 
 		this->insert("Enabled", "false");
 		this->insert("CanDrop", "false");
 
 		this->insert("Drop", "false");
-		this->insert("Name", "'Untitled'");
+		this->insert("Name", std::format("'{}'", name).c_str());
 
 		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 

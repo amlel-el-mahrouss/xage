@@ -104,13 +104,16 @@ namespace Xplicit
 					mAudio->Play(volume, pitch, pan);
 				}
 
-				void play_3d(const Vector<float>& pos, bool* loop = nullptr) noexcept
+				void play_3d(const Vector<float>& pos, const float volume, const float pitch, const float pan, bool* loop = nullptr) noexcept
 				{
 					if (!mAudio)
 						return;
 
 					mSource = mAudio->CreateInstance(DirectX::SoundEffectInstance_Use3D);
-					if (!mAudio) return;
+					
+					mSource->SetPitch(pitch);
+					mSource->SetVolume(volume);
+					mSource->SetPan(pan);
 
 					mSource->Play(*loop);
 				}
