@@ -202,12 +202,12 @@ function World:Spawn()
     end
 end
 
-World.Name = "WorldLand"
-World.Info = "The first ever world in Xplicit, home sweet home."
+World.Name = "My first XPLICIT Level"
+World.Info = "My first ever world in Xplicit, home sweet home."
 World.Version = "1.0.0"
 
 -- Class tbl
-World.INVALtbl = 0;
+World.INVALID = 0;
 World.SCRIPT = 1;
 World.SOUND = 2;
 World.PARTICLE = 3;

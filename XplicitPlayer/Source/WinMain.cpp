@@ -92,6 +92,8 @@ int main(int argc, char** argv)
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 			RENDER->getVideoDriver()->endScene();
+
+			Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Tick()");
 		}
 	}
 	catch (Xplicit::EngineError& err)

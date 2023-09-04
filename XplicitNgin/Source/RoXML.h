@@ -305,7 +305,7 @@ namespace Xplicit::RoXML
 											const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(node->first_attribute()->value());
 
 											if (scene_node)
-												scene_node->getMaterial(0).DiffuseColor.color = mat_id_cast;
+												scene_node->getMaterial(0).AmbientColor.color = mat_id_cast;
 										}
 										catch (...)
 										{

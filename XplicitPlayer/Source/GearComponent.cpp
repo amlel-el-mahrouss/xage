@@ -46,15 +46,16 @@ namespace Xplicit::Player
 	void GearComponent::update(void* class_ptr)
 	{
 		ClassComponent::update(class_ptr);
-		GearComponent* _this = (GearComponent*)class_ptr;
 
-		String path = _this->index_as_string("Mesh");
+		GearComponent* self = (GearComponent*)class_ptr;
 
-		if (auto _path = _this->mMeshPtr->path();
+		String path = self->index_as_string("Mesh");
+
+		if (auto _path = self->mMeshPtr->path();
 			path != _path && !path.empty())
 		{
-			_this->mMeshPtr.reset();
-			_this->mMeshPtr = std::make_unique<StaticMesh>(_path.c_str(), _this->mName.c_str(), _this->mParent.c_str());
+			self->mMeshPtr.reset();
+			self->mMeshPtr = std::make_unique<StaticMesh>(_path.c_str(), self->mName.c_str(), self->mParent.c_str());
 		}
 	}
 }

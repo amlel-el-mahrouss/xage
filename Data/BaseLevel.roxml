@@ -1,6 +1,6 @@
 <RoXML>
 	<CLua>
-		World.Slot.Login:Connect(function(id)
+		World.Slot.Login:Connect(function(tbl)
 
 		end)
 	</CLua>

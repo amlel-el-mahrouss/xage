@@ -174,6 +174,8 @@ int main(int argc, char** argv)
 				Xplicit::EventSystem::get_singleton_ptr()->update();
 
 				Xplicit::NetworkServerContext::send_all(net);
+
+				Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Tick()");
 			};
 		});
 

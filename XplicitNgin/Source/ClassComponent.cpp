@@ -75,9 +75,9 @@ namespace Xplicit
 
 		this->insert("Scale", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
+		this->insert("Rotation", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Color", "{ R = 0, G = 0, B = 0, A = 1 }");
 
-		this->insert("Alpha", "1.0");
 		this->insert("Slots", "{ }");
 
 		this->insert("Anchored", "true");
@@ -127,7 +127,7 @@ namespace Xplicit
 		self->archivable(self->index_as_bool("Archivable"));
 		self->anchor(self->index_as_bool("Anchored"));
 	
-		self->alpha(self->index_as_number<float>("Alpha"));
+		self->alpha(self->index_as_number<float>("Color.A"));
 
 		self->color().R = self->index_as_number<float>("Color.R");
 		self->color().G = self->index_as_number<float>("Color.G");
@@ -140,5 +140,22 @@ namespace Xplicit
 		self->pos().X = self->index_as_number<float>("Position.X");
 		self->pos().Y = self->index_as_number<float>("Position.Y");
 		self->pos().Z = self->index_as_number<float>("Position.Z");
+
+		if (RENDER)
+		{
+			if (self->index_as_bool("Locked"))
+				return;
+
+			if (auto node = RENDER->getSceneManager()->getSceneNodeFromName(self->index_as_string("Name").c_str()); 
+				node != nullptr)
+			{
+				node->setScale(vector3df(self->scale().X, self->scale().Y, self->scale().Z));
+				node->setPosition(vector3df(self->pos().X, self->pos().Y, self->pos().Z));
+
+				node->setRotation(vector3df(self->index_as_number("Rotation.X"), self->index_as_number("Rotation.Y"), self->index_as_number("Rotation.Z")));
+
+				node->getMaterial(0).AmbientColor.set(self->color().A, self->color().R, self->color().G, self->color().B);
+			}
+		}
 	}
 }
