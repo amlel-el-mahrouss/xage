@@ -34,6 +34,8 @@ static void XplicitThrowException(Xplicit::Win32Error& err);
 int64_t XPLICIT_FILE_COOLDOWN = 18000;
 bool XPLICIT_FILE_REQ = false;
 
+using namespace Xplicit;
+
 XPLICIT_MAIN()
 {
 
@@ -62,11 +64,11 @@ XPLICIT_MAIN()
 
 		KB = kb;
 
-		RENDER->setWindowCaption(L"XplicitEd");
+		RENDER->setWindowCaption(L"Xplicit Studio");
 		
 		Xplicit::ImGUI::UIWindow ribbon;
 		
-		Xplicit::ImGUI::UIButton file(L"XplicitEd");
+		Xplicit::ImGUI::UIButton file(L"Menu");
 
 		file.get()->W = 122;
 		file.get()->H = 30;
@@ -169,7 +171,7 @@ static void XplicitThrowException(Xplicit::EngineError& err)
 	exit += converter.from_bytes(err.what());
 	exit += L"\n";
 
-	Xplicit::DialogHelper::message_box(L"XplicitStudio",
+	Xplicit::DialogHelper::message_box(L"Xplicit Studio",
 		L"XPLICIT Couldn't continue!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,

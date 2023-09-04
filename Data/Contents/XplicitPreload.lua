@@ -33,6 +33,14 @@ World.Slot = {
             __rmEvent(self, Index); 
         end 
     },
+    LocalMove = { 
+        Connect = function(self, Func)
+            return __addEvent(self, Func); 
+        end,
+        Disconnect = function(Index)
+            __rmEvent(self, Index); 
+        end 
+    },
     Logoff = { 
         Connect = function(self, Func)
         return __addEvent(self, Func); 
@@ -164,8 +172,14 @@ function World:LocalSpawn()
     end
 end
 
-function World:Move(x, y, z)
+function World:Move(tbl)
     for _, v in ipairs(World.Slot.Move) do
+        v.Func(tbl)
+    end
+end
+
+function World:LocalMove(x, y, z)
+    for _, v in ipairs(World.Slot.LocalMove) do
         v.Func(x, y, z)
     end
 end

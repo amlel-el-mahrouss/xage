@@ -105,5 +105,8 @@ namespace Xplicit
 		}
 
 		mDeltaTime += (mDeltaVar->as_float() / XPLICIT_DPS);
+
+		String heartbeat_fmt = std::format("World.RunService.DeltaTime = {}", std::to_string(mDeltaTime));
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(heartbeat_fmt.c_str());
 	}
 }

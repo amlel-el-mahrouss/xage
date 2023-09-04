@@ -54,12 +54,12 @@ namespace Xplicit::Player
 
 	void LoadingComponent::update(void* class_ptr)
 	{
-		LoadingComponent* _this = (LoadingComponent*)class_ptr;
+		LoadingComponent* self = (LoadingComponent*)class_ptr;
 
-		if (!_this->mNetwork) return;
+		if (!self->mNetwork) return;
 
 		NetworkPacket packet;
-		_this->mNetwork->read(packet);
+		self->mNetwork->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
@@ -70,7 +70,7 @@ namespace Xplicit::Player
 
 			mEnabled = false;
 
-			ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
+			ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
 
 			return;
 		}
@@ -89,7 +89,9 @@ namespace Xplicit::Player
 			const auto ply = ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash);
 
 			ply->attach(cam);
-			_this->mNetwork->set_hash(hash);
+			cam->get()->setName("Camera");
+
+			self->mNetwork->set_hash(hash);
 
 			const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
 
@@ -106,32 +108,23 @@ namespace Xplicit::Player
 			XPLICIT_INFO("World:LocalSpawn [EVENT]");
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
 
-			XPLICIT_GET_DATA_DIR(XPLICIT_STUDIO_DIRECTORY);
-			Xplicit::String skydome_path = XPLICIT_STUDIO_DIRECTORY;
-			skydome_path += "/Contents/Studio/Skydome.obj";
-
-			irr::scene::IMeshSceneNode* Skydome = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getMesh(skydome_path.c_str()));
-
-			Skydome->setPosition(irr::core::vector3df(0, 0, 0)); 
-			Skydome->setName("DefaultSkyDay");
-
 			mEnabled = false;
 
 			return;
 		}
 		else
 		{
-			--_this->mTimeout;
+			--self->mTimeout;
 
 			// peek after the ++timeout, or retry
-			if (_this->mTimeout < 0)
+			if (self->mTimeout < 0)
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 					[]() {
 						RENDER->closeDevice();
 					}, POPUP_TYPE::NETWORK, "StopPopup");
 
-				ComponentSystem::get_singleton_ptr()->remove(_this->mNetwork);
+				ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
 				mEnabled = false;
 
 				return;

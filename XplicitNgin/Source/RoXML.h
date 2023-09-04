@@ -109,10 +109,10 @@ namespace Xplicit::RoXML
 						if (node->first_attribute())
 						{
 							auto klass = node->last_attribute();
-							String klass_to_instanciate;
+							String klass_to_instanciate = klass->name();
 
 							if (klass &&
-								strcmp(klass->name(), "Object") == 0)
+								klass_to_instanciate == "Object")
 								klass_to_instanciate = klass->value();
 
 							// Here is the list of run-time components { "Light", "Mesh", "Sound", "Particle" };
@@ -164,7 +164,11 @@ namespace Xplicit::RoXML
 										irr::scene::ISceneNode* stud = nullptr;
 										object = stud = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh());
 										
-										stud->setName(node_id);
+										if (stud)
+										{
+											stud->setName(node_id);
+											stud->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+										}
 									}
 
 									if (klass_to_instanciate == "Mesh")
@@ -174,7 +178,9 @@ namespace Xplicit::RoXML
 										for (size_t i = 0; i < strlen(node->value()); i++)
 										{
 											if (node->value()[i] == '\r' ||
-												node->value()[i] == '\n')
+												node->value()[i] == '\n' ||
+												node->value()[i] == '\t' ||
+												node->value()[i] == ' ')
 												continue;
 
 											mesh_path += node->value()[i];
@@ -185,9 +191,12 @@ namespace Xplicit::RoXML
 										if (mesh)
 										{
 											auto mesh_ptr = RENDER->getSceneManager()->addMeshSceneNode(mesh);
-
+											
 											if (mesh_ptr)
+											{
 												mesh_ptr->setName(node_id);
+												mesh_ptr->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+											}
 
 											object = mesh_ptr;
 										}
@@ -203,7 +212,11 @@ namespace Xplicit::RoXML
 										nod = RENDER->getSceneManager()->addSkyDomeSceneNode(RENDER->getVideoDriver()->getTexture(node->value()));
 										object = nod;
 
-										nod->setName(node_id);
+										if (nod)
+										{
+											nod->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+											nod->setName(node_id);
+										}
 									}
 
 									if (klass_to_instanciate == "Particle")
@@ -304,6 +317,54 @@ namespace Xplicit::RoXML
 						}
 					}
 
+					if (node_name == "Target3")
+					{
+						if (!node->first_attribute() ||
+							!node->first_attribute()->next_attribute() ||
+							!node->first_attribute()->next_attribute()->next_attribute())
+						{
+							XPLICIT_CRITICAL("RoXML: Bad Target3!");
+							break;
+						}
+
+						String attr_x = node->first_attribute()->name();
+						String attr_y = node->first_attribute()->next_attribute()->name();
+						String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
+
+						if (attr_x == "X" &&
+							attr_y == "Y" &&
+							attr_z == "Z")
+						{
+							String id;
+
+							for (std::size_t i = 0; i < strlen(node->value()); i++)
+							{
+								if (isalnum(node->value()[i]))
+								{
+									id += node->value()[i];
+								}
+							}
+
+							String x = node->first_attribute()->value();
+							String y = node->first_attribute()->next_attribute()->value();
+							String z = node->first_attribute()->next_attribute()->next_attribute()->value();
+
+							world_node.Rotation.X = std::atof(x.c_str());
+							world_node.Rotation.Y = std::atof(y.c_str());
+							world_node.Rotation.Z = std::atof(z.c_str());
+
+							if (params.Has3D)
+							{
+								irr::scene::ICameraSceneNode* scene_node = (irr::scene::ICameraSceneNode*)RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+
+								const auto pos = irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()));
+
+								if (scene_node)
+									scene_node->setTarget(pos);
+							}
+						}
+					}
+
 					if (node_name == "Rotate3")
 					{
 						if (!node->first_attribute() ||
@@ -343,10 +404,12 @@ namespace Xplicit::RoXML
 
 							if (params.Has3D)
 							{
-								const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+								auto scene_node = (irr::scene::ICameraSceneNode*)RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+
+								const auto pos = irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()));
 
 								if (scene_node)
-									scene_node->setRotation(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+									scene_node->setRotation(pos);
 							}
 						}
 					}

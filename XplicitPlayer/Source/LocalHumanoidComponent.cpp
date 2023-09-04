@@ -83,22 +83,11 @@ namespace Xplicit::Player
 				_this->mPos.X = xSpeed;
 				_this->mPos.Y = ySpeed;
 
-				for (size_t i = 0; i < _this->count_parts(); ++i)
-				{
-					if (!_this->node_at(i))
-						continue;
+				XPLICIT_INFO("World:BodyMove [EVENT]");
 
-					auto pos = _this->node_at(i)->getPosition();
+				String fmt = std::format("World:BodyMove({},{},{})", std::to_string(_this->mPos.X), std::to_string(_this->mPos.Y), std::to_string(_this->mPos.Z));
 
-					pos.Z += _this->mPos.Z;
-					pos.X += _this->mPos.X;
-					pos.Y += _this->mPos.Y;
-
-					_this->node_at(i)->setPosition(pos);
-				}
-
-				XPLICIT_INFO("World:Move [EVENT]");
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Move()");
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
 		}
 	}

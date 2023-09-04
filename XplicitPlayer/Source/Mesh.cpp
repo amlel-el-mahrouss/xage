@@ -93,8 +93,6 @@ namespace Xplicit::Player
 
 	bool StaticMesh::has_physics() noexcept { return mPhysics == PHYSICS_COMPLEX;  }
 
-	static auto XPLICIT_BUNDLE_PATH = "Contents/Bundles/";
-
 	StaticBundleMesh::StaticBundleMesh(const char* character_path)
 	{
 		static XPLICIT_GET_DATA_DIR(XPLICIT_DIR);
@@ -110,7 +108,7 @@ namespace Xplicit::Player
 		//! Load a specific character and show it to screen.
 		
 		params.Path = XPLICIT_DIR;
-		params.Path += XPLICIT_BUNDLE_PATH;
+		params.Path += "/";
 		params.Path += character_path;
 		params.WaitFor = true;
 
@@ -136,8 +134,6 @@ namespace Xplicit::Player
 				}
 			}
 		}
-
-		XPLICIT_INFO("Loaded StaticBundleMesh successfully!");
 	}
 
 	StaticBundleMesh::~StaticBundleMesh() noexcept

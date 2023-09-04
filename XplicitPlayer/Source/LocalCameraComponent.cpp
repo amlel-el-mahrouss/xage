@@ -21,9 +21,9 @@ namespace Xplicit::Player
 		: Component(), mCamera(nullptr)
 	{
 		mCamera = RENDER->getSceneManager()->addCameraSceneNode();
-		mCamera->setName("Camera");
-
 		XPLICIT_ASSERT(mCamera);
+
+		mCamera->setName("Camera");
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept

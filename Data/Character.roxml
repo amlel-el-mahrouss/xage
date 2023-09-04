@@ -1,0 +1,80 @@
+<Xplicit xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+	<Class Name="LocalHumanoid" Parent="World" Object="">
+
+	</Class>
+
+	<Class Name="HumanoidLight" Class="Light">
+	</Class>
+
+	<!-- -7.451, 0, -13.514 -->
+	<Position3 X="0" Y="0" Z="0">
+		HumanoidLight
+	</Position3>
+
+	<Class Name="Head" Parent="World.LocalHumanoid" Object="Mesh">
+		Contents/Bundles/Head.obj
+	</Class>
+
+	<Class Name="LeftArm" Parent="World.LocalHumanoid" Object="Mesh">
+		Contents/Bundles/LeftArm.obj
+	</Class>
+
+	<Class Name="RightArm" Parent="World.LocalHumanoid" Object="Mesh">
+		Contents/Bundles/RightArm.obj
+	</Class>
+
+	<Class Name="Torso" Parent="World.LocalHumanoid" Object="Mesh">
+		Contents/Bundles/Torso.obj
+	</Class>
+
+	<Class Name="LeftLeg" Parent="World.LocalHumanoid" Object="Mesh">
+		Contents/Bundles/LeftLeg.obj
+	</Class>
+
+	<Class Name="RightLeg" Parent="World.LocalHumanoid" Object="Mesh">
+		Contents/Bundles/RightLeg.obj
+	</Class>
+
+	<!-- -8.951, 3, -13.514 -->
+	<Position3 X="-8.951" Y="3" Z="-13.514">
+		LeftArm
+	</Position3>
+
+	<!-- -5.951, 3, -13.514 -->
+	<Position3 X="-5.951" Y="3" Z="-13.514">
+		RightArm
+	</Position3>
+
+	<!-- -7.951, 1, -13.514 -->
+	<Position3 X="-7.951" Y="1" Z="-13.514">
+		LeftLeg
+	</Position3>
+
+	<!-- -6.951, 1, -13.514 -->
+	<Position3 X="-6.951" Y="1" Z="-13.514">
+		RightLeg
+	</Position3>
+
+	<!-- -7.451, 3, -13.514 -->
+	<Position3 X="-7.451" Y="3" Z="-13.514">
+		Torso
+	</Position3>
+
+	<!-- -7.451, 4.5, -13.514 -->
+	<Position3 X="-7.451" Y="4.5" Z="-13.514">
+		Head
+	</Position3>
+
+	<!-- -7.451, 0, -13.514 -->
+	<Position3 X="-7.451" Y="0" Z="-13.514">
+		Camera
+	</Position3>
+
+	<Target3 X="-7.296" Y="5.841" Z="-12.585">
+		Camera
+	</Target3>
+
+	<CLua>
+		
+	</CLua>
+</Xplicit>
