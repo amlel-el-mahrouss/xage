@@ -44,6 +44,8 @@ namespace Xplicit
 			if (mNetwork->get(i)->public_hash != public_hash)
 				continue;
 
+			NetworkServerContext::send(mNetwork, mNetwork->get(i));
+
 			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
 			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
@@ -67,6 +69,8 @@ namespace Xplicit
 		{
 			if (mNetwork->get(i)->public_hash != public_hash)
 				continue;
+
+			NetworkServerContext::send(mNetwork, mNetwork->get(i));
 
 			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
@@ -92,9 +96,11 @@ namespace Xplicit
 			if (mNetwork->get(i)->public_hash != public_hash)
 				continue;
 
+			NetworkServerContext::send(mNetwork, mNetwork->get(i));
+
 			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
-			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_FIRE] = NETWORK_REPL_CMD_FIRE;
+			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_UPDATE] = NETWORK_REPL_CMD_UPDATE;
 			mNetwork->get(i)->packet.id = id;
 
 			memset(mNetwork->get(i)->packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);

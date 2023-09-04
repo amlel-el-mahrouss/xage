@@ -83,13 +83,35 @@ namespace Xplicit::Player
 				_this->mPos.X = xSpeed;
 				_this->mPos.Y = ySpeed;
 
-				XPLICIT_INFO("World:BodyMove [EVENT]");
+				XPLICIT_INFO("World:LocalMove [EVENT]");
 
-				String fmt = std::format("World:BodyMove({},{},{})", std::to_string(_this->mPos.X), std::to_string(_this->mPos.Y), std::to_string(_this->mPos.Z));
+				String fmt = std::format("World:LocalMove({},{},{})", std::to_string(_this->mPos.X), std::to_string(_this->mPos.Y), std::to_string(_this->mPos.Z));
 
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
 		}
+
+		if (KB->left_down())
+		{
+			_this->mPacket.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_LCLICK;
+			_this->mNetwork->send(_this->mPacket);
+
+			return;
+		}
+
+		if (KB->right_down())
+		{
+			_this->mPacket.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_RCLICK;
+			_this->mNetwork->send(_this->mPacket);
+
+			return;
+		}
+
+		_this->node_at(XPLICIT_BUNDLE_HEAD)->setRotation(vector3df(
+			_this->mCam->get()->getRotation().X,
+			_this->mCam->get()->getRotation().Y > 0 ? _this->mCam->get()->getRotation().Y : 0,
+			_this->mCam->get()->getRotation().Z));
+
 	}
 
 	void LocalHumanoidComponent::attach(LocalCameraComponent* cam) noexcept

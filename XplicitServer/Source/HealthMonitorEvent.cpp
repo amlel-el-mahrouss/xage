@@ -114,7 +114,7 @@ namespace Xplicit
 						XPLICIT_INFO("World:Spawn [EVENT]");
 
 						String path("_G.World.Players.");
-						path += peer_ptr->xplicit_id.as_string();
+						path += humanoid->get_peer()->xplicit_id.as_string();
 
 						String fmt = std::format("World:Spawn({})", path);
 						Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());

@@ -65,6 +65,12 @@ namespace Xplicit
 		self->mJumpPower = self->mClass->index_as_number<double>("JumpPower");
 		self->mWalkspeed = self->mClass->index_as_number<double>("WalkSpeed");
 
+		self->mClass->assign("IsLeftClickPressed", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] == NETWORK_CMD_LCLICK ? "true" : "false");
+		self->mClass->assign("IsRightClickPressed", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] == NETWORK_CMD_RCLICK ? "true" : "false");
+
+		self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_INVALID;
+		self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_INVALID;
+
 		for (auto gear : self->mGears)
 		{
 			if (gear == nullptr ||
@@ -127,7 +133,7 @@ namespace Xplicit
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");
 				mClass->insert("Kick", "false");
-				mClass->insert("ID", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
+				mClass->insert("XPLICIT_ID", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());

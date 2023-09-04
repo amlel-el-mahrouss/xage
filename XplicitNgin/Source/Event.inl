@@ -16,7 +16,7 @@ T* Xplicit::EventSystem::add(Args&&... args)
 	if (ptr)
 	{
 #ifdef XPLICIT_DEBUG
-		String fmt = "Created Event: ";
+		String fmt = "Created event: ";
 		fmt += typeid(T).name();
 
 		XPLICIT_INFO(fmt);

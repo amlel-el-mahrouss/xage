@@ -36,6 +36,8 @@ namespace Xplicit::Player
 
 	private:
 		irr::scene::ICameraSceneNode* mCamera;
+		NetworkComponent* mNetwork;
+		vector3df mRotation;
 
 	};
 }

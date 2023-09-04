@@ -22,6 +22,10 @@
  // RoXML parser
 Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
+#ifndef XPLICIT_XASSET_IDENT
+#	define XPLICIT_XASSET_IDENT ("xasset")
+#endif // ifndef XPLICIT_XASSET_IDENT
+
 #ifdef XPLICIT_WINDOWS
 
 std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
@@ -30,13 +34,45 @@ static int lua_PlaySound(lua_State* L)
 {
 	try
 	{
-		Xplicit::String path = lua_tostring(L, 1);
+		Xplicit::String url = lua_tostring(L, 1);
 
-		if (path.empty())
+		if (url.empty() ||
+			url.find(XPLICIT_XASSET_IDENT) == Xplicit::String::npos)
 			return 0;
 
-		if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::Player::SoundComponent>("SoundComponent"))
-			snd->play(path);
+		Xplicit::String substr = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
+
+		url.clear();
+		url = "/";
+		url += substr;
+
+		std::cout << url << std::endl;
+
+		static Xplicit::Player::LocalNetworkMonitorEvent* monitor = Xplicit::EventSystem::get_singleton_ptr()->get<Xplicit::Player::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
+
+		if (!monitor)
+			monitor = Xplicit::EventSystem::get_singleton_ptr()->get<Xplicit::Player::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
+
+		Xplicit::String endpoint = XPLICIT_XASSET_ENDPOINT;
+		monitor->HTTP->set_endpoint(endpoint);
+
+		auto tmp = std::to_string(xplicit_get_epoch()) + "-tmp-snd.wav";
+
+		if (monitor &&
+			monitor->HTTP->download(url, tmp))
+		{
+			XPLICIT_GET_DATA_DIR(full_path);
+
+			Xplicit::String full_download_path;
+
+			full_download_path += full_path;
+			full_download_path += "Contents/";
+			full_download_path += tmp;
+
+			if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::Player::SoundComponent>("SoundComponent"))
+				snd->play(url);
+		}
+
 	}
 	catch (...)
 	{
@@ -99,23 +135,23 @@ void XplicitLoadClientLua() noexcept
 
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService = {}");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsClient = true");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsServer = false");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsClient <const> = true");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsServer <const> = false");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineLoadRoXML");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService.Load = EngineLoadRoXML");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService.Load <const> = EngineLoadRoXML");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EnginePlaySound");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService.Play = EnginePlaySound");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService.Play <const> = EnginePlaySound");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_SetWindowCaption);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineSetWindowCaption");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RenderingService.SetCaption = EngineSetWindowCaption");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RenderingService.SetCaption <const> = EngineSetWindowCaption");
 	
 	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::SoundComponent>();
 }

@@ -99,8 +99,12 @@ namespace Xplicit
 				String path("_G.World.Players.");
 				path += peer->xplicit_id.as_string();
 
+				humanoid->get_class()->assign("IsMoving", "true");
+
 				String fmt = std::format("World:Move({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+				humanoid->get_class()->assign("IsMoving", "false");
 			}
 		}
 

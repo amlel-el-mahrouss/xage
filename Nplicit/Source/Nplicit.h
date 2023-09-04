@@ -152,7 +152,7 @@ namespace Xplicit
 		bool Valid{ true };
 
 	public:
-		void step_zone() noexcept
+		void simulate() noexcept
 		{
 			if (Stat == COLLISION_RESOLUTION_RUN)
 				return;

@@ -17,12 +17,13 @@ namespace Xplicit::Player
 			Color<float>(0.0f, 0.0f, 0.0f), 
 			nullptr,
 			"World",
-			"SoundFactory"),
+			"SoundService.Mixer"),
 		mVolume(1.0f), mLoop(false)
 	{
 		this->insert("Loop", "false");
-		this->insert("Pitch", "100");
+		this->insert("Pitch", "1");
 		this->insert("Pan", "1");
+		this->insert("Position", "{ X= 0, Y = 0, Z = 0}");
 		this->insert("Volume", "1");
 	}
 
@@ -58,6 +59,10 @@ namespace Xplicit::Player
 		_this->mPan = _this->index_as_number<float>("Pan");
 		_this->mPitch = _this->index_as_number<float>("Pitch");
 		_this->mVolume = _this->index_as_number<float>("Volume");
+
+		_this->pos().X = _this->index_as_number<float>("Position.X");
+		_this->pos().Y = _this->index_as_number<float>("Position.Y");
+		_this->pos().Z = _this->index_as_number<float>("Position.Z");
 	}
 
 	void SoundComponent::should_loop(const bool enable) noexcept

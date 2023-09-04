@@ -112,7 +112,7 @@ namespace Xplicit::Lua
 			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
 		{
 			String fmt = mClass;
-			fmt += " = { CLua = true, }";
+			fmt += " = {}";
 
 			CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}

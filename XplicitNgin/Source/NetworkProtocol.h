@@ -83,8 +83,11 @@ namespace Xplicit
         NETWORK_CMD_ACK, // Acknowledge
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
         NETWORK_CMD_REPL, // replication call
+        NETWORK_CMD_LCLICK,
+        NETWORK_CMD_RCLICK,
+        NETWORK_CMD_CAM_POS,
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
-        NETWORK_CMD_COUNT = 18,
+        NETWORK_CMD_COUNT = 21,
     };
 
     /* replication network commands. */
@@ -92,7 +95,7 @@ namespace Xplicit
     {
         NETWORK_REPL_CMD_CREATE = NETWORK_CMD_INVALID + 1,
         NETWORK_REPL_CMD_DESTROY,
-        NETWORK_REPL_CMD_FIRE,
+        NETWORK_REPL_CMD_UPDATE,
         NETWORK_REPL_CMD_COUNT = 3,
     };
 
@@ -214,6 +217,9 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_REPL (15)
 #define XPLICIT_NETWORK_CMD_CHAT (16)
 #define XPLICIT_NETWORK_CMD_JUMP (17)
+#define XPLICIT_NETWORK_CMD_LCLICK (18)
+#define XPLICIT_NETWORK_CMD_RCLICK (19)
+#define XPLICIT_NETWORK_CMD_CAM_POS (19)
 
 /*! this is a command reserved by the engine, 
   ! to separate the network and replication commands 
@@ -223,7 +229,7 @@ typedef int socklen_t;
 
 #define XPLICIT_REPL_CREATE (18)
 #define XPLICIT_REPL_DESTROY (19)
-#define XPLICIT_REPL_FIRE (20)
+#define XPLICIT_REPL_UPDATE (20)
 
 namespace Xplicit::Utils
 {
