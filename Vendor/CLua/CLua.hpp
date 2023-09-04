@@ -160,7 +160,7 @@ namespace Xplicit::Lua
 
 			luaL_dostring(mL, str.c_str());
 
-			return true;
+			return true; 
 		}
 
 		void i_clean(const std::int64_t& cnt) noexcept
@@ -178,8 +178,6 @@ namespace Xplicit::Lua
 			{
 				if (lua_isnumber(mL, -1))
 					ret = lua_tonumber(mL, -1);
-
-				this->i_clean(1);
 			}
 
 			return ret;
@@ -193,8 +191,6 @@ namespace Xplicit::Lua
 			{
 				if (lua_isboolean(mL, -1))
 					ret = lua_toboolean(mL, -1);
-
-				this->i_clean(1);
 			}
 
 			return ret;
@@ -208,8 +204,6 @@ namespace Xplicit::Lua
 			{
 				if (lua_isstring(mL, -1))
 					ret = lua_tostring(mL, -1);
-
-				this->i_clean(1);
 			}
 
 			return ret;

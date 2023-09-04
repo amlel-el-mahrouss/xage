@@ -30,7 +30,8 @@ namespace Xplicit::Player
 		mPublicHash(public_hash),
 		mCam(nullptr), 
 		mPacket(),
-		mPos(0.f, 2.f, 0.f)
+		mPos(0.f, 2.f, 0.f),
+		mState(HUMANOID_STATE::DEAD)
 	{
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -39,10 +40,6 @@ namespace Xplicit::Player
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("LocalHumanoidComponent::LocalHumanoidComponent");
 #endif
-
-
-		XPLICIT_INFO("World:Spawn [EVENT]");
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Spawn()");
 	}
 
 	LocalHumanoidComponent::~LocalHumanoidComponent()
@@ -107,11 +104,26 @@ namespace Xplicit::Player
 			return;
 		}
 
+		if (_this->mPacket.health > 0 &&
+			_this->mState == HUMANOID_STATE::DEAD)
+		{
+			XPLICIT_INFO("World:LocalSpawn [EVENT]");
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
+
+			_this->mState = HUMANOID_STATE::ALIVE;
+		}
+		else if (_this->mPacket.health <= 0)
+		{
+			_this->mState = HUMANOID_STATE::DEAD;
+		}
+
+		if (_this->count_parts() < 1)
+			return;
+
 		_this->node_at(XPLICIT_BUNDLE_HEAD)->setRotation(vector3df(
 			_this->mCam->get()->getRotation().X,
 			_this->mCam->get()->getRotation().Y > 0 ? _this->mCam->get()->getRotation().Y : 0,
 			_this->mCam->get()->getRotation().Z));
-
 	}
 
 	void LocalHumanoidComponent::attach(LocalCameraComponent* cam) noexcept

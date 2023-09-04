@@ -59,10 +59,6 @@ namespace Xplicit::Player
 		_this->mPan = _this->index_as_number<float>("Pan");
 		_this->mPitch = _this->index_as_number<float>("Pitch");
 		_this->mVolume = _this->index_as_number<float>("Volume");
-
-		_this->pos().X = _this->index_as_number<float>("Position.X");
-		_this->pos().Y = _this->index_as_number<float>("Position.Y");
-		_this->pos().Z = _this->index_as_number<float>("Position.Z");
 	}
 
 	void SoundComponent::should_loop(const bool enable) noexcept

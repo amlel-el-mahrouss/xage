@@ -20,6 +20,13 @@
 
 namespace Xplicit::Player
 {
+	enum class HUMANOID_STATE
+	{
+		ALIVE,
+		DEAD,
+		INVALID,
+	};
+
 	class LocalHumanoidMoveEvent;
 
 	//! Replicated player component
@@ -51,6 +58,7 @@ namespace Xplicit::Player
 		LocalCameraComponent* mCam;
 
 	private:
+		HUMANOID_STATE mState;
 		std::int64_t mPublicHash;
 		NetworkPacket mPacket;
 		Vector<float> mPos;

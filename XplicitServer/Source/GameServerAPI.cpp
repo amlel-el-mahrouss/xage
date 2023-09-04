@@ -100,17 +100,17 @@ static int lua_NetworkService_Fire(lua_State* L)
 			{
 			case 0:
 			{
-				Xplicit::ServerReplicationManager::get_singleton_ptr()->create(repl_id, string, humanoids[i]->get_peer()->public_hash);
+				Xplicit::ServerReplicationManager::get_singleton_ptr()->create(repl_id, string, humanoids[i]->get_peer()->hash);
 				break;
 			}
 			case 1:
 			{
-				Xplicit::ServerReplicationManager::get_singleton_ptr()->update(repl_id, string, humanoids[i]->get_peer()->public_hash);
+				Xplicit::ServerReplicationManager::get_singleton_ptr()->update(repl_id, string, humanoids[i]->get_peer()->hash);
 				break;
 			}
 			case 2:
 			{
-				Xplicit::ServerReplicationManager::get_singleton_ptr()->remove(repl_id, string, humanoids[i]->get_peer()->public_hash);
+				Xplicit::ServerReplicationManager::get_singleton_ptr()->remove(repl_id, string, humanoids[i]->get_peer()->hash);
 				break;
 			}
 			}
@@ -185,30 +185,30 @@ void XplicitLoadServerLua() noexcept
 
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService = {}");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsClient <const> = false");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsServer <const> = true");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsClient = false");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsServer = true");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_CreateGear);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineCreateGear");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService.Create <const> = EngineCreateGear");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService.Create = EngineCreateGear");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_DestroyGear);
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineDestroyGear");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService.Destroy <const> = EngineDestroyGear");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService.Destroy = EngineDestroyGear");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadScript);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineLoadScript");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ScriptService.SendTo <const> = EngineLoadScript");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ScriptService.Load = EngineLoadScript");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineLoadRoXML");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService.SendTo <const> = EngineLoadRoXML");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService.Load = EngineLoadRoXML");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NetworkService_Fire);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineFireServer");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.NetworkService.SendTo <const> = EngineFireServer");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.NetworkService.SendTo = EngineFireServer");
 }

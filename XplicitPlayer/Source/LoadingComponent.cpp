@@ -105,9 +105,6 @@ namespace Xplicit::Player
 
 			RENDER->setWindowCaption(L"XPLICIT [ Loaded ]");
 
-			XPLICIT_INFO("World:LocalSpawn [EVENT]");
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
-
 			mEnabled = false;
 
 			return;

@@ -5,9 +5,9 @@ function World.Vector3:New(X, Y, Z)
     return { X = X, Y = Y, Z = Z }
 end
 
-World.ColorRGB = {}
+World.Color = {}
 
-function World.ColorRGB:New(R, G, B)
+function World.Color:New(R, G, B)
     return { Red = R, Green = G, Blue = B }
 end
 
@@ -190,15 +190,15 @@ function World:Damage()
     end
 end
 
-function World:Death()
+function World:Death(tbl)
     for _, v in ipairs(World.Slot.Death) do
-        v.Func()
+        v.Func(tbl)
     end
 end
 
-function World:Spawn()
+function World:Spawn(tbl)
     for _, v in ipairs(World.Slot.Spawn) do
-        v.Func()
+        v.Func(tbl)
     end
 end
 

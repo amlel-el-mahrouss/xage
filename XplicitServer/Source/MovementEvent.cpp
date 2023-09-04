@@ -67,19 +67,19 @@ namespace Xplicit
 				NetworkFloat speed = humanoid->get_walk_speed();
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
-					humanoid->get_attribute().pos().Y += speed;
+					humanoid->get_attribute().pos().Y += speed * mDeltaTime;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					humanoid->get_attribute().pos().Z += speed;
+					humanoid->get_attribute().pos().Z += speed * mDeltaTime;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					humanoid->get_attribute().pos().Z -= speed;
+					humanoid->get_attribute().pos().Z -= speed * mDeltaTime;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					humanoid->get_attribute().pos().X -= speed;
+					humanoid->get_attribute().pos().X -= speed * mDeltaTime;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					humanoid->get_attribute().pos().X += speed;
+					humanoid->get_attribute().pos().X += speed * mDeltaTime;
 
 				peer->packet.pos[XPLICIT_NETWORK_X] = humanoid->get_attribute().pos().X;
 				peer->packet.pos[XPLICIT_NETWORK_Y] = humanoid->get_attribute().pos().Y;

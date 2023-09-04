@@ -501,13 +501,33 @@ namespace Xplicit::RoXML
 					}
 
 					// if it is a CLua snippet
+					if (node_name == "InlineCLua") // and it is really what we think it is.
+					{
+						// go on and include that!
+						world_node.ID = node_name;
+						world_node.Value += node->value();
+
+						Lua::CLuaStateManager::get_singleton_ptr()->run_string(world_node.Value.c_str());
+					}
+
 					if (node_name == "CLua") // and it is really what we think it is.
 					{
 						// go on and include that!
 						world_node.ID = node_name;
-						world_node.Value = node->value();
 
-						Lua::CLuaStateManager::get_singleton_ptr()->run_string(world_node.Value.c_str());
+						for (size_t i = 0; i < strlen(node->value()); i++)
+						{
+							if (isalnum(node->value()[i]) ||
+								node->value()[i] == '.' ||
+								node->value()[i] == '/' ||
+								node->value()[i] == '\\' ||
+								node->value()[i] == ':')
+							{
+								world_node.Value += node->value()[i];
+							}
+						}
+
+						Lua::CLuaStateManager::get_singleton_ptr()->run(world_node.Value.c_str());
 					}
 
 					world_node.Name = node_name;
