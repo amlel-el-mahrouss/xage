@@ -10,6 +10,7 @@
 #pragma once
 
 #include <Component.h>
+#include <NetworkComponent.h>
 #include <cad-engine/irrlicht.h>
 
 namespace Xplicit::Player
@@ -37,7 +38,7 @@ namespace Xplicit::Player
 	private:
 		irr::scene::ICameraSceneNode* mCamera;
 		NetworkComponent* mNetwork;
-		vector3df mRotation;
+		irr::core::vector3df mRotation;
 
 	};
 }
