@@ -109,14 +109,11 @@ static int lua_LoadRoXML(lua_State* L)
 static int lua_LoadModel(lua_State* L)
 {
 	auto _path = lua_tostring(L, 1);
+	auto _name = lua_tostring(L, 2);
+	auto _parent = lua_tostring(L, 3);
 
-	lua_rawgeti(L, 2, 1);
-	lua_rawgeti(L, 2, 2);
-
-	auto _name = lua_tostring(L, -2);
-	auto _parent = lua_tostring(L, -1);
-
-	Xplicit::Player::StaticMesh* mesh = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::StaticMesh>(_path, 
+	Xplicit::Player::StaticMesh* mesh = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::StaticMesh>(
+		_path, 
 		_name, 
 		_parent);
 
@@ -235,7 +232,7 @@ void XplicitLoadClientLua() noexcept
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadModel);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineLoadMesh");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.MeshService.IsRightDown = EngineLoadMesh");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.MeshService.Load = EngineLoadMesh");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_ExplodeFX);
 

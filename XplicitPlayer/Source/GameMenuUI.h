@@ -13,6 +13,7 @@
 #include <NMath.h>
 #include <ImGUI.h>
 #include <Component.h>
+#include <CommonEngine.h>
 #include <NetworkComponent.h>
 
 namespace Xplicit::Player
@@ -85,6 +86,9 @@ namespace Xplicit::Player
 		static bool should_update() { return true; }
 
 	private:
+		std::array<ImGUI::UIFrame, XPLICIT_MAX_ELEMENTS_INVENTORY> mInventorySlots;
+		std::size_t mSelectedSlot;
+
 		NetworkComponent* mNetwork;
 		ImGUI::UIFrame* mHudFrame;
 
@@ -101,8 +105,12 @@ namespace Xplicit::Player
 		~LocalFrameComponent() = default;
 
 	public:
+		XPLICIT_COPY_DEFAULT(LocalFrameComponent);
+
+	public:
 		const char* name();
 
+	public:
 		static void update(ClassPtr klass) noexcept;
 		static bool should_update();
 

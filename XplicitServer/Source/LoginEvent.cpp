@@ -57,6 +57,14 @@ namespace Xplicit
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
+		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+
+		// xconnect specs, always spawn at 0, 0, 0!
+
+		peer->packet.pos[XPLICIT_NETWORK_X] = 0;
+		peer->packet.pos[XPLICIT_NETWORK_Y] = 0;
+		peer->packet.pos[XPLICIT_NETWORK_Z] = 0;
+
 		peer->packet.hash = peer->hash;
 		peer->packet.size = sizeof(NetworkPacket);
 

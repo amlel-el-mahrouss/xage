@@ -241,3 +241,12 @@ function Util.Dump(o)
     end
 end
 
+function World:New(name, ...)
+    if (name == "Gear") then
+        return World.GearService.Create(...);
+    elseif (name == "RoXML") then
+        return World.RoXMLService.Load(...);
+    end
+
+    return nil;
+end

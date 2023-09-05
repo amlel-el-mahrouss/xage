@@ -64,6 +64,9 @@ namespace Xplicit::Lua
 
 		std::int32_t run(const char* file) noexcept
 		{
+			if (!file)
+				return -1;
+
 			if (auto err = (luaL_dofile(mL, file)) > 0)
 			{
 				String _err = "ERROR: ";
@@ -81,6 +84,9 @@ namespace Xplicit::Lua
 
 		std::int32_t run_string(const char* str) noexcept
 		{
+			if (!str)
+				return -1;
+
 			if (auto err = (luaL_dostring(mL, str)) > 0)
 			{
 				String _err = "ERROR: ";

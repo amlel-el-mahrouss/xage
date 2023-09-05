@@ -87,7 +87,7 @@ int main(int argc, char** argv)
 			Xplicit::ComponentSystem::get_singleton_ptr() &&
 			Xplicit::EventSystem::get_singleton_ptr())
 		{
-			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 50, 50, 50));
+			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0, 0, 0));
 
 #ifdef _WIN32
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();

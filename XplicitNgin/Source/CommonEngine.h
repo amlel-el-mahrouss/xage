@@ -17,7 +17,8 @@
 #include <CLua/CLua.hpp>
 
 #define XPLICIT_DEFAULT_HEALTH	100U
-#define XPLICIT_DEFAULT_NAME	"Player"
+#define XPLICIT_DEFAULT_NAME	"Human"
+#define XPLICIT_MAX_ELEMENTS_INVENTORY 4
 
 namespace Xplicit
 {

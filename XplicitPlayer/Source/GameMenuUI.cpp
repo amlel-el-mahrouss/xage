@@ -135,21 +135,22 @@ namespace Xplicit::Player
 		  mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		  mPublicHash(publicHash),
 		  mHealth(0),
-		  mHudFrame(new ImGUI::UIFrame())
+		  mHudFrame(new ImGUI::UIFrame()),
+		  mSelectedSlot(-1)
 	{
 		// verify hash and network component.
 		XPLICIT_ASSERT(mPublicHash != XPLICIT_INVALID_HASH);
 		XPLICIT_ASSERT(mNetwork);
 		XPLICIT_ASSERT(mHudFrame);
 
-		mHudFrame->BackgroundColor.setRed(0x4B);
-		mHudFrame->BackgroundColor.setGreen(0xA5);
-		mHudFrame->BackgroundColor.setBlue(0x54);
+		mHudFrame->BackgroundColor.setRed(0x00);
+		mHudFrame->BackgroundColor.setGreen(0x94);
+		mHudFrame->BackgroundColor.setBlue(0xFF);
 		mHudFrame->BackgroundColor.setAlpha(225);
 		
-		mHudFrame->BackgroundHoverColor.setRed(0x4B);
-		mHudFrame->BackgroundHoverColor.setGreen(0xA5);
-		mHudFrame->BackgroundHoverColor.setBlue(0x54);
+		mHudFrame->BackgroundHoverColor.setRed(0x00);
+		mHudFrame->BackgroundHoverColor.setGreen(0x94);
+		mHudFrame->BackgroundHoverColor.setBlue(0xFF);
 		mHudFrame->BackgroundHoverColor.setAlpha(225);
 
 		mHudFrame->H = 10;
@@ -157,6 +158,28 @@ namespace Xplicit::Player
 
 		mHudFrame->X = 10;
 		mHudFrame->Y = 10;
+
+		std::size_t x_off = 10UL;
+		std::size_t y_off = RENDER->getVideoDriver()->getScreenSize().Height - 74UL;
+
+		for (size_t i = 0; i < mInventorySlots.size(); i++)
+		{
+			mInventorySlots[i].BackgroundColor.setRed(0x00);
+			mInventorySlots[i].BackgroundColor.setGreen(0x94);
+			mInventorySlots[i].BackgroundColor.setBlue(0xFF);
+			mInventorySlots[i].BackgroundColor.setAlpha(225);
+
+			mInventorySlots[i].BackgroundHoverColor.setRed(0x00);
+			mInventorySlots[i].BackgroundHoverColor.setGreen(0x94);
+			mInventorySlots[i].BackgroundHoverColor.setBlue(0xFF);
+			mInventorySlots[i].BackgroundHoverColor.setAlpha(225);
+
+			mInventorySlots[i].W = mInventorySlots[i].H = 64;
+			mInventorySlots[i].X = x_off;
+			mInventorySlots[i].Y = y_off;
+
+			x_off += 68UL;
+		}
 	}
 
 	LocalHudComponent::~LocalHudComponent()
@@ -169,6 +192,24 @@ namespace Xplicit::Player
 	{
 		LocalHudComponent* _this = (LocalHudComponent*)class_ptr;
 
+		for (size_t i = 0; i < XPLICIT_MAX_ELEMENTS_INVENTORY; ++i)
+		{
+			char to_ascii = i + 48 + 1;
+
+			if (KB->key_down(to_ascii))
+				_this->mSelectedSlot = i;
+
+			_this->mInventorySlots[i].update(ImGUI::ImColor(255, 0x1C, 0x1C, 0x1C));
+
+			if (_this->mSelectedSlot == i)
+			{
+				RENDER->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(_this->mInventorySlots[i].X, _this->mInventorySlots[i].Y),
+					dimension2di(_this->mInventorySlots[i].W, _this->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));
+			}
+		}
+
+		_this->mHudFrame->update(_this->mHudFrame->BackgroundColor);
+
 		if (!_this->mNetwork)
 			return;
 
@@ -179,8 +220,6 @@ namespace Xplicit::Player
 			_this->mHealth = packet.health;
 			_this->mHudFrame->W = _this->mHealth * 2;
 		}
-
-		_this->mHudFrame->update(_this->mHudFrame->BackgroundColor);
 	}
 
 	LocalFrameComponent::LocalFrameComponent(const char* parent, const char* name)

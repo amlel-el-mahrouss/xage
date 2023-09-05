@@ -68,7 +68,7 @@ namespace Xplicit::Player
 		if (!mNetwork)
 			return;
 
-		static float pos_menu = 12;
+		static float pos_menu = 14;
 
 		if (KB->key_down(KEY_F3) &&
 			mTimeout < 0 && !mPopup)
@@ -91,16 +91,17 @@ namespace Xplicit::Player
 			}, POPUP_TYPE::LEAVE, "LeavePopup");
 		}
 
+		//RENDER->getVideoDriver()->draw2DImage(mEnabled ? mButtonHover : mButtonNoHover,
+		//	vector2di(10, XPLICIT_DIM.Y / pos_menu),
+		//	rect(0, 0, 63, 42),
+		//	nullptr,
+		//	SColor(255, 255, 255, 255),
+		//	true);
+
+
 		/* menu is being open */
 		if (mEnabled)
 		{
-			RENDER->getVideoDriver()->draw2DImage(mButtonHover,
-				vector2di(30, XPLICIT_DIM.Y / pos_menu),
-				rect(0, 0, 63, 42),
-				nullptr,
-				SColor(255, 255, 255, 255),
-				true);
-
 			if (KB->key_down(KEY_ESCAPE))
 			{
 				ComponentSystem::get_singleton_ptr()->remove(mPopup);
@@ -108,15 +109,6 @@ namespace Xplicit::Player
 
 				mEnabled = false;
 			}
-		}
-		else
-		{
-			RENDER->getVideoDriver()->draw2DImage(mButtonNoHover,
-				vector2di(30, XPLICIT_DIM.Y / pos_menu),
-				rect(0, 0, 63, 42),
-				nullptr,
-				SColor(255, 255, 255, 255),
-				true);
 		}
 
 		--mTimeout;

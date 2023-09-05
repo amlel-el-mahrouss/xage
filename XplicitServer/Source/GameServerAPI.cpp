@@ -25,7 +25,7 @@ static int lua_LoadRoXML(lua_State* L)
 	if (!_client)
 	{
 		Xplicit::RoXML::RoXMLDocumentParameters params;
-
+		 
 		params.Has3D = false;
 		params.LuaOnly = false;
 		params.NoLua = false;
@@ -66,13 +66,17 @@ static int lua_CreateGear(lua_State* L)
 {
 	const char* name = lua_tostring(L, 1);
 
-	lua_rawgeti(L, 2, 3);
+	lua_gettable(L, 2);
+	lua_getfield(L, 2, "XplicitId");
 
-	const char* xplicit_id = lua_tostring(L, -3);
+	const char* xplicit_id = lua_tostring(L, 2);
 
 	if (xplicit_id == nullptr ||
 		name == nullptr)
-		return 0;
+	{
+		lua_pushnil(L);
+		return 1;
+	}
 
 	Xplicit::String path_player("World.Players.");
 	path_player += xplicit_id;
@@ -94,14 +98,21 @@ static int lua_CreateGear(lua_State* L)
 
 				player->get_gears().push_back(gear);
 
-				return 0;
+				path_player += ".";
+				path_player += name;
+
+				lua_getglobal(L, path_player.c_str());
+				lua_pushvalue(L, -1);
+
+				return 1;
 			}
 		}
 
 		Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
 	}
 
-	return 0;
+	lua_pushnil(L);
+	return 1;
 }
 
 static int lua_DestroyGear(lua_State* L)

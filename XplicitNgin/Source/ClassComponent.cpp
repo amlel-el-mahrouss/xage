@@ -90,7 +90,6 @@ namespace Xplicit
 
 		this->insert("Destroy", XPLICIT_DESTROY_SNIPPET(mName, mParent).c_str());
 
-
 		//! Connect and disconnect methods
 		//! Use this to connect specific function to this class.
 		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
@@ -110,6 +109,8 @@ namespace Xplicit
 			this->script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script));
 
 			XPLICIT_ASSERT(this->script());	
+
+			this->script()->run();
 		}
 	}
 

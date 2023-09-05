@@ -25,9 +25,5 @@ namespace Xplicit
 	public:
 		XPLICIT_COPY_DEFAULT(Explosion);
 
-	private:
-		IBillboardSceneNode* mBillboard;
-		ITexture* mExplodeTex;
-
 	};
 }

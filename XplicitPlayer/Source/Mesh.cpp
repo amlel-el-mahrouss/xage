@@ -19,12 +19,15 @@
 namespace Xplicit::Player
 {
 	StaticMesh::StaticMesh(const char* path, const char* name, const char* group)
-		: mPath(path), mPhysics(PHYSICS_NONE), mGroup(group), mName(name), CLuaClass(String("World") + "." + group + "." + name)
+		: mPath(path), mNode(nullptr), 
+		mPhysics(PHYSICS_NONE), mGroup(group), 
+		mName(name), CLuaClass(String("") + group + "." + name),
+		mMdl(nullptr)
 	{
 		static XPLICIT_GET_DATA_DIR(XPLICIT_DIR);
 
 		String _path = XPLICIT_DIR;
-		_path += "/XplicitNgin/Contents/";
+		_path += "/Contents/";
 		_path += path;
 
 		mMdl = RENDER->getSceneManager()->getMesh(_path.c_str());
@@ -39,20 +42,12 @@ namespace Xplicit::Player
 			mNode = RENDER->getSceneManager()->addMeshSceneNode(mMdl);
 			mPhysics = PHYSICS_COMPLEX;
 
+			mNode->setName(mName.c_str());
 			mNode->setPosition(vector3df(0, 0, 0));
 
-			this->assign("Position.X", "0");
-			this->assign("Position.Y", "0");
-			this->assign("Position.Z", "0");
-
-			this->assign("Scale.X", std::to_string(mNode->getScale().X).c_str());
-			this->assign("Scale.Y", std::to_string(mNode->getScale().Y).c_str());
-			this->assign("Scale.Z", std::to_string(mNode->getScale().Z).c_str());
-
-			this->assign("Color.R", std::to_string(mNode->getMaterial(0).AmbientColor.getRed()).c_str());
-			this->assign("Color.G", std::to_string(mNode->getMaterial(0).AmbientColor.getGreen()).c_str());
-			this->assign("Color.B", std::to_string(mNode->getMaterial(0).AmbientColor.getBlue()).c_str());
-			this->assign("Color.A", std::to_string(mNode->getMaterial(0).AmbientColor.getAlpha()).c_str());
+			this->insert("Position", "{ X = 0, Y = 0, Z = 0}");
+			this->insert("Scale", "{ X = 0, Y = 0, Z = 0}");
+			this->insert("Color", "{ A = 255, R = 255, G = 255, B = 255 }");
 		}
 	}
 
@@ -69,6 +64,9 @@ namespace Xplicit::Player
 	{
 		auto self = (StaticMesh*)class_ptr;
 
+		if (!self->mNode)
+			return;
+
 		auto pos = self->mNode->getPosition();
 
 		pos.X = self->index_as_number("Position.X");
@@ -82,6 +80,8 @@ namespace Xplicit::Player
 		scale.X = self->index_as_number("Scale.X");
 		scale.Y = self->index_as_number("Scale.Y");
 		scale.Z = self->index_as_number("Scale.Z");
+
+		self->mNode->setScale(scale);
 
 		self->mNode->getMaterial(0).DiffuseColor.setRed(self->index_as_number("Color.R"));
 		self->mNode->getMaterial(0).DiffuseColor.setGreen(self->index_as_number("Color.G"));
