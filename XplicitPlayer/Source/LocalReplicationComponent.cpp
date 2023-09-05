@@ -109,8 +109,6 @@ namespace Xplicit::Player
 				url = "/";
 				url += substr;
 
-				std::cout << url << std::endl;
-
 				static LocalNetworkMonitorEvent* monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 
 				if (!monitor)

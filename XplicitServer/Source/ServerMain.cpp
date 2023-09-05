@@ -23,7 +23,6 @@
 #include "TimeoutEvent.h"
 #include "MovementEvent.h"
 #include "HealthMonitorEvent.h"
-#include "ServerReplicationManager.h"
 
 static bool XPLICIT_EXIT_REQUESTED = false;
 

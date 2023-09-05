@@ -14,6 +14,8 @@
 #include "GameMenuUI.h"
 #include "Application.h"
 
+static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
+
 namespace Xplicit::Player
 {
 	/*
@@ -179,5 +181,53 @@ namespace Xplicit::Player
 		}
 
 		_this->mHudFrame->update(_this->mHudFrame->BackgroundColor);
+	}
+
+	LocalFrameComponent::LocalFrameComponent(const char* parent, const char* name)
+		: Lua::CLuaClass((String(parent) + "." + name))
+	{
+		this->insert("Name", name);
+		this->insert("Parent", parent);
+
+		this->insert("Left", "0");
+		this->insert("Top", "0");
+		this->insert("Right", "0");
+		this->insert("Bottom", "0");
+
+		this->insert("X", "0");
+		this->insert("Y", "0");
+
+		this->insert("Red", "255");
+		this->insert("Green", "255");
+		this->insert("Blue", "255");
+		this->insert("Alpha", "255");
+	}
+
+	bool LocalFrameComponent::should_update() { return true; }
+
+	const char* LocalFrameComponent::name() 
+	{
+		return ((!this->index_as_string("Name").empty()) ? this->index_as_string("Name").c_str() : "LocalFrameComponent"); 
+	}
+
+	void LocalFrameComponent::update(ClassPtr klass) noexcept
+	{
+		LocalFrameComponent* msg = (LocalFrameComponent*)klass;
+
+		int x = msg->index_as_number("Left");
+		int y = msg->index_as_number("Top");
+		int x2 = msg->index_as_number("Right");
+		int y2 = msg->index_as_number("Bottom");
+
+		msg->mFrame.W = x2 - x;
+		msg->mFrame.H = y2 - y;
+
+		msg->mFrame.X = msg->index_as_number("X");
+		msg->mFrame.Y = msg->index_as_number("Y");
+
+		msg->mFrame.update(ImGUI::ImColor(msg->index_as_number("Alpha"), 
+			msg->index_as_number("Red"),
+			msg->index_as_number("Green"), 
+			msg->index_as_number("Blue")));
 	}
 }

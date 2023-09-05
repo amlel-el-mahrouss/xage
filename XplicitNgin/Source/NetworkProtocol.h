@@ -36,6 +36,7 @@
 #define XPLICIT_NUM_CHANNELS (2)
 
 #define XPLICIT_CHANNEL_DATA (1)
+#define XPLICIT_CHANNEL_LUA (2)
 #define XPLICIT_CHANNEL_CHAT (3)
 
 /* Used by the protocol to tell the velocity. */

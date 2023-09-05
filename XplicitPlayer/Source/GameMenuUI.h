@@ -93,4 +93,21 @@ namespace Xplicit::Player
 		std::int64_t mHealth;
 
 	};
+
+	class LocalFrameComponent final : public Lua::CLuaClass
+	{
+	public:
+		LocalFrameComponent(const char* parent, const char* name);
+		~LocalFrameComponent() = default;
+
+	public:
+		const char* name();
+
+		static void update(ClassPtr klass) noexcept;
+		static bool should_update();
+
+	private:
+		ImGUI::UIFrame mFrame;
+
+	};
 }

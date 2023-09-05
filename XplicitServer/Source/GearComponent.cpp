@@ -9,7 +9,6 @@
 
 // Include the component class.
 
-#include "ServerReplicationManager.h"
 #include "GearComponent.h"
 
 //! This file handles Gears (Sword, Pistol, Build Tools...)

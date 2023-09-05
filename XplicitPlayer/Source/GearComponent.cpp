@@ -59,5 +59,3 @@ namespace Xplicit::Player
 		}
 	}
 }
-
-#undef XPLICIT_LUA_GLOBAL

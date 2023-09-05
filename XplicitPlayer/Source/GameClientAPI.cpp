@@ -9,6 +9,7 @@
 
 #include "LocalNetworkMonitorEvent.h"
 #include "SoundComponent.h"
+#include "GameMenuUI.h"
 #include "Application.h"
 #include "Mesh.h"
 
@@ -26,9 +27,7 @@ Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 #	define XPLICIT_XASSET_IDENT ("xasset")
 #endif // ifndef XPLICIT_XASSET_IDENT
 
-#ifdef XPLICIT_WINDOWS
-
-std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
+static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
 
 static int lua_PlaySound(lua_State* L)
 {
@@ -122,14 +121,29 @@ static int lua_LoadModel(lua_State* L)
 	auto _name = lua_tostring(L, 2);
 	auto _parent = lua_tostring(L, 3);
 
-	Xplicit::Player::StaticMesh* mesh = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::StaticMesh>(_path, _name, _parent);
+	Xplicit::Player::StaticMesh* mesh = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::StaticMesh>(_path, 
+		_name, 
+		_parent);
+
+	return 0;
+}
+
+static int lua_MakeRect(lua_State* L)
+{
+	const char* parent = lua_tostring(L, 1);
+	const char* name = lua_tostring(L, 2);
+
+	Xplicit::Player::LocalFrameComponent* frame = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalFrameComponent>(parent, name);
+
+	lua_getglobal(L, (Xplicit::String(parent) + "." + name).c_str());
+	lua_pushvalue(L, -1);
 
 	return 0;
 }
 
 void XplicitLoadClientLua() noexcept
 {
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RenderingService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.UIService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
 
@@ -151,9 +165,12 @@ void XplicitLoadClientLua() noexcept
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_SetWindowCaption);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineSetWindowCaption");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RenderingService.SetCaption = EngineSetWindowCaption");
-	
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.UIService.SetCaption = EngineSetWindowCaption");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_MakeRect);
+
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineMakeRect");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.UIService.MakeRect = EngineMakeRect");
+
 	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::SoundComponent>();
 }
-
-#endif // ifdef XPLICIT_WINDOWS
