@@ -19,8 +19,6 @@
 //! To connect to peer. 
 #include "LoadingComponent.h"
 
-extern void XplicitLoadClientLua() noexcept;
-
 namespace Xplicit::Player
 {
 	Vector<float> XPLICIT_DIM = Vector<float>(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
@@ -33,12 +31,6 @@ namespace Xplicit::Bites
 	{
 		//! Setup Engine
 		this->setup();
-
-		//! Load Basic lua calls
-		XplicitLoadBaseLua();
-
-		//! Register clientside Lua calls, such as PlaySound
-		XplicitLoadClientLua();
 
 		ComponentSystem::get_singleton_ptr()->add<NetworkComponent>();
 

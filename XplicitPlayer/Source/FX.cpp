@@ -8,6 +8,7 @@
  */
 
 #include "FX.h"
+#include "SoundComponent.h"
 
 namespace Xplicit
 {
@@ -22,14 +23,6 @@ namespace Xplicit
 
 		mExplodeTex = RENDER->getVideoDriver()->getTexture(dir.c_str());
 
-		if (!mExplodeTex)
-		{
-			if (XPLICIT_HTTP.download("xasset://Library/fire.bmp", dir))
-			{
-				mExplodeTex = RENDER->getVideoDriver()->getTexture(dir.c_str());
-			}
-		}
-
 		if (mExplodeTex)
 		{
 			mBillboard = RENDER->getSceneManager()->addBillboardSceneNode();
@@ -37,6 +30,17 @@ namespace Xplicit
 			mBillboard->setScale(scale);
 			mBillboard->setPosition(pos);
 			mBillboard->setMaterialTexture(0, mExplodeTex);
+
+			XPLICIT_GET_DATA_DIR(full_path);
+
+			Xplicit::String full_sound_path;
+
+			full_sound_path += full_path;
+			full_sound_path += "Contents/";
+			full_sound_path += "Explode.mp3";
+
+			if (auto snd = ComponentSystem::get_singleton_ptr()->get<Xplicit::Player::SoundComponent>("SoundComponent"))
+				snd->play(full_sound_path);
 		}
 	}
 

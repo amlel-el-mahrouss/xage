@@ -88,9 +88,10 @@ namespace Xplicit::Player
 			const auto cam = ComponentSystem::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
 			const auto ply = ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash);
 
-			ply->attach(cam);
-			cam->get()->setName("Camera");
+			XPLICIT_ASSERT(ply);
+			XPLICIT_ASSERT(cam);
 
+			ply->attach(cam);
 			self->mNetwork->set_hash(hash);
 
 			const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);

@@ -129,11 +129,14 @@ namespace Xplicit
 					XPLICIT_DEFAULT_NAME
 					"\"");
 
+				mClass->insert("Parent", "World.Players");
+
+				mClass->insert("XplicitId", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
+
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");
 				mClass->insert("Kick", "false");
-				mClass->insert("XPLICIT_ID", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());

@@ -17,12 +17,15 @@
 #include "Application.h"
 
 #include <NetworkProtocol.h>
+#include <BaseLuaAPI.h>
 #include <XplicitSound.h>
 #include <DriverD3D11.h>
 #include <Component.h>
 #include <Event.h>
 #include <Bites.h>
 #include <codecvt>
+
+extern void XplicitLoadClientLua() noexcept;
 
 static void XplicitThrowException(Xplicit::EngineError& err);
 
@@ -46,7 +49,6 @@ int main(int argc, char** argv)
 #endif // XPLICIT_DEBUG
 #endif
 
-
 		// parse the connection uri.
 		Xplicit::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
 
@@ -68,6 +70,12 @@ int main(int argc, char** argv)
 
 		if (!checker(uri.get().c_str()))
 			return 1;
+
+		//! Load Basic lua calls
+		XplicitLoadBaseLua();
+
+		//! Register clientside Lua calls, such as PlaySound
+		XplicitLoadClientLua();
 
 		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);
 

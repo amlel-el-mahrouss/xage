@@ -7,6 +7,7 @@
  * =====================================================================
  */
 
+#include "ServerReplicationManager.h"
 #include "HumanoidComponent.h"
 #include "GearComponent.h"
 
@@ -19,22 +20,44 @@ Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 static int lua_LoadRoXML(lua_State* L)
 {
 	auto _path = lua_tostring(L, 1);
+	auto _client = lua_toboolean(L, 2);
 
-	Xplicit::RoXML::RoXMLDocumentParameters params;
-
-	params.Has3D = false;
-	params.LuaOnly = false;
-	params.NoLua = false;
-
-	params.Path = _path;
-
-	if (params.Path.empty())
+	if (!_client)
 	{
-		lua_pushnil(L);
-		return 1;
-	}
+		Xplicit::RoXML::RoXMLDocumentParameters params;
 
-	XPLICIT_PARSER.parse(params);
+		params.Has3D = false;
+		params.LuaOnly = false;
+		params.NoLua = false;
+
+		params.Path = _path;
+
+		if (params.Path.empty())
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		XPLICIT_PARSER.parse(params);
+	}
+	else
+	{
+		lua_rawgeti(L, 3, 3);
+
+		auto xid = lua_tostring(L, -3);
+
+		std::vector<Xplicit::HumanoidComponent*> players = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+
+		for (auto i = 0UL; i < players.size(); ++i)
+		{
+			auto player = players[i];
+
+			if (player->get_peer()->xplicit_id.as_string() == xid)
+			{
+				Xplicit::ServerReplicationManager::get_singleton_ptr()->create(Xplicit::COMPONENT_ID_ROXML, _path, player->get_peer()->public_hash);
+			}
+		}
+	}
 
 	return 0;
 }
@@ -42,7 +65,10 @@ static int lua_LoadRoXML(lua_State* L)
 static int lua_CreateGear(lua_State* L)
 {
 	const char* name = lua_tostring(L, 1);
-	const char* xplicit_id = lua_tostring(L, 2);
+
+	lua_rawgeti(L, 2, 3);
+
+	const char* xplicit_id = lua_tostring(L, -3);
 
 	if (xplicit_id == nullptr ||
 		name == nullptr)
@@ -66,8 +92,6 @@ static int lua_CreateGear(lua_State* L)
 				gear->insert("Owner", path_player.c_str());
 				gear->insert("Parent", "Owner");
 
-				Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("{}.{} = {}", path_player.c_str(), name, name).c_str());
-
 				player->get_gears().push_back(gear);
 
 				return 0;
@@ -82,7 +106,11 @@ static int lua_CreateGear(lua_State* L)
 
 static int lua_DestroyGear(lua_State* L)
 {
-	const char* name = lua_tostring(L, 1);
+	lua_rawgeti(L, 1, 1);
+	lua_rawgeti(L, 1, 2);
+
+	const char* name = lua_tostring(L, -1);
+	const char* xplicit_id = lua_tostring(L, -2);
 
 	auto gear = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::GearComponent>(name);
 

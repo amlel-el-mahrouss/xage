@@ -186,6 +186,9 @@ namespace Xplicit::Player
 	LocalFrameComponent::LocalFrameComponent(const char* parent, const char* name)
 		: Lua::CLuaClass((String(parent) + "." + name))
 	{
+		this->insert("UI", "true");
+		this->insert("View", "true");
+
 		this->insert("Name", name);
 		this->insert("Parent", parent);
 

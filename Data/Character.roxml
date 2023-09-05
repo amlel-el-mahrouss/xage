@@ -3,13 +3,13 @@
 
 	</Class>
 
-	<Class Name="HumanoidLight" Parent="World" Class="Light">
+	<Class Name="Light" Parent="World.LocalHumanoid" Class="Light">
 
 	</Class>
 
 	<!-- -7.451, 0, -13.514 -->
 	<Position3 X="0" Y="0" Z="0">
-		HumanoidLight
+		Light
 	</Position3>
 
 	<Class Name="Head" Parent="World.LocalHumanoid" Object="Mesh">
@@ -36,7 +36,7 @@
 		Contents/Bundles/RightLeg.obj
 	</Class>
 
-	<!-- -8.951, 3, -13.514 -->
+		<!-- -8.951, 3, -13.514 -->
 	<Position3 X="-8.951" Y="3" Z="-13.514">
 		LeftArm
 	</Position3>
@@ -65,13 +65,18 @@
 	<Position3 X="-7.451" Y="4.5" Z="-13.514">
 		Head
 	</Position3>
+	
+	<InlineCLua>
+		World.Slot.LocalSpawn:Connect(function()
+			World.Camera.FOV = 30
+			
+			World.Camera.Position.X = 0
+			World.Camera.Position.Y = 0
+			World.Camera.Position.Z = 0
 
-	<!-- -7.451, 0, -13.514 -->
-	<Position3 X="-7.451" Y="0" Z="-13.514">
-		Camera
-	</Position3>
-
-	<Target3 X="-7.296" Y="5.841" Z="-12.585">
-		Camera
-	</Target3>
+			World.LocalHumanoid.Head.Position.X = 10
+			World.LocalHumanoid.Head.Position.Y = 0
+			World.LocalHumanoid.Head.Position.Z = 10
+		end)
+	</InlineCLua>
 </RoXML>

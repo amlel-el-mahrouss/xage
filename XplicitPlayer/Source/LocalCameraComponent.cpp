@@ -29,6 +29,7 @@ namespace Xplicit::Player
 		mCamera->setRotation(vector3df(0, 0, 0));
 		mCamera->setName("Camera");
 
+		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("FOV", "90");
 
 		mRotation = mCamera->getRotation();

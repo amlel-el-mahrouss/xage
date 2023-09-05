@@ -17,7 +17,7 @@ namespace Xplicit::Player
 			Color<float>(0.0f, 0.0f, 0.0f), 
 			nullptr,
 			"World",
-			"SoundService.Mixer"),
+			"Mixer"),
 		mVolume(1.0f), mLoop(false)
 	{
 		this->insert("Loop", "false");

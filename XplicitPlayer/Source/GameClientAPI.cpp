@@ -12,6 +12,7 @@
 #include "GameMenuUI.h"
 #include "Application.h"
 #include "Mesh.h"
+#include "FX.h"
 
 #include <XplicitSound.h>
 #include <CLua/CLua.hpp>
@@ -108,8 +109,12 @@ static int lua_LoadRoXML(lua_State* L)
 static int lua_LoadModel(lua_State* L)
 {
 	auto _path = lua_tostring(L, 1);
-	auto _name = lua_tostring(L, 2);
-	auto _parent = lua_tostring(L, 3);
+
+	lua_rawgeti(L, 2, 1);
+	lua_rawgeti(L, 2, 2);
+
+	auto _name = lua_tostring(L, -2);
+	auto _parent = lua_tostring(L, -1);
 
 	Xplicit::Player::StaticMesh* mesh = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::StaticMesh>(_path, 
 		_name, 
@@ -134,6 +139,7 @@ static int lua_MakeRect(lua_State* L)
 static int lua_KeyDown(lua_State* L)
 {
 	lua_pushboolean(L, KB->key_down());
+
 	return 1;
 }
 
@@ -142,23 +148,47 @@ static int lua_IsKeyDown(lua_State* L)
 	int key = lua_tointeger(L, 1);
 
 	lua_pushboolean(L, KB->key_down(key));
+
 	return 1;
 }
 
 static int lua_IsLeftDown(lua_State* L)
 {
 	lua_pushboolean(L, KB->left_down());
+
 	return 1;
 }
 
 static int lua_IsRightDown(lua_State* L)
 {
 	lua_pushboolean(L, KB->right_down());
+
 	return 1;
+}
+
+static int lua_ExplodeFX(lua_State* L)
+{
+	// position
+
+	lua_rawgeti(L, 1, 1);
+	lua_rawgeti(L, 1, 2);
+	lua_rawgeti(L, 1, 3);
+
+	float z_pos = lua_tonumber(L, -3);
+	float y_pos = lua_tonumber(L, -2);
+	float x_pos = lua_tonumber(L, -1);
+
+	auto pos = irr::core::vector3df(x_pos, y_pos, z_pos);
+	auto scale = irr::core::vector3df(5, 5, 5);
+
+	Xplicit::Explosion explode(pos, scale);
+
+	return 0;
 }
 
 void XplicitLoadClientLua() noexcept
 {
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.MeshService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.UIService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
@@ -201,6 +231,15 @@ void XplicitLoadClientLua() noexcept
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineIsRightDown");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService.IsRightDown = EngineIsRightDown");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadModel);
+
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineLoadMesh");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.MeshService.IsRightDown = EngineLoadMesh");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_ExplodeFX);
+
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "__EngineRPCExplodeFX");
 
 	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::SoundComponent>();
 }
