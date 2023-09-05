@@ -12,7 +12,7 @@
 #include "XHTTPManager.h"
 #include "HelperMacros.h"
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	bool XHTTPManager::download(const String assetId, const String outputFileName) const noexcept
 	{

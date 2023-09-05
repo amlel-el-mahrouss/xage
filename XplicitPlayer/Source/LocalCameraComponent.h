@@ -10,16 +10,17 @@
 #pragma once
 
 #include <Component.h>
+#include <ClassComponent.h>
 #include <NetworkComponent.h>
 #include <cad-engine/irrlicht.h>
 
 namespace Xplicit::Player
 {
 	// The player view in-person.
-	class LocalCameraComponent final : public Component
+	class LocalCameraComponent final : public ClassComponent
 	{
 	public:
-		LocalCameraComponent(const char* name);
+		LocalCameraComponent();
 		~LocalCameraComponent() noexcept override;
 		
 		LocalCameraComponent& operator=(const LocalCameraComponent&) = default;

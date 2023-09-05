@@ -1,9 +1,10 @@
-<Xplicit xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+<RoXML xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
 	<Class Name="LocalHumanoid" Parent="World" Object="">
 
 	</Class>
 
 	<Class Name="HumanoidLight" Parent="World" Class="Light">
+
 	</Class>
 
 	<!-- -7.451, 0, -13.514 -->
@@ -73,8 +74,4 @@
 	<Target3 X="-7.296" Y="5.841" Z="-12.585">
 		Camera
 	</Target3>
-
-	<CLua>
-		
-	</CLua>
-</Xplicit>
+</RoXML>

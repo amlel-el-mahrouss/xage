@@ -81,16 +81,6 @@ static int lua_PlaySound(lua_State* L)
 	return 0;
 }
 
-static int lua_SetWindowCaption(lua_State* L)
-{
-	auto title = lua_tostring(L, -1);
-
-	if (title)
-		RENDER->setWindowCaption(XPLICIT_TO_WCHAR.from_bytes(title).c_str());
-
-	return 0;
-}
-
 static int lua_LoadRoXML(lua_State* L)
 {
 	auto _path = lua_tostring(L, 1);
@@ -141,13 +131,38 @@ static int lua_MakeRect(lua_State* L)
 	return 0;
 }
 
+static int lua_KeyDown(lua_State* L)
+{
+	lua_pushboolean(L, KB->key_down());
+	return 1;
+}
+
+static int lua_IsKeyDown(lua_State* L)
+{
+	int key = lua_tointeger(L, 1);
+
+	lua_pushboolean(L, KB->key_down(key));
+	return 1;
+}
+
+static int lua_IsLeftDown(lua_State* L)
+{
+	lua_pushboolean(L, KB->left_down());
+	return 1;
+}
+
+static int lua_IsRightDown(lua_State* L)
+{
+	lua_pushboolean(L, KB->right_down());
+	return 1;
+}
+
 void XplicitLoadClientLua() noexcept
 {
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.UIService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
-
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService = {}");
 
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsClient = true");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsServer = false");
@@ -162,15 +177,30 @@ void XplicitLoadClientLua() noexcept
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EnginePlaySound");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService.Play = EnginePlaySound");
 
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_SetWindowCaption);
-
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineSetWindowCaption");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.UIService.SetCaption = EngineSetWindowCaption");
-
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_MakeRect);
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineMakeRect");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.UIService.MakeRect = EngineMakeRect");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_KeyDown);
+
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineKeyDown");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService.KeyDown = EngineKeyDown");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_IsKeyDown);
+
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineIsKeyDown");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService.IsKeyDown = EngineIsKeyDown");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_IsLeftDown);
+
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineIsLeftDown");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService.IsLeftDown = EngineIsLeftDown");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_IsRightDown);
+
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineIsRightDown");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService.IsRightDown = EngineIsRightDown");
 
 	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::SoundComponent>();
 }

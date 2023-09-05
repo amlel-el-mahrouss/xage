@@ -85,7 +85,7 @@ namespace Xplicit
 		this->insert("Locked", "false");
 		this->insert("Collide", "true");
 
-		this->insert("Name", std::format("\'{}\'", mName).c_str());
+		this->insert("Name", mName.data());
 		this->insert("Destroy", XPLICIT_DESTROY_SNIPPET(mName, mParent).c_str());
 
 		this->insert("Parent", mParent.c_str());
@@ -157,5 +157,7 @@ namespace Xplicit
 				node->getMaterial(0).AmbientColor.set(self->color().A, self->color().R, self->color().G, self->color().B);
 			}
 		}
+
+		std::cout << self->mName << std::endl;
 	}
 }

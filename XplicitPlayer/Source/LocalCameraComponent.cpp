@@ -17,8 +17,8 @@
 
 namespace Xplicit::Player
 {
-	LocalCameraComponent::LocalCameraComponent(const char* name)
-		: Component(), 
+	LocalCameraComponent::LocalCameraComponent()
+		: ClassComponent("World", "Camera"),
 		mCamera(nullptr),
 		mRotation(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
@@ -29,6 +29,8 @@ namespace Xplicit::Player
 		mCamera->setRotation(vector3df(0, 0, 0));
 		mCamera->setName("Camera");
 
+		this->insert("FOV", "90");
+
 		mRotation = mCamera->getRotation();
 	}
 
@@ -36,23 +38,6 @@ namespace Xplicit::Player
 	{
 		if (mCamera)
 			mCamera->drop();
-
-		if (mRotation != mCamera->getRotation())
-		{
-			mRotation = mCamera->getRotation();
-
-			NetworkPacket packet;
-
-			packet.cmd[XPLICIT_NETWORK_CMD_CAM_POS] = NETWORK_CMD_CAM_POS;
-
-			packet.pos[XPLICIT_NETWORK_X] = mRotation.X;
-			packet.pos[XPLICIT_NETWORK_Y] = mRotation.Y;
-			packet.pos[XPLICIT_NETWORK_Z] = mRotation.Z;
-
-			packet.channel = XPLICIT_CHANNEL_DATA;
-
-			mNetwork->send(packet);
-		}
 	}
 
 	COMPONENT_TYPE LocalCameraComponent::type() noexcept { return COMPONENT_CAMERA; }
@@ -62,7 +47,33 @@ namespace Xplicit::Player
 	void LocalCameraComponent::update(void* class_ptr) 
 	{
 		LocalCameraComponent* cam = (LocalCameraComponent*)class_ptr;
-		(void)cam;
+
+		auto pos = cam->get()->getPosition();
+
+		pos.X = cam->index_as_number("Position.X");
+		pos.Y = cam->index_as_number("Position.Y");
+		pos.Z = cam->index_as_number("Position.Z");
+
+		cam->get()->setPosition(pos);
+
+		cam->get()->setFOV(cam->index_as_number("FOV"));
+
+		if (cam->mRotation != cam->mCamera->getRotation())
+		{
+			cam->mRotation = cam->mCamera->getRotation();
+
+			NetworkPacket packet;
+
+			packet.cmd[XPLICIT_NETWORK_CMD_CAM_POS] = NETWORK_CMD_CAM_POS;
+
+			packet.pos[XPLICIT_NETWORK_X] = cam->mRotation.X;
+			packet.pos[XPLICIT_NETWORK_Y] = cam->mRotation.Y;
+			packet.pos[XPLICIT_NETWORK_Z] = cam->mRotation.Z;
+
+			packet.channel = XPLICIT_CHANNEL_DATA;
+
+			cam->mNetwork->send(packet);
+		}
 	}
 
 	irr::scene::ICameraSceneNode* LocalCameraComponent::get() noexcept { return mCamera; }

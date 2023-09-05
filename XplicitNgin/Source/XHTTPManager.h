@@ -13,7 +13,7 @@
 #include "Http.h"
 #include "Uri.h"
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	/*
 	 *	@brief XHTTPManager

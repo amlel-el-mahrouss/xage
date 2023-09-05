@@ -39,7 +39,7 @@ namespace Xplicit::Player
 		mTimeout(XPLICIT_TIMEOUT),
 		mLoadingFrame()
 	{
-		ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>("Camera");
+		ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
 		
 		mLoadingFrame.X = 0;
 		mLoadingFrame.Y = 0;
@@ -102,8 +102,6 @@ namespace Xplicit::Player
 
 			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
-
-			RENDER->setWindowCaption(L"XPLICIT [ Loaded ]");
 
 			mEnabled = false;
 
