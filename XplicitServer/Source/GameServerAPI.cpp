@@ -7,7 +7,7 @@
  * =====================================================================
  */
 
-#include "ServerReplicationManager.h"
+#include "ServerReplicationFactory.h"
 #include "HumanoidComponent.h"
 #include "GearComponent.h"
 
@@ -46,6 +46,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 		auto xid = lua_tostring(L, -3);
 
+		Xplicit::ServerReplicationFactory factory;
 		std::vector<Xplicit::HumanoidComponent*> players = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
 
 		for (auto i = 0UL; i < players.size(); ++i)
@@ -54,7 +55,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 			if (player->get_peer()->xplicit_id.as_string() == xid)
 			{
-				Xplicit::ServerReplicationManager::get_singleton_ptr()->create(Xplicit::COMPONENT_ID_ROXML, _path, player->get_peer()->public_hash);
+				factory.create(Xplicit::COMPONENT_ID_ROXML, _path, player->get_peer()->public_hash);
 			}
 		}
 	}
@@ -65,16 +66,12 @@ static int lua_LoadRoXML(lua_State* L)
 static int lua_CreateGear(lua_State* L)
 {
 	const char* name = lua_tostring(L, 1);
-
-	lua_gettable(L, 2);
-	lua_getfield(L, 2, "XplicitId");
-
 	const char* xplicit_id = lua_tostring(L, 2);
 
 	if (xplicit_id == nullptr ||
 		name == nullptr)
 	{
-		lua_pushnil(L);
+		lua_pushboolean(L, false);
 		return 1;
 	}
 
@@ -93,17 +90,12 @@ static int lua_CreateGear(lua_State* L)
 
 			if (player->get_peer()->xplicit_id.as_string() == xplicit_id)
 			{
-				gear->insert("Owner", path_player.c_str());
-				gear->insert("Parent", "Owner");
-
 				player->get_gears().push_back(gear);
 
 				path_player += ".";
 				path_player += name;
 
-				lua_getglobal(L, path_player.c_str());
-				lua_pushvalue(L, -1);
-
+				lua_pushboolean(L, true);
 				return 1;
 			}
 		}
@@ -111,24 +103,26 @@ static int lua_CreateGear(lua_State* L)
 		Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
 	}
 
-	lua_pushnil(L);
+	lua_pushboolean(L, false);
 	return 1;
 }
 
 static int lua_DestroyGear(lua_State* L)
 {
-	lua_rawgeti(L, 1, 1);
-	lua_rawgeti(L, 1, 2);
-
-	const char* name = lua_tostring(L, -1);
-	const char* xplicit_id = lua_tostring(L, -2);
+	const char* name = lua_tostring(L, 1);
 
 	auto gear = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::GearComponent>(name);
 
 	if (gear)
+	{
 		Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
 
-	return 0;
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushboolean(L, 0);
+	return 1;
 }
 
 void XplicitLoadServerLua() noexcept

@@ -213,7 +213,7 @@ World.SOUND = 2;
 World.PARTICLE = 3;
 World.ROXML = 4;
 World.TEXTURE = 5;
-World.TOOL = 6;
+World.GEAR = 6;
 World.SMOKE = 7;
 World.FORCEFIELD = 8;
 World.EXPLOSION = 9;
@@ -242,11 +242,51 @@ function Util.Dump(o)
 end
 
 function World:New(name, ...)
-    if (name == "Gear") then
-        return World.GearService.Create(...);
-    elseif (name == "RoXML") then
-        return World.RoXMLService.Load(...);
+    if (World.RunService.IsServer) then
+        if (name == "Gear") then
+            return World.GearService.Create(...);
+        elseif (name == "RoXML") then
+            return World.RoXMLService.Load(...);
+        end
     end
 
     return nil;
+end
+
+if (World.RunService.IsClient) then
+    World.LocalHumanoid = {}
+
+    World.MeshService.Load('Contents/Bundles/Head.obj', 'Head', 'World.LocalHumanoid');
+    World.MeshService.Load('Contents/Bundles/LeftArm.obj', 'LeftArm', 'World.LocalHumanoid');
+    World.MeshService.Load('Contents/Bundles/RightArm.obj', 'RightArm', 'World.LocalHumanoid');
+    World.MeshService.Load('Contents/Bundles/Torso.obj', 'Torso', 'World.LocalHumanoid');
+    World.MeshService.Load('Contents/Bundles/Head.obj', 'Head', 'World.LocalHumanoid');
+
+    World.LocalHumanoid.LeftArm.Position.X = -1.5;
+    World.LocalHumanoid.LeftArm.Position.Y = 3;
+    World.LocalHumanoid.LeftArm.Position.Z = 0;
+    
+    World.LocalHumanoid.RightArm.Position.X = 1.5;
+    World.LocalHumanoid.RightArm.Position.Y = 3;
+    World.LocalHumanoid.RightArm.Position.Z = 0;
+    
+    World.LocalHumanoid.LeftLeg.Position.X = -0.5;
+    World.LocalHumanoid.LeftLeg.Position.Y = 1;
+    World.LocalHumanoid.LeftLeg.Position.Z = 0;
+    
+    World.LocalHumanoid.RightLeg.Position.X = 0.5;
+    World.LocalHumanoid.RightLeg.Position.Y = 1;
+    World.LocalHumanoid.RightLeg.Position.Z = 0;
+    
+    World.LocalHumanoid.Torso.Position.X = 0;
+    World.LocalHumanoid.Torso.Position.Y = 3;
+    World.LocalHumanoid.Torso.Position.Z = 0;
+    
+    World.LocalHumanoid.Head.Position.X = 0;
+    World.LocalHumanoid.Head.Position.Y = 3;
+    World.LocalHumanoid.Head.Position.Z = 0;
+
+    World.Camera.Position.X = -0.174;
+    World.Camera.Position.Y = 4.209;
+    World.Camera.Position.Z = 1.85;
 end

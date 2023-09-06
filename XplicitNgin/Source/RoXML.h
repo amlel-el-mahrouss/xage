@@ -18,6 +18,7 @@
 
 // Common includes
 #include "ClassComponent.h"
+#include "PartComponent.h"
 #include "DataValue.h"
 #include "Root.h"
 #include "Util.h"
@@ -66,7 +67,7 @@ namespace Xplicit::RoXML
 
 	};
 
-	class RoXMLDocumentParser final
+	class XPLICIT_API RoXMLDocumentParser final
 	{
 	public:
 		RoXMLDocumentParser() = default;
@@ -137,16 +138,6 @@ namespace Xplicit::RoXML
 									strcmp(node->first_attribute()->next_attribute()->name(), "Parent") == 0)
 									parent_id = node->first_attribute()->next_attribute()->value();
 
-								auto component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(
-									Vector<float>(0, 0, 0),
-									Vector<float>(0, 0, 0),
-									Color<float>(0, 0, 0),
-									params.NoLua ? script_id : nullptr,
-									parent_id,
-									node_id);
-
-								XPLICIT_ASSERT(component);
-
 								if (params.Has3D)
 								{
 									void* object = nullptr;
@@ -159,16 +150,12 @@ namespace Xplicit::RoXML
 										light->setName(node_id);
 									}
 
-									if (klass_to_instanciate == "Stud")
+									// assign a part component to the said id
+									// so you can use it.
+
+									if (klass_to_instanciate == "Part")
 									{
-										irr::scene::ISceneNode* stud = nullptr;
-										object = stud = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh());
-										
-										if (stud)
-										{
-											stud->setName(node_id);
-											stud->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-										}
+										PartComponent* part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(node_id, parent_id);
 									}
 
 									if (klass_to_instanciate == "Mesh")
@@ -251,11 +238,7 @@ namespace Xplicit::RoXML
 									{
 										irr::scene::ISceneNode* node = nullptr;
 
-										if (node = RENDER->getSceneManager()->getSceneNodeFromName(parent_id); !node)
-										{
-											ComponentSystem::get_singleton_ptr()->remove<ClassComponent>(component);
-										}
-										else
+										if (node = RENDER->getSceneManager()->getSceneNodeFromName(parent_id); node)
 										{
 											node->addChild(node);
 										}
@@ -270,13 +253,25 @@ namespace Xplicit::RoXML
 						if (node->first_attribute() &&
 							strcmp(node->first_attribute()->name(), "Path") == 0)
 						{
+							String name_id;
+
+							if (node->first_attribute()->next_attribute() &&
+								strcmp(node->first_attribute()->next_attribute()->name(), "Name") == 0)
+								name_id = node->first_attribute()->next_attribute()->value();
+
+							String parent_id;
+
+							if (node->first_attribute()->next_attribute()->next_attribute() &&
+								strcmp(node->first_attribute()->next_attribute()->next_attribute()->name(), "Parent") == 0)
+								parent_id = node->first_attribute()->next_attribute()->next_attribute()->value();
+
 							auto component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(
 								Vector<float>(0, 0, 0),
 								Vector<float>(0, 0, 0),
 								Color<float>(0, 0, 0),
 								nullptr,
-								"World",
-								node->value());
+								parent_id.c_str(),
+								name_id.c_str());
 
 							component->insert("Path", node->first_attribute()->value());
 							component->insert("Play", "function(self) _G.World.SoundService.Play(self.Path); end");

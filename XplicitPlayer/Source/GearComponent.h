@@ -42,10 +42,10 @@ namespace Xplicit::Player
 			const char* parent = "World") noexcept;
 
 	public:
-		StaticMesh* get_mesh() const noexcept;
+		MeshComponent* get_mesh() const noexcept;
 
 	private:
-		std::unique_ptr<StaticMesh> mMeshPtr;
+		std::unique_ptr<MeshComponent> mMeshPtr;
 
 	private:
 		String mParent;

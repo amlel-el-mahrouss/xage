@@ -13,18 +13,14 @@
 
 namespace Xplicit
 {
-	class ServerReplicationManager final
+	class ServerReplicationFactory final
 	{
-		explicit ServerReplicationManager();
+	public:
+		explicit ServerReplicationFactory();
+		~ServerReplicationFactory() = default;
 
 	public:
-		~ServerReplicationManager() = default;
-
-	public:
-		XPLICIT_COPY_DEFAULT(ServerReplicationManager);
-
-	public:
-		static ServerReplicationManager* get_singleton_ptr() noexcept;
+		XPLICIT_COPY_DEFAULT(ServerReplicationFactory);
 
 	public:
 		void remove(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept;

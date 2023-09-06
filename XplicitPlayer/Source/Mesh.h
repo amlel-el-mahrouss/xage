@@ -24,25 +24,25 @@
 
 namespace Xplicit::Player
 {
-	class StaticMesh;
+	class MeshComponent;
 	class StaticBundleMesh;
 
 	/* this classes gives an component a model. */
-	class StaticMesh : public Lua::CLuaClass
+	class MeshComponent : public Lua::CLuaClass
 	{
 	public:
-		StaticMesh() = delete;
+		MeshComponent() = delete;
 
 	public:
-		explicit StaticMesh(const char* path, const char* name, const char* group);
-		virtual ~StaticMesh() noexcept;
+		explicit MeshComponent(const char* path, const char* name, const char* group);
+		virtual ~MeshComponent() noexcept;
 
 	public:
-		StaticMesh& operator=(const StaticMesh&) = default;
-		StaticMesh(const StaticMesh&) = default;
+		MeshComponent& operator=(const MeshComponent&) = default;
+		MeshComponent(const MeshComponent&) = default;
 		
 	public:
-		const char* name() noexcept { return "StaticMesh"; }
+		const char* name() noexcept { return "MeshComponent"; }
 
 		irr::scene::ISceneNode* node() const { return mNode; }
 		irr::scene::IMesh* operator->() const { return mMdl; }

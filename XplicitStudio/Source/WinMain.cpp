@@ -68,6 +68,9 @@ XPLICIT_MAIN()
 		
 		Xplicit::ImGUI::UIWindow ribbon;
 		
+		std::vector<Xplicit::ImGUI::UIButton> buttonsWorld;
+		std::vector<Xplicit::ImGUI::UIButton> buttonsProps;
+
 		Xplicit::ImGUI::UIButton file(L"Menu");
 
 		file.get()->W = 122;
@@ -77,18 +80,6 @@ XPLICIT_MAIN()
 			XPLICIT_FILE_REQ = !XPLICIT_FILE_REQ;
 			XPLICIT_FILE_COOLDOWN = 18000;
 		};
-
-		Xplicit::ImGUI::UIButton exit_but(L"Quit Studio");
-
-		exit_but.get()->Y = 33;
-
-		exit_but.LeftClicked = []() {
-			XPLICIT_FILE_REQ = false;
-			std::exit(0);
-		};
-
-		exit_but.get()->W = 122;
-		exit_but.get()->H = 30;
 
 		ribbon.pos(0, 0);
 		ribbon.size(1280, 140, 30);
@@ -104,15 +95,6 @@ XPLICIT_MAIN()
 		classProperties.pos(970, 385);
 		classProperties.set("Properties");
 		classProperties.size(310, 312, 23);
-
-		XPLICIT_GET_DATA_DIR(XPLICIT_STUDIO_DIRECTORY);
-		Xplicit::String skydome_path = XPLICIT_STUDIO_DIRECTORY;
-		skydome_path += "/Contents/Studio/Skydome.obj";
-
-		irr::scene::IMeshSceneNode* Skydome = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getMesh(skydome_path.c_str()));
-		irr::scene::ICameraSceneNode* Cam = RENDER->getSceneManager()->addCameraSceneNodeMaya();
-
-		Skydome->setPosition(irr::core::vector3df(0, 0, 0));
 
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&
@@ -133,16 +115,23 @@ XPLICIT_MAIN()
 			file.update();
 
 			worldProperties.update();
+
+			// TODO update contents here
+
+			for (auto& but : buttonsWorld)
+			{
+				but.update();
+			}
+
 			classProperties.update();
 
-			if (XPLICIT_FILE_REQ)
+			// TODO update contents here
+
+			for (auto& but : buttonsProps)
 			{
-				exit_but.update();
-		
-				if (XPLICIT_FILE_COOLDOWN)
-					--XPLICIT_FILE_COOLDOWN;
+				but.update();
 			}
-		
+
 			RENDER->getVideoDriver()->endScene();
 		}
 	}

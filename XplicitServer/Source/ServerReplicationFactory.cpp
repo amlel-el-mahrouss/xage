@@ -7,26 +7,15 @@
  * =====================================================================
  */
 
-#include "ServerReplicationManager.h"
+#include "ServerReplicationFactory.h"
 
 namespace Xplicit
 {
-	ServerReplicationManager::ServerReplicationManager()
+	ServerReplicationFactory::ServerReplicationFactory()
 		:
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
 	{
 		XPLICIT_ASSERT(mNetwork);
-	}
-
-	//! get_singleton_ptr takes the singleton of this class.
-	ServerReplicationManager* ServerReplicationManager::get_singleton_ptr() noexcept
-	{
-		static ServerReplicationManager* manager = nullptr;
-
-		if (manager == nullptr)
-			manager = new ServerReplicationManager();
-
-		return manager;
 	}
 
 	/*
@@ -34,7 +23,7 @@ namespace Xplicit
 	 * It fills a buffer to tell what class/asset to load.
 	 */
 
-	void ServerReplicationManager::create(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
+	void ServerReplicationFactory::create(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
 	{
 		if (!mNetwork)
 			return;
@@ -58,7 +47,7 @@ namespace Xplicit
 		}
 	}
 
-	void ServerReplicationManager::remove(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
+	void ServerReplicationFactory::remove(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
 	{
 		if (!mNetwork)
 			return;
@@ -82,7 +71,7 @@ namespace Xplicit
 		}
 	}
 
-	void ServerReplicationManager::update(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
+	void ServerReplicationFactory::update(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
 	{
 		if (!mNetwork)
 			return;

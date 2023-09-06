@@ -11,12 +11,10 @@
  @file
  */
 
-#include <BaseLuaAPI.h>
-
-//! Application framework.
 #include "Application.h"
 
-//! To connect to peer. 
+#include <BaseLuaAPI.h>
+
 #include "LoadingComponent.h"
 
 namespace Xplicit::Player

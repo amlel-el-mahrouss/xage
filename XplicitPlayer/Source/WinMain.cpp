@@ -87,17 +87,14 @@ int main(int argc, char** argv)
 			Xplicit::ComponentSystem::get_singleton_ptr() &&
 			Xplicit::EventSystem::get_singleton_ptr())
 		{
-			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0, 0, 0));
+			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x87, 0xCE, 0xBB));
 
-#ifdef _WIN32
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
-#endif
+			Xplicit::EventSystem::get_singleton_ptr()->update();
+			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
-
-			Xplicit::EventSystem::get_singleton_ptr()->update();
-			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 			RENDER->getVideoDriver()->endScene();
 

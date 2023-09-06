@@ -11,6 +11,7 @@
 
 //! ImGUI Base Classes
 #include "ImGuiUIBase.h"
+
 #include <NMath.h>
 
 namespace Xplicit::ImGUI
@@ -180,6 +181,11 @@ namespace Xplicit::ImGUI
 				recti(vector2di(mHead.mBody->X + 5, mHead.mBody->Y - 2), dimension2du(0, 0)),
 				SColor(255, 255, 255, 255),
 				false, false);
+		}
+
+		bool in_region() noexcept
+		{
+			return mBody.mBody->in_region();
 		}
 
 	private:

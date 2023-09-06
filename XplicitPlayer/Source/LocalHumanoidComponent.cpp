@@ -26,7 +26,6 @@ namespace Xplicit::Player
 
 	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& public_hash)
 		:
-		StaticBundleMesh("Character.roxml"), // relative to contents dir
 		mPublicHash(public_hash),
 		mCam(nullptr), 
 		mPacket(),
@@ -57,32 +56,32 @@ namespace Xplicit::Player
 
 	void LocalHumanoidComponent::update(void* class_ptr)
 	{
-		LocalHumanoidComponent* _this = (LocalHumanoidComponent*)class_ptr;
+		LocalHumanoidComponent* self = (LocalHumanoidComponent*)class_ptr;
 
-		if (_this->mNetwork == nullptr) return;
-		if (!_this->mNetwork->read(_this->mPacket)) return;
+		if (self->mNetwork == nullptr) return;
+		if (!self->mNetwork->read(self->mPacket)) return;
 
-		if (_this->mPublicHash == 0)
-			_this->mPublicHash = _this->mPacket.public_hash;
+		if (self->mPublicHash == 0)
+			self->mPublicHash = self->mPacket.public_hash;
 
-		if (_this->mPacket.public_hash == _this->mPublicHash)
+		if (self->mPacket.public_hash == self->mPublicHash)
 		{
-			if (_this->mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
-				_this->mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
+			if (self->mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
+				self->mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{
-				const float delta = _this->mPacket.pos[XPLICIT_NETWORK_DELTA];
+				const float delta = self->mPacket.pos[XPLICIT_NETWORK_DELTA];
 
-				const float xSpeed = _this->mPacket.pos[XPLICIT_NETWORK_X] * delta;
-				const float zSpeed = _this->mPacket.pos[XPLICIT_NETWORK_Z] * delta;
-				const float ySpeed = _this->mPacket.pos[XPLICIT_NETWORK_Y] * delta;
+				const float xSpeed = self->mPacket.pos[XPLICIT_NETWORK_X] * delta;
+				const float zSpeed = self->mPacket.pos[XPLICIT_NETWORK_Z] * delta;
+				const float ySpeed = self->mPacket.pos[XPLICIT_NETWORK_Y] * delta;
 
-				_this->mPos.Z = zSpeed;
-				_this->mPos.X = xSpeed;
-				_this->mPos.Y = ySpeed;
+				self->mPos.Z = zSpeed;
+				self->mPos.X = xSpeed;
+				self->mPos.Y = ySpeed;
 
 				XPLICIT_INFO("World:LocalMove [EVENT]");
 
-				String fmt = std::format("World:LocalMove({},{},{})", std::to_string(_this->mPos.X), std::to_string(_this->mPos.Y), std::to_string(_this->mPos.Z));
+				String fmt = std::format("World:LocalMove({},{},{})", std::to_string(self->mPos.X), std::to_string(self->mPos.Y), std::to_string(self->mPos.Z));
 
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
@@ -90,40 +89,32 @@ namespace Xplicit::Player
 
 		if (KB->left_down())
 		{
-			_this->mPacket.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_LCLICK;
-			_this->mNetwork->send(_this->mPacket);
+			self->mPacket.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_LCLICK;
+			self->mNetwork->send(self->mPacket);
 
 			return;
 		}
 
 		if (KB->right_down())
 		{
-			_this->mPacket.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_RCLICK;
-			_this->mNetwork->send(_this->mPacket);
+			self->mPacket.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_RCLICK;
+			self->mNetwork->send(self->mPacket);
 
 			return;
 		}
 
-		if (_this->mPacket.health > 0 &&
-			_this->mState == HUMANOID_STATE::DEAD)
+		if (self->mPacket.health > 0 &&
+			self->mState == HUMANOID_STATE::DEAD)
 		{
 			XPLICIT_INFO("World:LocalSpawn [EVENT]");
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
 
-			_this->mState = HUMANOID_STATE::ALIVE;
+			self->mState = HUMANOID_STATE::ALIVE;
 		}
-		else if (_this->mPacket.health <= 0)
+		else if (self->mPacket.health <= 0)
 		{
-			_this->mState = HUMANOID_STATE::DEAD;
+			self->mState = HUMANOID_STATE::DEAD;
 		}
-
-		if (_this->count_parts() < 1)
-			return;
-
-		_this->node_at(XPLICIT_BUNDLE_HEAD)->setRotation(vector3df(
-			_this->mCam->get()->getRotation().X,
-			_this->mCam->get()->getRotation().Y > 0 ? _this->mCam->get()->getRotation().Y : 0,
-			_this->mCam->get()->getRotation().Z));
 	}
 
 	void LocalHumanoidComponent::attach(LocalCameraComponent* cam) noexcept

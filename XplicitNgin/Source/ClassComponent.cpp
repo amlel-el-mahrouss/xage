@@ -142,22 +142,5 @@ namespace Xplicit
 		self->pos().X = self->index_as_number<float>("Position.X");
 		self->pos().Y = self->index_as_number<float>("Position.Y");
 		self->pos().Z = self->index_as_number<float>("Position.Z");
-
-		if (RENDER)
-		{
-			if (self->index_as_bool("Locked"))
-				return;
-
-			if (auto node = RENDER->getSceneManager()->getSceneNodeFromName(self->index_as_string("Name").c_str()); 
-				node != nullptr)
-			{
-				node->setScale(vector3df(self->scale().X, self->scale().Y, self->scale().Z));
-				node->setPosition(vector3df(self->pos().X, self->pos().Y, self->pos().Z));
-
-				node->setRotation(vector3df(self->index_as_number("Rotation.X"), self->index_as_number("Rotation.Y"), self->index_as_number("Rotation.Z")));
-
-				node->getMaterial(0).AmbientColor.set(self->color().A, self->color().R, self->color().G, self->color().B);
-			}
-		}
 	}
 }
