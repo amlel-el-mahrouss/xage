@@ -152,7 +152,7 @@ NPLICIT_CONFIG = {
         },
         ["_SRC"] = {
             "Nplicit/Source/**.cpp",
-            "XplicitPlayer/Source/**.c"
+            "Nplicit/Source/**.c"
         },
     },
     ["_LIBDIR"] = {
@@ -186,7 +186,8 @@ XPLICIT_STUDIO_CONFIG = {
         },
         ["_SRC"] = {
             "XplicitStudio/Source/**.cpp",
-            "XplicitStudio/Source/**.c"
+            "XplicitStudio/Source/**.c",
+            "XplicitStudio/Source/vcpkg.json"
         },
     },
     ["_LIBDIR"] = {

@@ -38,13 +38,9 @@ using namespace Xplicit;
 
 XPLICIT_MAIN()
 {
-
 	try
 	{
 		XPLICIT_INIT_COM;
-
-		InitPropertyGrid(hInst);
-
 
 		XplicitLoadBaseLua();
 
@@ -64,38 +60,8 @@ XPLICIT_MAIN()
 
 		KB = kb;
 
-		RENDER->setWindowCaption(L"Xplicit Studio");
+		RENDER->setWindowCaption(L"STUDIO");
 		
-		Xplicit::ImGUI::UIWindow ribbon;
-		
-		std::vector<Xplicit::ImGUI::UIButton> buttonsWorld;
-		std::vector<Xplicit::ImGUI::UIButton> buttonsProps;
-
-		Xplicit::ImGUI::UIButton file(L"Menu");
-
-		file.get()->W = 122;
-		file.get()->H = 30;
-
-		file.LeftClicked = []() {
-			XPLICIT_FILE_REQ = !XPLICIT_FILE_REQ;
-			XPLICIT_FILE_COOLDOWN = 18000;
-		};
-
-		ribbon.pos(0, 0);
-		ribbon.size(1280, 140, 30);
-
-		Xplicit::ImGUI::UIWindow worldProperties;
-
-		worldProperties.set("World");
-		worldProperties.pos(970, 140);
-		worldProperties.size(310, 245, 23);
-
-		Xplicit::ImGUI::UIWindow classProperties;
-
-		classProperties.pos(970, 385);
-		classProperties.set("Properties");
-		classProperties.size(310, 312, 23);
-
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&
 			Xplicit::ComponentSystem::get_singleton_ptr() &&
@@ -109,28 +75,6 @@ XPLICIT_MAIN()
 
 			RENDER->getGUIEnvironment()->drawAll();
 			RENDER->getSceneManager()->drawAll();
-
-			ribbon.update();
-
-			file.update();
-
-			worldProperties.update();
-
-			// TODO update contents here
-
-			for (auto& but : buttonsWorld)
-			{
-				but.update();
-			}
-
-			classProperties.update();
-
-			// TODO update contents here
-
-			for (auto& but : buttonsProps)
-			{
-				but.update();
-			}
 
 			RENDER->getVideoDriver()->endScene();
 		}
@@ -182,7 +126,7 @@ static void XplicitThrowException(Xplicit::Win32Error& err)
 	exit += std::to_wstring(err.hr());
 	exit += L"\n";
 
-	Xplicit::DialogHelper::message_box(L"XplicitNgine",
+	Xplicit::DialogHelper::message_box(L"STUDIO",
 		L"Program Crash!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,

@@ -26,27 +26,15 @@ namespace Xplicit
 	private:
 		const String destroy_snippet() noexcept
 		{
-			String func_proto = "function(self) World.ClassService.Destroy(";
-
-			func_proto += "\"";
-			func_proto += this->name();
-			func_proto += "\"";
-			func_proto += ",";
-			func_proto += "\"";
-			func_proto += "World";
-			func_proto += "\"";
-			func_proto += "); end";
+			String func_proto = std::format("function(self) World.ClassService.Destroy(\"{}\", \"{}\"); end", 
+				this->name(), "World");
 
 			return func_proto;
 		}
 
 	public:
-		explicit LuaScriptComponent(const char* name) 
-			: mName(name), ClassComponent(
-				std::string("World").c_str(), (std::string("CLS_") + std::to_string(xplicit_get_epoch())).c_str())
-		{}
-
-		~LuaScriptComponent() override = default;
+		explicit LuaScriptComponent(const char* name);
+		~LuaScriptComponent() override;
 
 	public:
 		XPLICIT_COPY_DEFAULT(LuaScriptComponent);
@@ -59,8 +47,7 @@ namespace Xplicit
 		static void update(void* class_ptr);
 		static bool should_update() noexcept;
 
-
-	public:
+	private:
 		void run() noexcept;
 
 	private:

@@ -1,0 +1,5 @@
+{
+  "name": "xpx-studio",
+  "version": "1.0.0",
+  "dependencies": [ "wxwidgets" ]
+}

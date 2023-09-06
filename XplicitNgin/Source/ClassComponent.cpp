@@ -97,20 +97,8 @@ namespace Xplicit
 
 		if (script)
 		{
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{} = {}", mName, "{}").c_str());
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{}.Parent = {}", mName, std::format("_G.{}.{}", mParent, mName)).c_str());
-
-			// Script.Current
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.Current = {}{}", "_G.Script.", mName).c_str());
-			
-			//! ROBLOX(tm) like syntax
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.script = {}{}", "_G.Script.", mName).c_str());
-
 			this->script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script));
-
 			XPLICIT_ASSERT(this->script());	
-
-			this->script()->run();
 		}
 	}
 

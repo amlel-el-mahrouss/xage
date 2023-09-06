@@ -11,6 +11,28 @@
 
 namespace Xplicit
 {
+	LuaScriptComponent::LuaScriptComponent(const char* name)
+		: mName(name), ClassComponent(
+			std::string("World").c_str(), (std::string("XPXLuaScript") + std::to_string(xplicit_get_epoch())).c_str())
+	{
+		this->insert("Destroy", this->destroy_snippet().c_str());
+		this->insert("ShouldRun", "false");
+
+		this->insert("Run", "function(self) self.ShouldRun = true end");
+
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
+
+		// Script.Current
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.Current = _G.Script.{}", this->name()).c_str());
+
+		//! ROBLOX(tm) like syntax
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.script = _G.Script.Current");
+		
+		this->run();
+	}
+
+	LuaScriptComponent::~LuaScriptComponent() = default;
+
 	void LuaScriptComponent::run() noexcept
 	{
 		if (!this->mName.empty())
@@ -25,19 +47,6 @@ namespace Xplicit
 
 		if (comp->index_as_bool("ShouldRun"))
 		{
-			comp->insert("Destroy", comp->destroy_snippet().c_str());
-			comp->insert("ShouldRun", "false");
-			comp->insert("Run", "function(self) self.ShouldRun = true end");
-
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{} = {}", comp->name(), "{}").c_str());
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{}.Parent = {}", comp->name(), std::format("_G.{}.{}", comp->parent(), comp->name())).c_str());
-
-			// Script.Current
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.Current = {}{}", "_G.Script.", comp->name()).c_str());
-
-			//! ROBLOX(tm) like syntax
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.script = {}{}", "_G.Script.", comp->name()).c_str());
-
 			comp->run();
 
 			if (comp->index_as_bool("Archivable"))

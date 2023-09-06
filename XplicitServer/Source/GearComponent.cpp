@@ -17,12 +17,8 @@ namespace Xplicit
 {
 	static const String XPLICIT_GEAR_DESTROY(const String& name) noexcept
 	{
-		String func_proto = "function(self) World.GearService.Destroy(";
-
-		func_proto += "\"";
-		func_proto += name;
-		func_proto += "\"";
-		func_proto += "); end";
+		String func_proto = std::format("function(self) World.GearService.Destroy(\"{}\"); end",
+			name);
 
 		return func_proto;
 	}
@@ -40,13 +36,10 @@ namespace Xplicit
 		mParent(parent),
 		mName(name)
 	{
-		this->insert("Owner", parent);
 		this->insert("Slot", "0");
 
-		this->insert("Enabled", "false");
+		this->insert("Equipped", "false");
 		this->insert("CanDrop", "false");
-
-		this->insert("Drop", "false");
 
 		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 
@@ -69,11 +62,11 @@ namespace Xplicit
 
 		GearComponent* self = (GearComponent*)_self;
 
-		if (!self->index_as_bool("Enabled"))
+		if (!self->index_as_bool("Equipped"))
 			return;
 
-		self->assign("LookAt.X", "Parent.LookAt.X or 0");
-		self->assign("LookAt.Y", "Parent.LookAt.Y or 0");
-		self->assign("LookAt.Z", "Parent.LookAt.Z or 0");
+		self->assign("LookAt.X", "Parent.LookAt.X or nil");
+		self->assign("LookAt.Y", "Parent.LookAt.Y or nil");
+		self->assign("LookAt.Z", "Parent.LookAt.Z or nil");
 	}
 }

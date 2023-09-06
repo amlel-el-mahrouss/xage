@@ -88,7 +88,8 @@ static int lua_Destroy(lua_State* L)
 static int lua_Wait(lua_State* L)
 {
 	int seconds = lua_tonumber(L, 1);
-	std::this_thread::sleep_for(std::chrono::milliseconds(seconds));
+
+	std::this_thread::sleep_for(std::chrono::seconds(seconds));
 
 	return 0;
 }

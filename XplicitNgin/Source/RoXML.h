@@ -17,6 +17,7 @@
 #include <rapidxml/rapidxml.hpp>
 
 // Common includes
+#include "LuaScriptComponent.h"
 #include "ClassComponent.h"
 #include "PartComponent.h"
 #include "DataValue.h"
@@ -522,7 +523,7 @@ namespace Xplicit::RoXML
 							}
 						}
 
-						Lua::CLuaStateManager::get_singleton_ptr()->run(world_node.Value.c_str());
+						ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(world_node.Value.c_str());
 					}
 
 					world_node.Name = node_name;

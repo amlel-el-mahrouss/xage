@@ -131,7 +131,6 @@ namespace Xplicit::Player
 					full_download_path += tmp;
 
 					auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
-					script->run();
 				}
 				
 				break;

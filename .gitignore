@@ -4,6 +4,8 @@
 ### C++ ###
 # Prerequisites
 
+vcpkg_installed/
+
 premake5
 *.dylib
 *.so
