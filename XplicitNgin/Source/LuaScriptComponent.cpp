@@ -16,9 +16,6 @@ namespace Xplicit
 			std::string("World").c_str(), (std::string("XPXLuaScript") + std::to_string(xplicit_get_epoch())).c_str())
 	{
 		this->insert("Destroy", this->destroy_snippet().c_str());
-		this->insert("ShouldRun", "false");
-
-		this->insert("Run", "function(self) self.ShouldRun = true end");
 
 		Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
 
@@ -45,14 +42,9 @@ namespace Xplicit
 	{
 		LuaScriptComponent* comp = (LuaScriptComponent*)class_ptr;
 
-		if (comp->index_as_bool("ShouldRun"))
+		if (comp->index_as_bool("__Destroy"))
 		{
-			comp->run();
-
-			if (comp->index_as_bool("Archivable"))
-			{
-				comp->call("Destroy");
-			}
+			ComponentSystem::get_singleton_ptr()->remove(comp);
 		}
 	}
 

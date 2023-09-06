@@ -26,9 +26,7 @@ namespace Xplicit
 	private:
 		const String destroy_snippet() noexcept
 		{
-			String func_proto = std::format("function(self) World.ClassService.Destroy(\"{}\", \"{}\"); end", 
-				this->name(), "World");
-
+			String func_proto("function(self) self.__Destroy = true; end");
 			return func_proto;
 		}
 

@@ -1,16 +1,3 @@
-
-World.Vector3 = {}
-
-function World.Vector3:New(X, Y, Z)
-    return { X = X, Y = Y, Z = Z }
-end
-
-World.Color = {}
-
-function World.Color:New(R, G, B)
-    return { Red = R, Green = G, Blue = B }
-end
-
 World.HumanoidState = {}
 World.HumanoidState.ALIVE = 0
 World.HumanoidState.DEAD = 1

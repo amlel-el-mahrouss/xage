@@ -52,7 +52,7 @@ namespace Xplicit
 		bool has_physics() noexcept override;
 
 	public:
-		XAttribute& get_attribute() noexcept;
+		XPXAttribute& get_attribute() noexcept;
 
 	public:
 		void set_health(const double& health) noexcept;
@@ -78,7 +78,7 @@ namespace Xplicit
 
 	private:
 		std::vector<GearComponent*> mGears;
-		XAttribute mAttribute;
+		XPXAttribute mAttribute;
 		HUMANOID_STATE mState;
 		NetworkPeer* mPeer;
 
@@ -90,6 +90,4 @@ namespace Xplicit
 		bool mCanSpawn;
 
 	};
-
-	using PlayerID = std::int64_t;
 }

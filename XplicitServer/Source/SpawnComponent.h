@@ -37,11 +37,11 @@ namespace Xplicit
 		bool should_update() noexcept { return true; }
 		static void update(void* _this);
 
-		XAttribute& get_attribute() noexcept;
+		XPXAttribute& get_attribute() noexcept;
 
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;
-		XAttribute mAttribute;
+		XPXAttribute mAttribute;
 
 	};
 }

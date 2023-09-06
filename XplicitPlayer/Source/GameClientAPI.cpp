@@ -30,23 +30,27 @@ Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
 
+#define XPLICIT_ALLOWED_EXTENSION ".wav"
+
 static int lua_PlaySound(lua_State* L)
 {
 	try
 	{
 		Xplicit::String url = lua_tostring(L, 1);
 
+		// that means if we don't find it, then fail silently.
+		if (url.find(XPLICIT_ALLOWED_EXTENSION) == Xplicit::String::npos)
+			return 0;
+
 		if (url.empty() ||
 			url.find(XPLICIT_XASSET_IDENT) == Xplicit::String::npos)
 			return 0;
 
-		Xplicit::String substr = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
+		Xplicit::String substr_tmp = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
 
 		url.clear();
 		url = "/";
-		url += substr;
-
-		std::cout << url << std::endl;
+		url += substr_tmp;
 
 		static Xplicit::Player::LocalNetworkMonitorEvent* monitor = Xplicit::EventSystem::get_singleton_ptr()->get<Xplicit::Player::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 

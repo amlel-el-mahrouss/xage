@@ -152,7 +152,7 @@ namespace Xplicit
 
 	bool HumanoidComponent::can_spawn() const noexcept { return mCanSpawn; }
 
-	XAttribute& HumanoidComponent::get_attribute() noexcept { return mAttribute; }
+	XPXAttribute& HumanoidComponent::get_attribute() noexcept { return mAttribute; }
 
 	void HumanoidComponent::can_spawn(const bool enable) noexcept { mCanSpawn = enable; }
 

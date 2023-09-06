@@ -61,9 +61,9 @@ namespace Xplicit
 
 		// xconnect specs, always spawn at 0, 0, 0!
 
-		peer->packet.pos[XPLICIT_NETWORK_X] = 0;
-		peer->packet.pos[XPLICIT_NETWORK_Y] = 0;
-		peer->packet.pos[XPLICIT_NETWORK_Z] = 0;
+		peer->packet.pos[XPLICIT_NETWORK_X] = XPLICIT_ORIGIN.X;
+		peer->packet.pos[XPLICIT_NETWORK_Y] = XPLICIT_ORIGIN.Y;
+		peer->packet.pos[XPLICIT_NETWORK_Z] = XPLICIT_ORIGIN.Z;
 
 		peer->packet.hash = peer->hash;
 		peer->packet.size = sizeof(NetworkPacket);

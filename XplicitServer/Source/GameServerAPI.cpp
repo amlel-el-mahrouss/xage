@@ -125,10 +125,32 @@ static int lua_DestroyGear(lua_State* L)
 	return 1;
 }
 
+static int lua_Shutdown(lua_State* L)
+{
+	auto players = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+
+	for (auto& ply : players)
+	{
+		if (!ply->get_peer())
+			continue;
+
+		ply->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
+	}
+
+	Xplicit::NetworkServerContext::send_all(Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent"));
+
+	std::exit(0);
+
+	return 0;
+}
+
 void XplicitLoadServerLua() noexcept
 {
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService = {}");
+	
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ExperienceId = 0");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.OwnerId = 0");
 
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsClient = false");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsServer = true");
@@ -147,4 +169,9 @@ void XplicitLoadServerLua() noexcept
 
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineLoadRoXML");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService.Load = EngineLoadRoXML");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_Shutdown);
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineShutdown");
+
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Shutdown = EngineShutdown");
 }

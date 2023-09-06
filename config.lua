@@ -2,7 +2,6 @@ XPLICIT_PROJ = "Xplicit"
 
 XPLICIT_SERVER_PROJ = "XplicitServer"
 XPLICIT_CLIENT_PROJ = "XplicitPlayer"
-XPLICIT_STUDIO_PROJ = "XplicitStudio"
 
 XPLICIT_WORKSPACE = "XplicitNgine"
 NPLICIT_PROJ = "Nplicit"
@@ -173,53 +172,3 @@ NPLICIT_CONFIG = {
 };
 
 -- END OF CONFIG
-
-XPLICIT_STUDIO_CONFIG = {
-    ["_CXXDIALECT"] = 2022,
-    ["_CONFIGS"] = { "Debug", "Release" },
-    ["_MACROS"] = { "__XPLICIT__", "_CRT_SECURE_NO_WARNINGS", "_WINSOCK_DEPRECATED_NO_WARNINGS" },
-    ["_DIALECT"] = "C++",
-    ["_FILES"] = {
-        ["_INC"] = {
-            "XplicitStudio/Source/**.h",
-            "XplicitStudio/Source/**.inl",
-        },
-        ["_SRC"] = {
-            "XplicitStudio/Source/**.cpp",
-            "XplicitStudio/Source/**.c",
-            "XplicitStudio/Source/vcpkg.json"
-        },
-    },
-    ["_LIBDIR"] = {
-    	"Library/Xplicit",
-        "d3d11",
-        "dxgi",
-        "Library/glfw3",
-        "d2d1",
-        "opengl32",
-	    "ws2_32",
-	    "winmm",
-        "Library/lua54",
-        "Library/Irrlicht",
-        "C:/Program Files/OpenSSL-Win64/lib/libssl",
-        "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
-    },
-    ["_INCDIR"] = {
-        "C:/Program Files/OpenSSL-Win64/include/",
-        "Vendor/",
-        "SoundNgin/",
-    	"XplicitNgin/Source/",
-    	"Vendor/irr/include",
-        "Vendor/CLua/",
-        "Vendor/stb/",
-	    "Vendor/luajit/src",
-    	"Vendor/yaml/include",
-        "Vendor/nuklear/",
-	    "Vendor/glfw/include/GLFW/",
-    	"Nplicit/Source/",
-	    "Vendor/libzip/lib",
-	    "C:/VulkanSDK/1.3.250.1/Include",
-        "C:/Program Files/Mono/include/mono-2.0/",
-        "C:/Program Files/Mono/include/mono-2.0/mono",
-    }
-};

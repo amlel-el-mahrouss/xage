@@ -115,17 +115,20 @@ namespace Xplicit::Lua
 	{
 	public:
 		explicit CLuaClass(const String& klass) noexcept
-			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
+			: mClass(klass), mL(luaL_newstate()), mSymbolCnt(0)
 		{
 			String fmt = mClass;
 			fmt += " = {}";
 
-			CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+			luaL_dostring(mL, fmt.c_str());
 		}
 
 		virtual ~CLuaClass() noexcept
 		{
-			CLuaStateManager::get_singleton_ptr()->run_string(std::format("{} = nil", mClass).c_str());
+			luaL_dostring(mL, std::format("{} = nil", mClass).c_str());
+
+			if (mL)
+				lua_close(mL);
 		}
 
 	public:
@@ -141,7 +144,7 @@ namespace Xplicit::Lua
 				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
 				++mSymbolCnt;
 
-				return CLuaStateManager::get_singleton_ptr()->run_string(std::format("{}.{} = {}", mClass, symbol, reference).c_str());
+				return luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, reference).c_str());
 			}
 
 			return false;

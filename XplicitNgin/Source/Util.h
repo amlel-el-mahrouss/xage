@@ -51,10 +51,10 @@ namespace Xplicit
 	/// Xplicit Attribute Class.
 	/// Reserved for RoXML and scripting API.
 	/// </summary>
-	class XAttribute
+	class XPXAttribute
 	{
 	public:
-		explicit XAttribute()
+		XPXAttribute()
 			: 
 			  mScript(nullptr),
 			  mColor(0.0f, 0.0f, 0.0f),
@@ -67,10 +67,10 @@ namespace Xplicit
 			  mNoCollide(false)
 		{}
 
-		virtual ~XAttribute() = default;
+		virtual ~XPXAttribute() = default;
 
 	public:
-		XPLICIT_COPY_DEFAULT(XAttribute);
+		XPLICIT_COPY_DEFAULT(XPXAttribute);
 
 	public:
 		Color<float>& color() noexcept { return mColor; }
