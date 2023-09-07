@@ -63,16 +63,8 @@ namespace Xplicit
 			virtual bool in_region() noexcept
 			{
 #ifdef __RENDERER_IRR__
-				if (RENDER->getCursorControl()->getPosition().X > W)
-				{
-					return (RENDER->getCursorControl()->getPosition().X > X && RENDER->getCursorControl()->getPosition().X < (W + X)) &&
-						(RENDER->getCursorControl()->getPosition().Y > Y && RENDER->getCursorControl()->getPosition().Y < (H + Y));
-				}
-				else
-				{
-					return (RENDER->getCursorControl()->getPosition().X > X && RENDER->getCursorControl()->getPosition().X < (W)) &&
-						(RENDER->getCursorControl()->getPosition().Y > Y && RENDER->getCursorControl()->getPosition().Y < (H));
-				}
+				return (RENDER->getCursorControl()->getPosition().X < (W + X)) &&
+					(RENDER->getCursorControl()->getPosition().Y < (H + Y));
 #endif // __RENDERER_IRR__
 			}
 

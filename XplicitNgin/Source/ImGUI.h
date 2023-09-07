@@ -46,7 +46,21 @@ namespace Xplicit::ImGUI
 
 	};
 
-	class XPLICIT_API UIEditBox final
+	class XPLICIT_API UIInterface
+	{
+	public:
+		UIInterface() = default;
+		virtual ~UIInterface() = default;
+
+	public:
+		XPLICIT_COPY_DEFAULT(UIInterface);
+
+	public:
+		virtual void update() = 0;
+
+	};
+
+	class XPLICIT_API UIEditBox final : public UIInterface
 	{
 	public:
 		explicit UIEditBox(const PChar* placeHolder);
@@ -58,10 +72,25 @@ namespace Xplicit::ImGUI
 	public:
 		void set_text(const PChar*);
 		void set_pos(const int X, const int Y);
+
+		void set_size(const int w, const int h)
+		{
+			if (!mBox)
+				return;
+
+			mBox->W = w;
+			mBox->H = h;
+			
+			if (!mSelection)
+				return;
+
+			mSelection->H = h;
+		}
+
 		Vector<int> get_pos() noexcept;
 
 	public:
-		void update();
+		void update() override;
 
 	private:
 		BasicString<PChar> mPlaceholder{ L"..." };
@@ -75,7 +104,7 @@ namespace Xplicit::ImGUI
 
 	};
 
-	class XPLICIT_API UICheckBox final
+	class XPLICIT_API UICheckBox final : public UIInterface
 	{
 	public:
 		explicit UICheckBox();
@@ -85,14 +114,35 @@ namespace Xplicit::ImGUI
 		XPLICIT_COPY_DEFAULT(UICheckBox);
 
 	public:
-		void update();
+		void update() override;
+
+	public:
+
+		void set_pos(const int x, const int y)
+		{
+			if (x < 1 ||
+				y < 1)
+				return;
+
+			this->X = x;
+			this->Y = y;
+		}
+
+		void set_size(const int w, const int h)
+		{
+			this->W = w;
+			this->H = h;
+		}
+
 
 	public:
 		bool Checked{ true };
 
+	private:
 		int32_t H{ 41 };
 		int32_t W{ 41 };
 
+	public:
 		int32_t X{ 0 };
 		int32_t Y{ 0 };
 
@@ -123,10 +173,10 @@ namespace Xplicit::ImGUI
 		return ((x) / (Formula));
 	}
 
-	class XPLICIT_API UIWindow final
+	class XPLICIT_API UIWindow final : public UIInterface
 	{
 	public:
-		explicit UIWindow();
+		UIWindow();
 		~UIWindow();
 
 	public:
@@ -141,7 +191,7 @@ namespace Xplicit::ImGUI
 
 		};
 
-		void pos(const int x, const int y)
+		void set_pos(const int x, const int y)
 		{
 			if (x < 1 ||
 				y < 1)
@@ -153,7 +203,7 @@ namespace Xplicit::ImGUI
 			mBody.mBody->Y = y + mHead.mBody->H;
 		}
 
-		void size(const int w, const int bodyH, const int toolbarH)
+		void set_size(const int w, const int bodyH, const int toolbarH)
 		{
 			mBody.mBody->W = w;
 			mBody.mBody->H = bodyH;
@@ -162,12 +212,20 @@ namespace Xplicit::ImGUI
 			mHead.mBody->H = toolbarH;
 		}
 
+		float get_width() { return mBody.mBody->W + mHead.mBody->W; }
+
+		float get_height() { return mBody.mBody->H + mHead.mBody->H; }
+
+		float get_x() { return mBody.mBody->X + mHead.mBody->X; }
+
+		float get_y() { return mBody.mBody->Y + mHead.mBody->Y; }
+
 		void set(const char* title)
 		{
 			mTitle = platform_string(title);
 		}
 
-		void update()
+		void update() override
 		{
 			if (!mHead.mBody ||
 				!mBody.mBody)
@@ -193,6 +251,56 @@ namespace Xplicit::ImGUI
 		UIWindow* mParent;
 		UIContainer mHead;
 		UIContainer mBody;
+
+	};
+
+#define XPLICIT_UIPROPGRID_HEIGHT_EDITBOX 30
+
+	class XPLICIT_API UIPropGrid final : public UIInterface
+	{
+	public:
+		UIPropGrid(const char* title);
+		~UIPropGrid();
+
+	public:
+		void insert(UIEditBox* uiPtr)
+		{
+			if (uiPtr)
+			{
+				uiPtr->set_pos(mFrame->get_x() + 10, mFrame->get_y() + mPosY);
+				uiPtr->set_size(120, XPLICIT_UIPROPGRID_HEIGHT_EDITBOX);
+
+				mPosY += 10;
+
+				this->mElements.push_back(uiPtr);
+			}
+		}
+
+		void insert(UICheckBox* uiPtr)
+		{
+			if (uiPtr)
+			{
+				uiPtr->X = mFrame->get_x();
+				uiPtr->Y = mFrame->get_y() + mPosY;
+
+				mPosY += 5;
+
+				this->mElements.push_back(uiPtr);
+			}
+		}
+
+		UIInterface* operator[](const std::size_t& index)
+		{
+			return mElements[index];
+		}
+
+	public:
+		void update() override;
+
+	private:
+		std::vector<UIInterface*> mElements;
+		std::size_t mPosY;
+		UIWindow* mFrame;
 
 	};
 }

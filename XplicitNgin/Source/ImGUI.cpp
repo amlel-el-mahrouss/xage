@@ -107,8 +107,8 @@ namespace Xplicit::ImGUI
 
 		mSelection = new UIFrame();
 
-		mSelection->H = 33;
-		mSelection->W = mPlaceholder.size();
+		mSelection->H = 38;
+		mSelection->W = 0;
 
 		mSelection->BackgroundColor.setRed(0x00);
 		mSelection->BackgroundColor.setGreen(0x89);
@@ -141,8 +141,8 @@ namespace Xplicit::ImGUI
 		this->mBox->X = X;
 		this->mBox->Y = Y;
 
-		this->mSelection->X = X + 2;
-		this->mSelection->Y = Y + 2;
+		this->mSelection->X = X;
+		this->mSelection->Y = Y;
 	}
 
 	Vector<int> UIEditBox::get_pos() noexcept
@@ -158,7 +158,16 @@ namespace Xplicit::ImGUI
 
 		if (this->mBox->in_region() &&
 			KB->left_down())
+		{
 			this->mShallEdit = !this->mShallEdit;
+			std::this_thread::sleep_for(std::chrono::milliseconds(130));
+		}
+		else if (!this->mBox->in_region() &&
+			KB->left_down())
+		{
+			this->mShallEdit = false;
+			std::this_thread::sleep_for(std::chrono::milliseconds(130));
+		}
 
 		if (this->mShallEdit)
 		{
@@ -181,10 +190,11 @@ namespace Xplicit::ImGUI
 						isalpha(key) ||
 						isprint(key))
 					{
-						if (this->mText.size() > 23)
+						if (this->mText.size() > (this->mBox->W / 8))
 							return;
 
 						this->mText += tolower(key);
+						this->mSelection->W = this->mText.size();
 
 						mCooldown = 150;
 					}
@@ -213,6 +223,10 @@ namespace Xplicit::ImGUI
 		mCheckBox->BackgroundColor.setGreen(0x0D);
 		mCheckBox->BackgroundColor.setBlue(0x0D);
 		mCheckBox->BackgroundColor.setAlpha(255);
+
+		mCheckBox->W = this->W;
+		mCheckBox->H = this->H;
+
 	}
 
 	UICheckBox::~UICheckBox()
@@ -223,9 +237,6 @@ namespace Xplicit::ImGUI
 
 	void UICheckBox::update()
 	{
-		mCheckBox->W = this->W;
-		mCheckBox->H = this->H;
-
 		mCheckBox->Y = this->Y;
 		mCheckBox->X = this->X;
 
@@ -234,7 +245,7 @@ namespace Xplicit::ImGUI
 			if (KB->left_down())
 			{
 				this->Checked = !this->Checked;
-				std::this_thread::sleep_for(std::chrono::milliseconds(250));
+				std::this_thread::sleep_for(std::chrono::milliseconds(130));
 			}
 		}
 
@@ -253,6 +264,7 @@ namespace Xplicit::ImGUI
 	}
 
 	UIWindow::UIWindow()
+		: mParent(nullptr)
 	{
 		mHead.mBody = new UIFrame();
 		mBody.mBody = new UIFrame();
@@ -273,5 +285,37 @@ namespace Xplicit::ImGUI
 
 		if (mHead.mBody)
 			delete mHead.mBody;
+	}
+
+	UIPropGrid::UIPropGrid(const char* title)
+		: mFrame(new UIWindow()), mPosY(30)
+	{
+#define XPLICIT_DEFAULT_PROPGRID_DIM 250
+
+		mFrame->set(title);
+		mFrame->set_pos(0, 0);
+
+		mFrame->set_size(XPLICIT_DEFAULT_PROPGRID_DIM, 
+			RENDER->getVideoDriver()->getScreenSize().Height, 
+			RENDER->getVideoDriver()->getScreenSize().Height);
+	}
+
+	UIPropGrid::~UIPropGrid()
+	{
+		if (mFrame)
+			delete mFrame;
+	}
+
+	void UIPropGrid::update()
+	{
+		if (!this->mFrame)
+			return;
+
+		this->mFrame->update();
+
+		for (auto& elem : this->mElements)
+		{
+			elem->update();
+		}
 	}
 }

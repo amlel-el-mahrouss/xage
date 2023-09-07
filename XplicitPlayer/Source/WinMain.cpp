@@ -17,10 +17,11 @@
 #include "Application.h"
 
 #include <NetworkProtocol.h>
-#include <BaseLuaAPI.h>
 #include <XplicitSound.h>
 #include <DriverD3D11.h>
+#include <BaseLuaAPI.h>
 #include <Component.h>
+#include <ImGUI.h>
 #include <Event.h>
 #include <Bites.h>
 #include <codecvt>
@@ -79,6 +80,10 @@ int main(int argc, char** argv)
 
 		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);
 
+		Xplicit::ImGUI::UIPropGrid classes("Classes");
+		auto check = new Xplicit::ImGUI::UIEditBox(L"Edit Me!");
+		classes.insert(check);
+
 		if (!app_ptr)
 			throw Xplicit::EngineError("XPLICIT couldn't continue; we're sorry!");
 
@@ -92,6 +97,8 @@ int main(int argc, char** argv)
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
+
+			classes.update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
