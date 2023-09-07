@@ -591,7 +591,7 @@ namespace Xplicit::RoXML
 						if (HTTP &&
 							url.find("xasset://") != String::npos)
 						{
-							String substr = url.erase(url.find("xasset://"), strlen("xasset://") + 3);
+							String substr = url.erase(url.find("xasset://"), strlen("xasset://"));
 
 							url.clear();
 							url = "/";
