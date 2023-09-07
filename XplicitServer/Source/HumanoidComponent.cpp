@@ -76,9 +76,7 @@ namespace Xplicit
 			if (gear == nullptr ||
 				gear->index_as_bool("CanDrop"))
 			{
-				gear->insert("Parent", "World");
-				gear->insert("Owner", "Parent");
-
+				gear->assign("Parent", "World");
 				self->get_class()->assign(gear->name(), "nil");
 
 				auto it = std::find(self->mGears.cbegin(), self->mGears.cend(), gear);
@@ -130,9 +128,8 @@ namespace Xplicit
 					"\"");
 
 				mClass->insert("Parent", "World.Players");
-
 				mClass->insert("XplicitId", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
-
+				mClass->insert("IsMoving", "false");
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");

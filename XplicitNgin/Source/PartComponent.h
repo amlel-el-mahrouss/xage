@@ -10,7 +10,6 @@
 #pragma once
 
 #include "ClassComponent.h"
-#include "Root.h"
 
 namespace Xplicit
 {
@@ -21,7 +20,9 @@ namespace Xplicit
 			Vector<float> pos = Vector<float>(0,0,0), 
 			Vector<float> scale = Vector<float>(0, 0, 0),
 			Color<float> clr = Color<float>(0, 0, 0))
-			: ClassComponent(pos, scale, clr, nullptr, parent, name), mStud(nullptr)
+			:
+			ClassComponent(pos, scale, clr, nullptr, parent, name)
+			,mStud(nullptr)
 		{
 #ifdef __XPLICIT_CLIENT__
 			mStud = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh());
@@ -32,6 +33,8 @@ namespace Xplicit
 				mStud->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 			}
 #endif
+
+			this->assign("Destroy", this->part_service_destroy().c_str());
 		}
 
 		~PartComponent()
@@ -42,6 +45,16 @@ namespace Xplicit
 #endif
 		}
 
+	private:
+		String part_service_destroy() noexcept
+		{
+			String func_proto = std::format("function(self) World.PartService.Destroy(\"{}\"); end",
+				this->name());
+
+			return func_proto;
+		}
+
+	public:
 		static void update(ClassPtr cls)
 		{
 			ClassComponent::update(cls);

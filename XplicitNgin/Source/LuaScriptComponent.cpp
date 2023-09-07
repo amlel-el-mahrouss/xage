@@ -17,13 +17,13 @@ namespace Xplicit
 	{
 		this->insert("Destroy", this->destroy_snippet().c_str());
 
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
+		luaL_dostring(this->state(), std::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
 
 		// Script.Current
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("_G.Script.Current = _G.Script.{}", this->name()).c_str());
+		luaL_dostring(this->state(), std::format("_G.Script.Current = _G.Script.{}", this->name()).c_str());
 
 		//! ROBLOX(tm) like syntax
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.script = _G.Script.Current");
+		luaL_dostring(this->state(), "_G.script = _G.Script.Current");
 		
 		this->run();
 	}
@@ -34,7 +34,7 @@ namespace Xplicit
 	{
 		if (!this->mName.empty())
 		{
-			Lua::CLuaStateManager::get_singleton_ptr()->run(this->mName.c_str());
+			luaL_dofile(this->state(), this->mName.c_str());
 		}
 	}
 

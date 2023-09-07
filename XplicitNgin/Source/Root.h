@@ -14,7 +14,7 @@
 
 #include <CLua/CLua.hpp>
 
-//! The CAD Engine include.
+//! The CAD engine.
 #include <cad-engine/irrlicht.h>
 #include <cad-engine/IEventReceiver.h>
 

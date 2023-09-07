@@ -18,7 +18,7 @@
 
 namespace Xplicit
 {
-	constexpr const double XPLICIT_DPS = 1000.f;
+	constexpr const double XPLICIT_DELTA_PER_SECOND = 1000.f;
 
 	MovementEvent::MovementEvent() 
 		: 
@@ -108,9 +108,9 @@ namespace Xplicit
 			}
 		}
 
-		mDeltaTime += (mDeltaVar->as_float() / XPLICIT_DPS);
+		mDeltaTime += (mDeltaVar->as_float() / XPLICIT_DELTA_PER_SECOND);
 
-		String heartbeat_fmt = std::format("World.RunService.DeltaTime = {}", std::to_string(mDeltaTime));
+		String heartbeat_fmt = std::format("World.Settings.DeltaTime = {}", std::to_string(mDeltaTime));
 		Lua::CLuaStateManager::get_singleton_ptr()->run_string(heartbeat_fmt.c_str());
 	}
 }

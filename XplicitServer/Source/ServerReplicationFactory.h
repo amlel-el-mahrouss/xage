@@ -23,9 +23,7 @@ namespace Xplicit
 		XPLICIT_COPY_DEFAULT(ServerReplicationFactory);
 
 	public:
-		void remove(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept;
-		void create(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept;
-		void update(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept;
+		void send(const std::int32_t& id, const char* path, const std::int32_t& type, const std::int64_t& public_hash) const noexcept;
 
 	private:
 		NetworkServerComponent* mNetwork;

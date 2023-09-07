@@ -20,7 +20,7 @@ namespace Xplicit
 	class XPLICIT_API GameVar final : public Lua::CLuaClass
 	{
 	private:
-		GameVar(const char* name, const char* default_value, int flags);
+		GameVar(const char* name, const char* value, int flags);
 
 	public:
 		~GameVar();

@@ -12,10 +12,9 @@
  */
 
 #include "Application.h"
+#include "LoadingComponent.h"
 
 #include <BaseLuaAPI.h>
-
-#include "LoadingComponent.h"
 
 namespace Xplicit::Player
 {
@@ -27,15 +26,14 @@ namespace Xplicit::Bites
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mPath(""), mWsa()
 	{
-		//! Setup Engine
 		this->setup();
 
 		ComponentSystem::get_singleton_ptr()->add<NetworkComponent>();
 
-		const auto splash_screen = ComponentSystem::get_singleton_ptr()->add<Player::LoadingComponent>();
-		XPLICIT_ASSERT(splash_screen);
+		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<Player::LoadingComponent>();
+		XPLICIT_ASSERT(loading_screen);
 
-		splash_screen->connect(xconnect_to);
+		loading_screen->connect(xconnect_to);
 	}
 
 	Application::~Application() {}

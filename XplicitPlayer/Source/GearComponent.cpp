@@ -43,7 +43,7 @@ namespace Xplicit::Player
 
 	bool GearComponent::should_update() noexcept { return true; }
 
-	void GearComponent::update(void* class_ptr)
+	void GearComponent::update(ClassPtr class_ptr)
 	{
 		ClassComponent::update(class_ptr);
 
@@ -51,11 +51,14 @@ namespace Xplicit::Player
 
 		String path = self->index_as_string("Mesh");
 
-		if (auto _path = self->mMeshPtr->path();
-			path != _path && !path.empty())
+		if (!path.empty())
 		{
-			self->mMeshPtr.reset();
-			self->mMeshPtr = std::make_unique<MeshComponent>(_path.c_str(), self->mName.c_str(), self->mParent.c_str());
+			if (auto mesh_path = self->mMeshPtr->path();
+				path != mesh_path)
+			{
+				self->mMeshPtr.reset();
+				self->mMeshPtr = std::make_unique<MeshComponent>(path.c_str(), self->mName.c_str(), self->mParent.c_str());
+			}
 		}
 	}
 }

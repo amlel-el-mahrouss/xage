@@ -25,7 +25,7 @@ extern "C" {
 #include <vector>
 
 #define XPLICIT_LUA_NAME "CLua"
-#define XPLICIT_LUA_DESCRIPTION "Lua for Xplicit"
+#define XPLICIT_LUA_DESCRIPTION "Lua wrapper written in C++"
 
 namespace Xplicit::Lua
 {
@@ -60,6 +60,13 @@ namespace Xplicit::Lua
 				state = new CLuaStateManager();
 
 			return state;
+		}
+
+	public:
+		void global_set(lua_CFunction func, const char* name) noexcept
+		{
+			lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), func);
+			lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), name);
 		}
 
 		std::int32_t run(const char* file) noexcept
@@ -115,10 +122,10 @@ namespace Xplicit::Lua
 	{
 	public:
 		explicit CLuaClass(const String& klass) noexcept
-			: mClass(klass), mL(luaL_newstate()), mSymbolCnt(0)
+			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
 		{
 			String fmt = mClass;
-			fmt += " = {}";
+			fmt += " = { LuaClass = true; }";
 
 			luaL_dostring(mL, fmt.c_str());
 		}
@@ -126,9 +133,6 @@ namespace Xplicit::Lua
 		virtual ~CLuaClass() noexcept
 		{
 			luaL_dostring(mL, std::format("{} = nil", mClass).c_str());
-
-			if (mL)
-				lua_close(mL);
 		}
 
 	public:
@@ -155,7 +159,7 @@ namespace Xplicit::Lua
 		bool call(const char* lhs) { return operator()(lhs); }
 
 	private:
-		//! @brief Index field at an array.
+		//! @brief Index field of an array.
 		bool i_index_field(const char* lhs) noexcept
 		{
 			if (!lhs)
@@ -205,6 +209,8 @@ namespace Xplicit::Lua
 			return ret;
 		}
 
+		lua_State* state() noexcept { return mL; }
+
 		const String index_as_string(const char* lhs)
 		{
 			String ret = "";
@@ -246,36 +252,4 @@ namespace Xplicit::Lua
 	};
 
 	constexpr const char* XPLICIT_ROOT_CLASS = "_G.World";
-
-	class CLuaListener final
-	{
-	public:
-		explicit CLuaListener() = default;
-		~CLuaListener() = default;
-
-	public:
-		XPLICIT_COPY_DEFAULT(CLuaListener);
-
-	public:
-		//!
-		//! @brief Listens to a specific function.
-		//! 0param
-		//!		name the string to listen to.
-		//! @return if the evaluation was succesful, true.
-		//! 		
-
-		bool operator()(const String name = ":Tick")
-		{
-			String fmt = XPLICIT_ROOT_CLASS;
-			fmt += name;
-			fmt += "()";
-
-			return CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-		}
-
-	};
-
-	using ListenerList = std::vector<CLuaListener>;
 }
-
-

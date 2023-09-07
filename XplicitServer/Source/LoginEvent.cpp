@@ -105,7 +105,7 @@ namespace Xplicit
 	//! @brief Handle player log-in event
 	//! @brief setup humanoid and more...
 	
-	void LoginEvent::handleJoin() noexcept
+	void LoginEvent::HandleJoin() noexcept
 	{
 		if (this->size() >= XPLICIT_MAX_CONNECTIONS)
 			return;
@@ -126,11 +126,6 @@ namespace Xplicit
 				if (HumanoidComponent* player = mPlayers[mPlayerCount]; 
 					XplicitHandleJoin(mNetwork->get(peer_idx), player, mNetwork))
 				{
-					// Send XplicitID to the matching client.
-					memcpy(mNetwork->get(peer_idx)->packet.buffer, 
-						mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
-						mNetwork->get(peer_idx)->xplicit_id.as_string().size());
-
 					mNetwork->get(peer_idx)->ip_address = address_to_string(mNetwork->get(peer_idx));
 					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
 					
@@ -147,7 +142,7 @@ namespace Xplicit
 
 	}
 
-	void LoginEvent::handleLeave() noexcept
+	void LoginEvent::HandleLeave() noexcept
 	{
 		if (this->size() < 1)
 			return;
@@ -217,8 +212,8 @@ namespace Xplicit
 
 	void LoginEvent::operator()()
 	{
-		this->handleLeave();
-		this->handleJoin();
+		this->HandleLeave();
+		this->HandleJoin();
 	}
 
 	const size_t& LoginEvent::size() const noexcept { return mPlayerCount; }

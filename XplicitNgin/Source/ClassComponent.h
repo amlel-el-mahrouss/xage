@@ -9,9 +9,8 @@
 
 #pragma once
 
-#include "CommonEngine.h"
-#include "Component.h"
 #include "Util.h"
+#include "Component.h"
 
 #include <CLua/CLua.hpp>
 

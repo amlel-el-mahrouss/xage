@@ -11,32 +11,30 @@
 
 #include "ServerConfig.h"
 #include "HumanoidComponent.h"
+#include "ServerReplicationFactory.h"
 
 namespace Xplicit
 {
-	class LoginEvent final : public Event
+	class ReplicationEvent final : public Event
 	{
 	public:
-		explicit LoginEvent();
-		~LoginEvent() override;
-		
+		explicit ReplicationEvent();
+		~ReplicationEvent() override;
+
 	public:
-		LoginEvent& operator=(const LoginEvent&) = default;
-		LoginEvent(const LoginEvent&) = default;
-		
+		ReplicationEvent& operator=(const ReplicationEvent&) = default;
+		ReplicationEvent(const ReplicationEvent&) = default;
+
 	public:
 		const char* name() noexcept override;
 		void operator()() override;
-		
+
 	public:
 		const size_t& size() const noexcept;
 
 	private:
-		void HandleLeave() noexcept;
-		void HandleJoin() noexcept;
-
-	private:
 		std::vector<HumanoidComponent*> mPlayers;
+		ServerReplicationFactory mFactory;
 		NetworkServerComponent* mNetwork;
 		std::size_t mPlayerCount;
 

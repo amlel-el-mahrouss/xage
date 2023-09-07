@@ -8,7 +8,7 @@
  */
 
 #include "LuaScriptComponent.h"
-#include "ClassComponent.h"
+#include "PartComponent.h"
 
 #include "HelperMacros.h"
 #include "Xplicit.h"
@@ -94,18 +94,43 @@ static int lua_Wait(lua_State* L)
 	return 0;
 }
 
+static int lua_NewPart(lua_State* L)
+{
+	const char* name = lua_tostring(L, 1);
+	const char* parent = lua_tostring(L, 2);
+
+	Xplicit::PartComponent* part = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::PartComponent>(name, parent);
+
+	if (part)
+	{
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	lua_pushboolean(L, false);
+	return 0;
+}
+
+static int lua_DestroyPart(lua_State* L)
+{
+	const char* name = lua_tostring(L, 1);
+
+	Xplicit::PartComponent* part = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::PartComponent>(name);
+
+	if (part)
+		Xplicit::ComponentSystem::get_singleton_ptr()->remove(part);
+
+	return 0;
+}
+
 XPLICIT_API void XplicitLoadBaseLua()
 {
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Script = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World = {}");
-
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Color3 = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.Vector3 = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World = {}");
 
 	// have a look at GameVar if it ever crashes.
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Settings = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Players = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Settings = {}");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Players = {}");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_Wait);
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "Wait");
@@ -115,12 +140,24 @@ XPLICIT_API void XplicitLoadBaseLua()
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_New);
 	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineCreateClass");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.New = EngineCreateClass");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.Create = EngineCreateClass");
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_Destroy);
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineDestroy");
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineDestroyClass");
 
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.ClassService.Destroy = EngineDestroyClass");
+
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.PartService = {}");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_NewPart);
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EnginePartNew");
+
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.PartService.Create = EnginePartNew");
+
+	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_DestroyPart);
+	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EnginePartDestroy");
+
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.PartService.Destroy = EnginePartDestroy");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 

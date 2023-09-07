@@ -161,8 +161,7 @@ void XplicitLoadClientLua() noexcept
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService = {}");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsClient = true");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RunService.IsServer = false");
+	auto L = Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state();
 
 	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
 

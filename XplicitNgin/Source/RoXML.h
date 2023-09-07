@@ -20,12 +20,17 @@
 #include "LuaScriptComponent.h"
 #include "ClassComponent.h"
 #include "PartComponent.h"
+#include "XHTTPManager.h"
 #include "DataValue.h"
 #include "Root.h"
 #include "Util.h"
 
 // CLua
 #include <CLua/CLua.hpp>
+
+#ifndef XPLICIT_XASSET_ENDPOINT
+#	define XPLICIT_XASSET_ENDPOINT "play-xplicit.com"
+#endif // ifndef XPLICIT_XASSET_ENDPOINT
 
 namespace Xplicit::RoXML
 {
@@ -496,16 +501,6 @@ namespace Xplicit::RoXML
 						}
 					}
 
-					// if it is a CLua snippet
-					if (node_name == "InlineCLua") // and it is really what we think it is.
-					{
-						// go on and include that!
-						world_node.ID = node_name;
-						world_node.Value += node->value();
-
-						Lua::CLuaStateManager::get_singleton_ptr()->run_string(world_node.Value.c_str());
-					}
-
 					if (node_name == "CLua") // and it is really what we think it is.
 					{
 						// go on and include that!
@@ -523,7 +518,33 @@ namespace Xplicit::RoXML
 							}
 						}
 
-						ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(world_node.Value.c_str());
+						String url = world_node.Value;
+
+						std::unique_ptr<XHTTPManager> HTTP = std::make_unique<XHTTPManager>();
+
+						if (HTTP)
+						{
+							HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
+
+							auto tmp = std::to_string(xplicit_get_epoch()) + "-roxml-tmp.lua";
+
+							if (HTTP->download(url, tmp))
+							{
+								XPLICIT_GET_DATA_DIR(full_path);
+
+								String full_download_path;
+
+								full_download_path += full_path;
+								full_download_path += "Contents/";
+								full_download_path += tmp;
+
+								ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
+							}
+						}
+						else
+						{
+							XPLICIT_CRITICAL("Missing script! URL: " + url);
+						}
 					}
 
 					world_node.Name = node_name;

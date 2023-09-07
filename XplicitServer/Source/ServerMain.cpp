@@ -17,16 +17,17 @@
 #include <codecvt>
 #include <XplicitID.h>
 
-#include "ServerConfig.h"
-#include "SpawnComponent.h"
 #include "LoginEvent.h"
+#include "ServerConfig.h"
 #include "TimeoutEvent.h"
 #include "MovementEvent.h"
+#include "ReplicationEvent.h"
+#include "SpawnComponent.h"
 #include "HealthMonitorEvent.h"
 
 static bool XPLICIT_EXIT_REQUESTED = false;
 
-static void xplicit_print_help()
+static void XplicitPrintHelp()
 {
 	XPLICIT_INFO("\a+-------------- Xplicit Manual --------------+");
 	XPLICIT_INFO("exit: Exits the current server.");
@@ -51,7 +52,7 @@ static void XplicitLoadShell()
 		}
 
 		if (strcmp(cmd_buf, "man") == 0)
-			xplicit_print_help();
+			XplicitPrintHelp();
 
 		if (strcmp(cmd_buf, "ls") == 0)
 		{
@@ -96,7 +97,7 @@ int main(int argc, char** argv)
 		if (argc < 2)
 		{
 			std::cout << "XplicitServer, Self-Hostable XplicitNgin instance.\n";
-			std::cout << "usage: XplicitServer.exe <Port> <PlacePath>";
+			std::cout << "Usage: XplicitServer.exe <Port> <PlacePath>";
 			std::cin.get();
 
 			return 1;
@@ -147,6 +148,7 @@ int main(int argc, char** argv)
 		XplicitLoadServerLua();
 
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::HealthMonitorEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::ReplicationEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::TimeoutEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::MovementEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::LoginEvent>();
@@ -154,6 +156,7 @@ int main(int argc, char** argv)
 		XPLICIT_PLACE_ID = argv[2];
 
 		Xplicit::RoXML::RoXMLDocumentParameters params;
+
 		params.Has3D = false;
 		params.NoLua = false;
 		params.Path = XPLICIT_PLACE_ID;
@@ -175,6 +178,7 @@ int main(int argc, char** argv)
 				Xplicit::NetworkServerContext::send_all(net);
 
 				Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Tick()");
+
 			};
 		});
 
