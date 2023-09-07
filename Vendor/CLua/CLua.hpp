@@ -132,6 +132,7 @@ namespace Xplicit::Lua
 
 		virtual ~CLuaClass() noexcept
 		{
+			// {} = mClass
 			luaL_dostring(mL, std::format("{} = nil", mClass).c_str());
 		}
 

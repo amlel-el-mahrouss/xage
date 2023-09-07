@@ -34,7 +34,13 @@ namespace Xplicit
 			{
 				mFactory.send(player->get_class()->index_as_number<int>("ReplicatedDataId"), 
 					xasset.c_str(),
-					player->get_class()->index_as_number<int>("ReplcatedDataType"), player->get_peer()->public_hash);
+					player->get_class()->index_as_number<int>("ReplicatedDataType"), player->get_peer()->public_hash);
+			
+				// you wanna do that
+
+				player->get_class()->insert("ReplicatedDataType", "-1");
+				player->get_class()->insert("ReplicatedDataId", "-1");
+				player->get_class()->insert("ReplicatedData", "nil");
 			}
 		}
 	}
