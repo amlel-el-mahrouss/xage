@@ -160,58 +160,52 @@ namespace Xplicit::ImGUI
 			KB->left_down())
 		{
 			this->mShallEdit = !this->mShallEdit;
-			std::this_thread::sleep_for(std::chrono::milliseconds(130));
 		}
 		else if (!this->mBox->in_region() &&
 			KB->left_down())
 		{
 			this->mShallEdit = false;
-			std::this_thread::sleep_for(std::chrono::milliseconds(130));
 		}
 
 		if (this->mShallEdit)
 		{
-			if (!mCooldown)
+			if (auto key = KB->key_down();
+				key <= 255 && key > 0)
 			{
-				if (auto key = KB->key_down();
-					key <= 255 && key > 0)
+				if (key == KEY_BACK)
 				{
-					if (key == KEY_BACK)
+					this->mSelection->W -= 12;
+
+					if (this->mText.size() > 0)
 					{
-						if (this->mText.size() > 0)
-						{
-							this->mText.erase(this->mText.size() - 1);
-
-							mCooldown = 150;
-						}
-					}
-
-					if (isxdigit(key) ||
-						isalpha(key) ||
-						isprint(key))
-					{
-						if (this->mText.size() > (this->mBox->W / 8))
-							return;
-
-						this->mText += tolower(key);
-						this->mSelection->W = this->mText.size();
-
-						mCooldown = 150;
+						this->mText.erase(this->mText.size() - 1);
+						std::this_thread::sleep_for(std::chrono::milliseconds(130));
 					}
 				}
 
+				if (isxdigit(key) ||
+					isalpha(key) ||
+					isprint(key))
+				{
+					if (this->mText.size() > (this->mBox->W / 12))
+						return;
+
+					this->mText += tolower(key);
+
+					// we double check the size, so that the selection bar doesn't overflow...
+					if (this->mText.size() <= (this->mBox->W / 12))
+						this->mSelection->W += 12;
+
+					std::this_thread::sleep_for(std::chrono::milliseconds(130));
+				}
 			}
-			else
-			{
-				--mCooldown;
-			}
+
 		}
 
 		if (!mText.empty())
 			UIFont::get_label_font()->draw(mText.c_str(), irr::core::recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
 		else
 			UIFont::get_label_font()->draw(mPlaceholder.c_str(), irr::core::recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
-
 	}
 
 	UICheckBox::UICheckBox()

@@ -80,10 +80,6 @@ int main(int argc, char** argv)
 
 		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);
 
-		Xplicit::ImGUI::UIPropGrid classes("Classes");
-		auto check = new Xplicit::ImGUI::UIEditBox(L"Edit Me!");
-		classes.insert(check);
-
 		if (!app_ptr)
 			throw Xplicit::EngineError("XPLICIT couldn't continue; we're sorry!");
 
@@ -97,8 +93,6 @@ int main(int argc, char** argv)
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
-
-			classes.update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
