@@ -63,25 +63,11 @@ namespace Xplicit
 			virtual bool in_region() noexcept
 			{
 #ifdef __RENDERER_IRR__
-				return (RENDER->getCursorControl()->getPosition().X < (W + X)) &&
-					(RENDER->getCursorControl()->getPosition().Y < (H + Y));
-#endif // __RENDERER_IRR__
-			}
+				auto pos = RENDER->getCursorControl()->getPosition();
 
-			virtual bool in_region(irr::core::vector2di& dim2d) noexcept
-			{
-#ifdef __RENDERER_IRR__
-				if (dim2d.X > W)
-				{
-					return (dim2d.X > X && dim2d.X < (W + X)) &&
-						(dim2d.Y > Y && dim2d.Y < (H + X));
-				}
-				else
-				{
-					return (dim2d.X > X && dim2d.X < W) &&
-						(dim2d.Y > Y && dim2d.Y < H);
-				}
-#endif // __RENDERER_IRR__
+				return (pos.X < X && pos.X > W) &&
+						(pos.Y < Y && pos.Y > H);
+#endif
 			}
 
 		};
