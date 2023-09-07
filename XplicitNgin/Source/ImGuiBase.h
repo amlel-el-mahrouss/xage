@@ -65,8 +65,14 @@ namespace Xplicit
 #ifdef __RENDERER_IRR__
 				auto pos = RENDER->getCursorControl()->getPosition();
 
-				return (pos.X < X && pos.X > W) &&
-						(pos.Y < Y && pos.Y > H);
+				std::cout << pos.X << " " <<  pos.Y << std::endl;
+				std::cout << W << " " << H << std::endl;
+				std::cout << X << " " << Y << std::endl;
+
+				return ((pos.X > X) &&
+					(pos.X < X + W)) &&
+					(pos.Y > Y) &&
+					(pos.Y < Y + H);
 #endif
 			}
 
