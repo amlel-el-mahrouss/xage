@@ -69,6 +69,7 @@ namespace Xplicit::RoXML
 		bool NoLua{ false };
 		bool WaitFor{ false };
 
+		std::vector<DataValue> DataValues;
 		std::vector<RoXMLNodeDescription> WorldNodes;
 
 	};
@@ -415,6 +416,71 @@ namespace Xplicit::RoXML
 						}
 					}
 
+					if (node_name == "DataValue")
+					{
+						if (node->first_attribute() &&
+							node->first_attribute()->next_attribute())
+						{
+							String name = node->first_attribute()->next_attribute()->name();
+
+							if (name == "Kind")
+							{
+								String first_attr_value = node->first_attribute()->value();
+								DataValue data;
+
+								data.Name = node->first_attribute()->name();
+								
+								if (auto ptr = node->first_attribute()->value();
+									ptr)
+								{
+									data.Name += ".";
+									data.Name += ptr;
+								}
+
+								data.Kind = DATA_VALUE_TYPE::NIL;
+
+								if ("Boolean" == first_attr_value)
+								{
+									data.Kind = DATA_VALUE_TYPE::BOOLEAN;
+								}
+
+								if ("StringUTF8" == first_attr_value)
+								{
+									data.Kind = DATA_VALUE_TYPE::STRING_UTF8;
+								}
+
+								if ("Integer32" == first_attr_value)
+								{
+									data.Kind = DATA_VALUE_TYPE::INTEGER_32;
+								}
+
+								if ("IEE754" == first_attr_value)
+								{
+									data.Kind = DATA_VALUE_TYPE::IEE754;
+								}
+
+								String value = node->value();
+								String tmp;
+
+								for (size_t i = 0; i < value.size(); i++)
+								{
+									if (value[i] != ',' &&
+										isalnum(value[i]))
+									{
+										tmp += value[i];
+									}
+									else if (value[i] == ',')
+									{
+										data.Values.push_back(tmp);
+										tmp.clear();
+									}
+								}
+
+								params.DataValues.push_back(data);
+							}
+						}
+					}
+
 					if (node_name == "Position3")
 					{
 						if (node->first_attribute() &&
@@ -522,8 +588,15 @@ namespace Xplicit::RoXML
 
 						std::unique_ptr<XHTTPManager> HTTP = std::make_unique<XHTTPManager>();
 
-						if (HTTP)
+						if (HTTP &&
+							url.find("xasset://") != String::npos)
 						{
+							String substr = url.erase(url.find("xasset://"), strlen("xasset://") + 3);
+
+							url.clear();
+							url = "/";
+							url += substr;
+
 							HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
 
 							auto tmp = std::to_string(xplicit_get_epoch()) + "-roxml-tmp.lua";

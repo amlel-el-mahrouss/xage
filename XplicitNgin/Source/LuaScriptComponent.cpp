@@ -13,7 +13,7 @@ namespace Xplicit
 {
 	LuaScriptComponent::LuaScriptComponent(const char* name)
 		: mName(name), ClassComponent(
-			std::string("World").c_str(), (std::string("XPXLuaScript") + std::to_string(xplicit_get_epoch())).c_str())
+			std::string("World").c_str(), (String("XPXScript") + std::to_string(xplicit_get_epoch())).c_str())
 	{
 		this->insert("Destroy", this->destroy_snippet().c_str());
 

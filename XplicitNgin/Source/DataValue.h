@@ -17,19 +17,18 @@ namespace Xplicit
 	enum class DATA_VALUE_TYPE
 	{
 		BOOLEAN,
-		STRING,
-		INTEGER,
-		ARRAY,
-		NIL,
+		STRING_UTF8,
+		INTEGER_32,
 		IEE754, /* floating point number. */
+		NIL,
 	};
 
 	class DataValue final
 	{
 	public:
-		String Name;
-		DATA_VALUE_TYPE Kind;
 		std::vector<String> Values;
+		DATA_VALUE_TYPE Kind;
+		String Name;
 
 	};
 

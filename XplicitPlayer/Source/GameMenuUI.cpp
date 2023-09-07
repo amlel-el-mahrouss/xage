@@ -31,7 +31,8 @@ namespace Xplicit::Player
 			mClicked(on_click),
 			mPopupId(id),
 			mHudFrame(new ImGUI::UIFrame()),
-			mOk(L"OK")
+			mOk(L"Leave"),
+			mTitle(L"Disconnected")
 	{
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
@@ -56,6 +57,8 @@ namespace Xplicit::Player
 		case POPUP_TYPE::LEAVE:
 		{
 			mText = platform_string("Leave the game?");
+			mTitle = platform_string("Notice");
+
 			mOk.label(L"Yes");
 
 			break;
@@ -103,7 +106,7 @@ namespace Xplicit::Player
 		//! Draw text
 
 		//! Title
-		ImGUI::UIFont::get_title_font()->draw(L"NOTICE", recti(vector2di(((_this->mHudFrame->X + _this->mHudFrame->W / 2)), _this->mHudFrame->Y + 30),
+		ImGUI::UIFont::get_label_font()->draw(_this->mTitle.c_str(), recti(vector2di(((_this->mHudFrame->X + _this->mHudFrame->W / 2)), _this->mHudFrame->Y + 30),
 			dimension2d(0, 0)), 
 			_this->mHudFrame->TextColor, 
 			true, 

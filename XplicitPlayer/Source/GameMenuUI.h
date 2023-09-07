@@ -59,6 +59,7 @@ namespace Xplicit::Player
 
 	private:
 		BasicString<PChar> mText;
+		BasicString<PChar> mTitle;
 		ImGUI::UIFrame* mHudFrame;
 		ImGUI::UIButton mOk;
 
