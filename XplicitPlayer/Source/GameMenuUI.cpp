@@ -40,19 +40,19 @@ namespace Xplicit::Player
 		switch (popup_type)
 		{
 		case POPUP_TYPE::KICK:
-			mText = platform_string("You have been kicked by the server.\nPress OK to exit client.");
+			mText = platform_string("You have been kicked.");
 			break;
 		case POPUP_TYPE::NETWORK:
-			mText = platform_string("The connection has timed-out.\nPress OK to exit client.");
+			mText = platform_string("The connection has timed-out.");
 			break;
 		case POPUP_TYPE::SHUTDOWN:
-			mText = platform_string("The server shut-down.\nPress OK to exit client.");
+			mText = platform_string("The server has shutdown.");
 			break;
 		case POPUP_TYPE::CHALLENGE:
-			mText = platform_string("Challenge failed by peer.\nPress OK to exit client.");
+			mText = platform_string("Challenge failed by peer.");
 			break;
 		case POPUP_TYPE::BANNED:
-			mText = platform_string("You have been banned, play-xplicit.com/appeals.\nPress OK to exit client.");
+			mText = platform_string("You have been banned.");
 			break;
 		case POPUP_TYPE::LEAVE:
 		{

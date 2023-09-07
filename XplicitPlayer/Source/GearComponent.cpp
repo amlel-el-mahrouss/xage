@@ -25,7 +25,7 @@ namespace Xplicit::Player
 			name),
 		mMeshPtr(nullptr)
 	{
-		this->insert("Mesh", mesh ? mesh : "nil");
+		this->insert("Path", mesh ? mesh : "nil");
 
 		if (mesh)
 			mMeshPtr = std::make_unique<MeshComponent>(mesh, mName.c_str(), mParent.c_str());
@@ -49,7 +49,7 @@ namespace Xplicit::Player
 
 		GearComponent* self = (GearComponent*)class_ptr;
 
-		String path = self->index_as_string("Mesh");
+		String path = self->index_as_string("Path");
 
 		if (!path.empty())
 		{

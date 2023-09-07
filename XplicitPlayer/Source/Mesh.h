@@ -13,6 +13,8 @@
 #include <Nplicit.h>
 #include <Component.h>
 
+#include <MeshComponent.h>
+
 //! generic player bundle offsets.
 #define XPLICIT_BUNDLE_HEAD		 (0)
 #define XPLICIT_BUNDLE_LEFT_ARM  (1)
@@ -24,55 +26,12 @@
 
 namespace Xplicit::Player
 {
-	class MeshComponent;
 	class StaticBundleMesh;
-
-	/* this classes gives an component a model. */
-	class MeshComponent : public Lua::CLuaClass
-	{
-	public:
-		MeshComponent() = delete;
-
-	public:
-		explicit MeshComponent(const char* path, const char* name, const char* group);
-		virtual ~MeshComponent() noexcept;
-
-	public:
-		MeshComponent& operator=(const MeshComponent&) = default;
-		MeshComponent(const MeshComponent&) = default;
-		
-	public:
-		const char* name() noexcept { return "MeshComponent"; }
-
-		irr::scene::ISceneNode* node() const { return mNode; }
-		irr::scene::IMesh* operator->() const { return mMdl; }
-
-	public:
-		const String& path() noexcept;
-		bool has_physics() noexcept;
-
-	public:
-		static bool should_update() { return true; }
-		static void update(ClassPtr class_ptr);
-
-	protected:
-		irr::scene::ISceneNode* mNode; // Model Data pointer, generic
-		irr::scene::IMesh* mMdl; // Model Data pointer, generic
-
-	private:
-		PHYSICS_TYPE mPhysics; // What kind of physics we have here?
-
-	private:
-		String mGroup;
-		String mName;
-		String mPath; // Filesystem path (must be)
-
-	};
 
 	/* this class combines meshes to make a bundle */
 	/* example: Epic Bundle */
 
-	class StaticBundleMesh
+	class StaticBundleMesh final
 	{
 	public:
 		StaticBundleMesh() = delete;

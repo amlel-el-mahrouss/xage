@@ -22,6 +22,8 @@
 
 #endif
 
+#define NPLICIT_RELEASE "1.0.0-Reno"
+
 namespace Xplicit
 {
 

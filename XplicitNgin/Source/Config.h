@@ -155,3 +155,5 @@ namespace Xplicit
     typedef std::uint64_t UInt64;
 }
 
+#define XPLICIT_RELEASE "1.0.0-Salamanca"
+
