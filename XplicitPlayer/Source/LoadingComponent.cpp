@@ -98,6 +98,9 @@ namespace Xplicit::Player
 			const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
 
 			monitor->ID = packet.buffer;
+
+			XPLICIT_INFO(monitor->ID);
+
 			monitor->Endpoint = XPLICIT_XASSET_ENDPOINT;
 			monitor->HTTP = std::make_unique<XHTTPManager>();
 			monitor->HTTP->set_endpoint(monitor->Endpoint);

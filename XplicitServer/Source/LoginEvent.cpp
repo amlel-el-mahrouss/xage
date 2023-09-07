@@ -131,7 +131,13 @@ namespace Xplicit
 					
 					++mPlayerCount;
 
+					memcpy(mNetwork->get(peer_idx)->packet.buffer, 
+						mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
+						mNetwork->get(peer_idx)->xplicit_id.as_string().size());
+
 					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+
+					memset(mNetwork->get(peer_idx)->packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
 
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
