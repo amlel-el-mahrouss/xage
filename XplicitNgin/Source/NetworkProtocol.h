@@ -30,7 +30,7 @@
 #   define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif // ifndef XPLICIT_INVALID_ADDR
 
-#define XPLICIT_NETWORK_BUF_SZ      (256U)
+#define XPLICIT_NETWORK_BUF_SZ      (32U)
 #define XPLICIT_NETWORK_VERSION     (2U)
 
 #define XPLICIT_NUM_CHANNELS (2)
@@ -114,12 +114,15 @@ namespace Xplicit
     // Xplicit Xconnect packet.
     struct XPLICIT_API NetworkPacket final
     {
+    public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
         char                  buffer[XPLICIT_NETWORK_BUF_SZ];
         std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
 
+    public:
         NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
 
+    public:
         std::int8_t           channel;
         std::int16_t          version;
         std::int16_t          health;
@@ -129,7 +132,12 @@ namespace Xplicit
         std::int64_t          public_hash;
         std::int64_t          hash;
 
+    public:
+        char replicas[3][XPLICIT_NETWORK_BUF_SZ];
+
     };
+
+    typedef char ReplicaStr[3][XPLICIT_NETWORK_BUF_SZ];
 
     // Xplicit Xconnect Communication packet.
     struct XPLICIT_API NetworkPacketChat final
@@ -186,6 +194,7 @@ namespace Xplicit
     public:
         XPLICIT_COPY_DEFAULT(NetworkPeer);
 
+    public:
         void timeout() noexcept;
         void reset() noexcept;
         

@@ -29,18 +29,18 @@ namespace Xplicit
 	{
 		for (auto& player : mPlayers)
 		{
-			if (auto xasset = player->get_class()->index_as_string("ReplicatedData");
+			if (auto xasset = player->get_class()->index_as_string("ReplicaData");
 				!xasset.empty())
 			{
-				mFactory.send(player->get_class()->index_as_number<int>("ReplicatedDataId"), 
+				mFactory.send(player->get_class()->index_as_number<int>("ReplicaDataId"), 
 					xasset.c_str(),
-					player->get_class()->index_as_number<int>("ReplicatedDataType"), player->get_peer()->public_hash);
+					player->get_class()->index_as_number<int>("ReplicaataType"), player->get_peer()->public_hash);
 			
 				// you wanna do that
 
-				player->get_class()->insert("ReplicatedDataType", "-1");
-				player->get_class()->insert("ReplicatedDataId", "-1");
-				player->get_class()->insert("ReplicatedData", "nil");
+				player->get_class()->insert("ReplicaDataType", "-1");
+				player->get_class()->insert("ReplicaDataId", "-1");
+				player->get_class()->insert("ReplicaData", "nil");
 			}
 		}
 	}

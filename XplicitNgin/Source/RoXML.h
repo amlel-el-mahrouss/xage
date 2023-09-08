@@ -19,6 +19,7 @@
 // Common includes
 #include "LuaScriptComponent.h"
 #include "ClassComponent.h"
+#include "MeshComponent.h"
 #include "PartComponent.h"
 #include "XHTTPManager.h"
 #include "DataValue.h"
@@ -180,36 +181,22 @@ namespace Xplicit::RoXML
 											mesh_path += node->value()[i];
 										}
 
-										auto mesh = RENDER->getSceneManager()->getMesh(mesh_path.c_str());
-										
-										if (mesh)
-										{
-											auto mesh_ptr = RENDER->getSceneManager()->addMeshSceneNode(mesh);
-											
-											if (mesh_ptr)
-											{
-												mesh_ptr->setName(node_id);
-												mesh_ptr->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-											}
+										MeshComponent* _mesh = ComponentSystem::get_singleton_ptr()->add<MeshComponent>(mesh_path.c_str(), node_id, parent_id);
 
-											object = mesh_ptr;
-										}
-										else
-										{
-											object = nullptr;
-										}
+										if (_mesh)
+											object = _mesh;
 									}
 
-									if (klass_to_instanciate == "Sky")
+									if (klass_to_instanciate == "Skydome")
 									{
-										irr::scene::ISceneNode* nod = nullptr;
-										nod = RENDER->getSceneManager()->addSkyDomeSceneNode(RENDER->getVideoDriver()->getTexture(node->value()));
-										object = nod;
+										irr::scene::ISceneNode* skydome = nullptr;
+										skydome = RENDER->getSceneManager()->addSkyDomeSceneNode(RENDER->getVideoDriver()->getTexture(node->value()));
+										object = skydome;
 
-										if (nod)
+										if (skydome)
 										{
-											nod->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-											nod->setName(node_id);
+											skydome->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+											skydome->setName(node_id);
 										}
 									}
 
@@ -252,36 +239,6 @@ namespace Xplicit::RoXML
 									}
 								}
 							}
-						}
-					}
-
-					if (node_name == "Sound")
-					{
-						if (node->first_attribute() &&
-							strcmp(node->first_attribute()->name(), "Path") == 0)
-						{
-							String name_id;
-
-							if (node->first_attribute()->next_attribute() &&
-								strcmp(node->first_attribute()->next_attribute()->name(), "Name") == 0)
-								name_id = node->first_attribute()->next_attribute()->value();
-
-							String parent_id;
-
-							if (node->first_attribute()->next_attribute()->next_attribute() &&
-								strcmp(node->first_attribute()->next_attribute()->next_attribute()->name(), "Parent") == 0)
-								parent_id = node->first_attribute()->next_attribute()->next_attribute()->value();
-
-							auto component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(
-								Vector<float>(0, 0, 0),
-								Vector<float>(0, 0, 0),
-								Color<float>(0, 0, 0),
-								nullptr,
-								parent_id.c_str(),
-								name_id.c_str());
-
-							component->insert("Path", node->first_attribute()->value());
-							component->insert("Play", "function(self) _G.World.SoundService.Play(self.Path); end");
 						}
 					}
 

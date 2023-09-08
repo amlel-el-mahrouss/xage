@@ -44,10 +44,25 @@ namespace Xplicit
 			
 			mNetwork->get(i)->packet.id = id;
 
-			memset(mNetwork->get(i)->packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
-			memcpy(mNetwork->get(i)->packet.buffer, path, XPLICIT_NETWORK_BUF_SZ);
+			Thread job([](ReplicaStr buf, const char* path, NetworkPeer* peer, NetworkServerComponent* server) -> void {
+				String empty;
+				empty.reserve(XPLICIT_NETWORK_BUF_SZ);
 
-			NetworkServerContext::send(mNetwork, mNetwork->get(i));
+				for (size_t i = 0; i < 3; i++)
+				{
+					if (memcmp(buf[i], empty.data(), empty.size()) == 0)
+					{
+						memset(buf[i], 0, XPLICIT_NETWORK_BUF_SZ);
+						memcpy(buf[i], path, strlen(path));
+
+						NetworkServerContext::send(server, peer);
+
+						break;
+					}
+				}
+			}, mNetwork->get(i)->packet.replicas, path, mNetwork->get(i), mNetwork);
+
+			job.detach();
 
 			break;
 		}

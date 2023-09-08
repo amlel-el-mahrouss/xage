@@ -16,7 +16,21 @@
 
 namespace Xplicit::ImGUI
 {
-	class XPLICIT_API UIButton final
+	class XPLICIT_API UIInterface
+	{
+	public:
+		UIInterface() = default;
+		virtual ~UIInterface() = default;
+
+	public:
+		XPLICIT_COPY_DEFAULT(UIInterface);
+
+	public:
+		virtual void update() = 0;
+
+	};
+
+	class XPLICIT_API UIButton final : public UIInterface
 	{
 	public:
 		explicit UIButton(const PChar* text);
@@ -43,20 +57,6 @@ namespace Xplicit::ImGUI
 		BasicString<PChar> mText{ L"" };
 		UIFrame* m_pFrame{ nullptr };
 		std::uint64_t m_iFadeIn{ 0 };
-
-	};
-
-	class XPLICIT_API UIInterface
-	{
-	public:
-		UIInterface() = default;
-		virtual ~UIInterface() = default;
-
-	public:
-		XPLICIT_COPY_DEFAULT(UIInterface);
-
-	public:
-		virtual void update() = 0;
 
 	};
 

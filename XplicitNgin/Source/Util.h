@@ -14,6 +14,7 @@
 
 #include "Root.h"
 #include "XplicitID.h"
+#include "XHTTPManager.h"
 #include "NetworkServerComponent.h"
 
 inline Xplicit::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
@@ -41,6 +42,26 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 		return network->get(player_index)->xplicit_id;
 
 	return XPLICIT_INVALID_ID;
+}
+
+inline bool DownloadURL(std::string _url)
+{
+	std::unique_ptr<Xplicit::XHTTPManager> http_manager = std::make_unique<Xplicit::XHTTPManager>();
+
+	if (http_manager &&
+		_url.find("xasset://") != Xplicit::String::npos)
+	{
+		Xplicit::String url = "/";
+		url += _url.erase(_url.find("xasset://"), strlen("xasset://"));
+
+		http_manager->set_endpoint("play-xplicit.com");
+
+		auto tmp = std::to_string(xplicit_get_epoch()) + "-roxml-tmp.lua";
+
+		return http_manager->download(url, tmp);
+	}
+
+	return false;
 }
 
 namespace Xplicit
