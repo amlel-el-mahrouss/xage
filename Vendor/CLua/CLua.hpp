@@ -94,7 +94,9 @@ namespace Xplicit::Lua
 			if (!str)
 				return -1;
 
-			if (auto err = (luaL_dostring(mL, str)) > 0)
+			String tmp = str;
+
+			if (auto err = (luaL_dostring(mL, tmp.c_str())) > 0)
 			{
 				String _err = lua_tostring(mL, -1);
 
@@ -245,7 +247,10 @@ namespace Xplicit::Lua
 			if (!lhs)
 				return false;
 
-			auto ret = (luaL_dofile(mL, lhs)) < 0;
+			static String tmp;
+			tmp = lhs;
+
+			auto ret = (luaL_dofile(mL, tmp.c_str())) < 0;
 			return ret;
 		}
 
