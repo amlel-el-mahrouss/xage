@@ -209,8 +209,6 @@ namespace Xplicit::Lua
 			{
 				if (lua_isboolean(mL, -1))
 					ret = lua_toboolean(mL, -1);
-
-				lua_pop(mL, -1);
 			}
 
 			return ret;
@@ -226,8 +224,6 @@ namespace Xplicit::Lua
 			{
 				if (lua_isstring(mL, -1))
 					ret = lua_tostring(mL, -1);
-
-				lua_pop(mL, -1);
 			}
 
 			return ret;

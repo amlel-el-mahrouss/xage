@@ -5,6 +5,8 @@ World.HumanoidState.ALIVE = 0
 World.HumanoidState.DEAD = 1
 World.HumanoidState.INVALID = 3
 
+World.Mouse = {}
+
 local function __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })
 end

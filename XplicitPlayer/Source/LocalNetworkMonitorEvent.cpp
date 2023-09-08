@@ -84,7 +84,7 @@ namespace Xplicit::Player
 			NetworkPacket packet{};
 			packet = mNetwork->get();
 
-			const auto players = ComponentSystem::get_singleton_ptr()->all_of<Xplicit::Player::LocalHumanoidComponent>("LocalHumanoidComponent", false, packet.buffer);
+			const auto players = ComponentSystem::get_singleton_ptr()->all_of<Xplicit::Player::LocalHumanoidComponent>("LocalHumanoidComponent");
 
 			for (std::size_t index = 0UL; index < players.size(); ++index)
 			{
@@ -96,7 +96,7 @@ namespace Xplicit::Player
 			XPLICIT_INFO("World:Login [EVENT]");
 #endif
 
-			ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash, false);
+			ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash, false, packet.buffer);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Login()");
 
 			/*! invalidate command right there. */

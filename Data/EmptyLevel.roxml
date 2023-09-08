@@ -1,7 +1,5 @@
 <RoXML>
-	<InlineCLua>
-		World.Slot.Login:Connect(function(ply)
-
-		end)
-	</InlineCLua>
+	<CLua>
+		xasset://Library/OnSpawnServer.lua
+	</CLua>
 </RoXML>
