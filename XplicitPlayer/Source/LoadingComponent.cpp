@@ -20,7 +20,7 @@
 #include "LocalCameraComponent.h"
 #include "LoadingComponent.h"
 #include "LocalMenuEvent.h"
-#include "GameMenuUI.h"
+#include "MenuUI.h"
 #include "Application.h"
 
 #include <XHTTPManager.h>

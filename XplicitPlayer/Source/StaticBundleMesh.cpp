@@ -11,10 +11,10 @@
  @file
  */
 
+#include "StaticBundleMesh.h"
+
 #include <RoXML.h>
 #include <Root.h>
-
-#include "Mesh.h"
 
 namespace Xplicit::Player
 {

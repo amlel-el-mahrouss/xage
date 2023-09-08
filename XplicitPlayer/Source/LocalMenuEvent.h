@@ -13,7 +13,7 @@
 #include <Event.h>
 #include <Root.h>
 
-#include "GameMenuUI.h"
+#include "MenuUI.h"
 
 namespace Xplicit::Player
 {

@@ -170,7 +170,8 @@ namespace Xplicit
 				String fmt = std::format("World:Login({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
-				//! reset gear array
+				//! reset gear array. So that we don't have any non-nullptr left.
+				//! this applies the first time we get a peer for this humanoid. 
 				for (auto& gear : this->mGears)
 				{
 					if (gear)

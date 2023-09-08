@@ -12,7 +12,7 @@
 #include "LuaScriptComponent.h"
 #include "GearComponent.h"
 #include "Application.h"
-#include "GameMenuUI.h"
+#include "MenuUI.h"
 
 #include <CommonEngine.h>
 #include <CLua/CLua.hpp>

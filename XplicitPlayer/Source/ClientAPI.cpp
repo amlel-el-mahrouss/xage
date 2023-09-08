@@ -9,10 +9,10 @@
 
 #include "LocalNetworkMonitorEvent.h"
 #include "SoundComponent.h"
-#include "GameMenuUI.h"
+#include "MenuUI.h"
 #include "Application.h"
 #include "ClientUtils.h"
-#include "Mesh.h"
+#include "StaticBundleMesh.h"
 
 #include <XplicitSound.h>
 #include <CLua/CLua.hpp>

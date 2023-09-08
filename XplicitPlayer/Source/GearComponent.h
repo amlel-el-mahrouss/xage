@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "Mesh.h"
+#include "StaticBundleMesh.h"
 
 #include <Util.h>
 #include <Component.h>

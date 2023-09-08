@@ -11,7 +11,7 @@
  @file
  */
 
-#include "GameMenuUI.h"
+#include "MenuUI.h"
 #include "Application.h"
 
 static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;

@@ -14,7 +14,7 @@
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalHumanoidComponent.h"
 #include "Application.h"
-#include "GameMenuUI.h"
+#include "MenuUI.h"
 
 #include <CLua/CLua.hpp>
 

@@ -191,25 +191,14 @@ function World:Spawn(tbl)
     end
 end
 
--- Class tbl
-World.INVALID = 0;
-World.SCRIPT = 1;
-World.SOUND = 2;
-World.PARTICLE = 3;
-World.ROXML = 4;
-World.TEXTURE = 5;
-World.TOOL = 6;
-World.SMOKE = 7;
-World.FORCEFIELD = 8;
-World.EXPLOSION = 9;
-World.SKYBOX = 10;
-World.UNLOAD = 11;
-World.LOAD = 12;
-World.COUNT = 13;
+-- Replications enums
+World.REPLICATE_INVALID = 0;
+World.REPLICATE_SCRIPT = 1;
+World.REPLICATE_SCENE = 2;
 
-World.CREATE = 512;
-World.UPDATE = 523;
-World.REMOVE = 522;
+World.REPLICATE_CREATE = 512;
+World.REPLICATE_REMOVE = 522;
+World.REPLICATE_UPDATE = 523;
 
 function World:DumpTable(o)
     if type(o) == 'table' then

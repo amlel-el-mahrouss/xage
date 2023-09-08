@@ -13,7 +13,7 @@
 
 #include "LocalCameraComponent.h"
 #include "Application.h"
-#include "GameMenuUI.h"
+#include "MenuUI.h"
 
 namespace Xplicit::Player
 {

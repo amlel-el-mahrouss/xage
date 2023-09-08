@@ -59,12 +59,6 @@ namespace Xplicit
 
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
-		// xconnect specs, always spawn at 0, 0, 0!
-
-		peer->packet.pos[XPLICIT_NETWORK_X] = XPLICIT_ORIGIN.X;
-		peer->packet.pos[XPLICIT_NETWORK_Y] = XPLICIT_ORIGIN.Y;
-		peer->packet.pos[XPLICIT_NETWORK_Z] = XPLICIT_ORIGIN.Z;
-
 		peer->packet.hash = peer->hash;
 		peer->packet.size = sizeof(NetworkPacket);
 

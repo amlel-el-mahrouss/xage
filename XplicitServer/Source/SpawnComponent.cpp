@@ -30,12 +30,12 @@ namespace Xplicit
 
 	Vector<float>& SpawnComponent::get() noexcept { return mAttribute.pos(); }
 
-	void SpawnComponent::update(void* class_ptr) 
+	void SpawnComponent::update(ClassPtr class_ptr) 
 	{
 		SpawnComponent* self = (SpawnComponent*)class_ptr;
 
-		auto str = "{" + std::to_string(self->mAttribute.pos().X) + "," +
-			std::to_string(self->mAttribute.pos().Y) + "," +
+		static auto str = "{ X = " + std::to_string(self->mAttribute.pos().X) + ", Y = " +
+			std::to_string(self->mAttribute.pos().Y) + ", Z = " +
 			std::to_string(self->mAttribute.pos().Z) + "," + "}";
 
 		self->mClass->assign("Position", str.c_str());

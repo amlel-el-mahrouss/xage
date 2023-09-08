@@ -13,7 +13,7 @@
 #pragma once
 
 #include "LocalCameraComponent.h"
-#include "Mesh.h"
+#include "StaticBundleMesh.h"
 
 #include <NetworkComponent.h>
 #include <GameVar.h>
