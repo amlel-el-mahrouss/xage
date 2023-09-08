@@ -1,5 +1,5 @@
 {
-  "name": "xpx-studio",
+  "name": "xplicit-engine",
   "version": "1.0.0",
-  "dependencies": [ "wxwidgets" ]
+  "dependencies": [ "ogre" ]
 }
