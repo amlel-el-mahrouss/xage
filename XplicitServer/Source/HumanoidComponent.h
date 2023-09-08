@@ -60,8 +60,8 @@ namespace Xplicit
 		bool is_alive() const noexcept;
 
 	public:
-		void set_walk_speed(const double& speed) noexcept { mWalkspeed = speed; }
-		const double& get_walk_speed() noexcept { return mWalkspeed; }
+		void set_walk_speed(const double& speed) noexcept { mWalkSpeed = speed; }
+		const double& get_walk_speed() noexcept { return mWalkSpeed; }
 
 	public:
 		void set_state(const HUMANOID_STATE state) noexcept;
@@ -83,9 +83,7 @@ namespace Xplicit
 		XPXAttribute mAttribute;
 		HUMANOID_STATE mState;
 		NetworkPeer* mPeer;
-
-	private:
-		double mWalkspeed;
+		double mWalkSpeed;
 		double mMaxHealth;
 		double mJumpPower;
 		double mHealth;

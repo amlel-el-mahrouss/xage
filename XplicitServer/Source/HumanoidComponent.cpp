@@ -15,18 +15,19 @@
 
 namespace Xplicit
 {
-	HumanoidComponent::HumanoidComponent() 
-		: 
-		Component(), 
+	HumanoidComponent::HumanoidComponent()
+		:
+		Component(),
 		mPeer(nullptr),
-		mHealth(100), 
+		mHealth(100),
 		mCanSpawn(true),
 		mState(HUMANOID_STATE::ALIVE),
 		mClass(nullptr),
 		mJumpPower(10),
 		mMaxHealth(100),
-		mWalkspeed(16),
-		mActiveGear(nullptr)
+		mWalkSpeed(16),
+		mActiveGear(nullptr),
+		mGears()
 	{}
 
 	HumanoidComponent::~HumanoidComponent() = default;
@@ -66,7 +67,7 @@ namespace Xplicit
 		self->mHealth = self->mClass->index_as_number<double>("Health");
 		self->mMaxHealth = self->mClass->index_as_number<double>("MaxHealth");
 		self->mJumpPower = self->mClass->index_as_number<double>("JumpPower");
-		self->mWalkspeed = self->mClass->index_as_number<double>("WalkSpeed");
+		self->mWalkSpeed = self->mClass->index_as_number<double>("WalkSpeed");
 
 		self->mClass->assign("IsLeftClickPressed", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] == NETWORK_CMD_LCLICK ? "true" : "false");
 		self->mClass->assign("IsRightClickPressed", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] == NETWORK_CMD_RCLICK ? "true" : "false");
@@ -150,9 +151,7 @@ namespace Xplicit
 			//! Reset Humanoid information
 			if (mClass)
 			{
-				mClass->insert("Name", "\""
-					XPLICIT_DEFAULT_NAME
-					"\"");
+				mClass->insert("Name", "'Unconnected'");
 
 				mClass->insert("Parent", "World.Players");
 				mClass->insert("Id", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
@@ -164,7 +163,7 @@ namespace Xplicit
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
-				mClass->insert("WalkSpeed", std::to_string(mWalkspeed).c_str());
+				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed).c_str());
 
 				XPLICIT_INFO("World:Login [EVENT]");
 
