@@ -131,7 +131,7 @@ namespace Xplicit
 			for (auto& gear : this->mGears)
 			{
 				if (gear)
-					delete gear;
+					Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
 
 				gear = nullptr;
 			}
@@ -141,15 +141,15 @@ namespace Xplicit
 
 		if (mPeer)
 		{
-			String path("_G.World.Players.");
+			String path("World.Players.");
 			path += mPeer->xplicit_id.as_string();
 
-			if (!mClass)
+			if (mClass == nullptr)
 				mClass = std::make_unique<Lua::CLuaClass>(path);
 
+			//! Reset Humanoid information
 			if (mClass)
 			{
-				//! Reset Humanoid information
 				mClass->insert("Name", "\""
 					XPLICIT_DEFAULT_NAME
 					"\"");
@@ -171,7 +171,7 @@ namespace Xplicit
 				String fmt = std::format("World:Login({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
-				// reset gear array
+				//! reset gear array
 				for (auto& gear : this->mGears)
 				{
 					if (gear)
