@@ -78,6 +78,73 @@ int main(int argc, char** argv)
 		//! Register client-side Lua calls, such as PlaySound
 		XplicitLoadClientLua();
 
+		struct Vector3
+		{
+			float X, Y, Z;
+
+			static int add(lua_State* L)
+			{
+				Vector3* vec = (Vector3*)lua_touserdata(L, 1);
+
+				auto X = lua_tonumber(L, 2);
+				auto Y = lua_tonumber(L, 3);
+				auto Z = lua_tonumber(L, 4);
+
+				vec->X += X;
+				vec->Y += Y;
+				vec->Z += Z;
+
+				return 0;
+			}
+
+			static int mul(lua_State* L)
+			{
+				Vector3* vec = (Vector3*)lua_touserdata(L, 1);
+
+				auto X = lua_tonumber(L, 2);
+				auto Y = lua_tonumber(L, 3);
+				auto Z = lua_tonumber(L, 4);
+
+				vec->X *= X;
+				vec->Y *= Y;
+				vec->Z *= Z;
+
+				return 0;
+			}
+
+			static int sub(lua_State* L)
+			{
+				Vector3* vec = (Vector3*)lua_touserdata(L, 1);
+
+				auto X = lua_tonumber(L, 2);
+				auto Y = lua_tonumber(L, 3);
+				auto Z = lua_tonumber(L, 4);
+
+				vec->X -= X;
+				vec->Y -= Y;
+				vec->Z -= Z;
+
+				return 0;
+			}
+
+		};
+
+		Xplicit::RLua::RuntimeClass<Vector3> vector;
+
+		vector.begin_class("Vector3");
+
+		vector.append_proc("Add", &Vector3::add);
+		vector.append_proc("Mul", &Vector3::mul);
+		vector.append_proc("Sub", &Vector3::sub);
+
+		vector.append_proc("PrintCoord", [](Vector3* ptr) {
+			std::cout << ptr->X << ", " << ptr->Y << ", " << ptr->Z << std::endl;
+		});
+
+		vector.end_class();
+
+		Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("local vec = Vector3(); vec:Add(1, 2, 2); vec:PrintCoord();");
+
 		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);
 
 		if (!app_ptr)

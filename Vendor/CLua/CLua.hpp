@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright Xplicit Corporation, all rights reserved.
+ *			Copyright PlayXPlicit, all rights reserved.
  *
  * =====================================================================
  */
@@ -25,7 +25,7 @@ extern "C" {
 #include <vector>
 
 #define XPLICIT_LUA_NAME "C++Lua"
-#define XPLICIT_LUA_DESCRIPTION "Lua extensions for the Ngine."
+#define XPLICIT_LUA_DESCRIPTION "C++ Lua extension for the XplicitNgine."
 #define XPLICIT_LUA_AUTHOR "Amlal El Mahrouss"
 
 namespace Xplicit::Lua
@@ -260,5 +260,7 @@ namespace Xplicit::Lua
 
 	};
 
-	constexpr const char* XPLICIT_ROOT_CLASS = "_G.World";
+	constexpr const char* XPLICIT_ROOT_CLASS = "World";
 }
+
+#include <CLua/RLua.hpp>
