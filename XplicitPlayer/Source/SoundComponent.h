@@ -26,7 +26,7 @@ namespace Xplicit::Player
 	class SoundComponent final : public ClassComponent
 	{
 	public:
-		explicit SoundComponent();
+		explicit SoundComponent(const char* name, const char* parent);
 		~SoundComponent() override;
 
 	public:

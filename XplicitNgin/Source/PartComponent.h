@@ -48,7 +48,7 @@ namespace Xplicit
 	private:
 		String part_service_destroy() noexcept
 		{
-			String func_proto = std::format("function(self) World.PartService.Destroy(\"{}\"); end",
+			String func_proto = std::format("function(self) XPXDestroyPart(\"{}\"); end",
 				this->name());
 
 			return func_proto;

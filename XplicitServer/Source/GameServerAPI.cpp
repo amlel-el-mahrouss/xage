@@ -148,18 +148,8 @@ static bool XPLICIT_IS_SERVER = true;
 
 void XplicitLoadServerLua() noexcept
 {
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService = {}");
-	
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreateGear, "EngineCreateGear");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService.Create = EngineCreateGear");
-
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "EngineDestroyGear");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.GearService.Destroy = EngineDestroyGear");
-
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "EngineLoadRoXML");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService.Load = EngineLoadRoXML");
-
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "EngineShutdown");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.Shutdown = EngineShutdown");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreateGear, "XPXCreateGear");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "XPXDestroyGear");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "XPXLoadScene");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "Shutdown");
 }

@@ -17,7 +17,7 @@ namespace Xplicit
 {
 	static const String XPLICIT_GEAR_DESTROY(const String& name) noexcept
 	{
-		String func_proto = std::format("function(self) World.GearService.Destroy(\"{}\"); end",
+		String func_proto = std::format("function(self) XPXDestroyGear(\"{}\"); end",
 			name);
 
 		return func_proto;

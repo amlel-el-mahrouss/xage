@@ -11,13 +11,13 @@
 
 namespace Xplicit::Player
 {
-	SoundComponent::SoundComponent() 
+	SoundComponent::SoundComponent(const char* name, const char* parent) 
 		: ClassComponent(Vector<float>(0.0f, 0.0f, 0.0f),
 			Vector<float>(0.0f, 0.0f, 0.0f), 
 			Color<float>(0.0f, 0.0f, 0.0f), 
 			nullptr,
-			"World",
-			"Mixer"),
+			parent,
+			name),
 		mVolume(1.0f), mLoop(false)
 	{
 		this->insert("Loop", "false");
@@ -25,6 +25,7 @@ namespace Xplicit::Player
 		this->insert("Pan", "1");
 		this->insert("Position", "{ X= 0, Y = 0, Z = 0}");
 		this->insert("Volume", "1");
+		this->insert("Play", "function(self, path) EnginePlaySound(path); end");
 	}
 
 	SoundComponent::~SoundComponent() = default;

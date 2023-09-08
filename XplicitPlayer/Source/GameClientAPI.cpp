@@ -11,8 +11,8 @@
 #include "SoundComponent.h"
 #include "GameMenuUI.h"
 #include "Application.h"
+#include "ClientUtils.h"
 #include "Mesh.h"
-#include "FX.h"
 
 #include <XplicitSound.h>
 #include <CLua/CLua.hpp>
@@ -153,50 +153,29 @@ static int lua_IsRightDown(lua_State* L)
 	return 1;
 }
 
+static int lua_MakeSoundComponent(lua_State* L)
+{
+	if (lua_tostring(L, 1) &&
+		lua_tostring(L, 2))
+	{
+		auto name = lua_tostring(L, 1);
+		auto parent = lua_tostring(L, 2);
+
+		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::SoundComponent>(name, parent);
+	}
+}
+
 void XplicitLoadClientLua() noexcept
 {
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.MeshService = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.UIService = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService = {}");
-
 	auto L = Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_LoadRoXML);
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "XPXLoadScene");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "XPXPlaySound");
 
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineLoadRoXML");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.RoXMLService.Load = EngineLoadRoXML");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_MakeRect, "XPXMakeRect");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_KeyDown, "XPXKeyDown");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsKeyDown, "XPXIsKeyDown");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsLeftDown, "XPXIsLeftDown");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsRightDown, "XPXIsRightDown");
 
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_PlaySound);
-
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EnginePlaySound");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.SoundService.Play = EnginePlaySound");
-
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_MakeRect);
-
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineMakeRect");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.UIService.MakeRect = EngineMakeRect");
-
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_KeyDown);
-
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineKeyDown");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService.KeyDown = EngineKeyDown");
-
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_IsKeyDown);
-
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineIsKeyDown");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService.IsKeyDown = EngineIsKeyDown");
-
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_IsLeftDown);
-
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineIsLeftDown");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService.IsLeftDown = EngineIsLeftDown");
-
-	lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), lua_IsRightDown);
-
-	lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), "EngineIsRightDown");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("_G.World.InputService.IsRightDown = EngineIsRightDown");
-	
-	Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::SoundComponent>();
 }

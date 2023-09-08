@@ -209,14 +209,12 @@ World.CREATE = 512;
 World.UPDATE = 523;
 World.REMOVE = 522;
 
-Util = {}
-
-function Util.Dump(o)
+function World:DumpTable(o)
     if type(o) == 'table' then
        local s = '{ '
        for k,v in pairs(o) do
           if type(k) ~= 'number' then k = '"'..k..'"' end
-          s = s .. '['..k..'] = ' .. Util.Dump(v) .. ','
+          s = s .. '['..k..'] = ' .. Wolrd:Dump(v) .. ','
        end
        return s .. '} '
     else
@@ -225,17 +223,35 @@ function Util.Dump(o)
 end
 
 function World:New(name, ...)
-    if (name == "Tool") then
-        return World.GearService.Create(...);
+    if (name == "GearComponent") then
+        return XPXCreateGear(...);
     elseif (name == "Scene") then
-        return World.RoXMLService.Load(...);
-    elseif (name == "Part") then
-        return World.PartService.Create(...);
-    elseif (name == "Class") then
-        return World.ClassService.Create(...);
+        return XPXLoadScene(...);
+    elseif (name == "PartComponent") then
+        return XPXPartCreate(...);
+    elseif (name == "ClassComponent") then
+        return XPXCreateClass(...);
+    elseif (name == "SoundComponent") then
+        return XPXCreateSound(...);
     elseif (name == "Sound") then
-        if (World.SoundService) then
-            return World.SoundService.Play(...);
-        end
+        return XPXPlaySound(...);
+    elseif (name == "RectComponent") then
+        return XPXMakeRect(...);
     end
+end
+
+function World:KeyDown()
+    return XPXKeyDown();
+end
+
+function World:IsKeyDown(key)
+    return XPXIsKeyDown(key);
+end
+
+function World:IsLeftDown()
+    return XPXIsLeftDown();
+end
+
+function World:IsRightDown()
+    return XPXIsRightDown();
 end

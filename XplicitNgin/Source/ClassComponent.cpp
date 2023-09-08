@@ -17,16 +17,8 @@ namespace Xplicit
 
 	static const String XPLICIT_DESTROY_SNIPPET(const String& name, const String& parent) noexcept
 	{
-		String func_proto = "function(self) World.ClassService.Destroy(";
-
-		func_proto += "\"";
-		func_proto += name;
-		func_proto += "\"";
-		func_proto += ",";
-		func_proto += "\"";
-		func_proto += parent;
-		func_proto += "\"";
-		func_proto += "); end";
+		String func_proto = std::format("function(self) XPXDestroyClass(\"{}\", \"{}\"); end",
+			name, parent);
 
 		return func_proto;
 	}
