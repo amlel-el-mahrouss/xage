@@ -215,7 +215,7 @@ function World:DumpTable(o)
     end
 end
 
-function World:New(name, ...)
+function World:Create(name, ...)
     if (name == "GearComponent") then
         return XPXCreateGear(...);
     elseif (name == "Scene") then
@@ -233,7 +233,7 @@ function World:New(name, ...)
     end
 end
 
-function World:KeyDown()
+function World:AnyKeyDown()
     return XPXKeyDown();
 end
 
