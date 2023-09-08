@@ -52,9 +52,16 @@ namespace Xplicit::Player
 			{
 			case COMPONENT_ID_SCRIPT:
 			{
-				String url = packet.buffer;
+				String url;
 
-				memset(packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
+				for (size_t i = 0; i < XPLICIT_MAX_REPLICA_SLOTS; i++)
+				{
+					url = packet.replicas[i];
+
+					if (url.empty() ||
+						url.find(XPLICIT_XASSET_IDENT) == String::npos)
+						continue;
+				}
 
 				if (url.empty() ||
 					url.find(XPLICIT_XASSET_IDENT) == String::npos)
@@ -94,9 +101,16 @@ namespace Xplicit::Player
 			}
 			case COMPONENT_ID_ROXML:
 			{
-				String url = packet.buffer;
+				String url;
 
-				memset(packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
+				for (size_t i = 0; i < XPLICIT_MAX_REPLICA_SLOTS; i++)
+				{
+					url = packet.replicas[i];
+
+					if (url.empty() ||
+						url.find(XPLICIT_XASSET_IDENT) == String::npos)
+						continue;
+				}
 
 				if (url.empty() ||
 					url.find(XPLICIT_XASSET_IDENT) == String::npos)
@@ -149,7 +163,18 @@ namespace Xplicit::Player
 			{
 			case COMPONENT_ID_SCRIPT:
 			{
-				String name = packet.buffer;
+				String name;
+
+				for (size_t i = 0; i < XPLICIT_MAX_REPLICA_SLOTS; i++)
+				{
+					name = packet.replicas[i];
+
+					if (name.empty())
+						continue;
+				}
+
+				if (name.empty())
+					return;
 
 				if (auto script = ComponentSystem::get_singleton_ptr()->get<LuaScriptComponent>(name.c_str()))
 				{

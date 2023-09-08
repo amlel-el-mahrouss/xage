@@ -30,7 +30,8 @@ namespace Xplicit
 
 		for (size_t i = 0; i < mNetwork->size(); i++)
 		{
-			if (mNetwork->get(i)->public_hash != public_hash)
+			if (!mNetwork->get(i) ||
+				mNetwork->get(i)->public_hash != public_hash)
 				continue;
 
 			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
@@ -44,25 +45,21 @@ namespace Xplicit
 			
 			mNetwork->get(i)->packet.id = id;
 
-			Thread job([](ReplicaStr buf, const char* path, NetworkPeer* peer, NetworkServerComponent* server) -> void {
-				String empty;
-				empty.reserve(XPLICIT_NETWORK_BUF_SZ);
+			String empty;
+			empty.reserve(XPLICIT_NETWORK_BUF_SZ);
 
-				for (size_t i = 0; i < 3; i++)
+			for (size_t i = 0; i < XPLICIT_MAX_REPLICA_SLOTS; i++)
+			{
+				if (memcmp(mNetwork->get(i)->packet.replicas[i], 
+					empty.data(), 
+					empty.size()) == 0)
 				{
-					if (memcmp(buf[i], empty.data(), empty.size()) == 0)
-					{
-						memset(buf[i], 0, XPLICIT_NETWORK_BUF_SZ);
-						memcpy(buf[i], path, strlen(path));
+					memset(mNetwork->get(i)->packet.replicas[i], 0, XPLICIT_NETWORK_BUF_SZ);
+					memcpy(mNetwork->get(i)->packet.replicas[i], path, strlen(path));
 
-						NetworkServerContext::send(server, peer);
-
-						break;
-					}
+					NetworkServerContext::send(mNetwork, mNetwork->get(i));
 				}
-			}, mNetwork->get(i)->packet.replicas, path, mNetwork->get(i), mNetwork);
-
-			job.detach();
+			}
 
 			break;
 		}

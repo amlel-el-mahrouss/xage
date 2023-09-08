@@ -16,7 +16,6 @@ namespace Xplicit
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0UL)
 	{
-		mPlayers = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 	}
 
 	ReplicationEvent::~ReplicationEvent() = default;
@@ -27,19 +26,24 @@ namespace Xplicit
 
 	void ReplicationEvent::operator()()
 	{
+		mPlayers = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+
 		for (auto& player : mPlayers)
 		{
+			if (!player->get_peer())
+				continue;
+
 			if (auto xasset = player->get_class()->index_as_string("ReplicaData");
 				!xasset.empty())
 			{
-				mFactory.send(player->get_class()->index_as_number<int>("ReplicaDataId"), 
+				mFactory.send(player->get_class()->index_as_number<int>("ReplicaId"), 
 					xasset.c_str(),
-					player->get_class()->index_as_number<int>("ReplicaataType"), player->get_peer()->public_hash);
+					player->get_class()->index_as_number<int>("ReplicaType"), player->get_peer()->public_hash);
 			
 				// you wanna do that
 
-				player->get_class()->insert("ReplicaDataType", "-1");
-				player->get_class()->insert("ReplicaDataId", "-1");
+				player->get_class()->insert("ReplicaType", "-1");
+				player->get_class()->insert("ReplicaId", "-1");
 				player->get_class()->insert("ReplicaData", "nil");
 			}
 		}
