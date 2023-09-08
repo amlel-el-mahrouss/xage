@@ -598,3 +598,36 @@ namespace Xplicit::RoXML
 
 	};
 }
+
+// Utilities related to data values.
+
+void LoadDVFromRoXML(Xplicit::RoXML::RoXMLDocumentParameters& params) noexcept
+{
+	Xplicit::Thread data_values_job([](Xplicit::RoXML::RoXMLDocumentParameters params) {
+		Xplicit::String fmt;
+
+		if (params.DataValues.size() > 0)
+		{
+			for (size_t i = 0; i < params.DataValues.size(); i++)
+			{
+				Xplicit::String final_string;
+
+				for (size_t y = 0; y < params.DataValues[i].Values.size(); y++)
+				{
+					final_string += params.DataValues[i].Values[y];
+					final_string += ",";
+				}
+
+				fmt = params.DataValues[i].Name.c_str();
+				fmt += "=";
+				fmt += std::format("{}{}{}", "{", final_string, "}");
+
+				Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+				fmt.clear();
+			}
+		}
+		}, params);
+
+	data_values_job.detach();
+}

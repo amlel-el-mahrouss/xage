@@ -21,7 +21,7 @@
 #include "ServerConfig.h"
 #include "TimeoutEvent.h"
 #include "MovementEvent.h"
-#include "ReplicationEvent.h"
+#include "HumanoidReplicationEvent.h"
 #include "SpawnComponent.h"
 #include "HealthMonitorEvent.h"
 
@@ -147,7 +147,7 @@ int main(int argc, char** argv)
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();
 
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::ReplicationEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::HumanoidReplicationEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::HealthMonitorEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::TimeoutEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::MovementEvent>();
@@ -163,6 +163,8 @@ int main(int argc, char** argv)
 
 		Xplicit::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);
+
+		LoadDVFromRoXML(params);
 
 		Xplicit::Thread logic([&]() {
 			const auto net = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");

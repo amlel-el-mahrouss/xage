@@ -15,15 +15,15 @@
 
 namespace Xplicit
 {
-	class ReplicationEvent final : public Event
+	class HumanoidReplicationEvent final : public Event
 	{
 	public:
-		explicit ReplicationEvent();
-		~ReplicationEvent() override;
+		explicit HumanoidReplicationEvent();
+		~HumanoidReplicationEvent() override;
 
 	public:
-		ReplicationEvent& operator=(const ReplicationEvent&) = default;
-		ReplicationEvent(const ReplicationEvent&) = default;
+		HumanoidReplicationEvent& operator=(const HumanoidReplicationEvent&) = default;
+		HumanoidReplicationEvent(const HumanoidReplicationEvent&) = default;
 
 	public:
 		const char* name() noexcept override;

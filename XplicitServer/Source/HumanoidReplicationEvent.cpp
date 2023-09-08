@@ -7,24 +7,24 @@
  * =====================================================================
  */
 
-#include "ReplicationEvent.h"
+#include "HumanoidReplicationEvent.h"
 
 namespace Xplicit
 {
-	ReplicationEvent::ReplicationEvent()
+	HumanoidReplicationEvent::HumanoidReplicationEvent()
 		: 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0UL)
 	{
 	}
 
-	ReplicationEvent::~ReplicationEvent() = default;
+	HumanoidReplicationEvent::~HumanoidReplicationEvent() = default;
 
-	const size_t& ReplicationEvent::size() const noexcept { return mPlayerCount; }
+	const size_t& HumanoidReplicationEvent::size() const noexcept { return mPlayerCount; }
 
-	const char* ReplicationEvent::name() noexcept { return "ReplicationEvent"; }
+	const char* HumanoidReplicationEvent::name() noexcept { return "HumanoidReplicationEvent"; }
 
-	void ReplicationEvent::operator()()
+	void HumanoidReplicationEvent::operator()()
 	{
 		mPlayers = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 

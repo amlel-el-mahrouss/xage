@@ -14,6 +14,7 @@
 
 #include "Xplicit.h"
 #include <Nplicit.h>
+
 #include <CLua/CLua.hpp>
 
 #define XPLICIT_DEFAULT_HEALTH	(100)
