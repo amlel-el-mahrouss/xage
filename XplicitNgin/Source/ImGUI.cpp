@@ -13,7 +13,7 @@ namespace Xplicit::ImGUI
 {
 
 	UIButton::UIButton(const PChar* text)
-		: mText(text)
+		: mText(text), Hover(false), LeftClicked(false), RightClicked(false)
 	{
 		m_pFrame = new UIFrame();
 		XPLICIT_ASSERT(m_pFrame);
@@ -25,11 +25,6 @@ namespace Xplicit::ImGUI
 
 		m_pFrame->X = 0;
 		m_pFrame->Y = 0;
-
-
-		Hover = []() {};
-		LeftClicked = []() {};
-		RightClicked = []() {};
 	}
 
 	UIButton::~UIButton()
@@ -52,24 +47,14 @@ namespace Xplicit::ImGUI
 		m_pFrame->BackgroundColor.setAlpha(m_iFadeIn);
 		m_pFrame->BackgroundHoverColor.setAlpha(m_iFadeIn);
 
+		this->Hover = m_pFrame->in_region();
+
 		if (m_pFrame->in_region())
 		{
 			m_pFrame->update(m_pFrame->BackgroundHoverColor);
 
-			try
-			{
-				if (KB->left_down())
-					LeftClicked();
-
-				if (KB->right_down())
-					RightClicked();
-
-				Hover();
-			}
-			catch (const std::bad_function_call& err)
-			{
-				XPLICIT_INFO("Bad Funciton call!!! Please check your lambdas");
-			}
+			LeftClicked = KB->left_down();
+			RightClicked = KB->right_down();
 		}
 		else
 		{

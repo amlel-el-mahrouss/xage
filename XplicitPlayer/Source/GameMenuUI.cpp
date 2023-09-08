@@ -68,8 +68,6 @@ namespace Xplicit::Player
 			return;
 		}
 
-		mOk.LeftClicked = mClicked;
-
 		mHudFrame->W = 504;
 		mHudFrame->H = 288;
 		
@@ -120,6 +118,11 @@ namespace Xplicit::Player
 			true);
 
 		_this->mOk.update();
+
+		if (_this->mOk.LeftClicked)
+		{
+			_this->mClicked();
+		}
 	}
 
 	const char* PopupComponent::name() noexcept

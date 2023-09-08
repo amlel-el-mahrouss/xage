@@ -40,9 +40,9 @@ namespace Xplicit::ImGUI
 		XPLICIT_COPY_DEFAULT(UIButton);
 
 	slots:
-		std::function<void()> LeftClicked;
-		std::function<void()> RightClicked;
-		std::function<void()> Hover;
+		bool LeftClicked;
+		bool RightClicked;
+		bool Hover;
 
 	public:
 		void update();
