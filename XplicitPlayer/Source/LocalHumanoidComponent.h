@@ -34,7 +34,7 @@ namespace Xplicit::Player
 	class LocalHumanoidComponent final : public Component
 	{
 	public:
-		LocalHumanoidComponent(const int64_t& public_hash);
+		LocalHumanoidComponent(const int64_t& public_hash, const bool is_local_player = false);
 		~LocalHumanoidComponent() override;
 
 		LocalHumanoidComponent& operator=(const LocalHumanoidComponent&) = default;
@@ -52,14 +52,17 @@ namespace Xplicit::Player
 		void attach(LocalCameraComponent* cam) noexcept;
 		Vector<float> get_pos() noexcept;
 		const int64_t& id() noexcept;
+		Lua::CLuaClass* get_class() { return mClass; }
 
 	private:
 		NetworkComponent* mNetwork;
 		LocalCameraComponent* mCam;
+		bool mIsLocalPlayer;
 
 	private:
-		HUMANOID_STATE mState;
 		std::int64_t mPublicHash;
+		Lua::CLuaClass* mClass;
+		HUMANOID_STATE mState;
 		NetworkPacket mPacket;
 		Vector<float> mPos;
 

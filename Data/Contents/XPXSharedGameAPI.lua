@@ -1,3 +1,5 @@
+-- Copyright PlayXPlicit SARL
+
 World.HumanoidState = {}
 World.HumanoidState.ALIVE = 0
 World.HumanoidState.DEAD = 1

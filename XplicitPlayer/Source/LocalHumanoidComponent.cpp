@@ -24,14 +24,22 @@ namespace Xplicit::Player
 	constexpr const short XPLICIT_NETWORK_DELAY = 100;
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
 
-	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& public_hash)
+	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& public_hash, const bool is_local_player)
 		:
 		mPublicHash(public_hash),
 		mCam(nullptr), 
 		mPacket(),
-		mPos(0.f, 2.f, 0.f),
-		mState(HUMANOID_STATE::DEAD)
+		mPos(0.f, 0.f, 0.f),
+		mState(HUMANOID_STATE::ALIVE),
+		mIsLocalPlayer(is_local_player),
+		mClass(nullptr)
 	{
+		if (is_local_player)
+		{
+			mClass = new Lua::CLuaClass("World.Players.LocalPlayer");
+			mClass->insert("Health", "100");
+		}
+
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);
@@ -85,35 +93,39 @@ namespace Xplicit::Player
 
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
-		}
 
-		if (KB->left_down())
-		{
-			self->mPacket.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_LCLICK;
-			self->mNetwork->send(self->mPacket);
+			if (self->mIsLocalPlayer)
+			{
+				self->mPacket.health = self->mClass->index_as_number("Health");
 
-			return;
-		}
+				if (KB->left_down())
+				{
+					self->mPacket.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_LCLICK;
+					self->mNetwork->send(self->mPacket);
+				}
 
-		if (KB->right_down())
-		{
-			self->mPacket.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_RCLICK;
-			self->mNetwork->send(self->mPacket);
+				if (KB->right_down())
+				{
+					self->mPacket.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_RCLICK;
+					self->mNetwork->send(self->mPacket);
+				}
 
-			return;
-		}
+				if (self->mPacket.health > 0 &&
+					self->mState == HUMANOID_STATE::DEAD)
+				{
+					XPLICIT_INFO("World:LocalSpawn [EVENT]");
 
-		if (self->mPacket.health > 0 &&
-			self->mState == HUMANOID_STATE::DEAD)
-		{
-			XPLICIT_INFO("World:LocalSpawn [EVENT]");
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
 
-			self->mState = HUMANOID_STATE::ALIVE;
-		}
-		else if (self->mPacket.health <= 0)
-		{
-			self->mState = HUMANOID_STATE::DEAD;
+					self->mState = HUMANOID_STATE::ALIVE;
+
+					self->mClass->insert("Health", std::to_string(self->mPacket.health).c_str());
+				}
+				else if (self->mPacket.health <= 0)
+				{
+					self->mState = HUMANOID_STATE::DEAD;
+				}
+			}
 		}
 	}
 

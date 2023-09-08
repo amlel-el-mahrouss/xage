@@ -128,7 +128,7 @@ namespace Xplicit
 					"\"");
 
 				mClass->insert("Parent", "World.Players");
-				mClass->insert("XplicitId", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
+				mClass->insert("Id", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
 				mClass->insert("IsMoving", "false");
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");

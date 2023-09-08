@@ -144,16 +144,16 @@ namespace Xplicit::Lua
 		XPLICIT_COPY_DEFAULT(CLuaClass);
 
 	public:
-		bool insert(const char* symbol, const char* reference)
+		bool insert(const char* symbol, const char* value)
 		{
-			if (symbol && reference)
+			if (symbol && value)
 			{
 				//! Just push this symbol to the symbols list!
 				//! So that we're aware of it.
 				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
 				++mSymbolCnt;
 
-				bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, reference).c_str());
+				bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, value).c_str());
 				lua_pop(mL, -1);
 				
 				return ret;
@@ -235,12 +235,26 @@ namespace Xplicit::Lua
 			return ret;
 		}
 
-		bool call(const char* lhs) noexcept
+		bool run_string(const char* lhs) noexcept
 		{
 			if (!lhs)
 				return false;
 
-			return (luaL_dostring(mL, lhs)) < 0;
+			auto ret = (luaL_dostring(mL, lhs)) < 0;
+			lua_pop(mL, -1);
+
+			return ret;
+		}
+
+		bool run_path(const char* lhs) noexcept
+		{
+			if (!lhs)
+				return false;
+
+			auto ret = (luaL_dofile(mL, lhs)) < 0;
+			lua_pop(mL, -1);
+
+			return ret;
 		}
 
 		std::int64_t count() { return mSymbolCnt; }

@@ -87,17 +87,16 @@ namespace Xplicit::Player
 			ComponentSystem::get_singleton_ptr()->add<LocalHudComponent>(public_hash);
 			
 			const auto cam = ComponentSystem::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
-			const auto ply = ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash);
-
-			XPLICIT_ASSERT(ply);
-			XPLICIT_ASSERT(cam);
-
-			ply->attach(cam);
-			self->mNetwork->set_hash(hash);
+			const auto local_player = ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash, true);
 
 			const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
 
+			local_player->attach(cam);
+			self->mNetwork->set_hash(hash);
+
 			monitor->ID = packet.buffer;
+
+			local_player->get_class()->insert("Id", (String("'") + monitor->ID + "'").c_str());
 
 			XPLICIT_INFO(monitor->ID);
 

@@ -24,11 +24,7 @@ namespace Xplicit
 		LuaScriptComponent() = delete;
 
 	private:
-		const String destroy_snippet() noexcept
-		{
-			String func_proto("function(self) self.__Destroy = true; end");
-			return func_proto;
-		}
+		const String destroy_snippet() noexcept;
 
 	public:
 		explicit LuaScriptComponent(const char* name);

@@ -96,7 +96,7 @@ namespace Xplicit::Player
 			XPLICIT_INFO("World:Login [EVENT]");
 #endif
 
-			ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash);
+			ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash, false);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Login()");
 
 			/*! invalidate command right there. */

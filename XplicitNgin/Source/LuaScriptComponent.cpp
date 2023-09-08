@@ -11,19 +11,25 @@
 
 namespace Xplicit
 {
+	const String LuaScriptComponent::destroy_snippet() noexcept
+	{
+		String func_proto("function(self) XPXDestroyScript(self.Name); end");
+		return func_proto;
+	}
+
 	LuaScriptComponent::LuaScriptComponent(const char* name)
 		: mName(name), ClassComponent(
 			std::string("World").c_str(), (String("XPXScript") + std::to_string(xplicit_get_epoch())).c_str())
 	{
 		this->insert("Destroy", this->destroy_snippet().c_str());
 
-		luaL_dostring(this->state(), std::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
+		this->run_string(std::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
 
 		// Script.Current
-		luaL_dostring(this->state(), std::format("_G.Script.Current = _G.Script.{}", this->name()).c_str());
+		this->run_string(std::format("_G.Script.Current = _G.Script.{}", this->name()).c_str());
 
 		//! ROBLOX(tm) like syntax
-		luaL_dostring(this->state(), "_G.script = _G.Script.Current");
+		this->run_string("_G.script = _G.Script.Current");
 		
 		this->run();
 	}
@@ -34,21 +40,13 @@ namespace Xplicit
 	{
 		if (!this->mName.empty())
 		{
-			luaL_dofile(this->state(), this->mName.c_str());
+			this->run_path(this->mName.c_str());
 		}
 	}
 
-	void LuaScriptComponent::update(void* class_ptr) 
-	{
-		LuaScriptComponent* comp = (LuaScriptComponent*)class_ptr;
+	void LuaScriptComponent::update(void* class_ptr) {}
 
-		if (comp->index_as_bool("__Destroy"))
-		{
-			ComponentSystem::get_singleton_ptr()->remove(comp);
-		}
-	}
-
-	bool LuaScriptComponent::should_update() noexcept { return true; }
+	bool LuaScriptComponent::should_update() noexcept { return false; }
 
 	const char* LuaScriptComponent::path() noexcept { return mName.c_str(); }
 
