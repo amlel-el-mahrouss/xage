@@ -23,7 +23,7 @@ namespace Xplicit::Player
 		mRotation(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = RENDER->getSceneManager()->addCameraSceneNodeFPS();
+		mCamera = RENDER->getSceneManager()->addCameraSceneNode();
 		XPLICIT_ASSERT(mCamera);
 
 		mCamera->setRotation(vector3df(0, 0, 0));

@@ -30,19 +30,11 @@ namespace Xplicit
 
 		//! ROBLOX(tm) like syntax
 		this->run_string("_G.script = _G.Script.Current");
-		
-		this->run();
+
+		this->run_path(this->mName.c_str());
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;
-
-	void LuaScriptComponent::run() noexcept
-	{
-		if (!this->mName.empty())
-		{
-			this->run_path(this->mName.c_str());
-		}
-	}
 
 	void LuaScriptComponent::update(void* class_ptr) {}
 

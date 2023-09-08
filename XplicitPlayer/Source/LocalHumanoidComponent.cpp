@@ -96,7 +96,7 @@ namespace Xplicit::Player
 				self->mCharacter->node()->setRotation(
 					vector3df(self->mCam->get()->getPosition().X, 
 					0, 
-					self->mCam->get()->getPosition().X));
+					0));
 
 				XPLICIT_INFO("World:LocalMove [EVENT]");
 

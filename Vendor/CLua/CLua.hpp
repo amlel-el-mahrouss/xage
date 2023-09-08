@@ -155,7 +155,11 @@ namespace Xplicit::Lua
 			return false;
 		}
 
-		bool assign(const char* lhs, const char* rhs) { return this->insert(lhs, rhs); }
+		bool assign(const char* lhs, const char* rhs) 
+		{ 
+			bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, lhs, rhs).c_str());
+			return ret;
+		}
 
 	private:
 		//! @brief Index field of an array.

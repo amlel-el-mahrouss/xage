@@ -42,9 +42,6 @@ namespace Xplicit
 		static bool should_update() noexcept;
 
 	private:
-		void run() noexcept;
-
-	private:
 		String mName;
 
 	};
