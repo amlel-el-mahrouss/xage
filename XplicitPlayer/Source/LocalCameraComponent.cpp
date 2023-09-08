@@ -17,7 +17,7 @@
 
 namespace Xplicit::Player
 {
-	LocalCameraComponent::LocalCameraComponent()
+	LocalCameraComponent::LocalCameraComponent() noexcept
 		: ClassComponent("World", "Camera"),
 		mCamera(nullptr),
 		mRotation(0, 0, 0), 

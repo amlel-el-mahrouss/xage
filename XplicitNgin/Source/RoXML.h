@@ -601,7 +601,7 @@ namespace Xplicit::RoXML
 
 // Utilities related to data values.
 
-void LoadDVFromRoXML(Xplicit::RoXML::RoXMLDocumentParameters& params) noexcept
+inline void LoadDVFromRoXML(Xplicit::RoXML::RoXMLDocumentParameters& params) noexcept
 {
 	Xplicit::Thread data_values_job([](Xplicit::RoXML::RoXMLDocumentParameters params) {
 		Xplicit::String fmt;

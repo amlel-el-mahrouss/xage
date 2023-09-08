@@ -48,7 +48,7 @@ namespace Xplicit
 
 	protected:
 		irr::scene::IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic
-		irr::scene::IMesh* mMdl; // Model Data pointer, generic
+		irr::scene::IAnimatedMesh* mMdl; // Model Data pointer, generic
 
 	private:
 		PHYSICS_TYPE mPhysics; // What kind of physics we have here?

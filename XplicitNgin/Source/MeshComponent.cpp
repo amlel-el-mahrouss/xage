@@ -33,7 +33,7 @@ namespace Xplicit
 
 		if (mMdl)
 		{
-			mNode = RENDER->getSceneManager()->addOctreeSceneNode(mMdl);
+			mNode = RENDER->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
 			mPhysics = PHYSICS_COMPLEX;
 
 			mNode->setName(mName.c_str());

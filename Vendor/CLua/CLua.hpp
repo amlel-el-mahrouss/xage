@@ -86,7 +86,6 @@ namespace Xplicit::Lua
 				return err;
 			}
 
-			lua_pop(mL, -1);
 			return 0;
 		}
 
@@ -106,7 +105,6 @@ namespace Xplicit::Lua
 				return err;
 			}
 
-			lua_pop(mL, -1);
 			return 0;
 		}
 
@@ -129,14 +127,12 @@ namespace Xplicit::Lua
 			fmt += " = { CxxLua = true; }";
 
 			luaL_dostring(mL, fmt.c_str());
-			lua_pop(mL, -1);
 		}
 
 		virtual ~CLuaClass() noexcept
 		{
 			// {} = mClass
 			luaL_dostring(mL, std::format("{} = nil", mClass).c_str());
-			lua_pop(mL, -1);
 		}
 
 	public:
@@ -153,8 +149,6 @@ namespace Xplicit::Lua
 				++mSymbolCnt;
 
 				bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, value).c_str());
-				lua_pop(mL, -1);
-				
 				return ret;
 			}
 
@@ -210,7 +204,6 @@ namespace Xplicit::Lua
 				if (lua_isboolean(mL, -1))
 					ret = lua_toboolean(mL, -1);
 
-
 				lua_pop(mL, -1);
 			}
 
@@ -240,8 +233,6 @@ namespace Xplicit::Lua
 				return false;
 
 			auto ret = (luaL_dostring(mL, lhs)) < 0;
-			lua_pop(mL, -1);
-
 			return ret;
 		}
 
@@ -251,8 +242,6 @@ namespace Xplicit::Lua
 				return false;
 
 			auto ret = (luaL_dofile(mL, lhs)) < 0;
-			lua_pop(mL, -1);
-
 			return ret;
 		}
 

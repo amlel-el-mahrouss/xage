@@ -41,10 +41,9 @@ namespace Xplicit::Player
 			mClass->insert("Health", "100");
 		}
 
-		XPLICIT_GET_DATA_DIR(path);
-		path += "Contents/Bundles/Idle.dae";
+		String path = "Contents/Bundles/Idle.dae";
 
-		mCharacter = Xplicit::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path);
+		mCharacter = Xplicit::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer", "World");
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);
