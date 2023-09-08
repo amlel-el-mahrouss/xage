@@ -165,6 +165,18 @@ static int lua_MakeSoundComponent(lua_State* L)
 	}
 }
 
+static int lua_GetX(lua_State* L)
+{
+	lua_pushnumber(L, RENDER->getCursorControl()->getPosition().Y);
+	return 1;
+}
+
+static int lua_GetY(lua_State* L)
+{
+	lua_pushnumber(L, RENDER->getCursorControl()->getPosition().Y);
+	return 1;
+}
+
 void XplicitLoadClientLua() noexcept
 {
 	auto L = Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state();
@@ -172,10 +184,13 @@ void XplicitLoadClientLua() noexcept
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "XPXLoadScene");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "XPXPlaySound");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_MakeRect, "XPXMakeRect");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_MakeRect, "XPXMakeRectangle");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_KeyDown, "XPXKeyDown");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsKeyDown, "XPXIsKeyDown");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsLeftDown, "XPXIsLeftDown");
+
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsRightDown, "XPXIsRightDown");
 
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetY, "XPXGetY");
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetX, "XPXGetX");
 }

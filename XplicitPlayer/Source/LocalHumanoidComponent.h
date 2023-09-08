@@ -16,6 +16,7 @@
 #include "StaticBundleMesh.h"
 
 #include <NetworkComponent.h>
+#include <XplicitID.h>
 #include <GameVar.h>
 
 namespace Xplicit::Player
@@ -34,7 +35,7 @@ namespace Xplicit::Player
 	class LocalHumanoidComponent final : public Component
 	{
 	public:
-		LocalHumanoidComponent(const int64_t& public_hash, const bool is_local_player = false);
+		LocalHumanoidComponent(const int64_t& public_hash, const bool is_local_player = false, const char* optional_xplicit_id = XPLICIT_ID_DUMMY);
 		~LocalHumanoidComponent() override;
 
 		LocalHumanoidComponent& operator=(const LocalHumanoidComponent&) = default;

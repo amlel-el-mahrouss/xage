@@ -155,7 +155,7 @@ XPLICIT_API void XplicitLoadBaseLua()
 
 	Xplicit::String tmp = full_path;
 	tmp += "Contents/";
-	tmp += "XPXSharedGameAPI.lua";
+	tmp += "XPXSharedBase.lua";
 
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run(tmp.c_str());
 }

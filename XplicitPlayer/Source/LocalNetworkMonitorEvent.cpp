@@ -84,7 +84,7 @@ namespace Xplicit::Player
 			NetworkPacket packet{};
 			packet = mNetwork->get();
 
-			const auto players = ComponentSystem::get_singleton_ptr()->all_of<Xplicit::Player::LocalHumanoidComponent>("LocalHumanoidComponent");
+			const auto players = ComponentSystem::get_singleton_ptr()->all_of<Xplicit::Player::LocalHumanoidComponent>("LocalHumanoidComponent", false, packet.buffer);
 
 			for (std::size_t index = 0UL; index < players.size(); ++index)
 			{

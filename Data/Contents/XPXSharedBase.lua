@@ -227,7 +227,7 @@ function World:New(name, ...)
     elseif (name == "Sound") then
         return XPXPlaySound(...);
     elseif (name == "RectComponent") then
-        return XPXMakeRect(...);
+        return XPXMakeRectangle(...);
     end
 end
 
@@ -245,4 +245,12 @@ end
 
 function World:IsRightDown()
     return XPXIsRightDown();
+end
+
+function World.Mouse:GetY()
+    return XPXGetY();
+end
+
+function World.Mouse:GetX()
+    return XPXGetX();
 end

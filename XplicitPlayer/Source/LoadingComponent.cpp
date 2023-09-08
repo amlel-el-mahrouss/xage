@@ -104,6 +104,11 @@ namespace Xplicit::Player
 			monitor->HTTP = std::make_unique<XHTTPManager>();
 			monitor->HTTP->set_endpoint(monitor->Endpoint);
 
+			XPLICIT_GET_DATA_DIR(SCRIPT_DIR);
+			SCRIPT_DIR += "Contents/";
+
+			Lua::CLuaStateManager::get_singleton_ptr()->run((String(SCRIPT_DIR) + "XPXCameraSystem.lua").c_str());
+
 			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 

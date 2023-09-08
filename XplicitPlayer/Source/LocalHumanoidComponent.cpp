@@ -24,7 +24,7 @@ namespace Xplicit::Player
 	constexpr const short XPLICIT_NETWORK_DELAY = 100;
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
 
-	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& public_hash, const bool is_local_player)
+	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& public_hash, const bool is_local_player, const char* optional_xid)
 		:
 		mPublicHash(public_hash),
 		mCam(nullptr), 
@@ -35,15 +35,31 @@ namespace Xplicit::Player
 		mClass(nullptr),
 		mCharacter(nullptr)
 	{
+		String path = "Contents/Bundles/Idle.dae";
+
 		if (is_local_player)
 		{
 			mClass = new Lua::CLuaClass("World.Players.LocalPlayer");
 			mClass->insert("Health", "100");
+
+			mCharacter = Xplicit::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer.RootPart", "World");
+		}
+		else
+		{
+			// make sure that the server passes an xplicitid.
+			XPLICIT_ASSERT(optional_xid);
+
+			String path_xid = "Players.";
+			path_xid += optional_xid;
+
+			// ugly ass hack, as always.
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string((String("World.") + path_xid + " = {}").c_str());
+
+			path_xid += ".RootPart";
+
+			mCharacter = Xplicit::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), path_xid.c_str(), "World");
 		}
 
-		String path = "Contents/Bundles/Idle.dae";
-
-		mCharacter = Xplicit::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer", "World");
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);
