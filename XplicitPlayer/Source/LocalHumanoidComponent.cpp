@@ -32,7 +32,8 @@ namespace Xplicit::Player
 		mPos(0.f, 0.f, 0.f),
 		mState(HUMANOID_STATE::ALIVE),
 		mIsLocalPlayer(is_local_player),
-		mClass(nullptr)
+		mClass(nullptr),
+		mCharacter(nullptr)
 	{
 		if (is_local_player)
 		{
@@ -40,6 +41,10 @@ namespace Xplicit::Player
 			mClass->insert("Health", "100");
 		}
 
+		XPLICIT_GET_DATA_DIR(path);
+		path += "Contents/Bundles/Idle.dae";
+
+		mCharacter = Xplicit::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path);
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);
@@ -86,6 +91,13 @@ namespace Xplicit::Player
 				self->mPos.Z = zSpeed;
 				self->mPos.X = xSpeed;
 				self->mPos.Y = ySpeed;
+
+				self->mCharacter->node()->setPosition(vector3df(self->mPos.X, self->mPos.Y, self->mPos.Z));
+
+				self->mCharacter->node()->setRotation(
+					vector3df(self->mCam->get()->getPosition().X, 
+					0, 
+					self->mCam->get()->getPosition().X));
 
 				XPLICIT_INFO("World:LocalMove [EVENT]");
 

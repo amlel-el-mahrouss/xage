@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 		//! Load Basic lua calls
 		XplicitLoadBaseLua();
 
-		//! Register clientside Lua calls, such as PlaySound
+		//! Register client-side Lua calls, such as PlaySound
 		XplicitLoadClientLua();
 
 		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);

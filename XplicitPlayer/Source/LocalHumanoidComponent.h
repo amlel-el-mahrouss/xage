@@ -57,6 +57,7 @@ namespace Xplicit::Player
 	private:
 		NetworkComponent* mNetwork;
 		LocalCameraComponent* mCam;
+		MeshComponent* mCharacter;
 		bool mIsLocalPlayer;
 
 	private:

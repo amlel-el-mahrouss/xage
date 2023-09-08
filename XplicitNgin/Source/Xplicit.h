@@ -2,10 +2,8 @@
  * =====================================================================
  *
  *			XplicitNgin
+ * 
  *			Copyright PlayXPlicit, all rights reserved.
- *
- *			File: Xplicit.h
- *			Purpose: Xplicit Base Header
  *
  * =====================================================================
  */
@@ -580,6 +578,7 @@ namespace Xplicit
 		const std::size_t& capacity() const noexcept { return mIndex; }
 		char* data() const noexcept { return mPointer; }
 		
+	public:
 		template <typename... Args>
 		PtrType* allocate(Args&&... args) noexcept
 		{
@@ -587,7 +586,6 @@ namespace Xplicit
 				return nullptr;
 
 			PtrType* ptr = reinterpret_cast<PtrType*>(&mPointer[mIndex]);
-
 			*ptr = PtrType(std::forward<Args>(args)...);
 
 			mIndex += sizeof(PtrType);

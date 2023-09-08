@@ -23,13 +23,12 @@ namespace Xplicit::Player
 		mRotation(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = RENDER->getSceneManager()->addCameraSceneNode();
+		mCamera = RENDER->getSceneManager()->addCameraSceneNodeFPS();
 		XPLICIT_ASSERT(mCamera);
 
 		mCamera->setRotation(vector3df(0, 0, 0));
 		mCamera->setName("Camera");
 
-		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("FOV", "90");
 
 		mRotation = mCamera->getRotation();
@@ -47,6 +46,8 @@ namespace Xplicit::Player
 
 	void LocalCameraComponent::update(void* class_ptr) 
 	{
+		ClassComponent::update(class_ptr);
+
 		LocalCameraComponent* cam = (LocalCameraComponent*)class_ptr;
 
 		auto pos = cam->get()->getPosition();

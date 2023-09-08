@@ -36,7 +36,7 @@ namespace Xplicit
 		const char* name() noexcept { return "MeshComponent"; }
 
 		irr::scene::ISceneNode* node() const { return mNode; }
-		irr::scene::IMesh* operator->() const { return mMdl; }
+		irr::scene::IMesh* model() const { return mMdl; }
 
 	public:
 		const String& path() noexcept;
@@ -47,7 +47,7 @@ namespace Xplicit
 		static void update(ClassPtr class_ptr);
 
 	protected:
-		irr::scene::ISceneNode* mNode; // Model Data pointer, generic
+		irr::scene::IAnimatedMeshNode* mNode; // Model Data pointer, generic
 		irr::scene::IMesh* mMdl; // Model Data pointer, generic
 
 	private:

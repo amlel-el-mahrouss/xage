@@ -11,7 +11,6 @@
 
 //! ImGUI Base Classes
 #include "ImGuiBase.h"
-
 #include <NMath.h>
 
 namespace Xplicit::ImGUI
