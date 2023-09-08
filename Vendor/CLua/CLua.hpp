@@ -153,15 +153,16 @@ namespace Xplicit::Lua
 				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
 				++mSymbolCnt;
 
-				return luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, reference).c_str());
+				bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, reference).c_str());
+				lua_pop(mL, -1);
+				
+				return ret;
 			}
 
 			return false;
 		}
 
 		bool assign(const char* lhs, const char* rhs) { return this->insert(lhs, rhs); }
-
-		bool call(const char* lhs) { return operator()(lhs); }
 
 	private:
 		//! @brief Index field of an array.
@@ -209,6 +210,9 @@ namespace Xplicit::Lua
 			{
 				if (lua_isboolean(mL, -1))
 					ret = lua_toboolean(mL, -1);
+
+
+				lua_pop(mL, -1);
 			}
 
 			return ret;
@@ -224,23 +228,16 @@ namespace Xplicit::Lua
 			{
 				if (lua_isstring(mL, -1))
 					ret = lua_tostring(mL, -1);
+
+				lua_pop(mL, -1);
 			}
 
 			return ret;
 		}
 
-		bool operator()(const char* lhs) noexcept
+		bool call(const char* lhs) noexcept
 		{
 			if (!lhs)
-				return false;
-
-			return (luaL_dostring(mL, lhs)) < 0;
-		}
-
-		bool operator()(const char* lhs, const char* rhs) noexcept
-		{
-			if (!lhs ||
-				!rhs)
 				return false;
 
 			return (luaL_dostring(mL, lhs)) < 0;

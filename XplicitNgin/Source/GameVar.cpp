@@ -21,8 +21,6 @@ namespace Xplicit
 	GameVar::GameVar(const char* name, const char* value, int flags)
 		: mName(name), mValue(value), mFlags(flags), Lua::CLuaClass((String("World.Settings.") + name).c_str())
 	{
-		this->insert("__newindex", "function() error('GameVar is read-only!'); end");
-
 		this->insert("Name", name);
 		this->insert("Value", value);
 		this->insert("Flags", std::to_string(flags).c_str());
