@@ -32,13 +32,13 @@ namespace Xplicit
 
 	void SpawnComponent::update(void* class_ptr) 
 	{
-		SpawnComponent* _this = (SpawnComponent*)class_ptr;
+		SpawnComponent* self = (SpawnComponent*)class_ptr;
 
-		auto str = "{" + std::to_string(_this->mAttribute.pos().X) + "," +
-			std::to_string(_this->mAttribute.pos().Y) + "," +
-			std::to_string(_this->mAttribute.pos().Z) + "," + "}";
+		auto str = "{" + std::to_string(self->mAttribute.pos().X) + "," +
+			std::to_string(self->mAttribute.pos().Y) + "," +
+			std::to_string(self->mAttribute.pos().Z) + "," + "}";
 
-		_this->mClass->assign("Position", str.c_str());
+		self->mClass->assign("Position", str.c_str());
 	}
 
 	COMPONENT_TYPE SpawnComponent::type() noexcept { return (COMPONENT_LOGIC); }

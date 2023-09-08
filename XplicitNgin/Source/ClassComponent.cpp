@@ -100,9 +100,9 @@ namespace Xplicit
 	
 	bool ClassComponent::should_update() noexcept { return true; }
 
-	void ClassComponent::update(ClassPtr _this)
+	void ClassComponent::update(ClassPtr _self)
 	{
-		ClassComponent* self = static_cast<ClassComponent*>(_this);
+		ClassComponent* self = static_cast<ClassComponent*>(_self);
 
 		self->collide(self->index_as_bool("Collide"));
 		self->locked(self->index_as_bool("Locked"));

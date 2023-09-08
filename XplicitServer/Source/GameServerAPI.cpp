@@ -88,15 +88,19 @@ static int lua_CreateGear(lua_State* L)
 		{
 			auto player = players[i];
 
-			if (player->get_peer()->xplicit_id.as_string() == xplicit_id)
+			if (player->get_gears()[i] == nullptr)
 			{
-				player->get_gears().push_back(gear);
+				if (player->get_peer()->xplicit_id.as_string() == xplicit_id)
+				{
+					player->get_gears()[i] = gear;
+					player->get_gears()[i]->set_owner(player);
 
-				path_player += ".";
-				path_player += name;
+					path_player += ".";
+					path_player += name;
 
-				lua_pushboolean(L, true);
-				return 1;
+					lua_pushboolean(L, true);
+					return 1;
+				}
 			}
 		}
 
@@ -115,6 +119,18 @@ static int lua_DestroyGear(lua_State* L)
 
 	if (gear)
 	{
+		if (gear->get_owner())
+		{
+			for (size_t i = 0; i < gear->get_owner()->get_gears().size(); i++)
+			{
+				if (gear->get_owner()->get_gears()[i] == gear)
+				{
+					gear->get_owner()->get_gears()[i] = nullptr;
+					break;
+				}
+			}
+		}
+
 		Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
 
 		lua_pushboolean(L, true);

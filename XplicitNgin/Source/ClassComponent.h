@@ -14,7 +14,8 @@
 
 #include <CLua/CLua.hpp>
 
-#define XPLICIT_CLASS_NAMESPACE "World."
+#define XPLICIT_CLASS_NAMESPACE "World"
+#define XPLICIT_CLASS_NAME "Class"
 
 namespace Xplicit
 {
@@ -30,7 +31,7 @@ namespace Xplicit
 			const Color<float>& color,
 			const char* script = nullptr,
 			const char* parent = XPLICIT_CLASS_NAMESPACE,
-			const char* name = "Class");
+			const char* name = XPLICIT_CLASS_NAME);
 
 		ClassComponent(
 			const char* parent,
@@ -51,7 +52,7 @@ namespace Xplicit
 
 	public:
 		static bool should_update() noexcept;
-		static void update(ClassPtr _this);
+		static void update(ClassPtr self);
 
 	private:
 		String mParent;

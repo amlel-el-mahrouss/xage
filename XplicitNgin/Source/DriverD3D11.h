@@ -227,7 +227,7 @@ namespace Xplicit::Renderer::DX11
 		void create();
 
 	public:
-		static void update(void* _this);
+		static void update(void* self);
 
 	public:
 		static bool should_update() noexcept { return true; }

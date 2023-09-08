@@ -25,10 +25,13 @@ namespace Xplicit
 		mClass(nullptr),
 		mJumpPower(10),
 		mMaxHealth(100),
-		mWalkspeed(16)
+		mWalkspeed(16),
+		mActiveGear(nullptr)
 	{}
 
 	HumanoidComponent::~HumanoidComponent() = default;
+
+	GearComponent* HumanoidComponent::get_active_gear() noexcept { return mActiveGear; }
 
 	PHYSICS_TYPE HumanoidComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
@@ -73,20 +76,34 @@ namespace Xplicit
 
 		for (auto gear : self->mGears)
 		{
-			if (gear == nullptr ||
-				gear->index_as_bool("CanDrop"))
+			if (gear == nullptr)
+				continue;
+
+			if (gear->index_as_bool("CanDrop"))
 			{
 				gear->assign("Parent", "World");
 				self->get_class()->assign(gear->name(), "nil");
 
-				auto it = std::find(self->mGears.cbegin(), self->mGears.cend(), gear);
+				gear->set_owner(nullptr);
 
-				if (it != self->mGears.cend())
+				for (size_t i = 0; i < self->mGears.size(); ++i)
 				{
-					self->mGears.erase(it);
+					if (self->mGears[i] == gear)
+					{
+						self->mGears[i] = nullptr;
+						break;
+					}
 				}
 
 				continue;
+			}
+		}
+
+		if (self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] == NETWORK_CMD_INPUT)
+		{
+			if (self->mPeer->packet.id < self->mGears.size())
+			{
+				self->mActiveGear = self->mGears[self->mPeer->packet.id];
 			}
 		}
 	}
@@ -110,7 +127,17 @@ namespace Xplicit
 		mPeer = peer;
 
 		if (mClass)
+		{				// reset gear array
+			for (auto& gear : this->mGears)
+			{
+				if (gear)
+					delete gear;
+
+				gear = nullptr;
+			}
+
 			mClass.reset();
+		}
 
 		if (mPeer)
 		{
@@ -143,6 +170,13 @@ namespace Xplicit
 
 				String fmt = std::format("World:Login({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
+				// reset gear array
+				for (auto& gear : this->mGears)
+				{
+					if (gear)
+						gear = nullptr;
+				}
 			}
 		}
 	}
@@ -165,7 +199,7 @@ namespace Xplicit
 		return mClass.get();
 	}
 
-	std::vector<GearComponent*>& HumanoidComponent::get_gears() noexcept
+	std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY>& HumanoidComponent::get_gears() noexcept
 	{
 		return mGears;
 	}

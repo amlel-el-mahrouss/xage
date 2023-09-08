@@ -54,12 +54,12 @@ namespace Xplicit::Player
 	void SoundComponent::update(void* class_ptr)
 	{
 		ClassComponent::update(class_ptr);
-		SoundComponent* _this = (SoundComponent*)class_ptr;
+		SoundComponent* self = (SoundComponent*)class_ptr;
 
-		_this->mLoop = _this->index_as_bool("Loop");
-		_this->mPan = _this->index_as_number<float>("Pan");
-		_this->mPitch = _this->index_as_number<float>("Pitch");
-		_this->mVolume = _this->index_as_number<float>("Volume");
+		self->mLoop = self->index_as_bool("Loop");
+		self->mPan = self->index_as_number<float>("Pan");
+		self->mPitch = self->index_as_number<float>("Pitch");
+		self->mVolume = self->index_as_number<float>("Volume");
 	}
 
 	void SoundComponent::should_loop(const bool enable) noexcept

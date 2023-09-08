@@ -115,7 +115,7 @@ static int lua_MakeRect(lua_State* L)
 	const char* parent = lua_tostring(L, 1);
 	const char* name = lua_tostring(L, 2);
 
-	Xplicit::Player::LocalFrameComponent* frame = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalFrameComponent>(parent, name);
+	Xplicit::Player::RectComponent* frame = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::RectComponent>(parent, name);
 
 	lua_getglobal(L, (Xplicit::String(parent) + "." + name).c_str());
 	lua_pushvalue(L, -1);

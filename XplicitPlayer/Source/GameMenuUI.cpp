@@ -97,31 +97,31 @@ namespace Xplicit::Player
 	
 	void PopupComponent::update(ClassPtr class_ptr)
 	{
-		PopupComponent* _this = static_cast<PopupComponent*>(class_ptr);
+		PopupComponent* self = static_cast<PopupComponent*>(class_ptr);
 
-		_this->mHudFrame->update(_this->mHudFrame->BackgroundColor);
+		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
 		//! Draw text
 
 		//! Title
-		ImGUI::UIFont::get_label_font()->draw(_this->mTitle.c_str(), recti(vector2di(((_this->mHudFrame->X + _this->mHudFrame->W / 2)), _this->mHudFrame->Y + 30),
+		ImGUI::UIFont::get_label_font()->draw(self->mTitle.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 30),
 			dimension2d(0, 0)), 
-			_this->mHudFrame->TextColor, 
+			self->mHudFrame->TextColor, 
 			true, 
 			true);
 
 		//! label
-		ImGUI::UIFont::get_label_font()->draw(_this->mText.c_str(), recti(vector2di(((_this->mHudFrame->X + _this->mHudFrame->W / 2)), _this->mHudFrame->Y + 100),
+		ImGUI::UIFont::get_label_font()->draw(self->mText.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 100),
 			dimension2d(0, 0)),
-			_this->mHudFrame->TextColor,
+			self->mHudFrame->TextColor,
 			true,
 			true);
 
-		_this->mOk.update();
+		self->mOk.update();
 
-		if (_this->mOk.LeftClicked)
+		if (self->mOk.LeftClicked)
 		{
-			_this->mClicked();
+			self->mClicked();
 		}
 	}
 
@@ -136,7 +136,7 @@ namespace Xplicit::Player
 	}
 	
 	/* Heads up display */
-	LocalHudComponent::LocalHudComponent(const std::int64_t& publicHash)
+	HUDComponent::HUDComponent(const std::int64_t& publicHash)
 		:
 		  mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		  mPublicHash(publicHash),
@@ -188,47 +188,51 @@ namespace Xplicit::Player
 		}
 	}
 
-	LocalHudComponent::~LocalHudComponent()
+	HUDComponent::~HUDComponent()
 	{
 		if (mHudFrame)
 			delete mHudFrame;
 	}
 
-	void LocalHudComponent::update(void* class_ptr)
+	void HUDComponent::update(void* class_ptr)
 	{
-		LocalHudComponent* _this = (LocalHudComponent*)class_ptr;
+		HUDComponent* self = (HUDComponent*)class_ptr;
+
+		if (!self->mNetwork)
+			return;
+
+		auto& packet = self->mNetwork->get();
+
 
 		for (size_t i = 0; i < XPLICIT_MAX_ELEMENTS_INVENTORY; ++i)
 		{
 			char to_ascii = i + 48 + 1;
 
 			if (KB->key_down(to_ascii))
-				_this->mSelectedSlot = i;
+				self->mSelectedSlot = i;
 
-			_this->mInventorySlots[i].update(ImGUI::ImColor(255, 0x1C, 0x1C, 0x1C));
+			self->mInventorySlots[i].update(ImGUI::ImColor(255, 0x1C, 0x1C, 0x1C));
 
-			if (_this->mSelectedSlot == i)
+			if (self->mSelectedSlot == i)
 			{
-				RENDER->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(_this->mInventorySlots[i].X, _this->mInventorySlots[i].Y),
-					dimension2di(_this->mInventorySlots[i].W, _this->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));
+				packet.id = i;
+				packet.cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INPUT;
+
+				RENDER->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X, self->mInventorySlots[i].Y),
+					dimension2di(self->mInventorySlots[i].W, self->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));
 			}
 		}
 
-		_this->mHudFrame->update(_this->mHudFrame->BackgroundColor);
+		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
-		if (!_this->mNetwork)
-			return;
-
-		auto& packet = _this->mNetwork->get();
-	
-		if (packet.health != _this->mHealth)
+		if (packet.health != self->mHealth)
 		{
-			_this->mHealth = packet.health;
-			_this->mHudFrame->W = _this->mHealth * 2;
+			self->mHealth = packet.health;
+			self->mHudFrame->W = self->mHealth * 2;
 		}
 	}
 
-	LocalFrameComponent::LocalFrameComponent(const char* parent, const char* name)
+	RectComponent::RectComponent(const char* parent, const char* name)
 		: Lua::CLuaClass((String(parent) + "." + name))
 	{
 		this->insert("UI", "true");
@@ -251,16 +255,16 @@ namespace Xplicit::Player
 		this->insert("Alpha", "255");
 	}
 
-	bool LocalFrameComponent::should_update() { return true; }
+	bool RectComponent::should_update() { return true; }
 
-	const char* LocalFrameComponent::name() 
+	const char* RectComponent::name() 
 	{
-		return ((!this->index_as_string("Name").empty()) ? this->index_as_string("Name").c_str() : "LocalFrameComponent"); 
+		return ((!this->index_as_string("Name").empty()) ? this->index_as_string("Name").c_str() : "RectComponent"); 
 	}
 
-	void LocalFrameComponent::update(ClassPtr klass) noexcept
+	void RectComponent::update(ClassPtr klass) noexcept
 	{
-		LocalFrameComponent* msg = (LocalFrameComponent*)klass;
+		RectComponent* msg = (RectComponent*)klass;
 
 		int x = msg->index_as_number("Left");
 		int y = msg->index_as_number("Top");

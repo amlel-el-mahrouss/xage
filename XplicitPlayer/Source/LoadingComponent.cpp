@@ -84,7 +84,7 @@ namespace Xplicit::Player
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 			ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
-			ComponentSystem::get_singleton_ptr()->add<LocalHudComponent>(public_hash);
+			ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 			
 			const auto cam = ComponentSystem::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
 			const auto local_player = ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash, true);

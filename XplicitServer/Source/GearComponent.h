@@ -16,6 +16,8 @@
 
 namespace Xplicit
 {
+	class HumanoidComponent;
+
 	class GearComponent final : public ClassComponent
 	{
 	public:
@@ -37,7 +39,12 @@ namespace Xplicit
 		static bool should_update() noexcept;
 		static void update(ClassPtr _self);
 
+	public:
+		HumanoidComponent* get_owner() noexcept { return mOwner; }
+		void set_owner(HumanoidComponent* owner) noexcept { mOwner = owner; }
+
 	private:
+		HumanoidComponent* mOwner;
 		String mParent;
 		String mName;
 

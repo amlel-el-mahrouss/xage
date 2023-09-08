@@ -10,7 +10,7 @@
 #pragma once
 
  /* Author: Amlal El Mahrouss */
- /* CLua for the XplicitNgine. */
+ /* C++Lua for the XplicitNgine. */
 
 extern "C" {
 #	include "lua.h"
@@ -24,8 +24,9 @@ extern "C" {
 
 #include <vector>
 
-#define XPLICIT_LUA_NAME "CLua"
-#define XPLICIT_LUA_DESCRIPTION "Lua wrapper written in C++"
+#define XPLICIT_LUA_NAME "C++Lua"
+#define XPLICIT_LUA_DESCRIPTION "Lua extensions for the Ngine."
+#define XPLICIT_LUA_AUTHOR "Amlal El Mahrouss"
 
 namespace Xplicit::Lua
 {
@@ -76,8 +77,7 @@ namespace Xplicit::Lua
 
 			if (auto err = (luaL_dofile(mL, file)) > 0)
 			{
-				String _err = "ERROR: ";
-				_err += lua_tostring(mL, -1);
+				String _err = lua_tostring(mL, -1);
 
 				XPLICIT_ERROR(_err);
 
@@ -97,8 +97,7 @@ namespace Xplicit::Lua
 
 			if (auto err = (luaL_dostring(mL, str)) > 0)
 			{
-				String _err = "ERROR: ";
-				_err += lua_tostring(mL, -1);
+				String _err = lua_tostring(mL, -1);
 
 				XPLICIT_ERROR(_err);
 
@@ -127,7 +126,7 @@ namespace Xplicit::Lua
 			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
 		{
 			String fmt = mClass;
-			fmt += " = { LuaClass = true; }";
+			fmt += " = { CxxLua = true; }";
 
 			luaL_dostring(mL, fmt.c_str());
 			lua_pop(mL, -1);

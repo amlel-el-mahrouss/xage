@@ -69,18 +69,18 @@ namespace Xplicit::Player
 
 	};
 
-	class LocalHudComponent final : public Component
+	class HUDComponent final : public Component
 	{
 	public:
-		LocalHudComponent() = delete;
+		HUDComponent() = delete;
 		
-		explicit LocalHudComponent(const std::int64_t& publicHash);
-		~LocalHudComponent() override;
+		explicit HUDComponent(const std::int64_t& publicHash);
+		~HUDComponent() override;
 		
-		LocalHudComponent& operator=(const LocalHudComponent&) = default;
-		LocalHudComponent(const LocalHudComponent&) = default;
+		HUDComponent& operator=(const HUDComponent&) = default;
+		HUDComponent(const HUDComponent&) = default;
 
-		const char* name() noexcept override { return "LocalHudComponent"; }
+		const char* name() noexcept override { return "HUDComponent"; }
 		COMPONENT_TYPE type() noexcept override { return COMPONENT_GUI; }
 		
 		static void update(void* class_ptr);
@@ -99,14 +99,14 @@ namespace Xplicit::Player
 
 	};
 
-	class LocalFrameComponent final : public Lua::CLuaClass
+	class RectComponent final : public Lua::CLuaClass
 	{
 	public:
-		LocalFrameComponent(const char* parent, const char* name);
-		~LocalFrameComponent() = default;
+		RectComponent(const char* parent, const char* name);
+		~RectComponent() = default;
 
 	public:
-		XPLICIT_COPY_DEFAULT(LocalFrameComponent);
+		XPLICIT_COPY_DEFAULT(RectComponent);
 
 	public:
 		const char* name();

@@ -45,7 +45,7 @@ namespace Xplicit
 
 	public:
 		static bool should_update() noexcept;
-		static void update(void* _this);
+		static void update(void* self);
 
 	public:
 		bool can_collide() noexcept override;
@@ -71,13 +71,15 @@ namespace Xplicit
 
 	public:
 		Xplicit::Lua::CLuaClass* get_class() const;
-		std::vector<GearComponent*>& get_gears() noexcept;
+		std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY>& get_gears() noexcept;
+		GearComponent* get_active_gear() noexcept;
 
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;
 
 	private:
-		std::vector<GearComponent*> mGears;
+		std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY> mGears;
+		GearComponent* mActiveGear;
 		XPXAttribute mAttribute;
 		HUMANOID_STATE mState;
 		NetworkPeer* mPeer;

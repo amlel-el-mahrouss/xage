@@ -27,14 +27,15 @@ namespace Xplicit
 		const char* name,
 		const char* parent) noexcept
 		:
-		ClassComponent(Vector<float>(0, 0, 0), 
+		ClassComponent(Vector<float>(0, 0, 0),
 			Vector<float>(0, 0, 0),
 			Color<float>(0, 0, 0),
 			nullptr,
 			parent,
 			name),
 		mParent(parent),
-		mName(name)
+		mName(name),
+		mOwner(nullptr)
 	{
 		this->insert("Slot", "0");
 
