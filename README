@@ -30,7 +30,7 @@ REQUIREMENTS:
 INSTALLING:
 ===========
 
-- Put the C# assemblies into %appdata%/Data.
+- Put the C# assemblies into %appdata%/XplicitNgin
 - Download DirectXTK for the XplicitSound header. (XplicitPlayer) via NuGet.
 
 ==============================================================
