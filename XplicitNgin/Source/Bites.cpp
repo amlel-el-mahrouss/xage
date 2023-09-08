@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin (XplicitRenderer)
- *			Copyright Xplicit Inc, all rights reserved.
+ *			Copyright PlayXPlicit, all rights reserved.
  *
  *			File: Bites.cpp
  *			Purpose: C++ Header only, window class for Direct3D 11.

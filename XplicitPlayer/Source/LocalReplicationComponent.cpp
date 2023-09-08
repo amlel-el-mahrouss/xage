@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright Xplicit Inc, all rights reserved.
+ *			Copyright PlayXPlicit, all rights reserved.
  *
  * =====================================================================
  */
@@ -41,10 +41,8 @@ namespace Xplicit::Player
 		if (!self->mNetwork)
 			return;
 
-		NetworkPacket packet{};
-
-		if (!self->mNetwork->read(packet))
-			return;
+		NetworkPacket packet;
+		self->mNetwork->read(packet);
 
 		if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
 		{

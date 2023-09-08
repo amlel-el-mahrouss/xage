@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin C++ World Engine
- *			Copyright Xplicit Inc, all rights reserved.
+ *			Copyright PlayXPlicit, all rights reserved.
  *
  * =====================================================================
  */

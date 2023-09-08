@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitServer
- *			Copyright Xplicit Inc, all rights reserved.
+ *			Copyright PlayXPlicit, all rights reserved.
  *
  * =====================================================================
  */
@@ -45,23 +45,10 @@ namespace Xplicit
 			
 			mNetwork->get(i)->packet.id = id;
 
-			String empty;
-			empty.reserve(XPLICIT_NETWORK_BUF_SZ);
+			memset(mNetwork->get(i)->packet.replicas[0], 0, XPLICIT_NETWORK_BUF_SZ);
+			memcpy(mNetwork->get(i)->packet.replicas[0], path, strlen(path));
 
-			for (size_t i = 0; i < XPLICIT_MAX_REPLICA_SLOTS; i++)
-			{
-				if (memcmp(mNetwork->get(i)->packet.replicas[i], 
-					empty.data(), 
-					empty.size()) == 0)
-				{
-					memset(mNetwork->get(i)->packet.replicas[i], 0, XPLICIT_NETWORK_BUF_SZ);
-					memcpy(mNetwork->get(i)->packet.replicas[i], path, strlen(path));
-
-					NetworkServerContext::send(mNetwork, mNetwork->get(i));
-				}
-			}
-
-			break;
+			return;
 		}
 	}
 }

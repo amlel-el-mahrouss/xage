@@ -86,6 +86,7 @@ namespace Xplicit::Lua
 				return err;
 			}
 
+			lua_pop(mL, -1);
 			return 0;
 		}
 
@@ -106,6 +107,7 @@ namespace Xplicit::Lua
 				return err;
 			}
 
+			lua_pop(mL, -1);
 			return 0;
 		}
 
@@ -128,12 +130,14 @@ namespace Xplicit::Lua
 			fmt += " = { LuaClass = true; }";
 
 			luaL_dostring(mL, fmt.c_str());
+			lua_pop(mL, -1);
 		}
 
 		virtual ~CLuaClass() noexcept
 		{
 			// {} = mClass
 			luaL_dostring(mL, std::format("{} = nil", mClass).c_str());
+			lua_pop(mL, -1);
 		}
 
 	public:

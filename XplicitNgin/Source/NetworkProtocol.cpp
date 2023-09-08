@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright Xplicit Inc, all rights reserved.
+ *			Copyright PlayXPlicit, all rights reserved.
  *
  * =====================================================================
  */
@@ -27,8 +27,6 @@ namespace Xplicit
 		public_hash(XPLICIT_INVALID_HASH),
         status(NETWORK_STAT_DISCONNECTED)
 	{
-        sizeof(NetworkPacket);
-
         memset(&this->address, 0, sizeof(PrivateAddressData));
     }
 

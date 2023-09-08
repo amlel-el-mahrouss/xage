@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitServer
- *			Copyright Xplicit Inc, all rights reserved.
+ *			Copyright PlayXPlicit, all rights reserved.
  *
  * =====================================================================
  */
@@ -147,8 +147,8 @@ int main(int argc, char** argv)
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();
 
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::HealthMonitorEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::ReplicationEvent>();
+		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::HealthMonitorEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::TimeoutEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::MovementEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::LoginEvent>();
@@ -172,8 +172,8 @@ int main(int argc, char** argv)
 			{
 				Xplicit::NetworkServerContext::recv_all(net);
 
-				Xplicit::ComponentSystem::get_singleton_ptr()->update();
 				Xplicit::EventSystem::get_singleton_ptr()->update();
+				Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 				Xplicit::NetworkServerContext::send_all(net);
 
@@ -208,7 +208,7 @@ int main(int argc, char** argv)
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::DialogHelper::message_box(L"Xplicit World Server", 
+		Xplicit::DialogHelper::message_box(L"XplicitNgin Server", 
 			L"XPLICIT Couldn't continue!",
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 

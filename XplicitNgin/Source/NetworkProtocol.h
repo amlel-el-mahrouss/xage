@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright Xplicit Inc, all rights reserved.
+ *			Copyright PlayXPlicit, all rights reserved.
  *
  * =====================================================================
  */
@@ -30,7 +30,7 @@
 #   define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif // ifndef XPLICIT_INVALID_ADDR
 
-#define XPLICIT_NETWORK_BUF_SZ      (32U)
+#define XPLICIT_NETWORK_BUF_SZ      (64U)
 #define XPLICIT_NETWORK_VERSION     (2U)
 
 #define XPLICIT_NUM_CHANNELS (2)
@@ -39,6 +39,10 @@
 #define XPLICIT_CHANNEL_DATA (1)
 #define XPLICIT_CHANNEL_LUA (2)
 #define XPLICIT_CHANNEL_CHAT (3)
+
+#define XPLICIT_REPLICA_PLAYER 0
+#define XPLICIT_REPLICA_SCRIPT 1
+#define XPLICIT_REPLICA_ROXML 2
 
 /* Used by the protocol to tell the velocity. */
 
