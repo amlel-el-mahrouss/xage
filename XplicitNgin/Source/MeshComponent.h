@@ -47,7 +47,7 @@ namespace Xplicit
 		static void update(ClassPtr class_ptr);
 
 	protected:
-		irr::scene::IAnimatedMeshNode* mNode; // Model Data pointer, generic
+		irr::scene::IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic
 		irr::scene::IMesh* mMdl; // Model Data pointer, generic
 
 	private:
