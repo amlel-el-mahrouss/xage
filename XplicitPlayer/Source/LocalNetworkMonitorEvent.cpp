@@ -51,18 +51,13 @@ namespace Xplicit
 		/* did we lost connection to peer? */
 		if (mNetwork->is_reset())
 		{
-			++XPLICIT_RESET_COUNT;
+			ComponentSystem::get_singleton_ptr()->remove(mNetwork);
 
-			if (XPLICIT_RESET_COUNT > XPLICIT_MAX_RESET)
+			if (ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ResetPopup") == nullptr)
 			{
-				ComponentSystem::get_singleton_ptr()->remove(mNetwork);
-
-				if (ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ResetPopup") == nullptr)
-				{
-					ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-						RENDER->closeDevice();
-					}, POPUP_TYPE::NETWORK, "ResetPopup");
-				}
+				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+					RENDER->closeDevice();
+				}, POPUP_TYPE::NETWORK, "ResetPopup");
 			}
 
 			return;

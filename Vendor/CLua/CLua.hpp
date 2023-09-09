@@ -172,6 +172,7 @@ namespace Xplicit::Lua
 
 			String fmt = "return ";
 			fmt += mClass;
+			fmt += ".";
 			fmt += lhs;
 
 			luaL_dostring(mL, fmt.c_str());
