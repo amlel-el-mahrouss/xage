@@ -16,13 +16,12 @@
 
 #include <LuaAPI.h>
 
-namespace Xplicit
-{
-	Vector<float> XPLICIT_DIM = Vector<float>(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
-}
+extern void XplicitLoadClientLua() noexcept;
 
 namespace Xplicit::Bites
 {
+	Vector<float> XPLICIT_DIM = Vector<float>(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
+
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mPath(""), mWsa()
 	{
@@ -32,6 +31,9 @@ namespace Xplicit::Bites
 
 		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<LoadingComponent>();
 		XPLICIT_ASSERT(loading_screen);
+
+		XplicitLoadBaseLua();
+		XplicitLoadClientLua();
 
 		loading_screen->connect(xconnect_to);
 	}

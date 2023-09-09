@@ -100,11 +100,13 @@ namespace Xplicit
 			}
 		}
 
+		// select a specfic item in our inventory.
 		if (self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] == NETWORK_CMD_INPUT)
 		{
 			if (self->mPeer->packet.id < self->mGears.size())
 			{
 				self->mActiveGear = self->mGears[self->mPeer->packet.id];
+				self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INVALID;
 			}
 		}
 	}

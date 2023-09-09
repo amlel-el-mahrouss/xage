@@ -5,7 +5,8 @@ World.HumanoidState.ALIVE = 0
 World.HumanoidState.DEAD = 1
 World.HumanoidState.INVALID = 3
 
-World.Mouse = {}
+World.Cursor = {}
+World.Cursor.URL = "xasset://Library/DefaultCursor.png";
 
 local function __addEvent(Tbl, Func)
     return table.insert(Tbl, { Func = Func })
@@ -104,38 +105,24 @@ World.Slots = {
             __rmEvent(self, Index); 
         end 
     },
-    Tick = { 
-        Connect = function(self, Func)
-        return __addEvent(self, Func); 
-        end,
-        Disconnect = function(self, Index)
-            __rmEvent(self, Index); 
-        end 
-    },
 }
 
 World.Counter = 0
 World.PlayerCount = 0
 
-function World:Login(tbl)
+function World:Login(ply)
     World.PlayerCount = World.PlayerCount + 1
 
     for _, v in ipairs(World.Slots.Login) do
-        v.Func(tbl)
+        v.Func(ply)
     end
 end
 
-function World:Logoff(tbl)
+function World:Logoff(ply)
     World.PlayerCount = World.PlayerCount - 1
 
     for _, v in ipairs(World.Slots.Logoff) do
-        v.Func(tbl)
-    end
-end
-
-function World:Tick()
-    for _, v in ipairs(World.Slots.Tick) do
-        v.Func()
+        v.Func(ply)
     end
 end
 
@@ -163,9 +150,9 @@ function World:LocalSpawn()
     end
 end
 
-function World:Move(tbl)
+function World:Move(ply)
     for _, v in ipairs(World.Slots.Move) do
-        v.Func(tbl)
+        v.Func(ply)
     end
 end
 
@@ -175,21 +162,21 @@ function World:LocalMove(x, y, z)
     end
 end
 
-function World:Damage()
+function World:Damage(ply)
     for _, v in ipairs(World.Slots.Damage) do
-        v.Func()
+        v.Func(ply)
     end
 end
 
-function World:Death(tbl)
+function World:Death(ply)
     for _, v in ipairs(World.Slots.Death) do
-        v.Func(tbl)
+        v.Func(ply)
     end
 end
 
-function World:Spawn(tbl)
+function World:Spawn(ply)
     for _, v in ipairs(World.Slots.Spawn) do
-        v.Func(tbl)
+        v.Func(ply)
     end
 end
 
@@ -202,7 +189,7 @@ World.REPLICATE_CREATE = 512;
 World.REPLICATE_REMOVE = 522;
 World.REPLICATE_UPDATE = 523;
 
-function World:DumpTable(self, o)
+function World:DumpTable(o)
     if type(o) == 'table' then
        local s = '{ '
        for k,v in pairs(o) do
@@ -218,7 +205,7 @@ end
 function World:Create(name, ...)
     if (name == "Gear") then
         return XPXCreateGear(...);
-    elseif (name == "Scene") then
+    elseif (name == "RoXML") then
         return XPXLoadScene(...);
     elseif (name == "Part") then
         return XPXPartCreate(...);
@@ -250,10 +237,27 @@ function World:IsRightDown()
     return XPXIsRightDown();
 end
 
-function World.Mouse:GetY()
+function World.Cursor:GetY()
     return XPXGetY();
 end
 
-function World.Mouse:GetX()
+function World.Cursor:GetX()
     return XPXGetX();
 end
+
+function World:RedirectToPlace(ply, xplace)
+    ply.Redirect = true;
+    ply.RedirectTo = xplace;
+end
+
+function World:MakeDamageTo(ply, dmg)
+    ply.Health = ply.Health - dmg;
+end
+
+-- Some part of the specs.
+-- World = Root table of components.
+-- Script = Root table of scripts.
+-- World.Settings = GameVars.
+-- World.Players = Players.
+-- World.<Object> = C++ or lua exposed object.
+

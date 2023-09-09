@@ -26,8 +26,6 @@
 #include <Bites.h>
 #include <codecvt>
 
-extern void XplicitLoadClientLua() noexcept;
-
 static void XplicitThrowException(Xplicit::EngineError& err);
 
 #ifdef _WIN32
@@ -72,12 +70,6 @@ int main(int argc, char** argv)
 		if (!checker(uri.get().c_str()))
 			return 1;
 
-		//! Load Basic lua calls
-		XplicitLoadBaseLua();
-
-		//! Register client-side Lua calls, such as PlaySound
-		XplicitLoadClientLua();
-
 		std::unique_ptr<Xplicit::Bites::Application> app_ptr = std::make_unique<Xplicit::Bites::Application>(uri);
 
 		if (!app_ptr)
@@ -91,6 +83,7 @@ int main(int argc, char** argv)
 			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x40, 0x40, 0x40));
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
+
 			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
 
@@ -98,8 +91,6 @@ int main(int argc, char** argv)
 			RENDER->getGUIEnvironment()->drawAll();
 
 			RENDER->getVideoDriver()->endScene();
-
-			Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Tick()");
 		}
 	}
 	catch (Xplicit::EngineError& err)
@@ -159,7 +150,7 @@ static void XplicitThrowException(Xplicit::Win32Error& err)
 	exit += L"\n";
 
 	Xplicit::DialogHelper::message_box(L"XPLICIT",
-		L"XPLICIT Couldn't continue!",
+		L"Program crash!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);

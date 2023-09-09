@@ -164,7 +164,7 @@ int main(int argc, char** argv)
 		Xplicit::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);
 
-		LoadDVFromRoXML(params);
+		DVFromRoXML(params);
 
 		Xplicit::Thread logic([&]() {
 			const auto net = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
@@ -178,8 +178,6 @@ int main(int argc, char** argv)
 				Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 				Xplicit::NetworkServerContext::send_all(net);
-
-				Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Tick()");
 
 			};
 		});
@@ -210,8 +208,8 @@ int main(int argc, char** argv)
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::DialogHelper::message_box(L"XplicitNgin Server", 
-			L"XPLICIT Couldn't continue!",
+		Xplicit::DialogHelper::message_box(L"Xplicit Server", 
+			L"Program crash!",
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 
 			TDCBF_OK_BUTTON);
