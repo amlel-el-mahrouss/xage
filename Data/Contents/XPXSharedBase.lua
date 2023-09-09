@@ -202,7 +202,7 @@ World.REPLICATE_CREATE = 512;
 World.REPLICATE_REMOVE = 522;
 World.REPLICATE_UPDATE = 523;
 
-function World:DumpTable(o)
+function World:DumpTable(self, o)
     if type(o) == 'table' then
        local s = '{ '
        for k,v in pairs(o) do
@@ -216,20 +216,21 @@ function World:DumpTable(o)
 end
 
 function World:Create(name, ...)
-    if (name == "GearComponent") then
+    if (name == "Gear") then
         return XPXCreateGear(...);
     elseif (name == "Scene") then
         return XPXLoadScene(...);
-    elseif (name == "PartComponent") then
+    elseif (name == "Part") then
         return XPXPartCreate(...);
-    elseif (name == "ClassComponent") then
+    elseif (name == "Class") then
         return XPXCreateClass(...);
-    elseif (name == "SoundComponent") then
-        return XPXCreateSound(...);
     elseif (name == "Sound") then
-        return XPXPlaySound(...);
-    elseif (name == "RectComponent") then
+        return XPXCreateSound(...);
+    elseif (name == "Rect") then
         return XPXMakeRectangle(...);
+    elseif (name == "Vector3") then
+        local vec = Vector3();
+        return vec;
     end
 end
 
@@ -256,7 +257,3 @@ end
 function World.Mouse:GetX()
     return XPXGetX();
 end
-
-local vec = Vector3.New();
-vec.X = 54;
-print(vec.X);

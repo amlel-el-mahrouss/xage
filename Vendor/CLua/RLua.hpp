@@ -48,11 +48,7 @@ namespace Xplicit::RLua
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			lua_newtable(L);
-			lua_pushcfunction(L, RuntimeClass<Class>::on_new);
-
-			lua_setfield(L, -2, "New");
-			lua_setglobal(L, name);
+			lua_register(L, name, RuntimeClass<Class>::on_new);
 
 			luaL_newmetatable(L, name);
 
