@@ -12,7 +12,7 @@
  /* Author: Amlal El Mahrouss */
  /* ReflectedLua for the XplicitNgine. */
 
-#define XPLICIT_RLUA_NAME "R++Lua"
+#define XPLICIT_RLUA_NAME "ReflectedLua"
 #define XPLICIT_RLUA_DESCRIPTION "ReflectedLua extension for the XplicitNgine."
 #define XPLICIT_RLUA_AUTHOR "Amlal El Mahrouss"
 
@@ -48,9 +48,16 @@ namespace Xplicit::RLua
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			lua_register(L, name, RuntimeClass<Class>::on_new);
+			lua_newtable(L);
+			lua_pushcfunction(L, RuntimeClass<Class>::on_new);
+
+			lua_setfield(L, -2, "New");
+			lua_setglobal(L, name);
+
+			luaL_newmetatable(L, name);
 
 			lua_pushcfunction(L, RuntimeClass<Class>::on_delete);
+
 			lua_setfield(L, -2, "__gc");
 
 			lua_pushvalue(L, -1); 
@@ -64,24 +71,6 @@ namespace Xplicit::RLua
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
 			lua_pushcfunction(L, fn);
-			lua_setfield(L, -2, fn_name);
-
-			return *this;
-		}
-
-		RuntimeClass& append_proc(const char* fn_name, std::function<void(Class* ptr)> fn)
-		{
-			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
-
-			std::function<int(lua_State* ptr)> fn_lua([&] {
-				Class* vec = (Class*)lua_touserdata(L, 1);
-
-				fn(vec);
-
-				return 0;
-			});
-
-			lua_pushcfunction(L, fn_lua);
 			lua_setfield(L, -2, fn_name);
 
 			return *this;

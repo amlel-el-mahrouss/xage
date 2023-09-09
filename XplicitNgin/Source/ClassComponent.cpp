@@ -111,6 +111,8 @@ namespace Xplicit
 	
 		self->alpha(self->index_as_number<float>("Color.A"));
 
+		self->color().A = self->alpha();
+
 		self->color().R = self->index_as_number<float>("Color.R");
 		self->color().G = self->index_as_number<float>("Color.G");
 		self->color().B = self->index_as_number<float>("Color.B");

@@ -40,7 +40,7 @@ static int lua_CreateClass(lua_State* L)
 		return 1;
 	}
 
-	auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::ClassComponent>(
+	auto klass = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::ClassComponent>(
 		Xplicit::Vector<float>(0, 0, 0),
 		Xplicit::Vector<float>(0, 0, 0),
 		Xplicit::Color<float>(0, 0, 0),
@@ -49,7 +49,7 @@ static int lua_CreateClass(lua_State* L)
 		name.c_str()
 	);
 
-	XPLICIT_ASSERT(instance);
+	XPLICIT_ASSERT(klass);
 
 	lua_pushboolean(L, true);
 	return 1;
@@ -69,15 +69,15 @@ static int lua_DestroyClass(lua_State* L)
 		return 1;
 	}
 
-	if (auto instance = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::ClassComponent>(name.c_str()))
+	if (auto klass = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::ClassComponent>(name.c_str()))
 	{
-		if (instance->parent() == parent ||
-			instance->name() == name)
+		if (klass->parent() == parent ||
+			klass->name() == name)
 		{
-			if (instance->script())
-				Xplicit::ComponentSystem::get_singleton_ptr()->remove(instance->script());
+			if (klass->script())
+				Xplicit::ComponentSystem::get_singleton_ptr()->remove(klass->script());
 
-			Xplicit::ComponentSystem::get_singleton_ptr()->remove<Xplicit::ClassComponent>(instance);
+			Xplicit::ComponentSystem::get_singleton_ptr()->remove<Xplicit::ClassComponent>(klass);
 		}
 	}
 
@@ -142,6 +142,8 @@ XPLICIT_API void XplicitLoadBaseLua()
 
 	// have a look at GameVar if it ever crashes.
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Settings = {}");
+	
+	// players table.
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Players = {}");
 
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Wait, "Wait");
@@ -152,10 +154,11 @@ XPLICIT_API void XplicitLoadBaseLua()
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "XPXDestroyScript");
 
 	XPLICIT_GET_DATA_DIR(full_path);
+	
+	Xplicit::String xpx_shared_base = full_path;
 
-	Xplicit::String tmp = full_path;
-	tmp += "Contents/";
-	tmp += "XPXSharedBase.lua";
+	xpx_shared_base += "Contents/";
+	xpx_shared_base += "XPXSharedBase.lua";
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run(tmp.c_str());
+	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run(xpx_shared_base.c_str());
 }
