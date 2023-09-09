@@ -15,7 +15,7 @@
 
 namespace Xplicit
 {
-	static const String XPLICIT_GEAR_DESTROY(const String& name) noexcept
+	static const String destroy_gear_class_snippet(const String& name) noexcept
 	{
 		String func_proto = std::format("function(self) XPXDestroyGear(\"{}\"); end",
 			name);
@@ -23,9 +23,7 @@ namespace Xplicit
 		return func_proto;
 	}
 
-	GearComponent::GearComponent(
-		const char* name,
-		const char* parent) noexcept
+	GearComponent::GearComponent(const char* name, const char* parent) noexcept
 		:
 		ClassComponent(Vector<float>(0, 0, 0),
 			Vector<float>(0, 0, 0),
@@ -37,14 +35,10 @@ namespace Xplicit
 		mName(name),
 		mOwner(nullptr)
 	{
-		this->insert("Slot", "0");
-
 		this->insert("Equipped", "false");
 		this->insert("CanDrop", "false");
-
 		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
-
-		this->insert("Destroy", XPLICIT_GEAR_DESTROY(name).c_str());
+		this->insert("Destroy", destroy_gear_class_snippet(name).c_str());
 	}
 
 	const char* GearComponent::name() noexcept { return mName.c_str(); }

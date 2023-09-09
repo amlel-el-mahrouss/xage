@@ -17,6 +17,9 @@
 #include "XHTTPManager.h"
 #include "NetworkServerComponent.h"
 
+#define XPLICIT_XASSET_URI "xasset://"
+#define XPLICIT_XASSET_URI_ENDPOINT "play-xplicit.com"
+
 inline Xplicit::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
 inline Xplicit::Color<float> White(0xFF, 0xFF, 0xFF, 0xFF);
 inline Xplicit::Color<float> DarkRed(0x8B, 0, 0, 0xFF);
@@ -44,21 +47,19 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 	return XPLICIT_INVALID_ID;
 }
 
-inline bool DownloadURL(std::string _url)
+inline bool DownloadURL(std::string _url, std::string out_path = "") noexcept
 {
 	std::unique_ptr<Xplicit::XHTTPManager> http_manager = std::make_unique<Xplicit::XHTTPManager>();
 
 	if (http_manager &&
-		_url.find("xasset://") != Xplicit::String::npos)
+		_url.find(XPLICIT_XASSET_URI) != Xplicit::String::npos)
 	{
 		Xplicit::String url = "/";
-		url += _url.erase(_url.find("xasset://"), strlen("xasset://"));
+		url += _url.erase(_url.find(XPLICIT_XASSET_URI), strlen(XPLICIT_XASSET_URI));
 
-		http_manager->set_endpoint("play-xplicit.com");
+		http_manager->set_endpoint(XPLICIT_XASSET_URI_ENDPOINT);
 
-		auto tmp = std::to_string(xplicit_get_epoch()) + "-roxml-tmp.lua";
-
-		return http_manager->download(url, tmp);
+		return http_manager->download(url, out_path);
 	}
 
 	return false;

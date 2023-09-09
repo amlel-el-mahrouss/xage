@@ -76,6 +76,20 @@ namespace Xplicit::RLua
 			return *this;
 		}
 
+		RuntimeClass& append_prop(const char* prop_name, RLuaProc getter, RLuaProc setter)
+		{
+			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
+
+			lua_newtable(L);
+
+			*this = this->append_proc("__index", getter);
+			*this = this->append_proc("__newindex", setter);
+
+			lua_setfield(L, -1, prop_name);
+
+			return *this;
+		}
+
 		RuntimeClass& end_class()
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();

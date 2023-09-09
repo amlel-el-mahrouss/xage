@@ -16,6 +16,8 @@
 #include <Nplicit.h>
 #include <CLua/CLua.hpp>
 
+#include "BaseLuaAPI.h"
+
 static int lua_CreateClass(lua_State* L)
 {
 	if (!lua_tostring(L, 1) ||
@@ -152,6 +154,17 @@ XPLICIT_API void XplicitLoadBaseLua()
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreatePart, "XPXCreatePart");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyPart, "XPXDestroyPart");
 	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "XPXDestroyScript");
+
+	Xplicit::RLua::RuntimeClass<Vector3> vector;
+
+	vector.begin_class("Vector3").
+		append_proc("__add", &Vector3::add)
+		.append_proc("__mul", &Vector3::mul)
+		.append_proc("__sub", &Vector3::sub)
+		.append_prop("X", &Vector3::get_x, &Vector3::set_x)
+		.append_prop("Y", &Vector3::get_y, &Vector3::set_y)
+		.append_prop("Z", &Vector3::get_z, &Vector3::set_z)
+		.end_class();
 
 	XPLICIT_GET_DATA_DIR(full_path);
 	

@@ -75,7 +75,7 @@ namespace Xplicit
 				XPLICIT_INFO("World:Death [EVENT]");
 #endif // ifdef XPLICIT_DEBUG
 
-				String path("_G.World.Players.");
+				String path("World.Players.");
 				path += peer_ptr->xplicit_id.as_string();
 
 				String fmt = std::format("World:Death({})", path);
@@ -113,7 +113,7 @@ namespace Xplicit
 
 						XPLICIT_INFO("World:Spawn [EVENT]");
 
-						String path("_G.World.Players.");
+						String path("World.Players.");
 						path += humanoid->get_peer()->xplicit_id.as_string();
 
 						String fmt = std::format("World:Spawn({})", path);

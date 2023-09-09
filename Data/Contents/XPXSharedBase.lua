@@ -256,3 +256,7 @@ end
 function World.Mouse:GetX()
     return XPXGetX();
 end
+
+local vec = Vector3.New();
+vec.X = 54;
+print(vec.X);
