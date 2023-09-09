@@ -170,13 +170,11 @@ namespace Xplicit::Lua
 			if (!lhs)
 				return false;
 
-			//! push it to the stack.
-			String str = "return ";
-			str += mClass;
-			str += ".";
-			str += lhs;
+			String fmt = "return ";
+			fmt += mClass;
+			fmt += lhs;
 
-			luaL_dostring(mL, str.c_str());
+			luaL_dostring(mL, fmt.c_str());
 
 			return true; 
 		}
