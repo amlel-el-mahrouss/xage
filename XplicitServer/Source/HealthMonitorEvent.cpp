@@ -102,8 +102,6 @@ namespace Xplicit
 						humanoid->set_state(HUMANOID_STATE::ALIVE);
 						humanoid->can_spawn(true);
 
-						humanoid->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
-
 						auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 
 						for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)
@@ -117,15 +115,6 @@ namespace Xplicit
 						}
 
 						XplicitHandleSpawn(spawner, humanoid);
-
-						XPLICIT_INFO("World:Spawn [EVENT]");
-
-						String path("World.Players.");
-						path += humanoid->get_peer()->xplicit_id.as_string();
-
-						String fmt = std::format("World:Spawn({})", path);
-						Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
 					}
 				}, humanoid, mSpawner);
 

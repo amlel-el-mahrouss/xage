@@ -81,22 +81,3 @@ namespace Xplicit
 	typedef double NplicitFloat;
 #endif
 }
-
-// if you choose to not inherit from PhysicsComponent, use this.
-#define NPLICIT_DO_UPDATE_PHYSICS(PHYS, DT)\
-self->PHYS.Anchored = self->index_as_bool("Anchored");\
-\
-if (self->PHYS.step(self->DT))\
-{\
-	self->PHYS.Gravity.X = self->index_as_number("Gravity.X");\
-	self->PHYS.Gravity.Y = self->index_as_number("Gravity.Y");\
-	self->PHYS.Gravity.Z = self->index_as_number("Gravity.Z");\
-\
-	++self->mDt;\
-\
-	self->pos().X = self->PHYS.Position.X;\
-	self->pos().Y = self->PHYS.Position.Y;\
-	self->pos().Z = self->PHYS.Position.Z;\
-}\
-
-

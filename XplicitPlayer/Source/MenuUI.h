@@ -41,7 +41,7 @@ namespace Xplicit
 		
 	public:
 		explicit PopupComponent(const std::function<void()>& on_click,
-			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, const char* id = "POPUP") noexcept;
+			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, const char* id = "POPUP", const char* msg = "You have been kicked.") noexcept;
 
 		~PopupComponent() override;
 		

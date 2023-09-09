@@ -26,7 +26,8 @@ namespace Xplicit
 	PopupComponent::PopupComponent(
 		const std::function<void()>& on_click, 
 		const POPUP_TYPE popup_type, 
-		const char* id) noexcept
+		const char* id,
+		const char* msg) noexcept
 		:
 			mClicked(on_click),
 			mPopupId(id),
@@ -40,7 +41,7 @@ namespace Xplicit
 		switch (popup_type)
 		{
 		case POPUP_TYPE::KICK:
-			mText = platform_string("You have been kicked.");
+			mText = platform_string(msg ? msg : "You have been kicked.");
 			break;
 		case POPUP_TYPE::NETWORK:
 			mText = platform_string("The connection has timed-out.");

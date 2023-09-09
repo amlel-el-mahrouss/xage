@@ -51,9 +51,6 @@ namespace Xplicit
 		/* did we lost connection to peer? */
 		if (mNetwork->is_reset())
 		{
-			ImGUI::UIFont::get_label_font()->draw(L"Connection to server lost, retrying...", recti(position2di(10, 10),
-				dimension2d(256, 30)), ImGUI::ImColor(0xFF, 0xFF, 0xFF, 0xFF), true, true);
-
 			++XPLICIT_RESET_COUNT;
 
 			if (XPLICIT_RESET_COUNT > XPLICIT_MAX_RESET)
@@ -77,7 +74,7 @@ namespace Xplicit
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 					RENDER->closeDevice();
-					}, POPUP_TYPE::KICK, "KickPopup");
+					}, POPUP_TYPE::KICK, "KickPopup", packet.buffer[0] != 0 ? packet.buffer : "You have been kicked.");
 			}
 		}
 

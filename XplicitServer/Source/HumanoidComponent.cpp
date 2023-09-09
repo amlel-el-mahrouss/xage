@@ -50,10 +50,18 @@ namespace Xplicit
 
 		// execute a series of commands for this humanoid.
 
-		if (self->mHealth > 0)
-			self->mState = HUMANOID_STATE::ALIVE;
-		else
-			self->mState = HUMANOID_STATE::DEAD;
+		if (self->can_spawn())
+		{
+			self->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
+
+			XPLICIT_INFO("World:Spawn [EVENT]");
+
+			String path("World.Players.");
+			path += self->get_peer()->xplicit_id.as_string();
+
+			String fmt = std::format("World:Spawn({})", path);
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		}
 
 		String str = "{" + std::to_string(self->mAttribute.pos().X) + "," +
 						 std::to_string(self->mAttribute.pos().Y) + "," +
@@ -61,8 +69,19 @@ namespace Xplicit
 
 		self->mClass->assign("Position", str.c_str());
 
-		if (self->mClass->index_as_bool("Kick"))
+		if (self->mClass->index_as_bool("KickNow"))
+		{
 			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+
+			String reason = "You have been kicked";
+
+			if (!self->mClass->index_as_string("KickReason").empty())
+				reason = self->mClass->index_as_string("KickReason");
+
+			memcpy(self->mPeer->packet.buffer, reason.c_str(), reason.size());
+
+			return;
+		}
 
 		self->mHealth = self->mClass->index_as_number<double>("Health");
 		self->mMaxHealth = self->mClass->index_as_number<double>("MaxHealth");
@@ -100,7 +119,7 @@ namespace Xplicit
 			}
 		}
 
-		// select a specfic item in our inventory.
+		// select a specific item in our inventory.
 		if (self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] == NETWORK_CMD_INPUT)
 		{
 			if (self->mPeer->packet.id < self->mGears.size())
@@ -161,7 +180,8 @@ namespace Xplicit
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");
-				mClass->insert("Kick", "false");
+				mClass->insert("KickNow", "false");
+				mClass->insert("KickReason", "false");
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
