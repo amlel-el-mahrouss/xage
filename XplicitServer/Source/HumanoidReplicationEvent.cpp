@@ -35,18 +35,18 @@ namespace Xplicit
 
 			// xasset is a wrapper over http which downloads any contents from play-xplicit.com.
 
-			if (auto replica_xasset = player->get_class()->index_as_string("SendData");
+			if (auto replica_xasset = player->get_class()->index_as_string("PacketData");
 				!replica_xasset.empty())
 			{
-				mFactory.send(player->get_class()->index_as_number<int>("SendAs"), 
+				mFactory.send(player->get_class()->index_as_number<int>("PacketContentKind"), 
 					replica_xasset.c_str(),
-					player->get_class()->index_as_number<int>("SendKind"), player->get_peer()->public_hash);
+					player->get_class()->index_as_number<int>("PacketKind"), player->get_peer()->public_hash);
 			
 				// you wanna do that
 
-				player->get_class()->insert("ReplicaType", "-1");
-				player->get_class()->insert("ReplicaId", "-1");
-				player->get_class()->insert("ReplicaData", "nil");
+				player->get_class()->insert("PacketKind", "-1");
+				player->get_class()->insert("PacketContentKind", "-1");
+				player->get_class()->insert("PacketData", "nil");
 			}
 		}
 	}

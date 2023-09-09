@@ -88,7 +88,6 @@ namespace Xplicit
 			}
 #else
 			self->mDt = GameVarManager::get_singleton_ptr()->get("DeltaTime")->as_int();
-			NPLICIT_DO_UPDATE_PHYSICS(mPhysics, mDt);
 #endif
 
 		}

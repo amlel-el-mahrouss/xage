@@ -63,6 +63,9 @@ namespace Xplicit
 		void set_walk_speed(const double& speed) noexcept { mWalkSpeed = speed; }
 		const double& get_walk_speed() noexcept { return mWalkSpeed; }
 
+		void set_jump_power(const double& jump) noexcept { mJumpPower = jump; }
+		const double& get_jump_power() noexcept { return mJumpPower; }
+
 	public:
 		void set_state(const HUMANOID_STATE state) noexcept;
 		void can_spawn(const bool enable) noexcept;

@@ -66,20 +66,23 @@ namespace Xplicit
 			{
 				NetworkFloat speed = humanoid->get_walk_speed();
 
-				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
-					humanoid->get_attribute().pos().Y += speed * mDeltaTime;
+				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP &&
+					humanoid->get_attribute().pos().Z < 1)
+					humanoid->get_attribute().pos().Z += humanoid->get_jump_power();
+				else if (humanoid->get_attribute().pos().Y > 0)
+					humanoid->get_attribute().pos().Z -= mDeltaVar->as_float();
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					humanoid->get_attribute().pos().Z += speed * mDeltaTime;
+					humanoid->get_attribute().pos().X += speed * mDeltaTime;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					humanoid->get_attribute().pos().Z -= speed * mDeltaTime;
-
-				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
 					humanoid->get_attribute().pos().X -= speed * mDeltaTime;
 
+				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
+					humanoid->get_attribute().pos().Y -= speed * mDeltaTime;
+
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					humanoid->get_attribute().pos().X += speed * mDeltaTime;
+					humanoid->get_attribute().pos().Y += speed * mDeltaTime;
 
 				peer->packet.pos[XPLICIT_NETWORK_X] = humanoid->get_attribute().pos().X;
 				peer->packet.pos[XPLICIT_NETWORK_Y] = humanoid->get_attribute().pos().Y;
@@ -110,7 +113,7 @@ namespace Xplicit
 
 		mDeltaTime += (mDeltaVar->as_float() / XPLICIT_DELTA_PER_SECOND);
 
-		//String heartbeat_fmt = std::format("World.Settings.DeltaTime.Value = {}", std::to_string(mDeltaTime));
-		//Lua::CLuaStateManager::get_singleton_ptr()->run_string(heartbeat_fmt.c_str());
+		String heartbeat_fmt = std::format("World.Settings.DeltaTime.Value = {}", std::to_string(mDeltaTime));
+		Lua::CLuaStateManager::get_singleton_ptr()->run_string(heartbeat_fmt.c_str());
 	}
 }

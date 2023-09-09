@@ -161,37 +161,50 @@ namespace Xplicit::RoXML
 									// assign a part component to the said id
 									// so you can use it.
 
-									if (klass_to_instanciate == "Mesh")
+									if (klass_to_instanciate == "Collada")
 									{
-										XPLICIT_GET_DATA_DIR(mesh_path);
+										// go on and include that!
+										world_node.ID = node_name;
 
 										for (size_t i = 0; i < strlen(node->value()); i++)
 										{
-											if (node->value()[i] == '\r' ||
-												node->value()[i] == '\n' ||
-												node->value()[i] == '\t' ||
-												node->value()[i] == ' ')
-												continue;
-
-											mesh_path += node->value()[i];
+											if (isalnum(node->value()[i]) ||
+												node->value()[i] == '.' ||
+												node->value()[i] == '/' ||
+												node->value()[i] == '\\' ||
+												node->value()[i] == ':')
+											{
+												world_node.Value += node->value()[i];
+											}
 										}
 
-										MeshComponent* _mesh = ComponentSystem::get_singleton_ptr()->add<MeshComponent>(mesh_path.c_str(), node_id, parent_id);
+										String url = world_node.Value;
 
-										if (_mesh)
-											object = _mesh;
+										XPLICIT_GET_DATA_DIR(MESH_PATH);
+										MESH_PATH += "Contents/";
+										MESH_PATH += std::to_string(xplicit_get_epoch());
+										MESH_PATH += ".dae";
+
+										if (DownloadURL(url, MESH_PATH))
+										{
+											MeshComponent* _mesh = ComponentSystem::get_singleton_ptr()->add<MeshComponent>(MESH_PATH.c_str(), node_id, parent_id);
+
+											if (_mesh)
+												object = _mesh;
+										}
+
 									}
 
-									if (klass_to_instanciate == "Skydome")
+									if (klass_to_instanciate == "SkyDome")
 									{
-										irr::scene::ISceneNode* skydome = nullptr;
-										skydome = RENDER->getSceneManager()->addSkyDomeSceneNode(RENDER->getVideoDriver()->getTexture(node->value()));
-										object = skydome;
+										irr::scene::ISceneNode* sky_dome = nullptr;
+										sky_dome = RENDER->getSceneManager()->addSkyDomeSceneNode(RENDER->getVideoDriver()->getTexture(node->value()));
+										object = sky_dome;
 
-										if (skydome)
+										if (sky_dome)
 										{
-											skydome->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-											skydome->setName(node_id);
+											sky_dome->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+											sky_dome->setName(node_id);
 										}
 									}
 

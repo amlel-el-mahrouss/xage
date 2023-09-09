@@ -33,27 +33,6 @@ namespace Xplicit
 		PhysicsComponent(const PhysicsComponent&) = default;
 
 	public:
-		bool step(const int64_t& dt /*delta time*/) noexcept
-		{
-			if (this->Anchored)
-				return false;
-
-			this->Force = Vector<float>(this->Gravity.X * this->Mass,
-				this->Gravity.Y * this->Mass,
-				this->Gravity.Z * this->Mass);
-
-			this->Velocity = Vector<float>(this->Force.X * this->Mass,
-				this->Force.Y * this->Mass,
-				this->Force.Z * this->Mass);
-
-			this->Position = Vector<float>(this->Velocity.X * dt, this->Velocity.Y * dt, this->Velocity.Z * dt);
-
-			this->Force = Vector<float>(0, 0, 0);
-
-			return true;
-		}
-
-	public:
 		Vector<TypeFloat> Position;
 		Vector<TypeFloat> Velocity;
 		Vector<TypeFloat> Force;
