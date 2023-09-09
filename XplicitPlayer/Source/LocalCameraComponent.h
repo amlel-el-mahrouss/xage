@@ -12,7 +12,7 @@
 #include <Component.h>
 #include <ClassComponent.h>
 #include <NetworkComponent.h>
-#include <cad-engine/irrlicht.h>
+#include <CADNgin/irrlicht.h>
 
 namespace Xplicit
 {

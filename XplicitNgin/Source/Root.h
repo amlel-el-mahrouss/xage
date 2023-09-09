@@ -15,8 +15,8 @@
 #include <CLua/CLua.hpp>
 
 //! The CAD engine.
-#include <cad-engine/irrlicht.h>
-#include <cad-engine/IEventReceiver.h>
+#include <CADNgin/irrlicht.h>
+#include <CADNgin/IEventReceiver.h>
 
  /* common engine macros for Root */
 #define RENDER Xplicit::Root::get_singleton_ptr()->Dev

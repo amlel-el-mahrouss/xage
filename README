@@ -24,7 +24,7 @@ REQUIREMENTS:
 - CADEngine
 - Windows 11/Mac OS X
 - Visual Studio 2022 (C++ Workload)
-- Vulkan SDK 1.3.250.0 (Vulkan Rendering System)
+- Vulkan SDK 1.3.250.1 (Vulkan Rendering System)
 - DirectXTK for VS2019 (Install for Xplicit and XplicitPlayer)
 
 INSTALLING:

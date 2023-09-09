@@ -19,7 +19,7 @@
 #include <NetworkProtocol.h>
 #include <XplicitSound.h>
 #include <DriverD3D11.h>
-#include <BaseLuaAPI.h>
+#include <LuaAPI.h>
 #include <Component.h>
 #include <ImGUI.h>
 #include <Event.h>

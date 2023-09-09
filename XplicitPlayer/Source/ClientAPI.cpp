@@ -8,14 +8,18 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
+
 #include "SoundComponent.h"
 #include "MenuUI.h"
+
 #include "Application.h"
 #include "ClientUtils.h"
+
 #include "StaticBundleMesh.h"
 
 #include <XplicitSound.h>
 #include <CLua/CLua.hpp>
+#include <LuaAPI.h>
 #include <codecvt>
 #include <RoXML.h>
 #include <Util.h>
@@ -30,7 +34,7 @@ Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
 
-#define XPLICIT_ALLOWED_EXTENSION ".wav"
+#define XPLICIT_ALLOWED_AUDIO_EXTENSION ".wav"
 
 static int lua_PlaySound(lua_State* L)
 {
@@ -39,7 +43,7 @@ static int lua_PlaySound(lua_State* L)
 		Xplicit::String url = lua_tostring(L, 1);
 
 		// that means if we don't find it, then fail silently.
-		if (url.find(XPLICIT_ALLOWED_EXTENSION) == Xplicit::String::npos)
+		if (url.find(XPLICIT_ALLOWED_AUDIO_EXTENSION) == Xplicit::String::npos)
 			return 0;
 
 		if (url.empty() ||
@@ -126,7 +130,6 @@ static int lua_MakeRect(lua_State* L)
 static int lua_KeyDown(lua_State* L)
 {
 	lua_pushboolean(L, KB->key_down());
-
 	return 1;
 }
 
@@ -135,21 +138,18 @@ static int lua_IsKeyDown(lua_State* L)
 	int key = lua_tointeger(L, 1);
 
 	lua_pushboolean(L, KB->key_down(key));
-
 	return 1;
 }
 
 static int lua_IsLeftDown(lua_State* L)
 {
 	lua_pushboolean(L, KB->left_down());
-
 	return 1;
 }
 
 static int lua_IsRightDown(lua_State* L)
 {
 	lua_pushboolean(L, KB->right_down());
-
 	return 1;
 }
 

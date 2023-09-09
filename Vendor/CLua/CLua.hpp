@@ -259,8 +259,6 @@ namespace Xplicit::Lua
 		String mClass;
 
 	};
-
-	constexpr const char* XPLICIT_ROOT_CLASS = "World";
 }
 
 #include <CLua/RLua.hpp>

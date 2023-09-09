@@ -14,7 +14,7 @@
 #include "Application.h"
 #include "LoadingComponent.h"
 
-#include <BaseLuaAPI.h>
+#include <LuaAPI.h>
 
 namespace Xplicit
 {

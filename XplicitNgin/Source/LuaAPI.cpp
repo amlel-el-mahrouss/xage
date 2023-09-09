@@ -16,7 +16,7 @@
 #include <Nplicit.h>
 #include <CLua/CLua.hpp>
 
-#include "BaseLuaAPI.h"
+#include "LuaAPI.h"
 
 static int lua_CreateClass(lua_State* L)
 {
