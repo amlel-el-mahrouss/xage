@@ -21,7 +21,7 @@ namespace Xplicit
 	class GearComponent final : public ClassComponent
 	{
 	public:
-		GearComponent(const char* name, const char* parent = "World") noexcept;
+		GearComponent(const char* name, const char* parent) noexcept;
 
 	public:
 		GearComponent() = delete;

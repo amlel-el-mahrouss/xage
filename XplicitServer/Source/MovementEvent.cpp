@@ -110,7 +110,7 @@ namespace Xplicit
 
 		mDeltaTime += (mDeltaVar->as_float() / XPLICIT_DELTA_PER_SECOND);
 
-		String heartbeat_fmt = std::format("World.Settings.DeltaTime.Value = {}", std::to_string(mDeltaTime));
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(heartbeat_fmt.c_str());
+		//String heartbeat_fmt = std::format("World.Settings.DeltaTime.Value = {}", std::to_string(mDeltaTime));
+		//Lua::CLuaStateManager::get_singleton_ptr()->run_string(heartbeat_fmt.c_str());
 	}
 }

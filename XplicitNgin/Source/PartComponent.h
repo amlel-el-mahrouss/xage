@@ -10,19 +10,22 @@
 #pragma once
 
 #include "ClassComponent.h"
+#include "GameVar.h"
+
+#include <Nplicit.h>
 
 namespace Xplicit
 {
 	class XPLICIT_API PartComponent final : public ClassComponent
 	{
 	public:
-		PartComponent(const char* name, const char* parent, 
-			Vector<float> pos = Vector<float>(0,0,0), 
+		PartComponent(const char* name, const char* parent,
+			Vector<float> pos = Vector<float>(0, 0, 0),
 			Vector<float> scale = Vector<float>(0, 0, 0),
 			Color<float> clr = Color<float>(0, 0, 0))
 			:
-			ClassComponent(pos, scale, clr, nullptr, parent, name)
-			,mStud(nullptr)
+			ClassComponent(pos, scale, clr, nullptr, parent, name),
+			mStud(nullptr)
 		{
 #ifdef __XPLICIT_CLIENT__
 			mStud = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh());
@@ -32,12 +35,17 @@ namespace Xplicit
 				mStud->setName(name);
 				mStud->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 			}
+#else
+			this->mPhysics.Position = this->pos();
+
+			this->insert("Gravity", "{ X = 1, Y = 1, Z = 1 }");
 #endif
 
-			this->assign("Destroy", this->part_service_destroy().c_str());
+			this->insert("Destroy", this->part_service_destroy().c_str());
+
 		}
 
-		~PartComponent()
+		~PartComponent() noexcept
 		{
 #ifdef __XPLICIT_CLIENT__
 			if (mStud)
@@ -59,9 +67,11 @@ namespace Xplicit
 		{
 			ClassComponent::update(cls);
 
-#ifdef __XPLICIT_CLIENT__
 			PartComponent* self = (PartComponent*)cls;
 
+			self->mDt = GameVarManager::get_singleton_ptr()->get("DeltaTime")->as_int();
+
+#ifdef __XPLICIT_CLIENT__
 			if (RENDER)
 			{
 				if (self->index_as_bool("Locked"))
@@ -73,16 +83,24 @@ namespace Xplicit
 					self->mStud->setPosition(vector3df(self->pos().X, self->pos().Y, self->pos().Z));
 
 					self->mStud->setRotation(vector3df(self->index_as_number("Rotation.X"), self->index_as_number("Rotation.Y"), self->index_as_number("Rotation.Z")));
-					
+
 					self->mStud->getMaterial(0).DiffuseColor.set(self->color().A, self->color().R, self->color().G, self->color().B);
 					self->mStud->getMaterial(0).AmbientColor.set(self->color().A, self->color().R, self->color().G, self->color().B);
 				}
 			}
+#else
+			NPLICIT_DO_UPDATE_PHYSICS(mPhysics, mDt);
+
 #endif
+
 		}
 
 	public:
 		XPLICIT_COPY_DEFAULT(PartComponent);
+
+	private:
+		PhysicsComponent<float> mPhysics;
+		std::int64_t mDt;
 
 	private:
 		irr::scene::ISceneNode* mStud;

@@ -18,8 +18,7 @@ public:
 	{
 		Vector3* vec = (Vector3*)lua_touserdata(L, 1);
 
-		std::string index = luaL_checkstring(L, 2);
-		luaL_argcheck(L, index == "X", 2, "index out of range");
+		RLUA_TYPE_CHECK(L, 2, "X");
 
 		lua_pushnumber(L, vec->X);
 		return 1;
@@ -30,8 +29,7 @@ public:
 	{
 		Vector3* vec = (Vector3*)lua_touserdata(L, 1);
 
-		std::string index = luaL_checkstring(L, 2);
-		luaL_argcheck(L, index == "Z", 2, "index out of range");
+		RLUA_TYPE_CHECK(L, 2, "X");
 
 		float X = lua_tonumber(L, 3);
 
@@ -44,8 +42,7 @@ public:
 	{
 		Vector3* vec = (Vector3*)lua_touserdata(L, 1);
 
-		std::string index = luaL_checkstring(L, 2);
-		luaL_argcheck(L, index == "Y", 2, "index out of range");
+		RLUA_TYPE_CHECK(L, 2, "Y");
 
 		lua_pushnumber(L, vec->Y);
 		return 1;
@@ -56,8 +53,7 @@ public:
 	{
 		Vector3* vec = (Vector3*)lua_touserdata(L, 1);
 
-		std::string index = luaL_checkstring(L, 2);
-		luaL_argcheck(L, index == "Z", 2, "index out of range");
+		RLUA_TYPE_CHECK(L, 2, "Y");
 
 		float Y = lua_tonumber(L, 3);
 
@@ -70,8 +66,7 @@ public:
 	{
 		Vector3* vec = (Vector3*)lua_touserdata(L, 1);
 
-		std::string index = luaL_checkstring(L, 2);
-		luaL_argcheck(L, index == "Z", 2, "index out of range");
+		RLUA_TYPE_CHECK(L, 2, "Z");
 
 		lua_pushnumber(L, vec->Y);
 		return 1;
@@ -82,8 +77,7 @@ public:
 	{
 		Vector3* vec = (Vector3*)lua_touserdata(L, 1);
 
-		std::string index = luaL_checkstring(L, 2);
-		luaL_argcheck(L, index == "Z", 2, "index out of range");
+		RLUA_TYPE_CHECK(L, 2, "Z");
 
 		float Z = lua_tonumber(L, 3);
 

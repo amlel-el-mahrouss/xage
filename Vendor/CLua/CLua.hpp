@@ -96,7 +96,7 @@ namespace Xplicit::Lua
 
 			String tmp = str;
 
-			if (auto err = (luaL_dostring(mL, tmp.c_str())) > 0)
+			if (auto err = (luaL_dostring(mL, tmp.c_str())); err)
 			{
 				String _err = lua_tostring(mL, -1);
 
@@ -195,7 +195,10 @@ namespace Xplicit::Lua
 			if (this->i_index_field(lhs))
 			{
 				if (lua_isnumber(mL, -1))
+				{
 					ret = lua_tonumber(mL, -1);
+					this->i_clean(2);
+				}
 			}
 
 			return ret;
@@ -208,7 +211,10 @@ namespace Xplicit::Lua
 			if (this->i_index_field(lhs))
 			{
 				if (lua_isboolean(mL, -1))
+				{
 					ret = lua_toboolean(mL, -1);
+					this->i_clean(2);
+				}
 			}
 
 			return ret;
@@ -223,7 +229,10 @@ namespace Xplicit::Lua
 			if (this->i_index_field(lhs))
 			{
 				if (lua_isstring(mL, -1))
+				{
 					ret = lua_tostring(mL, -1);
+					this->i_clean(2);
+				}
 			}
 
 			return ret;

@@ -18,10 +18,13 @@
 
 extern void XplicitLoadClientLua() noexcept;
 
-namespace Xplicit::Bites
+namespace Xplicit
 {
 	Vector<float> XPLICIT_DIM = Vector<float>(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
+}
 
+namespace Xplicit::Bites
+{
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mPath(""), mWsa()
 	{

@@ -59,7 +59,13 @@ int main(int argc, char** argv)
 
 		if (cmd_line.empty() ||
 			cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == Xplicit::String::npos)
+		{
+			// TODO: Games Menu.
+
+
+
 			return 1;
+		}
 
 		cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
 

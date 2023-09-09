@@ -1,0 +1,9 @@
+<RoXML>
+    	<Class Name="PhysicsPart" Object="Part">
+    
+	</Class>
+	
+	<CLua>
+		xasset://Library/NplicitNginTest.lua
+	</CLua>
+</RoXML>

@@ -40,7 +40,7 @@ namespace Xplicit
 
 	public:
 		std::string& as_str() noexcept;
-		int32_t as_int() noexcept;
+		int64_t as_int() noexcept;
 		float as_float() noexcept;
 		int32_t flags() noexcept;
 

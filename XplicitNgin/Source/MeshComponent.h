@@ -12,6 +12,7 @@
 #include "Xplicit.h"
 
 #include <CLua/CLua.hpp>
+#include <Nplicit.h>
 
 #include "Component.h"
 #include "Root.h"

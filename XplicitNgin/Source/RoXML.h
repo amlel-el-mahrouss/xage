@@ -161,11 +161,6 @@ namespace Xplicit::RoXML
 									// assign a part component to the said id
 									// so you can use it.
 
-									if (klass_to_instanciate == "Part")
-									{
-										PartComponent* part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(node_id, parent_id);
-									}
-
 									if (klass_to_instanciate == "Mesh")
 									{
 										XPLICIT_GET_DATA_DIR(mesh_path);
@@ -238,6 +233,12 @@ namespace Xplicit::RoXML
 										}
 									}
 								}
+
+								if (klass_to_instanciate == "Part")
+								{
+									PartComponent* part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(node_id, parent_id);
+								}
+
 							}
 						}
 					}

@@ -16,6 +16,9 @@
 #define XPLICIT_RLUA_DESCRIPTION "ReflectedLua extension for the XplicitNgine."
 #define XPLICIT_RLUA_AUTHOR "Amlal El Mahrouss"
 
+// L = lua_State, N = index, X = name.
+#define RLUA_TYPE_CHECK(L, N, X) Xplicit::String index = luaL_checkstring(L, N);luaL_argcheck(L, index == X, 2, "RLua: Index out of range");
+
 namespace Xplicit::RLua
 {
 	typedef int (*RLuaProc)(lua_State* L);
@@ -41,6 +44,19 @@ namespace Xplicit::RLua
 			delete reinterpret_cast<RuntimeClass**>(lua_touserdata(L, 1));
 
 			return 0;
+		}
+
+		static int delete_internal(void* block)
+		{
+#ifdef XPLICIT_WINDOWS
+#ifdef _DEBUG
+			_free_dbg(block, _UNKNOWN_BLOCK);
+#else
+			free(block);
+#endif
+#else
+			free(block);
+#endif
 		}
 
 	public:

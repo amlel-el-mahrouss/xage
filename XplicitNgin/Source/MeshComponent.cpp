@@ -8,6 +8,7 @@
  */
 
 #include "MeshComponent.h"
+#include "GameVar.h"
 
 namespace Xplicit
 {
@@ -63,9 +64,14 @@ namespace Xplicit
 		if (!self->mNode)
 			return;
 
-		auto pos = self->mNode->getPosition();
-
 		self->mNode->setVisible(self->index_as_bool("Visible"));
+
+		if (!self->mNode->isVisible() ||
+			self->mNode->getMaterial(0).AmbientColor.getAlpha() == 0 ||
+			self->mNode->getMaterial(0).DiffuseColor.getAlpha() == 0)
+			return;
+
+		auto pos = self->mNode->getPosition();
 
 		pos.X = self->index_as_number("Position.X");
 		pos.Y = self->index_as_number("Position.Y");

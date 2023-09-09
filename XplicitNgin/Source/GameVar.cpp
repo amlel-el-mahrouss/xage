@@ -33,7 +33,7 @@ namespace Xplicit
 
 	int32_t GameVar::flags() noexcept { return mFlags; }
 
-	int32_t GameVar::as_int() noexcept { return std::stoi(mValue); }
+	int64_t GameVar::as_int() noexcept { return std::stol(mValue); }
 
 	float GameVar::as_float() noexcept { return std::stof(mValue); }
 

@@ -20,10 +20,7 @@
 
 namespace Xplicit
 {
-	namespace Player
-	{
-		extern Vector<float> XPLICIT_DIM;
-	}
+	extern Vector<float> XPLICIT_DIM;
 } // namespace Xplicit
 
 namespace Xplicit::Bites
