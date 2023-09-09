@@ -34,7 +34,7 @@ namespace Xplicit
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 
-		bool should_update() noexcept { return true; }
+		static bool should_update() noexcept { return true; }
 		static void update(void* self);
 
 		XPXAttribute& get_attribute() noexcept;

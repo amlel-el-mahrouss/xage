@@ -153,6 +153,8 @@ int main(int argc, char** argv)
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::MovementEvent>();
 		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::LoginEvent>();
 
+		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::SpawnComponent>(XPLICIT_ORIGIN);
+
 		XPLICIT_PLACE_ID = argv[2];
 
 		Xplicit::RoXML::RoXMLDocumentParameters params;

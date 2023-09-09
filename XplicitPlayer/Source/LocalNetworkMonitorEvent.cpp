@@ -18,9 +18,11 @@
 
 #include <CLua/CLua.hpp>
 
+#define XPLICIT_MAX_RESET (1024)
+
 namespace Xplicit
 {
-	constexpr int XPLICIT_MAX_RESETS = 150; // Max resets allowed before connection drop
+	static int XPLICIT_RESET_COUNT = 0;
 
 	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(const std::int64_t& priv, const std::int64_t& publ)
 		:
@@ -43,21 +45,31 @@ namespace Xplicit
 	{
 		if (!mNetwork) return;
 
+		NetworkPacket packet;
+		mNetwork->read(packet);
+
 		/* did we lost connection to peer? */
 		if (mNetwork->is_reset())
 		{
-			if (ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ResetPopup") == nullptr)
+			ImGUI::UIFont::get_label_font()->draw(L"Connection to server lost, retrying...", recti(position2di(10, 10),
+				dimension2d(256, 30)), ImGUI::ImColor(0xFF, 0xFF, 0xFF, 0xFF), true, true);
+
+			++XPLICIT_RESET_COUNT;
+
+			if (XPLICIT_RESET_COUNT > XPLICIT_MAX_RESET)
 			{
-				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					RENDER->closeDevice();
+				ComponentSystem::get_singleton_ptr()->remove(mNetwork);
+
+				if (ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ResetPopup") == nullptr)
+				{
+					ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+						RENDER->closeDevice();
 					}, POPUP_TYPE::NETWORK, "ResetPopup");
+				}
 			}
 
 			return;
 		}
-
-		NetworkPacket packet;
-		if (!mNetwork->read(packet)) return;
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 		{

@@ -195,7 +195,6 @@ namespace Xplicit::Lua
 				if (lua_isnumber(mL, -1))
 				{
 					ret = lua_tonumber(mL, -1);
-					this->i_clean(2);
 				}
 			}
 
@@ -211,7 +210,6 @@ namespace Xplicit::Lua
 				if (lua_isboolean(mL, -1))
 				{
 					ret = lua_toboolean(mL, -1);
-					this->i_clean(2);
 				}
 			}
 
@@ -229,7 +227,6 @@ namespace Xplicit::Lua
 				if (lua_isstring(mL, -1))
 				{
 					ret = lua_tostring(mL, -1);
-					this->i_clean(2);
 				}
 			}
 

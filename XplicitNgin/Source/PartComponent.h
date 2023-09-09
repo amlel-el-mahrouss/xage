@@ -25,7 +25,8 @@ namespace Xplicit
 			Color<float> clr = Color<float>(0, 0, 0))
 			:
 			ClassComponent(pos, scale, clr, nullptr, parent, name),
-			mStud(nullptr)
+			mStud(nullptr),
+			mDt(0L)
 		{
 #ifdef __XPLICIT_CLIENT__
 			mStud = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh());
@@ -37,7 +38,6 @@ namespace Xplicit
 			}
 #else
 			this->mPhysics.Position = this->pos();
-
 			this->insert("Gravity", "{ X = 1, Y = 1, Z = 1 }");
 #endif
 
@@ -69,8 +69,6 @@ namespace Xplicit
 
 			PartComponent* self = (PartComponent*)cls;
 
-			self->mDt = GameVarManager::get_singleton_ptr()->get("DeltaTime")->as_int();
-
 #ifdef __XPLICIT_CLIENT__
 			if (RENDER)
 			{
@@ -89,8 +87,8 @@ namespace Xplicit
 				}
 			}
 #else
+			self->mDt = GameVarManager::get_singleton_ptr()->get("DeltaTime")->as_int();
 			NPLICIT_DO_UPDATE_PHYSICS(mPhysics, mDt);
-
 #endif
 
 		}

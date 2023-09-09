@@ -50,7 +50,11 @@ namespace Xplicit
 		if (!mNetwork)
 			return;
 
-		static auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+		mSpawner = ComponentSystem::get_singleton_ptr()->get<SpawnComponent>("SpawnComponent");
+
+		XPLICIT_ASSERT(mSpawner);
+
+		auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 
 		for (HumanoidComponent* humanoid : humanoids)
 		{
@@ -87,10 +91,11 @@ namespace Xplicit
 					peer_ptr->packet.public_hash = humanoid->get_peer()->public_hash;
 				}
 
-				Thread respawn_job([&](HumanoidComponent* humanoid) {
+				Thread respawn_job([](HumanoidComponent* humanoid, SpawnComponent* spawner) {
 					std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_DEATH_DELAY));
 
 					if (humanoid &&
+						spawner &&
 						humanoid->get_peer())
 					{
 						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
@@ -98,6 +103,8 @@ namespace Xplicit
 						humanoid->can_spawn(true);
 
 						humanoid->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
+
+						auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 
 						for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)
 						{
@@ -109,7 +116,7 @@ namespace Xplicit
 							humanoids[peer]->get_peer()->packet.public_hash = humanoid->get_peer()->public_hash;
 						}
 
-						XplicitHandleSpawn(mSpawner, humanoid);
+						XplicitHandleSpawn(spawner, humanoid);
 
 						XPLICIT_INFO("World:Spawn [EVENT]");
 
@@ -120,7 +127,7 @@ namespace Xplicit
 						Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					}
-				}, humanoid);
+				}, humanoid, mSpawner);
 
 				respawn_job.detach();
 			}
