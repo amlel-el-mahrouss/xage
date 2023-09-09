@@ -16,7 +16,7 @@
 
 #include <BaseLuaAPI.h>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	Vector<float> XPLICIT_DIM = Vector<float>(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
 }
@@ -30,7 +30,7 @@ namespace Xplicit::Bites
 
 		ComponentSystem::get_singleton_ptr()->add<NetworkComponent>();
 
-		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<Player::LoadingComponent>();
+		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<LoadingComponent>();
 		XPLICIT_ASSERT(loading_screen);
 
 		loading_screen->connect(xconnect_to);
@@ -63,8 +63,8 @@ namespace Xplicit::Bites
 		params.Fullscreen = false;
 		params.WindowSize = dimension2d<irr::u32>(traits.window_width, traits.window_height);
 
-		Player::XPLICIT_DIM.X = traits.window_width;
-		Player::XPLICIT_DIM.Y = traits.window_height;
+		XPLICIT_DIM.X = traits.window_width;
+		XPLICIT_DIM.Y = traits.window_height;
 
 		Root::get_singleton_ptr()->set(
 			createDeviceEx(params)
@@ -84,8 +84,8 @@ namespace Xplicit::Bites
 		//! Check for the existence of this ini file.
 		if (!std::filesystem::exists(path_ini))
 		{
-			traits.window_width = Player::XPLICIT_DIM.X;
-			traits.window_height = Player::XPLICIT_DIM.Y;
+			traits.window_width = XPLICIT_DIM.X;
+			traits.window_height = XPLICIT_DIM.Y;
 			traits.mouse_sensitivity = 1.0f;
 
 			(*mSettings) << traits;

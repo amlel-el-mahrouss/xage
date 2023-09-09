@@ -17,7 +17,7 @@
 
 inline void PlaySound(const Xplicit::String& path, const Xplicit::Vector<float>& pos)
 {
-	if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::Player::SoundComponent>("SoundComponent");
+	if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::SoundComponent>("SoundComponent");
 		snd)
 	{
 		snd->set_position(Xplicit::Vector<float>(pos.X, pos.Y, pos.Z));

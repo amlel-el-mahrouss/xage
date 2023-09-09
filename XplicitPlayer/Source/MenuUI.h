@@ -16,12 +16,12 @@
 #include <CommonEngine.h>
 #include <NetworkComponent.h>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	extern Vector<float> XPLICIT_DIM;
 }
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	enum class POPUP_TYPE
 	{

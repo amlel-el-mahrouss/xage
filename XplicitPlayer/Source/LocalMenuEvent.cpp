@@ -18,7 +18,7 @@
 #define LOCAL_MENU_TWEEN_END	(2)
 #define LOCAL_MENU_TWEENING		(0.1f)
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	constexpr int XPLICIT_TIMEOUT_MENU = 2000;
 
@@ -76,7 +76,7 @@ namespace Xplicit::Player
 			mEnabled = true;
 			mTimeout = XPLICIT_TIMEOUT_MENU;
 
-			mPopup = ComponentSystem::get_singleton_ptr()->add<Player::PopupComponent>(
+			mPopup = ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 				[&]() {
 					NetworkPacket packet{};
 

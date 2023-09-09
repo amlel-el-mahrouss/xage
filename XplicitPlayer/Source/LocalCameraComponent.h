@@ -14,7 +14,7 @@
 #include <NetworkComponent.h>
 #include <cad-engine/irrlicht.h>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	// The player view in-person.
 	class LocalCameraComponent final : public ClassComponent

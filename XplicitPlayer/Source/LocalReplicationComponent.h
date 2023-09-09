@@ -12,7 +12,7 @@
 #include <Root.h>
 #include <NetworkComponent.h>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	class LocalReplicationComponent final : public Component
 	{

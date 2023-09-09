@@ -21,7 +21,7 @@
 #include <XplicitSound.h>
 #include <ClassComponent.h>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	class SoundComponent final : public ClassComponent
 	{

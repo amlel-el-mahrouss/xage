@@ -52,10 +52,10 @@ static int lua_PlaySound(lua_State* L)
 		url = "/";
 		url += substr_tmp;
 
-		static Xplicit::Player::LocalNetworkMonitorEvent* monitor = Xplicit::EventSystem::get_singleton_ptr()->get<Xplicit::Player::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
+		static Xplicit::LocalNetworkMonitorEvent* monitor = Xplicit::EventSystem::get_singleton_ptr()->get<Xplicit::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 
 		if (!monitor)
-			monitor = Xplicit::EventSystem::get_singleton_ptr()->get<Xplicit::Player::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
+			monitor = Xplicit::EventSystem::get_singleton_ptr()->get<Xplicit::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 
 		Xplicit::String endpoint = XPLICIT_XASSET_ENDPOINT;
 		monitor->HTTP->set_endpoint(endpoint);
@@ -73,7 +73,7 @@ static int lua_PlaySound(lua_State* L)
 			full_download_path += "Contents/";
 			full_download_path += tmp;
 
-			if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::Player::SoundComponent>("SoundComponent"))
+			if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::SoundComponent>("SoundComponent"))
 				snd->play(full_download_path);
 		}
 
@@ -115,7 +115,7 @@ static int lua_MakeRect(lua_State* L)
 	const char* parent = lua_tostring(L, 1);
 	const char* name = lua_tostring(L, 2);
 
-	Xplicit::Player::RectComponent* frame = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::RectComponent>(parent, name);
+	Xplicit::RectComponent* frame = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::RectComponent>(parent, name);
 
 	lua_getglobal(L, (Xplicit::String(parent) + "." + name).c_str());
 	lua_pushvalue(L, -1);
@@ -161,7 +161,7 @@ static int lua_MakeSoundComponent(lua_State* L)
 		auto name = lua_tostring(L, 1);
 		auto parent = lua_tostring(L, 2);
 
-		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::SoundComponent>(name, parent);
+		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::SoundComponent>(name, parent);
 	}
 }
 

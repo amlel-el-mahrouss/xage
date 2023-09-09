@@ -14,7 +14,7 @@
 
 #include <Event.h>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	/*
 	* 

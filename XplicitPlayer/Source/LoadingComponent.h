@@ -14,7 +14,7 @@
 #include <Root.h>
 #include <Uri.h>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	class LoadingComponent final : public Component
 	{

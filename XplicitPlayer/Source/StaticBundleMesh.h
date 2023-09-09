@@ -23,7 +23,7 @@
 #define XPLICIT_BUNDLE_RIGHT_LEG (5)
 #define XPLICIT_BUNDLE_MAX (6)
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	class StaticBundleMesh;
 

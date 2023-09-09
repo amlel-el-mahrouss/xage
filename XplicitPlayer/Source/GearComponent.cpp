@@ -10,7 +10,7 @@
 // The component itself 
 #include "GearComponent.h"
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	GearComponent::GearComponent(
 		const char* name,

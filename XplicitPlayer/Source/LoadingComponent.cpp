@@ -29,7 +29,7 @@
 #include <RoXML.h>
 #include <codecvt>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	// connection timeout, then client quits.
 	constexpr int XPLICIT_TIMEOUT = 18000;
@@ -40,7 +40,7 @@ namespace Xplicit::Player
 		mTimeout(XPLICIT_TIMEOUT),
 		mLoadingFrame()
 	{
-		ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalCameraComponent>();
+		ComponentSystem::get_singleton_ptr()->add<Xplicit::LocalCameraComponent>();
 		
 		mLoadingFrame.X = 0;
 		mLoadingFrame.Y = 0;
@@ -64,7 +64,7 @@ namespace Xplicit::Player
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
-			ComponentSystem::get_singleton_ptr()->add<Player::PopupComponent>(
+			ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 				[]() { 
 					RENDER->closeDevice();
 				}, POPUP_TYPE::BANNED, "StopPopup");
@@ -176,7 +176,7 @@ namespace Xplicit::Player
 
 	void LoadingComponent::reset() noexcept
 	{
-		ComponentSystem::get_singleton_ptr()->add<Player::PopupComponent>([]()-> void {
+		ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 			RENDER->closeDevice();
 			}, POPUP_TYPE::NETWORK);
 	}

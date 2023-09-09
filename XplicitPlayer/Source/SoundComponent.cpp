@@ -9,7 +9,7 @@
 
 #include "SoundComponent.h"
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	SoundComponent::SoundComponent(const char* name, const char* parent) 
 		: ClassComponent(Vector<float>(0.0f, 0.0f, 0.0f),

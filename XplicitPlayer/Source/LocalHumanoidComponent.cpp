@@ -19,7 +19,7 @@
 #include <CommonEngine.h>
 #include <CLua/CLua.hpp>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	constexpr const short XPLICIT_NETWORK_DELAY = 100;
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;

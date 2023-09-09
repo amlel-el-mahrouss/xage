@@ -24,7 +24,7 @@ namespace Xplicit
 	{
 		extern Vector<float> XPLICIT_DIM;
 	}
-} // namespace Xplicit::Player
+} // namespace Xplicit
 
 namespace Xplicit::Bites
 {
@@ -129,4 +129,4 @@ namespace Xplicit::Bites
 #endif
 
 	};
-} // namespace Xplicit::Player
+} // namespace Xplicit

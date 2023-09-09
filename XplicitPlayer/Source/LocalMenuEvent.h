@@ -15,7 +15,7 @@
 
 #include "MenuUI.h"
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	class LocalMenuEvent final : public Event
 	{

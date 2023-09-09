@@ -26,7 +26,7 @@
 
 Xplicit::RoXML::RoXMLDocumentParser parser;
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_REPLICATION; }
 

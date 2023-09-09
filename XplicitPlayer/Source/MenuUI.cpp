@@ -16,7 +16,7 @@
 
 static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	/*
 	 * This is a popup class

@@ -15,7 +15,7 @@
 #include "Application.h"
 #include "MenuUI.h"
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	LocalCameraComponent::LocalCameraComponent() noexcept
 		: ClassComponent("World", "Camera"),

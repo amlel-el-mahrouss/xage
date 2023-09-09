@@ -16,7 +16,7 @@
 #include <CommonEngine.h>
 #include <ClassComponent.h>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	class GearComponent final : public ClassComponent
 	{

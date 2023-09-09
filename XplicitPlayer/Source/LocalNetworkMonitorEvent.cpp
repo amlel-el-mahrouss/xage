@@ -18,7 +18,7 @@
 
 #include <CLua/CLua.hpp>
 
-namespace Xplicit::Player
+namespace Xplicit
 {
 	constexpr int XPLICIT_MAX_RESETS = 150; // Max resets allowed before connection drop
 
@@ -84,7 +84,7 @@ namespace Xplicit::Player
 			NetworkPacket packet{};
 			packet = mNetwork->get();
 
-			const auto players = ComponentSystem::get_singleton_ptr()->all_of<Xplicit::Player::LocalHumanoidComponent>("LocalHumanoidComponent");
+			const auto players = ComponentSystem::get_singleton_ptr()->all_of<Xplicit::LocalHumanoidComponent>("LocalHumanoidComponent");
 
 			for (std::size_t index = 0UL; index < players.size(); ++index)
 			{
@@ -96,7 +96,7 @@ namespace Xplicit::Player
 			XPLICIT_INFO("World:Login [EVENT]");
 #endif
 
-			ComponentSystem::get_singleton_ptr()->add<Xplicit::Player::LocalHumanoidComponent>(packet.public_hash, false, packet.buffer);
+			ComponentSystem::get_singleton_ptr()->add<Xplicit::LocalHumanoidComponent>(packet.public_hash, false, packet.buffer);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Login()");
 
 			/*! invalidate command right there. */
