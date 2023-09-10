@@ -31,7 +31,7 @@ static void XplicitPrintHelp()
 {
 	XPLICIT_INFO("\a+-------------- XPX Manual --------------+");
 	XPLICIT_INFO("exit: Exits the current server.");
-	XPLICIT_INFO("xconnect: Gets Xconnect network info.");
+	XPLICIT_INFO("xinfo: Gets Xconnect info.");
 	XPLICIT_INFO("ls: Lists players.");
 	XPLICIT_INFO("+-------------- XPX Manual --------------+");
 }
@@ -74,14 +74,14 @@ static void XplicitLoadShell()
 			}
 		}
 
-		if (strcmp(cmd_buf, "xconnect") == 0)
+		if (strcmp(cmd_buf, "xinfo") == 0)
 		{
 			const char* ip4 = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
 			if (!ip4)
-				XPLICIT_CRITICAL("xconnect: address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
+				XPLICIT_CRITICAL("xinfo: address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
-			XPLICIT_INFO(XPX::String("IP: ") + (ip4 ? ip4 : "?"));
+			XPLICIT_INFO(XPX::String("IPv4: ") + (ip4 ? ip4 : "?"));
 			XPLICIT_INFO(XPX::String("Version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
 		}
 	}
