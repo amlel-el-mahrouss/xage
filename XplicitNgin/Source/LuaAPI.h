@@ -8,6 +8,8 @@
 XPLICIT_API void XplicitLoadBaseLua();
 
 // CLua builtin types
+// Vector3, PartColor...
+
 struct Vector3
 {
 private:

@@ -160,16 +160,22 @@ int main(int argc, char** argv)
 
 		XPLICIT_PLACE_ID = argv[2];
 
-		XPX::String place = "XplicitPlace.roxml";
+		XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
+		generated_path += "-ROXML.roxml";
 
-		if (!DownloadURL(XPLICIT_PLACE_ID, place))
+		XPLICIT_GET_DATA_DIR(path);
+		path += "Contents/";
+		path += generated_path;
+
+		if (!DownloadURL(XPLICIT_PLACE_ID, generated_path))
 			return -34;
 
 		XPX::RoXML::RoXMLDocumentParameters params;
 
 		params.Has3D = false;
 		params.NoLua = false;
-		params.Path = place;
+
+		params.Path = path;
 
 		XPX::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);

@@ -570,7 +570,9 @@ namespace XPX::RoXML
 
 							HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
 
-							auto tmp = std::to_string(xplicit_get_epoch()) + "-roxml-tmp.lua";
+							XPLICIT_GET_DATA_DIR(full_path);
+
+							auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-LUA.lua";
 
 							if (HTTP->download(url, tmp))
 							{

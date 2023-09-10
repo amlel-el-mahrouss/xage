@@ -22,7 +22,7 @@ namespace XPX
 
         // static is added here wtf??
         // - check the preprocessor value of XPLICIT_GET_DATA_DIR :)
-        static XPLICIT_GET_DATA_DIR(full_path);
+        XPLICIT_GET_DATA_DIR(full_path);
 
         String http_path;
 
@@ -91,11 +91,13 @@ namespace XPX
 
                 file.flush();
                 file.close();
+
+                delete[] bytes;
+
+                return true;
             }
 
             delete[] bytes;
-
-            return true;
         }
 
         return false;
