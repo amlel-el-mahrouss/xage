@@ -19,10 +19,10 @@
 #include <CADNgin/IEventReceiver.h>
 
  /* common engine macros for Root */
-#define RENDER Xplicit::Root::get_singleton_ptr()->Dev
-#define KB Xplicit::Root::get_singleton_ptr()->Keyboard
+#define RENDER XPX::Root::get_singleton_ptr()->Dev
+#define KB XPX::Root::get_singleton_ptr()->Keyboard
 
-namespace Xplicit
+namespace XPX
 {
 	using namespace irr;
 	using namespace core;

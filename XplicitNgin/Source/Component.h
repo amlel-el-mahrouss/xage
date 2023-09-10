@@ -13,7 +13,7 @@
 
  //! This file handles the engine component system stuff.
 
-namespace Xplicit
+namespace XPX
 {
 	enum COMPONENT_TYPE : uint8_t
 	{

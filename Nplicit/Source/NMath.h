@@ -87,7 +87,7 @@ static inline constexpr auto nplicit_cricle_shortdist(
 	return min(a, b);
 }
 
-namespace Xplicit
+namespace XPX
 {
 	template <typename TypeFloat = float>
 	class NPLICIT_API Vector final

@@ -234,7 +234,7 @@ ar_close(struct ar_context* ctx) {
     return false;
 }
 
-namespace Xplicit
+namespace XPX
 {
     ArchiveManager::ArchiveManager(const char* path, const char* rest)
         : mAr(ar_new(path, rest)), mGood(true), mOff(0)

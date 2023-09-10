@@ -13,7 +13,7 @@
 
 #include "Component.h"
 
-namespace Xplicit
+namespace XPX
 {
 	void ComponentSystem::update()
 	{

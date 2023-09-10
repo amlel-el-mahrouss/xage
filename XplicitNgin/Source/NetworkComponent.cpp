@@ -10,7 +10,7 @@
 #include "NetworkComponent.h"
 #include "CommonEngine.h"
 
-namespace Xplicit 
+namespace XPX 
 {
 	static void xplicit_set_ioctl(Socket sock)
 	{
@@ -22,7 +22,7 @@ namespace Xplicit
 	}
 	
 	NetworkError::NetworkError(const int what) 
-		: std::runtime_error("Xplicit did ran into network issues, we're sorry!")
+		: std::runtime_error("XPX did ran into network issues, we're sorry!")
 #ifdef XPLICIT_WINDOWS
 		, mErr(WSAGetLastError())
 #endif

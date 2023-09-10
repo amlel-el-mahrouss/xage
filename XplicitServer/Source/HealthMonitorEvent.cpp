@@ -17,7 +17,7 @@
 #include "HealthMonitorEvent.h"
 #include <CLua/CLua.hpp>
 
-namespace Xplicit
+namespace XPX
 {
 	constexpr int16_t XPLICIT_DEATH_DELAY = 5;
 

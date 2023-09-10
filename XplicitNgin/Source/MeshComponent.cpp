@@ -10,7 +10,7 @@
 #include "MeshComponent.h"
 #include "GameVar.h"
 
-namespace Xplicit
+namespace XPX
 {
 	MeshComponent::MeshComponent(const char* path, const char* name, const char* group)
 		:

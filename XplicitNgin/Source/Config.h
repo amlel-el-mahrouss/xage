@@ -143,7 +143,7 @@ KLASS(KLASS&&) = default;\
 #   endif
 #endif /* ifndef */
 
-namespace Xplicit
+namespace XPX
 {
     typedef double Double;
     typedef float Real;

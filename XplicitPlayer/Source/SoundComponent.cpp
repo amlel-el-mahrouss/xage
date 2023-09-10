@@ -9,7 +9,7 @@
 
 #include "SoundComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	SoundComponent::SoundComponent(const char* name, const char* parent) 
 		: ClassComponent(Vector<float>(0.0f, 0.0f, 0.0f),
@@ -69,11 +69,11 @@ namespace Xplicit
 
 	void SoundComponent::play_2d(const String& path) noexcept
 	{
-		Xplicit::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
+		XPX::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
 
 		Thread job([&](String _path, float vol, float pitch, float pan) {
 			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
-			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
+			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = XPX::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
 			
 			if (audio)
 				audio->play(vol, pitch, pan);
@@ -84,11 +84,11 @@ namespace Xplicit
 
 	void SoundComponent::play(const String& path) noexcept
 	{
-		Xplicit::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
+		XPX::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
 
 		Thread job([&](String _path) {
 			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
-			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = Xplicit::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
+			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = XPX::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
 			
 			if (audio)
 				audio->play_3d(this->pos(), mVolume, mPitch, mPan, &mLoop);

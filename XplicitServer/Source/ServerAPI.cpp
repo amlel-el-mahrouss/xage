@@ -15,7 +15,7 @@
 #include <RoXML.h>
 
  // RoXML parser
-Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
+XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 static int lua_LoadRoXML(lua_State* L)
 {
@@ -24,7 +24,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 	if (!_client)
 	{
-		Xplicit::RoXML::RoXMLDocumentParameters params;
+		XPX::RoXML::RoXMLDocumentParameters params;
 		 
 		params.Has3D = false;
 		params.LuaOnly = false;
@@ -46,8 +46,8 @@ static int lua_LoadRoXML(lua_State* L)
 
 		auto xid = lua_tostring(L, -3);
 
-		Xplicit::ServerReplicationFactory factory;
-		std::vector<Xplicit::HumanoidComponent*> players = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+		XPX::ServerReplicationFactory factory;
+		std::vector<XPX::HumanoidComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>("HumanoidComponent");
 
 		for (auto i = 0UL; i < players.size(); ++i)
 		{
@@ -55,7 +55,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 			if (player->get_peer()->xplicit_id.as_string() == xid)
 			{
-				factory.send(Xplicit::COMPONENT_ID_ROXML, _path, Xplicit::NETWORK_REPL_CMD_CREATE, player->get_peer()->public_hash);
+				factory.send(XPX::COMPONENT_ID_ROXML, _path, XPX::NETWORK_REPL_CMD_CREATE, player->get_peer()->public_hash);
 			}
 		}
 	}
@@ -75,14 +75,14 @@ static int lua_CreateGear(lua_State* L)
 		return 1;
 	}
 
-	Xplicit::String path_player("World.Players.");
+	XPX::String path_player("World.Players.");
 	path_player += xplicit_id;
 
-	Xplicit::GearComponent* gear = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::GearComponent>(name, path_player.c_str());
+	XPX::GearComponent* gear = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::GearComponent>(name, path_player.c_str());
 
 	if (gear)
 	{
-		std::vector<Xplicit::HumanoidComponent*> players = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+		std::vector<XPX::HumanoidComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>("HumanoidComponent");
 
 		for (auto i = 0UL; i < players.size(); ++i)
 		{
@@ -104,7 +104,7 @@ static int lua_CreateGear(lua_State* L)
 			}
 		}
 
-		Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
+		XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
 	}
 
 	lua_pushboolean(L, false);
@@ -115,7 +115,7 @@ static int lua_DestroyGear(lua_State* L)
 {
 	const char* name = lua_tostring(L, 1);
 
-	auto gear = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::GearComponent>(name);
+	auto gear = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::GearComponent>(name);
 
 	if (gear)
 	{
@@ -131,7 +131,7 @@ static int lua_DestroyGear(lua_State* L)
 			}
 		}
 
-		Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
+		XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
 
 		lua_pushboolean(L, true);
 		return 1;
@@ -143,17 +143,17 @@ static int lua_DestroyGear(lua_State* L)
 
 static int lua_Shutdown(lua_State* L)
 {
-	auto players = Xplicit::ComponentSystem::get_singleton_ptr()->all_of<Xplicit::HumanoidComponent>("HumanoidComponent");
+	auto players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>("HumanoidComponent");
 
 	for (auto& ply : players)
 	{
 		if (!ply->get_peer())
 			continue;
 
-		ply->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = Xplicit::NETWORK_CMD_SHUTDOWN;
+		ply->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] = XPX::NETWORK_CMD_SHUTDOWN;
 	}
 
-	Xplicit::NetworkServerContext::send_all(Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent"));
+	XPX::NetworkServerContext::send_all(XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent"));
 
 	std::exit(0);
 
@@ -164,8 +164,8 @@ static bool XPLICIT_IS_SERVER = true;
 
 void XplicitLoadServerLua() noexcept
 {
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreateGear, "XPXCreateGear");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "XPXDestroyGear");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "XPXLoadScene");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "Shutdown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreateGear, "XPXCreateGear");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "XPXDestroyGear");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "XPXLoadScene");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "Shutdown");
 }

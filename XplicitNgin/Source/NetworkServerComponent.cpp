@@ -13,7 +13,7 @@
 
 #include "NetworkServerComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	/// <summary>
 	/// Utility function which removes the peer and actor from the server.

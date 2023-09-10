@@ -9,7 +9,7 @@
 
 #include "HumanoidReplicationEvent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	HumanoidReplicationEvent::HumanoidReplicationEvent()
 		: 

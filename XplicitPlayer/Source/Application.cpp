@@ -18,12 +18,12 @@
 
 extern void XplicitLoadClientLua() noexcept;
 
-namespace Xplicit
+namespace XPX
 {
 	Vector<float> XPLICIT_DIM = Vector<float>(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
 }
 
-namespace Xplicit::Bites
+namespace XPX::Bites
 {
 	Application::Application(Utils::UriParser& xconnect_to)
 		: mPath(""), mWsa()
@@ -80,7 +80,7 @@ namespace Xplicit::Bites
 		Root::get_singleton_ptr()->set(new InputReceiver());
 		RENDER->setEventReceiver(Root::get_singleton_ptr()->Keyboard);
 
-		Xplicit::init_winsock(&mWsa);
+		XPX::init_winsock(&mWsa);
 
 		//! Fetch our file first.
 		String path_ini(path);

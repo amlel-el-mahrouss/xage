@@ -27,9 +27,9 @@ static int lua_CreateClass(lua_State* L)
 		return 1;
 	}
 
-	Xplicit::String name;
-	Xplicit::String parent;
-	Xplicit::String script;
+	XPX::String name;
+	XPX::String parent;
+	XPX::String script;
 
 	name += lua_tostring(L, 1);
 	parent += lua_tostring(L, 2);
@@ -42,10 +42,10 @@ static int lua_CreateClass(lua_State* L)
 		return 1;
 	}
 
-	auto klass = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::ClassComponent>(
-		Xplicit::Vector<float>(0, 0, 0),
-		Xplicit::Vector<float>(0, 0, 0),
-		Xplicit::Color<float>(0, 0, 0),
+	auto klass = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::ClassComponent>(
+		XPX::Vector<float>(0, 0, 0),
+		XPX::Vector<float>(0, 0, 0),
+		XPX::Color<float>(0, 0, 0),
 		script.c_str(),
 		parent.c_str(),
 		name.c_str()
@@ -59,8 +59,8 @@ static int lua_CreateClass(lua_State* L)
 
 static int lua_DestroyClass(lua_State* L)
 {
-	Xplicit::String name;
-	Xplicit::String parent;
+	XPX::String name;
+	XPX::String parent;
 
 	name += lua_tostring(L, 1);
 	parent += lua_tostring(L, 2);
@@ -71,15 +71,15 @@ static int lua_DestroyClass(lua_State* L)
 		return 1;
 	}
 
-	if (auto klass = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::ClassComponent>(name.c_str()))
+	if (auto klass = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::ClassComponent>(name.c_str()))
 	{
 		if (klass->parent() == parent ||
 			klass->name() == name)
 		{
 			if (klass->script())
-				Xplicit::ComponentSystem::get_singleton_ptr()->remove(klass->script());
+				XPX::ComponentSystem::get_singleton_ptr()->remove(klass->script());
 
-			Xplicit::ComponentSystem::get_singleton_ptr()->remove<Xplicit::ClassComponent>(klass);
+			XPX::ComponentSystem::get_singleton_ptr()->remove<XPX::ClassComponent>(klass);
 		}
 	}
 
@@ -101,7 +101,7 @@ static int lua_CreatePart(lua_State* L)
 	const char* name = lua_tostring(L, 1);
 	const char* parent = lua_tostring(L, 2);
 
-	Xplicit::PartComponent* part = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::PartComponent>(name, parent);
+	XPX::PartComponent* part = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::PartComponent>(name, parent);
 
 	if (part)
 	{
@@ -117,10 +117,10 @@ static int lua_DestroyPart(lua_State* L)
 {
 	const char* name = lua_tostring(L, 1);
 
-	Xplicit::PartComponent* part = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::PartComponent>(name);
+	XPX::PartComponent* part = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::PartComponent>(name);
 
 	if (part)
-		Xplicit::ComponentSystem::get_singleton_ptr()->remove(part);
+		XPX::ComponentSystem::get_singleton_ptr()->remove(part);
 
 	return 0;
 }
@@ -129,33 +129,33 @@ static int lua_DestroyScript(lua_State* L)
 {
 	const char* name = lua_tostring(L, 1);
 
-	Xplicit::LuaScriptComponent* script = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::LuaScriptComponent>(name);
+	XPX::LuaScriptComponent* script = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::LuaScriptComponent>(name);
 
 	if (script)
-		Xplicit::ComponentSystem::get_singleton_ptr()->remove(script);
+		XPX::ComponentSystem::get_singleton_ptr()->remove(script);
 
 	return 0;
 }
 
 XPLICIT_API void XplicitLoadBaseLua()
 {
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World = {}");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World = {}");
 
 	// have a look at GameVar if it ever crashes.
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Settings = {}");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Settings = {}");
 	
 	// players table.
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Players = {}");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Players = {}");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Wait, "Wait");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreateClass, "XPXCreateClass");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyClass, "XPXDestroyClass");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreatePart, "XPXCreatePart");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyPart, "XPXDestroyPart");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "XPXDestroyScript");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Wait, "Wait");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreateClass, "XPXCreateClass");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyClass, "XPXDestroyClass");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreatePart, "XPXCreatePart");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyPart, "XPXDestroyPart");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "XPXDestroyScript");
 
-	Xplicit::RLua::RuntimeClass<Vector3> vector;
+	XPX::RLua::RuntimeClass<Vector3> vector;
 
 	vector.begin_class("Vector3").
 		append_proc("__add", &Vector3::add)
@@ -168,10 +168,10 @@ XPLICIT_API void XplicitLoadBaseLua()
 
 	XPLICIT_GET_DATA_DIR(full_path);
 	
-	Xplicit::String xpx_shared_base = full_path;
+	XPX::String xpx_shared_base = full_path;
 
 	xpx_shared_base += "Contents/";
 	xpx_shared_base += "XPXSharedBase.lua";
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run(xpx_shared_base.c_str());
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run(xpx_shared_base.c_str());
 }

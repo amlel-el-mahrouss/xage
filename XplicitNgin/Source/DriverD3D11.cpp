@@ -19,7 +19,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-namespace Xplicit::Renderer::DX11
+namespace XPX::Renderer::DX11
 {
 	namespace Details
 	{
@@ -271,7 +271,7 @@ namespace Xplicit::Renderer::DX11
 			}
 			catch (...)
 			{
-				DialogHelper::message_box(L"Xplicit Rendering System",
+				DialogHelper::message_box(L"XPX Rendering System",
 					L"Device has been removed!",
 					L"Direct3D driver crashed! Engine has to exit.", TD_ERROR_ICON,
 					TDCBF_OK_BUTTON);

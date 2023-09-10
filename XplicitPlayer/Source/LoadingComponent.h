@@ -14,7 +14,7 @@
 #include <Root.h>
 #include <Uri.h>
 
-namespace Xplicit
+namespace XPX
 {
 	class LoadingComponent final : public Component
 	{

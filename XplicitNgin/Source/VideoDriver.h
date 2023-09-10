@@ -20,7 +20,7 @@
 
 #include "DriverD3D11.h"
 
-namespace Xplicit
+namespace XPX
 {
 	namespace Renderer
 	{

@@ -33,7 +33,7 @@
 #	define XPLICIT_XASSET_ENDPOINT "play-xplicit.com"
 #endif // ifndef XPLICIT_XASSET_ENDPOINT
 
-namespace Xplicit::RoXML
+namespace XPX::RoXML
 {
 	using namespace rapidxml;
 
@@ -615,16 +615,16 @@ namespace Xplicit::RoXML
 
 // Utilities related to data values.
 
-inline void DVFromRoXML(Xplicit::RoXML::RoXMLDocumentParameters& params) noexcept
+inline void DVFromRoXML(XPX::RoXML::RoXMLDocumentParameters& params) noexcept
 {
-	Xplicit::Thread data_values_job([](Xplicit::RoXML::RoXMLDocumentParameters params) {
-		Xplicit::String fmt;
+	XPX::Thread data_values_job([](XPX::RoXML::RoXMLDocumentParameters params) {
+		XPX::String fmt;
 
 		if (params.DataValues.size() > 0)
 		{
 			for (size_t i = 0; i < params.DataValues.size(); i++)
 			{
-				Xplicit::String final_string;
+				XPX::String final_string;
 
 				for (size_t y = 0; y < params.DataValues[i].Values.size(); y++)
 				{
@@ -636,7 +636,7 @@ inline void DVFromRoXML(Xplicit::RoXML::RoXMLDocumentParameters& params) noexcep
 				fmt += "=";
 				fmt += std::format("{}{}{}", "{", final_string, "}");
 
-				Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 				fmt.clear();
 			}

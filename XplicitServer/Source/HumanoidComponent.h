@@ -14,7 +14,7 @@
 
 #include <CLua/CLua.hpp>
 
-namespace Xplicit
+namespace XPX
 {
 	enum class HUMANOID_STATE : std::int16_t
 	{
@@ -77,7 +77,7 @@ namespace Xplicit
 		GearComponent* get_active_gear() noexcept;
 
 	public:
-		Xplicit::Lua::CLuaClass* get_class() const;
+		XPX::Lua::CLuaClass* get_class() const;
 
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;

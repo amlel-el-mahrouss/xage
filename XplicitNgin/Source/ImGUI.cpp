@@ -9,7 +9,7 @@
 
 #include "ImGUI.h"
 
-namespace Xplicit::ImGUI
+namespace XPX::ImGUI
 {
 
 	UIButton::UIButton(const PChar* text)

@@ -11,7 +11,7 @@
 
 #include "Xplicit.h"
 
-namespace Xplicit 
+namespace XPX 
 {
 	///! do that so that we don't deal with any errors.
 	class EventListener;
@@ -60,8 +60,8 @@ namespace Xplicit
 		Event(const Event&) = default;
 
 	public:
-		virtual void operator()();
 		virtual const char* name() noexcept;
+		virtual void operator()();
 
 	public:
 		void update() noexcept;

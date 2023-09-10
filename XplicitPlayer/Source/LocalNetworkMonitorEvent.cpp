@@ -20,7 +20,7 @@
 
 #define XPLICIT_MAX_RESET (1024)
 
-namespace Xplicit
+namespace XPX
 {
 	static int XPLICIT_RESET_COUNT = 0;
 
@@ -88,7 +88,7 @@ namespace Xplicit
 			NetworkPacket packet{};
 			packet = mNetwork->get();
 
-			const auto players = ComponentSystem::get_singleton_ptr()->all_of<Xplicit::LocalHumanoidComponent>("LocalHumanoidComponent");
+			const auto players = ComponentSystem::get_singleton_ptr()->all_of<XPX::LocalHumanoidComponent>("LocalHumanoidComponent");
 
 			for (std::size_t index = 0UL; index < players.size(); ++index)
 			{
@@ -100,7 +100,7 @@ namespace Xplicit
 			XPLICIT_INFO("World:Login [EVENT]");
 #endif
 
-			ComponentSystem::get_singleton_ptr()->add<Xplicit::LocalHumanoidComponent>(packet.public_hash, false, packet.buffer);
+			ComponentSystem::get_singleton_ptr()->add<XPX::LocalHumanoidComponent>(packet.public_hash, false, packet.buffer);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Login()");
 
 			/*! invalidate command right there. */

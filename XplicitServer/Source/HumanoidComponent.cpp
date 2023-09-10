@@ -13,7 +13,7 @@
 
 #include "HumanoidComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	HumanoidComponent::HumanoidComponent()
 		:
@@ -135,7 +135,7 @@ namespace Xplicit
 			for (auto& gear : this->mGears)
 			{
 				if (gear)
-					Xplicit::ComponentSystem::get_singleton_ptr()->remove(gear);
+					XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
 
 				gear = nullptr;
 			}
@@ -201,7 +201,7 @@ namespace Xplicit
 
 	void HumanoidComponent::set_state(const HUMANOID_STATE state) noexcept { mState = state; }
 
-	Xplicit::Lua::CLuaClass* HumanoidComponent::get_class() const
+	XPX::Lua::CLuaClass* HumanoidComponent::get_class() const
 	{
 		XPLICIT_ASSERT(mClass);
 		return mClass.get();

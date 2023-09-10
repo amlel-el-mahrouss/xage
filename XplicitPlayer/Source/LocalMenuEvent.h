@@ -15,7 +15,7 @@
 
 #include "MenuUI.h"
 
-namespace Xplicit
+namespace XPX
 {
 	class LocalMenuEvent final : public Event
 	{

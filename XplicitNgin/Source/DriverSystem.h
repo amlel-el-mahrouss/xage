@@ -18,7 +18,7 @@
 #include <map>
 #include <CLua/CLua.hpp>
 
-namespace Xplicit::Renderer
+namespace XPX::Renderer
 {
 	/// <summary>
 	/// Tells what rendering api we're using.

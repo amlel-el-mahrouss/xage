@@ -17,7 +17,7 @@
  * @file
  */
 
-namespace Xplicit::Renderer::OpenGL
+namespace XPX::Renderer::OpenGL
 {
 	namespace Details
 	{

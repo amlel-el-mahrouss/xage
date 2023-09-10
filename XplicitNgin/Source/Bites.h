@@ -27,7 +27,7 @@
 #define XPLICIT_GET_X_POS(LPARAM) GET_X_LPARAM(LPARAM)
 #define XPLICIT_GET_Y_POS(LPARAM) GET_Y_LPARAM(LPARAM)
 
-namespace Xplicit::Bites
+namespace XPX::Bites
 {
 	class XPLICIT_API Win32Window final
 	{

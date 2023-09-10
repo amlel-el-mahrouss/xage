@@ -14,7 +14,7 @@
 #include "Xplicit.h"
 #include "Event.h"
 
-namespace Xplicit
+namespace XPX
 {
 	// @brief Maximum players in single party.
 	constexpr std::int16_t XPLICIT_MAX_CONNECTIONS = 24;

@@ -22,7 +22,7 @@
 #define XPLICIT_XCONNECT_PROTOCOL ("xconnect://")
 #endif // XPLICIT_XCONNECT_PROTOCOL
 
-namespace Xplicit::Utils
+namespace XPX::Utils
 {
 	// Accessors are like iterators, but with an offset.
 	using UriAccessor = int32_t;

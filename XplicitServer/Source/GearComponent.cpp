@@ -14,7 +14,7 @@
 
 //! This file handles Gears (Sword, Pistol, Build Tools...)
 
-namespace Xplicit
+namespace XPX
 {
 	static const String destroy_gear_class_snippet(const String& name) noexcept
 	{

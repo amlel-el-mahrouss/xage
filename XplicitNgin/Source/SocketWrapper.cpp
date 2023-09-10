@@ -9,7 +9,7 @@
 
 #include "SocketWrapper.h"
 
-namespace Xplicit::Network
+namespace XPX::Network
 {
 	Socket::Socket(const SOCKET_TYPE type)
 		: PublicSocket(SOCKET_ERROR)

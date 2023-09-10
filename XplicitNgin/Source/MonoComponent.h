@@ -19,7 +19,7 @@
 #include <metadata/assembly.h>
 #include <metadata/debug-helpers.h>
 
-namespace Xplicit
+namespace XPX
 {
 	class MonoScriptComponent;
 	class MonoEngineComponent;

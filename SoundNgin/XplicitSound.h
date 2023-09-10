@@ -29,7 +29,7 @@
 #	define XPLICIT_AUDIO_RATE (44100)
 #endif // ifndef XPLICIT_AUDIO_RATE
 
-namespace Xplicit
+namespace XPX
 {
 	namespace Audio
 	{

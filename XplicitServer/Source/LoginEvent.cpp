@@ -16,7 +16,7 @@
 #include "LoginEvent.h"
 #include <CLua/CLua.hpp>
 
-namespace Xplicit
+namespace XPX
 {
 	/**
 	 * \brief Creates an hash from the GUID.

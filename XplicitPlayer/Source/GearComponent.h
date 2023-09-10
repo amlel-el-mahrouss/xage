@@ -16,7 +16,7 @@
 #include <CommonEngine.h>
 #include <ClassComponent.h>
 
-namespace Xplicit
+namespace XPX
 {
 	class GearComponent final : public ClassComponent
 	{

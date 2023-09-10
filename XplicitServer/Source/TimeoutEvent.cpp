@@ -13,7 +13,7 @@
 
 #include "TimeoutEvent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	TimeoutEvent::TimeoutEvent()
 		:

@@ -17,7 +17,7 @@
 #define XPLICIT_LUA_GLOBAL "_G."
 #define XPLICIT_LUA_NAMESPACE "World."
 
-namespace Xplicit
+namespace XPX
 {
 	SpawnComponent::SpawnComponent(const Vector<float>& vec) 
 		: Component(), mClass(std::make_unique<Lua::CLuaClass>("SpawnLocation"))

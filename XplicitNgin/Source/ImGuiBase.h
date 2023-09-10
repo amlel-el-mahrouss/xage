@@ -19,7 +19,7 @@
 
 #define slots public
 
-namespace Xplicit
+namespace XPX
 {
 	namespace ImGUI
 	{

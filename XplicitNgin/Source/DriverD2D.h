@@ -21,7 +21,7 @@
 #include <dwrite.h>
 #include <d2d1helper.h>
 
-namespace Xplicit
+namespace XPX
 {
 	using float32 = float;
 	using float64 = double;
@@ -37,7 +37,7 @@ namespace Xplicit
 
 #ifdef XPLICIT_WINDOWS
 
-namespace Xplicit::Renderer::D2D
+namespace XPX::Renderer::D2D
 {
 	class DriverSystemD2D;
 	class UIView;

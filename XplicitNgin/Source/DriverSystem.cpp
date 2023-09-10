@@ -16,7 +16,7 @@
 
 #include "DriverSystem.h"
 
-namespace Xplicit::Renderer
+namespace XPX::Renderer
 {
 	const char* DriverSystem::name() noexcept { return ("DriverSystem"); }
 

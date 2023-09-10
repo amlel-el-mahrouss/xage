@@ -14,7 +14,7 @@
 
 #include <Nplicit.h>
 
-namespace Xplicit
+namespace XPX
 {
 	typedef irr::scene::ISceneNode* CorePartPtr;
 

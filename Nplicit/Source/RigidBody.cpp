@@ -13,7 +13,7 @@
 
 #include "RigidBody.h"
 
-namespace Xplicit
+namespace XPX
 {
 
 }

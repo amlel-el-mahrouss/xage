@@ -15,7 +15,7 @@
 #include "DriverSystem.h"
 #include "Bites.h"
 
-namespace Xplicit::Renderer::OpenGL
+namespace XPX::Renderer::OpenGL
 {
 	class ShaderError : public std::runtime_error
 	{

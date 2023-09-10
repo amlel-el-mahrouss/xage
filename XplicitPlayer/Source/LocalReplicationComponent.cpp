@@ -24,9 +24,9 @@
 #	define XPLICIT_XASSET_IDENT ("xasset")
 #endif // ifndef XPLICIT_XASSET_IDENT
 
-Xplicit::RoXML::RoXMLDocumentParser parser;
+XPX::RoXML::RoXMLDocumentParser parser;
 
-namespace Xplicit
+namespace XPX
 {
 	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_REPLICATION; }
 

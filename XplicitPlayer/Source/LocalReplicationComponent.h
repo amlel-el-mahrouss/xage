@@ -12,7 +12,7 @@
 #include <Root.h>
 #include <NetworkComponent.h>
 
-namespace Xplicit
+namespace XPX
 {
 	class LocalReplicationComponent final : public Component
 	{

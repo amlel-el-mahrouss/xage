@@ -917,7 +917,7 @@ namespace uuids
 #endif
 }
 
-namespace Xplicit
+namespace XPX
 {
     using UUID = uuids::uuid;
 }

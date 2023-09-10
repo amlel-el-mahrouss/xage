@@ -15,7 +15,7 @@
 #include "SpawnComponent.h"
 #include "HumanoidComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	class HealthMonitorEvent : public Event
 	{

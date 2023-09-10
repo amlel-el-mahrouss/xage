@@ -29,19 +29,19 @@ static bool XPLICIT_EXIT_REQUESTED = false;
 
 static void XplicitPrintHelp()
 {
-	XPLICIT_INFO("\a+-------------- Xplicit Manual --------------+");
+	XPLICIT_INFO("\a+-------------- XPX Manual --------------+");
 	XPLICIT_INFO("exit: Exits the current server.");
 	XPLICIT_INFO("xconnect: Gets Xconnect network info.");
 	XPLICIT_INFO("ls: Lists players.");
-	XPLICIT_INFO("+-------------- Xplicit Manual --------------+");
+	XPLICIT_INFO("+-------------- XPX Manual --------------+");
 }
 
 static void XplicitLoadShell()
 {
 	char cmd_buf[1024];
-	const auto network = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+	const auto network = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent");
 
-	while (Xplicit::ComponentSystem::get_singleton_ptr() && Xplicit::EventSystem::get_singleton_ptr())
+	while (XPX::ComponentSystem::get_singleton_ptr() && XPX::EventSystem::get_singleton_ptr())
 	{
 		std::cin.getline(cmd_buf, 1024);
 
@@ -58,16 +58,16 @@ static void XplicitLoadShell()
 		{
 			for (int index = 0; index < network->size(); ++index)
 			{
-				if (network->get(index)->status == Xplicit::NETWORK_STAT_CONNECTED)
+				if (network->get(index)->status == XPX::NETWORK_STAT_CONNECTED)
 					std::cout << "CONNECTED, ";
 
-				if (network->get(index)->status == Xplicit::NETWORK_STAT_DISCONNECTED)
+				if (network->get(index)->status == XPX::NETWORK_STAT_DISCONNECTED)
 					std::cout << "DISCONNECTED, ";
 
-				if (network->get(index)->status == Xplicit::NETWORK_STAT_INVALID)
+				if (network->get(index)->status == XPX::NETWORK_STAT_INVALID)
 					std::cout << "INVALID, ";
 
-				if (network->get(index)->status == Xplicit::NETWORK_STAT_STASIS)
+				if (network->get(index)->status == XPX::NETWORK_STAT_STASIS)
 					std::cout << "IN-CHECK, ";
 
 				std::cout << "INET: " << network->get(index)->ip_address << std::endl;
@@ -81,8 +81,8 @@ static void XplicitLoadShell()
 			if (!ip4)
 				XPLICIT_CRITICAL("xconnect: address is invalid, please define XPLICIT_SERVER_ADDR again in order to be able to reboot the server.");
 
-			XPLICIT_INFO(Xplicit::String("IP: ") + (ip4 ? ip4 : "?"));
-			XPLICIT_INFO(Xplicit::String("Version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
+			XPLICIT_INFO(XPX::String("IP: ") + (ip4 ? ip4 : "?"));
+			XPLICIT_INFO(XPX::String("Version: ") + std::to_string(XPLICIT_NETWORK_VERSION));
 		}
 	}
 }
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
 		WSADATA wsa;
 		RtlZeroMemory(&wsa, sizeof(WSADATA));
 
-		Xplicit::init_winsock(&wsa);
+		XPX::init_winsock(&wsa);
 #endif
 
 		/*
@@ -128,11 +128,11 @@ int main(int argc, char** argv)
 
 		const char* port4 = argv[1];
 
-		const auto network = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::NetworkServerComponent>(ip4, port4);
+		const auto network = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::NetworkServerComponent>(ip4, port4);
 
 #ifdef XPLICIT_WINDOWS
 
-		Xplicit::String title = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
+		XPX::String title = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
 
 		title += ":";
 		title += std::to_string(network->port());
@@ -147,39 +147,39 @@ int main(int argc, char** argv)
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();
 
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::HumanoidReplicationEvent>();
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::HealthMonitorEvent>();
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::TimeoutEvent>();
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::MovementEvent>();
-		Xplicit::EventSystem::get_singleton_ptr()->add<Xplicit::LoginEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::MovementEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
 
-		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::SpawnComponent>(XPLICIT_ORIGIN);
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
 
 		XPLICIT_PLACE_ID = argv[2];
 
-		Xplicit::RoXML::RoXMLDocumentParameters params;
+		XPX::RoXML::RoXMLDocumentParameters params;
 
 		params.Has3D = false;
 		params.NoLua = false;
 		params.Path = XPLICIT_PLACE_ID;
 
-		Xplicit::RoXML::RoXMLDocumentParser parser;
+		XPX::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);
 
 		DVFromRoXML(params);
 
-		Xplicit::Thread logic([&]() {
-			const auto net = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+		XPX::Thread logic([&]() {
+			const auto net = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent");
 
-			while (Xplicit::ComponentSystem::get_singleton_ptr() &&
-				Xplicit::EventSystem::get_singleton_ptr())
+			while (XPX::ComponentSystem::get_singleton_ptr() &&
+				XPX::EventSystem::get_singleton_ptr())
 			{
-				Xplicit::NetworkServerContext::recv_all(net);
+				XPX::NetworkServerContext::recv_all(net);
 
-				Xplicit::EventSystem::get_singleton_ptr()->update();
-				Xplicit::ComponentSystem::get_singleton_ptr()->update();
+				XPX::EventSystem::get_singleton_ptr()->update();
+				XPX::ComponentSystem::get_singleton_ptr()->update();
 
-				Xplicit::NetworkServerContext::send_all(net);
+				XPX::NetworkServerContext::send_all(net);
 
 			};
 		});
@@ -210,7 +210,7 @@ int main(int argc, char** argv)
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		Xplicit::DialogHelper::message_box(L"Xplicit Server", 
+		XPX::DialogHelper::message_box(L"XPX Server", 
 			L"Program crash!",
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 

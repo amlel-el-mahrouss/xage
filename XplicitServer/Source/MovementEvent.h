@@ -10,13 +10,12 @@
 #pragma once
 
 #include "ServerConfig.h"
+#include "HumanoidComponent.h"
 
 #include <Nplicit.h>
 #include <RigidBody.h>
 
-#include "HumanoidComponent.h"
-
-namespace Xplicit
+namespace XPX
 {
 	/// <summary>
 	/// Either accepts of refuses player movement.

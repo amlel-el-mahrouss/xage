@@ -18,7 +18,7 @@
 #include "HelperMacros.h"
 #include "MonoInterop.h"
 
-namespace Xplicit
+namespace XPX
 {
 	XPLICIT_API bool xplicit_register_class(MonoString* namespase, MonoString* klass)
 	{

@@ -47,7 +47,7 @@
 
 using namespace DirectX;
 
-namespace Xplicit::Renderer::DX11
+namespace XPX::Renderer::DX11
 {
 	namespace Details
 	{

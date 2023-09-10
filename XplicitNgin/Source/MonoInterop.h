@@ -14,7 +14,7 @@
 #include "Component.h"
 #include "MonoComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	class MonoClassComponent;
 	class MonoEventListener;

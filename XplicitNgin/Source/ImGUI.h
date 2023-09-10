@@ -13,7 +13,7 @@
 #include "ImGuiBase.h"
 #include <NMath.h>
 
-namespace Xplicit::ImGUI
+namespace XPX::ImGUI
 {
 	class XPLICIT_API UIInterface
 	{

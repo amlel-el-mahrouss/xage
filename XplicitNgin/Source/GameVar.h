@@ -15,7 +15,7 @@
 #include "Xplicit.h"
 #include <CLua/CLua.hpp>
 
-namespace Xplicit
+namespace XPX
 {
 	class XPLICIT_API GameVar final : public Lua::CLuaClass
 	{

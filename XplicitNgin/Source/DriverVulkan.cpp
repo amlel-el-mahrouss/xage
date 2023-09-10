@@ -10,7 +10,7 @@
 #include "DriverVulkan.h"
 #include <set>
 
-namespace Xplicit::Renderer::Vk
+namespace XPX::Renderer::Vk
 {
 	namespace Details
 	{

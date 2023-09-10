@@ -59,7 +59,7 @@
 #define XPLICIT_BAD_ADDRESS     (0xFFFFFFFF)
 #define XPLICIT_BAD_ADDRESS_STR ("255.255.255.255")
 
-namespace Xplicit
+namespace XPX
 {
 #ifdef XPLICIT_WINDOWS
     using PrivateAddressData = SOCKADDR_IN;
@@ -194,7 +194,7 @@ namespace Xplicit
         int64_t hash;
         
     public:
-        explicit NetworkPeer(const Xplicit::Auth::XplicitID& id);
+        explicit NetworkPeer(const XPX::Auth::XplicitID& id);
         ~NetworkPeer();
         
     public:
@@ -248,7 +248,7 @@ typedef int socklen_t;
 #define XPLICIT_REPL_DESTROY (19)
 #define XPLICIT_REPL_UPDATE (20)
 
-namespace Xplicit::Utils
+namespace XPX::Utils
 {
     class InternetProtocolChecker final
     {

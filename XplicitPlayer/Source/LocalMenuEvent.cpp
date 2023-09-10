@@ -14,10 +14,6 @@
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
-#define LOCAL_MENU_TWEEN_START	(8)
-#define LOCAL_MENU_TWEEN_END	(2)
-#define LOCAL_MENU_TWEENING		(0.1f)
-
 namespace Xplicit
 {
 	constexpr int XPLICIT_TIMEOUT_MENU = 2000;

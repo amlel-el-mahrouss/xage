@@ -28,7 +28,7 @@ extern "C" {
 #define XPLICIT_LUA_DESCRIPTION "C++ Lua extension for the XplicitNgine."
 #define XPLICIT_LUA_AUTHOR "Amlal El Mahrouss"
 
-namespace Xplicit::Lua
+namespace XPX::Lua
 {
 	typedef lua_State* CLuaStatePtr;
 
@@ -66,8 +66,8 @@ namespace Xplicit::Lua
 	public:
 		void global_set(lua_CFunction func, const char* name) noexcept
 		{
-			lua_pushcfunction(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), func);
-			lua_setglobal(Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state(), name);
+			lua_pushcfunction(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), func);
+			lua_setglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), name);
 		}
 
 		std::int32_t run(const char* file) noexcept

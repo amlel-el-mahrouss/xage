@@ -9,7 +9,7 @@
 
 #include "PartComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	PartComponent::PartComponent(const char* name, const char* parent,
 		Vector<float> pos,

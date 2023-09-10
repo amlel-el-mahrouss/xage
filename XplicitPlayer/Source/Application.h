@@ -18,12 +18,12 @@
 #include <Uri.h>
 #include <ini.h>
 
-namespace Xplicit
+namespace XPX
 {
 	extern Vector<float> XPLICIT_DIM;
 } // namespace Xplicit
 
-namespace Xplicit::Bites
+namespace XPX::Bites
 {
 	constexpr const PChar* XPLICIT_APP_NAME = L"XPLICIT";
 

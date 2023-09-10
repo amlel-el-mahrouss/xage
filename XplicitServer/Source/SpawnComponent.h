@@ -14,7 +14,7 @@
 
 #include "ServerConfig.h"
 
-namespace Xplicit
+namespace XPX
 {
 	class SpawnComponent : public Component
 	{

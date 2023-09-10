@@ -15,7 +15,7 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
-namespace Xplicit::HTTP
+namespace XPX::HTTP
 {
     constexpr int16_t XPLICIT_HTTP_PORT = 443;
 
@@ -56,7 +56,7 @@ namespace Xplicit::HTTP
             else if (!strcmp(extension.c_str(), ".jpg"))
                 return { .t_name = "JPEG", .t_mime = "Content-Type: image/jpeg" };
             else if (!strcmp(extension.c_str(), ".ar"))
-                return { .t_name = "Xplicit Package Format", .t_mime = "Content-Type: archive/ar" };
+                return { .t_name = "XPX Package Format", .t_mime = "Content-Type: archive/ar" };
 
             return { .t_name = "Not allowed", .t_mime = "Content-Type: */not-allowed" };
         }
@@ -112,7 +112,7 @@ namespace Xplicit::HTTP
     class HTTPError final : public std::runtime_error 
     {
     public:
-        explicit HTTPError(const std::uint16_t what) : std::runtime_error("Xplicit HTTP Error") {  }
+        explicit HTTPError(const std::uint16_t what) : std::runtime_error("XPX HTTP Error") {  }
         ~HTTPError() override = default; // let the ABI define that.
 
         HTTPError& operator=(const HTTPError&) = default;

@@ -17,7 +17,7 @@
 #define XPLICIT_CLASS_NAMESPACE "World"
 #define XPLICIT_CLASS_NAME "Class"
 
-namespace Xplicit
+namespace XPX
 {
 	class XPLICIT_API ClassComponent : public Component, public Lua::CLuaClass, public XPXAttribute
 	{

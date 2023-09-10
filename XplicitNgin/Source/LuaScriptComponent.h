@@ -11,7 +11,7 @@
 
 #include "ClassComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	/*
 	 * @brief Lua Script Instance.

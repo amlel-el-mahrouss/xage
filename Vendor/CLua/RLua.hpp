@@ -17,9 +17,9 @@
 #define XPLICIT_RLUA_AUTHOR "Amlal El Mahrouss"
 
 // L = lua_State, N = index, X = name.
-#define RLUA_TYPE_CHECK(L, N, X) Xplicit::String index = luaL_checkstring(L, N);luaL_argcheck(L, index == X, 2, "RLua: Index out of range");
+#define RLUA_TYPE_CHECK(L, N, X) XPX::String index = luaL_checkstring(L, N);luaL_argcheck(L, index == X, 2, "RLua: Index out of range");
 
-namespace Xplicit::RLua
+namespace XPX::RLua
 {
 	typedef int (*RLuaProc)(lua_State* L);
 

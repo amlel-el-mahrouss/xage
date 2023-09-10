@@ -9,7 +9,7 @@
 
 #include "ServerReplicationFactory.h"
 
-namespace Xplicit
+namespace XPX
 {
 	ServerReplicationFactory::ServerReplicationFactory()
 		:

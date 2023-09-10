@@ -16,7 +16,7 @@
 #include "MovementEvent.h"
 #include <CLua/CLua.hpp>
 
-namespace Xplicit
+namespace XPX
 {
 	constexpr const double XPLICIT_DELTA_PER_SECOND = 1000.f;
 
@@ -29,9 +29,9 @@ namespace Xplicit
 
 		if (!mDeltaVar)
 		{
-			mDeltaVar = Xplicit::GameVarManager::get_singleton_ptr()->create("DeltaTime",
+			mDeltaVar = XPX::GameVarManager::get_singleton_ptr()->create("DeltaTime",
 				"0.01",
-				Xplicit::GameVar::FLAG_SERVER_ONLY | Xplicit::GameVar::FLAG_CHEAT);
+				XPX::GameVar::FLAG_SERVER_ONLY | XPX::GameVar::FLAG_CHEAT);
 		}
 	}
 

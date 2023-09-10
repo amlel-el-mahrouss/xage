@@ -16,7 +16,7 @@
 #include <RoXML.h>
 #include <Root.h>
 
-namespace Xplicit
+namespace XPX
 {
 	StaticBundleMesh::StaticBundleMesh(const char* character_path)
 	{

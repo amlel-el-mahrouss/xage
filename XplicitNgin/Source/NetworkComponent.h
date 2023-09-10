@@ -28,7 +28,7 @@
 #endif
 #endif
 
-namespace Xplicit 
+namespace XPX 
 {
 	enum NETWORK_ERR : int
 	{

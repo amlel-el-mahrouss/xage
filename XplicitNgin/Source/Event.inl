@@ -8,7 +8,7 @@
  */
 
 template <typename T, typename... Args>
-T* Xplicit::EventSystem::add(Args&&... args)
+T* XPX::EventSystem::add(Args&&... args)
 {
 	T* ptr = new T{ args... };
 	XPLICIT_ASSERT(ptr);
@@ -30,7 +30,7 @@ T* Xplicit::EventSystem::add(Args&&... args)
 }
 
 template <typename T>
-T* Xplicit::EventSystem::get(const char* name)
+T* XPX::EventSystem::get(const char* name)
 {
 	for (size_t i = 0; i < mEvents.size(); i++)
 	{
@@ -51,7 +51,7 @@ T* Xplicit::EventSystem::get(const char* name)
 }
 
 template <typename T>
-bool Xplicit::EventSystem::remove(T* ptr)
+bool XPX::EventSystem::remove(T* ptr)
 {
 	if (!ptr)
 		return false;

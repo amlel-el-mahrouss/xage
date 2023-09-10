@@ -15,7 +15,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-namespace Xplicit::Bites
+namespace XPX::Bites
 {
 	Win32Window::Win32Window(const char* wndName, const char* wndClass, HINSTANCE hInstance)
 		: mTraits(), mExit(false)

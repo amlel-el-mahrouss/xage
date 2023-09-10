@@ -12,7 +12,7 @@
 #include "ServerConfig.h"
 #include "HumanoidComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	class LoginEvent final : public Event
 	{

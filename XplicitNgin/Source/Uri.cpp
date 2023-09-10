@@ -24,7 +24,7 @@
 #define URI_SEPARATOR '\a'
 #endif // URI_SEPARATOR
 
-namespace Xplicit::Utils
+namespace XPX::Utils
 {
 	UriParser::UriParser(const char* protocol)
 	{

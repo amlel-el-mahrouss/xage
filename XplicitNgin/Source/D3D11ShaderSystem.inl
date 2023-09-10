@@ -10,7 +10,7 @@
  * =====================================================================
  */
 
-namespace Xplicit::Renderer::DX11
+namespace XPX::Renderer::DX11
 {
 	template <typename StructSz>
 	HRESULT ShaderSystemD3D11::ShaderTraits::create_matrix_buffer(ID3D11Device* device)

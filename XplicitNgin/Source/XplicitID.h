@@ -16,7 +16,7 @@
 
 #define XPLICIT_ID_DUMMY "XPLICIT_0_0000000000"
 
-namespace Xplicit::Auth
+namespace XPX::Auth
 {
 	//!
 	//! @class : XplicitID

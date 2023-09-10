@@ -29,7 +29,7 @@
 #include <RoXML.h>
 #include <codecvt>
 
-namespace Xplicit
+namespace XPX
 {
 	// connection timeout, then client quits.
 	constexpr int XPLICIT_TIMEOUT = 18000;
@@ -40,7 +40,7 @@ namespace Xplicit
 		mTimeout(XPLICIT_TIMEOUT),
 		mLoadingFrame()
 	{
-		ComponentSystem::get_singleton_ptr()->add<Xplicit::LocalCameraComponent>();
+		ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
 		
 		mLoadingFrame.X = 0;
 		mLoadingFrame.Y = 0;

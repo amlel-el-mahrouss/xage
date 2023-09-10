@@ -15,7 +15,7 @@
 
 #include "ServerConfig.h"
 
-namespace Xplicit
+namespace XPX
 {
 	class TimeoutEvent final : public Event
 	{

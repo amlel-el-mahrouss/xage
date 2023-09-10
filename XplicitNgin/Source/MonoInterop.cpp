@@ -16,7 +16,7 @@
 
 #include "MonoInterop.h"
 
-namespace Xplicit
+namespace XPX
 {
 	XPLICIT_API bool xplicit_register_event(MonoString* event_name)
 	{

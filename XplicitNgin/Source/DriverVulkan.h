@@ -27,7 +27,7 @@
 
 #include <vulkan/vulkan.hpp>
 
-namespace Xplicit::Renderer::Vk
+namespace XPX::Renderer::Vk
 {
 	namespace Details
 	{

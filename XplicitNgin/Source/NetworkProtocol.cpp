@@ -14,9 +14,9 @@
 #include "NetworkProtocol.h"
 #include "NetworkServerComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
-    NetworkPeer::NetworkPeer(const Xplicit::Auth::XplicitID& id)
+    NetworkPeer::NetworkPeer(const XPX::Auth::XplicitID& id)
 	:
         address(),
         xplicit_id(id),

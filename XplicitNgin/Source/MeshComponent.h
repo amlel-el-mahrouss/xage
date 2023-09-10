@@ -17,7 +17,7 @@
 #include "Component.h"
 #include "Root.h"
 
-namespace Xplicit
+namespace XPX
 {
 	/* this classes gives an component a model. */
 	class XPLICIT_API MeshComponent : public Lua::CLuaClass

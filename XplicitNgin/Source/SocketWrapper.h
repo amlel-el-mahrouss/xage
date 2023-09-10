@@ -31,7 +31,7 @@
 
 #endif // XPLICIT_WINDOWS
 
-namespace Xplicit
+namespace XPX
 {
 	enum class SOCKET_FLAG : std::int64_t
 	{
@@ -40,7 +40,7 @@ namespace Xplicit
 	};
 }
 
-namespace Xplicit::Network
+namespace XPX::Network
 {
 	enum class SOCKET_TYPE
 	{

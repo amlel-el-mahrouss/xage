@@ -14,7 +14,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-namespace Xplicit::Renderer::D2D
+namespace XPX::Renderer::D2D
 {
 	DriverSystemD2D::DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv)
 		: m_pDriver(drv)

@@ -9,7 +9,7 @@
 
 #include "XplicitID.h"
 
-namespace Xplicit::Auth
+namespace XPX::Auth
 {
 	XplicitID::XplicitID(const std::int64_t& universe,
 						 const std::int64_t& id) noexcept

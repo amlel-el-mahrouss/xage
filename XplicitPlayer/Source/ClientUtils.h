@@ -15,19 +15,19 @@
 #include <Xplicit.h>
 #include <Root.h>
 
-inline void PlaySound(const Xplicit::String& path, const Xplicit::Vector<float>& pos)
+inline void PlaySound(const XPX::String& path, const XPX::Vector<float>& pos)
 {
-	if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::SoundComponent>("SoundComponent");
+	if (auto snd = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>("SoundComponent");
 		snd)
 	{
-		snd->set_position(Xplicit::Vector<float>(pos.X, pos.Y, pos.Z));
+		snd->set_position(XPX::Vector<float>(pos.X, pos.Y, pos.Z));
 		snd->set_volume(1);
 
 		snd->play(path);
 	}
 }
 
-namespace Xplicit
+namespace XPX
 {
 	class Explosion final
 	{

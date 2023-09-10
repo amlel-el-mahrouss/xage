@@ -19,7 +19,7 @@
 #include <XplicitID.h>
 #include <GameVar.h>
 
-namespace Xplicit
+namespace XPX
 {
 	enum class HUMANOID_STATE
 	{

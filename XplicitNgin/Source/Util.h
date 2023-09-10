@@ -20,26 +20,26 @@
 #define XPLICIT_XASSET_URI "xasset://"
 #define XPLICIT_XASSET_URI_ENDPOINT "play-xplicit.com"
 
-inline Xplicit::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
-inline Xplicit::Color<float> White(0xFF, 0xFF, 0xFF, 0xFF);
-inline Xplicit::Color<float> DarkRed(0x8B, 0, 0, 0xFF);
-inline Xplicit::Color<float> Black(0, 0, 0, 0xFF);
-inline Xplicit::Color<float> Red(0xFF, 0, 0, 0xFF);
+inline XPX::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
+inline XPX::Color<float> White(0xFF, 0xFF, 0xFF, 0xFF);
+inline XPX::Color<float> DarkRed(0x8B, 0, 0, 0xFF);
+inline XPX::Color<float> Black(0, 0, 0, 0xFF);
+inline XPX::Color<float> Red(0xFF, 0, 0, 0xFF);
 
-inline Xplicit::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, 0xFFFFFF);
-inline Xplicit::Vector<float>   XPLICIT_ORIGIN(0.0f, 0.0f, 0.0f);
+inline XPX::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, 0xFFFFFF);
+inline XPX::Vector<float>   XPLICIT_ORIGIN(0.0f, 0.0f, 0.0f);
 
 /// <summary>
 /// Gets the XPLICIT_ID of a specific peer.
 /// </summary>
 /// <param name="player_index">player at index.</param>
 /// <returns></returns>
-inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
+inline XPX::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 {
-	if (player_index > Xplicit::XPLICIT_MAX_CONNECTIONS)
+	if (player_index > XPX::XPLICIT_MAX_CONNECTIONS)
 		return XPLICIT_INVALID_ID;
 
-	Xplicit::NetworkServerComponent* network = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::NetworkServerComponent>("NetworkServerComponent");
+	XPX::NetworkServerComponent* network = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent");
 
 	if (network)
 		return network->get(player_index)->xplicit_id;
@@ -49,12 +49,12 @@ inline Xplicit::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 
 inline bool DownloadURL(std::string _url, std::string out_path = "") noexcept
 {
-	std::unique_ptr<Xplicit::XHTTPManager> http_manager = std::make_unique<Xplicit::XHTTPManager>();
+	std::unique_ptr<XPX::XHTTPManager> http_manager = std::make_unique<XPX::XHTTPManager>();
 
 	if (http_manager &&
-		_url.find(XPLICIT_XASSET_URI) != Xplicit::String::npos)
+		_url.find(XPLICIT_XASSET_URI) != XPX::String::npos)
 	{
-		Xplicit::String url = "/";
+		XPX::String url = "/";
 		url += _url.erase(_url.find(XPLICIT_XASSET_URI), strlen(XPLICIT_XASSET_URI));
 
 		http_manager->set_endpoint(XPLICIT_XASSET_URI_ENDPOINT);
@@ -65,7 +65,7 @@ inline bool DownloadURL(std::string _url, std::string out_path = "") noexcept
 	return false;
 }
 
-namespace Xplicit
+namespace XPX
 {
 	class LuaScriptComponent;
 

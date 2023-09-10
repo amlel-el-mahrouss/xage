@@ -31,7 +31,7 @@ XPLICIT_API bool xplicit_open_logger();
 #define PACKED_STRUCT(DECL)
 #endif
 
-namespace Xplicit 
+namespace XPX 
 {
 	namespace FS = std::filesystem;
 
@@ -653,8 +653,8 @@ namespace Xplicit
 #	define XPLICIT_FINI_COM CoUninitialize()
 #endif // ifdef XPLICIT_WINDOWS
 
-#define XPLICIT_CRITICAL(...) Xplicit::Logger::get_singleton().get()->critical(__VA_ARGS__)
-#define XPLICIT_ERROR(...) Xplicit::Logger::get_singleton().get()->error(__VA_ARGS__)
-#define XPLICIT_INFO(...) Xplicit::Logger::get_singleton().get()->info(__VA_ARGS__)
+#define XPLICIT_CRITICAL(...) XPX::Logger::get_singleton().get()->critical(__VA_ARGS__)
+#define XPLICIT_ERROR(...) XPX::Logger::get_singleton().get()->error(__VA_ARGS__)
+#define XPLICIT_INFO(...) XPX::Logger::get_singleton().get()->info(__VA_ARGS__)
 
 #endif // ifndef __XPLICIT_H__

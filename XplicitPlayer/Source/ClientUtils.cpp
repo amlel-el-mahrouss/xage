@@ -10,7 +10,7 @@
 #include "ClientUtils.h"
 #include "SoundComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	Explosion::Explosion(vector3df& pos, vector3df& scale)
 	{

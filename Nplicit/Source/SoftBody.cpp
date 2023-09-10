@@ -13,7 +13,7 @@
 
 #include "SoftBody.h"
 
-namespace Xplicit
+namespace XPX
 {
 
 }

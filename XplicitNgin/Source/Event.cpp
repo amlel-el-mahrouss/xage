@@ -16,7 +16,7 @@
 
 #include "Event.h"
 
-namespace Xplicit
+namespace XPX
 {
 	void EventSystem::update() noexcept
 	{

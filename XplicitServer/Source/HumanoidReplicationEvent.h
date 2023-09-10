@@ -13,7 +13,7 @@
 #include "HumanoidComponent.h"
 #include "ServerReplicationFactory.h"
 
-namespace Xplicit
+namespace XPX
 {
 	class HumanoidReplicationEvent final : public Event
 	{

@@ -12,7 +12,7 @@
 
 #include "VideoDriver.h"
 
-namespace Xplicit::Renderer
+namespace XPX::Renderer
 {
 	VideoBuffer::VideoBuffer() 
 		: m_resource_desc(), m_resource_data() {}

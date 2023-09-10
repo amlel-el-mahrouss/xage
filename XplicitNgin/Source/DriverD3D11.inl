@@ -10,7 +10,7 @@
  * =====================================================================
  */
 
-namespace Xplicit
+namespace XPX
 {
 	static inline void print_error(ID3D10Blob* error)
 	{
@@ -136,18 +136,18 @@ namespace Xplicit
 /// <param name="driver">The rendering driver</param>
 /// <returns>Pointer to a new ShaderSystem</returns>
 /// 
-template <Xplicit::Renderer::DX11::XPLICIT_SHADER_TYPE ShaderType>
-Xplicit::Renderer::DX11::ShaderSystemD3D11* Xplicit::Renderer::DX11::D3D11ShaderHelper1::make_shader(
+template <XPX::Renderer::DX11::XPLICIT_SHADER_TYPE ShaderType>
+XPX::Renderer::DX11::ShaderSystemD3D11* XPX::Renderer::DX11::D3D11ShaderHelper1::make_shader(
 	const PChar* filename,
 	const char* entrypoint,
-	std::unique_ptr<Xplicit::Renderer::DX11::DriverSystemD3D11>& driver
+	std::unique_ptr<XPX::Renderer::DX11::DriverSystemD3D11>& driver
 )
 {
 	if (!entrypoint ||
 		*entrypoint == 0)
 		return nullptr;
 
-	Xplicit::Renderer::DX11::ShaderSystemD3D11* shader_system = new Xplicit::Renderer::DX11::ShaderSystemD3D11(filename);
+	XPX::Renderer::DX11::ShaderSystemD3D11* shader_system = new XPX::Renderer::DX11::ShaderSystemD3D11(filename);
 
 	if (shader_system)
 	{

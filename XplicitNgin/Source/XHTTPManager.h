@@ -13,7 +13,7 @@
 #include "Http.h"
 #include "Uri.h"
 
-namespace Xplicit
+namespace XPX
 {
 	/*
 	 *	@brief XHTTPManager

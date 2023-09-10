@@ -95,7 +95,7 @@ ar_flush(struct ar_context* ctx);
 XPLICIT_API bool
 ar_close(struct ar_context* ctx);
 
-namespace Xplicit 
+namespace XPX 
 {
     class XPLICIT_API ArchiveManager final 
     {

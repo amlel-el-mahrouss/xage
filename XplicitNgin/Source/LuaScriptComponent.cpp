@@ -9,7 +9,7 @@
 
 #include "LuaScriptComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	const String LuaScriptComponent::destroy_snippet() noexcept
 	{

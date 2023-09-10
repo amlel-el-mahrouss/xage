@@ -16,7 +16,7 @@
  @file
  */
 
-namespace Xplicit
+namespace XPX
 {
 	GameVar::GameVar(const char* name, const char* value, int flags)
 		: mName(name), mValue(value), mFlags(flags), Lua::CLuaClass((String("World.Settings.") + name).c_str())

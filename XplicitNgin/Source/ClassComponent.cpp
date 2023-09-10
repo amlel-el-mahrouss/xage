@@ -10,7 +10,7 @@
 #include "LuaScriptComponent.h"
 #include "ClassComponent.h"
 
-namespace Xplicit
+namespace XPX
 {
 	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Name, Func) self.Slots[Name] = Func end";
 	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, Name) self.Slots[Name] = nil; end";

@@ -12,7 +12,7 @@
 #include "Xplicit.h"
 #include <Nplicit.h>
 
-namespace Xplicit
+namespace XPX
 {
 	enum class DATA_VALUE_TYPE
 	{

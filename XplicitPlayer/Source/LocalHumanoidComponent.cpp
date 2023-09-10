@@ -19,7 +19,7 @@
 #include <CommonEngine.h>
 #include <CLua/CLua.hpp>
 
-namespace Xplicit
+namespace XPX
 {
 	constexpr const short XPLICIT_NETWORK_DELAY = 100;
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
@@ -42,7 +42,7 @@ namespace Xplicit
 			mClass = new Lua::CLuaClass("World.Players.LocalPlayer");
 			mClass->insert("Health", "100");
 
-			mCharacter = Xplicit::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer.RootPart", "World");
+			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer.RootPart", "World");
 		}
 		else
 		{
@@ -57,7 +57,7 @@ namespace Xplicit
 
 			path_xid += ".RootPart";
 
-			mCharacter = Xplicit::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), path_xid.c_str(), "World");
+			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), path_xid.c_str(), "World");
 		}
 
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");

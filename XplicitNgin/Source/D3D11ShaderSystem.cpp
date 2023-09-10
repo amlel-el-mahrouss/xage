@@ -19,7 +19,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-namespace Xplicit::Renderer::DX11
+namespace XPX::Renderer::DX11
 {
 	ShaderSystemD3D11::~ShaderSystemD3D11()
 	{

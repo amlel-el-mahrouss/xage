@@ -26,7 +26,7 @@
 #include <Uri.h>
 
  // RoXML parser
-Xplicit::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
+XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 #ifndef XPLICIT_XASSET_IDENT
 #	define XPLICIT_XASSET_IDENT ("xasset")
@@ -40,28 +40,28 @@ static int lua_PlaySound(lua_State* L)
 {
 	try
 	{
-		Xplicit::String url = lua_tostring(L, 1);
+		XPX::String url = lua_tostring(L, 1);
 
 		// that means if we don't find it, then fail silently.
-		if (url.find(XPLICIT_ALLOWED_AUDIO_EXTENSION) == Xplicit::String::npos)
+		if (url.find(XPLICIT_ALLOWED_AUDIO_EXTENSION) == XPX::String::npos)
 			return 0;
 
 		if (url.empty() ||
-			url.find(XPLICIT_XASSET_IDENT) == Xplicit::String::npos)
+			url.find(XPLICIT_XASSET_IDENT) == XPX::String::npos)
 			return 0;
 
-		Xplicit::String substr_tmp = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
+		XPX::String substr_tmp = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
 
 		url.clear();
 		url = "/";
 		url += substr_tmp;
 
-		static Xplicit::LocalNetworkMonitorEvent* monitor = Xplicit::EventSystem::get_singleton_ptr()->get<Xplicit::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
+		static XPX::LocalNetworkMonitorEvent* monitor = XPX::EventSystem::get_singleton_ptr()->get<XPX::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 
 		if (!monitor)
-			monitor = Xplicit::EventSystem::get_singleton_ptr()->get<Xplicit::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
+			monitor = XPX::EventSystem::get_singleton_ptr()->get<XPX::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
 
-		Xplicit::String endpoint = XPLICIT_XASSET_ENDPOINT;
+		XPX::String endpoint = XPLICIT_XASSET_ENDPOINT;
 		monitor->HTTP->set_endpoint(endpoint);
 
 		auto tmp = std::to_string(xplicit_get_epoch()) + "-tmp-snd.wav";
@@ -71,13 +71,13 @@ static int lua_PlaySound(lua_State* L)
 		{
 			XPLICIT_GET_DATA_DIR(full_path);
 
-			Xplicit::String full_download_path;
+			XPX::String full_download_path;
 
 			full_download_path += full_path;
 			full_download_path += "Contents/";
 			full_download_path += tmp;
 
-			if (auto snd = Xplicit::ComponentSystem::get_singleton_ptr()->get<Xplicit::SoundComponent>("SoundComponent"))
+			if (auto snd = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>("SoundComponent"))
 				snd->play(full_download_path);
 		}
 
@@ -94,7 +94,7 @@ static int lua_LoadRoXML(lua_State* L)
 {
 	auto _path = lua_tostring(L, 1);
 
-	Xplicit::RoXML::RoXMLDocumentParameters params;
+	XPX::RoXML::RoXMLDocumentParameters params;
 
 	params.Has3D = true;
 	params.NoLua = true;
@@ -119,9 +119,9 @@ static int lua_MakeRect(lua_State* L)
 	const char* parent = lua_tostring(L, 1);
 	const char* name = lua_tostring(L, 2);
 
-	Xplicit::RectComponent* frame = Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::RectComponent>(parent, name);
+	XPX::RectComponent* frame = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RectComponent>(parent, name);
 
-	lua_getglobal(L, (Xplicit::String(parent) + "." + name).c_str());
+	lua_getglobal(L, (XPX::String(parent) + "." + name).c_str());
 	lua_pushvalue(L, -1);
 
 	return 0;
@@ -161,7 +161,7 @@ static int lua_MakeSoundComponent(lua_State* L)
 		auto name = lua_tostring(L, 1);
 		auto parent = lua_tostring(L, 2);
 
-		Xplicit::ComponentSystem::get_singleton_ptr()->add<Xplicit::SoundComponent>(name, parent);
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(name, parent);
 	}
 }
 
@@ -179,18 +179,18 @@ static int lua_GetY(lua_State* L)
 
 void XplicitLoadClientLua() noexcept
 {
-	auto L = Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->state();
+	auto L = XPX::Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "XPXLoadScene");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "XPXPlaySound");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "XPXLoadScene");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "XPXPlaySound");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_MakeRect, "XPXMakeRectangle");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_KeyDown, "XPXKeyDown");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsKeyDown, "XPXIsKeyDown");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsLeftDown, "XPXIsLeftDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_MakeRect, "XPXMakeRectangle");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_KeyDown, "XPXKeyDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsKeyDown, "XPXIsKeyDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsLeftDown, "XPXIsLeftDown");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsRightDown, "XPXIsRightDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsRightDown, "XPXIsRightDown");
 
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetY, "XPXGetY");
-	Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetX, "XPXGetX");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetY, "XPXGetY");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetX, "XPXGetX");
 }
