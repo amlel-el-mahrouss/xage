@@ -4,6 +4,6 @@
 	</Class>
 	
 	<CLua>
-		xasset://Library/NplicitNginTest.lua
+		xasset://Library/BrickBattleLogic.lua
 	</CLua>
 </RoXML>

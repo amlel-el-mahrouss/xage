@@ -143,14 +143,16 @@ namespace Xplicit::Lua
 	public:
 		bool insert(const char* symbol, const char* value)
 		{
-			if (symbol && value)
+			if (symbol && 
+				value)
 			{
 				//! Just push this symbol to the symbols list!
 				//! So that we're aware of it.
 				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
 				++mSymbolCnt;
 
-				bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, value).c_str());
+				bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, value).c_str()) > 0;
+
 				return ret;
 			}
 
@@ -171,6 +173,7 @@ namespace Xplicit::Lua
 				return false;
 
 			String fmt = "return ";
+
 			fmt += mClass;
 			fmt += ".";
 			fmt += lhs;

@@ -14,6 +14,6 @@ local function overTheShoulder()
     World.Players.LocalPlayer.RootPart.Position = cameraOffset;
 end
 
-World.Slots.Tick:Connect(function()
+World.Slots.RenderOneFrame:Connect(function()
     overTheShoulder();
 end)

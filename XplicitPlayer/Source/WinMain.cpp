@@ -90,13 +90,15 @@ int main(int argc, char** argv)
 
 			Xplicit::Audio::XAudioEngine::get_singleton_ptr()->update();
 
-			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 			Xplicit::EventSystem::get_singleton_ptr()->update();
+			Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();
 
 			RENDER->getVideoDriver()->endScene();
+
+			Xplicit::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:RenderOneFrame()");
 		}
 	}
 	catch (Xplicit::EngineError& err)

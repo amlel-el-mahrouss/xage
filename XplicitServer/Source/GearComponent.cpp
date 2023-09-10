@@ -10,6 +10,7 @@
 // Include the component class.
 
 #include "GearComponent.h"
+#include "HumanoidComponent.h"
 
 //! This file handles Gears (Sword, Pistol, Build Tools...)
 
@@ -56,6 +57,26 @@ namespace Xplicit
 		ClassComponent::update(_self);
 
 		GearComponent* self = (GearComponent*)_self;
+
+		if (self->index_as_bool("CanDrop") &&
+			self->get_owner())
+		{
+			self->assign("Parent", "Parent.Parent");
+			self->get_owner()->get_class()->assign(self->name(), "nil");
+
+			for (size_t i = 0; i < self->get_owner()->get_gears().size(); ++i)
+			{
+				auto& gear = self->get_owner()->get_gears()[i];
+
+				if (gear == self)
+				{
+					gear = nullptr;
+					break;
+				}
+			}
+
+			self->set_owner(nullptr);
+		}
 
 		if (!self->index_as_bool("Equipped"))
 			return;

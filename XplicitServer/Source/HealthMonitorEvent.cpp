@@ -98,8 +98,6 @@ namespace Xplicit
 						spawner &&
 						humanoid->get_peer())
 					{
-						humanoid->set_health(XPLICIT_DEFAULT_HEALTH);
-						humanoid->set_state(HUMANOID_STATE::ALIVE);
 						humanoid->can_spawn(true);
 
 						auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");

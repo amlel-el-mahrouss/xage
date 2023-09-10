@@ -45,9 +45,6 @@ namespace Xplicit
 	{
 		if (!mNetwork) return;
 
-		NetworkPacket packet;
-		mNetwork->read(packet);
-
 		/* did we lost connection to peer? */
 		if (mNetwork->is_reset())
 		{
@@ -62,6 +59,9 @@ namespace Xplicit
 
 			return;
 		}
+
+		NetworkPacket packet;
+		mNetwork->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 		{
@@ -108,7 +108,6 @@ namespace Xplicit
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||
-			packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK ||
 			packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
 		{
 			if (packet.hash == mHash ||

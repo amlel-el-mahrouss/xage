@@ -176,8 +176,8 @@ int main(int argc, char** argv)
 			{
 				Xplicit::NetworkServerContext::recv_all(net);
 
-				Xplicit::ComponentSystem::get_singleton_ptr()->update();
 				Xplicit::EventSystem::get_singleton_ptr()->update();
+				Xplicit::ComponentSystem::get_singleton_ptr()->update();
 
 				Xplicit::NetworkServerContext::send_all(net);
 

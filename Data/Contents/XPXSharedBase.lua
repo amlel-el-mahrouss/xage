@@ -37,7 +37,7 @@ World.Slots = {
         Connect = function(self, Func)
         return __addEvent(self, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -45,7 +45,7 @@ World.Slots = {
         Connect = function(self, Func)
             return __addEvent(selfk, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -53,7 +53,7 @@ World.Slots = {
         Connect = function(self, Func)
             return __addEvent(self, Func); 
         end,
-        Disconnect = function(Iself, Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -61,7 +61,7 @@ World.Slots = {
         Connect = function(self, Func)
         return __addEvent(self, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -69,15 +69,15 @@ World.Slots = {
         Connect = function(self, Func)
         return __addEvent(self, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end  
     },
     Move = { 
         Connect = function(self, Func)
-        return __addEvent(World.Slots.Move, Func); 
+        return __addEvent(self, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -85,7 +85,7 @@ World.Slots = {
         Connect = function(self, Func)
         return __addEvent(self, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end  
     },
@@ -93,7 +93,7 @@ World.Slots = {
         Connect = function(self, Func)
         return __addEvent(self, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -101,7 +101,15 @@ World.Slots = {
         Connect = function(self, Func)
         return __addEvent(self, Func); 
         end,
-        Disconnect = function(self, Index)
+        Disconnect = function(Index)
+            __rmEvent(self, Index); 
+        end 
+    },
+    RenderOneFrame = { 
+        Connect = function(self, Func)
+        return __addEvent(self, Func); 
+        end,
+        Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
@@ -177,6 +185,12 @@ end
 function World:Spawn(ply)
     for _, v in ipairs(World.Slots.Spawn) do
         v.Func(ply)
+    end
+end
+
+function World:RenderOneFrame()
+    for _, v in ipairs(World.Slots.RenderOneFrame) do
+        v.Func()
     end
 end
 

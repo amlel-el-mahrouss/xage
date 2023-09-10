@@ -50,8 +50,12 @@ namespace Xplicit
 
 		// execute a series of commands for this humanoid.
 
-		if (self->can_spawn())
+		if (self->can_spawn() &&
+			self->get_health() < 1)
 		{
+			self->set_health(XPLICIT_DEFAULT_HEALTH);
+			self->set_state(HUMANOID_STATE::ALIVE);
+
 			self->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
 
 			XPLICIT_INFO("World:Spawn [EVENT]");
@@ -69,7 +73,7 @@ namespace Xplicit
 
 		self->mClass->assign("Position", str.c_str());
 
-		if (self->mClass->index_as_bool("KickNow"))
+		if (self->mClass->index_as_bool("Kick"))
 		{
 			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 
@@ -94,37 +98,14 @@ namespace Xplicit
 		self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_INVALID;
 		self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_INVALID;
 
-		for (auto gear : self->mGears)
-		{
-			if (gear == nullptr)
-				continue;
-
-			if (gear->index_as_bool("CanDrop"))
-			{
-				gear->assign("Parent", "World");
-				self->get_class()->assign(gear->name(), "nil");
-
-				gear->set_owner(nullptr);
-
-				for (size_t i = 0; i < self->mGears.size(); ++i)
-				{
-					if (self->mGears[i] == gear)
-					{
-						self->mGears[i] = nullptr;
-						break;
-					}
-				}
-
-				continue;
-			}
-		}
-
 		// select a specific item in our inventory.
 		if (self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] == NETWORK_CMD_INPUT)
 		{
 			if (self->mPeer->packet.id < self->mGears.size())
 			{
-				self->mActiveGear = self->mGears[self->mPeer->packet.id];
+				if (self->mGears[self->mPeer->packet.id])
+					self->mActiveGear = self->mGears[self->mPeer->packet.id];
+
 				self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INVALID;
 			}
 		}
@@ -180,8 +161,8 @@ namespace Xplicit
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");
-				mClass->insert("KickNow", "false");
-				mClass->insert("KickReason", "false");
+				mClass->insert("Kick", "false");
+				mClass->insert("KickReason", "''");
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
