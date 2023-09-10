@@ -11,6 +11,9 @@
 
 namespace XPX
 {
+	LuaEventListener::LuaEventListener(const char* snippet) : mSnippet(snippet) {}
+	LuaEventListener::~LuaEventListener() = default;
+
 	void LuaEventListener::update(EventPtr _event)
 	{
 		if (!_event)

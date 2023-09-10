@@ -14,7 +14,7 @@
 #include "LocalMenuEvent.h"
 #include "Application.h"
 
-namespace Xplicit
+namespace XPX
 {
 	constexpr int XPLICIT_TIMEOUT_MENU = 2000;
 
