@@ -180,7 +180,11 @@ int main(int argc, char** argv)
 		XPX::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);
 
+		// We want to parse any datavalues needed by the game.
+		// Such as SoundId.ExplosionId. or Textures.Ghost.
 		DVFromRoXML(params);
+
+		NPLICIT_SPLASH_SCREEN;
 
 		XPX::Thread logic([&]() {
 			const auto net = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent");

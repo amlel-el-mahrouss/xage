@@ -21,7 +21,8 @@ namespace XPX
 	class GearComponent final : public ClassComponent
 	{
 	public:
-		GearComponent(const char* name, const char* parent) noexcept;
+		GearComponent(const char* name, 
+					  const char* parent) noexcept;
 
 	public:
 		GearComponent() = delete;
@@ -40,8 +41,8 @@ namespace XPX
 		static void update(ClassPtr _self);
 
 	public:
-		HumanoidComponent* get_owner() noexcept { return mOwner; }
-		void set_owner(HumanoidComponent* owner) noexcept { mOwner = owner; }
+		void set_owner(HumanoidComponent* owner) noexcept;
+		HumanoidComponent* get_owner() noexcept;
 
 	private:
 		HumanoidComponent* mOwner;

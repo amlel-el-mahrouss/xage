@@ -17,21 +17,24 @@ namespace XPX
 	class NPLICIT_API RigidBodyComponent final : public virtual PhysicsComponent<TypeFloat>
 	{
 	public:
-		explicit RigidBodyComponent() = default;
+		RigidBodyComponent() = default;
 		~RigidBodyComponent() override = default;
 
-		RigidBodyComponent& operator=(const RigidBodyComponent&) = default;
-		RigidBodyComponent(const RigidBodyComponent&) = default;
+	public:
+		XPLICIT_COPY_DEFAULT(RigidBodyComponent);
 
-		void set(const Vector<TypeFloat>& pos, const Vector<TypeFloat>& velocity, const Vector<TypeFloat>& force) noexcept
+	public:
+		bool is_touching(RigidBodyComponent<float>* rigid_body) noexcept
 		{
-			this->Position = pos;
-			this->Force = force;
-			this->Velocity = velocity;
+			if (rigid_body)
+				return (this->PositionMax.X > rigid_body->PositionMin.X &&
+					this->PositionMin.X < rigid_body->PositionMax.X &&
+					this->PositionMax.Y > rigid_body->PositionMin.Y &&
+					this->PositionMin.Y < rigid_body->PositionMax.Y &&
+					this->PositionMax.Z > rigid_body->PositionMin.Z &&
+					this->PositionMin.Z < rigid_body->PositionMax.Z);
 
-#ifdef XPLICIT_DEBUG
-			XPLICIT_INFO("[RigidBodyComponent::set] New parameters set for RigidBody.");
-#endif
+			return false;
 		}
 
 	};

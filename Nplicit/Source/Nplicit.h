@@ -19,7 +19,8 @@ namespace XPX
 	{
 	public:
 		explicit PhysicsComponent() : 
-			Position(0, 0, 0), 
+			PositionMin(0, 0, 0), 
+			PositionMax(0, 0, 0),
 			Velocity(0, 0, 0),
 			Gravity(0, 0, 0),
 			Force(0, 0, 0), 
@@ -33,7 +34,9 @@ namespace XPX
 		PhysicsComponent(const PhysicsComponent&) = default;
 
 	public:
-		Vector<TypeFloat> Position;
+		Vector<TypeFloat> PositionMax;
+		Vector<TypeFloat> PositionMin;
+
 		Vector<TypeFloat> Velocity;
 		Vector<TypeFloat> Force;
 		Vector<TypeFloat> Gravity; // it has it's own gravity. so that we can easily customize it.
@@ -54,7 +57,7 @@ namespace XPX
 		
 	};
 
-#ifndef __NPLICIT_DETAIL_IEE__
+#ifndef __NPLICIT_DETAIL_IEE754__
 	typedef float NplicitFloat;
 #else
 	typedef double NplicitFloat;

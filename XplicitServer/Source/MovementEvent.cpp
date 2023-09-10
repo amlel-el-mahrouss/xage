@@ -69,9 +69,7 @@ namespace XPX
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP &&
 					humanoid->get_attribute().pos().Z < 1)
 					humanoid->get_attribute().pos().Z += humanoid->get_jump_power();
-				else if (humanoid->get_attribute().pos().Y > 0)
-					humanoid->get_attribute().pos().Z -= mDeltaVar->as_float();
-
+				
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 					humanoid->get_attribute().pos().X += speed * mDeltaTime;
 

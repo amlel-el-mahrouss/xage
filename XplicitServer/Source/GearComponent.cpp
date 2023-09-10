@@ -85,4 +85,7 @@ namespace XPX
 		self->assign("LookAt.Y", "Parent.LookAt.Y or nil");
 		self->assign("LookAt.Z", "Parent.LookAt.Z or nil");
 	}
+
+	HumanoidComponent* GearComponent::get_owner() noexcept { return mOwner; }
+	void GearComponent::set_owner(HumanoidComponent* owner) noexcept { mOwner = owner; }
 }

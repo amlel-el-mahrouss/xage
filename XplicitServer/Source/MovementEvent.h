@@ -12,7 +12,7 @@
 #include "ServerConfig.h"
 #include "HumanoidComponent.h"
 
-#include <Nplicit.h>
+// NplicitNgin Rigid bodies include.
 #include <RigidBody.h>
 
 namespace XPX
@@ -21,13 +21,13 @@ namespace XPX
 	/// Either accepts of refuses player movement.
 	/// Refuses if:
 	///		- Player is dead
-	///		- Player is inactive
+	///		- Player is nil (disconnected player)
 	/// </summary>
 	
 	class MovementEvent : public Event
 	{
 	public:
-		explicit MovementEvent();
+		MovementEvent();
 		~MovementEvent() override;
 
 	public:
