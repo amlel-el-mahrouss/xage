@@ -123,10 +123,13 @@ int main(int argc, char** argv)
 			std::cout << "Please define XPLICIT_SERVER_ADDR, it is needed to bound to a specific address.\n";
 			std::cin.get();
 
-			return 1;
+			return -32;
 		}
 
 		const char* port4 = argv[1];
+
+		if (!port4)
+			return -33;
 
 		const auto network = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::NetworkServerComponent>(ip4, port4);
 
@@ -157,11 +160,16 @@ int main(int argc, char** argv)
 
 		XPLICIT_PLACE_ID = argv[2];
 
+		XPX::String place = "XplicitPlace.roxml";
+
+		if (!DownloadURL(XPLICIT_PLACE_ID, place))
+			return -34;
+
 		XPX::RoXML::RoXMLDocumentParameters params;
 
 		params.Has3D = false;
 		params.NoLua = false;
-		params.Path = XPLICIT_PLACE_ID;
+		params.Path = place;
 
 		XPX::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);
