@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitPlayer
- *			Copyright PlayXPlicit, all rights reserved.
+ *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: WinMain.cpp
  *			Purpose: Main Application entrypoint.

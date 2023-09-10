@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright PlayXPlicit, all rights reserved.
+ *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: DriverSystem.h
  *			Purpose: C++ Rendering Driver API, replacement of the LegacyRenderer (irrlicht)

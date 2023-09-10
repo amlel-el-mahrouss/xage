@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin
- *			Copyright PlayXPlicit, all rights reserved.
+ *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: Event.cpp
  *			Purpose: Xplicit Event Dispatcher and listeners

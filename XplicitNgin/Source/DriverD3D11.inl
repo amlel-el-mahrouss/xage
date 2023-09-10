@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitNgin (XplicitRenderer)
- *			Copyright PlayXPlicit, all rights reserved.
+ *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: DriverD3D11.h
  *			Purpose: C++ Rendering Driver for Direct3D 11

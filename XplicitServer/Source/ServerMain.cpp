@@ -2,7 +2,7 @@
  * =====================================================================
  *
  *			XplicitServer
- *			Copyright PlayXPlicit, all rights reserved.
+ *			Copyright XPX Corporation, all rights reserved.
  *
  * =====================================================================
  */
@@ -21,9 +21,9 @@
 #include "ServerConfig.h"
 #include "TimeoutEvent.h"
 #include "MovementEvent.h"
-#include "HumanoidReplicationEvent.h"
 #include "SpawnComponent.h"
 #include "HealthMonitorEvent.h"
+#include "HumanoidReplicationEvent.h"
 
 static bool XPLICIT_EXIT_REQUESTED = false;
 
