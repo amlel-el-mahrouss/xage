@@ -91,22 +91,14 @@ namespace Xplicit
 			}, POPUP_TYPE::LEAVE, "LeavePopup");
 		}
 
-		//RENDER->getVideoDriver()->draw2DImage(mEnabled ? mButtonHover : mButtonNoHover,
-		//	vector2di(10, XPLICIT_DIM.Y / pos_menu),
-		//	rect(0, 0, 63, 42),
-		//	nullptr,
-		//	SColor(255, 255, 255, 255),
-		//	true);
-
-
 		/* menu is being open */
 		if (mEnabled)
 		{
 			if (KB->key_down(KEY_ESCAPE))
 			{
 				ComponentSystem::get_singleton_ptr()->remove(mPopup);
-				mPopup = nullptr;
 
+				mPopup = nullptr;
 				mEnabled = false;
 			}
 		}
