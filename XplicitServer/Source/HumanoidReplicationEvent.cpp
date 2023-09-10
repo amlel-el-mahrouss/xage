@@ -40,13 +40,14 @@ namespace Xplicit
 			{
 				mFactory.send(player->get_class()->index_as_number<int>("PacketContentKind"), 
 					replica_xasset.c_str(),
-					player->get_class()->index_as_number<int>("PacketKind"), player->get_peer()->public_hash);
+					player->get_class()->index_as_number<int>("PacketKind"), 
+					player->get_peer()->public_hash);
 			
 				// you wanna do that
 
-				player->get_class()->insert("PacketKind", "-1");
-				player->get_class()->insert("PacketContentKind", "-1");
-				player->get_class()->insert("PacketData", "nil");
+				player->get_class()->assign("PacketKind", "-1");
+				player->get_class()->assign("PacketContentKind", "-1");
+				player->get_class()->assign("PacketData", "nil");
 			}
 		}
 	}

@@ -178,9 +178,7 @@ namespace Xplicit::Lua
 			fmt += ".";
 			fmt += lhs;
 
-			luaL_dostring(mL, fmt.c_str());
-
-			return true; 
+			return !luaL_dostring(mL, fmt.c_str());
 		}
 
 		void i_clean(const std::int64_t& cnt) noexcept

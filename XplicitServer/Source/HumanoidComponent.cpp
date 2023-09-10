@@ -77,9 +77,10 @@ namespace Xplicit
 		{
 			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 
-			String reason = "You have been kicked";
+			String reason = "Kicked by the server.";
 
-			if (!self->mClass->index_as_string("KickReason").empty())
+			if (!self->mClass->index_as_string("KickReason").empty() &&
+				self->mClass->index_as_string("KickReason").size() < XPLICIT_NETWORK_BUF_SZ)
 				reason = self->mClass->index_as_string("KickReason");
 
 			memcpy(self->mPeer->packet.buffer, reason.c_str(), reason.size());
@@ -167,6 +168,10 @@ namespace Xplicit
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
 				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed).c_str());
+
+				this->get_class()->insert("PacketKind", "-1");
+				this->get_class()->insert("PacketContentKind", "-1");
+				this->get_class()->insert("PacketData", "nil");
 
 				XPLICIT_INFO("World:Login [EVENT]");
 

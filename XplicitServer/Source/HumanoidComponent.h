@@ -73,9 +73,11 @@ namespace Xplicit
 		bool can_spawn() const noexcept;
 
 	public:
-		Xplicit::Lua::CLuaClass* get_class() const;
 		std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY>& get_gears() noexcept;
 		GearComponent* get_active_gear() noexcept;
+
+	public:
+		Xplicit::Lua::CLuaClass* get_class() const;
 
 	private:
 		std::unique_ptr<Lua::CLuaClass> mClass;
@@ -83,7 +85,7 @@ namespace Xplicit
 	private:
 		std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY> mGears;
 		GearComponent* mActiveGear;
-		XPXAttribute mAttribute;
+		XPXAttribute mAttribute; // XPlicit attribute class. Used to reflect data about the current component.
 		HUMANOID_STATE mState;
 		NetworkPeer* mPeer;
 		double mWalkSpeed;
