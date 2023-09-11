@@ -161,7 +161,7 @@ namespace XPX::RoXML
 									// assign a part component to the said id
 									// so you can use it.
 
-									if (klass_to_instantiate == "Collada")
+									if (klass_to_instantiate == "Mesh")
 									{
 										// go on and include that!
 										world_node.ID = node_name;
