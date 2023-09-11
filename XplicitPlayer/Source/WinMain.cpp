@@ -75,6 +75,8 @@ int main(int argc, char** argv)
 		if (!app_ptr)
 			throw XPX::EngineError("XPLICIT couldn't continue; we're sorry!");
 
+		NPLICIT_SPLASH_SCREEN;
+
 		//! The Main Logic and Render loop.
 		while (RENDER->run() &&
 			XPX::ComponentSystem::get_singleton_ptr() &&

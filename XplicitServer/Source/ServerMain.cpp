@@ -26,8 +26,6 @@
 #include "HealthMonitorEvent.h"
 #include "HumanoidReplicationComponent.h"
 
-static bool XPLICIT_EXIT_REQUESTED = false;
-
 static void XplicitPrintHelp()
 {
 	XPLICIT_INFO("\a+-------------- XPX Manual --------------+");
@@ -48,7 +46,7 @@ static void XplicitLoadShell()
 
 		if (strcmp(cmd_buf, "exit") == 0)
 		{
-			XPLICIT_EXIT_REQUESTED = true;
+			std::exit(-30);
 			break;
 		}
 
@@ -191,24 +189,19 @@ int main(int argc, char** argv)
 
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(net);
 
-		XPX::Thread logic([&]() {
-			while (XPX::ComponentSystem::get_singleton_ptr() &&
-				XPX::EventSystem::get_singleton_ptr())
-			{
-				XPX::NetworkServerContext::recv_all(net);
+		XPX::Thread job(XplicitLoadShell);
 
-				XPX::ComponentSystem::get_singleton_ptr()->update();
-				XPX::EventSystem::get_singleton_ptr()->update();
+		while (XPX::ComponentSystem::get_singleton_ptr() &&
+			XPX::EventSystem::get_singleton_ptr())
+		{
+			XPX::NetworkServerContext::recv_all(net);
 
-				XPX::NetworkServerContext::send_all(net);
+			XPX::ComponentSystem::get_singleton_ptr()->update();
+			XPX::EventSystem::get_singleton_ptr()->update();
 
-			};
-		});
+			XPX::NetworkServerContext::send_all(net);
+		};
 
-		logic.detach();
-
-		XplicitLoadShell();
-		
 		return 0;
 	}
 	catch (const std::runtime_error& err)
