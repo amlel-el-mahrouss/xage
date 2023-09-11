@@ -251,7 +251,7 @@ namespace XPX::Lua
 
 				lua_call(mL, 1, 1);
 
-				String bytecode = lua_tostring(mL, 1);
+				String bytecode = lua_tostring(mL, -1);
 				return bytecode;
 			}
 
