@@ -235,7 +235,7 @@ namespace XPX::Lua
 			return ret;
 		}
 
-		String run_string(const char* lhs) noexcept
+		const char* run_string(const char* lhs) noexcept
 		{
 			if (!lhs)
 				return "";
@@ -244,15 +244,11 @@ namespace XPX::Lua
 
 			if (ret)
 			{
-				lua_getglobal(mL, "string");
-				lua_getfield(mL, -1, "dump");
-				lua_pushstring(mL, lhs);
-				lua_pushboolean(mL, true);
+				
+				ret = (luaL_dostring(mL, std::format("return string.dump({})", lhs).c_str()));
 
-				lua_call(mL, 1, 1);
-
-				String bytecode = lua_tostring(mL, -1);
-				return bytecode;
+				if (ret)
+					return lua_tostring(mL, -1);
 			}
 
 			return "";
@@ -270,7 +266,7 @@ namespace XPX::Lua
 			return ret;
 		}
 
-		String call_method(const char* method) noexcept
+		const char* call_method(const char* method) noexcept
 		{
 			String fmt = mClass;
 			fmt += ".";
