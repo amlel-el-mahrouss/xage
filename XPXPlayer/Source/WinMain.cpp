@@ -84,7 +84,9 @@ int main(int argc, char** argv)
 		{
 			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x40, 0x40, 0x40));
 
+#ifdef _WIN32
 			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
+#endif
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();

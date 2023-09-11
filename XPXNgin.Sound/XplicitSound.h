@@ -11,8 +11,6 @@
 
 #pragma once
 
-#ifdef _WIN32
-
 #ifndef __XPLICIT_H__
 #	error Please include XPXNginCore.h before XplicitSound!
 #endif // __XPLICIT_H__
@@ -22,12 +20,14 @@
 
 #define _USE_MATH_DEFINES
 
-#include <Audio.h>
-#include <SimpleMath.h>
-
 #ifndef XPLICIT_AUDIO_RATE
 #	define XPLICIT_AUDIO_RATE (44100)
 #endif // ifndef XPLICIT_AUDIO_RATE
+
+#ifdef _WIN32
+
+#include <Audio.h>
+#include <SimpleMath.h>
 
 namespace XPX
 {
@@ -35,7 +35,7 @@ namespace XPX
 	{
 		class XAudioEngine final
 		{
-			explicit XAudioEngine()
+			XAudioEngine()
 			{
 				DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_Default;
 
@@ -271,6 +271,234 @@ namespace XPX
 			
 		};
 	}
+}
+
+#else
+
+#include <OpenAL/OpenAL.h>
+
+namespace XPX {
+    namespace Audio {
+        class XAudioEngineOpenAL final {
+        public:
+            XAudioEngineOpenAL()
+                : mDevice(alcOpenDevice(nullptr))
+            {
+                if (!mDevice)
+                    throw EngineError("No Audio devices found!");
+
+                ALboolean enumeration;
+
+                enumeration = alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT");
+
+                if (enumeration == AL_FALSE)
+                    throw EngineError("ALC_ENUMERATION_EXT: Not supported by Computer");
+
+                const ALCchar *device = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+                const ALCchar *next = device + 1;
+                size_t len = 0;
+
+                fprintf(stdout, "Devices list:\n");
+                fprintf(stdout, "----------\n");
+
+                while (device && *device != '\0' && next && *next != '\0') {
+                    fprintf(stdout, "%s\n", device);
+                    len = strlen(device);
+                    device += (len + 1);
+                    next += (len + 2);
+                }
+
+                fprintf(stdout, "----------\n");
+
+                mContext = alcCreateContext(mDevice, nullptr);
+
+                if (!alcMakeContextCurrent(mContext))
+                {
+                    throw EngineError("alcCreateContext: Not supported by Computer");
+                }
+
+                auto pos = Vector<float>(0, 0, 0);
+                auto vel = Vector<float>(0, 0, 0);
+                ALfloat ori[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
+
+                this->openal_configure_listener(pos, vel, ori);
+                this->openal_generate_source(&mSource);
+                this->openal_generate_buffer(&mBuffer);
+            }
+
+        public:
+            XPLICIT_COPY_DEFAULT(XAudioEngineOpenAL);
+
+        public:
+            void openal_load_wave(const char* path, bool loop)
+            {
+                ALsizei size, freq;
+                ALenum format = AL_FORMAT_STEREO16;
+                ALvoid *data = nullptr;
+
+                this->openal_load_wave_internal(path, size, freq, format, &data, loop);
+            }
+
+            bool openal_generate_buffer(ALuint* buffer)
+            {
+                alGenBuffers((ALuint)1, buffer);
+
+                try
+                {
+                    this->try_fatal();
+                    return true;
+                }
+                catch (...)
+                {
+                    return false;
+                }
+            }
+            
+            void openal_configure_listener(Vector<float>& pos, Vector<float>& vel, ALfloat* ori)
+            {
+                alListener3f(AL_POSITION, pos.X, pos.Y, pos.Z);
+
+                try
+                {
+                    this->try_fatal();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+
+                alListener3f(AL_VELOCITY, vel.X, vel.Y, vel.Z);
+
+                try
+                {
+                    this->try_fatal();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+
+                alListenerfv(AL_ORIENTATION, ori);
+
+                try
+                {
+                    this->try_fatal();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+            }
+
+            void openal_generate_source(ALuint* source)
+            {
+                alGenSources((ALuint)1, source);
+
+                try
+                {
+                    this->try_fatal();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+
+
+                alSourcef(*source, AL_PITCH, 1);
+
+                try
+                {
+                    this->try_fatal();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+
+                alSourcef(*source, AL_GAIN, 1);
+
+                try
+                {
+                    this->try_fatal();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+
+                alSource3f(*source, AL_POSITION, 0, 0, 0);
+
+                try
+                {
+                    this->try_fatal();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+
+                alSource3f(*source, AL_VELOCITY, 0, 0, 0);
+
+                try
+                {
+                    this->try_fatal();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+
+                alSourcei(*source, AL_LOOPING, AL_FALSE);
+
+                try
+                {
+                    this->try_fatal();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+
+            }
+
+        public:
+            void openal_load_wave_internal(
+                    const char* path,
+                    ALsizei size,
+                    ALsizei freq,
+                    ALenum format,
+                    ALvoid *data,
+                    bool loop
+                    )
+            {
+                XPLICIT_CRITICAL("openal_load_wave_internal: Unimplemented");
+            }
+
+        private:
+            bool try_fatal() noexcept
+            {
+                ALCenum error;
+
+                error = alGetError();
+
+                if (error != AL_NO_ERROR)
+                {
+                    throw EngineError("OpenAL: Fatal error!");
+                }
+
+                return true;
+            }
+
+        private:
+            ALCcontext* mContext;
+            ALCdevice* mDevice;
+            ALuint mBuffer;
+            ALuint mSource;
+
+        };
+
+        typedef XAudioEngineOpenAL XAudioEngine;
+    }
 }
 
 #endif
