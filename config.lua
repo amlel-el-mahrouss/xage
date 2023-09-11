@@ -12,7 +12,7 @@ XPLICIT_CONFIG = {
     ["_CXXDIALECT"] = 2022,
     ["_CONFIGS"] = { "Debug", "Release" },
     ["_MACROS"] = { "__XPX__", "_CRT_SECURE_NO_WARNINGS", "_WINSOCK_DEPRECATED_NO_WARNINGS", "__XPLICIT_DLL__", "__EXPORT_XPLICIT__" },
-    ["_DIALECT"] = "C++",
+    ["_DIALECT"] = "Objective-C++",
     ["_FILES"] = {
         ["_INC"] = {
             "XPXNgin/Source/**.h",
@@ -49,7 +49,7 @@ XPLICIT_SERVER_CONFIG = {
     ["_CXXDIALECT"] = 2022,
     ["_CONFIGS"] = { "Debug", "Release" },
     ["_MACROS"] = { "__XPX__", "__SERVER__", "_CRT_SECURE_NO_WARNINGS", "_WINSOCK_DEPRECATED_NO_WARNINGS" },
-    ["_DIALECT"] = "C++",
+    ["_DIALECT"] = "Objective-C++",
     ["_FILES"] = {
         ["_INC"] = {
             "XPXServer/Source/**.h",
@@ -88,7 +88,7 @@ XPLICIT_CLIENT_CONFIG = {
     ["_CXXDIALECT"] = 2022,
     ["_CONFIGS"] = { "Debug", "Release" },
     ["_MACROS"] = { "__XPX__", "_CRT_SECURE_NO_WARNINGS", "_WINSOCK_DEPRECATED_NO_WARNINGS", "__XPLICIT_CLIENT__" },
-    ["_DIALECT"] = "C++",
+    ["_DIALECT"] = "Objective-C++",
     ["_FILES"] = {
         ["_INC"] = {
             "XPXPlayer/Source/**.h",
@@ -130,7 +130,7 @@ NPLICIT_CONFIG = {
     ["_CXXDIALECT"] = 2022,
     ["_CONFIGS"] = { "Debug", "Release" },
     ["_MACROS"] = { "__NPLICIT__", "_CRT_SECURE_NO_WARNINGS", "_WINSOCK_DEPRECATED_NO_WARNINGS", "__NPLICIT_DLL__", "__EXPORT_NPLICIT__" },
-    ["_DIALECT"] = "C++",
+    ["_DIALECT"] = "Objective-C++",
     ["_FILES"] = {
         ["_INC"] = {
             "XPXNgin.Physics/Source/**.h",
@@ -143,8 +143,6 @@ NPLICIT_CONFIG = {
     },
     ["_LIBDIR"] = {
     	"Library/Xplicit",
-        "d3d11",
-        "dxgi",
     },
     ["_INCDIR"] = {
         "Vendor/",

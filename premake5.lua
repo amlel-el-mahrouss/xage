@@ -1,4 +1,10 @@
-include('config.lua')
+if os.execute('ver') == nil then
+	include('config.lua')
+	filter { "system:macosx", "action:gmake2" }
+		linkoptions { "-framework Foundation -framework OpenGL -framework AppKit -framework IOKit -fobjc-arc" }
+else
+	include('config-windows.lua')
+end
 
  filter "configurations:Debug"
       defines { "_DEBUG" }
@@ -30,7 +36,7 @@ kind ("SharedLib")
 configurations { XPLICIT_SERVER_CONFIG["_CONFIGS"] }
 project(XPLICIT_SERVER_PROJ)
 defines { XPLICIT_SERVER_CONFIG["_MACROS"] }
-lang = XPLICIT_SERVER_CONFIG["_DIALECT"]
+compileas = XPLICIT_SERVER_CONFIG["_DIALECT"]
 files { XPLICIT_SERVER_CONFIG["_FILES"]["_INC"], XPLICIT_SERVER_CONFIG["_FILES"]["_SRC"] }
 includedirs { XPLICIT_SERVER_CONFIG["_INCDIR"] } 
 links{ XPLICIT_SERVER_CONFIG["_LIBDIR"] } 
@@ -41,7 +47,7 @@ kind ("ConsoleApp")
 configurations { XPLICIT_CLIENT_CONFIG["_CONFIGS"] }
 project(XPLICIT_CLIENT_PROJ)
 defines { XPLICIT_CLIENT_CONFIG["_MACROS"] }
-lang = XPLICIT_CLIENT_CONFIG["_DIALECT"]
+compileas = XPLICIT_CLIENT_CONFIG["_DIALECT"]
 files { XPLICIT_CLIENT_CONFIG["_FILES"]["_INC"], XPLICIT_CLIENT_CONFIG["_FILES"]["_SRC"] }
 includedirs { XPLICIT_CLIENT_CONFIG["_INCDIR"] } 
 links{ XPLICIT_CLIENT_CONFIG["_LIBDIR"] } 
@@ -52,7 +58,7 @@ kind ("WindowedApp")
 configurations { NPLICIT_CONFIG["_CONFIGS"] }
 project(NPLICIT_PROJ)
 defines { NPLICIT_CONFIG["_MACROS"] }
-lang = NPLICIT_CONFIG["_DIALECT"]
+compileas = NPLICIT_CONFIG["_DIALECT"]
 files { NPLICIT_CONFIG["_FILES"]["_INC"], NPLICIT_CONFIG["_FILES"]["_SRC"] }
 includedirs { NPLICIT_CONFIG["_INCDIR"] } 
 links{ NPLICIT_CONFIG["_LIBDIR"] } 
