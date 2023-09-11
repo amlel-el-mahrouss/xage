@@ -79,12 +79,16 @@ namespace XPX
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
-			auto public_hash = packet.public_hash;
-			auto hash = packet.hash;
-
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 			ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(self->mNetwork);
+
+			auto& hash = packet.hash;
+
+			auto& public_hash = packet.public_hash;
+
+			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
+			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
 			auto replicator = ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
 
@@ -107,11 +111,9 @@ namespace XPX
 			XPLICIT_INFO(monitor->ID);
 
 			monitor->Endpoint = XPLICIT_XASSET_ENDPOINT;
+
 			monitor->HTTP = std::make_unique<XHTTPManager>();
 			monitor->HTTP->set_endpoint(monitor->Endpoint);
-
-			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
-			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
 			mEnabled = false;
 

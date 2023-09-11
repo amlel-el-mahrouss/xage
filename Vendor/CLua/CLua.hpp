@@ -247,7 +247,7 @@ namespace XPX::Lua
 				
 				ret = (luaL_dostring(mL, std::format("return string.dump({})", lhs).c_str()));
 
-				if (ret)
+				if (!ret)
 					return lua_tostring(mL, -1);
 			}
 

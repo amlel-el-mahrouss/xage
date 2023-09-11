@@ -191,6 +191,11 @@ namespace XPX
 		if (menu && menu->enabled())
 			return;
 
+		mPacket = mNetwork->get();
+
+		if (mPublicHash != mPacket.public_hash)
+			mPublicHash = mPacket.public_hash;
+
 		auto& traits = Bites::ObjectInputSystem::get_singleton_ptr()->Layout;
 
 		if (KB->key_down(traits.mForward))

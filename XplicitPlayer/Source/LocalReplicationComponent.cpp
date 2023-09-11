@@ -57,6 +57,8 @@ namespace XPX
 
 				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
 
+				XPX_HTTP.set_endpoint("play-xplicit.com");
+
 				if (XPX_HTTP.download(url, tmp))
 				{
 					XPLICIT_GET_DATA_DIR(full_path);
@@ -83,6 +85,8 @@ namespace XPX
 					return;
 
 				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
+
+				XPX_HTTP.set_endpoint("play-xplicit.com");
 
 				if (XPX_HTTP.download(url, tmp))
 				{

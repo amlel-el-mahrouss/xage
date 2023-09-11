@@ -70,14 +70,17 @@ namespace XPX
 			{
 				for (size_t i = 0; i < self->mServer->size(); ++i)
 				{
-					auto bytecode = self->run_string((std::format("{}:StepUpdate()()", XPLICIT_REMOTE_EVENTS[i]).c_str()));
+					auto bytecode = self->run_string(std::format("{}()", (String("World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[i] + ":Update()")).c_str());
 
-					self->mServer->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
+					if (bytecode)
+					{
+						self->mServer->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
-					memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
-					memcpy(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], bytecode, XPLICIT_NETWORK_BUF_SZ);
+						memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
+						memcpy(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], bytecode, XPLICIT_NETWORK_BUF_SZ);
 
-					XPX::NetworkServerContext::send_all(self->mServer);
+						XPX::NetworkServerContext::send_all(self->mServer);
+					}
 				}
 
 				self->assign((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str(), "false");
