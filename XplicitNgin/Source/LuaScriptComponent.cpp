@@ -31,6 +31,10 @@ namespace XPX
 		//! ROBLOX(tm) like syntax
 		this->run_string("_G.script = _G.Script.Current");
 
+		this->insert("PacketKind", "-1");
+		this->insert("PacketContentKind", "-1");
+		this->insert("PacketContent", "nil");
+
 		this->run_path(this->mName.c_str());
 	}
 

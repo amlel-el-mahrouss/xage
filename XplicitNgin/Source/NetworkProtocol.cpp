@@ -12,6 +12,7 @@
  */
 
 #include "NetworkProtocol.h"
+
 #include "NetworkServerComponent.h"
 
 namespace XPX
@@ -112,4 +113,21 @@ namespace XPX
     String address_to_string(NetworkPeer* instance) { return address_to_string(instance->address); }
 
     const bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs) { return lhs.sin_addr.S_un.S_addr == rhs.sin_addr.S_un.S_addr; }
+
+    XPLICIT_API NetworkPeer* find_peer(uuids::uuid& uuid)
+    {
+        NetworkServerComponent* server = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+
+        for (size_t i = 0; i < server->size(); ++i)
+        {
+            auto peer = server->get(i);
+
+            XPLICIT_ASSERT(peer);
+
+            if (peer->unique_addr.get_private_uuid() == uuid)
+                return peer;
+        }
+
+        return nullptr;
+    }
 }

@@ -33,9 +33,9 @@ namespace XPX
 			if (!player->get_peer())
 				continue;
 
-			// xasset is a wrapper over http which downloads any contents from play-xplicit.com.
+			// xasset is a wrapper over http, it downloads any contents from play-xplicit.com.
 
-			if (auto replica_xasset = player->get_class()->index_as_string("PacketData");
+			if (auto replica_xasset = player->get_class()->index_as_string("PacketContent");
 				!replica_xasset.empty())
 			{
 				mFactory.send(player->get_class()->index_as_number<int>("PacketContentKind"), 
@@ -43,11 +43,11 @@ namespace XPX
 					player->get_class()->index_as_number<int>("PacketKind"), 
 					player->get_peer()->public_hash);
 			
-				// you wanna do that
+				// you wanna do that, so we avoid calling this guy again.
 
 				player->get_class()->assign("PacketKind", "-1");
 				player->get_class()->assign("PacketContentKind", "-1");
-				player->get_class()->assign("PacketData", "nil");
+				player->get_class()->assign("PacketContent", "nil");
 			}
 		}
 	}

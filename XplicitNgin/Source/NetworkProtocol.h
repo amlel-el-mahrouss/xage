@@ -33,16 +33,17 @@
 #define XPLICIT_NETWORK_BUF_SZ      (64U)
 #define XPLICIT_NETWORK_VERSION     (2U)
 
-#define XPLICIT_NUM_CHANNELS (2)
-#define XPLICIT_MAX_REPLICA_SLOTS (3)
+#define XPLICIT_MAX_REPLICAS        (5)
+
+#define XPLICIT_NUM_CHANNELS (3)
 
 #define XPLICIT_CHANNEL_DATA (1)
 #define XPLICIT_CHANNEL_LUA (2)
 #define XPLICIT_CHANNEL_CHAT (3)
 
-#define XPLICIT_REPLICA_PLAYER 0
-#define XPLICIT_REPLICA_SCRIPT 1
-#define XPLICIT_REPLICA_ROXML 2
+#define XPLICIT_REPLICA_PLAYER (0)
+#define XPLICIT_REPLICA_SCRIPT (1)
+#define XPLICIT_REPLICA_ROXML (2)
 
 /* Used by the protocol to tell the velocity. */
 
@@ -117,7 +118,6 @@ namespace XPX
 
     using NetworkFloat = float;
 
-    // Xplicit Xconnect packet.
     struct XPLICIT_API NetworkPacket final
     {
     public:
@@ -139,11 +139,9 @@ namespace XPX
         std::int64_t          hash;
 
     public:
-        char replicas[3][XPLICIT_NETWORK_BUF_SZ];
+        char                  replicas[XPLICIT_MAX_REPLICAS][XPLICIT_NETWORK_BUF_SZ];
 
     };
-
-    typedef char ReplicaStr[3][XPLICIT_NETWORK_BUF_SZ];
 
     // Xplicit Xconnect Communication packet.
     struct XPLICIT_API NetworkPacketChat final
@@ -205,6 +203,8 @@ namespace XPX
         void reset() noexcept;
         
     };
+
+    XPLICIT_API NetworkPeer* find_peer(uuids::uuid& uuid);
 
     XPLICIT_API String address_to_string(NetworkPeer* instance);
     XPLICIT_API String address_to_string(const PrivateAddressData& ip);

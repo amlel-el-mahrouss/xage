@@ -169,9 +169,9 @@ namespace XPX
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
 				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed).c_str());
 
-				this->get_class()->insert("PacketKind", "-1");
-				this->get_class()->insert("PacketContentKind", "-1");
-				this->get_class()->insert("PacketData", "nil");
+				mClass->insert("PacketKind", "-1");
+				mClass->insert("PacketContentKind", "-1");
+				mClass->insert("PacketContent", "nil");
 
 				XPLICIT_INFO("World:Login [EVENT]");
 

@@ -45,8 +45,8 @@ namespace XPX
 			
 			mNetwork->get(i)->packet.id = id;
 
-			memset(mNetwork->get(i)->packet.replicas[0], 0, XPLICIT_NETWORK_BUF_SZ);
-			memcpy(mNetwork->get(i)->packet.replicas[0], path, strlen(path));
+			memset(mNetwork->get(i)->packet.replicas[XPLICIT_REPLICA_PLAYER], 0, XPLICIT_NETWORK_BUF_SZ);
+			memcpy(mNetwork->get(i)->packet.replicas[XPLICIT_REPLICA_PLAYER], path, strlen(path));
 
 			return;
 		}
