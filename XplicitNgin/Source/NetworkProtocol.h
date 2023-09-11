@@ -44,6 +44,7 @@
 #define XPLICIT_REPLICA_PLAYER (0)
 #define XPLICIT_REPLICA_SCRIPT (1)
 #define XPLICIT_REPLICA_ROXML (2)
+#define XPLICIT_REPLICA_EVENT (3)
 
 /* Used by the protocol to tell the velocity. */
 

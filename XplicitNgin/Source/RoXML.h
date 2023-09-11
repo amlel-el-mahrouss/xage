@@ -546,7 +546,7 @@ namespace XPX::RoXML
 						if (strcmp(node->first_attribute()->name(), "Path") == 0)
 						{
 
-							for (size_t i = 0; i < strlen(node->value()); i++)
+							for (size_t i = 0; i < strlen(node->first_attribute()->value()); i++)
 							{
 								if (isalnum(node->value()[i]) ||
 									node->value()[i] == '.' ||

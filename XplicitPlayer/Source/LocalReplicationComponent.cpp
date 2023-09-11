@@ -52,14 +52,7 @@ namespace XPX
 			{
 				String url;
 
-				for (size_t i = 0; i < XPLICIT_MAX_REPLICA_SLOTS; i++)
-				{
-					url = packet.replicas[i];
-
-					if (url.empty() ||
-						url.find(XPLICIT_XASSET_IDENT) == String::npos)
-						continue;
-				}
+				url = packet.replicas[0];
 
 				if (url.empty() ||
 					url.find(XPLICIT_XASSET_IDENT) == String::npos)
@@ -155,17 +148,7 @@ namespace XPX
 			case COMPONENT_ID_SCRIPT:
 			{
 				String name;
-
-				for (size_t i = 0; i < XPLICIT_MAX_REPLICA_SLOTS; i++)
-				{
-					name = packet.replicas[i];
-
-					if (name.empty())
-						continue;
-				}
-
-				if (name.empty())
-					return;
+				name = packet.replicas[0];
 
 				if (auto script = ComponentSystem::get_singleton_ptr()->get<LuaScriptComponent>(name.c_str()))
 				{

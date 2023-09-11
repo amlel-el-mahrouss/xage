@@ -124,6 +124,8 @@ function World:Login(ply)
     for _, v in ipairs(World.Slots.Login) do
         v.Func(ply)
     end
+
+    World.RemoteEventStorage.Login.ShouldUpdate = true;
 end
 
 function World:Logoff(ply)
@@ -132,6 +134,8 @@ function World:Logoff(ply)
     for _, v in ipairs(World.Slots.Logoff) do
         v.Func(ply)
     end
+
+    World.RemoteEventStorage.Logoff.ShouldUpdate = true;
 end
 
 function World:LeftClick()
@@ -162,6 +166,8 @@ function World:Move(ply)
     for _, v in ipairs(World.Slots.Move) do
         v.Func(ply)
     end
+
+    World.RemoteEventStorage.Move.ShouldUpdate = true;
 end
 
 function World:LocalMove(x, y, z)
@@ -174,18 +180,24 @@ function World:Damage(ply)
     for _, v in ipairs(World.Slots.Damage) do
         v.Func(ply)
     end
+
+    World.RemoteEventStorage.Damage.ShouldUpdate = true;
 end
 
 function World:Death(ply)
     for _, v in ipairs(World.Slots.Death) do
         v.Func(ply)
     end
+
+    World.RemoteEventStorage.Death.ShouldUpdate = true;
 end
 
 function World:Spawn(ply)
     for _, v in ipairs(World.Slots.Spawn) do
         v.Func(ply)
     end
+
+    World.RemoteEventStorage.Spawn.ShouldUpdate = true;
 end
 
 function World:RenderOneFrame()

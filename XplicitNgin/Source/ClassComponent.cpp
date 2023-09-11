@@ -15,6 +15,8 @@ namespace XPX
 	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Name, Func) self.Slots[Name] = Func end";
 	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, Name) self.Slots[Name] = nil; end";
 
+	static const char* XPLICIT_UPDATE_SNIPPET = "function (self) for _, v in pairs(self.Slots) do v(self); end end";
+
 	static const String XPLICIT_DESTROY_SNIPPET(const String& name, const String& parent) noexcept
 	{
 		String func_proto = std::format("function(self) XPXDestroyClass(\"{}\", \"{}\"); end",
@@ -33,6 +35,8 @@ namespace XPX
 	{
 		this->insert("Name", std::format("\'{}\'", mName).c_str());
 		this->insert("Parent", mParent.c_str());
+
+		this->insert("Update", XPLICIT_UPDATE_SNIPPET);
 
 		this->insert("Anchored", "true");
 		this->insert("Archivable", "false");
@@ -105,5 +109,7 @@ namespace XPX
 		self->pos().X = self->index_as_number<float>("Position.X");
 		self->pos().Y = self->index_as_number<float>("Position.Y");
 		self->pos().Z = self->index_as_number<float>("Position.Z");
+
+		self->call_method("Update");
 	}
 }

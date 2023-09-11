@@ -88,6 +88,17 @@ namespace XPX
 			return;
 		}
 
+		if (self->mHealth != self->mClass->index_as_number<double>("Health"))
+		{
+			String path("World.Players.");
+			path += self->mPeer->xplicit_id.as_string();
+
+			XPLICIT_INFO("World:Damage [EVENT]");
+
+			String fmt = std::format("World:Damage({})", path);
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		}
+
 		self->mHealth = self->mClass->index_as_number<double>("Health");
 		self->mMaxHealth = self->mClass->index_as_number<double>("MaxHealth");
 		self->mJumpPower = self->mClass->index_as_number<double>("JumpPower");

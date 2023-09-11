@@ -151,7 +151,7 @@ namespace XPX::Lua
 				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
 				++mSymbolCnt;
 
-				bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, value).c_str()) > 0;
+				bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, value).c_str());
 
 				return ret;
 			}
@@ -235,25 +235,48 @@ namespace XPX::Lua
 			return ret;
 		}
 
-		bool run_string(const char* lhs) noexcept
+		String run_string(const char* lhs) noexcept
 		{
 			if (!lhs)
-				return false;
+				return "";
 
-			auto ret = (luaL_dostring(mL, lhs)) < 0;
-			return ret;
+			auto ret = (luaL_dostring(mL, lhs));
+
+			lua_getglobal(mL, "string");
+			lua_getfield(mL, -1, "dump");
+			lua_pushvalue(mL, -3);
+			lua_call(mL, 1, 1);
+
+			String bytecode = lua_tostring(mL, 1);
+			return bytecode;
 		}
 
-		bool run_path(const char* lhs) noexcept
+		String run_path(const char* lhs) noexcept
 		{
 			if (!lhs)
-				return false;
+				return "";
 
 			static String tmp;
 			tmp = lhs;
 
-			auto ret = (luaL_dofile(mL, tmp.c_str())) < 0;
-			return ret;
+			auto ret = (luaL_dofile(mL, tmp.c_str()));
+
+			lua_getglobal(mL, "string");
+			lua_getfield(mL, -1, "dump");
+			lua_pushvalue(mL, -3);
+			lua_call(mL, 1, 1);
+
+			String bytecode = lua_tostring(mL, 1);
+			return bytecode;
+		}
+
+		String call_method(const char* method) noexcept
+		{
+			String fmt = mClass;
+			fmt += ".";
+			fmt += method;
+
+			return this->run_string(fmt.c_str());
 		}
 
 		std::int64_t count() { return mSymbolCnt; }
