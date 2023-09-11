@@ -89,7 +89,6 @@ namespace XPX
 
 	private:
 		NetworkComponent* mNetwork;
-		std::int64_t mPublicHash;
 		NetworkPacket mPacket;
 
 	};

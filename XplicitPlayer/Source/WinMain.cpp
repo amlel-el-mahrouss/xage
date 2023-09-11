@@ -84,8 +84,8 @@ int main(int argc, char** argv)
 
 			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
 
-			XPX::EventSystem::get_singleton_ptr()->update();
 			XPX::ComponentSystem::get_singleton_ptr()->update();
+			XPX::EventSystem::get_singleton_ptr()->update();
 
 			RENDER->getSceneManager()->drawAll();
 			RENDER->getGUIEnvironment()->drawAll();

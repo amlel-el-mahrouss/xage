@@ -178,27 +178,27 @@ int main(int argc, char** argv)
 		XPX::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);
 
-		// We want to parse any datavalues needed by the game.
+		// We want to parse any data values needed by the game.
 		// Such as SoundId.ExplosionId. or Textures.Ghost.
 		DVFromRoXML(params);
 
 		NPLICIT_SPLASH_SCREEN;
 
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
+		
+		auto net = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent");
+
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(net);
+
 		XPX::Thread logic([&]() {
-			const auto net = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent");
-
-			XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
-			XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
-
-			XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(net);
-
 			while (XPX::ComponentSystem::get_singleton_ptr() &&
 				XPX::EventSystem::get_singleton_ptr())
 			{
 				XPX::NetworkServerContext::recv_all(net);
 
-				XPX::EventSystem::get_singleton_ptr()->update();
 				XPX::ComponentSystem::get_singleton_ptr()->update();
+				XPX::EventSystem::get_singleton_ptr()->update();
 
 				XPX::NetworkServerContext::send_all(net);
 

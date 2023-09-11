@@ -52,13 +52,15 @@ namespace XPX
 			HumanoidComponent* humanoid = humanoids[i];
 
 			if (humanoid == nullptr ||
-				humanoid->get_health() < 1 ||
-				humanoid->get_peer() == nullptr)
+				!humanoid->can_spawn() ||
+				humanoid->get_peer() == nullptr ||
+				humanoid->get_peer()->packet.hash != humanoid->get_peer()->hash)
 				continue;
 
 			NetworkPeer* peer = humanoid->get_peer();
 
-			if (peer->packet.channel == XPLICIT_CHANNEL_CHAT)
+			if (peer->packet.channel == XPLICIT_CHANNEL_CHAT ||
+				peer->packet.channel == XPLICIT_CHANNEL_LUA)
 				continue;
 
 			//! No need to edit this piece of code, WorldCollisionEvent will take care of this.
@@ -90,6 +92,8 @@ namespace XPX
 				peer->packet.pos[XPLICIT_NETWORK_DELTA] = mDeltaTime;
 
 				/* finally accept request */
+
+				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 				peer->packet.public_hash = peer->public_hash;
 
