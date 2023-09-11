@@ -63,7 +63,7 @@ namespace XPX
 			String path("World.Players.");
 			path += self->get_peer()->xplicit_id.as_string();
 
-			String fmt = std::format("World:Spawn({})", path);
+			String fmt = fmt::format("World:Spawn({})", path);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 
@@ -95,7 +95,7 @@ namespace XPX
 
 			XPLICIT_INFO("World:Damage [EVENT]");
 
-			String fmt = std::format("World:Damage({})", path);
+			String fmt = fmt::format("World:Damage({})", path);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 
@@ -168,7 +168,7 @@ namespace XPX
 				mClass->insert("Name", "'Unconnected'");
 
 				mClass->insert("Parent", "World.Players");
-				mClass->insert("Id", std::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
+				mClass->insert("Id", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
 				mClass->insert("IsMoving", "false");
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
@@ -186,7 +186,7 @@ namespace XPX
 
 				XPLICIT_INFO("World:Login [EVENT]");
 
-				String fmt = std::format("World:Login({})", path);
+				String fmt = fmt::format("World:Login({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 				//! reset gear array. So that we don't have any non-nullptr left.

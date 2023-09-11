@@ -21,7 +21,7 @@ XPLICIT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-      "C:/Program Files/Mono/lib/mono-2.0-sgen",
+      "/opt/homebrew/Cellar/mono/6.12.0.182/lib/libmonosgen-2.0",
 	  "dxgi",
 	  "d3d11",
 	  "d2d1",
@@ -29,24 +29,24 @@ XPLICIT_CONFIG = {
 	  "ws2_32",
 	  "winmm",
 	  "opengl32",
-	  "C:/VulkanSDK/1.3.250.1/Lib/vulkan-1",
+	  "/Users/amlal/VulkanSDK/1.3.250.1/Lib/vulkan-1",
       "Library/glfw3",
       "Library/lua54",
       "Library/Irrlicht",
-      "C:/Program Files/OpenSSL-Win64/lib/libssl",
-      "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
+      "/opt/homebrew/opt/openssl@1.1/lib/libssl",
+      "/opt/homebrew/opt/openssl@1.1/lib/libcrypto",
     },
     ["_INCDIR"] = {
-        "C:/Program Files/OpenSSL-Win64/include/",
+        "/opt/homebrew/opt/openssl@1.1/include",
         "Vendor/",
         "XPXLua/",
 	    "Vendor/glfw/include/GLFW/",
     	"Vendor/yaml/include",
     	"XPXNgin.Physics/Source/",
-	    "C:/VulkanSDK/1.3.250.1/Include",
+	    "/Users/amlal/VulkanSDK/1.3.250.1/Include",
 	    "Vendor/libzip/lib",
-        "C:/Program Files/Mono/include/mono-2.0/",
-        "C:/Program Files/Mono/include/mono-2.0/mono",
+        "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/",
+        "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/mono",
     }
 };
 
@@ -65,17 +65,17 @@ XPLICIT_SERVER_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-        "C:/Program Files/Mono/lib/mono-2.0-sgen",
+        "/opt/homebrew/Cellar/mono/6.12.0.182/lib/libmonosgen-2.0",
     	"Library/Xplicit",
 	    "ws2_32",
 	    "winmm",
         "Library/Irrlicht",
         "Library/lua54",
-        "C:/Program Files/OpenSSL-Win64/lib/libssl",
-        "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
+      "/opt/homebrew/opt/openssl@1.1/lib/libssl",
+      "/opt/homebrew/opt/openssl@1.1/lib/libcrypto",
     },
     ["_INCDIR"] = {
-        "C:/Program Files/OpenSSL-Win64/include/",
+        "/opt/homebrew/opt/openssl@1.1/include",
         "Vendor/",
         "XPXLua/",
         "Vendor/stb/",
@@ -85,9 +85,9 @@ XPLICIT_SERVER_CONFIG = {
     	"Vendor/yaml/include",
     	"XPXNgin.Physics/Source/",
 	    "Vendor/libzip/lib",
-	    "C:/VulkanSDK/1.3.250.1/Include",
-        "C:/Program Files/Mono/include/mono-2.0/",
-        "C:/Program Files/Mono/include/mono-2.0/mono",
+	    "/Users/amlal/VulkanSDK/1.3.250.1/Include",
+        "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/",
+        "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/mono",
     }
 };
 
@@ -117,11 +117,11 @@ XPLICIT_CLIENT_CONFIG = {
 	    "winmm",
         "Library/lua54",
         "Library/Irrlicht",
-        "C:/Program Files/OpenSSL-Win64/lib/libssl",
-        "C:/Program Files/OpenSSL-Win64/lib/libcrypto",
+      "/opt/homebrew/opt/openssl@1.1/lib/libssl",
+      "/opt/homebrew/opt/openssl@1.1/lib/libcrypto",
     },
     ["_INCDIR"] = {
-        "C:/Program Files/OpenSSL-Win64/include/",
+        "/opt/homebrew/opt/openssl@1.1/include",
         "Vendor/",
         "XPXNgin.Sound/",
     	"XPXNgin/Source/",
@@ -134,9 +134,9 @@ XPLICIT_CLIENT_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
     	"XPXNgin.Physics/Source/",
 	    "Vendor/libzip/lib",
-	    "C:/VulkanSDK/1.3.250.1/Include",
-        "C:/Program Files/Mono/include/mono-2.0/",
-        "C:/Program Files/Mono/include/mono-2.0/mono",
+	    "/Users/amlal/VulkanSDK/1.3.250.1/Include",
+        "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/",
+        "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/mono",
     }
 };
 

@@ -18,7 +18,7 @@ namespace XPX
 		const auto error = XPLICIT_IOCTL(sock, static_cast<long>(SOCKET_FLAG::NON_BLOCKING), &ul);
 		(void)error;
 
-		XPLICIT_ASSERT(error == NO_ERROR);
+		XPLICIT_ASSERT(error == 0L);
 	}
 	
 	NetworkError::NetworkError(const int what) 
@@ -78,7 +78,7 @@ namespace XPX
 
 		memset(&mTargetAddress, 0, sizeof(PrivateAddressData));
 
-		mTargetAddress.sin_addr.S_un.S_addr = inet_addr(ip);
+        mTargetAddress.sin_addr.s_addr = inet_addr(ip);
 		mTargetAddress.sin_family = AF_INET;
 		mTargetAddress.sin_port = htons(std::atoi(port));
 
@@ -134,9 +134,8 @@ namespace XPX
 				FD_ZERO(&fd);
 				FD_SET(mSocket.PublicSocket, &fd);
 
-				static constexpr timeval timeout = { .tv_sec = 0, .tv_usec = 100000 };
-
-				::select(0, &fd, nullptr, nullptr, &timeout);
+                timeval timeout = { .tv_sec = 0, .tv_usec = 100000 };
+                ::select(0, &fd, nullptr, nullptr, &timeout);
 
 				return true;
 			}
@@ -159,7 +158,7 @@ namespace XPX
 	{
 		mReset = false;
 
-		std::int32_t len = sizeof(PrivateAddressData);
+		socklen_t len = sizeof(PrivateAddressData);
 
 		const std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
 			reinterpret_cast<char*>(&mPacket), 

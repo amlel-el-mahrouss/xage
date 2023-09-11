@@ -134,7 +134,7 @@ namespace XPX::Lua
 		virtual ~CLuaClass() noexcept
 		{
 			// {} = mClass
-			luaL_dostring(mL, std::format("{} = nil", mClass).c_str());
+			luaL_dostring(mL, fmt::format("{} = nil", mClass).c_str());
 		}
 
 	public:
@@ -151,7 +151,7 @@ namespace XPX::Lua
 				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
 				++mSymbolCnt;
 
-				bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, symbol, value).c_str());
+				bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, symbol, value).c_str());
 
 				return ret;
 			}
@@ -161,7 +161,7 @@ namespace XPX::Lua
 
 		bool assign(const char* lhs, const char* rhs) 
 		{ 
-			bool ret = luaL_dostring(mL, std::format("{}.{} = {}", mClass, lhs, rhs).c_str());
+			bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, lhs, rhs).c_str());
 			return ret;
 		}
 
@@ -245,7 +245,7 @@ namespace XPX::Lua
 			if (ret)
 			{
 				
-				ret = (luaL_dostring(mL, std::format("return string.dump({})", lhs).c_str()));
+				ret = (luaL_dostring(mL, fmt::format("return string.dump({})", lhs).c_str()));
 
 				if (!ret)
 					return lua_tostring(mL, -1);

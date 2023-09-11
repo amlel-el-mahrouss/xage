@@ -57,7 +57,7 @@ namespace XPX
 		int run(MonoAssembly* in, int argc, const char** argv);
 
 	public:
-		XPLICIT_COMPONENT_OVERRIDE(MonoEngineComponent);
+		XPLICIT_COMPONENT_OVERRIDE();
 
 	public:
 		MonoClass* make(Ref<MonoScriptComponent*>& assembly, const char* namespase, const char* klass);
@@ -80,7 +80,7 @@ namespace XPX
 		MonoScriptComponent(const MonoScriptComponent&) = default;
 
 	public:
-		XPLICIT_COMPONENT_OVERRIDE(MonoScriptComponent);
+		XPLICIT_COMPONENT_OVERRIDE();
 
 	public:
 		MonoObject* run(const char* method_name);

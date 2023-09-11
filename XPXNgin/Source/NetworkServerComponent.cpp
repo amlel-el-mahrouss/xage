@@ -57,14 +57,14 @@ namespace XPX
 		sockaddr_in bindAddress = {};
 		memset(&bindAddress, 0, sizeof(sockaddr_in));
 		
-		inet_pton(AF_INET, this->mDns.c_str(), &bindAddress.sin_addr.S_un.S_addr);
+		inet_pton(AF_INET, this->mDns.c_str(), &bindAddress.sin_addr.s_addr);
 
 		bindAddress.sin_family = AF_INET;
 		bindAddress.sin_port = htons(std::atoi(port));
 
 		mPort = ntohs(bindAddress.sin_port);
 
-		if (::bind(mSocket, reinterpret_cast<SOCKADDR*>(&bindAddress), sizeof(bindAddress)) == SOCKET_ERROR)
+		if (::bind(mSocket, reinterpret_cast<struct sockaddr*>(&bindAddress), sizeof(bindAddress)) == SOCKET_ERROR)
 			throw NetworkError(NETWORK_ERR_INTERNAL_ERROR);
 
 		// !Let's preallocate the clients.
@@ -123,7 +123,7 @@ namespace XPX
 
 	bool NetworkServerContext::recv(const NetworkServerComponent* server, NetworkPeer* peer) noexcept
 	{
-		std::int32_t from_len = sizeof(PrivateAddressData);
+		socklen_t from_len = sizeof(PrivateAddressData);
 		NetworkPacket packet{};
 
 		auto sock = SOCKET_ERROR;
@@ -147,8 +147,7 @@ namespace XPX
 				FD_ZERO(&fd);
 				FD_SET(server->mSocket, &fd);
 				
-				constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
-
+				timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
 				::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
 
 				break;
@@ -255,8 +254,7 @@ namespace XPX
 				FD_ZERO(&fd);
 				FD_SET(server->mSocket, &fd);
 				
-				constexpr timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
-
+				timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
 				::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
 				
 				break;
@@ -271,7 +269,7 @@ namespace XPX
 	{
 		XPLICIT_ASSERT(peer && server);
 
-		std::int32_t from_len = sizeof(PrivateAddressData);
+        socklen_t from_len = sizeof(PrivateAddressData);
 
 		::recvfrom(server->mSocket,
 			reinterpret_cast<char*>(&packet),

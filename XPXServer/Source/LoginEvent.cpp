@@ -176,7 +176,7 @@ namespace XPX
 					String path("_G.World.Players.");
 					path += mNetwork->get(peer_idx)->xplicit_id.as_string();
 
-					String fmt = std::format("World:Logoff({})", path);
+					String fmt = fmt::format("World:Logoff({})", path);
 					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;

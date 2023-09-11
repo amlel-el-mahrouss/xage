@@ -10,6 +10,7 @@
 #pragma once
 
 #include "XPXNginCore.h"
+#include "SocketWrapper.h"
 
 // OpenSSL
 #include <openssl/ssl.h>
@@ -69,7 +70,7 @@ namespace XPX::HTTP
         {
             struct sockaddr_in m_Addr;
             std::string m_Dns;
-            SOCKET m_Socket;
+            Network::CSocket m_Socket;
 
             friend HTTPWriter;
 
@@ -203,11 +204,11 @@ namespace XPX::HTTP
             if (m_Socket)
             {
                 if (shutdown(m_Socket->m_Socket, SD_BOTH) == SOCKET_ERROR)
-                    closesocket(m_Socket->m_Socket);
+                    XPLICIT_CLOSE(m_Socket->m_Socket);
 
 
                 char buf[256];
-                vsprintf_s<256U>(buf, "[SERVER] %s has been closed!", m_Socket->m_Dns.data());
+                vsprintf(buf, "[SERVER] %s has been closed!", m_Socket->m_Dns.data());
 
                 XPLICIT_INFO(buf);
                 xplicit_log(buf);
@@ -243,7 +244,7 @@ namespace XPX::HTTP
 
             sock->m_Addr.sin_family = AF_INET;
             sock->m_Addr.sin_addr.s_addr = inet_addr(dns.c_str());
-            sock->m_Addr.sin_port = ::htons(XPLICIT_HTTP_PORT);
+            sock->m_Addr.sin_port = htons(XPLICIT_HTTP_PORT);
 
             if (sock->m_Addr.sin_addr.s_addr == INADDR_NONE)
             {
@@ -251,7 +252,7 @@ namespace XPX::HTTP
 
                 if (!host)
                 {
-                    closesocket(sock->m_Socket);
+                    XPLICIT_CLOSE(sock->m_Socket);
 
                     xplicit_log("Invalid hostname! returning nullptr...");
                     xplicit_log(dns.c_str());
@@ -264,7 +265,7 @@ namespace XPX::HTTP
 
             sock->m_Dns = String{ dns.data() };
 
-            int result = connect(sock->m_Socket, reinterpret_cast<SOCKADDR*>(&sock->m_Addr), sizeof(sock->m_Addr));
+            int result = connect(sock->m_Socket, reinterpret_cast<struct sockaddr*>(&sock->m_Addr), sizeof(sock->m_Addr));
             if (result == SOCKET_ERROR) return nullptr;
 
             SSL_set_fd(m_Ssl, sock->m_Socket);

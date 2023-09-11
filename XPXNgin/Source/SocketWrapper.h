@@ -22,6 +22,18 @@
 
 #else
 
+#ifndef _WIN32
+#   define INADDR_NONE -1
+#   define SOCKET_ERROR -1
+#   define WSAECONNRESET ECONNRESET
+#   define WSAEWOULDBLOCK EWOULDBLOCK
+#   define WSAGetLastError() errno
+#endif
+
+#ifdef _WIN32
+#   define s_addr S_un.S_addr
+#endif
+
 #define XPLICIT_SOCKET socket
 #define XPLICIT_CLOSE close
 #define XPLICIT_SHUTDOWN shutdown

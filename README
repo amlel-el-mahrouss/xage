@@ -21,6 +21,7 @@ REQUIREMENTS:
 - OpenSSL
 - LuaNgine
 - FreeType
+- OpenAL
 - CADEngine
 - Windows 11/Mac OS X
 - Visual Studio 2022 (C++ Workload)

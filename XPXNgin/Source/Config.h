@@ -35,7 +35,19 @@
 
 #else
 
+#   include <sys/socket.h>
 #   include <unistd.h>
+#   include <netdb.h>
+#   include <sys/ioctl.h>
+#   include <arpa/inet.h>
+
+#define SD_BOTH SHUT_RDWR
+#define SD_SEND SHUT_WR
+#define SD_READ SHUT_RD
+
+#define ZeroMemory(ptr, sz) memset(ptr, 0, sz)
+
+#define INVALID_SOCKET -1
 
 #endif
 

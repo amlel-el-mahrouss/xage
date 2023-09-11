@@ -19,7 +19,7 @@ namespace XPX
 		if (!_event)
 			return;
 
-		String fmt = std::format("{}()", this->mSnippet);
+		String fmt = fmt::format("{}()", this->mSnippet);
 		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 	}
 

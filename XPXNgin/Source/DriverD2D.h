@@ -12,6 +12,8 @@
 
 #pragma once
 
+#ifdef XPLICIT_WINDOWS
+
 #include "XPXNginCore.h"
 #include "Component.h"
 #include "DriverD3D11.h"
@@ -89,5 +91,7 @@ namespace XPX::Renderer::D2D
 
 	};
 }
+
+#endif
 
 #endif

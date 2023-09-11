@@ -13,11 +13,10 @@
 #include "GLad.h"
 #include "Bites.h"
 
-#ifdef XPLICIT_WINDOWS
-
 namespace XPX::Bites
 {
-	Win32Window::Win32Window(const char* wndName, const char* wndClass, HINSTANCE hInstance)
+#ifdef XPLICIT_WINDOWS
+    Win32Window::Win32Window(const char* wndName, const char* wndClass, HINSTANCE hInstance)
 		: mTraits(), mExit(false)
 	{
 		RtlZeroMemory(&mTraits.WndClass, sizeof(WNDCLASSEXA));
@@ -116,6 +115,8 @@ namespace XPX::Bites
 		return 0;
 	}
 
+#endif // ifdef XPLICIT_WINDOWS
+
 	void glfw_size_callback(GLFWwindow* window, int width, int height)
 	{
 		glViewport(0, 0, width, height);
@@ -163,5 +164,3 @@ namespace XPX::Bites
 		return mWindow;
 	}
 }
-
-#endif // ifdef XPLICIT_WINDOWS

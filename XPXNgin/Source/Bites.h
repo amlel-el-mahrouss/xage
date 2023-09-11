@@ -20,8 +20,6 @@
 #define XPLICIT_MIN_WIDTH  (XPLICIT_DEFAULT_WIDTH)
 #define XPLICIT_MIN_HEIGHT (XPLICIT_DEFAULT_HEIGHT)
 
-#ifdef XPLICIT_WINDOWS
-
 #include <glfw3.h>
 
 #define XPLICIT_GET_X_POS(LPARAM) GET_X_LPARAM(LPARAM)
@@ -29,6 +27,7 @@
 
 namespace XPX::Bites
 {
+#ifdef XPLICIT_WINDOWS
 	class XPLICIT_API Win32Window final
 	{
 	public:
@@ -61,6 +60,11 @@ namespace XPX::Bites
 
 	};
 
+#define XPLICIT_MAIN()\
+INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
+
+#endif // XPLICIT_WINDOWS
+
 	class XPLICIT_API GLFWWindow final
 	{
 	public:
@@ -80,9 +84,3 @@ namespace XPX::Bites
 
 	};
 }
-
-#define XPLICIT_MAIN()\
-INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
-
-
-#endif // XPLICIT_WINDOWS

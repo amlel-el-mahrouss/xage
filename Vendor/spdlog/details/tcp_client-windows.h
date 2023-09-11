@@ -63,7 +63,7 @@ public:
 
     void close()
     {
-        ::closesocket(socket_);
+        ::XPLICIT_CLOSE(socket_);
         socket_ = INVALID_SOCKET;
     }
 

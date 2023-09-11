@@ -31,7 +31,7 @@ namespace XPX
 		MonoClassComponent& operator=(const MonoClassComponent&) = default;
 		MonoClassComponent(const MonoClassComponent&) = default;
 
-		XPLICIT_COMPONENT_OVERRIDE(MonoClassComponent);
+		XPLICIT_COMPONENT_OVERRIDE();
 
 	public:
 		operator bool();

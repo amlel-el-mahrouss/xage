@@ -137,7 +137,7 @@ namespace XPX
 }
 
 #define XPLICIT_COMPONENT_OVERRIDE()\
-		const char* name() noexcept override;\
+		const char* name() noexcept;\
 		COMPONENT_TYPE type() noexcept override;\
 		static bool should_update() noexcept;\
 		static void update(void* class_ptr);\

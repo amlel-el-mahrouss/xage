@@ -106,7 +106,7 @@ namespace XPX
 
 				humanoid->get_class()->assign("IsMoving", "true");
 
-				String fmt = std::format("World:Move({})", path);
+				String fmt = fmt::format("World:Move({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 				humanoid->get_class()->assign("IsMoving", "false");
@@ -115,7 +115,7 @@ namespace XPX
 
 		mDeltaTime += (mDeltaVar->as_float() / XPLICIT_DELTA_PER_SECOND);
 
-		String heartbeat_fmt = std::format("World.Settings.DeltaTime.Value = {}", std::to_string(mDeltaTime));
+		String heartbeat_fmt = fmt::format("World.Settings.DeltaTime.Value = {}", std::to_string(mDeltaTime));
 		Lua::CLuaStateManager::get_singleton_ptr()->run_string(heartbeat_fmt.c_str());
 	}
 }

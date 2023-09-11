@@ -641,7 +641,7 @@ inline void DVFromRoXML(XPX::RoXML::RoXMLDocumentParameters& params) noexcept
 
 				fmt = params.DataValues[i].Name.c_str();
 				fmt += "=";
-				fmt += std::format("{}{}{}", "{", final_string, "}");
+				fmt += fmt::format("{}{}{}", "{", final_string, "}");
 
 				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 

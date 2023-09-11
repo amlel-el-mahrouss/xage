@@ -23,10 +23,10 @@ namespace XPX
 	{
 		this->insert("Destroy", this->destroy_snippet().c_str());
 
-		this->run_string(std::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
+		this->run_string(fmt::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
 
 		// Script.Current
-		this->run_string(std::format("_G.Script.Current = _G.Script.{}", this->name()).c_str());
+		this->run_string(fmt::format("_G.Script.Current = _G.Script.{}", this->name()).c_str());
 
 		//! ROBLOX(tm) like syntax
 		this->run_string("_G.script = _G.Script.Current");

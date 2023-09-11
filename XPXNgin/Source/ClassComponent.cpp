@@ -19,7 +19,7 @@ namespace XPX
 
 	static const String XPLICIT_DESTROY_SNIPPET(const String& name, const String& parent) noexcept
 	{
-		String func_proto = std::format("function(self) XPXDestroyClass(\"{}\", \"{}\"); end",
+		String func_proto = fmt::format("function(self) XPXDestroyClass(\"{}\", \"{}\"); end",
 			name, parent);
 
 		return func_proto;
@@ -33,7 +33,7 @@ namespace XPX
 		mName(name),
 		mParent(parent)
 	{
-		this->insert("Name", std::format("\'{}\'", mName).c_str());
+		this->insert("Name", fmt::format("\'{}\'", mName).c_str());
 		this->insert("Parent", mParent.c_str());
 
 		this->insert("Update", XPLICIT_UPDATE_SNIPPET);

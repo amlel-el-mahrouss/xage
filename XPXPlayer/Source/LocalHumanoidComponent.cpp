@@ -116,7 +116,7 @@ namespace XPX
 
 				XPLICIT_INFO("World:LocalMove [EVENT]");
 
-				String fmt = std::format("World:LocalMove({},{},{})", std::to_string(self->mPos.X), std::to_string(self->mPos.Y), std::to_string(self->mPos.Z));
+				String fmt = fmt::format("World:LocalMove({},{},{})", std::to_string(self->mPos.X), std::to_string(self->mPos.Y), std::to_string(self->mPos.Z));
 
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}

@@ -52,7 +52,7 @@ class udp_client
     {
         if (socket_ != INVALID_SOCKET)
         {
-            ::closesocket(socket_);
+            ::XPLICIT_CLOSE(socket_);
         }
         socket_ = INVALID_SOCKET;
         ::WSACleanup();

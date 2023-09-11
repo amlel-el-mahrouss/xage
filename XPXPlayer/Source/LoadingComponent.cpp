@@ -106,7 +106,7 @@ namespace XPX
 
 			monitor->ID = packet.buffer;
 
-			local_player->get_class()->insert("Id", std::format("'{}'", monitor->ID).c_str());
+			local_player->get_class()->insert("Id", fmt::format("'{}'", monitor->ID).c_str());
 
 			XPLICIT_INFO(monitor->ID);
 

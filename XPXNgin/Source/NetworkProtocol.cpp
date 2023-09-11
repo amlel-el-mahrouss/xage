@@ -12,7 +12,6 @@
  */
 
 #include "NetworkProtocol.h"
-
 #include "NetworkServerComponent.h"
 
 namespace XPX
@@ -112,7 +111,7 @@ namespace XPX
 
     String address_to_string(NetworkPeer* instance) { return address_to_string(instance->address); }
 
-    const bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs) { return lhs.sin_addr.S_un.S_addr == rhs.sin_addr.S_un.S_addr; }
+    const bool equals(const PrivateAddressData& lhs, const PrivateAddressData& rhs) { return lhs.sin_addr.s_addr == rhs.sin_addr.s_addr; }
 
     XPLICIT_API NetworkPeer* find_peer(uuids::uuid& uuid)
     {

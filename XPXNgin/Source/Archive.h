@@ -22,16 +22,6 @@ constexpr auto AR_MAGIC = 0xBADF00D;
 struct ar_extension_table;
 struct ar_header;
 
-#ifndef _WIN32
-
-inline int fopen_s(FILE** fp, const char* path, const char* res) noexcept
-{
-    *fp = fopen(path, res);
-    return errno;
-}
-
-#endif
-
 typedef enum 
 {
     AR_FLAG_ZLIB, // The archive is compressed using DEFLATE.

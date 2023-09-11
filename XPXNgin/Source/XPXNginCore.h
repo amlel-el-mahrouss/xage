@@ -13,6 +13,16 @@
 
 #include "Config.h"
 
+#ifndef XPLICIT_WINDOWS
+
+inline int fopen_s(FILE** fp, const char* path, const char* res) noexcept
+{
+    *fp = fopen(path, res);
+    return errno;
+}
+
+#endif
+
 #ifdef XPLICIT_END_OF_BUFFER
 #undef XPLICIT_END_OF_BUFFER
 #endif // XPLICIT_END_OF_BUFFER
@@ -41,12 +51,7 @@ namespace XPX
 	template <typename CharType>
 	using BasicString = std::basic_string<CharType>;
 
-	// platform dependent chars
-#ifdef XPLICIT_WINDOWS
-	using PChar = wchar_t;
-#else
-	using PChar = char;
-#endif
+    using PChar = wchar_t;
 
 	using PString = BasicString<PChar>;
 
@@ -639,13 +644,11 @@ namespace XPX
 		};
 	}
 
-#ifdef XPLICIT_WINDOWS
-	XPLICIT_API inline BasicString<PChar> platform_string(const char* utf8)
-	{
-		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
-		return cvt.from_bytes(utf8);
-	}
-#endif // ifdef XPLICIT_WINDOWS
+    XPLICIT_API inline BasicString<PChar> platform_string(const char* utf8)
+    {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
+        return cvt.from_bytes(utf8);
+    }
 }
 
 #ifdef XPLICIT_WINDOWS

@@ -1,9 +1,0 @@
-<RoXML>
-    	<Class Name="PhysicsPart" Object="Part">
-    
-	</Class>
-	
-	<CLua>
-		xasset://Library/BrickBattleLogic.lua
-	</CLua>
-</RoXML>

@@ -12,6 +12,7 @@
 
 #include "VideoDriver.h"
 
+#ifdef XPLICIT_WINDOWS
 namespace XPX::Renderer
 {
 	VideoBuffer::VideoBuffer() 
@@ -70,3 +71,5 @@ namespace XPX::Renderer
 		return nullptr;
 	}
 }
+
+#endif

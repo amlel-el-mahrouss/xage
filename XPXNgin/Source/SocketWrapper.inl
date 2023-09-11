@@ -31,5 +31,5 @@ void XPX::Network::Socket::send(Data ptr, size_t sz)
 template <typename Data, size_t Size>
 void XPX::Network::Socket::recv(Data ptr, size_t sz)
 {
-	::recv(Socket, (char*)ptr, sz < 1 ? Size : sz, 0);
+	::recv(this->PublicSocket, (char*)ptr, sz < 1 ? Size : sz, 0);
 }

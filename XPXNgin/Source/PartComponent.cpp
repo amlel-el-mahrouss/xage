@@ -62,7 +62,7 @@ namespace XPX
 
 	String PartComponent::part_destroy() noexcept
 	{
-		String func_proto = std::format("function(self) XPXDestroyPart(\"{}\"); end",
+		String func_proto = fmt::format("function(self) XPXDestroyPart(\"{}\"); end",
 			this->name());
 
 		return func_proto;

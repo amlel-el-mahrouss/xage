@@ -18,13 +18,13 @@
 #ifdef _WIN32
 #define XPLICIT_GET_DATA_DIR(DIR)\
 XPX::String DIR = getenv("APPDATA");\
-DIR += "/XPXNgin/";
+DIR += "/NginData/";
 
 
 #else
 #define XPLICIT_GET_DATA_DIR(DIR)\
 XPX::String DIR = getenv("HOME");\
-DIR += "/XPXNgin/";
+DIR += "/NginData/";
 
 
 #endif

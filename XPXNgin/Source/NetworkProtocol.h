@@ -61,6 +61,8 @@
 #define XPLICIT_BAD_ADDRESS     (0xFFFFFFFF)
 #define XPLICIT_BAD_ADDRESS_STR ("255.255.255.255")
 
+#include "SocketWrapper.h"
+
 namespace XPX
 {
 #ifdef XPLICIT_WINDOWS
@@ -68,7 +70,7 @@ namespace XPX
     using Socket = SOCKET;
 #else
     typedef struct sockaddr_in PrivateAddressData;
-    using Socket = socket;
+    using Socket = Network::CSocket;
 #endif
 
     // network commands.

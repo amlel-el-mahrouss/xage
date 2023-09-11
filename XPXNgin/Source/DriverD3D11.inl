@@ -10,6 +10,8 @@
  * =====================================================================
  */
 
+#ifdef XPLICIT_WINDOWS
+
 namespace XPX
 {
 	static inline void print_error(ID3D10Blob* error)
@@ -186,3 +188,5 @@ XPX::Renderer::DX11::ShaderSystemD3D11* XPX::Renderer::DX11::D3D11ShaderHelper1:
 }
 
 #undef XPLICIT_DX11_STRING_SZ
+
+#endif

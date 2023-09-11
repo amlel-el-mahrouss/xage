@@ -23,8 +23,6 @@
 
 #	include <glfw3native.h>
 
-#endif
-
 #include <vulkan/vulkan.hpp>
 
 namespace XPX::Renderer::Vk
@@ -82,3 +80,5 @@ namespace XPX::Renderer::Vk
 
 	};
 }
+
+#endif

@@ -82,7 +82,7 @@ namespace XPX
 				String path("World.Players.");
 				path += peer_ptr->xplicit_id.as_string();
 
-				String fmt = std::format("World:Death({})", path);
+				String fmt = fmt::format("World:Death({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 				for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)

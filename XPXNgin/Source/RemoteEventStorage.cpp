@@ -70,7 +70,7 @@ namespace XPX
 			{
 				for (size_t i = 0; i < self->mServer->size(); ++i)
 				{
-					auto bytecode = self->run_string(std::format("{}()", (String("World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[i] + ":Update()")).c_str());
+					auto bytecode = self->run_string(fmt::format("{}()", (String("World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[i] + ":Update()")).c_str());
 
 					if (bytecode)
 					{

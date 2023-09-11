@@ -10,6 +10,8 @@
 #include "DriverVulkan.h"
 #include <set>
 
+#ifdef _WIN32
+
 namespace XPX::Renderer::Vk
 {
 	namespace Details
@@ -180,7 +182,6 @@ namespace XPX::Renderer::Vk
 			}
 			else 
 			{
-
 				RECT rect{};
 
 				GetWindowRect(window, &rect);
@@ -400,3 +401,5 @@ namespace XPX::Renderer::Vk
 	const char* DriverSystemVulkan::name() noexcept { return ("DriverSystemVulkan"); }
 	RENDER_SYSTEM DriverSystemVulkan::api() noexcept { return RENDER_SYSTEM::VULKAN; }
 }
+
+#endif

@@ -15,9 +15,10 @@
  */
 
 #include "DriverD3D11.h"
-#include <d3dcompiler.h>
 
 #ifdef XPLICIT_WINDOWS
+
+#include <d3dcompiler.h>
 
 namespace XPX::Renderer::DX11
 {
