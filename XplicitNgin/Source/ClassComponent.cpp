@@ -57,13 +57,8 @@ namespace XPX
 		const char* parent,
 		const char* name)
 		: 
-		Lua::CLuaClass((String(parent) + "." + name)),
-		mName(name),
-		mParent(parent)
+		ClassComponent::ClassComponent(parent, name)
 	{
-		this->insert("Name", mName.c_str());
-		this->insert("Parent", mParent.c_str());
-
 		this->pos() = position;
 		this->scale() = size;
 		this->color() = color;
@@ -72,20 +67,6 @@ namespace XPX
 		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Rotation", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Color", "{ R = 0, G = 0, B = 0, A = 1 }");
-
-		this->insert("Slots", "{ }");
-
-		this->insert("Anchored", "true");
-		this->insert("Archivable", "false");
-		this->insert("Locked", "false");
-		this->insert("Collide", "true");
-
-		this->insert("Destroy", XPLICIT_DESTROY_SNIPPET(mName, mParent).c_str());
-
-		//! Connect and disconnect methods
-		//! Use this to connect specific function to this class.
-		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
-		this->insert("Disconnect", XPLICIT_DISCONNECT_SNIPPET);
 
 		if (script)
 		{

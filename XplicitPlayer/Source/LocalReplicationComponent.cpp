@@ -101,14 +101,7 @@ namespace XPX
 			{
 				String url;
 
-				for (size_t i = 0; i < XPLICIT_MAX_REPLICA_SLOTS; i++)
-				{
-					url = packet.replicas[i];
-
-					if (url.empty() ||
-						url.find(XPLICIT_XASSET_IDENT) == String::npos)
-						continue;
-				}
+				url = packet.replicas[0];
 
 				if (url.empty() ||
 					url.find(XPLICIT_XASSET_IDENT) == String::npos)

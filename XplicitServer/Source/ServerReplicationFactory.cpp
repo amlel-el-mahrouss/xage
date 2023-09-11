@@ -12,8 +12,7 @@
 namespace XPX
 {
 	ServerReplicationFactory::ServerReplicationFactory()
-		:
-		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
+		: mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
 	{
 		XPLICIT_ASSERT(mNetwork);
 	}
