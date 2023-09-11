@@ -78,8 +78,8 @@ namespace XPX
 		mHudFrame->BackgroundColor.setGreen(0x0F);
 		mHudFrame->BackgroundColor.setBlue(0x0F);
 
-		mHudFrame->X = ImGUI::JustifyBy<1.7>(ImGUI::CenterOf(XPLICIT_DIM.X));
-		mHudFrame->Y = ImGUI::JustifyBy<1.7>(ImGUI::CenterOf(XPLICIT_DIM.Y));
+		mHudFrame->X = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_DIM.X));
+		mHudFrame->Y = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_DIM.Y));
 
 		mOk->W = 504;
 		mOk->H = 41;

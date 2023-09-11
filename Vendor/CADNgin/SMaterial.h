@@ -270,7 +270,7 @@ namespace video
 		never need more than 2 textures per material you can set this to 2.
 
 		We (mostly) avoid dynamic memory in SMaterial, so the extra memory
-		will still be allocated. But by lowering MATERIAL_MAX_TEXTURES_USED the
+		will still be allocated. But by lowering _IRR_MATERIAL_MAX_TEXTURES_ the
 		material comparisons and assignments can be faster. Also several other
 		places in the engine can be faster when reducing this value to the limit
 		you need.
@@ -279,7 +279,6 @@ namespace video
 		NOTE: Do not set it below 1 or above the value of _IRR_MATERIAL_MAX_TEXTURES_.
 		NOTE: Going below 4 is usually not worth it.
 	*/
-	IRRLICHT_API extern u32 MATERIAL_MAX_TEXTURES_USED;
 
 	//! Struct for holding parameters for a material renderer
 	// Note for implementors: Serialization is in CNullDriver
@@ -306,7 +305,7 @@ namespace video
 		SMaterial(const SMaterial& other)
 		{
 			// These pointers are checked during assignment
-			for (u32 i=0; i<MATERIAL_MAX_TEXTURES_USED; ++i)
+			for (u32 i=0; i<_IRR_MATERIAL_MAX_TEXTURES_; ++i)
 				TextureLayer[i].TextureMatrix = 0;
 			*this = other;
 		}
@@ -329,7 +328,7 @@ namespace video
 			MaterialTypeParam = other.MaterialTypeParam;
 			MaterialTypeParam2 = other.MaterialTypeParam2;
 			Thickness = other.Thickness;
-			for (u32 i=0; i<MATERIAL_MAX_TEXTURES_USED; ++i)
+			for (u32 i=0; i<_IRR_MATERIAL_MAX_TEXTURES_; ++i)
 			{
 				TextureLayer[i] = other.TextureLayer[i];
 			}
@@ -610,23 +609,23 @@ namespace video
 					FrontfaceCulling = value; break;
 				case EMF_BILINEAR_FILTER:
 				{
-					for (u32 i=0; i<MATERIAL_MAX_TEXTURES_USED; ++i)
+					for (u32 i=0; i<_IRR_MATERIAL_MAX_TEXTURES_; ++i)
 						TextureLayer[i].BilinearFilter = value;
 				}
 				break;
 				case EMF_TRILINEAR_FILTER:
 				{
-					for (u32 i=0; i<MATERIAL_MAX_TEXTURES_USED; ++i)
+					for (u32 i=0; i<_IRR_MATERIAL_MAX_TEXTURES_; ++i)
 						TextureLayer[i].TrilinearFilter = value;
 				}
 				break;
 				case EMF_ANISOTROPIC_FILTER:
 				{
 					if (value)
-						for (u32 i=0; i<MATERIAL_MAX_TEXTURES_USED; ++i)
+						for (u32 i=0; i<_IRR_MATERIAL_MAX_TEXTURES_; ++i)
 							TextureLayer[i].AnisotropicFilter = 0xFF;
 					else
-						for (u32 i=0; i<MATERIAL_MAX_TEXTURES_USED; ++i)
+						for (u32 i=0; i<_IRR_MATERIAL_MAX_TEXTURES_; ++i)
 							TextureLayer[i].AnisotropicFilter = 0;
 				}
 				break;
@@ -636,7 +635,7 @@ namespace video
 					NormalizeNormals = value; break;
 				case EMF_TEXTURE_WRAP:
 				{
-					for (u32 i=0; i<MATERIAL_MAX_TEXTURES_USED; ++i)
+					for (u32 i=0; i<_IRR_MATERIAL_MAX_TEXTURES_; ++i)
 					{
 						TextureLayer[i].TextureWrapU = (E_TEXTURE_CLAMP)value;
 						TextureLayer[i].TextureWrapV = (E_TEXTURE_CLAMP)value;
@@ -759,7 +758,7 @@ namespace video
 				UseMipMaps != b.UseMipMaps ||
 				ZWriteFineControl != b.ZWriteFineControl;
 				;
-			for (u32 i=0; (i<MATERIAL_MAX_TEXTURES_USED) && !different; ++i)
+			for (u32 i=0; (i<_IRR_MATERIAL_MAX_TEXTURES_) && !different; ++i)
 			{
 				different |= (TextureLayer[i] != b.TextureLayer[i]);
 			}

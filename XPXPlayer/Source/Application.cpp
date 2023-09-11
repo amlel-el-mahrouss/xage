@@ -26,7 +26,10 @@ namespace XPX
 namespace XPX::Bites
 {
 	Application::Application(Utils::UriParser& xconnect_to)
-		: mPath(""), mWsa()
+		: mPath("")
+#ifdef __XPLICIT_WINDOWS__
+    , mWsa()
+#endif
 	{
 		this->setup();
 
@@ -80,7 +83,9 @@ namespace XPX::Bites
 		Root::get_singleton_ptr()->set(new InputReceiver());
 		CAD->setEventReceiver(Root::get_singleton_ptr()->Keyboard);
 
+#ifdef __XPLICIT_WINDOWS__
 		XPX::init_winsock(&mWsa);
+#endif
 
 		//! Fetch our file first.
 		String path_ini(path);

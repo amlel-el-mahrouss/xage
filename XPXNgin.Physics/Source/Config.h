@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef __NPLICIT_DLL__
+#if defined(__NPLICIT_DLL__) && defined(__XPLICIT_WINDOWS__)
 #ifdef __EXPORT_NPLICIT__
 #	define NPLICIT_API __declspec(dllexport)
 #else

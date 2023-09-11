@@ -354,7 +354,7 @@ namespace XPX {
                 }
             }
             
-            void openal_configure_listener(Vector<float>& pos, Vector<float>& vel, ALfloat* ori)
+            bool openal_configure_listener(Vector<float>& pos, Vector<float>& vel, ALfloat* ori)
             {
                 alListener3f(AL_POSITION, pos.X, pos.Y, pos.Z);
 
@@ -364,7 +364,7 @@ namespace XPX {
                 }
                 catch (...)
                 {
-                    std::terminate();
+                    return false;
                 }
 
                 alListener3f(AL_VELOCITY, vel.X, vel.Y, vel.Z);
@@ -375,7 +375,7 @@ namespace XPX {
                 }
                 catch (...)
                 {
-                    std::terminate();
+                    return false;
                 }
 
                 alListenerfv(AL_ORIENTATION, ori);
@@ -386,11 +386,13 @@ namespace XPX {
                 }
                 catch (...)
                 {
-                    std::terminate();
+                    return false;
                 }
+
+                return true;
             }
 
-            void openal_generate_source(ALuint* source)
+            bool openal_generate_source(ALuint* source)
             {
                 alGenSources((ALuint)1, source);
 
@@ -400,7 +402,7 @@ namespace XPX {
                 }
                 catch (...)
                 {
-                    std::terminate();
+                    return false;
                 }
 
 
@@ -412,7 +414,7 @@ namespace XPX {
                 }
                 catch (...)
                 {
-                    std::terminate();
+                    return false;
                 }
 
                 alSourcef(*source, AL_GAIN, 1);
@@ -423,7 +425,7 @@ namespace XPX {
                 }
                 catch (...)
                 {
-                    std::terminate();
+                    return false;
                 }
 
                 alSource3f(*source, AL_POSITION, 0, 0, 0);
@@ -434,7 +436,7 @@ namespace XPX {
                 }
                 catch (...)
                 {
-                    std::terminate();
+                    return false;
                 }
 
                 alSource3f(*source, AL_VELOCITY, 0, 0, 0);
@@ -445,7 +447,7 @@ namespace XPX {
                 }
                 catch (...)
                 {
-                    std::terminate();
+                    return false;
                 }
 
                 alSourcei(*source, AL_LOOPING, AL_FALSE);
@@ -456,9 +458,10 @@ namespace XPX {
                 }
                 catch (...)
                 {
-                    std::terminate();
+                    return false;
                 }
 
+                return true;
             }
 
         public:

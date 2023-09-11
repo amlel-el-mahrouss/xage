@@ -166,10 +166,9 @@ namespace XPX::ImGUI
 		return 0;
 	}
 
-	template <double Formula>
-	inline std::int32_t JustifyBy(const std::int32_t& x)
+	inline float JustifyBy(float formula, const float& x)
 	{
-		return ((x) / (Formula));
+		return ((x) / (formula));
 	}
 
 	class XPLICIT_API UIWindow final : public UIInterface
