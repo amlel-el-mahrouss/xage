@@ -54,6 +54,7 @@ int main(int argc, char** argv)
 #ifdef _WIN32
         std::string cmd_line = pCmdLine;
 #else
+        XPLICIT_ASSERT(argv[1]);
         std::string cmd_line = argv[1];
 #endif
 

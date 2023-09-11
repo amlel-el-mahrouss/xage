@@ -66,17 +66,14 @@ namespace XPX::Bites
 			traits.window_width < 800)
 			throw EngineError("The Engine doesn't support high DPI displays.");
 
-		params.DriverMultithreaded = true;
-		params.DriverType = EDT_OPENGL;
-		params.Fullscreen = false;
-		params.WindowSize = dimension2d<irr::u32>(traits.window_width, traits.window_height);
-
 		XPLICIT_DIM.X = traits.window_width;
 		XPLICIT_DIM.Y = traits.window_height;
 
 		Root::get_singleton_ptr()->set(
-			createDeviceEx(params)
+			createDevice()
 		);
+
+        CAD->setWindowSize(dimension2du(XPLICIT_DIM.X, XPLICIT_DIM.Y));
 
 		CAD->setWindowCaption(XPLICIT_APP_NAME);
 
