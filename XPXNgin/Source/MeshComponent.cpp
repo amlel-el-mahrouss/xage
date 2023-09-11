@@ -26,7 +26,7 @@ namespace XPX
 
 		std::cout << _path << std::endl;
 
-		mMdl = RENDER->getSceneManager()->getMesh(_path.c_str());
+		mMdl = CAD->getSceneManager()->getMesh(_path.c_str());
 
 		this->insert("Visible", "true");
 
@@ -34,7 +34,7 @@ namespace XPX
 
 		if (mMdl)
 		{
-			mNode = RENDER->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
+			mNode = CAD->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
 			mPhysics = PHYSICS_COMPLEX;
 
 			mNode->setName(mName.c_str());

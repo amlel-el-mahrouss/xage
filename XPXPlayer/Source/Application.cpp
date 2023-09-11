@@ -75,10 +75,10 @@ namespace XPX::Bites
 			createDeviceEx(params)
 		);
 
-		RENDER->setWindowCaption(XPLICIT_APP_NAME);
+		CAD->setWindowCaption(XPLICIT_APP_NAME);
 
 		Root::get_singleton_ptr()->set(new InputReceiver());
-		RENDER->setEventReceiver(Root::get_singleton_ptr()->Keyboard);
+		CAD->setEventReceiver(Root::get_singleton_ptr()->Keyboard);
 
 		XPX::init_winsock(&mWsa);
 
@@ -99,7 +99,7 @@ namespace XPX::Bites
 		String prebuilt = mPath;
 		prebuilt += "Textures/Default.zip";
 
-		if (!RENDER->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
+		if (!CAD->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
 			throw EngineError("Missing Textures! This pack is needed for the XPXPlayer to work.");
 	}
 

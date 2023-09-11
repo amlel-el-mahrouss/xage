@@ -1,6 +1,6 @@
 // Copyright (C) 2006-2012 by Kat'Oun
 // This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
+// For conditions of distribution and use, see copyright notice in CADNgin.h
 
 #ifndef __IRR_MAP_H_INCLUDED__
 #define __IRR_MAP_H_INCLUDED__

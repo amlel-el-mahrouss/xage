@@ -12,7 +12,7 @@
 #include <Component.h>
 #include <ClassComponent.h>
 #include <NetworkComponent.h>
-#include <CADNgin/irrlicht.h>
+#include <CADNgin/CADNgin.h>
 
 namespace XPX
 {

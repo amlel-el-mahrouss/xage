@@ -35,12 +35,12 @@ namespace XPX
 
 		frame_path += "menu_hover.png";
 
-		mButtonHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
+		mButtonHover = CAD->getVideoDriver()->getTexture(frame_path.c_str());
 
 		frame_path.clear();
 		frame_path += "menu_no_hover.png";
 
-		mButtonNoHover = RENDER->getVideoDriver()->getTexture(frame_path.c_str());
+		mButtonNoHover = CAD->getVideoDriver()->getTexture(frame_path.c_str());
 	}
 
 	LocalMenuEvent::~LocalMenuEvent() 
@@ -66,7 +66,7 @@ namespace XPX
 
 		static float pos_menu = 14;
 
-		if (KB->key_down(KEY_F3) &&
+		if (KEYBOARD->key_down(KEY_F3) &&
 			mTimeout < 0 && !mPopup)
 		{
 			mEnabled = true;
@@ -90,7 +90,7 @@ namespace XPX
 		/* menu is being open */
 		if (mEnabled)
 		{
-			if (KB->key_down(KEY_ESCAPE))
+			if (KEYBOARD->key_down(KEY_ESCAPE))
 			{
 				ComponentSystem::get_singleton_ptr()->remove(mPopup);
 

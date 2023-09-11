@@ -1,6 +1,6 @@
 // Copyright (C) 2009-2012 Christian Stehno
 // This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
+// For conditions of distribution and use, see copyright notice in CADNgin.h
 
 #ifndef __S_VERTEX_MANIPULATOR_H_INCLUDED__
 #define __S_VERTEX_MANIPULATOR_H_INCLUDED__

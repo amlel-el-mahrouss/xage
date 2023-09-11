@@ -1,4 +1,4 @@
-/* irrlicht.h -- interface of the 'Irrlicht Engine'
+/* CADNgin.h -- interface of the 'Irrlicht Engine'
 
   Copyright (C) 2002-2012 Nikolaus Gebhardt
 
@@ -227,7 +227,7 @@
  * of the engine quite well:
  *
  * \code
- * #include <irrlicht.h>
+ * #include <CADNgin.h>
  * using namespace irr;
  *
  * int main()
@@ -391,7 +391,7 @@ namespace irr
 	}
 }
 
-/*! \file irrlicht.h
+/*! \file CADNgin.h
 	\brief Main header file of the irrlicht, the only file needed to include.
 */
 

@@ -52,7 +52,7 @@ namespace XPX
 
 			if (it != params.WorldNodes.cend())
 			{
-				irr::scene::IMeshSceneNode* mesh = static_cast<irr::scene::IMeshSceneNode*>(RENDER->getSceneManager()->getSceneNodeFromName(parts[i]));
+				irr::scene::IMeshSceneNode* mesh = static_cast<irr::scene::IMeshSceneNode*>(CAD->getSceneManager()->getSceneNodeFromName(parts[i]));
 
 				if (mesh)
 					mParts.push_back(std::make_pair(mesh, mesh->getMesh()));

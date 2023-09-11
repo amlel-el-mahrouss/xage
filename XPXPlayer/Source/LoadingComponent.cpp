@@ -46,8 +46,8 @@ namespace XPX
 		mLoadingFrame.X = 0;
 		mLoadingFrame.Y = 0;
 
-		mLoadingFrame.W = RENDER->getVideoDriver()->getScreenSize().Width;
-		mLoadingFrame.H = RENDER->getVideoDriver()->getScreenSize().Height;
+		mLoadingFrame.W = CAD->getVideoDriver()->getScreenSize().Width;
+		mLoadingFrame.H = CAD->getVideoDriver()->getScreenSize().Height;
 	}
 
 	LoadingComponent::~LoadingComponent() = default;
@@ -67,7 +67,7 @@ namespace XPX
 		{
 			ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 				[]() { 
-					RENDER->closeDevice();
+					CAD->closeDevice();
 				}, POPUP_TYPE::BANNED, "StopPopup");
 
 			mEnabled = false;
@@ -128,7 +128,7 @@ namespace XPX
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 					[]() {
-						RENDER->closeDevice();
+						CAD->closeDevice();
 					}, POPUP_TYPE::NETWORK, "StopPopup");
 
 				ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
@@ -181,7 +181,7 @@ namespace XPX
 	void LoadingComponent::reset() noexcept
 	{
 		ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-			RENDER->closeDevice();
+			CAD->closeDevice();
 			}, POPUP_TYPE::NETWORK);
 	}
 }

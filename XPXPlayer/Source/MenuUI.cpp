@@ -167,7 +167,7 @@ namespace XPX
 		mHudFrame->Y = 10;
 
 		std::size_t x_off = 10UL;
-		std::size_t y_off = RENDER->getVideoDriver()->getScreenSize().Height - 74UL;
+		std::size_t y_off = CAD->getVideoDriver()->getScreenSize().Height - 74UL;
 
 		for (size_t i = 0; i < mInventorySlots.size(); i++)
 		{
@@ -209,7 +209,7 @@ namespace XPX
 		{
 			char to_ascii = i + 48 + 1;
 
-			if (KB->key_down(to_ascii))
+			if (KEYBOARD->key_down(to_ascii))
 				self->mSelectedSlot = i;
 
 			self->mInventorySlots[i].update(ImGUI::ImColor(255, 0x1C, 0x1C, 0x1C));
@@ -219,7 +219,7 @@ namespace XPX
 				packet.id = i;
 				packet.cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INPUT;
 
-				RENDER->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X, self->mInventorySlots[i].Y),
+				CAD->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X, self->mInventorySlots[i].Y),
 					dimension2di(self->mInventorySlots[i].W, self->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));
 			}
 		}

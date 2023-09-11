@@ -53,7 +53,7 @@ namespace XPX
 			if (ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ResetPopup") == nullptr)
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					RENDER->closeDevice();
+					CAD->closeDevice();
 				}, POPUP_TYPE::NETWORK, "ResetPopup");
 			}
 
@@ -68,7 +68,7 @@ namespace XPX
 			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					RENDER->closeDevice();
+					CAD->closeDevice();
 					}, POPUP_TYPE::KICK, "KickPopup", packet.buffer[0] != 0 ? packet.buffer : "You have been kicked.");
 			}
 		}
@@ -78,7 +78,7 @@ namespace XPX
 			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					RENDER->closeDevice();
+					CAD->closeDevice();
 					}, POPUP_TYPE::BANNED, "BanPopup");
 			}
 		}
@@ -116,7 +116,7 @@ namespace XPX
 				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
 				{
 					ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-						RENDER->closeDevice();
+						CAD->closeDevice();
 					}, POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
 

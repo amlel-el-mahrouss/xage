@@ -153,7 +153,7 @@ namespace XPX::RoXML
 									if (klass_to_instantiate == "Light")
 									{
 										irr::scene::ILightSceneNode* light = nullptr;
-										object = light = RENDER->getSceneManager()->addLightSceneNode();
+										object = light = CAD->getSceneManager()->addLightSceneNode();
 										
 										light->setName(node_id);
 									}
@@ -198,7 +198,7 @@ namespace XPX::RoXML
 									if (klass_to_instantiate == "SkyDome")
 									{
 										irr::scene::ISceneNode* sky_dome = nullptr;
-										sky_dome = RENDER->getSceneManager()->addSkyDomeSceneNode(RENDER->getVideoDriver()->getTexture(node->value()));
+										sky_dome = CAD->getSceneManager()->addSkyDomeSceneNode(CAD->getVideoDriver()->getTexture(node->value()));
 										object = sky_dome;
 
 										if (sky_dome)
@@ -210,10 +210,10 @@ namespace XPX::RoXML
 
 									if (klass_to_instantiate == "Particle")
 									{
-										auto particle_scene_node = RENDER->getSceneManager()->addParticleSystemSceneNode(true);
+										auto particle_scene_node = CAD->getSceneManager()->addParticleSystemSceneNode(true);
 										particle_scene_node->setName(node_id);
 
-										particle_scene_node->setMaterialTexture(0, RENDER->getVideoDriver()->getTexture(node->value()));
+										particle_scene_node->setMaterialTexture(0, CAD->getVideoDriver()->getTexture(node->value()));
 										particle_scene_node->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
 										particle_scene_node->setPosition(irr::core::vector3df(0, 0, 0));
 										particle_scene_node->setScale(irr::core::vector3df(2, 2, 2));
@@ -240,7 +240,7 @@ namespace XPX::RoXML
 									{
 										irr::scene::ISceneNode* node = nullptr;
 
-										if (node = RENDER->getSceneManager()->getSceneNodeFromName(parent_id); node)
+										if (node = CAD->getSceneManager()->getSceneNodeFromName(parent_id); node)
 										{
 											node->addChild(node);
 										}
@@ -275,7 +275,7 @@ namespace XPX::RoXML
 									{
 										try
 										{
-											const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(node->first_attribute()->value());
+											const auto scene_node = CAD->getSceneManager()->getSceneNodeFromName(node->first_attribute()->value());
 
 											if (scene_node)
 												scene_node->getMaterial(0).AmbientColor.color = mat_id_cast;
@@ -328,7 +328,7 @@ namespace XPX::RoXML
 
 							if (params.Has3D)
 							{
-								irr::scene::ICameraSceneNode* scene_node = (irr::scene::ICameraSceneNode*)RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+								irr::scene::ICameraSceneNode* scene_node = (irr::scene::ICameraSceneNode*)CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
 
 								const auto pos = irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()));
 
@@ -377,7 +377,7 @@ namespace XPX::RoXML
 
 							if (params.Has3D)
 							{
-								auto scene_node = (irr::scene::ICameraSceneNode*)RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+								auto scene_node = (irr::scene::ICameraSceneNode*)CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
 
 								const auto pos = irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()));
 
@@ -487,7 +487,7 @@ namespace XPX::RoXML
 
 								if (params.Has3D)
 								{
-									const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+									const auto scene_node = CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
 
 									if (scene_node)
 										scene_node->setPosition(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
@@ -531,7 +531,7 @@ namespace XPX::RoXML
 
 								if (params.Has3D)
 								{
-									const auto scene_node = RENDER->getSceneManager()->getSceneNodeFromName(id.c_str());
+									const auto scene_node = CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
 									scene_node->setScale(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 								}
 							}

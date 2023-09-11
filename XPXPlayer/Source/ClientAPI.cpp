@@ -129,7 +129,7 @@ static int lua_MakeRect(lua_State* L)
 
 static int lua_KeyDown(lua_State* L)
 {
-	lua_pushboolean(L, KB->key_down());
+	lua_pushboolean(L, KEYBOARD->key_down());
 	return 1;
 }
 
@@ -137,19 +137,19 @@ static int lua_IsKeyDown(lua_State* L)
 {
 	int key = lua_tointeger(L, 1);
 
-	lua_pushboolean(L, KB->key_down(key));
+	lua_pushboolean(L, KEYBOARD->key_down(key));
 	return 1;
 }
 
 static int lua_IsLeftDown(lua_State* L)
 {
-	lua_pushboolean(L, KB->left_down());
+	lua_pushboolean(L, KEYBOARD->left_down());
 	return 1;
 }
 
 static int lua_IsRightDown(lua_State* L)
 {
-	lua_pushboolean(L, KB->right_down());
+	lua_pushboolean(L, KEYBOARD->right_down());
 	return 1;
 }
 
@@ -167,13 +167,13 @@ static int lua_MakeSoundComponent(lua_State* L)
 
 static int lua_GetX(lua_State* L)
 {
-	lua_pushnumber(L, RENDER->getCursorControl()->getPosition().Y);
+	lua_pushnumber(L, CAD->getCursorControl()->getPosition().Y);
 	return 1;
 }
 
 static int lua_GetY(lua_State* L)
 {
-	lua_pushnumber(L, RENDER->getCursorControl()->getPosition().Y);
+	lua_pushnumber(L, CAD->getCursorControl()->getPosition().Y);
 	return 1;
 }
 

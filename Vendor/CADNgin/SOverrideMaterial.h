@@ -1,6 +1,6 @@
 // Copyright (C) 2017 Michael Zeilfelder
 // This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
+// For conditions of distribution and use, see copyright notice in CADNgin.h
 
 #ifndef __S_OVERRIDE_MATERIAL_H_INCLUDED__
 #define __S_OVERRIDE_MATERIAL_H_INCLUDED__

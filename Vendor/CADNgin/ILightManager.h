@@ -1,7 +1,7 @@
 // Written by Colin MacDonald - all rights assigned to Nikolaus Gebhardt
 // Copyright (C) 2008-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
+// For conditions of distribution and use, see copyright notice in CADNgin.h
 
 #ifndef __I_LIGHT_MANAGER_H_INCLUDED__
 #define __I_LIGHT_MANAGER_H_INCLUDED__

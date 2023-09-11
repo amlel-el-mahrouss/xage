@@ -15,20 +15,19 @@
 #include <CLua.hpp>
 
 //! The CAD engine.
-#include <CADNgin/irrlicht.h>
-#include <CADNgin/IEventReceiver.h>
+#include <CADNgin/CADNgin.h>
 
  /* common engine macros for Root */
-#define RENDER XPX::Root::get_singleton_ptr()->Dev
-#define KB XPX::Root::get_singleton_ptr()->Keyboard
+#define CAD XPX::Root::get_singleton_ptr()->Dev
+#define KEYBOARD XPX::Root::get_singleton_ptr()->Keyboard
 
 namespace XPX
 {
-	using namespace irr;
-	using namespace core;
-	using namespace gui;
-	using namespace video;
-	using namespace scene;
+    using namespace irr;
+    using namespace core;
+    using namespace gui;
+    using namespace video;
+    using namespace scene;
 
 	class InputReceiver final : public irr::IEventReceiver
 	{

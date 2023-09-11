@@ -1,5 +1,5 @@
 // This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
+// For conditions of distribution and use, see copyright notice in CADNgin.h
 // Written by Michael Zeilfelder
 
 #ifndef __I_PROFILER_H_INCLUDED__

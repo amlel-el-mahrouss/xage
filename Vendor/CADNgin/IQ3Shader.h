@@ -1,6 +1,6 @@
 // Copyright (C) 2006-2012 Nikolaus Gebhardt / Thomas Alten
 // This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
+// For conditions of distribution and use, see copyright notice in CADNgin.h
 
 #ifndef __I_Q3_LEVEL_SHADER_H_INCLUDED__
 #define __I_Q3_LEVEL_SHADER_H_INCLUDED__

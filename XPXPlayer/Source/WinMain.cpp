@@ -78,11 +78,11 @@ int main(int argc, char** argv)
 		NPLICIT_SPLASH_SCREEN;
 
 		//! The Main Logic and Render loop.
-		while (RENDER->run() &&
+		while (CAD->run() &&
 			XPX::ComponentSystem::get_singleton_ptr() &&
 			XPX::EventSystem::get_singleton_ptr())
 		{
-			RENDER->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x40, 0x40, 0x40));
+			CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x40, 0x40, 0x40));
 
 #ifdef _WIN32
 			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
@@ -91,10 +91,10 @@ int main(int argc, char** argv)
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
 
-			RENDER->getSceneManager()->drawAll();
-			RENDER->getGUIEnvironment()->drawAll();
+			CAD->getSceneManager()->drawAll();
+			CAD->getGUIEnvironment()->drawAll();
 
-			RENDER->getVideoDriver()->endScene();
+			CAD->getVideoDriver()->endScene();
 
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:RenderOneFrame()");
 		}

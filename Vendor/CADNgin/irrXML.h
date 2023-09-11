@@ -1,6 +1,6 @@
 // Copyright (C) 2002-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine" and the "irrXML" project.
-// For conditions of distribution and use, see copyright notice in irrlicht.h and/or irrXML.h
+// For conditions of distribution and use, see copyright notice in CADNgin.h and/or irrXML.h
 
 #ifndef __IRR_XML_H_INCLUDED__
 #define __IRR_XML_H_INCLUDED__

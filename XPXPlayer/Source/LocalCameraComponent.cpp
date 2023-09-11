@@ -23,7 +23,7 @@ namespace XPX
 		mRotation(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = RENDER->getSceneManager()->addCameraSceneNode(0, vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z), 
+		mCamera = CAD->getSceneManager()->addCameraSceneNode(0, vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z),
 			vector3df(0, 5, 0));
 
 		XPLICIT_ASSERT(mCamera);

@@ -54,7 +54,7 @@ namespace XPX
 					return;
 
 #ifdef __RENDERER_IRR__
-				RENDER->getVideoDriver()->draw2DRectangle(clr,
+				CAD->getVideoDriver()->draw2DRectangle(clr,
 					irr::core::recti(position2di(X, Y), dimension2d(W, H)),
 					nullptr);
 #endif // __RENDERER_IRR__
@@ -63,7 +63,7 @@ namespace XPX
 			virtual bool in_region() noexcept
 			{
 #ifdef __RENDERER_IRR__
-				auto pos = RENDER->getCursorControl()->getPosition();
+				auto pos = CAD->getCursorControl()->getPosition();
 
 				return ((pos.X > X) &&
 					(pos.X < X + W)) &&
@@ -80,7 +80,7 @@ namespace XPX
 #ifdef __RENDERER_IRR__
 			typedef irr::gui::IGUIFont* FontPtr;
 
-			static FontPtr get_font(const char* path) { return RENDER->getGUIEnvironment()->getFont(path); }
+			static FontPtr get_font(const char* path) { return CAD->getGUIEnvironment()->getFont(path); }
 
 			static FontPtr get_title_font() noexcept
 			{

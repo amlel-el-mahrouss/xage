@@ -1,6 +1,6 @@
 // Copyright (C) 2002-2012 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
+// For conditions of distribution and use, see copyright notice in CADNgin.h
 
 #ifndef __IRR_COMPILE_CONFIG_H_INCLUDED__
 #define __IRR_COMPILE_CONFIG_H_INCLUDED__
@@ -763,7 +763,7 @@ precision will be lower but speed higher. currently X86 only
 #ifdef _IRR_WINDOWS_API_
 
 // To build Irrlicht as a static library, you must define _IRR_STATIC_LIB_ in both the
-// Irrlicht build, *and* in the user application, before #including <irrlicht.h>
+// Irrlicht build, *and* in the user application, before #including <CADNgin.h>
 #ifndef _IRR_STATIC_LIB_
 #ifdef IRRLICHT_EXPORTS
 #define IRRLICHT_API __declspec(dllexport)

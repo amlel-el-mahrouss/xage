@@ -1,6 +1,6 @@
 // Copyright (C) Michael Zeilfelder
 // This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
+// For conditions of distribution and use, see copyright notice in CADNgin.h
 
 #ifndef __E_READ_FILE_TYPES_H_INCLUDED__
 #define __E_READ_FILE_TYPES_H_INCLUDED__

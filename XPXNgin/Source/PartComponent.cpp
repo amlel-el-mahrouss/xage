@@ -20,7 +20,7 @@ namespace XPX
 		mStud(nullptr)
 	{
 #ifdef __XPLICIT_CLIENT__
-		mStud = RENDER->getSceneManager()->addMeshSceneNode(RENDER->getSceneManager()->getGeometryCreator()->createCubeMesh());
+		mStud = CAD->getSceneManager()->addMeshSceneNode(CAD->getSceneManager()->getGeometryCreator()->createCubeMesh());
 
 		if (mStud)
 		{
@@ -40,7 +40,7 @@ namespace XPX
 		PartComponent* self = (PartComponent*)cls;
 
 #ifdef __XPLICIT_CLIENT__
-		if (RENDER)
+		if (CAD)
 		{
 			if (self->index_as_bool("Locked"))
 				return;

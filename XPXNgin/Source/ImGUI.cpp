@@ -53,8 +53,8 @@ namespace XPX::ImGUI
 		{
 			m_pFrame->update(m_pFrame->BackgroundHoverColor);
 
-			LeftClicked = KB->left_down();
-			RightClicked = KB->right_down();
+			LeftClicked = KEYBOARD->left_down();
+			RightClicked = KEYBOARD->right_down();
 		}
 		else
 		{
@@ -142,19 +142,19 @@ namespace XPX::ImGUI
 		this->mSelection->update(this->mSelection->BackgroundColor);
 
 		if (this->mBox->in_region() &&
-			KB->left_down())
+			KEYBOARD->left_down())
 		{
 			this->mShallEdit = !this->mShallEdit;
 		}
 		else if (!this->mBox->in_region() &&
-			KB->left_down())
+			KEYBOARD->left_down())
 		{
 			this->mShallEdit = false;
 		}
 
 		if (this->mShallEdit)
 		{
-			if (auto key = KB->key_down();
+			if (auto key = KEYBOARD->key_down();
 				key <= 255 && key > 0)
 			{
 				if (key == KEY_BACK)
@@ -221,7 +221,7 @@ namespace XPX::ImGUI
 
 		if (this->mCheckBox->in_region())
 		{
-			if (KB->left_down())
+			if (KEYBOARD->left_down())
 			{
 				this->Checked = !this->Checked;
 				std::this_thread::sleep_for(std::chrono::milliseconds(130));
@@ -232,11 +232,11 @@ namespace XPX::ImGUI
 
 		if (this->Checked)
 		{
-			RENDER->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 12, mCheckBox->Y + 30), 
+			CAD->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 12, mCheckBox->Y + 30),
 				vector2di(mCheckBox->X + 32, mCheckBox->Y + 11),
 				SColor(0xFF, 0x43, 0xA0, 0x47));
 
-			RENDER->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 3, mCheckBox->Y + 21),
+			CAD->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 3, mCheckBox->Y + 21),
 				vector2di(mCheckBox->X + 12, mCheckBox->Y + 30),
 				SColor(0xFF, 0x43, 0xA0, 0x47));
 		}
@@ -275,8 +275,8 @@ namespace XPX::ImGUI
 		mFrame->set_pos(0, 0);
 
 		mFrame->set_size(XPLICIT_DEFAULT_PROPGRID_DIM, 
-			RENDER->getVideoDriver()->getScreenSize().Height, 
-			RENDER->getVideoDriver()->getScreenSize().Height);
+			CAD->getVideoDriver()->getScreenSize().Height,
+			CAD->getVideoDriver()->getScreenSize().Height);
 	}
 
 	UIPropGrid::~UIPropGrid()
