@@ -8,6 +8,8 @@ XPLICIT_CLIENT_PROJ = "XPXPlayer"
 XPLICIT_WORKSPACE = "XplicitNgine"
 NPLICIT_PROJ = "XPXNgin.Physics"
 
+TAGRET="ARM64"
+
 XPLICIT_CONFIG = {
     ["_CXXDIALECT"] = 2022,
     ["_CONFIGS"] = { "Debug", "Release" },

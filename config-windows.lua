@@ -7,6 +7,8 @@ XPLICIT_STUDIO_PROJ = "XplicitStudio"
 XPLICIT_WORKSPACE = "XplicitNgine"
 NPLICIT_PROJ = "Nplicit"
 
+TAGRET="x86_64"
+
 XPLICIT_CONFIG = {
     ["_CXXDIALECT"] = 2022,
     ["_CONFIGS"] = { "Debug", "Release" },
