@@ -1,3 +1,5 @@
+architecture ("x86_64")
+
 XPLICIT_PROJ = "Xplicit"
 
 XPLICIT_SERVER_PROJ = "XPXServer"
@@ -21,20 +23,13 @@ XPLICIT_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-      "/opt/homebrew/Cellar/mono/6.12.0.182/lib/libmonosgen-2.0",
-	  "dxgi",
-	  "d3d11",
-	  "d2d1",
-	  "d3dcompiler",
-	  "ws2_32",
-	  "winmm",
-	  "opengl32",
-	  "/Users/amlal/VulkanSDK/1.3.250.1/Lib/vulkan-1",
+      "/opt/homebrew/Cellar/mono/6.12.0.182/lib/monosgen-2.0",
+	  "/Users/amlal/VulkanSDK/1.3.250.1/macOS/vulkan.1",
       "Library/glfw3",
-      "Library/lua54",
-      "Library/Irrlicht",
-      "/opt/homebrew/opt/openssl@1.1/lib/libssl",
-      "/opt/homebrew/opt/openssl@1.1/lib/libcrypto",
+      "/opt/homebrew/Cellar/lua/5.4.6/lib/lua",
+      "/opt/homebrew/Cellar/irrlicht/1.8.5_1/lib/Irrlicht",
+      "/opt/homebrew/opt/openssl@1.1/lib/ssl",
+      "/opt/homebrew/opt/openssl@1.1/lib/crypto",
     },
     ["_INCDIR"] = {
         "/opt/homebrew/opt/openssl@1.1/include",
@@ -65,14 +60,12 @@ XPLICIT_SERVER_CONFIG = {
         },
     },
     ["_LIBDIR"] = {
-        "/opt/homebrew/Cellar/mono/6.12.0.182/lib/libmonosgen-2.0",
+        "/opt/homebrew/Cellar/mono/6.12.0.182/lib/monosgen-2.0",
     	"Library/Xplicit",
-	    "ws2_32",
-	    "winmm",
-        "Library/Irrlicht",
-        "Library/lua54",
-      "/opt/homebrew/opt/openssl@1.1/lib/libssl",
-      "/opt/homebrew/opt/openssl@1.1/lib/libcrypto",
+        "/opt/homebrew/Cellar/irrlicht/1.8.5_1/lib/Irrlicht",
+        "/opt/homebrew/Cellar/lua/5.4.6/lib/lua",
+      	"/opt/homebrew/opt/openssl@1.1/lib/ssl",
+      	"/opt/homebrew/opt/openssl@1.1/lib/crypto",
     },
     ["_INCDIR"] = {
         "/opt/homebrew/opt/openssl@1.1/include",
@@ -108,17 +101,10 @@ XPLICIT_CLIENT_CONFIG = {
     },
     ["_LIBDIR"] = {
     	"Library/Xplicit",
-        "d3d11",
-        "dxgi",
-        "Library/glfw3",
-        "d2d1",
-        "opengl32",
-	    "ws2_32",
-	    "winmm",
-        "Library/lua54",
-        "Library/Irrlicht",
-      "/opt/homebrew/opt/openssl@1.1/lib/libssl",
-      "/opt/homebrew/opt/openssl@1.1/lib/libcrypto",
+        "/opt/homebrew/Cellar/lua/5.4.6/lib/lua",
+        "/opt/homebrew/Cellar/irrlicht/1.8.5_1/lib/Irrlicht",
+      "/opt/homebrew/opt/openssl@1.1/lib/ssl",
+      "/opt/homebrew/opt/openssl@1.1/lib/crypto",
     },
     ["_INCDIR"] = {
         "/opt/homebrew/opt/openssl@1.1/include",
