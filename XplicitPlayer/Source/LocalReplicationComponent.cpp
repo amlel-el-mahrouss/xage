@@ -20,14 +20,12 @@
 #include <Util.h>
 #include <Uri.h>
 
-#ifndef XPLICIT_XASSET_IDENT
-#	define XPLICIT_XASSET_IDENT ("xasset")
-#endif // ifndef XPLICIT_XASSET_IDENT
-
-XPX::RoXML::RoXMLDocumentParser parser;
 
 namespace XPX
 {
+	static XPX::RoXML::RoXMLDocumentParser XPX_PARSER;
+	static XHTTPManager XPX_HTTP;
+
 	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_REPLICATION; }
 
 	const char* LocalReplicationComponent::name() noexcept { return "LocalReplicationManager"; }
@@ -51,30 +49,15 @@ namespace XPX
 			{
 				String url;
 
-				url = packet.replicas[0];
+				url = packet.replicas[XPLICIT_REPLICA_PLAYER];
 
 				if (url.empty() ||
-					url.find(XPLICIT_XASSET_IDENT) == String::npos)
+					url.find("xasset://") == String::npos)
 					return;
 
-				String substr = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
+				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
 
-				url.clear();
-				url = "/";
-				url += substr;
-
-				static LocalNetworkMonitorEvent* monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
-
-				if (!monitor)
-					monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
-
-				String endpoint = XPLICIT_XASSET_ENDPOINT;
-				monitor->HTTP->set_endpoint(endpoint);
-
-				auto tmp = std::to_string(xplicit_get_epoch()) + "-tmp.lua";
-
-				if (monitor &&
-					monitor->HTTP->download(url, tmp))
+				if (XPX_HTTP.download(url, tmp))
 				{
 					XPLICIT_GET_DATA_DIR(full_path);
 
@@ -93,30 +76,15 @@ namespace XPX
 			{
 				String url;
 
-				url = packet.replicas[0];
+				url = packet.replicas[XPLICIT_REPLICA_PLAYER];
 
 				if (url.empty() ||
-					url.find(XPLICIT_XASSET_IDENT) == String::npos)
+					url.find("xasset://") == String::npos)
 					return;
 
-				String substr = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
+				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
 
-				url.clear();
-				url = "/";
-				url += substr;
-
-				static LocalNetworkMonitorEvent* monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
-
-				if (!monitor)
-					monitor = EventSystem::get_singleton_ptr()->get<LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
-
-				String endpoint = XPLICIT_XASSET_ENDPOINT;
-				monitor->HTTP->set_endpoint(endpoint);
-
-				auto tmp = std::to_string(xplicit_get_epoch()) + "-tmp.roxml";
-
-				if (monitor &&
-					monitor->HTTP->download(url, tmp))
+				if (XPX_HTTP.download(url, tmp))
 				{
 					XPLICIT_GET_DATA_DIR(full_path);
 
@@ -131,7 +99,7 @@ namespace XPX
 					params.Inline = false;
 					params.Path = tmp;
 
-					parser.parse(params);
+					XPX_PARSER.parse(params);
 				}
 
 				break;
@@ -147,7 +115,7 @@ namespace XPX
 			case COMPONENT_ID_SCRIPT:
 			{
 				String name;
-				name = packet.replicas[0];
+				name = packet.replicas[XPLICIT_REPLICA_PLAYER];
 
 				if (auto script = ComponentSystem::get_singleton_ptr()->get<LuaScriptComponent>(name.c_str()))
 				{

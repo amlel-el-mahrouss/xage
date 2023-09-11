@@ -7,7 +7,7 @@
  * =====================================================================
  */
 
-#include "HumanoidReplicationEvent.h"
+#include "HumanoidReplicationComponent.h"
 
 namespace XPX
 {
@@ -15,8 +15,7 @@ namespace XPX
 		: 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0UL)
-	{
-	}
+	{}
 
 	HumanoidReplicationComponent::~HumanoidReplicationComponent() = default;
 
@@ -24,7 +23,7 @@ namespace XPX
 
 	const char* HumanoidReplicationComponent::name() noexcept { return "HumanoidReplicationComponent"; }
 
-	bool HumanoidReplicationComponent::should_update() { return true; }
+	bool HumanoidReplicationComponent::should_update() noexcept { return true; }
 
 	void HumanoidReplicationComponent::update(ClassPtr ptr)
 	{

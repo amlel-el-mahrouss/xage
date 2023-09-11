@@ -41,13 +41,13 @@ namespace XPX
 				mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
 			else if (type == NETWORK_REPL_CMD_DESTROY)
 				mNetwork->get(i)->packet.cmd[XPLICIT_REPL_DESTROY] = NETWORK_REPL_CMD_DESTROY;
+			else
+				return;
 			
 			mNetwork->get(i)->packet.id = id;
 
 			memset(mNetwork->get(i)->packet.replicas[XPLICIT_REPLICA_PLAYER], 0, XPLICIT_NETWORK_BUF_SZ);
 			memcpy(mNetwork->get(i)->packet.replicas[XPLICIT_REPLICA_PLAYER], path, strlen(path));
-
-			XPX::NetworkServerContext::send(mNetwork, mNetwork->get(i));
 
 			break;
 		}

@@ -211,9 +211,9 @@ World.REPLICATE_INVALID = 0;
 World.REPLICATE_SCRIPT = 1;
 World.REPLICATE_SCENE = 2;
 
-World.REPLICATE_CREATE = 512;
-World.REPLICATE_REMOVE = 522;
-World.REPLICATE_UPDATE = 523;
+World.REPLICATE_CREATE = 522;
+World.REPLICATE_REMOVE = 523;
+World.REPLICATE_UPDATE = 524;
 
 function World:DumpTable(o)
     if type(o) == 'table' then

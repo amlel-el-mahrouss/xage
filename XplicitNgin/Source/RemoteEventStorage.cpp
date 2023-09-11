@@ -73,12 +73,15 @@ namespace XPX
 				for (size_t i = 0; i < self->mServer->size(); ++i)
 				{
 					self->mServer->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
+
+					memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
 					memcpy(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], bytecode.c_str(), bytecode.size());
+
+					XPX::NetworkServerContext::send_all(self->mServer);
 				}
 
 				self->assign((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str(), "false");
 
-				XPX::NetworkServerContext::send_all(self->mServer);
 			}
 			else if (self->mClient &&
 				self->index_as_bool((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str()))

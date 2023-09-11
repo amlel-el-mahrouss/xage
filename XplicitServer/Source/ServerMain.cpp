@@ -24,7 +24,7 @@
 #include "MovementEvent.h"
 #include "SpawnComponent.h"
 #include "HealthMonitorEvent.h"
-#include "HumanoidReplicationEvent.h"
+#include "HumanoidReplicationComponent.h"
 
 static bool XPLICIT_EXIT_REQUESTED = false;
 
