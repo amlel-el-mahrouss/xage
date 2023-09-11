@@ -5,6 +5,9 @@
 
 *.roxml
 
+Makefile
+*.make
+
 ### C++ ###
 # Prerequisites
 
@@ -76,7 +79,7 @@ Docs/html/
 *.lib
 
 # Executables
-XplicitNgin/*.exe
+XPXNgin/*.exe
 *.out
 *.app
 

@@ -1,0 +1,22 @@
+/*
+ * =====================================================================
+ *
+ *			XPXNgin
+ *			Copyright XPX Corporation, all rights reserved.
+ *
+ *			File: HelperMacros.h
+ *			Purpose:
+ *
+ * =====================================================================
+ */
+
+#pragma once
+
+#include "XPXNginCore.h"
+
+#ifndef XPLICIT_GET_DATA_DIR
+#define XPLICIT_GET_DATA_DIR(DIR)\
+XPX::String DIR = getenv("APPDATA");\
+DIR += "/XPXNgin/";
+
+#endif // ifndef XPLICIT_GET_DATA_DIR

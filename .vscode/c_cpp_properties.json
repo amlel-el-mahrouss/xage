@@ -4,10 +4,10 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/Xplicit/Source",
-                "${workspaceFolder}/SoundNgin",
-                "${workspaceFolder}/Nplicit/Source",
-                "${workspaceFolder}/XplicitServer/Source",
-                "${workspaceFolder}/XplicitPlayer/Source",
+                "${workspaceFolder}/XPXNgin.Sound",
+                "${workspaceFolder}/XPXNgin.Physics/Source",
+                "${workspaceFolder}/XPXServer/Source",
+                "${workspaceFolder}/XPXPlayer/Source",
                 "${workspaceFolder}/Vendor",
                 "${workspaceFolder}/Vendor/spdlog",
                 "${workspaceFolder}/Vendor/glfw/include/GLFW"

@@ -4,7 +4,7 @@ XplicitNgine
 NOTICE:
 =======
 
-Place the Data/ directory as 'XplicitNgin'.
+Place the Data/ directory as 'XPXNgin'.
 
 There is already sln projects if you happen to target Windows.
 If you want, generate one, but you gotta enable AVX support and set floating point precesion to fast.
@@ -25,13 +25,13 @@ REQUIREMENTS:
 - Windows 11/Mac OS X
 - Visual Studio 2022 (C++ Workload)
 - Vulkan SDK 1.3.250.1 (Vulkan Rendering System)
-- DirectXTK for VS2019/Windows 10 (Install for Xplicit and XplicitPlayer)
+- DirectXTK for VS2019/Windows 10 (Install for Xplicit and XPXPlayer)
 
 INSTALLING:
 ===========
 
-- Put the C# assemblies into %appdata%/XplicitNgin
-- Download DirectXTK for the XplicitSound header. (XplicitPlayer) via NuGet.
+- Put the C# assemblies into %appdata%/XPXNgin
+- Download DirectXTK for the XplicitSound header. (XPXPlayer) via NuGet.
 
 ==============================================================
 Copyright Xplicit Inc, Amlal El Mahrouss, all rights reserved.
