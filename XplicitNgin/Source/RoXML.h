@@ -113,20 +113,20 @@ namespace XPX::RoXML
 					const String node_name = node->name();
 					RoXMLNodeDescription world_node;
 
-					if (node_name == "Class")
+					if (node_name == "Component")
 					{
 						if (node->first_attribute())
 						{
 							auto klass = node->last_attribute();
-							String klass_to_instanciate = klass->name();
+							String klass_to_instantiate = klass->name();
 
 							if (klass &&
-								klass_to_instanciate == "Object")
-								klass_to_instanciate = klass->value();
+								klass_to_instantiate == "ClassName")
+								klass_to_instantiate = klass->value();
 
 							// Here is the list of run-time components { "Light", "Mesh", "Sound", "Particle" };
 
-							if (strcmp(node->first_attribute()->name(), "Name") == 0)
+							if (strcmp(node->first_attribute()->name(), "InstanceName") == 0)
 							{
 								auto node_id = node->first_attribute()->value();
 
@@ -138,19 +138,19 @@ namespace XPX::RoXML
 
 								// For for a lua attribute!
 								if (node->first_attribute()->next_attribute() &&
-									strcmp(node->first_attribute()->next_attribute()->name(), "Lua") == 0)
+									strcmp(node->first_attribute()->next_attribute()->name(), "AttachedScript") == 0)
 									script_id = node->first_attribute()->next_attribute()->value();
 
 								// now check for a parent!
 								if (node->first_attribute()->next_attribute() &&
-									strcmp(node->first_attribute()->next_attribute()->name(), "Parent") == 0)
+									strcmp(node->first_attribute()->next_attribute()->name(), "AttachedParent") == 0)
 									parent_id = node->first_attribute()->next_attribute()->value();
 
 								if (params.Has3D)
 								{
 									void* object = nullptr;
 
-									if (klass_to_instanciate == "Light")
+									if (klass_to_instantiate == "Light")
 									{
 										irr::scene::ILightSceneNode* light = nullptr;
 										object = light = RENDER->getSceneManager()->addLightSceneNode();
@@ -161,7 +161,7 @@ namespace XPX::RoXML
 									// assign a part component to the said id
 									// so you can use it.
 
-									if (klass_to_instanciate == "Collada")
+									if (klass_to_instantiate == "Collada")
 									{
 										// go on and include that!
 										world_node.ID = node_name;
@@ -195,7 +195,7 @@ namespace XPX::RoXML
 
 									}
 
-									if (klass_to_instanciate == "SkyDome")
+									if (klass_to_instantiate == "SkyDome")
 									{
 										irr::scene::ISceneNode* sky_dome = nullptr;
 										sky_dome = RENDER->getSceneManager()->addSkyDomeSceneNode(RENDER->getVideoDriver()->getTexture(node->value()));
@@ -208,7 +208,7 @@ namespace XPX::RoXML
 										}
 									}
 
-									if (klass_to_instanciate == "Particle")
+									if (klass_to_instantiate == "Particle")
 									{
 										auto particle_scene_node = RENDER->getSceneManager()->addParticleSystemSceneNode(true);
 										particle_scene_node->setName(node_id);
@@ -247,7 +247,7 @@ namespace XPX::RoXML
 									}
 								}
 
-								if (klass_to_instanciate == "Part")
+								if (klass_to_instantiate == "Part")
 								{
 									PartComponent* part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(node_id, parent_id);
 								}
@@ -267,7 +267,7 @@ namespace XPX::RoXML
 								attr_mat == "Mat")
 							{
 								const auto mat_id = node->first_attribute()->next_attribute()->value();
-								const auto mat_id_cast = std::atoi(node->value());
+								const UInt32 mat_id_cast = std::atoi(node->value());
 
 								if (params.Has3D)
 								{
@@ -296,7 +296,7 @@ namespace XPX::RoXML
 							!node->first_attribute()->next_attribute() ||
 							!node->first_attribute()->next_attribute()->next_attribute())
 						{
-							XPLICIT_CRITICAL("RoXML: Bad Target3!");
+							XPLICIT_CRITICAL("SceneLoader: Bad Target3!");
 							break;
 						}
 
@@ -345,7 +345,7 @@ namespace XPX::RoXML
 							!node->first_attribute()->next_attribute()->next_attribute() ||
 							!node->first_attribute()->next_attribute()->next_attribute()->next_attribute())
 						{
-							XPLICIT_CRITICAL("RoXML: Bad Rotate3!");
+							XPLICIT_CRITICAL("SceneLoader: Bad Rotate3!");
 							break;
 						}
 
@@ -538,58 +538,62 @@ namespace XPX::RoXML
 						}
 					}
 
-					if (node_name == "CLua") // and it is really what we think it is.
+					if (node_name == "Script") // and it is really what we think it is.
 					{
 						// go on and include that!
 						world_node.ID = node_name;
 
-						for (size_t i = 0; i < strlen(node->value()); i++)
+						if (strcmp(node->first_attribute()->name(), "Path") == 0)
 						{
-							if (isalnum(node->value()[i]) ||
-								node->value()[i] == '.' ||
-								node->value()[i] == '/' ||
-								node->value()[i] == '\\' ||
-								node->value()[i] == ':')
+
+							for (size_t i = 0; i < strlen(node->value()); i++)
 							{
-								world_node.Value += node->value()[i];
+								if (isalnum(node->value()[i]) ||
+									node->value()[i] == '.' ||
+									node->value()[i] == '/' ||
+									node->value()[i] == '\\' ||
+									node->value()[i] == ':')
+								{
+									world_node.Value += node->first_attribute()->value()[i];
+								}
 							}
-						}
 
-						String url = world_node.Value;
+							String url = world_node.Value;
 
-						std::unique_ptr<XHTTPManager> HTTP = std::make_unique<XHTTPManager>();
+							std::unique_ptr<XHTTPManager> HTTP = std::make_unique<XHTTPManager>();
 
-						if (HTTP &&
-							url.find("xasset://") != String::npos)
-						{
-							String substr = url.erase(url.find("xasset://"), strlen("xasset://"));
-
-							url.clear();
-							url = "/";
-							url += substr;
-
-							HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
-
-							XPLICIT_GET_DATA_DIR(full_path);
-
-							auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-LUA.lua";
-
-							if (HTTP->download(url, tmp))
+							if (HTTP &&
+								url.find("xasset://") != String::npos)
 							{
+								String substr = url.erase(url.find("xasset://"), strlen("xasset://"));
+
+								url.clear();
+								url = "/";
+								url += substr;
+
+								HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
+
 								XPLICIT_GET_DATA_DIR(full_path);
 
-								String full_download_path;
+								auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-LUA.lua";
 
-								full_download_path += full_path;
-								full_download_path += "Contents/";
-								full_download_path += tmp;
+								if (HTTP->download(url, tmp))
+								{
+									XPLICIT_GET_DATA_DIR(full_path);
 
-								ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
+									String full_download_path;
+
+									full_download_path += full_path;
+									full_download_path += "Contents/";
+									full_download_path += tmp;
+
+									ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
+								}
 							}
-						}
-						else
-						{
-							XPLICIT_CRITICAL("Missing script! URL: " + url);
+							else
+							{
+								XPLICIT_CRITICAL("Missing script! URL: " + url);
+							}
 						}
 					}
 
