@@ -62,7 +62,7 @@ namespace XPX::ImGUI
 		}
 
 		//! TODO: SIMD String class
-		m_pFont->draw(mText.c_str(), irr::core::recti(position2di(m_pFrame->X, m_pFrame->Y),
+		m_pFont->draw(mText.c_str(), recti(position2di(m_pFrame->X, m_pFrame->Y),
 			dimension2d(m_pFrame->W, m_pFrame->H)), m_pFrame->TextColor, true, true);
 
 		if (m_iFadeIn < 255)
@@ -188,9 +188,9 @@ namespace XPX::ImGUI
 		}
 
 		if (!mText.empty())
-			UIFont::get_label_font()->draw(mText.c_str(), irr::core::recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
+			UIFont::get_label_font()->draw(mText.c_str(), recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
 		else
-			UIFont::get_label_font()->draw(mPlaceholder.c_str(), irr::core::recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
+			UIFont::get_label_font()->draw(mPlaceholder.c_str(), recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
 	}
 
 	UICheckBox::UICheckBox()

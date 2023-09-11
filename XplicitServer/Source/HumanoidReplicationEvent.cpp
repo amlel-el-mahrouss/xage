@@ -38,7 +38,7 @@ namespace XPX
 			if (auto replica_xasset = player->get_class()->index_as_string("PacketContent");
 				!replica_xasset.empty())
 			{
-				mFactory.send(player->get_class()->index_as_number<int>("PacketContentKind"), 
+				mFactory.send(player->get_class()->index_as_number<int>("PacketDeliveryKind"), 
 					replica_xasset.c_str(),
 					player->get_class()->index_as_number<int>("PacketKind"), 
 					player->get_peer()->public_hash);
@@ -46,7 +46,7 @@ namespace XPX
 				// you wanna do that, so we avoid calling this guy again.
 
 				player->get_class()->assign("PacketKind", "-1");
-				player->get_class()->assign("PacketContentKind", "-1");
+				player->get_class()->assign("PacketDeliveryKind", "-1");
 				player->get_class()->assign("PacketContent", "nil");
 			}
 		}

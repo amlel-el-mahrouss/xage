@@ -242,32 +242,32 @@ namespace XPX::Lua
 
 			auto ret = (luaL_dostring(mL, lhs));
 
-			lua_getglobal(mL, "string");
-			lua_getfield(mL, -1, "dump");
-			lua_pushvalue(mL, -3);
-			lua_call(mL, 1, 1);
+			if (ret)
+			{
+				lua_getglobal(mL, "string");
+				lua_getfield(mL, -1, "dump");
+				lua_pushstring(mL, lhs);
+				lua_pushboolean(mL, true);
 
-			String bytecode = lua_tostring(mL, 1);
-			return bytecode;
+				lua_call(mL, 1, 1);
+
+				String bytecode = lua_tostring(mL, 1);
+				return bytecode;
+			}
+
+			return "";
 		}
 
-		String run_path(const char* lhs) noexcept
+		bool run_path(const char* lhs) noexcept
 		{
 			if (!lhs)
-				return "";
+				return false;
 
 			static String tmp;
 			tmp = lhs;
 
 			auto ret = (luaL_dofile(mL, tmp.c_str()));
-
-			lua_getglobal(mL, "string");
-			lua_getfield(mL, -1, "dump");
-			lua_pushvalue(mL, -3);
-			lua_call(mL, 1, 1);
-
-			String bytecode = lua_tostring(mL, 1);
-			return bytecode;
+			return ret;
 		}
 
 		String call_method(const char* method) noexcept

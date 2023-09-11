@@ -16,6 +16,7 @@
 #include <RoXML.h>
 #include <codecvt>
 #include <XplicitID.h>
+#include <RemoteEventStorage.h>
 
 #include "LoginEvent.h"
 #include "ServerConfig.h"
@@ -188,6 +189,8 @@ int main(int argc, char** argv)
 
 		XPX::Thread logic([&]() {
 			const auto net = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent");
+
+			XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(net);
 
 			while (XPX::ComponentSystem::get_singleton_ptr() &&
 				XPX::EventSystem::get_singleton_ptr())

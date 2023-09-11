@@ -286,4 +286,3 @@ end
 -- World.Settings = GameVars.
 -- World.Players = Players.
 -- World.<Object> = C++ or lua exposed object.
-

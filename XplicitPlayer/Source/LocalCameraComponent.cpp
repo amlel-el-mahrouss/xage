@@ -23,10 +23,11 @@ namespace XPX
 		mRotation(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = RENDER->getSceneManager()->addCameraSceneNode();
+		mCamera = RENDER->getSceneManager()->addCameraSceneNode(0, vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z), 
+			vector3df(0, 5, 0));
+
 		XPLICIT_ASSERT(mCamera);
 
-		mCamera->setRotation(vector3df(0, 0, 0));
 		mCamera->setName("Camera");
 
 		this->insert("FOV", "90");

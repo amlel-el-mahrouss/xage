@@ -47,6 +47,8 @@ namespace XPX
 			memset(mNetwork->get(i)->packet.replicas[XPLICIT_REPLICA_PLAYER], 0, XPLICIT_NETWORK_BUF_SZ);
 			memcpy(mNetwork->get(i)->packet.replicas[XPLICIT_REPLICA_PLAYER], path, strlen(path));
 
+			XPX::NetworkServerContext::send(mNetwork, mNetwork->get(i));
+
 			return;
 		}
 	}

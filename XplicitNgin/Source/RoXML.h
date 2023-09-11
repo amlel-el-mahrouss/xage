@@ -545,16 +545,17 @@ namespace XPX::RoXML
 
 						if (strcmp(node->first_attribute()->name(), "Path") == 0)
 						{
+							auto val = node->first_attribute()->value();
 
-							for (size_t i = 0; i < strlen(node->first_attribute()->value()); i++)
+							for (size_t i = 0; i < strlen(val); i++)
 							{
-								if (isalnum(node->value()[i]) ||
-									node->value()[i] == '.' ||
-									node->value()[i] == '/' ||
-									node->value()[i] == '\\' ||
-									node->value()[i] == ':')
+								if (isalnum(val[i]) ||
+									val[i] == '.' ||
+									val[i] == '/' ||
+									val[i] == '\\' ||
+									val[i] == ':')
 								{
-									world_node.Value += node->first_attribute()->value()[i];
+									world_node.Value += val[i];
 								}
 							}
 

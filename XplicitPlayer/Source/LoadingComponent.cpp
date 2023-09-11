@@ -23,6 +23,7 @@
 #include "MenuUI.h"
 #include "Application.h"
 
+#include <RemoteEventStorage.h>
 #include <XHTTPManager.h>
 #include <CommonEngine.h>
 #include <CLua/CLua.hpp>
@@ -41,7 +42,7 @@ namespace XPX
 		mLoadingFrame()
 	{
 		ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
-		
+
 		mLoadingFrame.X = 0;
 		mLoadingFrame.Y = 0;
 
@@ -83,6 +84,8 @@ namespace XPX
 
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
+			ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(self->mNetwork);
+
 			ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
 			ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 			
@@ -96,18 +99,13 @@ namespace XPX
 
 			monitor->ID = packet.buffer;
 
-			local_player->get_class()->insert("Id", (String("'") + monitor->ID + "'").c_str());
+			local_player->get_class()->insert("Id", std::format("'{}'", monitor->ID).c_str());
 
 			XPLICIT_INFO(monitor->ID);
 
 			monitor->Endpoint = XPLICIT_XASSET_ENDPOINT;
 			monitor->HTTP = std::make_unique<XHTTPManager>();
 			monitor->HTTP->set_endpoint(monitor->Endpoint);
-
-			XPLICIT_GET_DATA_DIR(SCRIPT_DIR);
-			SCRIPT_DIR += "Contents/";
-
-			Lua::CLuaStateManager::get_singleton_ptr()->run((String(SCRIPT_DIR) + "XPXCameraSystem.lua").c_str());
 
 			EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
 			EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
@@ -129,6 +127,7 @@ namespace XPX
 					}, POPUP_TYPE::NETWORK, "StopPopup");
 
 				ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
+
 				mEnabled = false;
 
 				return;

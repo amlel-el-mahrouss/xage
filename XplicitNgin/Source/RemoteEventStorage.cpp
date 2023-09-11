@@ -68,7 +68,7 @@ namespace XPX
 			if (self->mServer && 
 				self->index_as_bool((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str()))
 			{
-				auto bytecode = self->call_method((String(XPLICIT_REMOTE_EVENTS[i]) + ".Update").c_str());
+				auto bytecode = self->call_method((String(XPLICIT_REMOTE_EVENTS[i]) + ":Update").c_str());
 
 				for (size_t i = 0; i < self->mServer->size(); ++i)
 				{
@@ -77,8 +77,11 @@ namespace XPX
 				}
 
 				self->assign((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str(), "false");
+
+				XPX::NetworkServerContext::send_all(self->mServer);
 			}
-			else
+			else if (self->mClient &&
+				self->index_as_bool((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str()))
 			{
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(self->mClient->get().buffer);
 			}

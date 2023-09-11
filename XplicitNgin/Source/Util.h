@@ -27,7 +27,7 @@ inline XPX::Color<float> Black(0, 0, 0, 0xFF);
 inline XPX::Color<float> Red(0xFF, 0, 0, 0xFF);
 
 inline XPX::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, 0xFFFFFF);
-inline XPX::Vector<float>   XPLICIT_ORIGIN(0.0f, 0.0f, 0.0f);
+inline XPX::Vector<float>   XPLICIT_ORIGIN(0.0f, 30, -40);
 
 /// <summary>
 /// Gets the XPLICIT_ID of a specific peer.

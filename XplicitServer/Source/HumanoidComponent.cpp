@@ -181,7 +181,7 @@ namespace XPX
 				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed).c_str());
 
 				mClass->insert("PacketKind", "-1");
-				mClass->insert("PacketContentKind", "-1");
+				mClass->insert("PacketDeliveryKind", "-1");
 				mClass->insert("PacketContent", "nil");
 
 				XPLICIT_INFO("World:Login [EVENT]");
