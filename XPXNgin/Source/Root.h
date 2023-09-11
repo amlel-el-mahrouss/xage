@@ -12,7 +12,7 @@
 #include "XPXNginCore.h"
 #include "HelperMacros.h"
 
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 
 //! The CAD engine.
 #include <CADNgin/irrlicht.h>

@@ -12,7 +12,7 @@
 #include "XPXNginCore.h"
 #include "Event.h"
 
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 
 namespace XPX
 {

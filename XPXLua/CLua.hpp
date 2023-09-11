@@ -286,4 +286,4 @@ namespace XPX::Lua
 	};
 }
 
-#include <XPXLua/RLua.hpp>
+#include <RLua.hpp>

@@ -15,7 +15,7 @@
 #include "XPXNginCore.h"
 #include <Nplicit.h>
 
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 
 #define XPLICIT_DEFAULT_HEALTH	(100)
 #define XPLICIT_MAX_ELEMENTS_INVENTORY (9)

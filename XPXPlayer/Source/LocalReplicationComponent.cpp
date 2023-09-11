@@ -15,7 +15,7 @@
 #include "MenuUI.h"
 
 #include <CommonEngine.h>
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 #include <RoXML.h>
 #include <Util.h>
 #include <Uri.h>

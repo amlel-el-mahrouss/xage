@@ -16,7 +16,7 @@
 #include <Nplicit.h>
 
 #include <map>
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 
 namespace XPX::Renderer
 {

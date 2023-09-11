@@ -11,7 +11,7 @@
 
 #include "XPXNginCore.h"
 
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 #include <Nplicit.h>
 
 #include "Component.h"

@@ -18,7 +18,7 @@
 #include "StaticBundleMesh.h"
 
 #include <XplicitSound.h>
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 #include <LuaAPI.h>
 #include <codecvt>
 #include <RoXML.h>

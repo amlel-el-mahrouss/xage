@@ -11,7 +11,7 @@
 
 #include "PlayerConfig.h"
 
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 #include <Nplicit.h>
 #include <Bites.h>
 #include <Root.h>

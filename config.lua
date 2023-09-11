@@ -39,7 +39,7 @@ XPLICIT_CONFIG = {
     ["_INCDIR"] = {
         "C:/Program Files/OpenSSL-Win64/include/",
         "Vendor/",
-	    "Vendor/luajit/src",
+        "XPXLua/",
 	    "Vendor/glfw/include/GLFW/",
     	"Vendor/yaml/include",
     	"XPXNgin.Physics/Source/",
@@ -77,6 +77,7 @@ XPLICIT_SERVER_CONFIG = {
     ["_INCDIR"] = {
         "C:/Program Files/OpenSSL-Win64/include/",
         "Vendor/",
+        "XPXLua/",
         "Vendor/stb/",
 	    "Vendor/glfw/include/GLFW/",
     	"XPXNgin/Source/",

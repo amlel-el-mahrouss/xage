@@ -14,7 +14,7 @@
 #include "XPXNginCore.h"
 
 #include <Nplicit.h>
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 
 #include "LuaAPI.h"
 

@@ -11,7 +11,7 @@
 #include "HumanoidComponent.h"
 #include "GearComponent.h"
 
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 #include <RoXML.h>
 
  // RoXML parser

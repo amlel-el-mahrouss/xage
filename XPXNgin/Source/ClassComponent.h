@@ -12,7 +12,7 @@
 #include "Util.h"
 #include "Component.h"
 
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 
 #define XPLICIT_CLASS_NAMESPACE "World"
 #define XPLICIT_CLASS_NAME "Class"

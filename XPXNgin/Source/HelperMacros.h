@@ -15,8 +15,17 @@
 #include "XPXNginCore.h"
 
 #ifndef XPLICIT_GET_DATA_DIR
+#ifdef _WIN32
 #define XPLICIT_GET_DATA_DIR(DIR)\
 XPX::String DIR = getenv("APPDATA");\
 DIR += "/XPXNgin/";
 
+
+#else
+#define XPLICIT_GET_DATA_DIR(DIR)\
+XPX::String DIR = getenv("HOME");\
+DIR += "/XPXNgin/";
+
+
+#endif
 #endif // ifndef XPLICIT_GET_DATA_DIR

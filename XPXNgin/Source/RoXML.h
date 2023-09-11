@@ -27,7 +27,7 @@
 #include "Util.h"
 
 // CLua
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 
 #ifndef XPLICIT_XASSET_ENDPOINT
 #	define XPLICIT_XASSET_ENDPOINT "play-xplicit.com"

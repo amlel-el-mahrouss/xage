@@ -13,7 +13,7 @@
 #pragma once
 
 #include "XPXNginCore.h"
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 
 namespace XPX
 {

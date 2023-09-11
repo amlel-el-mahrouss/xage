@@ -16,7 +16,7 @@
 #include "Application.h"
 #include "MenuUI.h"
 
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 
 #define XPLICIT_MAX_RESET (1024)
 

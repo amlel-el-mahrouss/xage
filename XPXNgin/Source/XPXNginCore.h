@@ -28,14 +28,14 @@ XPLICIT_API bool xplicit_open_logger();
 #ifdef _MSC_VER
 #define PACKED_STRUCT(DECL) __pragma( pack(push, 1) ) DECL; __pragma( pack(pop))
 #else
-#define PACKED_STRUCT(DECL)
+#define PACKED_STRUCT(DECL) typedef DECL __attribute__((packed));
 #endif
 
 namespace XPX 
 {
 	namespace FS = std::filesystem;
 
-    using Thread = std::jthread;
+    using Thread = std::thread;
 	using String = std::string;
 
 	template <typename CharType>
@@ -339,6 +339,7 @@ namespace XPX
 	class DialogHelper
 	{
 	public:
+#ifdef XPLICIT_WINDOWS
         static int32_t message_box(wchar_t* title, wchar_t* message, int flags = 0)
 		{
 			if (!title)
@@ -347,14 +348,13 @@ namespace XPX
 			if (!message)
 				return -1;
 
-#ifdef XPLICIT_WINDOWS
 			return MessageBoxExW(nullptr, message, title, flags, LANG_ENGLISH);
-#endif // !XPLICIT_WINDOWS
 		}
+#endif // !XPLICIT_WINDOWS
 
+#ifdef XPLICIT_WINDOWS
         static int32_t message_box(PCWSTR title, PCWSTR header, PCWSTR message, PCWSTR icon, int buttonFlags)
 		{
-#ifdef XPLICIT_WINDOWS
 			if (!title)
 				return -1;
 
@@ -377,8 +377,8 @@ namespace XPX
 			TaskDialogIndirect(&config, &clicked_button, nullptr, nullptr);
 
 			return clicked_button;
-#endif // !XPLICIT_WINDOWS
 		}
+#endif // !XPLICIT_WINDOWS
 
 	};
 

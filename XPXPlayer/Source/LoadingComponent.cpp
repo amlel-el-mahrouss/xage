@@ -26,7 +26,7 @@
 #include <RemoteEventStorage.h>
 #include <XHTTPManager.h>
 #include <CommonEngine.h>
-#include <XPXLua/CLua.hpp>
+#include <CLua.hpp>
 #include <RoXML.h>
 #include <codecvt>
 
