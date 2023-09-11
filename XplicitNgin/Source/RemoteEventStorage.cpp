@@ -28,7 +28,7 @@ namespace XPX
 	static const char* XPLICIT_UPDATE_SNIPPET = "function (self) for _, v in pairs(self.Slots) do v(self); end end";
 
 	RemoteEventStorage::RemoteEventStorage()
-		: mClient(nullptr), mServer(nullptr), Lua::CLuaClass("RemoteEventStorage")
+		: mClient(nullptr), mServer(nullptr), Lua::CLuaClass("World.RemoteEventStorage")
 	{
 		for (size_t i = 0; i < XPLICIT_REMOTE_EVENTS_CNT; ++i)
 		{
