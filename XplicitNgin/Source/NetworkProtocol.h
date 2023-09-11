@@ -33,7 +33,7 @@
 #define XPLICIT_NETWORK_BUF_SZ      (64U)
 #define XPLICIT_NETWORK_VERSION     (2U)
 
-#define XPLICIT_MAX_REPLICAS        (5)
+#define XPLICIT_MAX_REPLICAS        (4)
 
 #define XPLICIT_NUM_CHANNELS (3)
 

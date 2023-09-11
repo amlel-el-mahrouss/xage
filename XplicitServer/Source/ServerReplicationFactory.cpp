@@ -49,7 +49,7 @@ namespace XPX
 
 			XPX::NetworkServerContext::send(mNetwork, mNetwork->get(i));
 
-			return;
+			break;
 		}
 	}
 }

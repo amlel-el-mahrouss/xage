@@ -11,24 +11,28 @@
 
 namespace XPX
 {
-	HumanoidReplicationEvent::HumanoidReplicationEvent()
+	HumanoidReplicationComponent::HumanoidReplicationComponent()
 		: 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0UL)
 	{
 	}
 
-	HumanoidReplicationEvent::~HumanoidReplicationEvent() = default;
+	HumanoidReplicationComponent::~HumanoidReplicationComponent() = default;
 
-	const size_t& HumanoidReplicationEvent::size() const noexcept { return mPlayerCount; }
+	const size_t& HumanoidReplicationComponent::size() const noexcept { return mPlayerCount; }
 
-	const char* HumanoidReplicationEvent::name() noexcept { return "HumanoidReplicationEvent"; }
+	const char* HumanoidReplicationComponent::name() noexcept { return "HumanoidReplicationComponent"; }
 
-	void HumanoidReplicationEvent::operator()()
+	bool HumanoidReplicationComponent::should_update() { return true; }
+
+	void HumanoidReplicationComponent::update(ClassPtr ptr)
 	{
-		mPlayers = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+		HumanoidReplicationComponent* self = (HumanoidReplicationComponent*)ptr;
 
-		for (auto& player : mPlayers)
+		self->mPlayers = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+
+		for (auto& player : self->mPlayers)
 		{
 			if (!player->get_peer())
 				continue;
@@ -38,7 +42,7 @@ namespace XPX
 			if (auto replica_xasset = player->get_class()->index_as_string("PacketContent");
 				!replica_xasset.empty())
 			{
-				mFactory.send(player->get_class()->index_as_number<int>("PacketDeliveryKind"), 
+				self->mFactory.send(player->get_class()->index_as_number<int>("PacketDeliveryKind"),
 					replica_xasset.c_str(),
 					player->get_class()->index_as_number<int>("PacketKind"), 
 					player->get_peer()->public_hash);

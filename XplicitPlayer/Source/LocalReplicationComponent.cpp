@@ -41,8 +41,7 @@ namespace XPX
 		if (!self->mNetwork)
 			return;
 
-		NetworkPacket packet;
-		self->mNetwork->read(packet);
+		NetworkPacket packet = self->mNetwork->get();
 
 		if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
 		{

@@ -576,7 +576,7 @@ namespace XPX::RoXML
 
 								XPLICIT_GET_DATA_DIR(full_path);
 
-								auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-LUA.lua";
+								auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-LUA";
 
 								if (HTTP->download(url, tmp))
 								{

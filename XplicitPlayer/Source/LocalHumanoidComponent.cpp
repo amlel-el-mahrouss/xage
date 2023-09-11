@@ -193,7 +193,7 @@ namespace XPX
 
 		auto& traits = Bites::ObjectInputSystem::get_singleton_ptr()->Layout;
 
-		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(traits.mForward))
+		if (KB->key_down(traits.mForward))
 		{
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
@@ -208,7 +208,7 @@ namespace XPX
 			return;
 		}
 
-		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(traits.mBackward))
+		if (KB->key_down(traits.mBackward))
 		{
 			mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
 
@@ -223,7 +223,7 @@ namespace XPX
 			return;
 		}
 
-		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(traits.mRight))
+		if (KB->key_down(traits.mRight))
 		{
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
@@ -237,7 +237,7 @@ namespace XPX
 			return;
 		}
 
-		if (Bites::ObjectInputSystem::get_singleton_ptr()->key_down(traits.mLeft))
+		if (KB->key_down(traits.mLeft))
 		{
 			mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
 			mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;

@@ -151,18 +151,15 @@ int main(int argc, char** argv)
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();
 
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::MovementEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
 
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
-
 		XPLICIT_PLACE_ID = argv[2];
 
 		XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
-		generated_path += "-ROXML.roxml";
+		generated_path += "-ROXML";
 
 		XPLICIT_GET_DATA_DIR(path);
 		path += "Contents/";
@@ -189,6 +186,9 @@ int main(int argc, char** argv)
 
 		XPX::Thread logic([&]() {
 			const auto net = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent");
+
+			XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
+			XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
 
 			XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(net);
 

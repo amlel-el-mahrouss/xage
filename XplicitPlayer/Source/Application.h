@@ -47,16 +47,6 @@ namespace XPX::Bites
 			return singleton;
 		}
 
-		bool key_down(const char key) noexcept
-		{
-			return KB->key_down(key);
-		}
-
-		bool key_down() noexcept
-		{
-			return KB->key_down();
-		}
-
 	public:
 		struct InputTraits
 		{

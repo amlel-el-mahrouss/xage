@@ -86,7 +86,10 @@ namespace XPX
 
 			ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(self->mNetwork);
 
-			ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
+			auto replicator = ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
+
+			LocalReplicationComponent::update((void*)replicator);
+
 			ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 			
 			const auto cam = ComponentSystem::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
