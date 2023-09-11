@@ -16,6 +16,8 @@
 #define XPLICIT_RLUA_DESCRIPTION "ReflectedLua extension for the XplicitNgine."
 #define XPLICIT_RLUA_AUTHOR "Amlal El Mahrouss"
 
+#define RLUA_ASSERT(X) XPLICIT_ASSERT(X)
+
 // L = lua_State, N = index, X = name.
 #define RLUA_TYPE_CHECK(L, N, X) XPX::String index = luaL_checkstring(L, N);luaL_argcheck(L, index == X, 2, "RLua: Index out of range");
 
@@ -34,7 +36,6 @@ namespace XPX::RLua
 		static int on_new(lua_State* L)
 		{
 			*reinterpret_cast<RuntimeClass**>(lua_newuserdata(L, sizeof(RuntimeClass*))) = new RuntimeClass();
-			
 			return 1;
 		}
 
@@ -66,20 +67,29 @@ namespace XPX::RLua
 
 			lua_register(L, name, RuntimeClass<Class>::on_new);
 
+			luaL_Reg sClassRegs[] =
+			{
+				{ "Create", RuntimeClass<Class>::on_new },
+				{ "__gc", RuntimeClass<Class>::on_delete },
+				{ NULL, NULL }
+			};
+
 			luaL_newmetatable(L, name);
 
-			lua_pushcfunction(L, RuntimeClass<Class>::on_delete);
+			luaL_setfuncs(L, sClassRegs, 0);
 
-			lua_setfield(L, -2, "__gc");
+			lua_pushvalue(L, -1);
+			lua_setfield(L, -1, "__index");
 
-			lua_pushvalue(L, -1); 
-			lua_setfield(L, -2, "__index");
+			lua_setglobal(L, name);
 
 			return *this;
 		}
 
 		RuntimeClass& append_proc(const char* fn_name, RLuaProc fn)
 		{
+			RLUA_ASSERT(fn);
+
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
 			lua_pushcfunction(L, fn);
@@ -88,7 +98,7 @@ namespace XPX::RLua
 			return *this;
 		}
 
-		RuntimeClass& append_prop(const char* prop_name, RLuaProc getter, RLuaProc setter)
+		RuntimeClass& append_prop(const char* name, RLuaProc getter, RLuaProc setter)
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
@@ -97,7 +107,7 @@ namespace XPX::RLua
 			*this = this->append_proc("__index", getter);
 			*this = this->append_proc("__newindex", setter);
 
-			lua_setfield(L, -1, prop_name);
+			lua_setfield(L, -1, name);
 
 			return *this;
 		}

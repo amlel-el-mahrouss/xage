@@ -37,6 +37,7 @@ namespace XPX
 		Vector<TypeFloat> PositionMax;
 		Vector<TypeFloat> PositionMin;
 
+	public:
 		Vector<TypeFloat> Velocity;
 		Vector<TypeFloat> Force;
 		Vector<TypeFloat> Gravity; // it has it's own gravity. so that we can easily customize it.
@@ -46,15 +47,6 @@ namespace XPX
 		bool NoCollide;
 		bool Anchored;
 
-	};
-
-	template <typename TypeFloat = float>
-	struct NPLICIT_API Transform
-	{
-		Quaternion<TypeFloat> Rotation{ 0, 0, 0 };
-		Vector<TypeFloat> Position{ 0, 0, 0 };
-		Vector<TypeFloat> Scale{ 0, 0, 0 };
-		
 	};
 
 #ifndef __NPLICIT_DETAIL_IEE754__
