@@ -20,8 +20,8 @@
 #include "LocalCameraComponent.h"
 #include "LoadingComponent.h"
 #include "LocalMenuEvent.h"
-#include "MenuUI.h"
 #include "Application.h"
+#include "MenuUI.h"
 
 #include <RemoteEventStorage.h>
 #include <XHTTPManager.h>

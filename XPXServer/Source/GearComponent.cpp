@@ -61,20 +61,9 @@ namespace XPX
 		if (self->index_as_bool("CanDrop") &&
 			self->get_owner())
 		{
-			self->assign("Parent", "Parent.Parent");
+			self->assign("Parent", "World");
+
 			self->get_owner()->get_class()->assign(self->name(), "nil");
-
-			for (size_t i = 0; i < self->get_owner()->get_gears().size(); ++i)
-			{
-				auto& gear = self->get_owner()->get_gears()[i];
-
-				if (gear == self)
-				{
-					gear = nullptr;
-					break;
-				}
-			}
-
 			self->set_owner(nullptr);
 		}
 
