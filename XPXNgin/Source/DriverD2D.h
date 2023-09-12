@@ -14,7 +14,7 @@
 
 #ifdef XPLICIT_WINDOWS
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 #include "Component.h"
 #include "DriverD3D11.h"
 

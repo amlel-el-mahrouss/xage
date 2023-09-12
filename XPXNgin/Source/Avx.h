@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 #ifdef XPLICIT_WINDOWS
 

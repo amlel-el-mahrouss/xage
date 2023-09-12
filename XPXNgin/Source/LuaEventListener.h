@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 #include "Event.h"
 
 #include <CLua.hpp>

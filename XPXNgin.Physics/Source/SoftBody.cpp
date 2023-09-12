@@ -12,8 +12,3 @@
  */
 
 #include "SoftBody.h"
-
-namespace XPX
-{
-
-}

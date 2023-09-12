@@ -1,11 +1,11 @@
-XPLICIT_PROJ = "Xplicit"
+XPLICIT_PROJ = "XPXNgin"
 
 XPLICIT_SERVER_PROJ = "XplicitServer"
 XPLICIT_CLIENT_PROJ = "XplicitPlayer"
 XPLICIT_STUDIO_PROJ = "XplicitStudio"
 
 XPLICIT_WORKSPACE = "XplicitNgine"
-NPLICIT_PROJ = "Nplicit"
+NPLICIT_PROJ = "XPXNgin.Physics"
 
 TAGRET="x86_64"
 

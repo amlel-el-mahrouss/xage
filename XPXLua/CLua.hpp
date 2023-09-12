@@ -19,7 +19,7 @@ extern "C" {
 }
 
 #ifndef __XPLICIT_H__
-#	include <XPXNginCore.h>
+#	include <NginCore.h>
 #endif // ifndef __XPLICIT_H__
 
 #include <vector>

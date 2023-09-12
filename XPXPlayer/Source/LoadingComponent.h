@@ -38,7 +38,6 @@ namespace XPX
 		void reset() noexcept;
 
 	private:
-		ImGUI::UIFrame mLoadingFrame;
 		NetworkComponent* mNetwork;
 		std::int64_t mTimeout; /* Network Timeout, incremented on each connection failure. */
 

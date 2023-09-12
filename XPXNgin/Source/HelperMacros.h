@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 #ifndef XPLICIT_GET_DATA_DIR
 #ifdef _WIN32

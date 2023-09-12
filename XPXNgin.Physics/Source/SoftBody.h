@@ -10,8 +10,3 @@
 #pragma once
 
 #include "Nplicit.h"
-
-namespace XPX
-{
-
-}

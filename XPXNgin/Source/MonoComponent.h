@@ -13,7 +13,7 @@
 #pragma once
 
 #include "Component.h"
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 #include <jit/jit.h>
 #include <metadata/assembly.h>

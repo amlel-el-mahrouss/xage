@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 #include "XplicitID.h"
 
 #define XPLICIT_INVALID_HASH (0xDEEBEEF)

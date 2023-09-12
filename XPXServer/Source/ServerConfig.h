@@ -5,7 +5,7 @@
 #include <Uri.h>
 #include <Util.h>
 #include <Event.h>
-#include <XPXNginCore.h>
+#include <NginCore.h>
 #include <GameVar.h>
 #include <Component.h>
 #include <MonoInterop.h>

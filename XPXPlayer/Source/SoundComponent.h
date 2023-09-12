@@ -9,16 +9,12 @@
 
 #pragma once
 
-//! Xplicit ECS API
-
 #include <Component.h>
 #include <codecvt>
 #include <Util.h>
 
-//! Xplicit Sound API
-
-#include <XPXNginCore.h>
-#include <XplicitSound.h>
+#include <NginCore.h>
+#include <SoundNgin.h>
 #include <ClassComponent.h>
 
 namespace XPX
@@ -26,7 +22,7 @@ namespace XPX
 	class SoundComponent final : public ClassComponent
 	{
 	public:
-		explicit SoundComponent(const char* name, const char* parent);
+		SoundComponent(const char* name, const char* parent);
 		~SoundComponent() override;
 
 	public:
@@ -45,15 +41,15 @@ namespace XPX
 		PHYSICS_TYPE physics() noexcept override;
 
 	public:
-		void set_volume(const float volume = 0.5f) noexcept;
-		void set_position(const Vector<float> pos = Vector<float>(0.0f, 0.0f, 0.0f)) noexcept;
-		void should_loop(const bool enable = true) noexcept;
+		void set_volume(float volume = 0.5f) noexcept;
+		void set_position(Vector<float> pos = Vector<float>(0.0f, 0.0f, 0.0f)) noexcept;
+		void should_loop(bool enable = true) noexcept;
 
 	private:
 		float mVolume{ 0.5f };
 		float mPitch{ 100.f };
+        bool mLoop{ false };
 		float mPan{ 0 };
-		bool mLoop{ false };
 
 	};
 }

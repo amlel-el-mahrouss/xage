@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 #define XPLICIT_UNIVERSE_DELIM "_"
 #define XPLICIT_UNIVERSE_PREFIX "XPLICIT_"

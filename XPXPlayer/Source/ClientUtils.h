@@ -12,7 +12,7 @@
 #include "SoundComponent.h"
 #include <XHTTPManager.h>
 #include <Nplicit.h>
-#include <XPXNginCore.h>
+#include <NginCore.h>
 #include <Root.h>
 
 inline void PlaySound(const XPX::String& path, const XPX::Vector<float>& pos)

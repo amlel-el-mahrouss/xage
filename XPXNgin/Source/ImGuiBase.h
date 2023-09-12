@@ -13,7 +13,7 @@
 #pragma once
 
 #include "Root.h"
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 #define __RENDERER_IRR__ 1
 

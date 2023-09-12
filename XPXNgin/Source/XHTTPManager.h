@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 #include "Http.h"
 #include "Uri.h"
 

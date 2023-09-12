@@ -1,6 +1,6 @@
 architecture ("x86_64")
 
-XPLICIT_PROJ = "Xplicit"
+XPLICIT_PROJ = "XPXNgin"
 
 XPLICIT_SERVER_PROJ = "XPXServer"
 XPLICIT_CLIENT_PROJ = "XPXPlayer"

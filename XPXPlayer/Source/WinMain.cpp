@@ -17,7 +17,7 @@
 #include "Application.h"
 
 #include <NetworkProtocol.h>
-#include <XplicitSound.h>
+#include <SoundNgin.h>
 #include <DriverD3D11.h>
 #include <Component.h>
 #include <LuaAPI.h>
@@ -76,8 +76,6 @@ int main(int argc, char** argv)
 		if (!app_ptr)
 			throw XPX::EngineError("XPLICIT couldn't continue; we're sorry!");
 
-		NPLICIT_SPLASH_SCREEN;
-
 		//! The Main Logic and Render loop.
 		while (CAD->run() &&
 			XPX::ComponentSystem::get_singleton_ptr() &&
@@ -92,8 +90,8 @@ int main(int argc, char** argv)
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
 
-			CAD->getSceneManager()->drawAll();
-			CAD->getGUIEnvironment()->drawAll();
+            CAD->getSceneManager()->drawAll();
+            CAD->getGUIEnvironment()->drawAll();
 
 			CAD->getVideoDriver()->endScene();
 

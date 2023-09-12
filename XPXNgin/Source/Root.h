@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 #include "HelperMacros.h"
 
 #include <CLua.hpp>
@@ -50,6 +50,9 @@ namespace XPX
 
 			if (env.EventType == EET_KEY_INPUT_EVENT)
 				mKeys[env.KeyInput.Key] = env.KeyInput.PressedDown;
+
+            if (env.EventType == EET_LOG_TEXT_EVENT)
+                return true;
 
 			if (env.EventType == EET_MOUSE_INPUT_EVENT)
 			{
@@ -175,6 +178,7 @@ namespace XPX
 			char mForward{ -1 };
 			char mRight{ -1 };
 			char mLeft{ -1 };
+
 		};
 
 	private:

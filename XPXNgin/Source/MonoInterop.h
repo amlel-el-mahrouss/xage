@@ -10,7 +10,7 @@
 #pragma once
 
 #include "Event.h"
-#include "XPXNginCore.h"
+#include "NginCore.h"
 #include "Component.h"
 #include "MonoComponent.h"
 

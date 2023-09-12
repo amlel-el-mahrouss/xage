@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 #ifndef XPLICIT_XASSET_PROTOCOL
 #define XPLICIT_XASSET_PROTOCOL ("xasset://")

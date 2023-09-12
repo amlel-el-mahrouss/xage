@@ -14,7 +14,7 @@
 
 #include "DriverSystem.h"
 #include "Component.h"
-#include "XPXNginCore.h"
+#include "NginCore.h"
 #include "Avx.h"
 
 #include <Nplicit.h>

@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 #define XPLICIT_DEFAULT_WIDTH (1280)
 #define XPLICIT_DEFAULT_HEIGHT (720)

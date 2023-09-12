@@ -69,7 +69,7 @@ namespace XPX::Bites
 		Application() = delete;
 
 	public:
-		Application(Utils::UriParser& xconnectTo);
+		Application(Utils::UriParser xconnectTo);
 		~Application();
 
 	public:
@@ -100,7 +100,7 @@ namespace XPX::Bites
 		SettingsManager* leak_settings() const noexcept { return mSettings.get(); }
 
 	private:
-		void setup();
+		void setup_engine();
 		
 	private:
 		std::unique_ptr<SettingsManager> mSettings;

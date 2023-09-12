@@ -9,6 +9,6 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 XPLICIT_API int xplicit_crc32(const char* byte, int len);

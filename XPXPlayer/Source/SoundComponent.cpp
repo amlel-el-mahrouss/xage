@@ -38,9 +38,9 @@ namespace XPX
 
 	PHYSICS_TYPE SoundComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
-	void SoundComponent::set_position(const Vector<float> pos) noexcept { Vector<float> mPosition = pos; }
+	void SoundComponent::set_position(Vector<float> pos) noexcept { Vector<float> mPosition = pos; }
 
-	void SoundComponent::set_volume(const float volume) noexcept
+	void SoundComponent::set_volume(float volume) noexcept
 	{
 		if (volume > 1.0f)
 		{
@@ -51,7 +51,7 @@ namespace XPX
 		mVolume = volume;
 	}
 
-	void SoundComponent::update(void* class_ptr)
+	void SoundComponent::update(ClassPtr class_ptr)
 	{
 		ClassComponent::update(class_ptr);
 		SoundComponent* self = (SoundComponent*)class_ptr;
@@ -62,7 +62,7 @@ namespace XPX
 		self->mVolume = self->index_as_number<float>("Volume");
 	}
 
-	void SoundComponent::should_loop(const bool enable) noexcept
+	void SoundComponent::should_loop(bool enable) noexcept
 	{
 		mLoop = enable;
 	}
@@ -81,6 +81,8 @@ namespace XPX
 		}, path, mVolume, mPitch, mPan);
 
 		job.detach();
+#else
+        XPX::Audio::XAudioEngine::get_singleton_ptr()->openal_load_wave(path.c_str(), mLoop);
 #endif
 	}
 
@@ -98,6 +100,9 @@ namespace XPX
 		}, path);
 
 		job.detach();
+#else
+        XPX::Audio::XAudioEngine::get_singleton_ptr()->openal_configure_listener(this->pos(), , nullptr);
+        XPX::Audio::XAudioEngine::get_singleton_ptr()->openal_load_wave(path.c_str(), mLoop);
 #endif
 	}
 }

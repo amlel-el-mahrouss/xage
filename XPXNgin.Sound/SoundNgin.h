@@ -12,19 +12,19 @@
 #pragma once
 
 #ifndef __XPLICIT_H__
-#	error Please include XPXNginCore.h before XplicitSound!
+#	error Please include NginCore.h before SoundNgin.h!
 #endif // __XPLICIT_H__
 
 #include <iostream>
 #include <string>
-
-#define _USE_MATH_DEFINES
 
 #ifndef XPLICIT_AUDIO_RATE
 #	define XPLICIT_AUDIO_RATE (44100)
 #endif // ifndef XPLICIT_AUDIO_RATE
 
 #ifdef _WIN32
+
+#define _USE_MATH_DEFINES
 
 #include <Audio.h>
 #include <SimpleMath.h>
@@ -277,9 +277,12 @@ namespace XPX
 
 #include <OpenAL/OpenAL.h>
 
-namespace XPX {
-    namespace Audio {
-        class XAudioEngineOpenAL final {
+namespace XPX
+{
+    namespace Audio
+    {
+        class XAudioEngineOpenAL final
+        {
         public:
             XAudioEngineOpenAL()
                 : mDevice(alcOpenDevice(nullptr))
@@ -294,7 +297,7 @@ namespace XPX {
                 if (enumeration == AL_FALSE)
                     throw EngineError("ALC_ENUMERATION_EXT: Not supported by Computer");
 
-                const ALCchar *device = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+                const ALCchar *device = alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
                 const ALCchar *next = device + 1;
                 size_t len = 0;
 
@@ -326,6 +329,16 @@ namespace XPX {
                 this->openal_generate_buffer(&mBuffer);
             }
 
+            ~XAudioEngineOpenAL() noexcept
+            {
+                alDeleteSources(1, &mSource);
+                alDeleteBuffers(1, &mBuffer);
+                mDevice = alcGetContextsDevice(context);
+                alcMakeContextCurrent(nullptr);
+                alcDestroyContext(mContext);
+                alcCloseDevice(mDevice);
+            }
+
         public:
             XPLICIT_COPY_DEFAULT(XAudioEngineOpenAL);
 
@@ -336,7 +349,7 @@ namespace XPX {
                 ALenum format = AL_FORMAT_STEREO16;
                 ALvoid *data = nullptr;
 
-                this->openal_load_wave_internal(path, size, freq, format, &data, loop);
+                this->openal_load_wave_internal(path, size, freq, &data, format, loop);
             }
 
             bool openal_generate_buffer(ALuint* buffer)
@@ -345,7 +358,7 @@ namespace XPX {
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                     return true;
                 }
                 catch (...)
@@ -356,11 +369,16 @@ namespace XPX {
             
             bool openal_configure_listener(Vector<float>& pos, Vector<float>& vel, ALfloat* ori)
             {
+                ALfloat ori_replacement[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
+
+                if (!ori)
+                    ori = ori_replacement;
+
                 alListener3f(AL_POSITION, pos.X, pos.Y, pos.Z);
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                 }
                 catch (...)
                 {
@@ -371,7 +389,7 @@ namespace XPX {
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                 }
                 catch (...)
                 {
@@ -382,7 +400,7 @@ namespace XPX {
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                 }
                 catch (...)
                 {
@@ -392,13 +410,14 @@ namespace XPX {
                 return true;
             }
 
+        private:
             bool openal_generate_source(ALuint* source)
             {
                 alGenSources((ALuint)1, source);
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                 }
                 catch (...)
                 {
@@ -410,7 +429,7 @@ namespace XPX {
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                 }
                 catch (...)
                 {
@@ -421,7 +440,7 @@ namespace XPX {
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                 }
                 catch (...)
                 {
@@ -432,7 +451,7 @@ namespace XPX {
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                 }
                 catch (...)
                 {
@@ -443,7 +462,7 @@ namespace XPX {
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                 }
                 catch (...)
                 {
@@ -454,7 +473,7 @@ namespace XPX {
 
                 try
                 {
-                    this->try_fatal();
+                    this->openal_try_catch();
                 }
                 catch (...)
                 {
@@ -469,16 +488,88 @@ namespace XPX {
                     const char* path,
                     ALsizei size,
                     ALsizei freq,
+                    ALvoid* data,
                     ALenum format,
-                    ALvoid *data,
                     bool loop
                     )
             {
                 XPLICIT_CRITICAL("openal_load_wave_internal: Unimplemented");
+
+                //RIFFLoader riff;
+                //
+                //if (riff.load_openal(path, &data, mBuffer))
+                //    this->openal_finally_play(mSource);
             }
 
         private:
-            bool try_fatal() noexcept
+            void openal_finally_play(ALuint source)
+            {
+                ALint source_state = 0;
+
+                alSourcePlay(source);
+
+                try
+                {
+                    this->openal_try_catch();
+                }
+                catch (...)
+                {
+                    this->openal_cleanup_resources();
+                    return;
+                }
+
+                alGetSourcei(source, AL_SOURCE_STATE, &source_state);
+
+                try
+                {
+                    this->openal_try_catch();
+                }
+                catch (...)
+                {
+                    this->openal_cleanup_resources();
+                    return;
+                }
+
+                while (source_state == AL_PLAYING)
+                {
+                    alGetSourcei(source, AL_SOURCE_STATE, &source_state);
+
+                    try
+                    {
+                        this->openal_try_catch();
+                    }
+                    catch (...)
+                    {
+                        this->openal_cleanup_resources();
+                        throw EngineError("OpenAL: Something did go wrong...");
+                    }
+                }
+            }
+
+            void openal_cleanup_resources() noexcept
+            {
+
+            }
+
+        public:
+            static XAudioEngineOpenAL* get_singleton_ptr() noexcept
+            {
+                XAudioEngineOpenAL* engine = nullptr;
+
+                if (!engine)
+                    engine = new XAudioEngineOpenAL();
+
+                return engine;
+            }
+
+        public:
+            void openal_bind_source(ALuint source, ALvoid* buffer)
+            {
+                alSourcei(source, AL_BUFFER, buffer);
+            }
+
+        private:
+            bool openal_try_catch() noexcept
             {
                 ALCenum error;
 

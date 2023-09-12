@@ -32,7 +32,7 @@ INSTALLING:
 ===========
 
 - Put the C# assemblies into %appdata%/XPXNgin
-- Download DirectXTK for the XplicitSound header. (XPXPlayer) via NuGet.
+- Download DirectXTK for the SoundNgin.h header. (XPXPlayer) via NuGet.
 
 ==============================================================
 Copyright Xplicit Inc, Amlal El Mahrouss, all rights reserved.

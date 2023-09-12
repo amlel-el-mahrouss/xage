@@ -17,7 +17,7 @@
 
 #include "StaticBundleMesh.h"
 
-#include <XplicitSound.h>
+#include <SoundNgin.h>
 #include <CLua.hpp>
 #include <LuaAPI.h>
 #include <codecvt>
@@ -163,6 +163,8 @@ static int lua_MakeSoundComponent(lua_State* L)
 
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(name, parent);
 	}
+
+    return 0;
 }
 
 static int lua_GetX(lua_State* L)

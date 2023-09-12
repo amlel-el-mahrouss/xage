@@ -38,17 +38,11 @@ namespace XPX
 	LoadingComponent::LoadingComponent() 
 		:
 		mNetwork(nullptr), 
-		mTimeout(XPLICIT_TIMEOUT),
-		mLoadingFrame()
+		mTimeout(XPLICIT_TIMEOUT)
 	{
-		ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
-
-		mLoadingFrame.X = 0;
-		mLoadingFrame.Y = 0;
-
-		mLoadingFrame.W = CAD->getVideoDriver()->getScreenSize().Width;
-		mLoadingFrame.H = CAD->getVideoDriver()->getScreenSize().Height;
-	}
+		auto cam = ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
+        CAD->getSceneManager()->setActiveCamera(cam->get());
+    }
 
 	LoadingComponent::~LoadingComponent() = default;
 
@@ -58,7 +52,8 @@ namespace XPX
 	{
 		LoadingComponent* self = (LoadingComponent*)class_ptr;
 
-		if (!self->mNetwork) return;
+		if (!self ||
+            !self->mNetwork) return;
 
 		NetworkPacket packet;
 		self->mNetwork->read(packet);

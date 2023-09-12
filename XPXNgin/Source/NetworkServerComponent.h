@@ -11,7 +11,7 @@
 
 #include "NetworkComponent.h"
 #include "XplicitID.h"
-#include "XPXNginCore.h"
+#include "NginCore.h"
 #include "Event.h"
 
 namespace XPX

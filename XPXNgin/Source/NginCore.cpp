@@ -11,7 +11,7 @@
  @file
  */
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 static FILE* XPLICIT_LOGGER{ nullptr };
 

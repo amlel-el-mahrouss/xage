@@ -11,7 +11,7 @@
 #include "PartComponent.h"
 
 #include "HelperMacros.h"
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 #include <Nplicit.h>
 #include <CLua.hpp>

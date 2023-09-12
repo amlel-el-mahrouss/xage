@@ -13,7 +13,7 @@
 #ifndef __XPLICIT_DLL__
 
 #include <functional>
-#include <XPXNginCore.h>
+#include <NginCore.h>
 #include <Avx.h>
 
 #endif

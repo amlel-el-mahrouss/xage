@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "XPXNginCore.h"
+#include "NginCore.h"
 
 constexpr auto AR_MAGIC = 0xBADF00D;
 
