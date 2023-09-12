@@ -7,7 +7,7 @@ XPLICIT_STUDIO_PROJ = "XplicitStudio"
 XPLICIT_WORKSPACE = "XplicitNgine"
 NPLICIT_PROJ = "XPXNgin.Physics"
 
-TAGRET="x86_64"
+TAGRET="x64"
 
 XPLICIT_CONFIG = {
     ["_CXXDIALECT"] = 2022,
