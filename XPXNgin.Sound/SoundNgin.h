@@ -333,7 +333,7 @@ namespace XPX
             {
                 alDeleteSources(1, &mSource);
                 alDeleteBuffers(1, &mBuffer);
-                mDevice = alcGetContextsDevice(context);
+                mDevice = alcGetContextsDevice(mContext);
                 alcMakeContextCurrent(nullptr);
                 alcDestroyContext(mContext);
                 alcCloseDevice(mDevice);
@@ -563,7 +563,7 @@ namespace XPX
             }
 
         public:
-            void openal_bind_source(ALuint source, ALvoid* buffer)
+            void openal_bind_source(ALuint source, ALint buffer)
             {
                 alSourcei(source, AL_BUFFER, buffer);
             }

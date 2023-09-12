@@ -101,7 +101,9 @@ namespace XPX
 
 		job.detach();
 #else
-        XPX::Audio::XAudioEngine::get_singleton_ptr()->openal_configure_listener(this->pos(), , nullptr);
+        Vector<float> vel(0, 0, 0);
+
+        XPX::Audio::XAudioEngine::get_singleton_ptr()->openal_configure_listener(this->pos(), vel, nullptr);
         XPX::Audio::XAudioEngine::get_singleton_ptr()->openal_load_wave(path.c_str(), mLoop);
 #endif
 	}

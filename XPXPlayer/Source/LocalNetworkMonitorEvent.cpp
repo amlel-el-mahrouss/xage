@@ -104,7 +104,7 @@ namespace XPX
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Login()");
 
 			/*! invalidate command right there. */
-			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_INVALID;
+			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_INVALID;
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||

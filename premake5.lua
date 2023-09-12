@@ -1,7 +1,7 @@
 if os.execute('ver') == nil then
 	include('config.lua')
 	filter { "system:macosx", "action:gmake2" }
-		linkoptions { "-framework Foundation -framework OpenGL -framework AppKit -framework IOKit -fobjc-arc" }
+		linkoptions { "-framework OpenAL -framework Foundation -framework OpenGL -framework AppKit -framework IOKit -fobjc-arc" }
 else
 	include('config-windows.lua')
 end

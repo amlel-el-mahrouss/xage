@@ -260,7 +260,8 @@ namespace XPX
 
 	const char* RectComponent::name() 
 	{
-		return ((!this->index_as_string("Name").empty()) ? this->index_as_string("Name").c_str() : "RectComponent"); 
+        auto rect_name = this->index_as_string("Name");
+		return ((!this->index_as_string("Name").empty()) ? rect_name.c_str() : "RectComponent");
 	}
 
 	void RectComponent::update(ClassPtr klass) noexcept
