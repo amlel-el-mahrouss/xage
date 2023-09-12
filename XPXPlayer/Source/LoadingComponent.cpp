@@ -50,12 +50,12 @@ namespace XPX
 
 	void LoadingComponent::update(void* class_ptr)
 	{
-		LoadingComponent* self = (LoadingComponent*)class_ptr;
+		auto* self = (LoadingComponent*)class_ptr;
 
 		if (!self ||
             !self->mNetwork) return;
 
-		NetworkPacket packet;
+		NetworkPacket packet{};
 		self->mNetwork->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
