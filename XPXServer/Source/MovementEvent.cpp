@@ -14,7 +14,6 @@
  */
 
 #include "MovementEvent.h"
-#include <CLua.hpp>
 
 namespace XPX
 {
