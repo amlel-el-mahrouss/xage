@@ -276,6 +276,8 @@ namespace XPX
 #else
 
 #include <OpenAL/OpenAL.h>
+#include <fstream>
+#include <RIFF.h>
 
 namespace XPX
 {
@@ -493,12 +495,36 @@ namespace XPX
                     bool loop
                     )
             {
-                XPLICIT_CRITICAL("openal_load_wave_internal: Unimplemented");
+                RiffHeader riff;
 
-                //RIFFLoader riff;
-                //
-                //if (riff.load_openal(path, &data, mBuffer))
-                //    this->openal_finally_play(mSource);
+                std::ifstream riff_file(path, std::ios::binary);
+
+                riff_file.read(reinterpret_cast<char*>(riff.riff), sizeof(riff.riff));
+
+                BasicString<unsigned char> riff_mag( riff.riff, sizeof(riff.riff));
+
+                BasicString<unsigned char> cmp_to = reinterpret_cast<const unsigned char*>("RIFF");
+
+                if (riff_mag != cmp_to)
+                    throw EngineError("OpenAL: not a RIFF file!");
+
+                unsigned char buffer4[4];
+                unsigned char buffer2[2];
+
+                riff_file.read(reinterpret_cast<char*>(buffer4), sizeof(buffer4));
+                riff_file.read(reinterpret_cast<char*>(buffer2), sizeof(buffer2));
+
+                riff.overall_size = buffer4[0] |
+                                  (buffer4[1]<<8) |
+                                  (buffer4[2]<<16) |
+                                  (buffer4[3]<<24);
+
+                printf("(5-8) Overall size: bytes:%u, Kb:%u n", riff.overall_size, riff.overall_size/1024);
+
+                riff_file.read(reinterpret_cast<char*>(riff.wave), sizeof(riff.wave));
+                printf("(9-12) Wave marker: %sn", riff.wave);
+
+                this->openal_finally_play(mSource);
             }
 
         private:
