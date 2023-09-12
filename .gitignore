@@ -46,8 +46,6 @@ Docs/html/
 
 .idea/
 
-*.ini
-
 *.Interpreter.xml
 *.exe.config
 
