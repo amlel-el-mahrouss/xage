@@ -23,39 +23,39 @@ lang = XPLICIT_CONFIG["_DIALECT"]
 files { XPLICIT_CONFIG["_FILES"]["_INC"], XPLICIT_CONFIG["_FILES"]["_SRC"] }
 includedirs { XPLICIT_CONFIG["_INCDIR"] } 
 links{ XPLICIT_CONFIG["_LIBDIR"] } 
-architecture = "x86_64"
+architecture "x64"
 
 kind ("SharedLib")
 
 configurations { XPLICIT_SERVER_CONFIG["_CONFIGS"] }
 project(XPLICIT_SERVER_PROJ)
 defines { XPLICIT_SERVER_CONFIG["_MACROS"] }
-compileas = XPLICIT_SERVER_CONFIG["_DIALECT"]
+lang = XPLICIT_SERVER_CONFIG["_DIALECT"]
 files { XPLICIT_SERVER_CONFIG["_FILES"]["_INC"], XPLICIT_SERVER_CONFIG["_FILES"]["_SRC"] }
 includedirs { XPLICIT_SERVER_CONFIG["_INCDIR"] } 
 links{ XPLICIT_SERVER_CONFIG["_LIBDIR"] } 
-architecture = "x86_64"
+architecture "x64"
 
 kind ("ConsoleApp")
 
 configurations { XPLICIT_CLIENT_CONFIG["_CONFIGS"] }
 project(XPLICIT_CLIENT_PROJ)
 defines { XPLICIT_CLIENT_CONFIG["_MACROS"] }
-compileas = XPLICIT_CLIENT_CONFIG["_DIALECT"]
+lang = XPLICIT_CLIENT_CONFIG["_DIALECT"]
 files { XPLICIT_CLIENT_CONFIG["_FILES"]["_INC"], XPLICIT_CLIENT_CONFIG["_FILES"]["_SRC"] }
 includedirs { XPLICIT_CLIENT_CONFIG["_INCDIR"] } 
 links{ XPLICIT_CLIENT_CONFIG["_LIBDIR"] } 
-architecture = "x86_64"
+architecture "x64"
 
 kind ("WindowedApp")
 
 configurations { NPLICIT_CONFIG["_CONFIGS"] }
 project(NPLICIT_PROJ)
 defines { NPLICIT_CONFIG["_MACROS"] }
-compileas = NPLICIT_CONFIG["_DIALECT"]
+lang = NPLICIT_CONFIG["_DIALECT"]
 files { NPLICIT_CONFIG["_FILES"]["_INC"], NPLICIT_CONFIG["_FILES"]["_SRC"] }
 includedirs { NPLICIT_CONFIG["_INCDIR"] } 
 links{ NPLICIT_CONFIG["_LIBDIR"] } 
-architecture = "x86_64"
+architecture "x64"
 
 kind ("SharedLib")
