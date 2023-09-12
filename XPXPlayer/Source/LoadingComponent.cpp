@@ -33,7 +33,7 @@
 namespace XPX
 {
 	// connection timeout, then client quits.
-	constexpr int XPLICIT_TIMEOUT = 18000;
+	constexpr int XPLICIT_TIMEOUT = 25000;
 
 	LoadingComponent::LoadingComponent() 
 		:
@@ -132,6 +132,8 @@ namespace XPX
 
 				return;
 			}
+
+            std::this_thread::sleep_for(std::chrono::microseconds(250));
 		}
 	}
 

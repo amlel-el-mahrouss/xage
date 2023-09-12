@@ -26,6 +26,10 @@
 #include <Bites.h>
 #include <codecvt>
 
+#ifdef __APPLE__
+void XPXMacInitStuff();
+#endif
+
 static void XplicitThrowException(XPX::EngineError& err);
 
 #ifdef _WIN32
@@ -70,6 +74,10 @@ int main(int argc, char** argv)
 
 		if (!checker(uri.get().c_str()))
 			return 1;
+
+#ifdef __APPLE__
+        XPXMacInitStuff();
+#endif
 
 		std::unique_ptr<XPX::Bites::Application> app_ptr = std::make_unique<XPX::Bites::Application>(uri);
 

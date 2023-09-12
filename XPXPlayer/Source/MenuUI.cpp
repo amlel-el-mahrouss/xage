@@ -44,7 +44,7 @@ namespace XPX
 			mText = platform_string(msg ? msg : "You have been kicked.");
 			break;
 		case POPUP_TYPE::NETWORK:
-			mText = platform_string("The connection has timed-out.");
+			mText = platform_string("Connection has timed-out.\nPress OK to exit.");
 			break;
 		case POPUP_TYPE::SHUTDOWN:
 			mText = platform_string("The server has shutdown.");
@@ -201,7 +201,6 @@ namespace XPX
 			return;
 
 		auto& packet = self->mNetwork->get();
-
 
 		for (size_t i = 0; i < XPLICIT_MAX_ELEMENTS_INVENTORY; ++i)
 		{
