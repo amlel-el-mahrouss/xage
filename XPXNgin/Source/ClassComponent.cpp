@@ -12,8 +12,8 @@
 
 namespace XPX
 {
-	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Name, Func) self.Slots[Name] = Func end";
-	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, Name) self.Slots[Name] = nil; end";
+	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, UniqueName, Func) self.Slots[UniqueName] = Func end";
+	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, UniqueName) self.Slots[UniqueName] = nil; end";
 
 	static const char* XPLICIT_UPDATE_SNIPPET = "function (self) for _, v in pairs(self.Slots) do v(self); end end";
 
@@ -43,12 +43,12 @@ namespace XPX
 		this->insert("Locked", "false");
 		this->insert("Collide", "true");
 
-		this->insert("Destroy", XPLICIT_DESTROY_SNIPPET(mName, mParent).c_str());
-
 		this->insert("Slots", "{ }");
 
+        this->insert("Destroy", XPLICIT_DESTROY_SNIPPET(mName, mParent).c_str());
+
 		//! Connect and disconnect methods
-		//! Use this to connect specific function to this class.
+		//! Use this to connect specific functions to this class.
 		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
 		this->insert("Disconnect", XPLICIT_DISCONNECT_SNIPPET);
 	}

@@ -42,6 +42,7 @@ XPLICIT_CONFIG = {
     	"XPXNgin.Physics/Source/",
 	    "/Users/amlal/VulkanSDK/1.3.250.1/Include",
 	    "Vendor/libzip/lib",
+        "/opt/homebrew/Cellar/irrlicht/1.8.5_1/include",
         "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/",
         "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/mono",
     }
@@ -80,6 +81,7 @@ XPLICIT_SERVER_CONFIG = {
     	"Vendor/yaml/include",
     	"XPXNgin.Physics/Source/",
 	    "Vendor/libzip/lib",
+        "/opt/homebrew/Cellar/irrlicht/1.8.5_1/include",
 	    "/Users/amlal/VulkanSDK/1.3.250.1/Include",
         "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/",
         "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/mono",
@@ -122,6 +124,7 @@ XPLICIT_CLIENT_CONFIG = {
 	    "Vendor/glfw/include/GLFW/",
     	"XPXNgin.Physics/Source/",
 	    "Vendor/libzip/lib",
+        "/opt/homebrew/Cellar/irrlicht/1.8.5_1/include",
 	    "/Users/amlal/VulkanSDK/1.3.250.1/Include",
         "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/",
         "/opt/homebrew/Cellar/mono/6.12.0.182/include/mono-2.0/mono",
@@ -153,6 +156,7 @@ NPLICIT_CONFIG = {
         "Vendor/stb/",
 	    "Vendor/libzip/lib",
         "Vendor/yaml/include",
+        "/opt/homebrew/Cellar/irrlicht/1.8.5_1/include",
 	    "Vendor/glfw/include/GLFW/",
         "Vendor/nuklear/",
     }

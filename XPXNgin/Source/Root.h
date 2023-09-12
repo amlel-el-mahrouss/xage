@@ -14,8 +14,8 @@
 
 #include <CLua.hpp>
 
-//! The CAD engine.
-#include <CADNgin/CADNgin.h>
+//! Renderering engine.
+#include <irrlicht/irrlicht.h>
 
  /* common engine macros for Root */
 #define CAD XPX::Root::get_singleton_ptr()->Dev
