@@ -4,8 +4,8 @@
  *			XPXPlayer
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			File: WinMain.cpp
- *			Purpose: Main Application entrypoint (Objective-C)
+ *			File: AppMain.cpp
+ *			Purpose: Main Application entrypoint for the Mac.
  *
  * =====================================================================
  */

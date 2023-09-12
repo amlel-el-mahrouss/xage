@@ -4,7 +4,7 @@
  *			XPXPlayer
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			File: WinMain.cpp
+ *			File: AppMain.cpp
  *			Purpose: Main Application entrypoint.
  *
  * =====================================================================

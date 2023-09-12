@@ -13,13 +13,13 @@
  * @file
  */
 
-#include "MovementEvent.h"
+#include "HumanoidMovementEvent.h"
 
 namespace XPX
 {
-	constexpr const double XPLICIT_DELTA_PER_SECOND = 1000.f;
+	constexpr const double XPLICIT_DELTA = 0.01;
 
-	MovementEvent::MovementEvent() 
+	HumanoidMovementEvent::HumanoidMovementEvent() 
 		: 
 		mDeltaTime(0UL),
 		mDeltaVar(nullptr)
@@ -34,15 +34,15 @@ namespace XPX
 		}
 	}
 
-	MovementEvent::~MovementEvent()
+	HumanoidMovementEvent::~HumanoidMovementEvent()
 	{
 		if (mDeltaVar)
 			delete mDeltaVar;
 	}
 
-	const char* MovementEvent::name() noexcept { return ("MovementEvent"); }
+	const char* HumanoidMovementEvent::name() noexcept { return ("HumanoidMovementEvent"); }
 
-	void MovementEvent::operator()()
+	void HumanoidMovementEvent::operator()()
 	{
 		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 		
@@ -112,7 +112,7 @@ namespace XPX
 			}
 		}
 
-		mDeltaTime += (mDeltaVar->as_float() / XPLICIT_DELTA_PER_SECOND);
+		mDeltaTime += (mDeltaVar->as_float() * XPLICIT_DELTA);
 
 		String heartbeat_fmt = fmt::format("World.Settings.DeltaTime.Value = {}", std::to_string(mDeltaTime));
 		Lua::CLuaStateManager::get_singleton_ptr()->run_string(heartbeat_fmt.c_str());

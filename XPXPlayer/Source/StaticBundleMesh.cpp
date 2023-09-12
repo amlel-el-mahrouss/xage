@@ -42,17 +42,17 @@ namespace XPX
 
 		//! RoXML provides uses cusotmization of these characters.
 		//! So that the user can express himself.
-		static const const char* parts[6] = { "Head", "LeftLeg", "RightLeg", "Torso", "LeftArm", "RightArm" };
+		static const const char* XPX_PARTS[XPLICIT_BUNDLE_MAX] = { "Head", "LeftLeg", "RightLeg", "Torso", "LeftArm", "RightArm" };
 
 		for (size_t i = 0; i < XPLICIT_BUNDLE_MAX; ++i)
 		{
 			auto it = std::find_if(params.WorldNodes.cbegin(), params.WorldNodes.cend(), [&](RoXML::RoXMLNodeDescription desc) -> bool {
-				return parts[i] == desc.ID;
-				});
+				return XPX_PARTS[i] == desc.ID;
+			});
 
 			if (it != params.WorldNodes.cend())
 			{
-				irr::scene::IMeshSceneNode* mesh = static_cast<irr::scene::IMeshSceneNode*>(CAD->getSceneManager()->getSceneNodeFromName(parts[i]));
+				irr::scene::IMeshSceneNode* mesh = static_cast<irr::scene::IMeshSceneNode*>(CAD->getSceneManager()->getSceneNodeFromName(XPX_PARTS[i]));
 
 				if (mesh)
 					mParts.push_back(std::make_pair(mesh, mesh->getMesh()));

@@ -15,7 +15,7 @@ namespace XPX
 	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, UniqueName, Func) self.Slots[UniqueName] = Func end";
 	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, UniqueName) self.Slots[UniqueName] = nil; end";
 
-	static const char* XPLICIT_UPDATE_SNIPPET = "function (self) for _, v in pairs(self.Slots) do v(self); end end";
+	static const char* XPLICIT_UPDATE_SNIPPET = "function (self, Restrict) for k, v in pairs(self.Slots) do if k == Restrict then v(self); end end end";
 
 	static const String XPLICIT_DESTROY_SNIPPET(const String& name, const String& parent) noexcept
 	{
@@ -109,7 +109,5 @@ namespace XPX
 		self->pos().X = self->index_as_number<float>("Position.X");
 		self->pos().Y = self->index_as_number<float>("Position.Y");
 		self->pos().Z = self->index_as_number<float>("Position.Z");
-
-		self->call_method("Update");
 	}
 }

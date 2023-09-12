@@ -24,15 +24,15 @@ namespace XPX
 	///		- Player is nil (disconnected player)
 	/// </summary>
 	
-	class MovementEvent : public Event
+	class HumanoidMovementEvent : public Event
 	{
 	public:
-		MovementEvent();
-		~MovementEvent() override;
+		HumanoidMovementEvent();
+		~HumanoidMovementEvent() override;
 
 	public:
-		MovementEvent& operator=(const MovementEvent&) = default;
-		MovementEvent(const MovementEvent&) = default;
+		HumanoidMovementEvent& operator=(const HumanoidMovementEvent&) = default;
+		HumanoidMovementEvent(const HumanoidMovementEvent&) = default;
 		
 	public:
 		const char* name() noexcept override;

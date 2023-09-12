@@ -21,7 +21,7 @@
 #include "LoginEvent.h"
 #include "ServerConfig.h"
 #include "TimeoutEvent.h"
-#include "MovementEvent.h"
+#include "HumanoidMovementEvent.h"
 #include "SpawnComponent.h"
 #include "HealthMonitorEvent.h"
 #include "HumanoidReplicationComponent.h"
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
 
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::MovementEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
 
 		XPLICIT_PLACE_ID = argv[2];

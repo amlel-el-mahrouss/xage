@@ -115,8 +115,13 @@ namespace XPX
 		{
 			if (self->mPeer->packet.id < self->mGears.size())
 			{
+				if (self->mActiveGear)
+					self->mActiveGear->call_method("Update('Deactivate')");
+
 				if (self->mGears[self->mPeer->packet.id])
 					self->mActiveGear = self->mGears[self->mPeer->packet.id];
+
+				self->mActiveGear->call_method("Update('Activate')");
 
 				self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INVALID;
 			}
@@ -186,7 +191,7 @@ namespace XPX
 
 				XPLICIT_INFO("World:Login [EVENT]");
 
-				String fmt = fmt::format("World:Login({})", path);
+				String fmt = std::format("World:Login({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 				//! reset gear array. So that we don't have any non-nullptr left.
