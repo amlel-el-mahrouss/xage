@@ -1,7 +1,7 @@
 XPLICIT_PROJ = "XPXNgin"
 
-XPLICIT_SERVER_PROJ = "XplicitServer"
-XPLICIT_CLIENT_PROJ = "XplicitPlayer"
+XPLICIT_SERVER_PROJ = "XPXServer"
+XPLICIT_CLIENT_PROJ = "XPXPlayer"
 XPLICIT_STUDIO_PROJ = "XplicitStudio"
 
 XPLICIT_WORKSPACE = "XplicitNgine"
@@ -16,11 +16,11 @@ XPLICIT_CONFIG = {
     ["_DIALECT"] = "C++",
     ["_FILES"] = {
         ["_INC"] = {
-            "XplicitNgin/Source/**.h",
-            "XplicitNgin/Source/**.inl"
+            "XPXNgin/Source/**.h",
+            "XPXNgin/Source/**.inl"
         },
         ["_SRC"] = {
-            "XplicitNgin/Source/**.cpp"
+            "XPXNgin/Source/**.cpp"
         },
     },
     ["_LIBDIR"] = {
@@ -45,7 +45,7 @@ XPLICIT_CONFIG = {
 	    "Vendor/luajit/src",
 	    "Vendor/glfw/include/GLFW/",
     	"Vendor/yaml/include",
-    	"Nplicit/Source/",
+    	"XPXNgin.Physics/Source/",
 	    "C:/VulkanSDK/1.3.250.1/Include",
 	    "Vendor/libzip/lib",
         "C:/Program Files/Mono/include/mono-2.0/",
@@ -60,11 +60,11 @@ XPLICIT_SERVER_CONFIG = {
     ["_DIALECT"] = "C++",
     ["_FILES"] = {
         ["_INC"] = {
-            "XplicitServer/Source/**.h",
-            "XplicitServer/Source/**.inl",
+            "XPXServer/Source/**.h",
+            "XPXServer/Source/**.inl",
         },
         ["_SRC"] = {
-            "XplicitServer/Source/**.cpp"
+            "XPXServer/Source/**.cpp"
         },
     },
     ["_LIBDIR"] = {
@@ -82,10 +82,10 @@ XPLICIT_SERVER_CONFIG = {
         "Vendor/",
         "Vendor/stb/",
 	    "Vendor/glfw/include/GLFW/",
-    	"XplicitNgin/Source/",
+    	"XPXNgin/Source/",
         "Vendor/nuklear/",
     	"Vendor/yaml/include",
-    	"Nplicit/Source/",
+    	"XPXNgin.Physics/Source/",
 	    "Vendor/libzip/lib",
 	    "C:/VulkanSDK/1.3.250.1/Include",
         "C:/Program Files/Mono/include/mono-2.0/",
@@ -100,12 +100,12 @@ XPLICIT_CLIENT_CONFIG = {
     ["_DIALECT"] = "C++",
     ["_FILES"] = {
         ["_INC"] = {
-            "XplicitPlayer/Source/**.h",
-            "XplicitPlayer/Source/**.inl",
+            "XPXPlayer/Source/**.h",
+            "XPXPlayer/Source/**.inl",
         },
         ["_SRC"] = {
-            "XplicitPlayer/Source/**.cpp",
-            "XplicitPlayer/Source/**.c"
+            "XPXPlayer/Source/**.cpp",
+            "XPXPlayer/Source/**.c"
         },
     },
     ["_LIBDIR"] = {
@@ -125,16 +125,16 @@ XPLICIT_CLIENT_CONFIG = {
     ["_INCDIR"] = {
         "C:/Program Files/OpenSSL-Win64/include/",
         "Vendor/",
-        "SoundNgin/",
-    	"XplicitNgin/Source/",
+        "XPXNgin.Sound/",
+    	"XPXNgin/Source/",
     	"Vendor/irr/include",
-        "Vendor/CLua/",
+        "XPXLua/",
         "Vendor/stb/",
 	    "Vendor/luajit/src",
     	"Vendor/yaml/include",
         "Vendor/nuklear/",
 	    "Vendor/glfw/include/GLFW/",
-    	"Nplicit/Source/",
+    	"XPXNgin.Physics/Source/",
 	    "Vendor/libzip/lib",
 	    "C:/VulkanSDK/1.3.250.1/Include",
         "C:/Program Files/Mono/include/mono-2.0/",
@@ -149,12 +149,12 @@ NPLICIT_CONFIG = {
     ["_DIALECT"] = "C++",
     ["_FILES"] = {
         ["_INC"] = {
-            "Nplicit/Source/**.h",
-            "Nplicit/Source/**.inl",
+            "XPXNgin.Physics/Source/**.h",
+            "XPXNgin.Physics/Source/**.inl",
         },
         ["_SRC"] = {
-            "Nplicit/Source/**.cpp",
-            "XplicitPlayer/Source/**.c"
+            "XPXNgin.Physics/Source/**.cpp",
+            "XPXPlayer/Source/**.c"
         },
     },
     ["_LIBDIR"] = {
@@ -164,8 +164,8 @@ NPLICIT_CONFIG = {
     },
     ["_INCDIR"] = {
         "Vendor/",
-    	"XplicitNgin/Source/",
-        "Vendor/CLua/",
+    	"XPXNgin/Source/",
+        "XPXLua/",
         "Vendor/stb/",
 	    "Vendor/libzip/lib",
         "Vendor/yaml/include",
@@ -208,16 +208,16 @@ XPLICIT_STUDIO_CONFIG = {
     ["_INCDIR"] = {
         "C:/Program Files/OpenSSL-Win64/include/",
         "Vendor/",
-        "SoundNgin/",
-    	"XplicitNgin/Source/",
+        "XPXNgin.Sound/",
+    	"XPXNgin/Source/",
     	"Vendor/irr/include",
-        "Vendor/CLua/",
+        "XPXLua/",
         "Vendor/stb/",
 	    "Vendor/luajit/src",
     	"Vendor/yaml/include",
         "Vendor/nuklear/",
 	    "Vendor/glfw/include/GLFW/",
-    	"Nplicit/Source/",
+    	"XPXNgin.Physics/Source/",
 	    "Vendor/libzip/lib",
 	    "C:/VulkanSDK/1.3.250.1/Include",
         "C:/Program Files/Mono/include/mono-2.0/",
