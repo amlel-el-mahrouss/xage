@@ -23,34 +23,15 @@ namespace XPX
 			mNetwork(nullptr),
 			mTimeout(0UL),
 			mEnabled(false),
-			mButtonNoHover(nullptr),
-			mButtonHover(nullptr),
 			mPopup(nullptr)
 	{
 		/* resource loading */
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 		XPLICIT_ASSERT(mNetwork);
-
-		String frame_path;
-
-		frame_path += "menu_hover.png";
-
-		mButtonHover = CAD->getVideoDriver()->getTexture(frame_path.c_str());
-
-		frame_path.clear();
-		frame_path += "menu_no_hover.png";
-
-		mButtonNoHover = CAD->getVideoDriver()->getTexture(frame_path.c_str());
 	}
 
 	LocalMenuEvent::~LocalMenuEvent() 
 	{
-		if (mButtonHover)
-			(void)mButtonHover->drop();
-
-		if (mButtonNoHover)
-			(void)mButtonNoHover->drop();
-
 	}
 
 	const char* LocalMenuEvent::name() noexcept { return ("LocalMenuEvent"); }

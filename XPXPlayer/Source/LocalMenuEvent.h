@@ -37,10 +37,6 @@ namespace XPX
 	private:
 		NetworkComponent* mNetwork;
 		PopupComponent* mPopup;
-	
-	private:
-		irr::video::ITexture* mButtonNoHover;
-		irr::video::ITexture* mButtonHover;
 
 	private:
 		std::int64_t mTimeout;

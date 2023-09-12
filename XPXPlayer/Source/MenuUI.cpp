@@ -92,13 +92,12 @@ namespace XPX
 	
 	PopupComponent::~PopupComponent()
 	{
-		if (mHudFrame)
-			delete mHudFrame;
+		delete mHudFrame;
 	}
 	
 	void PopupComponent::update(ClassPtr class_ptr)
 	{
-		PopupComponent* self = static_cast<PopupComponent*>(class_ptr);
+		auto* self = static_cast<PopupComponent*>(class_ptr);
 
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
@@ -169,21 +168,21 @@ namespace XPX
 		std::size_t x_off = 10UL;
 		std::size_t y_off = CAD->getVideoDriver()->getScreenSize().Height - 74UL;
 
-		for (size_t i = 0; i < mInventorySlots.size(); i++)
+		for (auto & mInventorySlot : mInventorySlots)
 		{
-			mInventorySlots[i].BackgroundColor.setRed(0x00);
-			mInventorySlots[i].BackgroundColor.setGreen(0x94);
-			mInventorySlots[i].BackgroundColor.setBlue(0xFF);
-			mInventorySlots[i].BackgroundColor.setAlpha(225);
+			mInventorySlot.BackgroundColor.setRed(0x00);
+			mInventorySlot.BackgroundColor.setGreen(0x94);
+			mInventorySlot.BackgroundColor.setBlue(0xFF);
+			mInventorySlot.BackgroundColor.setAlpha(225);
 
-			mInventorySlots[i].BackgroundHoverColor.setRed(0x00);
-			mInventorySlots[i].BackgroundHoverColor.setGreen(0x94);
-			mInventorySlots[i].BackgroundHoverColor.setBlue(0xFF);
-			mInventorySlots[i].BackgroundHoverColor.setAlpha(225);
+			mInventorySlot.BackgroundHoverColor.setRed(0x00);
+			mInventorySlot.BackgroundHoverColor.setGreen(0x94);
+			mInventorySlot.BackgroundHoverColor.setBlue(0xFF);
+			mInventorySlot.BackgroundHoverColor.setAlpha(225);
 
-			mInventorySlots[i].W = mInventorySlots[i].H = 64;
-			mInventorySlots[i].X = x_off;
-			mInventorySlots[i].Y = y_off;
+			mInventorySlot.W = mInventorySlot.H = 64;
+			mInventorySlot.X = x_off;
+			mInventorySlot.Y = y_off;
 
 			x_off += 68UL;
 		}
@@ -191,13 +190,12 @@ namespace XPX
 
 	HUDComponent::~HUDComponent()
 	{
-		if (mHudFrame)
-			delete mHudFrame;
+		delete mHudFrame;
 	}
 
 	void HUDComponent::update(void* class_ptr)
 	{
-		HUDComponent* self = (HUDComponent*)class_ptr;
+		auto* self = (HUDComponent*)class_ptr;
 
 		if (!self->mNetwork)
 			return;

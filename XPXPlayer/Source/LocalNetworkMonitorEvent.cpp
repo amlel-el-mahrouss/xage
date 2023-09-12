@@ -18,12 +18,8 @@
 
 #include <CLua.hpp>
 
-#define XPLICIT_MAX_RESET (1024)
-
 namespace XPX
 {
-	static int XPLICIT_RESET_COUNT = 0;
-
 	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(const std::int64_t& priv, const std::int64_t& publ)
 		:
 			mNetwork(nullptr),
@@ -60,7 +56,7 @@ namespace XPX
 			return;
 		}
 
-		NetworkPacket packet;
+		NetworkPacket packet{};
 		mNetwork->read(packet);
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
@@ -85,14 +81,14 @@ namespace XPX
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
 		{
-			NetworkPacket packet{};
-			packet = mNetwork->get();
+			NetworkPacket networkPacket{};
+            networkPacket = mNetwork->get();
 
 			const auto players = ComponentSystem::get_singleton_ptr()->all_of<XPX::LocalHumanoidComponent>("LocalHumanoidComponent");
 
-			for (std::size_t index = 0UL; index < players.size(); ++index)
+			for (auto player : players)
 			{
-				if (players[index]->id() == packet.public_hash)
+				if (player->id() == networkPacket.public_hash)
 					return;
 			}
 
@@ -100,11 +96,11 @@ namespace XPX
 			XPLICIT_INFO("World:Login [EVENT]");
 #endif
 
-			ComponentSystem::get_singleton_ptr()->add<XPX::LocalHumanoidComponent>(packet.public_hash, false, packet.buffer);
+			ComponentSystem::get_singleton_ptr()->add<XPX::LocalHumanoidComponent>(networkPacket.public_hash, false, networkPacket.buffer);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Login()");
 
 			/*! invalidate command right there. */
-			packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_INVALID;
+			networkPacket.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_INVALID;
 		}
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||
