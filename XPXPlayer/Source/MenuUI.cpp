@@ -236,7 +236,7 @@ namespace XPX
 		this->insert("UI", "true");
 		this->insert("View", "true");
 
-		this->insert("Name", name);
+		this->insert("ClassName", name);
 		this->insert("Parent", parent);
 
 		this->insert("Left", "0");
@@ -257,8 +257,8 @@ namespace XPX
 
 	const char* RectComponent::name() 
 	{
-        auto rect_name = this->index_as_string("Name");
-		return ((!this->index_as_string("Name").empty()) ? rect_name.c_str() : "RectComponent");
+        auto rect_name = this->index_as_string("ClassName");
+		return ((!this->index_as_string("ClassName").empty()) ? rect_name.c_str() : "RectComponent");
 	}
 
 	void RectComponent::update(ClassPtr klass) noexcept

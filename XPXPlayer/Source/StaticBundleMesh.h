@@ -12,7 +12,8 @@
 #include <Root.h>
 #include <Nplicit.h>
 #include <Component.h>
-#include <MeshComponent.h>
+
+#include "MeshComponent.h"
 
 //! generic player bundle offsets.
 #define XPLICIT_BUNDLE_HEAD		 (0)

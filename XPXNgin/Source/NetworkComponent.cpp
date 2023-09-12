@@ -8,7 +8,7 @@
  */
 
 #include "NetworkComponent.h"
-#include "CommonEngine.h"
+#include "Enums.h"
 
 namespace XPX 
 {

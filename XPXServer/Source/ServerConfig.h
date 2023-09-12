@@ -9,7 +9,7 @@
 #include <GameVar.h>
 #include <Component.h>
 #include <MonoInterop.h>
-#include <CommonEngine.h>
+#include <Enums.h>
 #include <HelperMacros.h>
 #include <MonoComponent.h>
 #include <SocketWrapper.h>

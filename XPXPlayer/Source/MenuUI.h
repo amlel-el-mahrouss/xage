@@ -13,7 +13,7 @@
 #include <NMath.h>
 #include <ImGUI.h>
 #include <Component.h>
-#include <CommonEngine.h>
+#include <Enums.h>
 #include <NetworkComponent.h>
 
 namespace XPX

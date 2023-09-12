@@ -16,7 +16,7 @@
 #include "Application.h"
 #include "MenuUI.h"
 
-#include <CommonEngine.h>
+#include <Enums.h>
 #include <CLua.hpp>
 
 namespace XPX

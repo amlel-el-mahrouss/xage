@@ -4,9 +4,6 @@
  *			XPXNgin
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			File: CommonEngine.h
- *			Purpose: Common Engine Macros/Components/Properties
- *
  * =====================================================================
  */
 
@@ -29,5 +26,12 @@ namespace XPX
 		COMPONENT_ID_ROXML = 2,
 		COMPONENT_ID_COUNT,
 		// NOTE: add more here, don't forget you can easily mod the engine with CLua.
+	};
+
+	enum
+	{
+		COMPONENT_REPLICATE_MESH,
+		COMPONENT_REPLICATE_PART,
+		COMPONENT_REPLICATE_COUNT,
 	};
 }

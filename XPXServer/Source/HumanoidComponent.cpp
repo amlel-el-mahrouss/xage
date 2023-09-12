@@ -170,7 +170,7 @@ namespace XPX
 			//! Reset Humanoid information
 			if (mClass)
 			{
-				mClass->insert("Name", "'Unconnected'");
+				mClass->insert("UserName", "'Unconnected'");
 
 				mClass->insert("Parent", "World.Players");
 				mClass->insert("Id", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());

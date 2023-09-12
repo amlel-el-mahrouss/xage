@@ -13,7 +13,7 @@
 
 #include <Util.h>
 #include <Component.h>
-#include <CommonEngine.h>
+#include <Enums.h>
 #include <ClassComponent.h>
 
 namespace XPX

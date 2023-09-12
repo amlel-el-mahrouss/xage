@@ -33,7 +33,7 @@ namespace XPX
 		mName(name),
 		mParent(parent)
 	{
-		this->insert("Name", fmt::format("\'{}\'", mName).c_str());
+		this->insert("ClassName", fmt::format("\'{}\'", mName).c_str());
 		this->insert("Parent", mParent.c_str());
 
 		this->insert("Update", XPLICIT_UPDATE_SNIPPET);

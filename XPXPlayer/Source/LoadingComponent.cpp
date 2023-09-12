@@ -25,7 +25,7 @@
 
 #include <RemoteEventStorage.h>
 #include <XHTTPManager.h>
-#include <CommonEngine.h>
+#include <Enums.h>
 #include <CLua.hpp>
 #include <RoXML.h>
 #include <codecvt>

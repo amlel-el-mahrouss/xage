@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XPXNgin
+ *			XPXPlayer
  *			Copyright XPX Corporation, all rights reserved.
  *
  * =====================================================================
@@ -19,7 +19,6 @@ namespace XPX
 		ClassComponent(pos, scale, clr, nullptr, parent, name),
 		mStud(nullptr)
 	{
-#ifdef __XPLICIT_CLIENT__
 		mStud = CAD->getSceneManager()->addMeshSceneNode(CAD->getSceneManager()->getGeometryCreator()->createCubeMesh());
 
 		if (mStud)
@@ -27,7 +26,6 @@ namespace XPX
 			mStud->setName(name);
 			mStud->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 		}
-#endif
 
 		this->insert("Destroy", this->part_destroy().c_str());
 
@@ -39,7 +37,6 @@ namespace XPX
 
 		PartComponent* self = (PartComponent*)cls;
 
-#ifdef __XPLICIT_CLIENT__
 		if (CAD)
 		{
 			if (self->index_as_bool("Locked"))
@@ -56,8 +53,6 @@ namespace XPX
 				self->mStud->getMaterial(0).AmbientColor.set(self->color().A, self->color().R, self->color().G, self->color().B);
 			}
 		}
-#endif
-
 	}
 
 	String PartComponent::part_destroy() noexcept

@@ -8,7 +8,6 @@
  */
 
 #include "LuaScriptComponent.h"
-#include "PartComponent.h"
 
 #include "HelperMacros.h"
 #include "NginCore.h"
@@ -96,35 +95,6 @@ static int lua_Wait(lua_State* L)
 	return 0;
 }
 
-static int lua_CreatePart(lua_State* L)
-{
-	const char* name = lua_tostring(L, 1);
-	const char* parent = lua_tostring(L, 2);
-
-	XPX::PartComponent* part = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::PartComponent>(name, parent);
-
-	if (part)
-	{
-		lua_pushboolean(L, true);
-		return 1;
-	}
-
-	lua_pushboolean(L, false);
-	return 0;
-}
-
-static int lua_DestroyPart(lua_State* L)
-{
-	const char* name = lua_tostring(L, 1);
-
-	XPX::PartComponent* part = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::PartComponent>(name);
-
-	if (part)
-		XPX::ComponentSystem::get_singleton_ptr()->remove(part);
-
-	return 0;
-}
-
 static int lua_DestroyScript(lua_State* L)
 {
 	const char* name = lua_tostring(L, 1);
@@ -151,8 +121,6 @@ XPLICIT_API void XplicitLoadBaseLua()
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Wait, "Wait");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreateClass, "XPXCreateClass");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyClass, "XPXDestroyClass");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreatePart, "XPXCreatePart");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyPart, "XPXDestroyPart");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "XPXDestroyScript");
 
 	XPLICIT_GET_DATA_DIR(full_path);

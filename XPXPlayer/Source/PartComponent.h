@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XPXNgin
+ *			XPXPlayer
  *			Copyright XPX Corporation, all rights reserved.
  *
  * =====================================================================
@@ -9,9 +9,7 @@
 
 #pragma once
 
-#include "ClassComponent.h"
-#include "GameVar.h"
-
+#include <ClassComponent.h>
 #include <Nplicit.h>
 
 namespace XPX

@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XPXNgin
+ *			XPXPlayer
  *			Copyright XPX Corporation, all rights reserved.
  *
  * =====================================================================
@@ -23,8 +23,6 @@ namespace XPX
 
 		String _path = XPLICIT_DIR;
 		_path += path;
-
-		std::cout << _path << std::endl;
 
 		mMdl = CAD->getSceneManager()->getMesh(_path.c_str());
 
@@ -61,7 +59,8 @@ namespace XPX
 	{
 		auto self = (MeshComponent*)class_ptr;
 
-		if (!self->mNode)
+		if (!self ||
+			!self->mNode)
 			return;
 
 		self->mNode->setVisible(self->index_as_bool("Visible"));

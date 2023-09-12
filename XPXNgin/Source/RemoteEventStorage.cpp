@@ -9,11 +9,11 @@
 
 #include "RemoteEventStorage.h"
 
-namespace XPX
-{
 #define XPLICIT_REMOTE_EVENTS_CNT (6)
 
-	inline const char* XPLICIT_REMOTE_EVENTS[XPLICIT_REMOTE_EVENTS_CNT] = {
+namespace XPX
+{
+	const char* XPLICIT_REMOTE_EVENTS[XPLICIT_REMOTE_EVENTS_CNT] = {
 		"Spawn",
 		"Death",
 		"Move",

@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XPXNgin
+ *			XPXPlayer
  *			Copyright XPX Corporation, all rights reserved.
  *
  * =====================================================================
@@ -9,13 +9,11 @@
 
 #pragma once
 
-#include "NginCore.h"
-
+#include <NginCore.h>
 #include <CLua.hpp>
 #include <Nplicit.h>
-
-#include "Component.h"
-#include "Root.h"
+#include <Component.h>
+#include <Root.h>
 
 namespace XPX
 {
@@ -23,15 +21,12 @@ namespace XPX
 	class XPLICIT_API MeshComponent : public Lua::CLuaClass
 	{
 	public:
+		MeshComponent(const char* path, const char* name, const char* group);
+		~MeshComponent() noexcept override;
 		MeshComponent() = delete;
 
 	public:
-		explicit MeshComponent(const char* path, const char* name, const char* group);
-		virtual ~MeshComponent() noexcept;
-
-	public:
-		MeshComponent& operator=(const MeshComponent&) = default;
-		MeshComponent(const MeshComponent&) = default;
+		XPLICIT_COPY_DEFAULT(MeshComponent);
 
 	public:
 		const char* name() noexcept { return "MeshComponent"; }
@@ -57,7 +52,7 @@ namespace XPX
 	private:
 		String mGroup;
 		String mName;
-		String mPath; // Filesystem path (must be)
+		String mPath;
 
 	};
 
