@@ -36,9 +36,9 @@ XPLICIT_API FILE* xplicit_get_logger();
 XPLICIT_API bool xplicit_open_logger();
 
 #ifdef _MSC_VER
-#define PACKED_STRUCT(DECL) __pragma( pack(push, 1) ) DECL; __pragma( pack(pop))
+#define XPX_PACKED_STRUCT(DECL) __pragma( pack(push, 1) ) DECL; __pragma( pack(pop))
 #else
-#define PACKED_STRUCT(DECL) typedef DECL __attribute__((packed));
+#define XPX_PACKED_STRUCT(DECL) typedef DECL __attribute__((packed));
 #endif
 
 namespace XPX 

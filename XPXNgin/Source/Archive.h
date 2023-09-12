@@ -28,7 +28,7 @@ typedef enum
     AR_FLAG_PASSWORD, // this archive has a password (AR Extension)
 } AR_FLAGS;
 
-PACKED_STRUCT(struct ar_extension_table {
+XPX_PACKED_STRUCT(struct ar_extension_table {
     uint64_t start;
     uint64_t count;
     uint64_t size;
@@ -39,7 +39,7 @@ PACKED_STRUCT(struct ar_extension_table {
     Stripped down tar header
 */
 
-PACKED_STRUCT(struct ar_header {
+XPX_PACKED_STRUCT(struct ar_header {
     uint64_t magic;
     time_t edit_epoch;
     time_t create_epoch;
@@ -56,7 +56,7 @@ typedef enum {
 
 typedef FILE ar_file_t;
 
-PACKED_STRUCT(struct ar_context{
+XPX_PACKED_STRUCT(struct ar_context{
     ar_file_t * fp;
     struct ar_header header;
 })
