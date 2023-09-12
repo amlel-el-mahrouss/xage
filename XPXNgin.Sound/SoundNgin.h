@@ -35,7 +35,7 @@ namespace XPX
 	{
 		class XAudioEngine final
 		{
-			XAudioEngine()
+			XAudioEngine() noexcept
 			{
 				DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_Default;
 
