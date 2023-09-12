@@ -69,7 +69,7 @@ namespace XPX
 
 	void SoundComponent::play_2d(const String& path) noexcept
 	{
-#ifdef __XPLICIT_WINDOWS__
+#ifdef XPLICIT_WINDOWS
         XPX::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
 
 		Thread job([&](String _path, float vol, float pitch, float pan) {
@@ -88,7 +88,7 @@ namespace XPX
 
 	void SoundComponent::play(const String& path) noexcept
 	{
-#ifdef __XPLICIT_WINDOWS__
+#ifdef XPLICIT_WINDOWS
 		XPX::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
 
 		Thread job([&](String _path) {
