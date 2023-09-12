@@ -39,7 +39,7 @@ namespace XPX
 	private:
 		irr::scene::ICameraSceneNode* mCamera;
 		NetworkComponent* mNetwork;
-		irr::core::vector3df mRotation;
+		irr::core::vector3df mLookAt;
 
 	};
 }

@@ -38,7 +38,8 @@ namespace XPX
 	{
 		this->insert("Equipped", "false");
 		this->insert("CanDrop", "false");
-		this->insert("Destroy", destroy_gear_class_snippet(name).c_str());
+		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
+		this->assign("Destroy", destroy_gear_class_snippet(name).c_str());
 	}
 
 	const char* GearComponent::name() noexcept { return mName.c_str(); }
@@ -70,7 +71,16 @@ namespace XPX
 			return;
 
 		if (self->get_owner())
+		{
 			self->pos() = self->get_owner()->get_attribute().pos();
+		
+			if (self->get_owner()->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_CAM_POS] == NETWORK_CMD_CAM_POS)
+			{
+				self->assign("LookAt.X", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_X]).c_str());
+				self->assign("LookAt.Y", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_Y]).c_str());
+				self->assign("LookAt.Z", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_Z]).c_str());
+			}
+		}
 	}
 
 	HumanoidComponent* GearComponent::get_owner() noexcept { return mOwner; }

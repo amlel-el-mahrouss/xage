@@ -20,7 +20,7 @@ namespace XPX
 	LocalCameraComponent::LocalCameraComponent() noexcept
 		: ClassComponent("World", "Camera"),
 		mCamera(nullptr),
-		mRotation(0, 0, 0), 
+		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
 		mCamera = CAD->getSceneManager()->addCameraSceneNode(nullptr, vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z),
@@ -62,17 +62,17 @@ namespace XPX
 
 		self->get()->setFOV(self->index_as_number("FOV"));
 
-		if (self->mRotation != self->mCamera->getRotation())
+		if (self->mLookAt != self->mCamera->getTarget())
 		{
-			self->mRotation = self->mCamera->getRotation();
+			self->mLookAt = self->mCamera->getTarget();
 
 			NetworkPacket packet;
 
 			packet.cmd[XPLICIT_NETWORK_CMD_CAM_POS] = NETWORK_CMD_CAM_POS;
 
-			packet.pos[XPLICIT_NETWORK_X] = self->mRotation.X;
-			packet.pos[XPLICIT_NETWORK_Y] = self->mRotation.Y;
-			packet.pos[XPLICIT_NETWORK_Z] = self->mRotation.Z;
+			packet.pos[XPLICIT_NETWORK_X] = self->mLookAt.X;
+			packet.pos[XPLICIT_NETWORK_Y] = self->mLookAt.Y;
+			packet.pos[XPLICIT_NETWORK_Z] = self->mLookAt.Z;
 
 			packet.channel = XPLICIT_CHANNEL_DATA;
 
