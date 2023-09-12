@@ -33,7 +33,7 @@
 namespace XPX
 {
 	// connection timeout, then client quits.
-	constexpr int XPLICIT_TIMEOUT = 25000;
+	constexpr int XPLICIT_TIMEOUT = 1000;
 
 	LoadingComponent::LoadingComponent() 
 		:
@@ -91,8 +91,6 @@ namespace XPX
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
-			ImGUI::UIFont::get_label_font()->draw("User is banned.", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
-
 			ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 				[]() { 
 					CAD->closeDevice();
@@ -153,13 +151,13 @@ namespace XPX
 		}
 		else
 		{
-			ImGUI::UIFont::get_label_font()->draw("Connecting...", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
-
 			--self->mTimeout;
 
 			// peek after the ++timeout, or retry
 			if (self->mTimeout < 0)
 			{
+				self->mLoadingTextureNode->setVisible(false);
+
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 					[]() {
 						CAD->closeDevice();
@@ -170,6 +168,11 @@ namespace XPX
 				mEnabled = false;
 
 				return;
+			}
+			else
+			{
+				ImGUI::UIFont::get_label_font()->draw("Connecting to server...", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
+
 			}
 
             std::this_thread::sleep_for(std::chrono::microseconds(250));
