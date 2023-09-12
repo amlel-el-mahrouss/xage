@@ -110,7 +110,7 @@ namespace XPX::RoXML
 
 									MESH_PATH += "Contents/";
 									MESH_PATH += std::to_string(xplicit_get_epoch());
-									MESH_PATH += "-COLLADA";
+									MESH_PATH += "-MESH";
 
 									if (DownloadURL(url, MESH_PATH))
 									{
@@ -120,6 +120,56 @@ namespace XPX::RoXML
 											object = _mesh;
 									}
 
+								}
+
+								if (klass_to_instantiate == "Water")
+								{
+									for (size_t i = 0; i < strlen(node->value()); i++)
+									{
+										if (isalnum(node->value()[i]) ||
+											node->value()[i] == '.' ||
+											node->value()[i] == '/' ||
+											node->value()[i] == '\\' ||
+											node->value()[i] == ':')
+										{
+											world_node.Value += node->value()[i];
+										}
+									}
+
+									String url = world_node.Value;
+
+									XPLICIT_GET_DATA_DIR(MESH_PATH);
+
+									MESH_PATH += "Contents/";
+									MESH_PATH += std::to_string(xplicit_get_epoch());
+									MESH_PATH += "-WATER_MESH";
+
+									if (DownloadURL(url, MESH_PATH))
+									{
+										auto water_mesh = CAD->getSceneManager()->getMesh(MESH_PATH.c_str());
+										auto water = CAD->getSceneManager()->addWaterSurfaceSceneNode(water_mesh);
+
+										water->setMaterialType(EMT_TRANSPARENT_REFLECTION_2_LAYER);
+
+										if (water)
+										{
+											water->setName(node_id);
+
+											object = water;
+										}
+									}
+								}
+
+								if (klass_to_instantiate == "Sphere")
+								{
+									auto _mesh = CAD->getSceneManager()->addSphereSceneNode();
+
+									if (_mesh)
+									{
+										_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+										_mesh->setName(node_id);
+										object = _mesh;
+									}
 								}
 
 								if (klass_to_instantiate == "Part")
@@ -219,7 +269,7 @@ namespace XPX::RoXML
 									}
 									catch (...)
 									{
-										XPLICIT_INFO("No such Entity had been found!");
+										XPLICIT_INFO("No such entity had been found!");
 									}
 								}
 							}
@@ -555,7 +605,7 @@ namespace XPX::RoXML
 	}
 }
 
-XPLICIT_API void DVFromRoXML(XPX::RoXML::RoXMLDocumentParameters& params) noexcept
+void DVFromRoXML(XPX::RoXML::RoXMLDocumentParameters& params) noexcept
 {
 	XPX::Thread data_values_job([](XPX::RoXML::RoXMLDocumentParameters params) {
 		XPX::String fmt;

@@ -18,7 +18,7 @@
 namespace XPX
 {
 	/* this classes gives an component a model. */
-	class XPLICIT_API MeshComponent : public Lua::CLuaClass
+	class MeshComponent : public Lua::CLuaClass
 	{
 	public:
 		MeshComponent(const char* path, const char* name, const char* group);

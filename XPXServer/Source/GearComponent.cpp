@@ -38,7 +38,6 @@ namespace XPX
 	{
 		this->insert("Equipped", "false");
 		this->insert("CanDrop", "false");
-		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Destroy", destroy_gear_class_snippet(name).c_str());
 	}
 
@@ -70,9 +69,8 @@ namespace XPX
 		if (!self->index_as_bool("Equipped"))
 			return;
 
-		self->assign("LookAt.X", "Parent.LookAt.X or nil");
-		self->assign("LookAt.Y", "Parent.LookAt.Y or nil");
-		self->assign("LookAt.Z", "Parent.LookAt.Z or nil");
+		if (self->get_owner())
+			self->pos() = self->get_owner()->get_attribute().pos();
 	}
 
 	HumanoidComponent* GearComponent::get_owner() noexcept { return mOwner; }

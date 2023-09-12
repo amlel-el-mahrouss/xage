@@ -16,7 +16,7 @@ namespace XPX
 {
 	typedef irr::scene::ISceneNode* CorePartPtr;
 
-	class XPLICIT_API PartComponent final : public ClassComponent
+	class PartComponent final : public ClassComponent
 	{
 	public:
 		PartComponent(const char* name, const char* parent,
