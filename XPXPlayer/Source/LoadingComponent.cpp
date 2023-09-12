@@ -38,10 +38,34 @@ namespace XPX
 	LoadingComponent::LoadingComponent() 
 		:
 		mNetwork(nullptr), 
-		mTimeout(XPLICIT_TIMEOUT)
+		mTimeout(XPLICIT_TIMEOUT),
+		mLoadingTexture(nullptr)
 	{
+		if (auto node = CAD->getSceneManager()->getSceneNodeFromName("LoadingCube");
+			node)
+			mLoadingTextureNode = (decltype(mLoadingTextureNode))node;
+
+		mLoadingTexture = CAD->getVideoDriver()->getTexture("xpxplayer.png");
+
+		auto mesh = CAD->getSceneManager()->getGeometryCreator()->createCubeMesh();
+		mLoadingTextureNode = CAD->getSceneManager()->addMeshSceneNode(mesh);
+		mLoadingTextureNode->setName("LoadingCube");
+
+		for (size_t i = 0; i < mLoadingTextureNode->getMaterialCount(); i++)
+		{
+			mLoadingTextureNode->setMaterialTexture(i, mLoadingTexture);
+		}
+
+		mLoadingTextureNode->setMaterialFlag(EMF_LIGHTING, false);
+		mLoadingTextureNode->setMaterialType(EMT_TRANSPARENT_ALPHA_CHANNEL);
+
+		// this needs to match the scene.
+		mLoadingTextureNode->getMaterial(0).DiffuseColor.setAlpha(0x40);
+
 		auto cam = ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
+
         CAD->getSceneManager()->setActiveCamera(cam->get());
+		CAD->getSceneManager()->getActiveCamera()->setTarget(mLoadingTextureNode->getPosition());
     }
 
 	LoadingComponent::~LoadingComponent() = default;
@@ -52,6 +76,13 @@ namespace XPX
 	{
 		auto* self = (LoadingComponent*)class_ptr;
 
+		auto rot = self->mLoadingTextureNode->getRotation();
+
+		rot.Y += 1;
+		rot.Z += 1;
+
+		self->mLoadingTextureNode->setRotation(rot);
+
 		if (!self ||
             !self->mNetwork) return;
 
@@ -60,6 +91,8 @@ namespace XPX
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
+			ImGUI::UIFont::get_label_font()->draw("User is banned.", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
+
 			ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 				[]() { 
 					CAD->closeDevice();
@@ -74,7 +107,11 @@ namespace XPX
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
+			ImGUI::UIFont::get_label_font()->draw("Acknowledge done, jumping in...", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
+
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+
+			self->mLoadingTextureNode->setVisible(false);
 
 			ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(self->mNetwork);
 
@@ -116,6 +153,8 @@ namespace XPX
 		}
 		else
 		{
+			ImGUI::UIFont::get_label_font()->draw("Connecting...", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
+
 			--self->mTimeout;
 
 			// peek after the ++timeout, or retry

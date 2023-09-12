@@ -39,6 +39,12 @@ namespace XPX
 
 	private:
 		NetworkComponent* mNetwork;
+
+	private:
+		IMeshSceneNode* mLoadingTextureNode;
+		ITexture* mLoadingTexture;
+
+	private:
 		std::int64_t mTimeout; /* Network Timeout, incremented on each connection failure. */
 
 	private:

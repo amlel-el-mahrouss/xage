@@ -79,7 +79,7 @@ namespace XPX::Bites
                         EDT_OPENGL,
                              dimension2d<u32>(XPLICIT_DIM.X, XPLICIT_DIM.Y),
                                      32,
-                                     false,
+                                     true,
                                      true, false)
 		);
 
