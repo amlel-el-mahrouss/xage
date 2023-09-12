@@ -105,6 +105,8 @@ namespace XPX
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 		{
+			ImGUI::UIFont::get_label_font()->draw("Acknowledge done, jumping in...", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
+
 			packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
 
 			self->mLoadingTextureNode->setVisible(false);
@@ -166,6 +168,11 @@ namespace XPX
 				mEnabled = false;
 
 				return;
+			}
+			else
+			{
+				ImGUI::UIFont::get_label_font()->draw("Connecting to server...", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
+
 			}
 
             std::this_thread::sleep_for(std::chrono::microseconds(250));
