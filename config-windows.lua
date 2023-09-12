@@ -83,6 +83,7 @@ XPLICIT_SERVER_CONFIG = {
         "Vendor/stb/",
 	    "Vendor/glfw/include/GLFW/",
     	"XPXNgin/Source/",
+        "XPXLua/",
         "Vendor/nuklear/",
     	"Vendor/yaml/include",
     	"XPXNgin.Physics/Source/",
