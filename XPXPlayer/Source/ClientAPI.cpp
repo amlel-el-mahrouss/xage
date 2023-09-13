@@ -9,13 +9,13 @@
 
 #include "LocalNetworkMonitorEvent.h"
 
+#include "StaticBundleMesh.h"
 #include "SoundComponent.h"
-#include "MenuUI.h"
-
+#include "PartComponent.h"
+#include "MeshComponent.h"
 #include "Application.h"
 #include "ClientUtils.h"
-
-#include "StaticBundleMesh.h"
+#include "MenuUI.h"
 
 #include <SoundNgin.h>
 #include <CLua.hpp>
@@ -90,111 +90,81 @@ static int lua_PlaySound(lua_State* L)
 	return 0;
 }
 
-static int lua_LoadRoXML(lua_State* L)
+class XPXInstance
 {
-	auto _path = lua_tostring(L, 1);
-
-	XPX::RoXML::RoXMLDocumentParameters params;
-
-	params.Has3D = true;
-	params.NoLua = true;
-	params.LuaOnly = false;
-
-	params.Path = _path;
-
-	if (params.Path.empty())
+public:
+	static int new_instance(lua_State* L)
 	{
-		lua_pushboolean(L, false);
+		XPXInstance* instance = (XPXInstance*)lua_touserdata(L, 1);
+		XPX::String component_name = lua_tostring(L, 2);
+
+		if (component_name == "Part")
+		{
+			if (lua_tostring(L, 3) &&
+				lua_tostring(L, 4))
+			{
+				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::PartComponent>(lua_tostring(L, 3), lua_tostring(L, 4));
+
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 3), lua_tostring(L, 4)).c_str());
+				return 1;
+			}
+		}
+		else if (component_name == "Sound")
+		{
+			if (lua_tostring(L, 3) &&
+				lua_tostring(L, 4))
+			{
+				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(lua_tostring(L, 3), lua_tostring(L, 4));
+
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 3), lua_tostring(L, 4)).c_str());
+				return 1;
+			}
+		}
+		else if (component_name == "Scene")
+		{
+			XPX::RoXML::RoXMLDocumentParameters params;
+
+			params.Has3D = true;
+			params.NoLua = true;
+			params.LuaOnly = false;
+
+			XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
+			generated_path += "-ROXML";
+
+			XPLICIT_GET_DATA_DIR(path);
+			path += "Contents/";
+			path += lua_tostring(L, 4);
+
+			if (!DownloadURL(lua_tostring(L, 3), generated_path))
+			{
+				lua_pushboolean(L, false);
+				return 1;
+			}
+
+			params.Path = generated_path;
+
+			if (params.Path.empty())
+			{
+				lua_pushboolean(L, false);
+				return 1;
+			}
+
+			XPLICIT_PARSER.parse(params);
+
+			lua_pushboolean(L, true);
+			return 1;
+		}
+
+		lua_pushnil(L);
 		return 1;
 	}
 
-	XPLICIT_PARSER.parse(params);
-
-	lua_pushboolean(L, true);
-	return 1;
-}
-
-static int lua_MakeRect(lua_State* L)
-{
-	const char* parent = lua_tostring(L, 1);
-	const char* name = lua_tostring(L, 2);
-
-	XPX::RectComponent* frame = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RectComponent>(parent, name);
-
-	lua_getglobal(L, (XPX::String(parent) + "." + name).c_str());
-	lua_pushvalue(L, -1);
-
-	return 0;
-}
-
-static int lua_KeyDown(lua_State* L)
-{
-	lua_pushboolean(L, KEYBOARD->key_down());
-	return 1;
-}
-
-static int lua_IsKeyDown(lua_State* L)
-{
-	int key = lua_tointeger(L, 1);
-
-	lua_pushboolean(L, KEYBOARD->key_down(key));
-	return 1;
-}
-
-static int lua_IsLeftDown(lua_State* L)
-{
-	lua_pushboolean(L, KEYBOARD->left_down());
-	return 1;
-}
-
-static int lua_IsRightDown(lua_State* L)
-{
-	lua_pushboolean(L, KEYBOARD->right_down());
-	return 1;
-}
-
-static int lua_MakeSoundComponent(lua_State* L)
-{
-	if (lua_tostring(L, 1) &&
-		lua_tostring(L, 2))
-	{
-		auto name = lua_tostring(L, 1);
-		auto parent = lua_tostring(L, 2);
-
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(name, parent);
-	}
-
-    return 0;
-}
-
-static int lua_GetX(lua_State* L)
-{
-	lua_pushnumber(L, CAD->getCursorControl()->getPosition().Y);
-	return 1;
-}
-
-static int lua_GetY(lua_State* L)
-{
-	lua_pushnumber(L, CAD->getCursorControl()->getPosition().Y);
-	return 1;
-}
+};
 
 void XplicitLoadClientLua() noexcept
 {
-	auto L = XPX::Lua::CLuaStateManager::get_singleton_ptr()->state();
+	XPX::RLua::RuntimeClass<XPXInstance> instance;
+	instance.begin_class("Instance", &XPXInstance::new_instance).end_class();
 
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "XPXLoadScene");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "XPXPlaySound");
-
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_MakeRect, "XPXMakeRectangle");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_KeyDown, "XPXKeyDown");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsKeyDown, "XPXIsKeyDown");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsLeftDown, "XPXIsLeftDown");
-
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsRightDown, "XPXIsRightDown");
-
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetY, "XPXGetY");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetX, "XPXGetX");
-
-	XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>("Mixer", "Sound");
 }

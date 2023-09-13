@@ -19,8 +19,8 @@ XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 static int lua_LoadRoXML(lua_State* L)
 {
-	auto _path = lua_tostring(L, 1);
-	auto _client = lua_toboolean(L, 2);
+	auto _path = lua_tostring(L, 3);
+	auto _client = lua_toboolean(L, 4);
 
 	if (!_client)
 	{
@@ -65,8 +65,8 @@ static int lua_LoadRoXML(lua_State* L)
 
 static int lua_CreateGear(lua_State* L)
 {
-	const char* name = lua_tostring(L, 1);
-	const char* xplicit_id = lua_tostring(L, 2);
+	const char* name = lua_tostring(L, 3);
+	const char* xplicit_id = lua_tostring(L, 4);
 
 	if (xplicit_id == nullptr ||
 		name == nullptr)
@@ -160,12 +160,33 @@ static int lua_Shutdown(lua_State* L)
 	return 0;
 }
 
-static bool XPLICIT_IS_SERVER = true;
+class XPXInstance
+{
+public:
+	static int new_instance(lua_State* L)
+	{
+		XPXInstance* instance = (XPXInstance*)lua_touserdata(L, 1);
+		XPX::String component_name = lua_tostring(L, 2);
+
+		if (component_name == "Tool")
+		{
+			return lua_CreateGear(L);
+		}
+		else if (component_name == "Scene")
+		{
+			return lua_LoadRoXML(L);
+		}
+
+		lua_pushnil(L);
+		return 1;
+	}
+
+};
 
 void XplicitLoadServerLua() noexcept
 {
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_CreateGear, "XPXCreateGear");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "XPXDestroyGear");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_LoadRoXML, "XPXLoadScene");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "Shutdown");
+
+	XPX::RLua::RuntimeClass<XPXInstance> instance;
+	instance.begin_class("Instance", &XPXInstance::new_instance).end_class();
 }

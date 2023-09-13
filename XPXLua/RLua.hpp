@@ -19,7 +19,7 @@
 #define RLUA_ASSERT(X) XPLICIT_ASSERT(X)
 
 // L = lua_State, N = index, X = name.
-#define RLUA_TYPE_CHECK(L, N, X) XPX::String index = luaL_checkstring(L, N);luaL_argcheck(L, index == X, 2, "RLua: Index out of range");
+#define RLUA_TYPE_CHECK(L, N, X) XPX::String index = luaL_checkstring(L, N); luaL_argcheck(L, index == X, 2, "RLua: Index out of range")
 
 namespace XPX::RLua
 {
@@ -61,15 +61,13 @@ namespace XPX::RLua
 		}
 
 	public:
-		RuntimeClass& begin_class(const char* name)
+		RuntimeClass& begin_class(const char* name, RLuaProc on_new = RuntimeClass<Class>::on_new, RLuaProc on_delete = RuntimeClass<Class>::on_delete)
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			lua_register(L, name, RuntimeClass<Class>::on_new);
-
 			luaL_Reg sClassRegs[] =
 			{
-				{ "Create", RuntimeClass<Class>::on_new },
+				{ "new", RuntimeClass<Class>::on_new },
 				{ "__gc", RuntimeClass<Class>::on_delete },
 				{ NULL, NULL }
 			};
