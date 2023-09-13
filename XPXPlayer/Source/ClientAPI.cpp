@@ -90,6 +90,57 @@ static int lua_PlaySound(lua_State* L)
 	return 0;
 }
 
+static int lua_GetX(lua_State* L)
+{
+	lua_pushnumber(L, CAD->getCursorControl()->getPosition().Y);
+	return 1;
+}
+
+static int lua_GetY(lua_State* L)
+{
+	lua_pushnumber(L, CAD->getCursorControl()->getPosition().Y);
+	return 1;
+}
+
+static int lua_MakeRect(lua_State* L)
+{
+	const char* parent = lua_tostring(L, 1);
+	const char* name = lua_tostring(L, 2);
+
+	XPX::RectComponent* frame = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RectComponent>(parent, name);
+
+	lua_getglobal(L, (XPX::String(parent) + "." + name).c_str());
+	lua_pushvalue(L, -1);
+
+	return 1;
+}
+
+static int lua_KeyDown(lua_State* L)
+{
+	lua_pushboolean(L, KEYBOARD->key_down());
+	return 1;
+}
+
+static int lua_IsKeyDown(lua_State* L)
+{
+	int key = lua_tointeger(L, 1);
+
+	lua_pushboolean(L, KEYBOARD->key_down(key));
+	return 1;
+}
+
+static int lua_IsLeftDown(lua_State* L)
+{
+	lua_pushboolean(L, KEYBOARD->left_down());
+	return 1;
+}
+
+static int lua_IsRightDown(lua_State* L)
+{
+	lua_pushboolean(L, KEYBOARD->right_down());
+	return 1;
+}
+
 class XPXInstance
 {
 public:
@@ -168,4 +219,14 @@ void XplicitLoadClientLua() noexcept
 	instance.begin_class("Class", &XPXInstance::new_instance).end_class();
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "XPXPlaySound");
+
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_MakeRect, "XPXMakeRectangle");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_KeyDown, "XPXKeyDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsKeyDown, "XPXIsKeyDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsLeftDown, "XPXIsLeftDown");
+
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsRightDown, "XPXIsRightDown");
+
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetY, "XPXGetY");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetX, "XPXGetX");
 }

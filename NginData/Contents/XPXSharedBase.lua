@@ -1,105 +1,123 @@
--- Copyright XPX Corporation, all rights reserved.
+-- Copyright PlayXPlicit SARL
+
+World.HumanoidState = {}
+World.HumanoidState.ALIVE = 0
+World.HumanoidState.DEAD = 1
+World.HumanoidState.INVALID = 3
 
 local function __addEvent(Tbl, Func)
-    return table.insert(Tbl, { Func = Func })
+    Tbl.Slots[#Tbl.Slots + 1] = Func;
+    return #Tbl.Slots - 1;
 end
 
 local function __rmEvent(Tbl, Index)
-    Tbl[Index] = nil;
+    Tbl.Slots[Index] = nil;
 end
 
 World.Slots = {
     Login = { 
+        Slots = {},
         Connect = function(self, Func)
-            return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     LocalMove = { 
+        Slots = {},
         Connect = function(self, Func)
-            return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     Logoff = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     LeftClick = { 
+        Slots = {},
         Connect = function(self, Func)
-            return __addEvent(selfk, Func); 
+            __addEvent(selfk, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     RightClick = { 
+        Slots = {},
         Connect = function(self, Func)
-            return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     MouseMove = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     LocalSpawn = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end  
     },
     Move = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     Damage = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end  
     },
     Spawn = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     Death = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     RenderOneFrame = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
@@ -113,94 +131,89 @@ World.PlayerCount = 0
 function World:Login(ply)
     World.PlayerCount = World.PlayerCount + 1
 
-    for _, v in ipairs(World.Slots.Login) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Login.Slots) do
+        v(ply)
     end
 end
 
 function World:Logoff(ply)
     World.PlayerCount = World.PlayerCount - 1
 
-    for _, v in ipairs(World.Slots.Logoff) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Logoff.Slots) do
+        v(ply)
     end
 end
 
 function World:LeftClick()
-    for _, v in ipairs(World.Slots.LeftClick) do
-        v.Func()
+    for _, v in pairs(World.Slots.LeftClick.Slots) do
+        v()
     end
 end
 
 function World:RightClick()
-    for _, v in ipairs(World.Slots.RightClick) do
-        v.Func()
+    for _, v in pairs(World.Slots.RightClick.Slots) do
+        v()
     end
 end
 
 function World:MouseMove()
-    for _, v in ipairs(World.Slots.MouseMove) do
-        v.Func()
+    for _, v in pairs(World.Slots.MouseMove.Slots) do
+        v()
     end
 end
 
 function World:LocalSpawn()
-    for _, v in ipairs(World.Slots.LocalSpawn) do
-        v.Func()
+    for _, v in pairs(World.Slots.LocalSpawn.Slots) do
+        v()
     end
 end
 
 function World:Move(ply)
-    for _, v in ipairs(World.Slots.Move) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Move.Slots) do
+        v(ply)
     end
 end
 
 function World:LocalMove(x, y, z)
-    for _, v in ipairs(World.Slots.LocalMove) do
-        v.Func(x, y, z)
+    for _, v in pairs(World.Slots.LocalMove.Slots) do
+        v(x, y, z)
     end
 end
 
 function World:Damage(ply)
-    for _, v in ipairs(World.Slots.Damage) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Damage.Slots) do
+        v(ply)
     end
 end
 
 function World:Death(ply)
-    for _, v in ipairs(World.Slots.Death) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Death.Slots) do
+        v(ply)
     end
 end
 
 function World:Spawn(ply)
-    for _, v in ipairs(World.Slots.Spawn) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Spawn.Slots) do
+        v(ply)
     end
 end
 
 function World:RenderOneFrame()
-    for _, v in ipairs(World.Slots.RenderOneFrame) do
-        v.Func()
+    for _, v in pairs(World.Slots.RenderOneFrame.Slots) do
+        v()
     end
 end
 
-World.HumanoidState = {}
-World.HumanoidState.ALIVE = 0
-World.HumanoidState.DEAD = 1
-World.HumanoidState.INVALID = 3
-
 -- Replications enums
-World.DEVLIER_INVALID = 0;
-World.DELIVER_SCRIPT = 1;
-World.DELIVER_SCENE = 2;
+World.REPLICATE_INVALID = 0;
+World.REPLICATE_SCRIPT = 1;
+World.REPLICATE_SCENE = 2;
 
-World.DELIVER_CREATE = 522;
-World.DELIVER_REMOVE = 523;
-World.DELIVER_UPDATE = 524;
+World.REPLICATE_TYPE_CREATE = 522;
+World.REPLICATE_TYPE_REMOVE = 523;
+World.REPLICATE_TYPE_UPDATE = 524;
 
-function World:DumpArray(o)
+function World:DumpTable(o)
     if type(o) == 'table' then
        local s = '{ '
        for k,v in pairs(o) do
@@ -212,3 +225,34 @@ function World:DumpArray(o)
        return tostring(o)
     end
 end
+
+function World:AnyKeyDown()
+    return XPXKeyDown();
+end
+
+function World:IsKeyDown(key)
+    return XPXIsKeyDown(key);
+end
+
+function World:IsLeftDown()
+    return XPXIsLeftDown();
+end
+
+function World:IsRightDown()
+    return XPXIsRightDown();
+end
+
+function World.Cursor:GetY()
+    return XPXGetY();
+end
+
+function World.Cursor:GetX()
+    return XPXGetX();
+end
+
+-- Some part of the specs.
+-- World = Root table of components.
+-- Script = Root table of scripts.
+-- World.Settings = GameVars.
+-- World.Players = Players.
+-- World.<Object> = C++ or lua exposed object.

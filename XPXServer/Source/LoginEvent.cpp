@@ -133,14 +133,6 @@ namespace XPX
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
-
-					XPLICIT_INFO("World:Login [EVENT]");
-
-					String path("World.Players.");
-					path += mNetwork->get(peer_idx)->xplicit_id.as_string();
-
-					String fmt = std::format("World:Login({})", path);
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 				}
 			}
 		}
