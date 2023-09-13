@@ -24,7 +24,6 @@
 namespace XPX
 {
 	static XPX::RoXML::RoXMLDocumentParser XPX_PARSER;
-	static XHTTPManager XPX_HTTP;
 
 	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_REPLICATION; }
 
@@ -57,9 +56,7 @@ namespace XPX
 
 				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
 
-				XPX_HTTP.set_endpoint("play-xplicit.com");
-
-				if (XPX_HTTP.download(url, tmp))
+				if (DownloadURL(url, tmp))
 				{
 					XPLICIT_GET_DATA_DIR(full_path);
 
@@ -86,9 +83,7 @@ namespace XPX
 
 				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
 
-				XPX_HTTP.set_endpoint("play-xplicit.com");
-
-				if (XPX_HTTP.download(url, tmp))
+				if (DownloadURL(url, tmp))
 				{
 					XPLICIT_GET_DATA_DIR(full_path);
 
