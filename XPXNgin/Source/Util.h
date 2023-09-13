@@ -10,7 +10,12 @@
 #pragma once
 
 #include "NginCore.h"
-#include <Nplicit.h>
+
+#ifdef __NPLICIT_DLL__
+#	include "NMath.h"
+#else
+#	include <NMath.h>
+#endif
 
 #include "Root.h"
 #include "XplicitID.h"
@@ -47,7 +52,7 @@ inline XPX::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 	return XPLICIT_INVALID_ID;
 }
 
-inline bool DownloadURL(std::string _url, std::string out_path = "") noexcept
+inline bool DownloadURL(std::string _url, std::string out_path) noexcept
 {
 	std::unique_ptr<XPX::XHTTPManager> http_manager = std::make_unique<XPX::XHTTPManager>();
 
