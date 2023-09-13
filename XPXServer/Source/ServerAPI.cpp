@@ -98,7 +98,8 @@ static int lua_CreateGear(lua_State* L)
 					path_player += ".";
 					path_player += name;
 
-					lua_pushboolean(L, true);
+					XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}", path_player).c_str());
+
 					return 1;
 				}
 			}
@@ -107,7 +108,7 @@ static int lua_CreateGear(lua_State* L)
 		XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
 	}
 
-	lua_pushboolean(L, false);
+	lua_pushnil(L);
 	return 1;
 }
 
