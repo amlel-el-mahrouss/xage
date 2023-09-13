@@ -40,7 +40,11 @@ namespace XPX::Lua
 		{
 			XPLICIT_ASSERT(mL);
 
-			luaL_openlibs(mL);
+			luaopen_base(mL);
+			luaopen_math(mL);
+			luaopen_string(mL);
+			luaopen_table(mL);
+			luaopen_utf8(mL);
 		}
 
 	private:
@@ -151,8 +155,7 @@ namespace XPX::Lua
 				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
 				++mSymbolCnt;
 
-				bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, symbol, value).c_str());
-
+				bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, symbol, value).c_str()) == 0;
 				return ret;
 			}
 
@@ -161,7 +164,7 @@ namespace XPX::Lua
 
 		bool assign(const char* lhs, const char* rhs) 
 		{ 
-			bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, lhs, rhs).c_str());
+			bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, lhs, rhs).c_str()) == 0;
 			return ret;
 		}
 
@@ -178,7 +181,8 @@ namespace XPX::Lua
 			fmt += ".";
 			fmt += lhs;
 
-			return !luaL_dostring(mL, fmt.c_str());
+			luaL_dostring(mL, fmt.c_str());
+			return true;
 		}
 
 		void i_clean(const std::int64_t& cnt) noexcept
@@ -240,7 +244,7 @@ namespace XPX::Lua
 			if (!lhs)
 				return "";
 
-			auto ret = (luaL_dostring(mL, lhs));
+			auto ret = (luaL_dostring(mL, lhs)) == 0;
 
 			if (ret)
 				return lua_tostring(mL, -1);
@@ -251,12 +255,12 @@ namespace XPX::Lua
 		const char* run_path(const char* lhs) noexcept
 		{
 			if (!lhs)
-				return false;
+				return "";
 
 			static String tmp;
 			tmp = lhs;
 
-			auto ret = (luaL_dofile(mL, tmp.c_str()));
+			auto ret = (luaL_dofile(mL, tmp.c_str())) == 0;
 			return lua_tostring(mL, -1);
 		}
 

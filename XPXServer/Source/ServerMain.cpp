@@ -149,6 +149,11 @@ int main(int argc, char** argv)
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();
 
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(network);
+
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
+
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
@@ -182,24 +187,17 @@ int main(int argc, char** argv)
 
 		NPLICIT_SPLASH_SCREEN;
 
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
-		
-		auto net = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent");
-
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(net);
-
 		XPX::Thread job(XplicitLoadShell);
 
 		while (XPX::ComponentSystem::get_singleton_ptr() &&
 			XPX::EventSystem::get_singleton_ptr())
 		{
-			XPX::NetworkServerContext::recv_all(net);
+			XPX::NetworkServerContext::recv_all(network);
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
 
-			XPX::NetworkServerContext::send_all(net);
+			XPX::NetworkServerContext::send_all(network);
 		};
 
 		return 0;

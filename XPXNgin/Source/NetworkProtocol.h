@@ -30,8 +30,8 @@
 #   define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif // ifndef XPLICIT_INVALID_ADDR
 
-#define XPLICIT_NETWORK_BUF_SZ      (64U)
-#define XPLICIT_NETWORK_VERSION     (2U)
+#define XPLICIT_NETWORK_BUF_SZ      (512U)
+#define XPLICIT_NETWORK_VERSION     (3U)
 
 #define XPLICIT_MAX_REPLICAS        (4)
 
@@ -125,11 +125,6 @@ namespace XPX
     {
     public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
-        char                  buffer[XPLICIT_NETWORK_BUF_SZ];
-        std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
-
-    public:
-        NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
 
     public:
         std::int8_t           channel;
@@ -142,7 +137,14 @@ namespace XPX
         std::int64_t          hash;
 
     public:
+        std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
+
+    public:
+        NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
+
+    public:
         char                  replicas[XPLICIT_MAX_REPLICAS][XPLICIT_NETWORK_BUF_SZ];
+        char                  buffer[XPLICIT_NETWORK_BUF_SZ];
 
     };
 
