@@ -14,27 +14,25 @@
 namespace XPX
 {
 	template <typename TypeFloat = float>
-	class NPLICIT_API RigidBodyComponent final : public virtual PhysicsComponent<TypeFloat>
+	class NPLICIT_API RigidBodyHelper final
 	{
 	public:
-		RigidBodyComponent() = default;
-		~RigidBodyComponent() override = default;
+		RigidBodyHelper() = default;
+		~RigidBodyHelper() override = default;
 
 	public:
-		XPLICIT_COPY_DEFAULT(RigidBodyComponent);
+		XPLICIT_COPY_DEFAULT(RigidBodyHelper);
 
 	public:
-		bool is_touching(RigidBodyComponent<float>* rigid_body) noexcept
+		static bool is_touching(Vector<float>& min, Vector<float>& max,
+								Vector<float>& min_rhs, Vector<float>& max_rhs) noexcept
 		{
-			if (rigid_body)
-				return (this->PositionMax.X > rigid_body->PositionMin.X &&
-					this->PositionMin.X < rigid_body->PositionMax.X &&
-					this->PositionMax.Y > rigid_body->PositionMin.Y &&
-					this->PositionMin.Y < rigid_body->PositionMax.Y &&
-					this->PositionMax.Z > rigid_body->PositionMin.Z &&
-					this->PositionMin.Z < rigid_body->PositionMax.Z);
-
-			return false;
+			return (max.X > min_rhs.X &&
+				min.X < max_rhs.X &&
+				max.Y > min_rhs.Y &&
+				min.Y < max_rhs.Y &&
+				max.Z > min_rhs.Z &&
+				min.Z < max_rhs.Z);
 		}
 
 	};

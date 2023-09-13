@@ -182,7 +182,8 @@ namespace XPX
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("State", "World.HumanoidState.Alive");
 				mClass->insert("Kick", "false");
-				mClass->insert("KickReason", "''");
+				mClass->insert("KickReason", "'Kicked by server.'");
+				mClass->insert("Anchored", "false");
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());

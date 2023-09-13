@@ -26,10 +26,7 @@ namespace XPX
     typedef ISceneNode* BtSceneNode;
 
     /// <summary>
-    /// Either accepts of refuses player movement.
-    /// Refuses if:
-    ///		- Player is dead
-    ///		- Player is nil (disconnected player)
+    /// Bullet event type.
     /// </summary>
 
     class XPLICIT_API BtMovementSharedEvent : public Event

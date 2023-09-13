@@ -33,7 +33,7 @@ namespace XPX
 
     }
 
-    BtMovementEvent::~BtMovementEvent()
+    BtMovementSharedEvent::~BtMovementSharedEvent()
     {
         delete mSolver;
         delete mDispatcher;
@@ -57,9 +57,9 @@ namespace XPX
         delete mWorld;
     }
 
-    const char* BtMovementEvent::name() noexcept { return "BtMovementEvent"; }
+    const char* BtMovementSharedEvent::name() noexcept { return "BtMovementSharedEvent"; }
 
-    void BtMovementEvent::operator()()
+    void BtMovementSharedEvent::operator()()
     {
         mDeltaTime = CAD->getTimer()->getTime() - mTimeStamp;
         mTimeStamp = CAD->getTimer()->getTime();
@@ -87,7 +87,7 @@ namespace XPX
         }
     }
 
-    void BtMovementEvent::insert_node(BtSceneNode node, double mass)
+    void BtMovementSharedEvent::insert_node(BtSceneNode node, double mass)
     {
         btVector3 tPosition(node->getPosition().X, node->getPosition().Y, node->getPosition().Z);
         btVector3 tScale(node->getScale().X, node->getScale().Y, node->getScale().Z);

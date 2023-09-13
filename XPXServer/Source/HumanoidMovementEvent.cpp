@@ -53,7 +53,8 @@ namespace XPX
 			if (humanoid == nullptr ||
 				!humanoid->can_spawn() ||
 				humanoid->get_peer() == nullptr ||
-				humanoid->get_peer()->packet.hash != humanoid->get_peer()->hash)
+				humanoid->get_peer()->packet.hash != humanoid->get_peer()->hash ||
+				humanoid->get_class()->index_as_bool("Anchored"))
 				continue;
 
 			NetworkPeer* peer = humanoid->get_peer();

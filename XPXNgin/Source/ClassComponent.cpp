@@ -94,20 +94,23 @@ namespace XPX
 		self->archivable(self->index_as_bool("Archivable"));
 		self->anchor(self->index_as_bool("Anchored"));
 	
-		self->alpha(self->index_as_number<float>("Color.A"));
+		if (!self->index_as_bool("Locked"))
+		{
+			self->alpha(self->index_as_number<float>("Color.A"));
 
-		self->color().A = self->alpha();
+			self->color().A = self->alpha();
 
-		self->color().R = self->index_as_number<float>("Color.R");
-		self->color().G = self->index_as_number<float>("Color.G");
-		self->color().B = self->index_as_number<float>("Color.B");
+			self->color().R = self->index_as_number<float>("Color.R");
+			self->color().G = self->index_as_number<float>("Color.G");
+			self->color().B = self->index_as_number<float>("Color.B");
 
-		self->scale().X = self->index_as_number<float>("Scale.X");
-		self->scale().Y = self->index_as_number<float>("Scale.Y");
-		self->scale().Z = self->index_as_number<float>("Scale.Z");
+			self->scale().X = self->index_as_number<float>("Scale.X");
+			self->scale().Y = self->index_as_number<float>("Scale.Y");
+			self->scale().Z = self->index_as_number<float>("Scale.Z");
 
-		self->pos().X = self->index_as_number<float>("Position.X");
-		self->pos().Y = self->index_as_number<float>("Position.Y");
-		self->pos().Z = self->index_as_number<float>("Position.Z");
+			self->pos().X = self->index_as_number<float>("Position.X");
+			self->pos().Y = self->index_as_number<float>("Position.Y");
+			self->pos().Z = self->index_as_number<float>("Position.Z");
+		}
 	}
 }
