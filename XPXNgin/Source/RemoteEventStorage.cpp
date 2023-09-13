@@ -73,11 +73,28 @@ namespace XPX
 			{
 				luaL_dostring(self->state(), (String("return World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[event_idx] + ":StepUpdate()").c_str());
 
-				void* bytecode = lua_tocfunction(self->state(), -1);
+				char bytecode[XPLICIT_NETWORK_BUF_SZ];
+				memset(bytecode, 0, XPLICIT_NETWORK_BUF_SZ);
 
-				if (lua_load(self->state(), nullptr, bytecode, "line", "w") == 0)
+				lua_Reader reader = [](lua_State* L,
+					void* data,
+					size_t* size) -> const char* {
+						char* blk = new char[*size];
+						memcpy(blk, data, *size);
+
+						return blk;
+				};
+
+				lua_Writer writer = [](lua_State* L,
+					const void* data,
+					size_t size, void* ud) -> int {
+						memcpy(ud, data, size);
+						return 0;
+				};
+
+				if (lua_load(self->state(), reader, bytecode, "line", "bt") == LUA_OK)
 				{
-					lua_dump(self->state(), nullptr, bytecode, true);
+					lua_dump(self->state(), writer, bytecode, true);
 
 					for (size_t i = 0; i < self->mServer->size(); ++i)
 					{
@@ -106,7 +123,7 @@ namespace XPX
 			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] == NETWORK_CMD_REPL)
 		{
 			if (luaL_loadbuffer(Lua::CLuaStateManager::get_singleton_ptr()->state(), self->mClient->get().replicas[XPLICIT_REPLICA_EVENT], XPLICIT_NETWORK_BUF_SZ, "line") ||
-				lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), 0, 0, 0))
+				lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), 0, LUA_MULTRET, 0))
 				XPLICIT_CRITICAL(lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
 
 			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] = NETWORK_CMD_INVALID;

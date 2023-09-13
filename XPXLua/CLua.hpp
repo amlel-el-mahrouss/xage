@@ -266,6 +266,9 @@ namespace XPX::Lua
 
 		const char* call_method(const char* method) noexcept
 		{
+			if (!method)
+				return "";
+
 			String fmt = mClass;
 			fmt += ".";
 			fmt += method;
