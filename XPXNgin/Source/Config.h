@@ -169,3 +169,11 @@ namespace XPX
 
 #define XPLICIT_RELEASE "1.0.0-Salamanca"
 
+#ifdef XPLICIT_BULLET
+#   include <bullet/btBulletCollisionCommon.h>
+#   include <bullet/btBulletDynamicsCommon.h>
+
+#   define XPLICIT_PHYSICS "Bullet"
+#else
+#   define XPLICIT_PHYSICS "XPXNgin.Physics"
+#endif

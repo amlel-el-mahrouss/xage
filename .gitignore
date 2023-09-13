@@ -5,6 +5,8 @@
 
 *.roxml
 
+vcpkg/
+
 Makefile
 *.make
 

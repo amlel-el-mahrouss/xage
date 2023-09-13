@@ -9,105 +9,118 @@ World.Cursor = {}
 World.Cursor.URL = "xasset://Library/DefaultCursor.png";
 
 local function __addEvent(Tbl, Func)
-    return table.insert(Tbl, { Func = Func })
+    Tbl.Slots[#Tbl.Slots + 1] = Func;
+    return #Tbl.Slots - 1;
 end
 
 local function __rmEvent(Tbl, Index)
-    Tbl[Index] = nil;
+    Tbl.Slots[Index] = nil;
 end
 
 World.Slots = {
     Login = { 
+        Slots = {},
         Connect = function(self, Func)
-            return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     LocalMove = { 
+        Slots = {},
         Connect = function(self, Func)
-            return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     Logoff = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     LeftClick = { 
+        Slots = {},
         Connect = function(self, Func)
-            return __addEvent(selfk, Func); 
+            __addEvent(selfk, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     RightClick = { 
+        Slots = {},
         Connect = function(self, Func)
-            return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     MouseMove = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     LocalSpawn = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end  
     },
     Move = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+            __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     Damage = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end  
     },
     Spawn = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     Death = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
         end 
     },
     RenderOneFrame = { 
+        Slots = {},
         Connect = function(self, Func)
-        return __addEvent(self, Func); 
+        __addEvent(self, Func); 
         end,
         Disconnect = function(Index)
             __rmEvent(self, Index); 
@@ -121,76 +134,76 @@ World.PlayerCount = 0
 function World:Login(ply)
     World.PlayerCount = World.PlayerCount + 1
 
-    for _, v in ipairs(World.Slots.Login) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Login.Slots) do
+        v(ply)
     end
 end
 
 function World:Logoff(ply)
     World.PlayerCount = World.PlayerCount - 1
 
-    for _, v in ipairs(World.Slots.Logoff) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Logoff.Slots) do
+        v(ply)
     end
 end
 
 function World:LeftClick()
-    for _, v in ipairs(World.Slots.LeftClick) do
-        v.Func()
+    for _, v in pairs(World.Slots.LeftClick.Slots) do
+        v()
     end
 end
 
 function World:RightClick()
-    for _, v in ipairs(World.Slots.RightClick) do
-        v.Func()
+    for _, v in pairs(World.Slots.RightClick.Slots) do
+        v()
     end
 end
 
 function World:MouseMove()
-    for _, v in ipairs(World.Slots.MouseMove) do
-        v.Func()
+    for _, v in pairs(World.Slots.MouseMove.Slots) do
+        v()
     end
 end
 
 function World:LocalSpawn()
-    for _, v in ipairs(World.Slots.LocalSpawn) do
-        v.Func()
+    for _, v in pairs(World.Slots.LocalSpawn.Slots) do
+        v()
     end
 end
 
 function World:Move(ply)
-    for _, v in ipairs(World.Slots.Move) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Move.Slots) do
+        v(ply)
     end
 end
 
 function World:LocalMove(x, y, z)
-    for _, v in ipairs(World.Slots.LocalMove) do
-        v.Func(x, y, z)
+    for _, v in pairs(World.Slots.LocalMove.Slots) do
+        v(x, y, z)
     end
 end
 
 function World:Damage(ply)
-    for _, v in ipairs(World.Slots.Damage) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Damage.Slots) do
+        v(ply)
     end
 end
 
 function World:Death(ply)
-    for _, v in ipairs(World.Slots.Death) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Death.Slots) do
+        v(ply)
     end
 end
 
 function World:Spawn(ply)
-    for _, v in ipairs(World.Slots.Spawn) do
-        v.Func(ply)
+    for _, v in pairs(World.Slots.Spawn.Slots) do
+        v(ply)
     end
 end
 
 function World:RenderOneFrame()
-    for _, v in ipairs(World.Slots.RenderOneFrame) do
-        v.Func()
+    for _, v in pairs(World.Slots.RenderOneFrame.Slots) do
+        v()
     end
 end
 

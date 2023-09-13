@@ -23,7 +23,7 @@ namespace XPX
 	};
 
 	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Func) self.Slots[#self.Slots + 1] = Func; self.Cnt = #self.Slots; return #self.Slots - 1; end";
-	static const char* XPLICIT_STEP_UPDATE_SNIPPET = "function(self, Name) self.Cnt = self.Cnt + 1; return self.Slots[self.Cnt - 1] end";
+	static const char* XPLICIT_STEP_UPDATE_SNIPPET = "function(self) self.Cnt = self.Cnt + 1; return self.Slots[self.Cnt - 1] end";
 	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, Index) self.Slots[Index] = nil; end";
 
 	RemoteEventStorage::RemoteEventStorage()
@@ -35,7 +35,6 @@ namespace XPX
 			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Cnt").c_str(), "0");
 			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Slots").c_str(), "{}");
 			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".StepUpdate").c_str(), XPLICIT_STEP_UPDATE_SNIPPET);
-			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str(), "false");
 			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Connect").c_str(), XPLICIT_CONNECT_SNIPPET);
 			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Disconnect").c_str(), XPLICIT_DISCONNECT_SNIPPET);
 		}
@@ -63,34 +62,40 @@ namespace XPX
 	{
 		RemoteEventStorage* self = (RemoteEventStorage*)_this;
 		
-		for (size_t i = 0; i < XPLICIT_REMOTE_EVENTS_CNT; ++i)
+		if (!self)
+			return;
+
+		for (size_t event_idx = 0; event_idx < (XPLICIT_REMOTE_EVENTS_CNT); ++event_idx)
 		{
-			if (self->mServer && 
-				self->index_as_bool((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str()))
+			if (self->mServer)
 			{
+				auto bytecode = self->run_string(fmt::format("{}", (String("World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[event_idx] + ":StepUpdate()()")).c_str());
+
 				for (size_t i = 0; i < self->mServer->size(); ++i)
 				{
-					auto bytecode = self->run_string(fmt::format("{}()", (String("World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[i] + ":Update()")).c_str());
-
-					if (bytecode)
+					if (bytecode &&
+						strcmp("", bytecode))
 					{
 						self->mServer->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
 						memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
 						memcpy(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], bytecode, XPLICIT_NETWORK_BUF_SZ);
 
-						XPX::NetworkServerContext::send_all(self->mServer);
+						self->mServer->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_REPL] = NETWORK_CMD_REPL;
+
+						XPX::NetworkServerContext::send(self->mServer, self->mServer->get(i));
+
+						memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
 					}
 				}
-
-				self->assign((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str(), "false");
-
 			}
-			else if (self->mClient &&
-				self->index_as_bool((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str()))
-			{
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string(self->mClient->get().buffer);
-			}
+		}
+
+		if (self->mClient && 
+			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] == NETWORK_CMD_REPL)
+		{
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(self->mClient->get().replicas[XPLICIT_REPLICA_EVENT]);
+			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] = NETWORK_CMD_INVALID;
 		}
 	}
 }

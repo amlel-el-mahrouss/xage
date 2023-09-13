@@ -243,18 +243,12 @@ namespace XPX::Lua
 			auto ret = (luaL_dostring(mL, lhs));
 
 			if (ret)
-			{
-				
-				ret = (luaL_dostring(mL, fmt::format("return string.dump({})", lhs).c_str()));
-
-				if (!ret)
-					return lua_tostring(mL, -1);
-			}
+				return lua_tostring(mL, -1);
 
 			return "";
 		}
 
-		bool run_path(const char* lhs) noexcept
+		const char* run_path(const char* lhs) noexcept
 		{
 			if (!lhs)
 				return false;
@@ -263,7 +257,7 @@ namespace XPX::Lua
 			tmp = lhs;
 
 			auto ret = (luaL_dofile(mL, tmp.c_str()));
-			return ret;
+			return lua_tostring(mL, -1);
 		}
 
 		const char* call_method(const char* method) noexcept

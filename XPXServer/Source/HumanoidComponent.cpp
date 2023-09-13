@@ -161,11 +161,14 @@ namespace XPX
 
 		if (mPeer)
 		{
-			String path("World.Players.");
-			path += mPeer->xplicit_id.as_string();
 
 			if (mClass == nullptr)
+			{
+				String path("World.Players.");
+				path += mPeer->xplicit_id.as_string();
+
 				mClass = std::make_unique<Lua::CLuaClass>(path);
+			}
 
 			if (mClass)
 			{
@@ -187,11 +190,6 @@ namespace XPX
 				mClass->insert("PacketKind", "-1");
 				mClass->insert("PacketDeliveryKind", "-1");
 				mClass->insert("PacketContent", "nil");
-
-				XPLICIT_INFO("World:Login [EVENT]");
-
-				String fmt = std::format("World:Login({})", path);
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
 		}
 	}

@@ -111,8 +111,6 @@ namespace XPX
 
             self->mLoadingTextureNode->setVisible(false);
 
-            ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(self->mNetwork);
-
             auto& hash = packet.hash;
 
             auto& public_hash = packet.public_hash;
@@ -120,9 +118,8 @@ namespace XPX
             EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
             EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
-            auto replicator = ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
-
-            LocalReplicationComponent::update((void*)replicator);
+            ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
+            ComponentSystem::get_singleton_ptr()->add<RemoteEventStorage>(self->mNetwork);
 
             ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 
