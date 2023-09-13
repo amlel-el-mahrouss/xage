@@ -109,9 +109,7 @@ static int lua_MakeRect(lua_State* L)
 
 	XPX::RectComponent* frame = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RectComponent>(parent, name);
 
-	lua_getglobal(L, (XPX::String(parent) + "." + name).c_str());
-	lua_pushvalue(L, -1);
-
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 1), lua_tostring(L, 2)).c_str());
 	return 1;
 }
 
@@ -146,29 +144,28 @@ class XPXInstance
 public:
 	static int new_instance(lua_State* L)
 	{
-		XPXInstance* instance = (XPXInstance*)lua_touserdata(L, 1);
-		XPX::String component_name = lua_tostring(L, 2);
+		XPX::String component_name = lua_tostring(L, 1);
 
 		if (component_name == "Part")
 		{
-			if (lua_tostring(L, 3) &&
-				lua_tostring(L, 4))
+			if (lua_tostring(L, 2) &&
+				lua_tostring(L, 3))
 			{
-				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::PartComponent>(lua_tostring(L, 3), lua_tostring(L, 4));
+				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::PartComponent>(lua_tostring(L, 2), lua_tostring(L, 3));
 
-				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 3), lua_tostring(L, 4)).c_str());
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 2), lua_tostring(L, 3)).c_str());
 				return 1;
 			}
 		}
 		else if (component_name == "Sound")
 		{
-			if (lua_tostring(L, 3))
+			if (lua_tostring(L, 2))
 			{
-				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(lua_tostring(L, 3),
-					lua_tostring(L, 4) ? lua_tostring(L, 4) : "World");
+				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(lua_tostring(L, 2),
+					lua_tostring(L, 3) ? lua_tostring(L, 3) : "World");
 
-				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 3), 
-					lua_tostring(L, 4) ? lua_tostring(L, 4) : "World").c_str());
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 2), 
+					lua_tostring(L, 3) ? lua_tostring(L, 3) : "World").c_str());
 				return 1;
 			}
 		}
@@ -185,9 +182,9 @@ public:
 
 			XPLICIT_GET_DATA_DIR(path);
 			path += "Contents/";
-			path += lua_tostring(L, 4);
+			path += lua_tostring(L, 3);
 
-			if (!DownloadURL(lua_tostring(L, 3), generated_path))
+			if (!DownloadURL(lua_tostring(L, 2), generated_path))
 			{
 				lua_pushboolean(L, false);
 				return 1;

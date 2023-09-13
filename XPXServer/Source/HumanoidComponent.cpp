@@ -115,7 +115,8 @@ namespace XPX
 		{
 			if (self->mPeer->packet.id < self->mGears.size())
 			{
-				if (self->mActiveGear)
+				if (self->mActiveGear &&
+					self->mActiveGear->index_as_number("Slot") != self->mPeer->packet.id)
 				{
 					self->mActiveGear->assign("Equipped", "false");
 					self->mActiveGear->call_method("Update('Deactivate')");

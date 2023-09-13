@@ -270,7 +270,7 @@ namespace XPX::Lua
 				return "";
 
 			String fmt = mClass;
-			fmt += ".";
+			fmt += ":";
 			fmt += method;
 
 			return this->run_string(fmt.c_str());

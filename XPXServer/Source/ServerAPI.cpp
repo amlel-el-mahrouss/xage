@@ -19,8 +19,8 @@ XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 static int lua_LoadRoXML(lua_State* L)
 {
-	auto _path = lua_tostring(L, 3);
-	auto _client = lua_toboolean(L, 4);
+	auto _path = lua_tostring(L, 2);
+	auto _client = lua_toboolean(L, 3);
 
 	if (!_client)
 	{
@@ -65,8 +65,8 @@ static int lua_LoadRoXML(lua_State* L)
 
 static int lua_CreateGear(lua_State* L)
 {
-	const char* name = lua_tostring(L, 3);
-	const char* xplicit_id = lua_tostring(L, 4);
+	const char* name = lua_tostring(L, 2);
+	const char* xplicit_id = lua_tostring(L, 3);
 
 	if (xplicit_id == nullptr ||
 		name == nullptr)
@@ -98,8 +98,7 @@ static int lua_CreateGear(lua_State* L)
 					path_player += ".";
 					path_player += name;
 
-					lua_getglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("{}", path_player).c_str());
-					lua_pushvalue(L, -1);
+					XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}", path_player).c_str());
 
 					return 1;
 				}
@@ -167,8 +166,7 @@ class XPXInstance
 public:
 	static int new_instance(lua_State* L)
 	{
-		XPXInstance* instance = (XPXInstance*)lua_touserdata(L, 1);
-		XPX::String component_name = lua_tostring(L, 2);
+		XPX::String component_name = lua_tostring(L, 1);
 
 		if (component_name == "Gear")
 		{
