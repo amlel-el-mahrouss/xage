@@ -32,8 +32,8 @@
 
 namespace XPX
 {
-    // connection timeout, then client quits.
-    constexpr int XPLICIT_TIMEOUT = 1000;
+    // connection timeout until client stops trying to ACK.
+    constexpr int XPLICIT_TIMEOUT = 100;
 
     LoadingComponent::LoadingComponent()
         :

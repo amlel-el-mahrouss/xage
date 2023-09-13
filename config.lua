@@ -159,6 +159,7 @@ NPLICIT_CONFIG = {
     ["_LIBDIR"] = {
     	"Library/XPXNgin",
         "d3d11",
+      "Library/lua54",
         "dxgi",
     },
     ["_INCDIR"] = {

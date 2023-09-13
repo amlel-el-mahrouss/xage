@@ -17,13 +17,6 @@ namespace XPX
 	class NPLICIT_API RigidBodyHelper final
 	{
 	public:
-		RigidBodyHelper() = default;
-		~RigidBodyHelper() override = default;
-
-	public:
-		XPLICIT_COPY_DEFAULT(RigidBodyHelper);
-
-	public:
 		static bool is_touching(Vector<float>& min, Vector<float>& max,
 								Vector<float>& min_rhs, Vector<float>& max_rhs) noexcept
 		{

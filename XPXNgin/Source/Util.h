@@ -15,15 +15,15 @@
 #	include "NMath.h"
 #else
 #	include <NMath.h>
-#endif
 
-#include "Root.h"
+#	include "Root.h"
 #include "XplicitID.h"
-#include "XHTTPManager.h"
-#include "NetworkServerComponent.h"
 
-#define XPLICIT_XASSET_URI "xasset://"
-#define XPLICIT_XASSET_URI_ENDPOINT "play-xplicit.com"
+#	include "XHTTPManager.h"
+#	include "NetworkServerComponent.h"
+
+#	define XPLICIT_XASSET_URI "xasset://"
+#	define XPLICIT_XASSET_URI_ENDPOINT "play-xplicit.com"
 
 inline XPX::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
 inline XPX::Color<float> White(0xFF, 0xFF, 0xFF, 0xFF);
@@ -69,6 +69,8 @@ inline bool DownloadURL(std::string _url, std::string out_path) noexcept
 
 	return false;
 }
+
+#endif // ifdef __NPLICIT_DLL__
 
 namespace XPX
 {

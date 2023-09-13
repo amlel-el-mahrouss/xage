@@ -11,14 +11,14 @@
 
 namespace XPX
 {
-	NpMovementSharedEvent::NpMovementSharedEvent()
+	NpMovementSharedEvent::NpMovementSharedEvent() noexcept
 		: 
 		mWorldNodes(),
 		mTimeStamp(CAD->getTimer()->getTime()),
 		mDeltaTime(0.0)
 	{}
 
-	NpMovementSharedEvent::NpMovementSharedEvent()
+	NpMovementSharedEvent::~NpMovementSharedEvent() noexcept
 	{
 		for (auto* node : mWorldNodes)
 		{
@@ -63,5 +63,11 @@ namespace XPX
 			lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
 			lhsNode->call_method("Update('PhysicsChanged')");
 		}
+	}
+
+	void NpMovementSharedEvent::insert_node(NpSceneNode node)
+	{
+		if (node)
+			mWorldNodes.push_back(node);
 	}
 }

@@ -169,7 +169,7 @@ int main(int argc, char** argv)
 		path += generated_path;
 
 		if (!DownloadURL(XPLICIT_PLACE_ID, generated_path))
-			return -34;
+			generated_path = XPLICIT_PLACE_ID; // probably a local path.
 
 		XPX::RoXML::RoXMLDocumentParameters params;
 

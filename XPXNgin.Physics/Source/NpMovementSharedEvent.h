@@ -19,6 +19,7 @@
 #include "RigidBody.h"
 
 #include <NginCore.h>
+
 #include <ClassComponent.h>
 #include <Event.h>
 #include <Root.h>
@@ -31,7 +32,7 @@ namespace XPX
     {
     public:
         NpMovementSharedEvent() noexcept;
-        ~NpMovementSharedEvent() override;
+        ~NpMovementSharedEvent() noexcept override;
 
     public:
         NpMovementSharedEvent& operator=(const NpMovementSharedEvent&) = default;
@@ -42,8 +43,7 @@ namespace XPX
         void operator()() override;
 
     public:
-        void insert_node(NpSceneNode node, 
-                        double mass);
+        void insert_node(NpSceneNode node);
 
     private:
         std::vector<NpSceneNode> mWorldNodes;
