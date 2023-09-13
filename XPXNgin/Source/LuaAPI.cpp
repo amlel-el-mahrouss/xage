@@ -1,17 +1,20 @@
 /*
  * =====================================================================
  *
- *			XPXServer
+ *			XPXNgin
  *			Copyright XPX Corporation, all rights reserved.
  *
  * =====================================================================
  */
 
 #include "LuaScriptComponent.h"
+
 #include "HelperMacros.h"
 #include "NginCore.h"
+
 #include <Nplicit.h>
 #include <CLua.hpp>
+
 #include "LuaAPI.h"
 
 static int lua_Wait(lua_State* L)
@@ -40,11 +43,19 @@ XPLICIT_API void XplicitLoadBaseLua()
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World = {}");
 
+	// have a look at GameVar if it ever crashes.
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Settings = {}");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Players = {}");
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Wait, "Wait");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "XPXDestroyScript");
 
+	XPLICIT_GET_DATA_DIR(full_path);
 
+	XPX::String xpx_shared_base = full_path;
+
+	xpx_shared_base += "Contents/";
+	xpx_shared_base += "XPXSharedBase.lua";
+
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run(xpx_shared_base.c_str());
 }

@@ -68,6 +68,7 @@ XPLICIT_SERVER_CONFIG = {
     ["_LIBDIR"] = {
         "C:/Program Files/Mono/lib/mono-2.0-sgen",
     	"Library/XPXNgin",
+"Library/XPXNgin.Physics",
 	    "ws2_32",
 	    "winmm",
         "Library/Irrlicht",
@@ -109,6 +110,7 @@ XPLICIT_CLIENT_CONFIG = {
     },
     ["_LIBDIR"] = {
     	"Library/XPXNgin",
+"Library/XPXNgin.Physics",
         "d3d11",
         "dxgi",
         "Library/glfw3",

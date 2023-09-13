@@ -19,7 +19,7 @@ namespace XPX
 	class XPLICIT_API LuaEventListener final : public EventListener
 	{
 	public:
-		LuaEventListener(const char* snippet);
+		LuaEventListener(RLua::RLuaProc proc);
 		~LuaEventListener() override;
 
 	public:
@@ -30,7 +30,7 @@ namespace XPX
 		const char* name() noexcept override;
 
 	private:
-		String mSnippet;
+		RLua::RLuaProc mProcedure;
 
 	};
 }

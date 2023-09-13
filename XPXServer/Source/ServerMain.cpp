@@ -17,6 +17,7 @@
 #include <codecvt>
 #include <XplicitID.h>
 #include <RemoteEventStorage.h>
+#include <NpMovementSharedEvent.h>
 
 #include "LoginEvent.h"
 #include "ServerConfig.h"
@@ -149,14 +150,17 @@ int main(int argc, char** argv)
 		XplicitLoadBaseLua();
 		XplicitLoadServerLua();
 
+		XPX::Root::get_singleton_ptr()->set(XPX::createDevice(XPX::EDT_NULL));
+
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(network);
 
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
 
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementSharedEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
 
 		XPLICIT_PLACE_ID = argv[2];

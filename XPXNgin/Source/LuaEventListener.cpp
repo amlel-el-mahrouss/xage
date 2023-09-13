@@ -11,7 +11,7 @@
 
 namespace XPX
 {
-	LuaEventListener::LuaEventListener(const char* snippet) : mSnippet(snippet) {}
+	LuaEventListener::LuaEventListener(RLua::RLuaProc proc) : mProcedure(proc) {}
 	LuaEventListener::~LuaEventListener() = default;
 
 	void LuaEventListener::update(EventPtr _event)
@@ -19,8 +19,10 @@ namespace XPX
 		if (!_event)
 			return;
 
-		String fmt = fmt::format("{}()", this->mSnippet);
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+		if (mProcedure(Lua::CLuaStateManager::get_singleton_ptr()->state()) != LUA_OK)
+		{
+			XPLICIT_CRITICAL(lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
+		}
 	}
 
 	const char* LuaEventListener::name() noexcept { return "LuaEventListener"; }

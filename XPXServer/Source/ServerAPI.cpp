@@ -168,7 +168,7 @@ public:
 		XPXInstance* instance = (XPXInstance*)lua_touserdata(L, 1);
 		XPX::String component_name = lua_tostring(L, 2);
 
-		if (component_name == "Tool")
+		if (component_name == "Gear")
 		{
 			return lua_CreateGear(L);
 		}
@@ -188,5 +188,5 @@ void XplicitLoadServerLua() noexcept
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "Shutdown");
 
 	XPX::RLua::RuntimeClass<XPXInstance> instance;
-	instance.begin_class("Instance", &XPXInstance::new_instance).end_class();
+	instance.begin_class("Class", &XPXInstance::new_instance).end_class();
 }

@@ -111,12 +111,13 @@ public:
 		}
 		else if (component_name == "Sound")
 		{
-			if (lua_tostring(L, 3) &&
-				lua_tostring(L, 4))
+			if (lua_tostring(L, 3))
 			{
-				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(lua_tostring(L, 3), lua_tostring(L, 4));
+				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(lua_tostring(L, 3),
+					lua_tostring(L, 4) ? lua_tostring(L, 4) : "World");
 
-				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 3), lua_tostring(L, 4)).c_str());
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 3), 
+					lua_tostring(L, 4) ? lua_tostring(L, 4) : "World").c_str());
 				return 1;
 			}
 		}
@@ -164,7 +165,7 @@ public:
 void XplicitLoadClientLua() noexcept
 {
 	XPX::RLua::RuntimeClass<XPXInstance> instance;
-	instance.begin_class("Instance", &XPXInstance::new_instance).end_class();
+	instance.begin_class("Class", &XPXInstance::new_instance).end_class();
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "XPXPlaySound");
 }
