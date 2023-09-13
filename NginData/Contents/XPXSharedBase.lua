@@ -5,6 +5,8 @@ World.HumanoidState.ALIVE = 0
 World.HumanoidState.DEAD = 1
 World.HumanoidState.INVALID = 3
 
+World.Cursor = {}
+
 local function __addEvent(Tbl, Func)
     Tbl.Slots[#Tbl.Slots + 1] = Func;
     return #Tbl.Slots - 1;

@@ -67,8 +67,8 @@ namespace XPX::RLua
 
 			luaL_Reg sClassRegs[] =
 			{
-				{ "new", RuntimeClass<Class>::on_new },
-				{ "__gc", RuntimeClass<Class>::on_delete },
+				{ "new", on_new },
+				{ "__gc", on_delete },
 				{ NULL, NULL }
 			};
 

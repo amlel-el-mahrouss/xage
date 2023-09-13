@@ -36,6 +36,7 @@ namespace XPX
 		mName(name),
 		mOwner(nullptr)
 	{
+		this->insert("Slot", "0");
 		this->insert("Equipped", "false");
 		this->insert("CanDrop", "false");
 		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");

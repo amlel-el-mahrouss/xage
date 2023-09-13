@@ -98,7 +98,8 @@ static int lua_CreateGear(lua_State* L)
 					path_player += ".";
 					path_player += name;
 
-					XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}", path_player).c_str());
+					lua_getglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), std::format("{}", path_player).c_str());
+					lua_pushvalue(L, -1);
 
 					return 1;
 				}
@@ -189,5 +190,5 @@ void XplicitLoadServerLua() noexcept
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "Shutdown");
 
 	XPX::RLua::RuntimeClass<XPXInstance> instance;
-	instance.begin_class("Class", &XPXInstance::new_instance).end_class();
+	instance.begin_class("Instance", &XPXInstance::new_instance).end_class();
 }

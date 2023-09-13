@@ -31,7 +31,12 @@ namespace XPX
 		//! ROBLOX(tm) like syntax
 		this->run_string("_G.script = _G.Script.Current");
 
-		this->run_path(this->mName.c_str());
+		if (auto err = this->run_path(this->mName.c_str());
+			err)
+		{
+			XPLICIT_CRITICAL(err);
+			ComponentSystem::get_singleton_ptr()->remove(this);
+		}
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;
