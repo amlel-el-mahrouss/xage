@@ -33,9 +33,9 @@ namespace XPX
 		{
 			this->insert(XPLICIT_REMOTE_EVENTS[i], "{}");
 			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Cnt").c_str(), "0");
-			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".ShouldUpdate").c_str(), "false");
+			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Flush").c_str(), "false");
 			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Slots").c_str(), "{}");
-			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".StepUpdate").c_str(), XPLICIT_STEP_UPDATE_SNIPPET);
+			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Step").c_str(), XPLICIT_STEP_UPDATE_SNIPPET);
 			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Connect").c_str(), XPLICIT_CONNECT_SNIPPET);
 			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Disconnect").c_str(), XPLICIT_DISCONNECT_SNIPPET);
 		}
@@ -69,9 +69,9 @@ namespace XPX
 		for (size_t event_idx = 0; event_idx < (XPLICIT_REMOTE_EVENTS_CNT); ++event_idx)
 		{
 			if (self->mServer &&
-				self->index_as_bool(std::format("{}.ShouldUpdate", XPLICIT_REMOTE_EVENTS[event_idx]).c_str()))
+				self->index_as_bool(std::format("{}.Flush", XPLICIT_REMOTE_EVENTS[event_idx]).c_str()))
 			{
-				luaL_dostring(self->state(), (String("return World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[event_idx] + ":StepUpdate()").c_str());
+				luaL_dostring(self->state(), (String("return World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[event_idx] + ":Step()").c_str());
 
 				char bytecode[XPLICIT_NETWORK_BUF_SZ];
 				memset(bytecode, 0, XPLICIT_NETWORK_BUF_SZ);
@@ -98,7 +98,7 @@ namespace XPX
 						return 0;
 				};
 
-				if (lua_load(self->state(), reader, bytecode, "line", "bt") == LUA_OK)
+				if (lua_load(self->state(), reader, bytecode, "bytecode", "bt") == LUA_OK)
 				{
 					lua_dump(self->state(), writer, bytecode, true);
 
@@ -134,7 +134,7 @@ namespace XPX
 
 				}
 
-				self->assign(std::format("{}.ShouldUpdate", XPLICIT_REMOTE_EVENTS[event_idx]).c_str(), "false");
+				self->assign(std::format("{}.Flush", XPLICIT_REMOTE_EVENTS[event_idx]).c_str(), "false");
 			}
 		}
 
@@ -142,7 +142,7 @@ namespace XPX
 			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] == NETWORK_CMD_REPL)
 		{
 			if (luaL_loadbufferx(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-				self->mClient->get().replicas[XPLICIT_REPLICA_EVENT], XPLICIT_NETWORK_BUF_SZ, "line", "bt") ||
+				self->mClient->get().replicas[XPLICIT_REPLICA_EVENT], XPLICIT_NETWORK_BUF_SZ, "bytecode", "bt") ||
 				lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), 0, LUA_MULTRET, 0))
 			{
 				XPLICIT_CRITICAL(lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
