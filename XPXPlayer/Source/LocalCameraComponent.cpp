@@ -68,7 +68,7 @@ namespace XPX
 
 			NetworkPacket packet;
 
-			packet.cmd[XPLICIT_NETWORK_CMD_CAM_POS] = NETWORK_CMD_CAM_POS;
+			packet.cmd[XPLICIT_NETWORK_CMD_TARGET] = NETWORK_CMD_TARGET;
 
 			packet.pos[XPLICIT_NETWORK_X] = self->mLookAt.X;
 			packet.pos[XPLICIT_NETWORK_Y] = self->mLookAt.Y;

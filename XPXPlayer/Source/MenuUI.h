@@ -41,13 +41,16 @@ namespace XPX
 		
 	public:
 		explicit PopupComponent(const std::function<void()>& on_click,
-			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, const char* id = "POPUP", const char* msg = "You have been kicked.") noexcept;
+			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, 
+			const char* id = "POPUP", 
+			const char* msg = "") noexcept;
 
 		~PopupComponent() override;
 		
-		PopupComponent& operator=(const PopupComponent&) = default;
-		PopupComponent(const PopupComponent&) = default;
+	public:
+		XPLICIT_COPY_DEFAULT(PopupComponent);
 		
+	public:
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 
@@ -58,8 +61,8 @@ namespace XPX
 		using FunctionPopup = std::function<void()>;
 
 	private:
-		BasicString<PChar> mText;
 		BasicString<PChar> mTitle;
+		BasicString<PChar> mText;
 		ImGUI::UIFrame* mHudFrame;
 		ImGUI::UIButton mOk;
 

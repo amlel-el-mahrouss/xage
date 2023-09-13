@@ -14,8 +14,8 @@
 #include "Application.h"
 #include "MenuUI.h"
 
-#include <Enums.h>
 #include <CLua.hpp>
+#include <Enums.h>
 #include <RoXML.h>
 #include <Util.h>
 #include <Uri.h>

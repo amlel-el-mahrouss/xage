@@ -74,7 +74,7 @@ namespace XPX
 		{
 			self->pos() = self->get_owner()->get_attribute().pos();
 		
-			if (self->get_owner()->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_CAM_POS] == NETWORK_CMD_CAM_POS)
+			if (self->get_owner()->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_TARGET] == NETWORK_CMD_TARGET)
 			{
 				self->assign("LookAt.X", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_X]).c_str());
 				self->assign("LookAt.Y", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_Y]).c_str());

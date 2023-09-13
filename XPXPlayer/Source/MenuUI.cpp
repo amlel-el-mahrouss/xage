@@ -58,7 +58,7 @@ namespace XPX
 		case POPUP_TYPE::LEAVE:
 		{
 			mText = platform_string("Leave the game?");
-			mTitle = platform_string("Notice");
+			mTitle = platform_string("Warning");
 
 			mOk.label(L"Yes");
 
@@ -84,6 +84,14 @@ namespace XPX
 		mOk->W = 504;
 		mOk->H = 41;
 
+		mOk->BackgroundHoverColor.setRed(0x0F);
+		mOk->BackgroundHoverColor.setGreen(0x0F);
+		mOk->BackgroundHoverColor.setBlue(0x0F);
+
+		mOk->BackgroundColor.setRed(0x0F);
+		mOk->BackgroundColor.setGreen(0x0F);
+		mOk->BackgroundColor.setBlue(0x0F);
+
 		mOk->X = mHudFrame->X;
 		mOk->Y = mHudFrame->Y + mHudFrame->H - mOk->H;
 
@@ -101,16 +109,12 @@ namespace XPX
 
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
-		//! Draw text
-
-		//! Title
 		ImGUI::UIFont::get_label_font()->draw(self->mTitle.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 30),
 			dimension2d(0, 0)), 
 			self->mHudFrame->TextColor, 
 			true, 
 			true);
 
-		//! label
 		ImGUI::UIFont::get_label_font()->draw(self->mText.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 100),
 			dimension2d(0, 0)),
 			self->mHudFrame->TextColor,
@@ -216,7 +220,7 @@ namespace XPX
 				packet.id = i;
 				packet.cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INPUT;
 
-				CAD->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X, self->mInventorySlots[i].Y),
+				CAD->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X , self->mInventorySlots[i].Y),
 					dimension2di(self->mInventorySlots[i].W, self->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));
 			}
 		}

@@ -60,11 +60,11 @@ namespace XPX
 
 			XPLICIT_INFO("World:Spawn [EVENT]");
 
-			String path("World.Players.");
-			path += self->get_peer()->xplicit_id.as_string();
+			String xpx_player_path("World.Players.");
+			xpx_player_path += self->get_peer()->xplicit_id.as_string();
 
-			String fmt = fmt::format("World:Spawn({})", path);
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+			xpx_player_path = std::format("World:Spawn({})", xpx_player_path);
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(xpx_player_path.c_str());
 		}
 
 		String str = "{" + std::to_string(self->mAttribute.pos().X) + "," +
@@ -77,7 +77,7 @@ namespace XPX
 		{
 			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 
-			String reason = "Kicked by the server.";
+			String reason = "You have been kicked.";
 
 			if (!self->mClass->index_as_string("KickReason").empty() &&
 				self->mClass->index_as_string("KickReason").size() < XPLICIT_NETWORK_BUF_SZ)
@@ -167,7 +167,6 @@ namespace XPX
 			if (mClass == nullptr)
 				mClass = std::make_unique<Lua::CLuaClass>(path);
 
-			//! Reset Humanoid information
 			if (mClass)
 			{
 				mClass->insert("UserName", "'Unconnected'");
@@ -193,14 +192,6 @@ namespace XPX
 
 				String fmt = std::format("World:Login({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-				//! reset gear array. So that we don't have any non-nullptr left.
-				//! this applies the first time we get a peer for this humanoid. 
-				for (auto& gear : this->mGears)
-				{
-					if (gear)
-						gear = nullptr;
-				}
 			}
 		}
 	}

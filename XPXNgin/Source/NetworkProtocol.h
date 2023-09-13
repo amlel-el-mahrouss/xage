@@ -95,7 +95,7 @@ namespace XPX
         NETWORK_CMD_REPL, // replication call
         NETWORK_CMD_LCLICK,
         NETWORK_CMD_RCLICK,
-        NETWORK_CMD_CAM_POS,
+        NETWORK_CMD_TARGET,
         NETWORK_CMD_INPUT,
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 20,
@@ -238,7 +238,7 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_JUMP (17)
 #define XPLICIT_NETWORK_CMD_LCLICK (18)
 #define XPLICIT_NETWORK_CMD_RCLICK (19)
-#define XPLICIT_NETWORK_CMD_CAM_POS (19)
+#define XPLICIT_NETWORK_CMD_TARGET (19)
 #define XPLICIT_NETWORK_CMD_INPUT (20)
 
 /*! this is a command reserved by the engine, 
