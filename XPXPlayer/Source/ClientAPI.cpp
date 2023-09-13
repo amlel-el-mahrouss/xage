@@ -159,13 +159,17 @@ public:
 		}
 		else if (component_name == "Sound")
 		{
-			if (lua_tostring(L, 2))
+			if (lua_tostring(L, 2) &&
+				lua_tostring(L, 3))
 			{
 				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(lua_tostring(L, 2),
-					lua_tostring(L, 3) ? lua_tostring(L, 3) : "World");
+					lua_tostring(L, 3));
 
-				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 2), 
-					lua_tostring(L, 3) ? lua_tostring(L, 3) : "World").c_str());
+				auto fmt = std::format("return {}.{}", lua_tostring(L, 2),
+					lua_tostring(L, 3));
+
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+
 				return 1;
 			}
 		}

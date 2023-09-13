@@ -23,6 +23,7 @@
 #include "Application.h"
 #include "MenuUI.h"
 
+#include <NpMovementSharedEvent.h>
 #include <RemoteEventStorage.h>
 #include <XHTTPManager.h>
 #include <Enums.h>
@@ -116,6 +117,8 @@ namespace XPX
             auto& hash = packet.hash;
 
             auto& public_hash = packet.public_hash;
+
+            EventSystem::get_singleton_ptr()->add<NpMovementSharedEvent>();
 
             EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
             EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();

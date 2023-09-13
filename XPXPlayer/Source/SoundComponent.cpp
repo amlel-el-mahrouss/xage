@@ -18,12 +18,12 @@ namespace XPX
 			nullptr,
 			parent,
 			name),
-		mVolume(1.0f), mLoop(false)
+		mVolume(1.0f), mLoop(false),
+		mPitch(1), mPan(1)
 	{
 		this->insert("Loop", "false");
 		this->insert("Pitch", "1");
 		this->insert("Pan", "1");
-		this->insert("Position", "{ X= 0, Y = 0, Z = 0}");
 		this->insert("Volume", "1");
 		this->insert("Play", "function(self, path) XPXPlaySound(path); end");
 	}

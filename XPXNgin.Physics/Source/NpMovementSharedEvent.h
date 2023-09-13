@@ -18,14 +18,22 @@
 #include "Config.h"
 #include "RigidBody.h"
 
-#include <NginCore.h>
-
+#ifdef __XPLICIT_DLL__
+#include "ClassComponent.h"
+#include "NginCore.h"
+#include "Event.h"
+#include "Root.h"
+#else
 #include <ClassComponent.h>
+#include <NginCore.h>
 #include <Event.h>
 #include <Root.h>
+#endif // ifdef __XPLICIT_DLL__
 
 namespace XPX
 {
+    class ClassComponent;
+
     typedef ClassComponent* NpSceneNode;
 
     class NPLICIT_API NpMovementSharedEvent : public Event
@@ -43,6 +51,7 @@ namespace XPX
         void operator()() override;
 
     public:
+        void remove_node(NpSceneNode node);
         void insert_node(NpSceneNode node);
 
     private:

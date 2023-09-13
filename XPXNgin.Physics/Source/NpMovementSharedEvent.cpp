@@ -70,4 +70,17 @@ namespace XPX
 		if (node)
 			mWorldNodes.push_back(node);
 	}
+
+	void NpMovementSharedEvent::remove_node(NpSceneNode node)
+	{
+		if (node)
+		{
+			auto it = std::find(mWorldNodes.cbegin(), mWorldNodes.cend(), node);
+
+			if (it != mWorldNodes.cend())
+			{
+				mWorldNodes.erase(it);
+			}
+		}
+	}
 }
