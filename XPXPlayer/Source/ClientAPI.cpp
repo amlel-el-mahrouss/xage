@@ -195,4 +195,6 @@ void XplicitLoadClientLua() noexcept
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetY, "XPXGetY");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetX, "XPXGetX");
+
+	XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>("Mixer", "Sound");
 }

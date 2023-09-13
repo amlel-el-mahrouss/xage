@@ -84,14 +84,6 @@ namespace XPX
 		mOk->W = 504;
 		mOk->H = 41;
 
-		mOk->BackgroundHoverColor.setRed(0x0F);
-		mOk->BackgroundHoverColor.setGreen(0x0F);
-		mOk->BackgroundHoverColor.setBlue(0x0F);
-
-		mOk->BackgroundColor.setRed(0x0F);
-		mOk->BackgroundColor.setGreen(0x0F);
-		mOk->BackgroundColor.setBlue(0x0F);
-
 		mOk->X = mHudFrame->X;
 		mOk->Y = mHudFrame->Y + mHudFrame->H - mOk->H;
 

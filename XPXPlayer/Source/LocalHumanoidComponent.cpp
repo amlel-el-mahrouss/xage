@@ -40,7 +40,6 @@ namespace XPX
 		if (is_local_player)
 		{
 			mClass = new Lua::CLuaClass("World.Players.LocalPlayer");
-			mClass->insert("Health", "100");
 
 			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer.RootPart", "World");
 		}
@@ -123,8 +122,6 @@ namespace XPX
 
 			if (self->mIsLocalPlayer)
 			{
-				self->mPacket.health = self->mClass->index_as_number("Health");
-
 				if (KEYBOARD->left_down())
 				{
 					self->mPacket.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_LCLICK;
@@ -145,8 +142,6 @@ namespace XPX
 					Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
 
 					self->mState = HUMANOID_STATE::ALIVE;
-
-					self->mClass->insert("Health", std::to_string(self->mPacket.health).c_str());
 				}
 				else if (self->mPacket.health <= 0)
 				{

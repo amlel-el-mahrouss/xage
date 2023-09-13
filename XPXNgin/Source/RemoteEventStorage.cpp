@@ -59,10 +59,10 @@ namespace XPX
 
 	bool RemoteEventStorage::should_update() { return true; }
 
-	void RemoteEventStorage::update(ClassPtr _this) 
+	void RemoteEventStorage::update(ClassPtr _this)
 	{
 		RemoteEventStorage* self = (RemoteEventStorage*)_this;
-		
+
 		if (!self)
 			return;
 
@@ -71,23 +71,31 @@ namespace XPX
 			if (self->mServer &&
 				self->index_as_bool(std::format("{}.ShouldUpdate", XPLICIT_REMOTE_EVENTS[event_idx]).c_str()))
 			{
-				auto bytecode = self->run_string((String("return string.dump(World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[event_idx] + ":StepUpdate())").c_str());
+				luaL_dostring(self->state(), (String("return World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[event_idx] + ":StepUpdate()").c_str());
 
-				for (size_t i = 0; i < self->mServer->size(); ++i)
+				void* bytecode = lua_tocfunction(self->state(), -1);
+
+				if (lua_load(self->state(), nullptr, bytecode, "line", "w") == 0)
 				{
-					if (bytecode)
+					lua_dump(self->state(), nullptr, bytecode, true);
+
+					for (size_t i = 0; i < self->mServer->size(); ++i)
 					{
-						self->mServer->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
+						if (bytecode)
+						{
+							self->mServer->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
-						memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
-						memcpy(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], bytecode, XPLICIT_NETWORK_BUF_SZ);
+							memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
+							memcpy(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], bytecode, XPLICIT_NETWORK_BUF_SZ);
 
-						self->mServer->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_REPL] = NETWORK_CMD_REPL;
+							self->mServer->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_REPL] = NETWORK_CMD_REPL;
 
-						XPX::NetworkServerContext::send(self->mServer, self->mServer->get(i));
+							XPX::NetworkServerContext::send(self->mServer, self->mServer->get(i));
 
-						memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
+							memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
+						}
 					}
+
 				}
 
 				self->assign(std::format("{}.ShouldUpdate", XPLICIT_REMOTE_EVENTS[event_idx]).c_str(), "false");
@@ -97,7 +105,10 @@ namespace XPX
 		if (self->mClient && 
 			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] == NETWORK_CMD_REPL)
 		{
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(self->mClient->get().replicas[XPLICIT_REPLICA_EVENT]);
+			if (luaL_loadbuffer(Lua::CLuaStateManager::get_singleton_ptr()->state(), self->mClient->get().replicas[XPLICIT_REPLICA_EVENT], XPLICIT_NETWORK_BUF_SZ, "line") ||
+				lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), 0, 0, 0))
+				XPLICIT_CRITICAL(lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
+
 			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] = NETWORK_CMD_INVALID;
 		}
 	}

@@ -239,7 +239,7 @@ function World:Create(name, ...)
     elseif (name == "Class") then
         return XPXCreateClass(...);
     elseif (name == "Sound") then
-        return XPXCreateSound(...);
+        return XPXPlaySound(...);
     elseif (name == "Rect") then
         return XPXMakeRectangle(...);
     elseif (name == "Vector3") then
