@@ -119,9 +119,10 @@ namespace XPX
 					self->mActiveGear->call_method("Update('Deactivate')");
 
 				if (self->mGears[self->mPeer->packet.id])
+				{
 					self->mActiveGear = self->mGears[self->mPeer->packet.id];
-
-				self->mActiveGear->call_method("Update('Activate')");
+					self->mActiveGear->call_method("Update('Activate')");
+				}
 
 				self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INVALID;
 			}

@@ -89,6 +89,12 @@ namespace XPX
 					const void* data,
 					size_t size, void* ud) -> int {
 						memcpy(ud, data, size);
+						char* ud_str = (char*)((uintptr_t)ud + size + 1);
+
+						ud_str[0] = 'E';
+						ud_str[1] = 'O';
+						ud_str[2] = 'B';
+
 						return 0;
 				};
 
@@ -103,7 +109,20 @@ namespace XPX
 							self->mServer->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
 							memset(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], 0, XPLICIT_NETWORK_BUF_SZ);
-							memcpy(self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT], bytecode, XPLICIT_NETWORK_BUF_SZ);
+
+							for (size_t bytecode_index = 0; bytecode_index < XPLICIT_NETWORK_BUF_SZ; ++bytecode_index)
+							{
+								if (bytecode[bytecode_index] != 'E')
+								{
+									self->mServer->get(i)->packet.replicas[XPLICIT_REPLICA_EVENT][bytecode_index] = bytecode[bytecode_index];
+								}
+								else
+								{
+									if (bytecode[bytecode_index++] == 'O' &&
+										bytecode[bytecode_index++] == 'B')
+										break;
+								}
+							}
 
 							self->mServer->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_REPL] = NETWORK_CMD_REPL;
 
@@ -122,9 +141,12 @@ namespace XPX
 		if (self->mClient && 
 			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] == NETWORK_CMD_REPL)
 		{
-			if (luaL_loadbuffer(Lua::CLuaStateManager::get_singleton_ptr()->state(), self->mClient->get().replicas[XPLICIT_REPLICA_EVENT], XPLICIT_NETWORK_BUF_SZ, "line") ||
+			if (luaL_loadbufferx(Lua::CLuaStateManager::get_singleton_ptr()->state(),
+				self->mClient->get().replicas[XPLICIT_REPLICA_EVENT], XPLICIT_NETWORK_BUF_SZ, "line", "bt") ||
 				lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), 0, LUA_MULTRET, 0))
+			{
 				XPLICIT_CRITICAL(lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
+			}
 
 			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] = NETWORK_CMD_INVALID;
 		}
