@@ -119,45 +119,6 @@ namespace XPX::RoXML
 										if (_mesh)
 											object = _mesh;
 									}
-
-								}
-
-								if (klass_to_instantiate == "Water")
-								{
-									for (size_t i = 0; i < strlen(node->value()); i++)
-									{
-										if (isalnum(node->value()[i]) ||
-											node->value()[i] == '.' ||
-											node->value()[i] == '/' ||
-											node->value()[i] == '\\' ||
-											node->value()[i] == ':')
-										{
-											world_node.Value += node->value()[i];
-										}
-									}
-
-									String url = world_node.Value;
-
-									XPLICIT_GET_DATA_DIR(MESH_PATH);
-
-									MESH_PATH += "Contents/";
-									MESH_PATH += std::to_string(xplicit_get_epoch());
-									MESH_PATH += "-WATER_MESH";
-
-									if (DownloadURL(url, MESH_PATH))
-									{
-										auto water_mesh = CAD->getSceneManager()->getMesh(MESH_PATH.c_str());
-										auto water = CAD->getSceneManager()->addWaterSurfaceSceneNode(water_mesh);
-
-										water->setMaterialType(EMT_TRANSPARENT_REFLECTION_2_LAYER);
-
-										if (water)
-										{
-											water->setName(node_id);
-
-											object = water;
-										}
-									}
 								}
 
 								if (klass_to_instantiate == "Sphere")
@@ -184,7 +145,7 @@ namespace XPX::RoXML
 									}
 								}
 
-								if (klass_to_instantiate == "SkyDome")
+								if (klass_to_instantiate == "3DSky")
 								{
 									irr::scene::ISceneNode* sky_dome = nullptr;
 									sky_dome = CAD->getSceneManager()->addSkyDomeSceneNode(CAD->getVideoDriver()->getTexture(node->value()));
@@ -238,6 +199,7 @@ namespace XPX::RoXML
 							{
 								ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(parent_id, node_name.c_str());
 								component->insert("ClassType", klass_to_instantiate.c_str());
+								component->insert("ClassAdditionalData", world_node.Value.c_str());
 							}
 						}
 					}
