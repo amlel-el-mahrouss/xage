@@ -31,7 +31,7 @@ namespace XPX
 
 	void HumanoidMovementEvent::operator()()
 	{
-		mDeltaTime += (CAD->getTimer()->getTime() - mTimeStamp) / XPLICIT_DELTA;
+		mDeltaTime = (CAD->getTimer()->getTime() - mTimeStamp) / XPLICIT_DELTA;
 		mTimeStamp = CAD->getTimer()->getTime();
 
 		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");

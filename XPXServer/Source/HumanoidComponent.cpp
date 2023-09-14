@@ -195,6 +195,7 @@ namespace XPX
 				mClass->insert("Kick", "false");
 				mClass->insert("KickReason", "'Kicked by server.'");
 				mClass->insert("Anchored", "false");
+				mClass->insert("Locked", "false");
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());

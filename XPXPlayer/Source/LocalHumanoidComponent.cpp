@@ -98,9 +98,9 @@ namespace XPX
 			{
 				const float delta = self->mPacket.pos[XPLICIT_NETWORK_DELTA];
 
-				const float xSpeed = self->mPacket.pos[XPLICIT_NETWORK_X] * delta;
-				const float zSpeed = self->mPacket.pos[XPLICIT_NETWORK_Z] * delta;
-				const float ySpeed = self->mPacket.pos[XPLICIT_NETWORK_Y] * delta;
+				const float xSpeed = self->mPacket.pos[XPLICIT_NETWORK_X];
+				const float zSpeed = self->mPacket.pos[XPLICIT_NETWORK_Z];
+				const float ySpeed = self->mPacket.pos[XPLICIT_NETWORK_Y];
 
 				self->mPos.Z = zSpeed;
 				self->mPos.X = xSpeed;
@@ -111,7 +111,7 @@ namespace XPX
 				self->mCharacter->node()->setRotation(
 					vector3df(self->mCam->get()->getPosition().X, 
 					0, 
-					0));
+						self->mCam->get()->getPosition().Z));
 
 				XPLICIT_INFO("world:LocalMove [EVENT]");
 
