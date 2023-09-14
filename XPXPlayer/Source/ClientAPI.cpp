@@ -147,8 +147,6 @@ public:
 				XPX::String value = lua_tostring(L, 3);
 
 				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::PartComponent>(value.c_str(), key.c_str());
-
-
 				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", key, value).c_str());
 
 				return 1;
@@ -163,7 +161,6 @@ public:
 				XPX::String value = lua_tostring(L, 3);
 
 				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(value.c_str(), key.c_str());
-
 				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", key, value).c_str());
 
 				return 1;

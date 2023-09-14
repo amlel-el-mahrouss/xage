@@ -71,7 +71,7 @@ static int lua_CreateGear(lua_State* L)
 	if (xplicit_id == nullptr ||
 		name == nullptr)
 	{
-		lua_pushboolean(L, false);
+		lua_pushnil(L);
 		return 1;
 	}
 
