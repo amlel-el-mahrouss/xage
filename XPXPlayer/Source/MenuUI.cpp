@@ -254,9 +254,6 @@ namespace XPX
 	RectComponent::RectComponent(const char* parent, const char* name)
 		: Lua::CLuaClass((String(parent) + "." + name))
 	{
-		this->insert("UI", "true");
-		this->insert("View", "true");
-
 		this->insert("ClassName", name);
 		this->insert("Parent", parent);
 

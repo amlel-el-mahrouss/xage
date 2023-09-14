@@ -40,52 +40,32 @@ namespace XPX
         :
         mNetwork(nullptr),
         mTimeout(0),
-        mLoadingTexture(nullptr)
+        mLoadingFrame()
     {
-        if (auto node = CAD->getSceneManager()->getSceneNodeFromName("LoadingCube");
-            node)
-            mLoadingTextureNode = (decltype(mLoadingTextureNode))node;
-
-        mLoadingTexture = CAD->getVideoDriver()->getTexture("xpxplayer.png");
-
-        auto mesh = CAD->getSceneManager()->getGeometryCreator()->createCubeMesh();
-        mLoadingTextureNode = CAD->getSceneManager()->addMeshSceneNode(mesh);
-        mLoadingTextureNode->setName("LoadingCube");
-
-        for (size_t i = 0; i < mLoadingTextureNode->getMaterialCount(); i++)
-        {
-            mLoadingTextureNode->setMaterialTexture(i, mLoadingTexture);
-        }
-
-        mLoadingTextureNode->setMaterialFlag(EMF_LIGHTING, false);
-        mLoadingTextureNode->setMaterialType(EMT_TRANSPARENT_ALPHA_CHANNEL);
-
-        // this needs to match the scene.
-        mLoadingTextureNode->getMaterial(0).DiffuseColor.setAlpha(0x40);
+        mLoadingFrame.BackgroundColor.setRed(45);
+        mLoadingFrame.BackgroundColor.setGreen(45);
+        mLoadingFrame.BackgroundColor.setBlue(45);
+        mLoadingFrame.BackgroundColor.setAlpha(255);
 
         auto cam = ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
-
         CAD->getSceneManager()->setActiveCamera(cam->get());
-        CAD->getSceneManager()->getActiveCamera()->setTarget(mLoadingTextureNode->getPosition());
     }
 
     LoadingComponent::~LoadingComponent() = default;
 
-    bool LoadingComponent::mEnabled = true;
+    bool LoadingComponent::StartLoad = true;
 
     void LoadingComponent::update(void* class_ptr)
     {
+        if (!LoadingComponent::StartLoad)
+            return;
+
         auto* self = (LoadingComponent*)class_ptr;
-
-        auto rot = self->mLoadingTextureNode->getRotation();
-
-        rot.Y += 0.1;
-        rot.Z += 0.1;
-
-        self->mLoadingTextureNode->setRotation(rot);
 
         if (!self ||
             !self->mNetwork) return;
+
+        self->mLoadingFrame.update(self->mLoadingFrame.BackgroundColor);
 
         NetworkPacket packet{};
         self->mNetwork->read(packet);
@@ -97,7 +77,7 @@ namespace XPX
                     CAD->closeDevice();
                 }, POPUP_TYPE::BANNED, "StopPopup");
 
-            mEnabled = false;
+            StartLoad = false;
 
             ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
 
@@ -106,11 +86,7 @@ namespace XPX
 
         if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
         {
-            ImGUI::UIFont::get_label_font()->draw("Acknowledge done, jumping in...", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
-
             packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
-            self->mLoadingTextureNode->setVisible(false);
 
             ComponentSystem::get_singleton_ptr()->add<RemoteEventStorage>(self->mNetwork);
 
@@ -137,7 +113,7 @@ namespace XPX
 
             monitor->ID = packet.buffer;
 
-            local_player->get_class()->insert("Id", fmt::format("'{}'", monitor->ID).c_str());
+            local_player->get_class()->insert("PlayerId", fmt::format("'{}'", monitor->ID).c_str());
 
             XPLICIT_INFO(monitor->ID);
 
@@ -146,29 +122,27 @@ namespace XPX
             monitor->HTTP = std::make_unique<XHTTPManager>();
             monitor->HTTP->set_endpoint(monitor->Endpoint);
 
-            mEnabled = false;
+            ImGUI::UIFont::get_label_font()->draw("Acknowledged by server, jumping in...", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
 
-            return;
+            StartLoad = false;
         }
         else
         {
             // peek after the ++timeout, or retry
             if (self->mTimeout >= XPLICIT_TIMEOUT)
             {
-                self->mLoadingTextureNode->setVisible(false);
-
                 ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
                     []() {
                         CAD->closeDevice();
-                    }, POPUP_TYPE::NETWORK, "StopPopup");
+                    }, POPUP_TYPE::NETWORK, "TimeoutPopup");
 
                 ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
 
-                mEnabled = false;
+                StartLoad = false;
             }
             else
             {
-                String fmt("Joining... (");
+                String fmt("Dialing to server... (");
                 fmt += std::to_string(self->mTimeout);
                 fmt += ")";
 
@@ -194,8 +168,14 @@ namespace XPX
 
         if (mNetwork->connect(ip.get().c_str(), ip.port().c_str()))
         {
+            mLoadingFrame.W = CAD->getVideoDriver()->getScreenSize().Width;
+            mLoadingFrame.H = CAD->getVideoDriver()->getScreenSize().Height;
+
+            mLoadingFrame.X = 0;
+            mLoadingFrame.Y = 0;
+
             Thread thrd([&]() {
-                while (mEnabled)
+                while (StartLoad)
                 {
                     if (!mNetwork)
                     {

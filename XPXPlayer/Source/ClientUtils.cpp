@@ -21,9 +21,8 @@ namespace XPX
 		full_sound_path = full_path;
 		full_sound_path += "Contents/Explosion.wav";
 
-		DownloadURL("xasset://Library/Explosion.wav", full_path);
-
-		PlaySound(full_sound_path, Vector<float>(pos.X, pos.Y, pos.Z));
+		if (DownloadURL("xasset://Library/Explosion.wav", full_path))
+			PlaySound(full_sound_path, Vector<float>(pos.X, pos.Y, pos.Z));
 	}
 
 	Explosion::~Explosion() = default;

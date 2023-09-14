@@ -17,27 +17,32 @@ namespace XPX
 		return func_proto;
 	}
 
-	LuaScriptComponent::LuaScriptComponent(const char* name)
+	LuaScriptComponent::LuaScriptComponent(const char* name, bool multi_threaded)
 		: mName(name), ClassComponent(
 			String("world").c_str(), (String("XPXScript") + std::to_string(xplicit_get_epoch())).c_str())
 	{
-		this->insert("Destroy", this->destroy_snippet().c_str());
-		this->insert("__gc", this->destroy_snippet().c_str());
+		Thread job([](LuaScriptComponent* self) {
+			self->insert("Destroy", self->destroy_snippet().c_str());
+			self->insert("__gc", self->destroy_snippet().c_str());
 
-		this->run_string(fmt::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
+			self->run_string(fmt::format("_G.Script.{} = {}", self->name(), String(self->parent()) + "." + self->name()).c_str());
 
-		// Script.Current
-		this->run_string(fmt::format("_G.Script.Current = _G.Script.{}", this->name()).c_str());
+			// Script.Current
+			self->run_string(fmt::format("_G.Script.Current = _G.Script.{}", self->name()).c_str());
 
-		//! ROBLOX(tm) like syntax
-		this->run_string("_G.script = _G.Script.Current");
+			//! ROBLOX(tm) like syntax
+			self->run_string("_G.script = _G.Script.Current");
 
-		if (auto err = this->run_path(this->mName.c_str());
-			err)
-		{
-			XPLICIT_CRITICAL(err);
-			ComponentSystem::get_singleton_ptr()->remove(this);
-		}
+			if (auto err = self->run_path(self->mName.c_str());
+				err)
+			{
+				XPLICIT_CRITICAL(err);
+				ComponentSystem::get_singleton_ptr()->remove(self);
+			}
+			}, this);
+
+		if (multi_threaded)
+			job.detach();
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;

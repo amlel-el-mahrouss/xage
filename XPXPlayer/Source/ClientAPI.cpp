@@ -41,7 +41,8 @@ static int lua_PlaySound(lua_State* L)
 {
 	try
 	{
-		XPX::String url = lua_tostring(L, 1);
+		XPX::String name = lua_tostring(L, 1);
+		XPX::String url = lua_tostring(L, 2);
 
 		// that means if we don't find it, then fail silently.
 		if (url.find(XPLICIT_ALLOWED_AUDIO_EXTENSION) == XPX::String::npos)
@@ -78,7 +79,8 @@ static int lua_PlaySound(lua_State* L)
 			full_download_path += "Contents/";
 			full_download_path += tmp;
 
-			if (auto snd = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>("SoundComponent"))
+			if (auto snd = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>(name.c_str());
+				snd)
 				snd->play(full_download_path);
 		}
 
@@ -141,9 +143,14 @@ public:
 			if (lua_tostring(L, 2) &&
 				lua_tostring(L, 3))
 			{
-				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::PartComponent>(lua_tostring(L, 2), lua_tostring(L, 3));
+				XPX::String key = lua_tostring(L, 2);
+				XPX::String value = lua_tostring(L, 3);
 
-				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 2), lua_tostring(L, 3)).c_str());
+				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::PartComponent>(value.c_str(), key.c_str());
+
+
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", key, value).c_str());
+
 				return 1;
 			}
 		}
@@ -152,19 +159,12 @@ public:
 			if (lua_tostring(L, 2) &&
 				lua_tostring(L, 3))
 			{
-				if (XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>("SoundComponent"))
-				{
-					lua_pushnil(L);
-					return 1;
-				}
+				XPX::String key = lua_tostring(L, 2);
+				XPX::String value = lua_tostring(L, 3);
 
-				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(lua_tostring(L, 2),
-					lua_tostring(L, 3));
+				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(value.c_str(), key.c_str());
 
-				auto fmt = std::format("return {}.{}", lua_tostring(L, 2),
-					lua_tostring(L, 3));
-
-				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", key, value).c_str());
 
 				return 1;
 			}

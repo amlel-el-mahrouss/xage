@@ -141,13 +141,6 @@ namespace XPX
 		if (self->mClient && 
 			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] == NETWORK_CMD_REPL)
 		{
-			if (luaL_loadbufferx(Lua::CLuaStateManager::get_singleton_ptr()->state(),
-				self->mClient->get().replicas[XPLICIT_REPLICA_EVENT], XPLICIT_NETWORK_BUF_SZ, "bytecode", "bt") ||
-				lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), 0, LUA_MULTRET, 0))
-			{
-				XPLICIT_CRITICAL(lua_tostring(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-			}
-
 			self->mClient->get().cmd[XPLICIT_NETWORK_CMD_REPL] = NETWORK_CMD_INVALID;
 		}
 	}

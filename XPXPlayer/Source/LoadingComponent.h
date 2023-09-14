@@ -26,7 +26,7 @@ namespace XPX
 		XPLICIT_COPY_DEFAULT(LoadingComponent);
 
 	public:
-		static bool should_update() noexcept { return mEnabled; }
+		static bool should_update() noexcept { return StartLoad; }
 		static void update(void* class_ptr);
 
 	public:
@@ -41,14 +41,13 @@ namespace XPX
 		NetworkComponent* mNetwork;
 
 	private:
-		IMeshSceneNode* mLoadingTextureNode;
-		ITexture* mLoadingTexture;
+		ImGUI::UIFrame mLoadingFrame;
 
 	private:
 		std::int64_t mTimeout; /* Network Timeout, incremented on each connection failure. */
 
 	private:
-		static bool mEnabled; /* Should we seek for a connection? */
+		static bool StartLoad; /* Should we seek for a connection? */
 
 	};
 }

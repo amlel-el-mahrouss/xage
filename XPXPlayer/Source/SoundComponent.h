@@ -36,7 +36,6 @@ namespace XPX
 		static void update(void* class_ptr);
 		static bool should_update() noexcept;
 
-		const char* name() noexcept override;
 		COMPONENT_TYPE type() noexcept override;
 		PHYSICS_TYPE physics() noexcept override;
 
