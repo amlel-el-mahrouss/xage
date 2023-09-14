@@ -10,6 +10,8 @@
 #include "LuaScriptComponent.h"
 #include "ClassComponent.h"
 
+#include <NpMovementSharedEvent.h>
+
 namespace XPX
 {
 	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, UniqueName, Func) self.Slots[UniqueName] = Func end";

@@ -23,7 +23,7 @@ namespace XPX
 		INVALID,
 	};
 
-	class HumanoidComponent final : public ClassComponent
+	class HumanoidComponent final : public Component
 	{
 	public:
 		HumanoidComponent() noexcept;

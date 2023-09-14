@@ -15,12 +15,6 @@
 
 namespace XPX
 {
-	PVHumanoid::PVHumanoid(const char* parent_humanoid)
-		: ClassComponent(parent_humanoid, "RootPart")
-	{
-
-	}
-
 	HumanoidComponent::HumanoidComponent() noexcept
 		:
 		Component(),
