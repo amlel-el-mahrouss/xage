@@ -113,9 +113,20 @@ namespace XPX
 			self->scale().Y = self->index_as_number<float>("Scale.Y");
 			self->scale().Z = self->index_as_number<float>("Scale.Z");
 
-			self->pos().X = self->index_as_number<float>("Position.X");
-			self->pos().Y = self->index_as_number<float>("Position.Y");
-			self->pos().Z = self->index_as_number<float>("Position.Z");
+			if (self->parent() &&
+				strcmp(self->parent(), XPLICIT_LUA_NAMESPACE) == 0 &&
+				strcmp(self->parent(), "_G.Script") == 0) // _G. is the global table, to avois any clashes.
+			{
+				self->pos().X = self->index_as_number<float>("Parent.Position.X");
+				self->pos().Y = self->index_as_number<float>("Parent.Position.Y");
+				self->pos().Z = self->index_as_number<float>("Parent.Position.Z");
+			}
+			else
+			{
+				self->pos().X = self->index_as_number<float>("Position.X");
+				self->pos().Y = self->index_as_number<float>("Position.Y");
+				self->pos().Z = self->index_as_number<float>("Position.Z");
+			}
 		}
 	}
 }
