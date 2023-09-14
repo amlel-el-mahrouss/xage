@@ -37,53 +37,95 @@ static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
 
 #define XPLICIT_ALLOWED_AUDIO_EXTENSION ".wav"
 
+struct XPXSoundCache final
+{
+	XPX::String name = "";
+	XPX::SoundComponent* component = nullptr;
+	XPX::String path = "";
+};
+
+std::vector<XPXSoundCache> XPX_CACHE;
+
 static int lua_PlaySound(lua_State* L)
 {
 	try
 	{
+		if (!lua_tostring(L, 1) ||
+			!lua_tostring(L, 2))
+		{
+			return 0;
+		}
+
 		XPX::String name = lua_tostring(L, 1);
 		XPX::String url = lua_tostring(L, 2);
 
-		// that means if we don't find it, then fail silently.
-		if (url.find(XPLICIT_ALLOWED_AUDIO_EXTENSION) == XPX::String::npos)
-			return 0;
+		auto it = std::find_if(XPX_CACHE.cbegin(), XPX_CACHE.cend(), [&](const XPXSoundCache cache) {
+			return cache.name == name;
+		});
 
-		if (url.empty() ||
-			url.find(XPLICIT_XASSET_IDENT) == XPX::String::npos)
-			return 0;
-
-		XPX::String substr_tmp = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
-
-		url.clear();
-		url = "/";
-		url += substr_tmp;
-
-		static XPX::LocalNetworkMonitorEvent* monitor = XPX::EventSystem::get_singleton_ptr()->get<XPX::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
-
-		if (!monitor)
-			monitor = XPX::EventSystem::get_singleton_ptr()->get<XPX::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
-
-		XPX::String endpoint = XPLICIT_XASSET_ENDPOINT;
-		monitor->HTTP->set_endpoint(endpoint);
-
-		auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-SND.wav";
-
-		if (monitor &&
-			monitor->HTTP->download(url, tmp))
+		if (it == XPX_CACHE.cend())
 		{
-			XPLICIT_GET_DATA_DIR(full_path);
+			// that means if we don't find it, then fail silently.
+			if (url.find(XPLICIT_ALLOWED_AUDIO_EXTENSION) == XPX::String::npos)
+				return 0;
 
-			XPX::String full_download_path;
+			if (url.empty() ||
+				url.find(XPLICIT_XASSET_IDENT) == XPX::String::npos)
+				return 0;
 
-			full_download_path += full_path;
-			full_download_path += "Contents/";
-			full_download_path += tmp;
+			XPX::String substr_tmp = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
 
-			if (auto snd = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>(name.c_str());
-				snd)
-				snd->play(full_download_path);
+			url.clear();
+			url = "/";
+			url += substr_tmp;
+
+			static XPX::LocalNetworkMonitorEvent* monitor = XPX::EventSystem::get_singleton_ptr()->get<XPX::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
+
+			if (!monitor)
+				monitor = XPX::EventSystem::get_singleton_ptr()->get<XPX::LocalNetworkMonitorEvent>("LocalNetworkMonitorEvent");
+
+			XPX::String endpoint = XPLICIT_XASSET_ENDPOINT;
+			monitor->HTTP->set_endpoint(endpoint);
+
+			auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-SND.wav";
+
+			if (monitor &&
+				monitor->HTTP->download(url, tmp))
+			{
+				XPLICIT_GET_DATA_DIR(full_path);
+
+				XPX::String full_download_path;
+
+				full_download_path += full_path;
+				full_download_path += "Contents/";
+				full_download_path += tmp;
+
+				if (auto snd = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>(name.c_str());
+					snd)
+				{
+					snd->play(full_download_path);
+
+					XPXSoundCache cache;
+					cache.component = snd;
+					cache.path = full_download_path;
+					cache.name = name;
+
+					XPX_CACHE.push_back(cache);
+				}
+				else
+				{
+					std::remove(full_download_path.c_str());
+				}
+			}
+			else
+			{
+				if (it->component)
+				{
+					it->component->play(it->path);
+				}
+			}
+
 		}
-
 	}
 	catch (...)
 	{

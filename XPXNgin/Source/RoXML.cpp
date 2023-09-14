@@ -234,7 +234,11 @@ namespace XPX::RoXML
 										node->addChild(node);
 								}
 							}
-
+							else
+							{
+								ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(parent_id, node_name.c_str());
+								component->insert("ClassType", klass_to_instantiate.c_str());
+							}
 						}
 					}
 				}
