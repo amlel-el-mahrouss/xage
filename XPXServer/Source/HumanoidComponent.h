@@ -23,10 +23,10 @@ namespace XPX
 		INVALID,
 	};
 
-	class HumanoidComponent final : public Component
+	class HumanoidComponent final : public ClassComponent
 	{
 	public:
-		explicit HumanoidComponent();
+		HumanoidComponent() noexcept;
 		~HumanoidComponent() override;
 
 	public:

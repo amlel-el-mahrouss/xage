@@ -61,7 +61,7 @@ namespace XPX
 			lhsNode->pos() = Vector<NetworkFloat>(velocity.X * mDeltaTime, velocity.Y * mDeltaTime, velocity.Z * mDeltaTime);
 
 			lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
-			lhsNode->call_method("Update('PhysicsChanged')");
+			lhsNode->call_method("Update('PhysicsFrame')");
 		}
 	}
 

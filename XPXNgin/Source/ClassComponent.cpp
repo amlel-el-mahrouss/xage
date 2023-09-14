@@ -10,8 +10,6 @@
 #include "LuaScriptComponent.h"
 #include "ClassComponent.h"
 
-#include <NpMovementSharedEvent.h>
-
 namespace XPX
 {
 	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, UniqueName, Func) self.Slots[UniqueName] = Func end";
@@ -68,12 +66,6 @@ namespace XPX
 		{
 			this->script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script));
 			XPLICIT_ASSERT(this->script());	
-		}
-
-		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementSharedEvent>("NpMovementSharedEvent");
-			mov)
-		{
-			mov->insert_node(this);
 		}
 	}
 

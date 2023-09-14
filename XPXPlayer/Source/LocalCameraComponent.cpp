@@ -23,14 +23,13 @@ namespace XPX
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = CAD->getSceneManager()->addCameraSceneNode(nullptr, vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z),
-			vector3df(0, 5, 0));
+		mCamera = CAD->getSceneManager()->addCameraSceneNodeFPS(nullptr);
 
 		XPLICIT_ASSERT(mCamera);
 
 		mCamera->setName("Camera");
 
-		this->insert("FOV", "90");
+		this->insert("FOV", "30");
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept
@@ -51,14 +50,6 @@ namespace XPX
 
         if (!self)
             return;
-
-		auto pos = self->get()->getPosition();
-
-		pos.X = self->index_as_number("Position.X");
-		pos.Y = self->index_as_number("Position.Y");
-		pos.Z = self->index_as_number("Position.Z");
-
-		self->get()->setPosition(pos);
 
 		self->get()->setFOV(self->index_as_number("FOV"));
 

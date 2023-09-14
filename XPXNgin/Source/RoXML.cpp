@@ -9,6 +9,8 @@
 
 #include "RoXML.h"
 
+#include <NpMovementSharedEvent.h>
+
 namespace XPX::RoXML
 {
 	void RoXMLDocumentParser::parse(RoXMLDocumentParameters& params) noexcept
@@ -198,8 +200,24 @@ namespace XPX::RoXML
 							else
 							{
 								ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(parent_id, node_name.c_str());
-								component->insert("ClassType", klass_to_instantiate.c_str());
-								component->insert("ClassAdditionalData", world_node.Value.c_str());
+
+								if (component)
+								{
+									component->insert("ClassType", fmt::format("'{}'", klass_to_instantiate.c_str()).c_str());
+									component->insert("Force", "{ X = 1, Y = 1, Z = 1 }");
+									component->insert("Weight", "{ X = 1, Y = 1, Z = 1 }");
+
+									if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementSharedEvent>("NpMovementSharedEvent");
+										mov)
+									{
+										mov->insert_node(component);
+									}
+									else
+									{
+										XPLICIT_CRITICAL("No Physics engine currently mounted! Don't except any form of physics.");
+										ComponentSystem::get_singleton_ptr()->remove(component);
+									}
+								}
 							}
 						}
 					}

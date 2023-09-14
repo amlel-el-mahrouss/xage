@@ -15,7 +15,13 @@
 
 namespace XPX
 {
-	HumanoidComponent::HumanoidComponent()
+	PVHumanoid::PVHumanoid(const char* parent_humanoid)
+		: ClassComponent(parent_humanoid, "RootPart")
+	{
+
+	}
+
+	HumanoidComponent::HumanoidComponent() noexcept
 		:
 		Component(),
 		mPeer(nullptr),
@@ -118,9 +124,7 @@ namespace XPX
 				if (self->mActiveGear &&
 					self->mActiveGear->index_as_number("Slot") != self->mPeer->packet.id)
 				{
-					self->mActiveGear->assign("Equipped", "false");
 					self->mActiveGear->call_method("Update('Unequipped')");
-
 					self->mActiveGear = nullptr;
 				}
 
@@ -134,8 +138,6 @@ namespace XPX
 						if (gear->index_as_number("Slot") == self->mPeer->packet.id)
 						{
 							self->mActiveGear = gear;
-
-							self->mActiveGear->assign("Equipped", "true");
 							self->mActiveGear->call_method("Update('Equipped')");
 						}
 					}
@@ -167,7 +169,8 @@ namespace XPX
 		if (mPeer)
 		{
 			if (mClass)
-			{				// reset gear array
+			{				
+				// reset gear array
 				for (auto& gear : this->mGears)
 				{
 					if (gear)
@@ -188,17 +191,15 @@ namespace XPX
 			if (mClass)
 			{
 				mClass->insert("UserName", "'Unconnected'");
-
 				mClass->insert("Parent", "world.Players");
+
 				mClass->insert("PlayerId", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
-				mClass->insert("IsMoving", "false");
+
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
-				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
-				mClass->insert("State", "world.HumanoidState.ALIVE");
+				
 				mClass->insert("Kick", "false");
-				mClass->insert("KickReason", "'Kicked by server.'");
-				mClass->insert("Anchored", "false");
-				mClass->insert("Locked", "false");
+				mClass->insert("KickReason", "'No message supplied.'");
+				
 				mClass->insert("Health", std::to_string(mHealth).c_str());
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());

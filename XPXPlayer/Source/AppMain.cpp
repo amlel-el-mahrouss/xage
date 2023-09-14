@@ -82,7 +82,7 @@ int main(int argc, char** argv)
 		std::unique_ptr<XPX::Bites::Application> app_ptr = std::make_unique<XPX::Bites::Application>(uri);
 
 		if (!app_ptr)
-			throw XPX::EngineError("XPLICIT couldn't continue; we're sorry!");
+			throw XPX::EngineError("XPXPlayer couldn't continue; we're sorry!");
 
 		//! The Main Logic and Render loop.
 		while (CAD->run() &&

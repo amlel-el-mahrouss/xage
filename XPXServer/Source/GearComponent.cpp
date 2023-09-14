@@ -37,7 +37,6 @@ namespace XPX
 		mOwner(nullptr)
 	{
 		this->insert("Slot", "0");
-		this->insert("Equipped", "false");
 		this->insert("Drop", "false");
 		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 		this->assign("Destroy", destroy_gear_class_snippet(name).c_str());
@@ -70,9 +69,6 @@ namespace XPX
 			self->get_owner()->get_class()->assign(self->name(), "nil");
 			self->set_owner(nullptr);
 		}
-
-		if (!self->index_as_bool("Equipped"))
-			return;
 
 		if (self->get_owner())
 		{

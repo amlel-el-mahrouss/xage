@@ -94,12 +94,8 @@ namespace XPX
 				String path = "world.Players.";
 				path += peer->xplicit_id.as_string();
 
-				humanoid->get_class()->assign("IsMoving", "true");
-
 				String fmt = fmt::format("world:Move({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
-				humanoid->get_class()->assign("IsMoving", "false");
 			}
 		}
 	}
