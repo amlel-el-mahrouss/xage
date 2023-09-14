@@ -18,7 +18,7 @@
 
 #endif
 
-#define NPLICIT_RELEASE "1.0.0-Reno"
+#define NPLICIT_RELEASE "1.0.1-NewReno"
 #define NPLICIT_SPLASH_SCREEN printf("NplicitNgin - (c) XPX Corporation, all rights reserved.\n")
 
 namespace XPX

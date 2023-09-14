@@ -70,11 +70,12 @@ namespace XPX
 			peer_ptr->packet.health = humanoid->get_health();
 
 			if (!humanoid->is_alive() &&
-				humanoid->can_spawn() ||
-				humanoid->get_attribute().pos().Y <= XPLICIT_DESTROY_Y)
+				humanoid->can_spawn())
 			{
 				humanoid->can_spawn(false);
 				humanoid->set_state(HUMANOID_STATE::DEAD);
+
+				humanoid->get_attribute().pos() = mSpawner->get();
 
 #ifdef XPLICIT_DEBUG
 				XPLICIT_INFO("world:Death [EVENT]");

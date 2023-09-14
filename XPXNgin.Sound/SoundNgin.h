@@ -104,7 +104,7 @@ namespace XPX
 					mAudio->Play(volume, pitch, pan);
 				}
 
-				void play_3d(const Vector<float>& pos, const float volume, const float pitch, const float pan, bool* loop = nullptr) noexcept
+				void play_3d(const Vector<NetworkFloat>& pos, const float volume, const float pitch, const float pan, bool* loop = nullptr) noexcept
 				{
 					if (!mAudio)
 						return;

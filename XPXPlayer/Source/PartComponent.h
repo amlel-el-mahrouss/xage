@@ -10,6 +10,7 @@
 #pragma once
 
 #include <ClassComponent.h>
+#include <NetworkProtocol.h>
 #include <Nplicit.h>
 
 namespace XPX
@@ -20,9 +21,9 @@ namespace XPX
 	{
 	public:
 		PartComponent(const char* name, const char* parent,
-			Vector<float> pos = Vector<float>(0, 0, 0),
-			Vector<float> scale = Vector<float>(0, 0, 0),
-			Color<float> clr = Color<float>(0, 0, 0));
+			Vector<NetworkFloat> pos = Vector<NetworkFloat>(0, 0, 0),
+			Vector<NetworkFloat> scale = Vector<NetworkFloat>(0, 0, 0),
+			Color<NetworkFloat> clr = Color<NetworkFloat>(0, 0, 0));
 
 		~PartComponent() noexcept;
 

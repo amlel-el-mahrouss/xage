@@ -63,6 +63,7 @@ namespace XPX
 	private:
 		BasicString<PChar> mTitle;
 		BasicString<PChar> mText;
+
 		ImGUI::UIFrame* mHudFrame;
 		ImGUI::UIButton mOk;
 
@@ -94,6 +95,7 @@ namespace XPX
 		std::size_t mSelectedSlot;
 
 		NetworkComponent* mNetwork;
+		ImGUI::UIFrame* mFrameParent;
 		ImGUI::UIFrame* mHudFrame;
 
 	private:

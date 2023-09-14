@@ -13,26 +13,27 @@
 
 #ifdef __NPLICIT_DLL__
 #	include "NMath.h"
+#	include <NetworkProtocol.h>
 #else
 #	include <NMath.h>
 
 #	include "Root.h"
-#include "XplicitID.h"
-
+#	include "XplicitID.h"
+#	include "NetworkProtocol.h"
 #	include "XHTTPManager.h"
 #	include "NetworkServerComponent.h"
 
 #	define XPLICIT_XASSET_URI "xasset://"
 #	define XPLICIT_XASSET_URI_ENDPOINT "play-xplicit.com"
 
-inline XPX::Color<float> Magenta(0xFF, 0x00, 0xFF, 0xFF);
-inline XPX::Color<float> White(0xFF, 0xFF, 0xFF, 0xFF);
-inline XPX::Color<float> DarkRed(0x8B, 0, 0, 0xFF);
-inline XPX::Color<float> Black(0, 0, 0, 0xFF);
-inline XPX::Color<float> Red(0xFF, 0, 0, 0xFF);
+inline XPX::Color<XPX::NetworkFloat> Magenta(0xFF, 0x00, 0xFF, 0xFF);
+inline XPX::Color<XPX::NetworkFloat> White(0xFF, 0xFF, 0xFF, 0xFF);
+inline XPX::Color<XPX::NetworkFloat> DarkRed(0x8B, 0, 0, 0xFF);
+inline XPX::Color<XPX::NetworkFloat> Black(0, 0, 0, 0xFF);
+inline XPX::Color<XPX::NetworkFloat> Red(0xFF, 0, 0, 0xFF);
 
 inline XPX::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, 0xFFFFFF);
-inline XPX::Vector<float>   XPLICIT_ORIGIN(0.0f, 30, -40);
+inline XPX::Vector<XPX::NetworkFloat>   XPLICIT_ORIGIN(0.0f, 30, -40);
 
 /// <summary>
 /// Gets the XPLICIT_ID of a specific peer.
@@ -102,9 +103,9 @@ namespace XPX
 		XPLICIT_COPY_DEFAULT(XPXAttribute);
 
 	public:
-		Color<float>& color() noexcept { return mColor; }
-		Vector<float>& scale() noexcept { return mScale; }
-		Vector<float>& pos() noexcept { return mPos; }
+		Color<NetworkFloat>& color() noexcept { return mColor; }
+		Vector<NetworkFloat>& scale() noexcept { return mScale; }
+		Vector<NetworkFloat>& pos() noexcept { return mPos; }
 
 	public:
 		LuaScriptComponent* script() noexcept { return mScript; }
@@ -124,9 +125,9 @@ namespace XPX
 
 	private:
 		LuaScriptComponent* mScript;
-		Vector<float> mScale;
-		Color<float> mColor;
-		Vector<float> mPos;
+		Vector<NetworkFloat> mScale;
+		Color<NetworkFloat> mColor;
+		Vector<NetworkFloat> mPos;
 
 	private:
 		bool mArchivable;

@@ -14,9 +14,5 @@
 
 namespace XPX
 {
-#ifndef __NPLICIT_DETAIL_IEE754__
-	typedef float NplicitFloat;
-#else
 	typedef double NplicitFloat;
-#endif
 }

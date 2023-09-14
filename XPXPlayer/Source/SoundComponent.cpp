@@ -12,9 +12,9 @@
 namespace XPX
 {
 	SoundComponent::SoundComponent(const char* name, const char* parent) 
-		: ClassComponent(Vector<float>(0.0f, 0.0f, 0.0f),
-			Vector<float>(0.0f, 0.0f, 0.0f), 
-			Color<float>(0.0f, 0.0f, 0.0f), 
+		: ClassComponent(Vector<NetworkFloat>(0.0f, 0.0f, 0.0f),
+			Vector<NetworkFloat>(0.0f, 0.0f, 0.0f),
+			Color<NetworkFloat>(0.0f, 0.0f, 0.0f),
 			nullptr,
 			parent,
 			name),

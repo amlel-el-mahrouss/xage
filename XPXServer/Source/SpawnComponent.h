@@ -22,14 +22,14 @@ namespace XPX
 		SpawnComponent() = delete;
 
 	public:
-		explicit SpawnComponent(const Vector<float>& spawn);
+		explicit SpawnComponent(const Vector<NetworkFloat>& spawn);
 		~SpawnComponent() override;
 
 	public:
 		SpawnComponent& operator=(const SpawnComponent&) = default;
 		SpawnComponent(const SpawnComponent&) = default;
 
-		Vector<float>& get() noexcept;
+		Vector<NetworkFloat>& get() noexcept;
 
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;

@@ -46,9 +46,9 @@ namespace XPX
 	}
 
 	ClassComponent::ClassComponent(
-		const Vector<float>& position, 
-		const Vector<float>& size, 
-		const Color<float>& color,
+		const Vector<NetworkFloat>& position, 
+		const Vector<NetworkFloat>& size,
+		const Color<NetworkFloat>& color,
 		const char* script,
 		const char* parent,
 		const char* name)

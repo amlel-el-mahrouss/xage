@@ -12,6 +12,8 @@
  */
 
 #include "SpawnComponent.h"
+
+#include "HumanoidComponent.h"
 #include <CLua.hpp>
 
 #define XPLICIT_LUA_GLOBAL "_G."
@@ -19,16 +21,26 @@
 
 namespace XPX
 {
-	SpawnComponent::SpawnComponent(const Vector<float>& vec) 
+	SpawnComponent::SpawnComponent(const Vector<NetworkFloat>& vec)
 		: Component(), mClass(std::make_unique<Lua::CLuaClass>("SpawnLocation"))
 	{
 		XPLICIT_ASSERT(mClass);
 		mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
+
+		this->mAttribute.pos() = vec;
+
+		auto all_of_humans = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+
+		for (auto& human : all_of_humans)
+		{
+			if (human)
+				human->get_attribute().pos() = this->mAttribute.pos();
+		}
 	}
 
 	SpawnComponent::~SpawnComponent() = default;
 
-	Vector<float>& SpawnComponent::get() noexcept { return mAttribute.pos(); }
+	Vector<NetworkFloat>& SpawnComponent::get() noexcept { return mAttribute.pos(); }
 
 	void SpawnComponent::update(ClassPtr class_ptr) 
 	{

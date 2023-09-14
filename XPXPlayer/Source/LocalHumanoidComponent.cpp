@@ -96,22 +96,22 @@ namespace XPX
 			if (self->mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
 				self->mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
 			{
-				const float delta = self->mPacket.pos[XPLICIT_NETWORK_DELTA];
+				const NetworkFloat delta = self->mPacket.pos[XPLICIT_NETWORK_DELTA];
 
-				const float xSpeed = self->mPacket.pos[XPLICIT_NETWORK_X];
-				const float zSpeed = self->mPacket.pos[XPLICIT_NETWORK_Z];
-				const float ySpeed = self->mPacket.pos[XPLICIT_NETWORK_Y];
+				const NetworkFloat xSpeed = self->mPacket.pos[XPLICIT_NETWORK_X];
+				const NetworkFloat zSpeed = self->mPacket.pos[XPLICIT_NETWORK_Z];
+				const NetworkFloat ySpeed = self->mPacket.pos[XPLICIT_NETWORK_Y];
 
 				self->mPos.Z = zSpeed;
 				self->mPos.X = xSpeed;
 				self->mPos.Y = ySpeed;
 
-				self->mCharacter->node()->setPosition(vector3df(self->mPos.X, self->mPos.Y, self->mPos.Z));
+				self->mCharacter->node()->setPosition(vector3df(self->mPos.X * delta, self->mPos.Y * delta, self->mPos.Z * delta));
 
 				self->mCharacter->node()->setRotation(
 					vector3df(self->mCam->get()->getPosition().X, 
 					0, 
-						self->mCam->get()->getPosition().Z));
+					self->mCam->get()->getPosition().Z));
 
 				XPLICIT_INFO("world:LocalMove [EVENT]");
 

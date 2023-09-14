@@ -29,8 +29,6 @@ extern "C"
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
 
-inline float XPLICIT_DESTROY_Y(-100000.f); // Add which point the Character should be destroyed.
-
 #define XPLICIT_XASSET_ENDPOINT "play-xplicit.com"
 #define XPLICIT_PLACE_ENDPOINT "play-xplicit.com"
 

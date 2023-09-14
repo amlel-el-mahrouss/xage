@@ -12,9 +12,9 @@
 namespace XPX
 {
 	PartComponent::PartComponent(const char* name, const char* parent,
-		Vector<float> pos,
-		Vector<float> scale,
-		Color<float> clr)
+		Vector<NetworkFloat> pos,
+		Vector<NetworkFloat> scale,
+		Color<NetworkFloat> clr)
 		:
 		ClassComponent(pos, scale, clr, nullptr, parent, name),
 		mStud(nullptr)

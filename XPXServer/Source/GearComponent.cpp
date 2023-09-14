@@ -26,9 +26,9 @@ namespace XPX
 
 	GearComponent::GearComponent(const char* name, const char* parent) noexcept
 		:
-		ClassComponent(Vector<float>(0, 0, 0),
-			Vector<float>(0, 0, 0),
-			Color<float>(0, 0, 0),
+		ClassComponent(Vector<NetworkFloat>(0, 0, 0),
+			Vector<NetworkFloat>(0, 0, 0),
+			Color<NetworkFloat>(0, 0, 0),
 			nullptr,
 			parent,
 			name),

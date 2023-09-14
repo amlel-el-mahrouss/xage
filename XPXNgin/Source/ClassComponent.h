@@ -26,9 +26,9 @@ namespace XPX
 
 	public:
 		ClassComponent(
-			const Vector<float>& position, 
-			const Vector<float>& size,
-			const Color<float>& color,
+			const Vector<NetworkFloat>& position,
+			const Vector<NetworkFloat>& size,
+			const Color<NetworkFloat>& color,
 			const char* script = nullptr,
 			const char* parent = XPLICIT_CLASS_NAMESPACE,
 			const char* name = XPLICIT_CLASS_NAME);

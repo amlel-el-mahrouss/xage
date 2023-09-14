@@ -17,8 +17,8 @@ namespace XPX
 	class NPLICIT_API RigidBodyHelper final
 	{
 	public:
-		static bool is_touching(Vector<float>& min, Vector<float>& max,
-								Vector<float>& min_rhs, Vector<float>& max_rhs) noexcept
+		static bool is_touching(Vector<NplicitFloat>& min, Vector<NplicitFloat>& max,
+								Vector<NplicitFloat>& min_rhs, Vector<NplicitFloat>& max_rhs) noexcept
 		{
 			return (max.X > min_rhs.X &&
 				min.X < max_rhs.X &&
