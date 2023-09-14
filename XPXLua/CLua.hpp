@@ -24,6 +24,9 @@ extern "C" {
 
 #include <vector>
 
+#define CLUA_USER_DATA_SYMBOL "UserData"
+#define CLUA_IDENT "CxxLua"
+
 #define XPLICIT_LUA_NAME "C++Lua"
 #define XPLICIT_LUA_DESCRIPTION "C++ Lua extension for the XplicitNgine."
 #define XPLICIT_LUA_AUTHOR "Amlal El Mahrouss"
@@ -161,7 +164,7 @@ namespace XPX::Lua
 
 				if (lua_gettable(mL, -1) == LUA_OK)
 				{
-					mSymbols.push_back(std::make_pair(mSymbolCnt, "C++UserData"));
+					mSymbols.push_back(std::make_pair(mSymbolCnt, CLUA_USER_DATA_SYMBOL));
 					++mSymbolCnt;
 
 					lua_newtable(mL);
@@ -329,5 +332,3 @@ namespace XPX::Lua
 
 #include <RLua.hpp>
 
-#define CLUA_USER_DATA_SYMBOL "UserData"
-#define CLUA_IDENT "CxxLua"

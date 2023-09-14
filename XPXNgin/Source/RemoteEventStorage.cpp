@@ -69,14 +69,14 @@ namespace XPX
 	{
 		RemoteEventStorage* self = (RemoteEventStorage*)_this;
 
-		if (!self)
+		if (!self ||
+			!self->mServer)
 			return;
 
 		for (size_t event_idx = 0; event_idx < self->count(); ++event_idx)
 		{
-			if (self->mServer &&
-				self->symbols()[event_idx].second.find(CLUA_USER_DATA_SYMBOL) != String::npos ||
-				self->symbols()[event_idx].second.find(CLUA_IDENT) != String::npos)
+			if (self->symbols()[event_idx].second != CLUA_USER_DATA_SYMBOL &&
+				self->symbols()[event_idx].second != "Attach")
 			{
 				luaL_dostring(self->state(), (String("string.dump(return world.RemoteEventStorage.") + self->symbols()[event_idx].second + ":Step())").c_str());
 				const char* bytecode = lua_tostring(self->state(), -1);
