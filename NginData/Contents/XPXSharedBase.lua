@@ -130,7 +130,7 @@ world.Slots = {
 world.Counter = 0
 world.PlayerCount = 0
 
-function World:Login(ply)
+function world:Login(ply)
     world.PlayerCount = world.PlayerCount + 1
 
     for _, v in pairs(world.Slots.Login.Slots) do
@@ -138,7 +138,7 @@ function World:Login(ply)
     end
 end
 
-function World:Logoff(ply)
+function world:Logoff(ply)
     world.PlayerCount = world.PlayerCount - 1
 
     for _, v in pairs(world.Slots.Logoff.Slots) do
@@ -146,61 +146,61 @@ function World:Logoff(ply)
     end
 end
 
-function World:LeftClick()
+function world:LeftClick()
     for _, v in pairs(world.Slots.LeftClick.Slots) do
         v()
     end
 end
 
-function World:RightClick()
+function world:RightClick()
     for _, v in pairs(world.Slots.RightClick.Slots) do
         v()
     end
 end
 
-function World:MouseMove()
+function world:MouseMove()
     for _, v in pairs(world.Slots.MouseMove.Slots) do
         v()
     end
 end
 
-function World:LocalSpawn()
+function world:LocalSpawn()
     for _, v in pairs(world.Slots.LocalSpawn.Slots) do
         v()
     end
 end
 
-function World:Move(ply)
+function world:Move(ply)
     for _, v in pairs(world.Slots.Move.Slots) do
         v(ply)
     end
 end
 
-function World:LocalMove(x, y, z)
+function world:LocalMove(x, y, z)
     for _, v in pairs(world.Slots.LocalMove.Slots) do
         v(x, y, z)
     end
 end
 
-function World:Damage(ply)
+function world:Damage(ply)
     for _, v in pairs(world.Slots.Damage.Slots) do
         v(ply)
     end
 end
 
-function World:Death(ply)
+function world:Death(ply)
     for _, v in pairs(world.Slots.Death.Slots) do
         v(ply)
     end
 end
 
-function World:Spawn(ply)
+function world:Spawn(ply)
     for _, v in pairs(world.Slots.Spawn.Slots) do
         v(ply)
     end
 end
 
-function World:RenderOneFrame()
+function world:RenderOneFrame()
     for _, v in pairs(world.Slots.RenderOneFrame.Slots) do
         v()
     end
@@ -215,7 +215,7 @@ world.REPLICATE_TYPE_CREATE = 522;
 world.REPLICATE_TYPE_REMOVE = 523;
 world.REPLICATE_TYPE_UPDATE = 524;
 
-function World:DumpTable(o)
+function world:DumpTable(o)
     if type(o) == 'table' then
        local s = '{ '
        for k,v in pairs(o) do
@@ -228,19 +228,19 @@ function World:DumpTable(o)
     end
 end
 
-function World:AnyKeyDown()
+function world:AnyKeyDown()
     return XPXKeyDown();
 end
 
-function World:IsKeyDown(key)
+function world:IsKeyDown(key)
     return XPXIsKeyDown(key);
 end
 
-function World:IsLeftDown()
+function world:IsLeftDown()
     return XPXIsLeftDown();
 end
 
-function World:IsRightDown()
+function world:IsRightDown()
     return XPXIsRightDown();
 end
 
@@ -253,7 +253,7 @@ function world.Cursor:GetX()
 end
 
 -- Some part of the specs.
--- World = Root table of components.
+-- world = Root table of components.
 -- Script = Root table of scripts.
 -- world.Settings = GameVars.
 -- world.Players = Players.

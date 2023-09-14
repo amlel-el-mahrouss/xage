@@ -61,26 +61,14 @@ int main(int argc, char** argv)
         XPLICIT_ASSERT(argv[1]);
         std::string cmd_line = argv[1];
 #endif
+		
+		if (cmd_line.empty() ||
+			cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == XPX::String::npos)
+			return 1;
 
-		// 6601 is the standard local port.
-		if (cmd_line.find("localdomain") != XPX::String::npos)
-		{
-			XPX::String full_xconnect = "xconnect://";
-			full_xconnect += XPLICIT_ENV("XPLICIT_SERVER_ADDR");
-			full_xconnect += ":6601";
+		cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
 
-			uri /= full_xconnect;
-		}
-		else
-		{
-			if (cmd_line.empty() ||
-				cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == XPX::String::npos)
-				return 1;
-
-			cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
-
-			uri /= cmd_line;
-		}
+		uri /= cmd_line;
 
 		XPX::Utils::InternetProtocolChecker checker;
 
