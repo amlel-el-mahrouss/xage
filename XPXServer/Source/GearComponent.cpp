@@ -18,7 +18,7 @@ namespace XPX
 {
 	static const String destroy_gear_class_snippet(const String& name) noexcept
 	{
-		String func_proto = fmt::format("function(self) XPXDestroyGear(\"{}\"); end",
+		String func_proto = fmt::format("function(self) destroyGear(\"{}\"); end",
 			name);
 
 		return func_proto;

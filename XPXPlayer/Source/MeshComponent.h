@@ -31,6 +31,9 @@ namespace XPX
 	public:
 		const char* name() noexcept { return "MeshComponent"; }
 
+		const auto instance_name() noexcept { return mName; }
+		const auto group_name() noexcept { return mGroup; }
+
 		irr::scene::ISceneNode* node() const { return mNode; }
 		irr::scene::IMesh* model() const { return mMdl; }
 

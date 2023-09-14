@@ -44,6 +44,9 @@ namespace XPX
 	public:
 		MeshComponent* get_mesh() const noexcept;
 
+		const auto instance_name() noexcept { return mName; }
+		const auto group_name() noexcept { return mParent; }
+
 	private:
 		std::unique_ptr<MeshComponent> mMeshPtr;
 

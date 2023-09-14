@@ -112,36 +112,6 @@ static int lua_CreateGear(lua_State* L)
 	return 1;
 }
 
-static int lua_DestroyGear(lua_State* L)
-{
-	const char* name = lua_tostring(L, 1);
-
-	auto gear = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::GearComponent>(name);
-
-	if (gear)
-	{
-		if (gear->get_owner())
-		{
-			for (size_t i = 0; i < gear->get_owner()->get_gears().size(); i++)
-			{
-				if (gear->get_owner()->get_gears()[i] == gear)
-				{
-					gear->get_owner()->get_gears()[i] = nullptr;
-					break;
-				}
-			}
-		}
-
-		XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
-
-		lua_pushboolean(L, true);
-		return 1;
-	}
-
-	lua_pushboolean(L, 0);
-	return 1;
-}
-
 static int lua_Shutdown(lua_State* L)
 {
 	auto players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>("HumanoidComponent");
@@ -183,9 +153,55 @@ public:
 
 };
 
+static int lua_DestroyGear(lua_State* L)
+{
+	auto name = lua_tostring(L, 1);
+	auto parent = lua_tostring(L, 2);
+
+	if (name && parent)
+	{
+		XPX::String name_str = name;
+		XPX::String parent_str = parent;
+
+		XPX::Thread job([](XPX::String name, XPX::String parent) {
+			auto part = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::GearComponent>(name.c_str());
+
+			if (part)
+			{
+				if (part->get_owner())
+				{
+					for (size_t i = 0; i < part->get_owner()->get_gears().size(); i++)
+					{
+						if (part->get_owner()->get_gears()[i] == part)
+						{
+							part->get_owner()->get_gears()[i] = nullptr;
+							break;
+						}
+					}
+				}
+
+				if (part->parent() == parent)
+				{
+					XPX::ComponentSystem::get_singleton_ptr()->remove(part);
+					return;
+				}
+
+			}
+
+			XPLICIT_INFO(name + " has not been found on parent: " + parent + ".");
+			}, name_str, parent_str);
+
+		job.detach();
+	}
+
+	return 0;
+}
+
 void XplicitLoadServerLua() noexcept
 {
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "Shutdown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "shutdown");
+
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "destroyGear");
 
 	XPX::RLua::RuntimeClass<XPXInstance> instance;
 	instance.begin_class("Instance", &XPXInstance::new_instance).end_class();

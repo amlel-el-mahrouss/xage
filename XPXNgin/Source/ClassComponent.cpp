@@ -19,14 +19,6 @@ namespace XPX
 
 	static const char* XPLICIT_UPDATE_SNIPPET = "function (self, Restrict) for k, v in pairs(self.Slots) do if k == Restrict then v(self); end end end";
 
-	static const String XPLICIT_DESTROY_SNIPPET(const String& name, const String& parent) noexcept
-	{
-		String func_proto = fmt::format("function(self) XPXDestroyClass(\"{}\", \"{}\"); end",
-			name, parent);
-
-		return func_proto;
-	}
-
 	ClassComponent::ClassComponent(
 		const char* parent,
 		const char* name)
@@ -46,8 +38,6 @@ namespace XPX
 		this->insert("Collide", "true");
 
 		this->insert("Slots", "{ }");
-
-        this->insert("Destroy", XPLICIT_DESTROY_SNIPPET(mName, mParent).c_str());
 
 		//! Connect and disconnect methods
 		//! Use this to connect specific functions to this class.

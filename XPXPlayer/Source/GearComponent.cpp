@@ -12,6 +12,12 @@
 
 namespace XPX
 {
+	static String gear_destroy(const char* name, const char* parent) noexcept
+	{
+		String func_proto = fmt::format("function(self) destroyGear(\"{}\", \"{}\"); end", name, parent);
+		return func_proto;
+	}
+
 	GearComponent::GearComponent(
 		const char* name,
 		const char* mesh, 
@@ -26,6 +32,9 @@ namespace XPX
 		mMeshPtr(nullptr)
 	{
 		this->insert("Path", mesh ? mesh : "nil");
+
+		this->insert("Destroy", gear_destroy(mName.c_str(), mParent.c_str()).c_str());
+		this->insert("__gc", gear_destroy(mName.c_str(), mParent.c_str()).c_str());
 
 		if (mesh)
 			mMeshPtr = std::make_unique<MeshComponent>(mesh, mName.c_str(), mParent.c_str());

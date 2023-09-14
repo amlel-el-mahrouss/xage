@@ -11,6 +11,7 @@
 
 #include "StaticBundleMesh.h"
 #include "SoundComponent.h"
+#include "GearComponent.h"
 #include "PartComponent.h"
 #include "MeshComponent.h"
 #include "Application.h"
@@ -99,17 +100,6 @@ static int lua_GetX(lua_State* L)
 static int lua_GetY(lua_State* L)
 {
 	lua_pushnumber(L, CAD->getCursorControl()->getPosition().Y);
-	return 1;
-}
-
-static int lua_MakeRect(lua_State* L)
-{
-	const char* parent = lua_tostring(L, 1);
-	const char* name = lua_tostring(L, 2);
-
-	XPX::RectComponent* frame = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RectComponent>(parent, name);
-
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", lua_tostring(L, 1), lua_tostring(L, 2)).c_str());
 	return 1;
 }
 
@@ -220,20 +210,128 @@ public:
 
 };
 
+static int lua_DestroyPart(lua_State* L)
+{
+	auto name = lua_tostring(L, 1);
+	auto parent = lua_tostring(L, 2);
+
+	if (name && parent)
+	{
+		XPX::String name_str = name;
+		XPX::String parent_str = parent;
+
+		XPX::Thread job([](XPX::String name, XPX::String parent) {
+			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::PartComponent>("PartComponent");
+
+			for (auto& part : all_of_parts)
+			{
+				if (part)
+				{
+					if (part->name() == name &&
+						part->parent() == parent)
+					{
+						XPX::ComponentSystem::get_singleton_ptr()->remove(part);
+						return;
+					}
+				}
+			}
+
+			XPLICIT_INFO(name + " has not been found on parent: " + parent + ".");
+		}, name_str, parent_str);
+
+		job.detach();
+	}
+
+	return 0;
+}
+
+static int lua_DestroyGear(lua_State* L)
+{
+	auto name = lua_tostring(L, 1);
+	auto parent = lua_tostring(L, 2);
+
+	if (name && parent)
+	{
+		XPX::String name_str = name;
+		XPX::String parent_str = parent;
+
+		XPX::Thread job([](XPX::String name, XPX::String parent) {
+			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::GearComponent>("GearComponent");
+
+			for (auto& part : all_of_parts)
+			{
+				if (part)
+				{
+					if (part->instance_name() == name &&
+						part->group_name() == parent)
+					{
+						XPX::ComponentSystem::get_singleton_ptr()->remove(part);
+						return;
+					}
+				}
+			}
+
+			XPLICIT_INFO(name + " has not been found on parent: " + parent + ".");
+			}, name_str, parent_str);
+
+		job.detach();
+	}
+
+	return 0;
+}
+
+static int lua_DestroyMesh(lua_State* L)
+{
+	auto name = lua_tostring(L, 1);
+	auto parent = lua_tostring(L, 2);
+
+	if (name && parent)
+	{
+		XPX::String name_str = name;
+		XPX::String parent_str = parent;
+
+		XPX::Thread job([](XPX::String name, XPX::String parent) {
+			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::MeshComponent>("MeshComponent");
+
+			for (auto& part : all_of_parts)
+			{
+				if (part)
+				{
+					if (part->instance_name() == name &&
+						part->group_name() == parent)
+					{
+						XPX::ComponentSystem::get_singleton_ptr()->remove(part);
+						return;
+					}
+				}
+			}
+
+			XPLICIT_INFO(name + " has not been found on parent: " + parent + ".");
+			}, name_str, parent_str);
+
+		job.detach();
+	}
+
+	return 0;
+}
+
 void XplicitLoadClientLua() noexcept
 {
 	XPX::RLua::RuntimeClass<XPXInstance> instance;
 	instance.begin_class("Instance", &XPXInstance::new_instance).end_class();
 
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "XPXPlaySound");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "playSound");
 
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_MakeRect, "XPXMakeRectangle");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_KeyDown, "XPXKeyDown");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsKeyDown, "XPXIsKeyDown");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsLeftDown, "XPXIsLeftDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_KeyDown, "someKeyDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsKeyDown, "isKeyDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsLeftDown, "isLeftMouseDown");
 
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsRightDown, "XPXIsRightDown");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsRightDown, "isRightMouseDown");
 
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetY, "XPXGetY");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetX, "XPXGetX");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "destroyGear");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyMesh, "destroyMesh");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyPart, "destroyPart");
+
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetY, "getMouseY");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_GetX, "getMouseX");
 }

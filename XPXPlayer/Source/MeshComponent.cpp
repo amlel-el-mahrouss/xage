@@ -12,6 +12,12 @@
 
 namespace XPX
 {
+	static String mesh_destroy(const char* name, const char* parent) noexcept
+	{
+		String func_proto = fmt::format("function(self) destroyMesh(\"{}\", \"{}\"); end", name, parent);
+		return func_proto;
+	}
+
 	MeshComponent::MeshComponent(const char* path, const char* name, const char* group)
 		:
 		mPath(path), mNode(nullptr),
@@ -27,6 +33,8 @@ namespace XPX
 		mMdl = CAD->getSceneManager()->getMesh(_path.c_str());
 
 		this->insert("Visible", "true");
+		this->insert("Destroy", mesh_destroy(name, group).c_str());
+		this->insert("__gc", mesh_destroy(name, group).c_str());
 
 		mPhysics = PHYSICS_NONE;
 

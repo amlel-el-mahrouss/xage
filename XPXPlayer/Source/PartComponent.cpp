@@ -28,7 +28,7 @@ namespace XPX
 		}
 
 		this->insert("Destroy", this->part_destroy().c_str());
-
+		this->insert("__gc", this->part_destroy().c_str());
 	}
 
 	void PartComponent::update(ClassPtr cls)
@@ -57,9 +57,7 @@ namespace XPX
 
 	String PartComponent::part_destroy() noexcept
 	{
-		String func_proto = fmt::format("function(self) XPXDestroyPart(\"{}\"); end",
-			this->name());
-
+		String func_proto = fmt::format("function(self) destroyPart(\"{}\", \"{}\"); end", this->name(), this->parent());
 		return func_proto;
 	}
 
