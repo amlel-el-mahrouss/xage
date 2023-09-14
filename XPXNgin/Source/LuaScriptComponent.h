@@ -27,7 +27,7 @@ namespace XPX
 		const String destroy_snippet() noexcept;
 
 	public:
-		LuaScriptComponent(const char* name, bool multi_threaded = true);
+		explicit LuaScriptComponent(const char* name);
 		~LuaScriptComponent() override;
 
 	public:

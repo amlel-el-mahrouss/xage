@@ -30,6 +30,11 @@ extern "C" {
 
 namespace XPX::Lua
 {
+	enum
+	{
+		ReadOnly
+	};
+
 	typedef lua_State* CLuaStatePtr;
 
 	class XPLICIT_API CLuaStateManager final
@@ -145,18 +150,53 @@ namespace XPX::Lua
 		XPLICIT_COPY_DEFAULT(CLuaClass);
 
 	public:
+		bool insert(const char* symbol,
+			void* value,
+			int type)
+		{
+			if (symbol &&
+				value)
+			{
+				if (lua_getglobal(mL, mClass.c_str()) == LUA_TTABLE)
+				{
+					mSymbols.push_back(std::make_pair(mSymbolCnt, "C++UserData"));
+					++mSymbolCnt;
+
+					lua_newtable(mL);
+
+					if (type == ReadOnly)
+					{
+						lua_pushcfunction(mL, [](lua_State* L) -> int { lua_error(L); return 0; });
+						lua_setfield(mL, -2, "__newindex");
+					}
+
+					lua_pushlightuserdata(mL, value);
+					lua_setfield(mL, -2, "__CxxData");
+					lua_setfield(mL, -1, symbol);
+
+					return true;
+				}
+
+			}
+
+			return false;
+		}
+
 		bool insert(const char* symbol, const char* value)
 		{
 			if (symbol && 
 				value)
 			{
-				//! Just push this symbol to the symbols list!
-				//! So that we're aware of it.
-				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
-				++mSymbolCnt;
+				if (lua_getglobal(mL, mClass.c_str()) == LUA_TTABLE)
+				{
+					//! Just push this symbol to the symbols list!
+//! So that we're aware of it.
+					mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
+					++mSymbolCnt;
 
-				bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, symbol, value).c_str()) == 0;
-				return ret;
+					bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, symbol, value).c_str()) == 0;
+					return ret;
+				}
 			}
 
 			return false;

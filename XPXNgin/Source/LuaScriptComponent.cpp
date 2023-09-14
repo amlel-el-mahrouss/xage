@@ -17,7 +17,7 @@ namespace XPX
 		return func_proto;
 	}
 
-	LuaScriptComponent::LuaScriptComponent(const char* name, bool multi_threaded)
+	LuaScriptComponent::LuaScriptComponent(const char* name)
 		: mName(name), ClassComponent(
 			String("world").c_str(), (String("XPXScript") + std::to_string(xplicit_get_epoch())).c_str())
 	{
@@ -41,8 +41,7 @@ namespace XPX
 			}
 			}, this);
 
-		if (multi_threaded)
-			job.detach();
+		job.detach();
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;
