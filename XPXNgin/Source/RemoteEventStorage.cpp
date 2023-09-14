@@ -9,19 +9,8 @@
 
 #include "RemoteEventStorage.h"
 
-#define XPLICIT_REMOTE_EVENTS_CNT (6)
-
 namespace XPX
 {
-	const char* XPLICIT_REMOTE_EVENTS[XPLICIT_REMOTE_EVENTS_CNT] = {
-		"Spawn",
-		"Death",
-		"Move",
-		"Login",
-		"Damage",
-		"Logoff",
-	};
-
 	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, Func) self.Slots[#self.Slots + 1] = Func; self.Cnt = #self.Slots; end";
 	static const char* XPLICIT_STEP_UPDATE_SNIPPET = "function(self) self.Cnt = self.Cnt + 1; return self.Slots[self.Cnt - 1]; end";
 	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, Index) self.Slots[Index] = nil; end";
@@ -54,18 +43,8 @@ namespace XPX
 	RemoteEventStorage::RemoteEventStorage()
 		: mClient(nullptr), mServer(nullptr), Lua::CLuaClass("world.RemoteEventStorage")
 	{
-		this->insert("UserData", this, Lua::ReadOnly); // read only by default.
+		this->insert(CLUA_USER_DATA_SYMBOL, this, Lua::ReadOnly); // read only by default.
 		this->insert("Attach", "function(self, Table) return xpxAttachRemoteEvent(self.UserData.__CxxData, Table); end"); // to actually call this.
-
-		for (size_t i = 0; i < XPLICIT_REMOTE_EVENTS_CNT; ++i)
-		{
-			this->insert(XPLICIT_REMOTE_EVENTS[i], "{}");
-			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Cnt").c_str(), "0");
-			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Slots").c_str(), "{}");
-			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Step").c_str(), XPLICIT_STEP_UPDATE_SNIPPET);
-			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Connect").c_str(), XPLICIT_CONNECT_SNIPPET);
-			this->insert((String(XPLICIT_REMOTE_EVENTS[i]) + ".Disconnect").c_str(), XPLICIT_DISCONNECT_SNIPPET);
-		}
 	}
 
 	RemoteEventStorage::~RemoteEventStorage() = default;
@@ -93,11 +72,13 @@ namespace XPX
 		if (!self)
 			return;
 
-		for (size_t event_idx = 0; event_idx < (XPLICIT_REMOTE_EVENTS_CNT); ++event_idx)
+		for (size_t event_idx = 0; event_idx < self->count(); ++event_idx)
 		{
-			if (self->mServer)
+			if (self->mServer &&
+				self->symbols()[event_idx].second.find(CLUA_USER_DATA_SYMBOL) == String::npos ||
+				self->symbols()[event_idx].second.find(CLUA_IDENT) == String::npos)
 			{
-				luaL_dostring(self->state(), (String("string.dump(return world.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[event_idx] + ":Step())").c_str());
+				luaL_dostring(self->state(), (String("string.dump(return world.RemoteEventStorage.") + self->symbols()[event_idx].second + ":Step())").c_str());
 				const char* bytecode = lua_tostring(self->state(), -1);
 
 				if (bytecode)

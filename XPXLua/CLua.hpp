@@ -317,6 +317,7 @@ namespace XPX::Lua
 		}
 
 		std::int64_t count() { return mSymbolCnt; }
+		std::vector<std::pair<std::int64_t, std::string>>& symbols() { return mSymbols; }
 
 	private:
 		std::vector<std::pair<std::int64_t, std::string>> mSymbols;
@@ -328,3 +329,6 @@ namespace XPX::Lua
 }
 
 #include <RLua.hpp>
+
+#define CLUA_USER_DATA_SYMBOL "UserData"
+#define CLUA_IDENT "CxxLua"
