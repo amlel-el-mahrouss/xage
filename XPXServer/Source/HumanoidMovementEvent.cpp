@@ -74,9 +74,9 @@ namespace XPX
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					humanoid->get_attribute().pos().X += speed;
 
-				peer->packet.pos[XPLICIT_NETWORK_X] = humanoid->get_attribute().pos().X;
-				peer->packet.pos[XPLICIT_NETWORK_Y] = humanoid->get_attribute().pos().Y;
-				peer->packet.pos[XPLICIT_NETWORK_Z] = humanoid->get_attribute().pos().Z;
+				peer->packet.pos[XPLICIT_NETWORK_X] = speed;
+				peer->packet.pos[XPLICIT_NETWORK_Y] = speed;
+				peer->packet.pos[XPLICIT_NETWORK_Z] = speed;
 
 				/* send server delta to player, so that he is not out of touch. */
 				peer->packet.pos[XPLICIT_NETWORK_DELTA] = mDeltaTime;

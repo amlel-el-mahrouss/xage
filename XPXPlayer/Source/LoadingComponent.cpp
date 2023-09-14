@@ -120,7 +120,7 @@ namespace XPX
 
             EventSystem::get_singleton_ptr()->add<NpMovementSharedEvent>();
 
-            EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(public_hash);
+            EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(hash);
             EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
             ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);

@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 			XPX::ComponentSystem::get_singleton_ptr() &&
 			XPX::EventSystem::get_singleton_ptr())
 		{
-			CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 0x40, 0x40, 0x40));
+			CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
 
 #ifdef _WIN32
 			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();

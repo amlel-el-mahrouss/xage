@@ -24,9 +24,9 @@ namespace XPX
 	constexpr const short XPLICIT_NETWORK_DELAY = 100;
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
 
-	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& public_hash, const bool is_local_player, const char* optional_xid)
+	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& hash, const bool is_local_player, const char* optional_xid)
 		:
-		mPublicHash(public_hash),
+		mHash(hash),
 		mCam(nullptr), 
 		mPacket(),
 		mPos(0.f, 0.f, 0.f),
@@ -88,10 +88,7 @@ namespace XPX
 		if (self->mNetwork == nullptr) return;
 		if (!self->mNetwork->read(self->mPacket)) return;
 
-		if (self->mPublicHash == 0)
-			self->mPublicHash = self->mPacket.public_hash;
-
-		if (self->mPacket.public_hash == self->mPublicHash)
+		if (self->mPacket.hash == self->mHash)
 		{
 			if (self->mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
 				self->mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
@@ -102,11 +99,11 @@ namespace XPX
 				const NetworkFloat zSpeed = self->mPacket.pos[XPLICIT_NETWORK_Z];
 				const NetworkFloat ySpeed = self->mPacket.pos[XPLICIT_NETWORK_Y];
 
-				self->mPos.Z = zSpeed;
-				self->mPos.X = xSpeed;
-				self->mPos.Y = ySpeed;
+				self->mPos.Z += zSpeed * delta;
+				self->mPos.X += xSpeed * delta;
+				self->mPos.Y += ySpeed * delta;
 
-				self->mCharacter->node()->setPosition(vector3df(self->mPos.X * delta, self->mPos.Y * delta, self->mPos.Z * delta));
+				self->mCharacter->node()->setPosition(vector3df(self->mPos.X, self->mPos.Y, self->mPos.Z));
 
 				self->mCharacter->node()->setRotation(
 					vector3df(self->mCam->get()->getPosition().X, 
@@ -175,7 +172,7 @@ namespace XPX
 
 	const char* LocalHumanoidMoveEvent::name() noexcept { return ("LocalHumanoidMoveEvent"); }
 
-	const int64_t& LocalHumanoidComponent::id() noexcept { return mPublicHash; }
+	const int64_t& LocalHumanoidComponent::id() noexcept { return mHash; }
 
 	/* LocalPlayer movement logic */
 	void LocalHumanoidMoveEvent::operator()()

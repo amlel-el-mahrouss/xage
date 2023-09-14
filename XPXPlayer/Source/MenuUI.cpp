@@ -138,6 +138,7 @@ namespace XPX
 		  mPublicHash(publicHash),
 		  mHealth(0),
 		  mHudFrame(new ImGUI::UIFrame()),
+			mFrameParent(new ImGUI::UIFrame()),
 		  mSelectedSlot(-1)
 	{
 		// verify hash and network component.
@@ -161,20 +162,21 @@ namespace XPX
 		mHudFrame->X = 10;
 		mHudFrame->Y = 10;
 
+		mFrameParent->H = 30;
+		mFrameParent->W = CAD->getVideoDriver()->getScreenSize().Width;
+
+		mFrameParent->BackgroundHoverColor.setAlpha(30);
+
+		mFrameParent->X = 0;
+		mFrameParent->Y = 0;
+
 		std::size_t x_off = 10UL;
 		std::size_t y_off = CAD->getVideoDriver()->getScreenSize().Height - 74UL;
 
 		for (auto & mInventorySlot : mInventorySlots)
 		{
-			mInventorySlot.BackgroundColor.setRed(0x00);
-			mInventorySlot.BackgroundColor.setGreen(0x94);
-			mInventorySlot.BackgroundColor.setBlue(0xFF);
-			mInventorySlot.BackgroundColor.setAlpha(225);
-
-			mInventorySlot.BackgroundHoverColor.setRed(0x00);
-			mInventorySlot.BackgroundHoverColor.setGreen(0x94);
-			mInventorySlot.BackgroundHoverColor.setBlue(0xFF);
-			mInventorySlot.BackgroundHoverColor.setAlpha(225);
+			mInventorySlot.BackgroundHoverColor.setAlpha(50);
+			mInventorySlot.BackgroundColor.setAlpha(70);
 
 			mInventorySlot.W = mInventorySlot.H = 64;
 			mInventorySlot.X = x_off;
@@ -200,12 +202,27 @@ namespace XPX
 
 		for (size_t i = 0; i < XPLICIT_MAX_ELEMENTS_INVENTORY; ++i)
 		{
-			char to_ascii = i + 48 + 1;
+			if (self->mSelectedSlot != i)
+			{
+				char to_ascii = i + 48 + 1;
 
-			if (KEYBOARD->key_down(to_ascii))
-				self->mSelectedSlot = i;
+				if (KEYBOARD->key_down(to_ascii))
+					self->mSelectedSlot = i;
 
-			self->mInventorySlots[i].update(ImGUI::ImColor(255, 0x1C, 0x1C, 0x1C));
+			}
+
+			if (self->mInventorySlots[i].in_region())
+			{
+				if (KEYBOARD->left_down() &&
+					self->mSelectedSlot != i)
+					self->mSelectedSlot = i;
+
+				self->mInventorySlots[i].update(self->mInventorySlots[i].BackgroundHoverColor);
+			}
+			else
+			{
+				self->mInventorySlots[i].update(self->mInventorySlots[i].BackgroundColor);
+			}
 
 			if (self->mSelectedSlot == i)
 			{
@@ -219,6 +236,7 @@ namespace XPX
 			}
 		}
 
+		self->mFrameParent->update(self->mFrameParent->BackgroundHoverColor);
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
 		if (packet.health != self->mHealth)

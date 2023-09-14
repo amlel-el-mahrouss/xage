@@ -35,7 +35,7 @@ namespace XPX
 	class LocalHumanoidComponent final : public Component
 	{
 	public:
-		LocalHumanoidComponent(const int64_t& public_hash, const bool is_local_player = false, const char* optional_xplicit_id = XPLICIT_ID_DUMMY);
+		LocalHumanoidComponent(const int64_t& hash, const bool is_local_player = false, const char* optional_xplicit_id = XPLICIT_ID_DUMMY);
 		~LocalHumanoidComponent() override;
 
 		LocalHumanoidComponent& operator=(const LocalHumanoidComponent&) = default;
@@ -62,7 +62,7 @@ namespace XPX
 		bool mIsLocalPlayer;
 
 	private:
-		std::int64_t mPublicHash;
+		std::int64_t mHash;
 		Lua::CLuaClass* mClass;
 		HUMANOID_STATE mState;
 		NetworkPacket mPacket;
