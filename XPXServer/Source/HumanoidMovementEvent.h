@@ -39,8 +39,8 @@ namespace XPX
 		void operator()() override;
 
 	private:
-		GameVarPtr mDeltaVar;
-		double mDeltaTime;
+		float mDeltaTime;
+		float mTimeStamp;
 
 	};
 }

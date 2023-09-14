@@ -28,7 +28,7 @@ namespace XPX::Bites
 	Application::Application(Utils::UriParser xconnect_to)
 		: mPath("")
 #ifdef XPLICIT_WINDOWS
-    , mWsa()
+		, mWsa()
 #endif
 	{
 		this->setup_engine();

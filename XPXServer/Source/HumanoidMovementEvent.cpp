@@ -22,28 +22,18 @@ namespace XPX
 	HumanoidMovementEvent::HumanoidMovementEvent() 
 		: 
 		mDeltaTime(0UL),
-		mDeltaVar(nullptr)
-	{
-		mDeltaVar = GameVarManager::get_singleton_ptr()->get("DeltaTime");
+		mTimeStamp(CAD->getTimer()->getTime())
+	{}
 
-		if (!mDeltaVar)
-		{
-			mDeltaVar = XPX::GameVarManager::get_singleton_ptr()->create("DeltaTime",
-				"0.01",
-				XPX::GameVar::FLAG_SERVER_ONLY | XPX::GameVar::FLAG_CHEAT);
-		}
-	}
-
-	HumanoidMovementEvent::~HumanoidMovementEvent()
-	{
-		if (mDeltaVar)
-			delete mDeltaVar;
-	}
+	HumanoidMovementEvent::~HumanoidMovementEvent() = default;
 
 	const char* HumanoidMovementEvent::name() noexcept { return ("HumanoidMovementEvent"); }
 
 	void HumanoidMovementEvent::operator()()
 	{
+		mDeltaTime += (CAD->getTimer()->getTime() - mTimeStamp);
+		mTimeStamp = CAD->getTimer()->getTime();
+
 		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 		
 		for (std::size_t i = 0; i < humanoids.size(); ++i)
@@ -54,7 +44,7 @@ namespace XPX
 				!humanoid->can_spawn() ||
 				humanoid->get_peer() == nullptr ||
 				humanoid->get_peer()->packet.hash != humanoid->get_peer()->hash ||
-				humanoid->get_class()->index_as_bool("Anchored"))
+				humanoid->get_class()->index_as_bool("Locked"))
 				continue;
 
 			NetworkPeer* peer = humanoid->get_peer();
@@ -112,10 +102,5 @@ namespace XPX
 				humanoid->get_class()->assign("IsMoving", "false");
 			}
 		}
-
-		mDeltaTime += (mDeltaVar->as_float() * XPLICIT_DELTA);
-
-		String heartbeat_fmt = fmt::format("World.Settings.DeltaTime.Value = {}", std::to_string(mDeltaTime));
-		Lua::CLuaStateManager::get_singleton_ptr()->run_string(heartbeat_fmt.c_str());
 	}
 }

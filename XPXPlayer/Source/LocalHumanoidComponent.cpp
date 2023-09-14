@@ -154,7 +154,10 @@ namespace XPX
 	void LocalHumanoidComponent::attach(LocalCameraComponent* cam) noexcept
 	{ 
 		if (cam)
+		{
 			mCam = cam;
+			mCam->get()->setTarget(mCharacter->node()->getPosition());
+		}
 	}
 
 	Vector<float> LocalHumanoidComponent::get_pos() noexcept { return mPos; }

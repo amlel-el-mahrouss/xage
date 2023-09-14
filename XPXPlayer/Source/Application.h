@@ -108,7 +108,6 @@ namespace XPX::Bites
 	private:
 		String mPath;
 
-
 	private:
 #ifdef XPLICIT_WINDOWS
 		// WinSock data

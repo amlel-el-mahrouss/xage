@@ -12,15 +12,15 @@
 #include "NginCore.h"
 
 #define XPLICIT_UNIVERSE_DELIM "_"
-#define XPLICIT_UNIVERSE_PREFIX "XPLICIT_"
+#define XPLICIT_UNIVERSE_PREFIX "XPX_"
 
-#define XPLICIT_ID_DUMMY "XPLICIT_0_0000000000"
+#define XPLICIT_ID_DUMMY "XPX_0_0000000000"
 
 namespace XPX::Auth
 {
 	//!
 	//! @class : XplicitID
-	//! @brief : Xplicit IDentifier or @brief Xplicit.com ID
+	//! @brief : Xplicit IDentifier or @brief play-xplicit.com ID
 	//! 
 	class XPLICIT_API XplicitID final
 	{

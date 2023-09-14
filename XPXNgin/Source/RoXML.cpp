@@ -229,10 +229,9 @@ namespace XPX::RoXML
 								{
 									irr::scene::ISceneNode* node = nullptr;
 
-									if (node = CAD->getSceneManager()->getSceneNodeFromName(parent_id); node)
-									{
+									if (node = CAD->getSceneManager()->getSceneNodeFromName(parent_id);
+										node)
 										node->addChild(node);
-									}
 								}
 							}
 

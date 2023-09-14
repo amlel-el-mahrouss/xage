@@ -24,7 +24,7 @@
 #define XPLICIT_NETWORK_MAG_2 ('X')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
-#define XPLICIT_NETWORK_CMD_MAX (24U)
+#define XPLICIT_NETWORK_CMD_MAX (30U)
 
 #ifndef XPLICIT_INVALID_ADDR
 #   define XPLICIT_INVALID_ADDR INADDR_NONE
@@ -123,9 +123,11 @@ namespace XPX
 
     struct XPLICIT_API NetworkPacket final
     {
+        // magic number.
     public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
 
+        // packet and player information.
     public:
         std::int8_t           channel;
         std::int16_t          version;
@@ -133,26 +135,37 @@ namespace XPX
         std::int16_t          size;
         std::int16_t          id;
 
+        // hash and public hash.
+    public:
         std::int64_t          public_hash;
         std::int64_t          hash;
 
+        // network commands.
     public:
         std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
 
+        // position stuff.
     public:
         NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
+        NetworkFloat          pos_second[XPLICIT_NETWORK_POS_MAX];
+        NetworkFloat          pos_third[XPLICIT_NETWORK_POS_MAX];
+        NetworkFloat          pos_fourth[XPLICIT_NETWORK_POS_MAX];
 
     public:
         char                  replicas[XPLICIT_MAX_REPLICAS][XPLICIT_NETWORK_BUF_SZ];
+
+        // additional data.
+    public:
         char                  buffer[XPLICIT_NETWORK_BUF_SZ];
 
     };
 
-    // Xplicit Xconnect Communication packet.
+    // chat packet.
     struct XPLICIT_API NetworkPacketChat final
     {
+    public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
-        std::int8_t           channel;
+        std::int8_t           channel; // channel of the packet, that is here which chatroom to print this in. 3 + n
         char                  buffer[XPLICIT_NETWORK_BUF_SZ];
 
     };
