@@ -61,10 +61,10 @@ namespace XPX
 				case EMIE_LMOUSE_PRESSED_DOWN:
 				{
 #ifdef XPLICIT_DEBUG
-					XPLICIT_INFO("World:LeftClick [EVENT]");
+					XPLICIT_INFO("world:LeftClick [EVENT]");
 #endif // XPLICIT_DEBUG
 
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LeftClick()");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:LeftClick()");
 
 					mMouseLeft.Down = true;
 					break;
@@ -77,10 +77,10 @@ namespace XPX
 				case EMIE_RMOUSE_PRESSED_DOWN:
 				{
 #ifdef XPLICIT_DEBUG
-					XPLICIT_INFO("World:RightClick [EVENT]");
+					XPLICIT_INFO("world:RightClick [EVENT]");
 #endif // XPLICIT_DEBUG
 
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:RightClick()");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:RightClick()");
 
 					mMouseRight.Down = true;
 					break;
@@ -104,10 +104,10 @@ namespace XPX
 					mMousePos.Y = env.MouseInput.Y;
 
 #ifdef XPLICIT_DEBUG
-					XPLICIT_INFO("World:MouseMove [EVENT]");
+					XPLICIT_INFO("world:MouseMove [EVENT]");
 #endif // XPLICIT_DEBUG
 
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:MouseMove()");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:MouseMove()");
 
 					break;
 				}

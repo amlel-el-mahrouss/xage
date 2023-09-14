@@ -41,14 +41,14 @@ static int lua_DestroyScript(lua_State* L)
 XPLICIT_API void XplicitLoadBaseLua()
 {
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World = {}");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world = {}");
 
 	// have a look at GameVar if it ever crashes.
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Settings = {}");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World.Players = {}");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Settings = {}");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Players = {}");
 
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Wait, "Wait");
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "XPXDestroyScript");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Wait, "wait");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "destroyScript");
 
 	XPLICIT_GET_DATA_DIR(full_path);
 

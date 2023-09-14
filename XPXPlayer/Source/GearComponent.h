@@ -39,7 +39,7 @@ namespace XPX
 	public:
 		explicit GearComponent(const char* name, 
 			const char* mesh = nullptr,
-			const char* parent = "World") noexcept;
+			const char* parent = "world") noexcept;
 
 	public:
 		MeshComponent* get_mesh() const noexcept;

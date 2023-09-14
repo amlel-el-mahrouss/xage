@@ -39,9 +39,9 @@ namespace XPX
 
 		if (is_local_player)
 		{
-			mClass = new Lua::CLuaClass("World.Players.LocalPlayer");
+			mClass = new Lua::CLuaClass("world.Players.LocalPlayer");
 
-			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer.RootPart", "World");
+			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer.RootPart", "world");
 		}
 		else
 		{
@@ -52,11 +52,11 @@ namespace XPX
 			path_xid += optional_xid;
 
 			// ugly ass hack, as always.
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string((String("World.") + path_xid + " = {}").c_str());
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string((String("world.") + path_xid + " = {}").c_str());
 
 			path_xid += ".RootPart";
 
-			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), path_xid.c_str(), "World");
+			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), path_xid.c_str(), "world");
 		}
 
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
@@ -113,9 +113,9 @@ namespace XPX
 					0, 
 					0));
 
-				XPLICIT_INFO("World:LocalMove [EVENT]");
+				XPLICIT_INFO("world:LocalMove [EVENT]");
 
-				String fmt = fmt::format("World:LocalMove({},{},{})", std::to_string(self->mPos.X), std::to_string(self->mPos.Y), std::to_string(self->mPos.Z));
+				String fmt = fmt::format("world:LocalMove({},{},{})", std::to_string(self->mPos.X), std::to_string(self->mPos.Y), std::to_string(self->mPos.Z));
 
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
@@ -137,9 +137,9 @@ namespace XPX
 				if (self->mPacket.health > 0 &&
 					self->mState == HUMANOID_STATE::DEAD)
 				{
-					XPLICIT_INFO("World:LocalSpawn [EVENT]");
+					XPLICIT_INFO("world:LocalSpawn [EVENT]");
 
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:LocalSpawn()");
+					Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:LocalSpawn()");
 
 					self->mState = HUMANOID_STATE::ALIVE;
 				}

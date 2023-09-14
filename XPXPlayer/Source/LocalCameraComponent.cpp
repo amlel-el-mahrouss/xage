@@ -18,7 +18,7 @@
 namespace XPX
 {
 	LocalCameraComponent::LocalCameraComponent() noexcept
-		: ClassComponent("World", "Camera"),
+		: ClassComponent("world", "Camera"),
 		mCamera(nullptr),
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))

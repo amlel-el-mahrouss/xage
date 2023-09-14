@@ -173,10 +173,10 @@ namespace XPX
 					XPLICIT_INFO("[LOGOFF] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
-					String path("_G.World.Players.");
+					String path("_G.world.Players.");
 					path += mNetwork->get(peer_idx)->xplicit_id.as_string();
 
-					String fmt = fmt::format("World:Logoff({})", path);
+					String fmt = fmt::format("world:Logoff({})", path);
 					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;

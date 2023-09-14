@@ -17,7 +17,7 @@
 
 namespace XPX
 {
-	constexpr const double XPLICIT_DELTA = 0.01;
+	constexpr const float XPLICIT_DELTA = 1000.f;
 
 	HumanoidMovementEvent::HumanoidMovementEvent() 
 		: 
@@ -31,7 +31,7 @@ namespace XPX
 
 	void HumanoidMovementEvent::operator()()
 	{
-		mDeltaTime += (CAD->getTimer()->getTime() - mTimeStamp);
+		mDeltaTime += (CAD->getTimer()->getTime() - mTimeStamp) / XPLICIT_DELTA;
 		mTimeStamp = CAD->getTimer()->getTime();
 
 		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
@@ -88,15 +88,15 @@ namespace XPX
 				peer->packet.public_hash = peer->public_hash;
 
 #ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("World:Move [EVENT]");
+				XPLICIT_INFO("world:Move [EVENT]");
 #endif // ifdef XPLICIT_DEBUG
 
-				String path("_G.World.Players.");
+				String path = "world.Players.";
 				path += peer->xplicit_id.as_string();
 
 				humanoid->get_class()->assign("IsMoving", "true");
 
-				String fmt = fmt::format("World:Move({})", path);
+				String fmt = fmt::format("world:Move({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 
 				humanoid->get_class()->assign("IsMoving", "false");

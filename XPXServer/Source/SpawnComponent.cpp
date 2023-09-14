@@ -15,7 +15,7 @@
 #include <CLua.hpp>
 
 #define XPLICIT_LUA_GLOBAL "_G."
-#define XPLICIT_LUA_NAMESPACE "World."
+#define XPLICIT_LUA_NAMESPACE "world."
 
 namespace XPX
 {

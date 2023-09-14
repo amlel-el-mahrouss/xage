@@ -27,7 +27,7 @@ namespace XPX
 	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, Index) self.Slots[Index] = nil; end";
 
 	RemoteEventStorage::RemoteEventStorage()
-		: mClient(nullptr), mServer(nullptr), Lua::CLuaClass("World.RemoteEventStorage")
+		: mClient(nullptr), mServer(nullptr), Lua::CLuaClass("world.RemoteEventStorage")
 	{
 		for (size_t i = 0; i < XPLICIT_REMOTE_EVENTS_CNT; ++i)
 		{
@@ -71,7 +71,7 @@ namespace XPX
 			if (self->mServer &&
 				self->index_as_bool(std::format("{}.Flush", XPLICIT_REMOTE_EVENTS[event_idx]).c_str()))
 			{
-				luaL_dostring(self->state(), (String("return World.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[event_idx] + ":Step()").c_str());
+				luaL_dostring(self->state(), (String("return world.RemoteEventStorage.") + XPLICIT_REMOTE_EVENTS[event_idx] + ":Step()").c_str());
 
 				char bytecode[XPLICIT_NETWORK_BUF_SZ];
 				memset(bytecode, 0, XPLICIT_NETWORK_BUF_SZ);

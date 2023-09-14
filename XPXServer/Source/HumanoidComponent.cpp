@@ -58,12 +58,12 @@ namespace XPX
 
 			self->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
 
-			XPLICIT_INFO("World:Spawn [EVENT]");
+			XPLICIT_INFO("world:Spawn [EVENT]");
 
-			String xpx_player_path("World.Players.");
+			String xpx_player_path("world.Players.");
 			xpx_player_path += self->get_peer()->xplicit_id.as_string();
 
-			xpx_player_path = std::format("World:Spawn({})", xpx_player_path);
+			xpx_player_path = std::format("world:Spawn({})", xpx_player_path);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(xpx_player_path.c_str());
 		}
 
@@ -90,12 +90,12 @@ namespace XPX
 
 		if (self->mHealth != self->mClass->index_as_number<double>("Health"))
 		{
-			String path("World.Players.");
+			String path("world.Players.");
 			path += self->mPeer->xplicit_id.as_string();
 
-			XPLICIT_INFO("World:Damage [EVENT]");
+			XPLICIT_INFO("world:Damage [EVENT]");
 
-			String fmt = fmt::format("World:Damage({})", path);
+			String fmt = fmt::format("world:Damage({})", path);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 		}
 
@@ -174,7 +174,7 @@ namespace XPX
 
 		if (mPeer)
 		{
-			String path("World.Players.");
+			String path("world.Players.");
 			path += mPeer->xplicit_id.as_string();
 
 			if (mClass == nullptr)
@@ -186,12 +186,12 @@ namespace XPX
 			{
 				mClass->insert("UserName", "'Unconnected'");
 
-				mClass->insert("Parent", "World.Players");
+				mClass->insert("Parent", "world.Players");
 				mClass->insert("Id", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
 				mClass->insert("IsMoving", "false");
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
-				mClass->insert("State", "World.HumanoidState.Alive");
+				mClass->insert("State", "world.HumanoidState.Alive");
 				mClass->insert("Kick", "false");
 				mClass->insert("KickReason", "'Kicked by server.'");
 				mClass->insert("Anchored", "false");
@@ -204,9 +204,9 @@ namespace XPX
 				mClass->insert("PacketDeliveryKind", "-1");
 				mClass->insert("PacketContent", "nil");
 
-				XPLICIT_INFO("World:Login [EVENT]");
+				XPLICIT_INFO("world:Login [EVENT]");
 
-				String fmt = std::format("World:Login({})", path);
+				String fmt = std::format("world:Login({})", path);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
 			}
 		}

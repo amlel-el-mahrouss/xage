@@ -64,7 +64,7 @@ static int lua_PlaySound(lua_State* L)
 		XPX::String endpoint = XPLICIT_XASSET_ENDPOINT;
 		monitor->HTTP->set_endpoint(endpoint);
 
-		auto tmp = std::to_string(xplicit_get_epoch()) + "-tmp-snd.wav";
+		auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-SND.wav";
 
 		if (monitor &&
 			monitor->HTTP->download(url, tmp))
@@ -162,6 +162,12 @@ public:
 			if (lua_tostring(L, 2) &&
 				lua_tostring(L, 3))
 			{
+				if (XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>("SoundComponent"))
+				{
+					lua_pushnil(L);
+					return 1;
+				}
+
 				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(lua_tostring(L, 2),
 					lua_tostring(L, 3));
 

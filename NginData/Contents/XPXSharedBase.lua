@@ -1,11 +1,11 @@
 -- Copyright PlayXPlicit SARL
 
-World.HumanoidState = {}
-World.HumanoidState.ALIVE = 0
-World.HumanoidState.DEAD = 1
-World.HumanoidState.INVALID = 3
+world.HumanoidState = {}
+world.HumanoidState.ALIVE = 0
+world.HumanoidState.DEAD = 1
+world.HumanoidState.INVALID = 3
 
-World.Cursor = {}
+world.Cursor = {}
 
 local function __addEvent(Tbl, Func)
     Tbl.Slots[#Tbl.Slots + 1] = Func;
@@ -16,7 +16,7 @@ local function __rmEvent(Tbl, Index)
     Tbl.Slots[Index] = nil;
 end
 
-World.Slots = {
+world.Slots = {
     Login = { 
         Slots = {},
         Connect = function(self, Func)
@@ -127,93 +127,93 @@ World.Slots = {
     },
 }
 
-World.Counter = 0
-World.PlayerCount = 0
+world.Counter = 0
+world.PlayerCount = 0
 
 function World:Login(ply)
-    World.PlayerCount = World.PlayerCount + 1
+    world.PlayerCount = world.PlayerCount + 1
 
-    for _, v in pairs(World.Slots.Login.Slots) do
+    for _, v in pairs(world.Slots.Login.Slots) do
         v(ply)
     end
 end
 
 function World:Logoff(ply)
-    World.PlayerCount = World.PlayerCount - 1
+    world.PlayerCount = world.PlayerCount - 1
 
-    for _, v in pairs(World.Slots.Logoff.Slots) do
+    for _, v in pairs(world.Slots.Logoff.Slots) do
         v(ply)
     end
 end
 
 function World:LeftClick()
-    for _, v in pairs(World.Slots.LeftClick.Slots) do
+    for _, v in pairs(world.Slots.LeftClick.Slots) do
         v()
     end
 end
 
 function World:RightClick()
-    for _, v in pairs(World.Slots.RightClick.Slots) do
+    for _, v in pairs(world.Slots.RightClick.Slots) do
         v()
     end
 end
 
 function World:MouseMove()
-    for _, v in pairs(World.Slots.MouseMove.Slots) do
+    for _, v in pairs(world.Slots.MouseMove.Slots) do
         v()
     end
 end
 
 function World:LocalSpawn()
-    for _, v in pairs(World.Slots.LocalSpawn.Slots) do
+    for _, v in pairs(world.Slots.LocalSpawn.Slots) do
         v()
     end
 end
 
 function World:Move(ply)
-    for _, v in pairs(World.Slots.Move.Slots) do
+    for _, v in pairs(world.Slots.Move.Slots) do
         v(ply)
     end
 end
 
 function World:LocalMove(x, y, z)
-    for _, v in pairs(World.Slots.LocalMove.Slots) do
+    for _, v in pairs(world.Slots.LocalMove.Slots) do
         v(x, y, z)
     end
 end
 
 function World:Damage(ply)
-    for _, v in pairs(World.Slots.Damage.Slots) do
+    for _, v in pairs(world.Slots.Damage.Slots) do
         v(ply)
     end
 end
 
 function World:Death(ply)
-    for _, v in pairs(World.Slots.Death.Slots) do
+    for _, v in pairs(world.Slots.Death.Slots) do
         v(ply)
     end
 end
 
 function World:Spawn(ply)
-    for _, v in pairs(World.Slots.Spawn.Slots) do
+    for _, v in pairs(world.Slots.Spawn.Slots) do
         v(ply)
     end
 end
 
 function World:RenderOneFrame()
-    for _, v in pairs(World.Slots.RenderOneFrame.Slots) do
+    for _, v in pairs(world.Slots.RenderOneFrame.Slots) do
         v()
     end
 end
 
 -- Replications enums
-World.REPLICATE_INVALID = 0;
-World.REPLICATE_SCRIPT = 1;
-World.REPLICATE_SCENE = 2;
+world.REPLICATE_INVALID = 0;
+world.REPLICATE_SCRIPT = 1;
+world.REPLICATE_SCENE = 2;
 
-World.REPLICATE_TYPE_CREATE = 522;
-World.REPLICATE_TYPE_REMOVE = 523;
-World.REPLICATE_TYPE_UPDATE = 524;
+world.REPLICATE_TYPE_CREATE = 522;
+world.REPLICATE_TYPE_REMOVE = 523;
+world.REPLICATE_TYPE_UPDATE = 524;
 
 function World:DumpTable(o)
     if type(o) == 'table' then
@@ -244,17 +244,17 @@ function World:IsRightDown()
     return XPXIsRightDown();
 end
 
-function World.Cursor:GetY()
+function world.Cursor:GetY()
     return XPXGetY();
 end
 
-function World.Cursor:GetX()
+function world.Cursor:GetX()
     return XPXGetX();
 end
 
 -- Some part of the specs.
 -- World = Root table of components.
 -- Script = Root table of scripts.
--- World.Settings = GameVars.
--- World.Players = Players.
--- World.<Object> = C++ or lua exposed object.
+-- world.Settings = GameVars.
+-- world.Players = Players.
+-- world.<Object> = C++ or lua exposed object.

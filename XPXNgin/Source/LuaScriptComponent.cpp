@@ -13,15 +13,16 @@ namespace XPX
 {
 	const String LuaScriptComponent::destroy_snippet() noexcept
 	{
-		String func_proto("function(self) XPXDestroyScript(self.Name); end");
+		String func_proto("function(self) destroyScript(self.Name); end");
 		return func_proto;
 	}
 
 	LuaScriptComponent::LuaScriptComponent(const char* name)
 		: mName(name), ClassComponent(
-			std::string("World").c_str(), (String("XPXScript") + std::to_string(xplicit_get_epoch())).c_str())
+			String("world").c_str(), (String("XPXScript") + std::to_string(xplicit_get_epoch())).c_str())
 	{
 		this->insert("Destroy", this->destroy_snippet().c_str());
+		this->insert("__gc", this->destroy_snippet().c_str());
 
 		this->run_string(fmt::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
 

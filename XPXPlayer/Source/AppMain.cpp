@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 
 			CAD->getVideoDriver()->endScene();
 
-			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:RenderOneFrame()");
+			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:RenderOneFrame()");
 		}
 	}
 	catch (XPX::EngineError& err)

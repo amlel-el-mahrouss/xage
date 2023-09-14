@@ -5,7 +5,7 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: GameVar.h
- *			Purpose: C++ World Variable Implementation
+ *			Purpose: C++ world Variable Implementation
  *
  * =====================================================================
  */
@@ -19,7 +19,7 @@
 namespace XPX
 {
 	GameVar::GameVar(const char* name, const char* value, int flags)
-		: mName(name), mValue(value), mFlags(flags), Lua::CLuaClass((String("World.Settings.") + name).c_str())
+		: mName(name), mValue(value), mFlags(flags), Lua::CLuaClass((String("world.Settings.") + name).c_str())
 	{
 		this->insert("VarName", name);
 		this->insert("Value", value);

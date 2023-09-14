@@ -93,11 +93,11 @@ namespace XPX
 			}
 
 #ifdef XPLICIT_DEBUG
-			XPLICIT_INFO("World:Login [EVENT]");
+			XPLICIT_INFO("world:Login [EVENT]");
 #endif
 
 			ComponentSystem::get_singleton_ptr()->add<XPX::LocalHumanoidComponent>(networkPacket.public_hash, false, networkPacket.buffer);
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Login()");
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:Login()");
 
 			/*! invalidate command right there. */
 			networkPacket.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_INVALID;
@@ -129,10 +129,10 @@ namespace XPX
 					if (packet.public_hash == players[ply]->id())
 					{
 #ifdef XPLICIT_DEBUG
-						XPLICIT_INFO("World:Logoff [EVENT]");
+						XPLICIT_INFO("world:Logoff [EVENT]");
 #endif
 
-						Lua::CLuaStateManager::get_singleton_ptr()->run_string("World:Logoff()");
+						Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:Logoff()");
 						ComponentSystem::get_singleton_ptr()->remove(players[ply]);
 
 						break;
