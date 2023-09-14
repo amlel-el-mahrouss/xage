@@ -95,7 +95,7 @@ namespace XPX
 				path += peer->xplicit_id.as_string();
 
 				String fmt = fmt::format("world:Move({})", path);
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 			}
 		}
 	}

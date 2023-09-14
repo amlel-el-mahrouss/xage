@@ -74,8 +74,7 @@ namespace XPX
 		}
 
 		peer->xplicit_id.generate(peer->public_hash);
-		player->set_peer(peer);
-		
+
 		return true;
 	}
 
@@ -133,6 +132,8 @@ namespace XPX
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
+					
+					player->set_peer(mNetwork->get(peer_idx));
 				}
 			}
 		}

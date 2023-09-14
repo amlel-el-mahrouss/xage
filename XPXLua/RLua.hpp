@@ -61,7 +61,7 @@ namespace XPX::RLua
 		}
 
 	public:
-		RuntimeClass& begin_class(const char* name, RLuaProc on_new = RuntimeClass<Class>::on_new, RLuaProc on_delete = RuntimeClass<Class>::on_delete)
+		RuntimeClass& begin_class(String name, RLuaProc on_new = RuntimeClass<Class>::on_new, RLuaProc on_delete = RuntimeClass<Class>::on_delete)
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
@@ -72,31 +72,31 @@ namespace XPX::RLua
 				{ NULL, NULL }
 			};
 
-			luaL_newmetatable(L, name);
+			luaL_newmetatable(L, name.c_str());
 
 			luaL_setfuncs(L, sClassRegs, 0);
 
 			lua_pushvalue(L, -1);
 			lua_setfield(L, -1, "__index");
 
-			lua_setglobal(L, name);
+			lua_setglobal(L, name.c_str());
 
 			return *this;
 		}
 
-		RuntimeClass& append_proc(const char* fn_name, RLuaProc fn)
+		RuntimeClass& append_proc(String fn_name, RLuaProc fn)
 		{
 			RLUA_ASSERT(fn);
 
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
 			lua_pushcfunction(L, fn);
-			lua_setfield(L, -2, fn_name);
+			lua_setfield(L, -2, fn_name.c_str());
 
 			return *this;
 		}
 
-		RuntimeClass& append_prop(const char* name, RLuaProc getter, RLuaProc setter)
+		RuntimeClass& append_prop(String name, RLuaProc getter, RLuaProc setter)
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
@@ -105,7 +105,7 @@ namespace XPX::RLua
 			*this = this->append_proc("__index", getter);
 			*this = this->append_proc("__newindex", setter);
 
-			lua_setfield(L, -1, name);
+			lua_setfield(L, -1, name.c_str());
 
 			return *this;
 		}

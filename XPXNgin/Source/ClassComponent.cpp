@@ -14,10 +14,10 @@
 
 namespace XPX
 {
-	static const char* XPLICIT_CONNECT_SNIPPET = "function(self, UniqueName, Func) self.Slots[UniqueName] = Func end";
-	static const char* XPLICIT_DISCONNECT_SNIPPET = "function(self, UniqueName) self.Slots[UniqueName] = nil; end";
+	static String XPLICIT_CONNECT_SNIPPET = "function(self, UniqueName, Func) self.Slots[UniqueName] = Func end";
+	static String XPLICIT_DISCONNECT_SNIPPET = "function(self, UniqueName) self.Slots[UniqueName] = nil; end";
 
-	static const char* XPLICIT_UPDATE_SNIPPET = "function (self, Restrict) for k, v in pairs(self.Slots) do if k == Restrict then v(self); end end end";
+	static String XPLICIT_UPDATE_SNIPPET = "function (self, Restrict) for k, v in pairs(self.Slots) do if k == Restrict then v(self); end end end";
 
 	ClassComponent::ClassComponent(
 		const char* parent,
@@ -27,7 +27,7 @@ namespace XPX
 		mName(name),
 		mParent(parent)
 	{
-		this->insert("ClassName", fmt::format("\'{}\'", mName).c_str());
+		this->insert("ClassName", fmt::format("\'{}\'", mName));
 		this->insert("Parent", mParent.c_str());
 
 		this->insert("Update", XPLICIT_UPDATE_SNIPPET);

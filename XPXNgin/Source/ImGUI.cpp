@@ -271,7 +271,7 @@ namespace XPX::ImGUI
 	{
 #define XPLICIT_DEFAULT_PROPGRID_DIM 250
 
-		mFrame->set(title);
+		mFrame->set_title(title);
 		mFrame->set_pos(0, 0);
 
 		mFrame->set_size(XPLICIT_DEFAULT_PROPGRID_DIM, 

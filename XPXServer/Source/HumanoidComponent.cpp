@@ -13,19 +13,24 @@
 
 #include "HumanoidComponent.h"
 
+#define XPX_DEFAULT_MAXHEALTH 100
+#define XPX_DEFAULT_WALKSPEED 16
+#define XPX_DEFAULT_JUMPPOWER 10
+#define XPX_DEFAULT_HEALTH 100
+
 namespace XPX
 {
 	HumanoidComponent::HumanoidComponent() noexcept
 		:
 		Component(),
 		mPeer(nullptr),
-		mHealth(100),
+		mHealth(XPX_DEFAULT_HEALTH),
 		mCanSpawn(true),
 		mState(HUMANOID_STATE::ALIVE),
 		mClass(nullptr),
-		mJumpPower(10),
-		mMaxHealth(100),
-		mWalkSpeed(16),
+		mJumpPower(XPX_DEFAULT_JUMPPOWER),
+		mMaxHealth(XPX_DEFAULT_MAXHEALTH),
+		mWalkSpeed(XPX_DEFAULT_WALKSPEED),
 		mActiveGear(nullptr),
 		mGears()
 	{}
@@ -56,7 +61,7 @@ namespace XPX
 			self->set_state(HUMANOID_STATE::ALIVE);
 			self->can_spawn(true);
 
-			self->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
+			self->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH));
 
 			XPLICIT_INFO("world:Spawn [EVENT]");
 
@@ -64,14 +69,14 @@ namespace XPX
 			xpx_player_path += self->get_peer()->xplicit_id.as_string();
 
 			xpx_player_path = std::format("world:Spawn({})", xpx_player_path);
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(xpx_player_path.c_str());
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(xpx_player_path);
 		}
 
 		String str = "{" + std::to_string(self->mAttribute.pos().X) + "," +
 						 std::to_string(self->mAttribute.pos().Y) + "," +
 						 std::to_string(self->mAttribute.pos().Z) + "," + "}";
 
-		self->mClass->assign("Position", str.c_str());
+		self->mClass->assign("Position", str);
 
 		if (self->mClass->index_as_bool("Kick"))
 		{
@@ -96,7 +101,7 @@ namespace XPX
 			XPLICIT_INFO("world:Damage [EVENT]");
 
 			String fmt = fmt::format("world:Damage({})", path);
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 		}
 
 		self->mHealth = self->mClass->index_as_number<double>("Health");
@@ -163,23 +168,24 @@ namespace XPX
 		if (mPeer)
 		{
 			if (mClass)
-			{				
-				// reset gear array
-				for (auto& gear : this->mGears)
-				{
-					if (gear)
-						XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
-
-					gear = nullptr;
-				}
-
 				mClass.reset();
+
+			for (auto& gear : this->mGears)
+			{
+				if (gear)
+					XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
+
+				gear = nullptr;
 			}
 
 			String path("world.Players.");
 			path += mPeer->xplicit_id.as_string();
 
-			mClass.reset();
+			mHealth = XPX_DEFAULT_HEALTH;
+			mMaxHealth = XPX_DEFAULT_MAXHEALTH;
+			mJumpPower = XPX_DEFAULT_JUMPPOWER;
+			mWalkSpeed = XPX_DEFAULT_WALKSPEED;
+
 			mClass = std::make_unique<Lua::CLuaClass>(path);
 
 			if (mClass)
@@ -187,18 +193,11 @@ namespace XPX
 				mClass->insert("UserName", "'Unconnected'");
 				mClass->insert("Parent", "world.Players");
 
-				mClass->insert("PlayerId", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
-
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				
 				mClass->insert("Kick", "false");
 				mClass->insert("KickReason", "'No message supplied.'");
 				
-				mClass->insert("Health", std::to_string(mHealth).c_str());
-				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
-				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
-				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed).c_str());
-
 				mClass->insert("IsLeftClickHold", "false");
 				mClass->insert("IsRightClickHold", "false");
 
@@ -206,11 +205,18 @@ namespace XPX
 				mClass->insert("PacketDeliveryKind", "-1");
 				mClass->insert("PacketContent", "nil");
 
-				XPLICIT_INFO("world:Login [EVENT]");
+				mClass->insert("PlayerId", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()));
 
-				String fmt = std::format("world:Login({})", path);
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
+				mClass->insert("Health", std::to_string(mHealth));
+				mClass->insert("MaxHealth", std::to_string(mMaxHealth));
+				mClass->insert("JumpPower", std::to_string(mJumpPower));
+				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed));
 			}
+
+			XPLICIT_INFO("world:Login [EVENT]");
+
+			String fmt = std::format("world:Login({})", path);
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 		}
 	}
 

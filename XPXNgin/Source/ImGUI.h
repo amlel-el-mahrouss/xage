@@ -218,10 +218,7 @@ namespace XPX::ImGUI
 
 		float get_y() { return mBody.mBody->Y + mHead.mBody->Y; }
 
-		void set(const char* title)
-		{
-			mTitle = platform_string(title);
-		}
+		void set_title(const char* title) { mTitle = platform_string(title); }
 
 		void update() override
 		{

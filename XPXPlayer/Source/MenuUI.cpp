@@ -146,14 +146,14 @@ namespace XPX
 		XPLICIT_ASSERT(mNetwork);
 		XPLICIT_ASSERT(mHudFrame);
 
-		mHudFrame->BackgroundColor.setRed(0x00);
-		mHudFrame->BackgroundColor.setGreen(0x94);
-		mHudFrame->BackgroundColor.setBlue(0xFF);
+		mHudFrame->BackgroundColor.setRed(75);
+		mHudFrame->BackgroundColor.setGreen(165);
+		mHudFrame->BackgroundColor.setBlue(84);
 		mHudFrame->BackgroundColor.setAlpha(225);
 		
-		mHudFrame->BackgroundHoverColor.setRed(0x00);
-		mHudFrame->BackgroundHoverColor.setGreen(0x94);
-		mHudFrame->BackgroundHoverColor.setBlue(0xFF);
+		mHudFrame->BackgroundHoverColor.setRed(75);
+		mHudFrame->BackgroundHoverColor.setGreen(165);
+		mHudFrame->BackgroundHoverColor.setBlue(84);
 		mHudFrame->BackgroundHoverColor.setAlpha(225);
 
 		mHudFrame->H = 10;

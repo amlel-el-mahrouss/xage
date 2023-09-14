@@ -71,18 +71,18 @@ namespace XPX::Lua
 		}
 
 	public:
-		void global_set(lua_CFunction func, const char* name) noexcept
+		void global_set(lua_CFunction func, const String name) noexcept
 		{
 			lua_pushcfunction(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), func);
-			lua_setglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), name);
+			lua_setglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), name.c_str());
 		}
 
-		std::int32_t run(const char* file) noexcept
+		std::int32_t run(const String file) noexcept
 		{
-			if (!file)
+			if (file.empty())
 				return -1;
 
-			if (auto err = (luaL_dofile(mL, file)) > 0)
+			if (auto err = (luaL_dofile(mL, file.c_str())) > 0)
 			{
 				String _err = lua_tostring(mL, -1);
 
@@ -96,14 +96,12 @@ namespace XPX::Lua
 			return 0;
 		}
 
-		std::int32_t run_string(const char* str) noexcept
+		std::int32_t run_string(const String str) noexcept
 		{
-			if (!str)
+			if (str.empty())
 				return -1;
 
-			String tmp = str;
-
-			if (auto err = (luaL_dostring(mL, tmp.c_str())); err)
+			if (auto err = (luaL_dostring(mL, str.c_str())); err)
 			{
 				String _err = lua_tostring(mL, -1);
 
@@ -130,19 +128,14 @@ namespace XPX::Lua
 	{
 	public:
 		explicit CLuaClass(const String& klass) noexcept
-			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
+			: mClass(klass), mL(lua_newthread(CLuaStateManager::get_singleton_ptr()->state())), mSymbolCnt(0)
 		{
-			String fmt = mClass;
-			fmt += " = { CxxLua = true; }";
-
-			luaL_dostring(mL, fmt.c_str());
+			lua_resume(mL, CLuaStateManager::get_singleton_ptr()->state(), 0, nullptr);
+			luaL_newmetatable(mL, mClass.c_str());
 		}
 
-		virtual ~CLuaClass() noexcept
-		{
-			// {} = mClass
-			luaL_dostring(mL, fmt::format("{} = nil", mClass).c_str());
-
+		virtual ~CLuaClass() noexcept 
+		{ 
 			if (mL)
 				lua_close(mL);
 		}
@@ -151,11 +144,11 @@ namespace XPX::Lua
 		XPLICIT_COPY_DEFAULT(CLuaClass);
 
 	public:
-		bool insert(const char* symbol,
+		bool insert(const String symbol,
 			void* value,
 			int type)
 		{
-			if (symbol &&
+			if (!symbol.empty() &&
 				value)
 			{
 				luaL_dostring(this->state(), std::format("return {}", mClass.c_str()).c_str());
@@ -175,7 +168,7 @@ namespace XPX::Lua
 
 					lua_pushlightuserdata(mL, value);
 					lua_setfield(mL, -2, "__CxxData");
-					lua_setfield(mL, -1, symbol);
+					lua_setfield(mL, -1, symbol.c_str());
 
 					lua_pop(mL, -1);
 
@@ -187,34 +180,36 @@ namespace XPX::Lua
 			return false;
 		}
 
-		bool insert(const char* symbol, const char* value)
+		bool insert(const String symbol, const String value)
 		{
-			if (symbol && 
-				value)
+			if (!symbol.empty() &&
+				!value.empty())
 			{
 				//! Just push this symbol to the symbols list!
 //! So that we're aware of it.
 				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
 				++mSymbolCnt;
 
-				bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, symbol, value).c_str()) == 0;
+				auto fmt = fmt::format("{}.{} = {}", mClass, symbol, value);
+				bool ret = luaL_dostring(mL, fmt.c_str()) == 0;
 				return ret;
 			}
 
 			return false;
 		}
 
-		bool assign(const char* lhs, const char* rhs) 
+		bool assign(const String lhs, const String rhs) 
 		{ 
-			bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, lhs, rhs).c_str()) == 0;
+			auto fmt = fmt::format("{}.{} = {}", mClass, lhs, rhs);
+			bool ret = luaL_dostring(mL, fmt.c_str()) == 0;
 			return ret;
 		}
 
 	private:
 		//! @brief Index field of an array.
-		bool i_index_field(const char* lhs) noexcept
+		bool i_index_field(const String lhs) noexcept
 		{
-			if (!lhs)
+			if (lhs.empty())
 				return false;
 
 			String fmt = "return ";
@@ -234,7 +229,7 @@ namespace XPX::Lua
 
 	public:
 		template <typename T = double>
-		const T index_as_number(const char* lhs) noexcept
+		const T index_as_number(const String lhs) noexcept
 		{
 			T ret = -1;
 
@@ -249,7 +244,7 @@ namespace XPX::Lua
 			return ret;
 		}
 
-		const bool index_as_bool(const char* lhs)
+		const bool index_as_bool(const String lhs)
 		{
 			bool ret = false;
 
@@ -266,7 +261,7 @@ namespace XPX::Lua
 
 		lua_State* state() noexcept { return mL; }
 
-		const String index_as_string(const char* lhs)
+		const String index_as_string(const String lhs)
 		{
 			String ret = "";
 
@@ -281,34 +276,38 @@ namespace XPX::Lua
 			return ret;
 		}
 
-		const char* run_string(const char* lhs) noexcept
+		const String run_string(const String lhs) noexcept
 		{
-			if (!lhs)
+			if (lhs.empty())
 				return "";
 
-			auto ret = (luaL_dostring(mL, lhs)) == 0;
+			auto ret = (luaL_dostring(mL, lhs.c_str())) == 0;
 
-			if (ret)
+			if (!ret)
 				return lua_tostring(mL, -1);
 
 			return "";
 		}
 
-		const char* run_path(const char* lhs) noexcept
+		const String run_path(const String lhs) noexcept
 		{
-			if (!lhs)
+			if (lhs.empty())
 				return "";
 
 			static String tmp;
 			tmp = lhs;
 
 			auto ret = (luaL_dofile(mL, tmp.c_str())) == 0;
-			return lua_tostring(mL, -1);
+			
+			if (!ret)
+				return lua_tostring(mL, -1);
+		
+			return "";
 		}
 
-		const char* call_method(const char* method) noexcept
+		const String call_method(const String method) noexcept
 		{
-			if (!method)
+			if (method.empty())
 				return "";
 
 			String fmt = mClass;

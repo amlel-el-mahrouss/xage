@@ -19,12 +19,10 @@ namespace XPX
 
 	LuaScriptComponent::LuaScriptComponent(const char* name)
 		: mName(name), ClassComponent(
-			String("world").c_str(), (String("XPXScript") + std::to_string(xplicit_get_epoch())).c_str())
+			"_G.Script", (String("XPXScript") + std::to_string(xplicit_get_epoch())).c_str())
 	{
 		this->insert("Destroy", this->destroy_snippet().c_str());
 		this->insert("__gc", this->destroy_snippet().c_str());
-
-		this->run_string(fmt::format("_G.Script.{} = {}", this->name(), String(this->parent()) + "." + this->name()).c_str());
 
 		// Script.Current
 		this->run_string(fmt::format("_G.Script.Current = _G.Script.{}", this->name()).c_str());
@@ -32,8 +30,8 @@ namespace XPX
 		//! ROBLOX(tm) like syntax
 		this->run_string("_G.script = _G.Script.Current");
 
-		if (auto err = this->run_path(this->mName.c_str());
-			err)
+		if (auto err = this->run_path(this->mName);
+			!err.empty())
 		{
 			XPLICIT_CRITICAL(err);
 			ComponentSystem::get_singleton_ptr()->remove(this);
