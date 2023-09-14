@@ -99,10 +99,10 @@ namespace XPX
 		self->mNode->getMaterial(0).AmbientColor.setBlue(self->index_as_number("Color.B"));
 		self->mNode->getMaterial(0).AmbientColor.setAlpha(self->index_as_number("Color.A"));
 
-		self->mNode->getMaterial(0).DiffuseColor.setRed(self->index_as_number("Color.R"));
-		self->mNode->getMaterial(0).DiffuseColor.setGreen(self->index_as_number("Color.G"));
-		self->mNode->getMaterial(0).DiffuseColor.setBlue(self->index_as_number("Color.B"));
-		self->mNode->getMaterial(0).DiffuseColor.setAlpha(self->index_as_number("Color.A"));
+		self->mNode->getMaterial(0).DiffuseColor.setRed(self->mNode->getMaterial(0).AmbientColor.getRed());
+		self->mNode->getMaterial(0).DiffuseColor.setGreen(self->mNode->getMaterial(0).AmbientColor.getGreen());
+		self->mNode->getMaterial(0).DiffuseColor.setBlue(self->mNode->getMaterial(0).AmbientColor.getBlue());
+		self->mNode->getMaterial(0).DiffuseColor.setAlpha(self->mNode->getMaterial(0).AmbientColor.getAlpha());
 	}
 
 	const String& MeshComponent::path() noexcept { return mPath; }

@@ -26,7 +26,7 @@ namespace XPX
 		this->insert("Pan", "1");
 		this->insert("Volume", "1");
 		this->insert("SoundId", "");
-		this->insert("Play", "function(self) playSound(self.Name, self.SoundId); end");
+		this->insert("Play", "function(self) playSound(self.ClassName, self.SoundId); end");
 	}
 
 	SoundComponent::~SoundComponent() = default;

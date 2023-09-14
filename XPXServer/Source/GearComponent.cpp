@@ -38,7 +38,7 @@ namespace XPX
 	{
 		this->insert("Slot", "0");
 		this->insert("Equipped", "false");
-		this->insert("CanDrop", "false");
+		this->insert("Drop", "false");
 		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 		this->assign("Destroy", destroy_gear_class_snippet(name).c_str());
 		this->insert("__gc", destroy_gear_class_snippet(name).c_str());
@@ -56,11 +56,13 @@ namespace XPX
 
 	void GearComponent::update(ClassPtr _self) 
 	{ 
-		ClassComponent::update(_self);
+		if (!_self)
+			return;
 
+		ClassComponent::update(_self);
 		GearComponent* self = (GearComponent*)_self;
 
-		if (self->index_as_bool("CanDrop") &&
+		if (self->index_as_bool("Drop") &&
 			self->get_owner())
 		{
 			self->assign("Parent", "world");

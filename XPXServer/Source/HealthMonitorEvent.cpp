@@ -52,7 +52,8 @@ namespace XPX
 
 		mSpawner = ComponentSystem::get_singleton_ptr()->get<SpawnComponent>("SpawnComponent");
 
-		XPLICIT_ASSERT(mSpawner);
+		if (!mSpawner)
+			return;
 
 		auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
 

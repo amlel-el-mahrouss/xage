@@ -17,15 +17,6 @@
 
 #include "LuaAPI.h"
 
-static int lua_Wait(lua_State* L)
-{
-	int seconds = lua_tonumber(L, 1);
-
-	std::this_thread::sleep_for(std::chrono::seconds(seconds));
-
-	return 0;
-}
-
 static int lua_DestroyScript(lua_State* L)
 {
 	const char* name = lua_tostring(L, 1);
@@ -47,7 +38,6 @@ XPLICIT_API void XplicitLoadBaseLua()
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Settings = {}");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Players = {}");
 
-	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Wait, "wait");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "destroyScript");
 
 	XPLICIT_GET_DATA_DIR(full_path);

@@ -47,12 +47,7 @@ namespace XPX::Lua
 			: mL(luaL_newstate())
 		{
 			XPLICIT_ASSERT(mL);
-
-			luaopen_base(mL);
-			luaopen_math(mL);
-			luaopen_string(mL);
-			luaopen_table(mL);
-			luaopen_utf8(mL);
+			luaL_openlibs(mL);
 		}
 
 	private:
@@ -147,6 +142,9 @@ namespace XPX::Lua
 		{
 			// {} = mClass
 			luaL_dostring(mL, fmt::format("{} = nil", mClass).c_str());
+
+			if (mL)
+				lua_close(mL);
 		}
 
 	public:
@@ -178,6 +176,8 @@ namespace XPX::Lua
 					lua_pushlightuserdata(mL, value);
 					lua_setfield(mL, -2, "__CxxData");
 					lua_setfield(mL, -1, symbol);
+
+					lua_pop(mL, -1);
 
 					return true;
 				}
