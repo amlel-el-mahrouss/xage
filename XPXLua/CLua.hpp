@@ -157,7 +157,9 @@ namespace XPX::Lua
 			if (symbol &&
 				value)
 			{
-				if (lua_getglobal(mL, mClass.c_str()) == LUA_TTABLE)
+				luaL_dostring(this->state(), std::format("return {}", mClass.c_str()).c_str());
+
+				if (lua_gettable(mL, -1) == LUA_OK)
 				{
 					mSymbols.push_back(std::make_pair(mSymbolCnt, "C++UserData"));
 					++mSymbolCnt;
@@ -187,16 +189,13 @@ namespace XPX::Lua
 			if (symbol && 
 				value)
 			{
-				if (lua_getglobal(mL, mClass.c_str()) == LUA_TTABLE)
-				{
-					//! Just push this symbol to the symbols list!
+				//! Just push this symbol to the symbols list!
 //! So that we're aware of it.
-					mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
-					++mSymbolCnt;
+				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
+				++mSymbolCnt;
 
-					bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, symbol, value).c_str()) == 0;
-					return ret;
-				}
+				bool ret = luaL_dostring(mL, fmt::format("{}.{} = {}", mClass, symbol, value).c_str()) == 0;
+				return ret;
 			}
 
 			return false;

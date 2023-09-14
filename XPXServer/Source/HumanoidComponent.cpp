@@ -50,11 +50,11 @@ namespace XPX
 
 		// execute a series of commands for this humanoid.
 
-		if (self->can_spawn() &&
-			self->get_health() < 1)
+		if (self->get_health() < 1)
 		{
 			self->set_health(XPLICIT_DEFAULT_HEALTH);
 			self->set_state(HUMANOID_STATE::ALIVE);
+			self->can_spawn(true);
 
 			self->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH).c_str());
 
@@ -164,39 +164,37 @@ namespace XPX
 	{	
 		mPeer = peer;
 
-		if (mClass)
-		{				// reset gear array
-			for (auto& gear : this->mGears)
-			{
-				if (gear)
-					XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
-
-				gear = nullptr;
-			}
-
-			mClass.reset();
-		}
-
 		if (mPeer)
 		{
+			if (mClass)
+			{				// reset gear array
+				for (auto& gear : this->mGears)
+				{
+					if (gear)
+						XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
+
+					gear = nullptr;
+				}
+
+				mClass.reset();
+			}
+
 			String path("world.Players.");
 			path += mPeer->xplicit_id.as_string();
 
-			if (mClass == nullptr)
-			{
-				mClass = std::make_unique<Lua::CLuaClass>(path);
-			}
+			mClass.reset();
+			mClass = std::make_unique<Lua::CLuaClass>(path);
 
 			if (mClass)
 			{
 				mClass->insert("UserName", "'Unconnected'");
 
 				mClass->insert("Parent", "world.Players");
-				mClass->insert("Id", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
+				mClass->insert("PlayerId", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()).c_str());
 				mClass->insert("IsMoving", "false");
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
-				mClass->insert("State", "world.HumanoidState.Alive");
+				mClass->insert("State", "world.HumanoidState.ALIVE");
 				mClass->insert("Kick", "false");
 				mClass->insert("KickReason", "'Kicked by server.'");
 				mClass->insert("Anchored", "false");
