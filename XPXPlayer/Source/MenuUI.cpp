@@ -200,6 +200,9 @@ namespace XPX
 
 		auto& packet = self->mNetwork->get();
 
+		packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] = KEYBOARD->left_down() ? NETWORK_CMD_LCLICK : NETWORK_CMD_INVALID;
+		packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] = KEYBOARD->right_down() ? NETWORK_CMD_RCLICK : NETWORK_CMD_INVALID;
+
 		for (size_t i = 0; i < XPLICIT_MAX_ELEMENTS_INVENTORY; ++i)
 		{
 			if (self->mSelectedSlot != i)
@@ -227,11 +230,11 @@ namespace XPX
 			if (self->mSelectedSlot == i)
 			{
 				packet.id = i;
-				packet.cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INPUT;
+				packet.cmd[XPLICIT_NETWORK_CMD_SLOT] = NETWORK_CMD_SLOT;
 
 				self->mNetwork->send(packet);
 
-				self->mNetwork->get().cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INVALID;
+				self->mNetwork->get().cmd[XPLICIT_NETWORK_CMD_SLOT] = NETWORK_CMD_INVALID;
 
 				CAD->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X , self->mInventorySlots[i].Y),
 					dimension2di(self->mInventorySlots[i].W, self->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));

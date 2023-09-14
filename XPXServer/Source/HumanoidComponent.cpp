@@ -111,7 +111,7 @@ namespace XPX
 		self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_INVALID;
 
 		// select a specific item in our inventory.
-		if (self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] == NETWORK_CMD_INPUT)
+		if (self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_SLOT] == NETWORK_CMD_SLOT)
 		{
 			if (self->mPeer->packet.id < self->mGears.size())
 			{
@@ -119,7 +119,7 @@ namespace XPX
 					self->mActiveGear->index_as_number("Slot") != self->mPeer->packet.id)
 				{
 					self->mActiveGear->assign("Equipped", "false");
-					self->mActiveGear->call_method("Update('Deactivate')");
+					self->mActiveGear->call_method("Update('Unequipped')");
 
 					self->mActiveGear = nullptr;
 				}
@@ -136,12 +136,12 @@ namespace XPX
 							self->mActiveGear = gear;
 
 							self->mActiveGear->assign("Equipped", "true");
-							self->mActiveGear->call_method("Update('Activate')");
+							self->mActiveGear->call_method("Update('Equipped')");
 						}
 					}
 				}
 
-				self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_INPUT] = NETWORK_CMD_INVALID;
+				self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_SLOT] = NETWORK_CMD_INVALID;
 			}
 		}
 	}

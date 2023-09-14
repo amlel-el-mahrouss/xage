@@ -30,9 +30,7 @@ namespace XPX
 		XPLICIT_ASSERT(mNetwork);
 	}
 
-	LocalMenuEvent::~LocalMenuEvent() 
-	{
-	}
+	LocalMenuEvent::~LocalMenuEvent() = default;
 
 	const char* LocalMenuEvent::name() noexcept { return ("LocalMenuEvent"); }
 
