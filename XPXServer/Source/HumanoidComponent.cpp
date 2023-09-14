@@ -104,8 +104,8 @@ namespace XPX
 		self->mJumpPower = self->mClass->index_as_number<double>("JumpPower");
 		self->mWalkSpeed = self->mClass->index_as_number<double>("WalkSpeed");
 
-		self->mClass->assign("IsLeftClickPressed", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] == NETWORK_CMD_LCLICK ? "true" : "false");
-		self->mClass->assign("IsRightClickPressed", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] == NETWORK_CMD_RCLICK ? "true" : "false");
+		self->mClass->assign("IsLeftClickHold", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] == NETWORK_CMD_LCLICK ? "true" : "false");
+		self->mClass->assign("IsRightClickHold", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] == NETWORK_CMD_RCLICK ? "true" : "false");
 
 		self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_INVALID;
 		self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_INVALID;
@@ -120,19 +120,24 @@ namespace XPX
 				{
 					self->mActiveGear->assign("Equipped", "false");
 					self->mActiveGear->call_method("Update('Deactivate')");
+
+					self->mActiveGear = nullptr;
 				}
 
-				for (auto& gear : self->mGears)
+				if (!self->mActiveGear)
 				{
-					if (!gear)
-						continue;
-
-					if (gear->index_as_number("Slot") == self->mPeer->packet.id)
+					for (auto& gear : self->mGears)
 					{
-						self->mActiveGear = gear;
+						if (!gear)
+							continue;
 
-						self->mActiveGear->assign("Equipped", "true");
-						self->mActiveGear->call_method("Update('Activate')");
+						if (gear->index_as_number("Slot") == self->mPeer->packet.id)
+						{
+							self->mActiveGear = gear;
+
+							self->mActiveGear->assign("Equipped", "true");
+							self->mActiveGear->call_method("Update('Activate')");
+						}
 					}
 				}
 
@@ -200,6 +205,9 @@ namespace XPX
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth).c_str());
 				mClass->insert("JumpPower", std::to_string(mJumpPower).c_str());
 				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed).c_str());
+
+				mClass->insert("IsLeftClickHold", "false");
+				mClass->insert("IsRightClickHold", "false");
 
 				mClass->insert("PacketKind", "-1");
 				mClass->insert("PacketDeliveryKind", "-1");
