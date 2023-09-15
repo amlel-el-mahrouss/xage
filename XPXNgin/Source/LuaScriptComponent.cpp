@@ -31,24 +31,26 @@ namespace XPX
 
 		this->insert("UniqueID", fmt::format("'{}'", mName));
 
+		this->insert("Destroy", this->destroy_snippet());
+
+		// Script.Current
+		this->run_string(fmt::format("Script.Current = Script.{}", this->name()));
+
+		// ROBLOX(tm) like syntax
+		this->run_string("script = Script.Current");
+
 		mRunningLua = Thread([&]() {
-			this->insert("Destroy", this->destroy_snippet());
-
-			// Script.Current
-			this->run_string(fmt::format("Script.Current = Script.{}", this->name()));
-
-			//! ROBLOX(tm) like syntax
-			this->run_string("script = Script.Current");
-
 			if (auto err = this->run_path(this->mName);
 				!err.empty())
 			{
 				XPLICIT_CRITICAL(err);
 				ComponentSystem::get_singleton_ptr()->remove(this);
-			}
-		});
 
-		mRunningLua.detach();
+				return;
+			}
+
+			mRunningLua.detach();
+		});
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;
