@@ -81,15 +81,11 @@ namespace XPX
 #ifdef XPLICIT_WINDOWS
 		XPX::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
 
-		Thread job([&](String _path) {
-			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
-			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = XPX::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
-			
-			if (audio)
-				audio->play_3d(this->pos(), mVolume, mPitch, mPan, &mLoop);
-		}, path);
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
+		std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = XPX::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(path).c_str());
 
-		job.detach();
+		if (audio)
+			audio->play_3d(this->pos(), mVolume, mPitch, mPan, &mLoop);
 #else
         Vector<float> vel(0, 0, 0);
 
