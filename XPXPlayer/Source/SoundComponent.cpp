@@ -11,7 +11,13 @@
 
 namespace XPX
 {
-	SoundComponent::SoundComponent(const char* name, const char* parent) 
+	static String sound_destroy(const char* name, const char* parent) noexcept
+	{
+		String func_proto = fmt::format("function(self) destroySound(\"{}\", \"{}\"); end", name, parent);
+		return func_proto;
+	}
+
+	SoundComponent::SoundComponent(const char* name, const char* parent)
 		: ClassComponent(Vector<NetworkFloat>(0.0f, 0.0f, 0.0f),
 			Vector<NetworkFloat>(0.0f, 0.0f, 0.0f),
 			Color<NetworkFloat>(0.0f, 0.0f, 0.0f),
@@ -19,14 +25,19 @@ namespace XPX
 			parent,
 			name),
 		mVolume(1.0f), mLoop(false),
-		mPitch(1), mPan(1)
+		mPitch(1), mPan(1),
+		mGroup(parent), mName(name)
 	{
 		this->insert("Loop", "false");
 		this->insert("Pitch", "1");
 		this->insert("Pan", "1");
+		
 		this->insert("Volume", "1");
 		this->insert("SoundId", "");
+
 		this->insert("Play", "function(self) playSound(self.ClassName, self.SoundId); end");
+
+		this->insert("Destroy", sound_destroy(name, parent).c_str());
 	}
 
 	SoundComponent::~SoundComponent() = default;

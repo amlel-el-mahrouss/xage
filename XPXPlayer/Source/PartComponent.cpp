@@ -28,7 +28,6 @@ namespace XPX
 		}
 
 		this->insert("Destroy", this->part_destroy().c_str());
-		this->insert("__gc", this->part_destroy().c_str());
 	}
 
 	void PartComponent::update(ClassPtr cls)

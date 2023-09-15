@@ -36,6 +36,9 @@ namespace XPX
 		static void update(void* class_ptr);
 		static bool should_update() noexcept;
 
+		const char* instance_name() noexcept { return mName.c_str(); }
+		const char* group_name() noexcept { return mGroup.c_str(); }
+
 		COMPONENT_TYPE type() noexcept override;
 		PHYSICS_TYPE physics() noexcept override;
 
@@ -49,6 +52,10 @@ namespace XPX
 		float mPitch{ 100.f };
         bool mLoop{ false };
 		float mPan{ 0 };
+
+	private:
+		String mGroup;
+		String mName;
 
 	};
 }

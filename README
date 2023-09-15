@@ -1,5 +1,7 @@
-XPXNgin
-=======
+XPXNgin XPXCAD compilant engine.
+================================
+
+XPXNgin supports the RoXML, CLua, RLua, ClassComponent and a ECS based design from the XPXCAD patent.
 
 NOTICE:
 =======

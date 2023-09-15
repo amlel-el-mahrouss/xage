@@ -35,8 +35,6 @@ XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
 
-#define XPLICIT_ALLOWED_AUDIO_EXTENSION ".wav"
-
 struct XPXSoundCache final
 {
 	XPX::String name = "";
@@ -66,8 +64,9 @@ static int lua_PlaySound(lua_State* L)
 		if (it == XPX_CACHE.cend())
 		{
 			// that means if we don't find it, then fail silently.
-			if (url.find(XPLICIT_ALLOWED_AUDIO_EXTENSION) == XPX::String::npos)
-				return 0;
+			if (url.find(".wav") == XPX::String::npos)
+				if (url.find(".mp3") == XPX::String::npos)
+					return 0;
 
 			if (url.empty() ||
 				url.find(XPLICIT_XASSET_IDENT) == XPX::String::npos)
@@ -320,6 +319,41 @@ static int lua_DestroyGear(lua_State* L)
 	return 0;
 }
 
+static int lua_DestroySound(lua_State* L)
+{
+	auto name = lua_tostring(L, 1);
+	auto parent = lua_tostring(L, 2);
+
+	if (name && parent)
+	{
+		XPX::String name_str = name;
+		XPX::String parent_str = parent;
+
+		XPX::Thread job([](XPX::String name, XPX::String parent) {
+			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::SoundComponent>(name.c_str());
+
+			for (auto& part : all_of_parts)
+			{
+				if (part)
+				{
+					if (part->instance_name() == name &&
+						part->group_name() == parent)
+					{
+						XPX::ComponentSystem::get_singleton_ptr()->remove(part);
+						return;
+					}
+				}
+			}
+
+			XPLICIT_INFO(name + " has not been found on parent: " + parent + ".");
+			}, name_str, parent_str);
+
+		job.detach();
+	}
+
+	return 0;
+}
+
 static int lua_DestroyMesh(lua_State* L)
 {
 	auto name = lua_tostring(L, 1);
@@ -358,7 +392,7 @@ static int lua_DestroyMesh(lua_State* L)
 void XplicitLoadClientLua() noexcept
 {
 	XPX::RLua::RuntimeClass<XPXInstance> instance;
-	instance.begin_class("Instance", &XPXInstance::new_instance).end_class();
+	instance.begin_class("Class", &XPXInstance::new_instance).end_class();
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "playSound");
 
@@ -368,6 +402,7 @@ void XplicitLoadClientLua() noexcept
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_IsRightDown, "isRightMouseDown");
 
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroySound, "destroySound");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "destroyGear");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyMesh, "destroyMesh");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyPart, "destroyPart");

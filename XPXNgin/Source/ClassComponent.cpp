@@ -97,7 +97,7 @@ namespace XPX
 		{
 			self->alpha(self->index_as_number<float>("Color.A"));
 
-			self->color().A = self->alpha();
+			self->color().A = self->index_as_number<float>("Color.A");
 
 			self->color().R = self->index_as_number<float>("Color.R");
 			self->color().G = self->index_as_number<float>("Color.G");

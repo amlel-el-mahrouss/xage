@@ -19,10 +19,9 @@ namespace XPX
 
 	LuaScriptComponent::LuaScriptComponent(const char* name)
 		: mName(name), ClassComponent(
-			"_G.Script", ("XPXRuntimeScript_" + std::to_string(xplicit_get_epoch())).c_str())
+			"world", ("XPXRuntimeScript_" + std::to_string(xplicit_get_epoch())).c_str())
 	{
 		this->insert("Destroy", this->destroy_snippet());
-		this->insert("__gc", this->destroy_snippet());
 
 		// Script.Current
 		this->run_string(fmt::format("_G.Script.Current = _G.Script.{}", this->name()));

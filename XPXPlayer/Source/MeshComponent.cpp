@@ -34,7 +34,6 @@ namespace XPX
 
 		this->insert("Visible", "true");
 		this->insert("Destroy", mesh_destroy(name, group).c_str());
-		this->insert("__gc", mesh_destroy(name, group).c_str());
 
 		mPhysics = PHYSICS_NONE;
 

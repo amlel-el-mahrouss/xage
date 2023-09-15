@@ -122,23 +122,7 @@ namespace XPX::Lua
 		explicit CLuaClass(const String& klass) noexcept
 			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
 		{
-			lua_newtable(mL);
-
-			int methods = lua_gettop(mL);
-			luaL_newmetatable(mL, mClass.c_str());
-			int metatable = lua_gettop(mL);
-
-			lua_pushvalue(mL, methods);
-			lua_setglobal(mL, mClass.c_str());
-
-			lua_pushvalue(mL, methods);
-			lua_setfield(mL, metatable, "__metatable");
-
-			lua_pushvalue(mL, methods);
-			lua_setfield(mL, metatable, "__index");
-
-			lua_setmetatable(mL, metatable);
-			lua_settable(mL, methods);
+			luaL_dostring(mL, fmt::format("{} = {}", klass, "{}").c_str());
 		}
 
 		virtual ~CLuaClass() noexcept = default;
@@ -193,8 +177,7 @@ namespace XPX::Lua
 		bool assign(const String lhs, const String rhs) 
 		{ 
 			auto fmt = fmt::format("{}.{} = {}", mClass, lhs, rhs);
-			
-			return luaL_dostring(mL, fmt.c_str()) == 0;;
+			return luaL_dostring(mL, fmt.c_str()) == 0;
 		}
 
 	private:
@@ -210,7 +193,14 @@ namespace XPX::Lua
 			fmt += ".";
 			fmt += lhs;
 
-			luaL_dostring(mL, fmt.c_str());
+			auto ret = luaL_dostring(mL, fmt.c_str()) == 0;
+
+			if (!ret)
+			{
+				XPLICIT_CRITICAL(lua_tostring(mL, -1));
+				return false;
+			}
+
 			return true;
 		}
 

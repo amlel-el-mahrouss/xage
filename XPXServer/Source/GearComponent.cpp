@@ -40,7 +40,6 @@ namespace XPX
 		this->insert("Drop", "false");
 		this->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 		this->assign("Destroy", destroy_gear_class_snippet(name).c_str());
-		this->insert("__gc", destroy_gear_class_snippet(name).c_str());
 	}
 
 	const char* GearComponent::name() noexcept { return mName.c_str(); }

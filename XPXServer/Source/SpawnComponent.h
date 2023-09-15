@@ -17,7 +17,7 @@
 
 namespace XPX
 {
-	class SpawnComponent : public ClassComponent
+	class SpawnComponent : public Component
 	{
 	public:
 		SpawnComponent() = delete;
@@ -35,13 +35,11 @@ namespace XPX
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 
-		static bool should_update() noexcept { return true; }
+		static bool should_update() noexcept { return false; }
 		static void update(void* self);
 
-		XPXAttribute& get_attribute() noexcept;
-
 	private:
-		XPXAttribute mAttribute;
+		Vector<NetworkFloat> mPos;
 
 	};
 }
