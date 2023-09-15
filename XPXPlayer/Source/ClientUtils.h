@@ -27,6 +27,32 @@ inline void PlaySound(const XPX::String& path, const XPX::Vector<float>& pos)
 	}
 }
 
+inline auto LoadSkybox(XPX::String skybox_prefix)
+{
+	XPLICIT_GET_DATA_DIR(DIR);
+
+	DIR += "Textures/";
+	DIR += skybox_prefix;
+
+	XPX::String up = DIR + "_up.png";
+	XPX::String dn = DIR + "_dn.png";
+	XPX::String lf = DIR + "_lf.png";
+	XPX::String rt = DIR + "_rt.png";
+	XPX::String ft = DIR + "_ft.png";
+	XPX::String bk = DIR + "_bk.png";
+
+	auto skybox = CAD->getSceneManager()->addSkyBoxSceneNode(CAD->getVideoDriver()->getTexture(up.c_str()),
+		CAD->getVideoDriver()->getTexture(dn.c_str()),
+		CAD->getVideoDriver()->getTexture(lf.c_str()),
+		CAD->getVideoDriver()->getTexture(rt.c_str()),
+		CAD->getVideoDriver()->getTexture(ft.c_str()),
+		CAD->getVideoDriver()->getTexture(bk.c_str()));
+
+	skybox->setVisible(true);
+
+	return skybox;
+}
+
 namespace XPX
 {
 	class Explosion final

@@ -5,7 +5,8 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: LoadingComponent.cpp
- *			Purpose: XPXPlayer Loading Screen, show something while the player waits.
+ *			Purpose: XPXPlayer Loading Screen, show something while the player waits
+ *          and manages the connection process.
  *
  * =====================================================================
  */
@@ -20,6 +21,7 @@
 #include "LocalCameraComponent.h"
 #include "LoadingComponent.h"
 #include "LocalMenuEvent.h"
+#include "ClientUtils.h"
 #include "Application.h"
 #include "MenuUI.h"
 
@@ -49,6 +51,8 @@ namespace XPX
 
         auto cam = ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
         CAD->getSceneManager()->setActiveCamera(cam->get());
+        
+		auto skybox = LoadSkybox("noonclouds");
     }
 
     LoadingComponent::~LoadingComponent() = default;

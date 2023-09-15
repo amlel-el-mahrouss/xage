@@ -75,14 +75,10 @@ namespace XPX::Bites
 		XPLICIT_DIM.Y = traits.window_height;
 
 		Root::get_singleton_ptr()->set(
-                createDevice(
-                        EDT_OPENGL,
-                             dimension2d<u32>(XPLICIT_DIM.X, XPLICIT_DIM.Y),
-                                     32,
-                                     false,
-                                     true, false)
+                createDeviceEx(params)
 		);
 
+		CAD->setResizable(false);
 		CAD->setWindowCaption(XPLICIT_APP_NAME);
 
 		Root::get_singleton_ptr()->set(new InputReceiver());

@@ -393,7 +393,7 @@ static int lua_DestroyMesh(lua_State* L)
 void XplicitLoadClientLua() noexcept
 {
 	XPX::RLua::RuntimeClass<XPXInstance> instance;
-	instance.begin_class("Class", &XPXInstance::new_instance).end_class();
+	instance.begin_class("Component", &XPXInstance::new_instance).end_class();
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "playSound");
 

@@ -23,7 +23,9 @@ namespace XPX
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = CAD->getSceneManager()->addCameraSceneNode(nullptr);
+		mCamera = CAD->getSceneManager()->addCameraSceneNodeMaya(nullptr);
+
+		mCamera->setFarValue(200.f);
 
 		XPLICIT_ASSERT(mCamera);
 

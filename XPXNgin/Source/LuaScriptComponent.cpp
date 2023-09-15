@@ -29,7 +29,7 @@ namespace XPX
 			}
 		}
 
-		this->insert("UniqueID", fmt::format("'{}'", mName));
+		this->insert("FilesystemPath", fmt::format("'{}'", mName));
 
 		this->insert("Destroy", this->destroy_snippet());
 
@@ -39,18 +39,14 @@ namespace XPX
 		// ROBLOX(tm) like syntax
 		this->run_string("script = Script.Current");
 
-		mRunningLua = Thread([&]() {
-			if (auto err = this->run_path(this->mName);
-				!err.empty())
-			{
-				XPLICIT_CRITICAL(err);
-				ComponentSystem::get_singleton_ptr()->remove(this);
+		if (auto err = this->run_path(this->mName);
+			!err.empty())
+		{
+			XPLICIT_CRITICAL(err);
+			ComponentSystem::get_singleton_ptr()->remove(this);
 
-				return;
-			}
-
-			mRunningLua.detach();
-		});
+			return;
+		}
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;
@@ -60,8 +56,6 @@ namespace XPX
 	bool LuaScriptComponent::should_update() noexcept { return false; }
 
 	const char* LuaScriptComponent::path() noexcept { return mName.c_str(); }
-
-	Thread& LuaScriptComponent::leak_thread() noexcept { return mRunningLua; }
 
 	COMPONENT_TYPE LuaScriptComponent::type() noexcept { return COMPONENT_SCRIPT; }
 }

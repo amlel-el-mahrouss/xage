@@ -15,10 +15,11 @@
  */
 
 #include "Application.h"
+#include "ClientUtils.h"
 
 #include <NetworkProtocol.h>
-#include <SoundNgin.h>
 #include <DriverD3D11.h>
+#include <SoundNgin.h>
 #include <Component.h>
 #include <LuaAPI.h>
 #include <ImGUI.h>
@@ -84,22 +85,29 @@ int main(int argc, char** argv)
 		if (!app_ptr)
 			throw XPX::EngineError("XPXPlayer couldn't continue; we're sorry!");
 
-		//! The Main Logic and Render loop.
-		while (CAD->run() &&
-			XPX::ComponentSystem::get_singleton_ptr() &&
-			XPX::EventSystem::get_singleton_ptr())
+		CAD->getSceneManager()->getParameters()->setAttribute(XPX::COLLADA_CREATE_SCENE_INSTANCES, true);
+
+		CAD->getVideoDriver()->setTextureCreationFlag(XPX::ETCF_ALWAYS_32_BIT, true);
+
+		CAD->getSceneManager()->addLightSceneNode(0, XPX::vector3df(200, 200, 200),
+			XPX::SColorf(1.0f, 1.0f, 1.0f), 2000);
+
+		CAD->getSceneManager()->setAmbientLight(XPX::SColorf(0.3f, 0.3f, 0.3f));
+
+		//! The main logic and render loop.
+		while (CAD->run())
 		{
-			CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
+			CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(150, 50, 50, 50));
 
 #ifdef _WIN32
 			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
 #endif
 
+			CAD->getSceneManager()->drawAll();
+			CAD->getGUIEnvironment()->drawAll();
+
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
-
-            CAD->getSceneManager()->drawAll();
-            CAD->getGUIEnvironment()->drawAll();
 
 			CAD->getVideoDriver()->endScene();
 

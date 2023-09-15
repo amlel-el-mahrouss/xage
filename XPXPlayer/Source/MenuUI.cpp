@@ -165,7 +165,7 @@ namespace XPX
 		mFrameParent->H = 30;
 		mFrameParent->W = CAD->getVideoDriver()->getScreenSize().Width;
 
-		mFrameParent->BackgroundHoverColor.setAlpha(30);
+		mFrameParent->BackgroundHoverColor.setAlpha(50);
 
 		mFrameParent->X = 0;
 		mFrameParent->Y = 0;

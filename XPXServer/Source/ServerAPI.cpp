@@ -211,5 +211,5 @@ void XplicitLoadServerLua() noexcept
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "destroyGear");
 
 	XPX::RLua::RuntimeClass<XPXInstance> instance;
-	instance.begin_class("Class", &XPXInstance::new_instance).end_class();
+	instance.begin_class("Component", &XPXInstance::new_instance).end_class();
 }

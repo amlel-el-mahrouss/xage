@@ -40,7 +40,6 @@ namespace XPX
 		if (is_local_player)
 		{
 			mClass = new Lua::CLuaClass("world.Players.LocalPlayer");
-
 			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer.RootPart", "world");
 		}
 		else
@@ -52,7 +51,7 @@ namespace XPX
 			path_xid += optional_xid;
 
 			// ugly ass hack, as always.
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string((String("world.") + path_xid + " = {}").c_str());
+			Lua::CLuaStateManager::get_singleton_ptr()->run_string("world." + path_xid + " = {}");
 
 			path_xid += ".RootPart";
 
