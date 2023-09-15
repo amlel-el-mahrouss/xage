@@ -30,6 +30,9 @@ extern "C" {
 #define XPLICIT_LUA_DESCRIPTION "C++ Lua extension for the XplicitNgine."
 #define XPLICIT_LUA_AUTHOR "Amlal El Mahrouss"
 
+void LuaLockInitial(lua_State* L);
+void LuaLockFinal(lua_State* L);
+
 namespace XPX::Lua
 {
 	enum
@@ -47,13 +50,20 @@ namespace XPX::Lua
 		{
 			XPLICIT_ASSERT(mL);
 			luaL_openlibs(mL);
+			LuaLockInitial(mL);
 		}
 
 	private:
 		CLuaStatePtr mL;
 
 	public:
-		~CLuaStateManager() = default;
+		~CLuaStateManager()
+		{
+			LuaLockFinal(mL);
+
+			if (mL)
+				lua_close(mL);
+		}
 
 	public:
 		XPLICIT_COPY_DEFAULT(CLuaStateManager);
@@ -81,7 +91,8 @@ namespace XPX::Lua
 			if (file.empty())
 				return -1;
 
-			if (auto err = (luaL_dofile(mL, file.c_str())) > 0)
+			if (auto err = (luaL_dofile(mL, file.c_str()));
+				err != LUA_OK)
 			{
 				String _err = lua_tostring(mL, -1);
 

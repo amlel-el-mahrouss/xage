@@ -8,6 +8,7 @@
  */
 
 #include "LuaScriptComponent.h"
+#include "LuaUser.h"
 
 namespace XPX
 {
@@ -43,22 +44,28 @@ namespace XPX
 			};
 
 			// Script.Current
-			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt::format("Script.Current = Script.{}", name));
+			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("Script.Current = Script.{}", name));
 
 			// ROBLOX(tm) like syntax
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("script = Script.Current");
 
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_ThisSleep, "script.wait");
 
+			clua_lock();
+
 			if (XPX::Lua::CLuaStateManager::get_singleton_ptr()->run(path) != LUA_OK)
 			{
 				if (lua_isstring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1))
 					XPLICIT_CRITICAL(lua_tostring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
 
+				clua_unlock();
+
 				ComponentSystem::get_singleton_ptr()->remove(this);
 
 				return;
 			}
+
+			clua_unlock();
 		});
 
 		job.detach();
