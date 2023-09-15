@@ -48,18 +48,20 @@ static int lua_PlaySound(lua_State* L)
 {
 	try
 	{
-		if (!lua_tostring(L, 1) ||
-			!lua_tostring(L, 2))
+		auto name = lua_tostring(L, 1);
+		auto url_raw = lua_tostring(L, 2);
+
+		if (!name ||
+			!url_raw)
 		{
 			return 0;
 		}
 
-		XPX::String name = lua_tostring(L, 1);
-		XPX::String url = lua_tostring(L, 2);
-
 		auto it = std::find_if(XPX_CACHE.cbegin(), XPX_CACHE.cend(), [&](const XPXSoundCache cache) {
 			return cache.name == name;
 		});
+
+		XPX::String url = url_raw;
 
 		if (it == XPX_CACHE.cend())
 		{
@@ -98,7 +100,7 @@ static int lua_PlaySound(lua_State* L)
 				full_download_path += "Contents/";
 				full_download_path += tmp;
 
-				if (auto snd = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>(name.c_str());
+				if (auto snd = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>(name);
 					snd)
 				{
 					snd->play(full_download_path);
