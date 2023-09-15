@@ -86,6 +86,13 @@ namespace XPX::Lua
 			lua_setglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), name.c_str());
 		}
 
+	private:
+		void i_clean(const std::int64_t& cnt) noexcept
+		{
+			lua_pop(mL, cnt);
+		}
+
+	public:
 		std::int32_t run(const String file) noexcept
 		{
 			if (file.empty())
@@ -95,6 +102,7 @@ namespace XPX::Lua
 				err != LUA_OK)
 			{
 				String _err = lua_tostring(mL, -1);
+				this->i_clean(1);
 
 				return err;
 			}
@@ -111,6 +119,8 @@ namespace XPX::Lua
 			{
 				String _err = lua_tostring(mL, -1);
 				XPLICIT_ERROR(_err);
+
+				this->i_clean(1);
 
 				return err;
 			}
@@ -229,6 +239,7 @@ namespace XPX::Lua
 				if (lua_isnumber(mL, -1))
 				{
 					ret = lua_tonumber(mL, -1);
+					this->i_clean(1);
 				}
 			}
 
@@ -244,6 +255,7 @@ namespace XPX::Lua
 				if (lua_isboolean(mL, -1))
 				{
 					ret = lua_toboolean(mL, -1);
+					this->i_clean(1);
 				}
 			}
 
@@ -261,6 +273,7 @@ namespace XPX::Lua
 				if (lua_isstring(mL, -1))
 				{
 					ret = lua_tostring(mL, -1);
+					this->i_clean(1);
 				}
 			}
 
@@ -278,6 +291,7 @@ namespace XPX::Lua
 			{
 				String ret_err = lua_tostring(mL, -1);
 				XPLICIT_ERROR(ret_err);
+				this->i_clean(1);
 
 				return ret_err;
 			}
@@ -296,6 +310,7 @@ namespace XPX::Lua
 			{
 				String ret_err = lua_tostring(mL, -1);
 				XPLICIT_ERROR(ret_err);
+				this->i_clean(1);
 
 				return ret_err;
 			}

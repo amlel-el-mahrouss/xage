@@ -49,7 +49,7 @@ namespace XPX
 			// ROBLOX(tm) like syntax
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("script = Script.Current");
 
-			XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_ThisSleep, "script.wait");
+			XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_ThisSleep, "wait");
 
 			clua_lock();
 
