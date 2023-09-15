@@ -43,7 +43,7 @@ namespace XPX
 	RemoteEventStorage::RemoteEventStorage()
 		: mClient(nullptr), mServer(nullptr), Lua::CLuaClass("world.RemoteEventStorage")
 	{
-		this->insert(CLUA_USER_DATA_SYMBOL, this, Lua::ReadOnly); // read only by default.
+		this->insert_userdata(CLUA_USER_DATA_SYMBOL, this); // read only userdata.
 		this->insert("Attach", "function(self, Table) return xpxAttachRemoteEvent(self.UserData.__CxxData, Table); end"); // to actually call this.
 	}
 

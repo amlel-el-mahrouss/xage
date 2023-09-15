@@ -40,12 +40,12 @@ namespace XPX
 
 	void SpawnComponent::update(ClassPtr class_ptr) 
 	{
-		ClassComponent::update(class_ptr);
-
 		SpawnComponent* self = (SpawnComponent*)class_ptr;
 
 		if (self)
 		{
+			ClassComponent::update(class_ptr);
+
 			String pos_fmt = "{ X = " + std::to_string(self->mAttribute.pos().X) + ", Y = " +
 				std::to_string(self->mAttribute.pos().Y) + ", Z = " +
 				std::to_string(self->mAttribute.pos().Z) + "," + "}";

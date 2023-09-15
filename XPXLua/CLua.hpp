@@ -25,7 +25,6 @@ extern "C" {
 #include <vector>
 
 #define CLUA_USER_DATA_SYMBOL "UserData"
-#define CLUA_IDENT "CxxLua"
 
 #define XPLICIT_LUA_NAME "C++Lua"
 #define XPLICIT_LUA_DESCRIPTION "C++ Lua extension for the XplicitNgine."
@@ -86,10 +85,6 @@ namespace XPX::Lua
 			{
 				String _err = lua_tostring(mL, -1);
 
-				XPLICIT_ERROR(_err);
-
-				lua_pop(mL, -1);
-
 				return err;
 			}
 
@@ -104,10 +99,7 @@ namespace XPX::Lua
 			if (auto err = (luaL_dostring(mL, str.c_str())); err)
 			{
 				String _err = lua_tostring(mL, -1);
-
 				XPLICIT_ERROR(_err);
-
-				lua_pop(mL, -1);
 
 				return err;
 			}
@@ -130,8 +122,23 @@ namespace XPX::Lua
 		explicit CLuaClass(const String& klass) noexcept
 			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
 		{
+			lua_newtable(mL);
+
+			int methods = lua_gettop(mL);
 			luaL_newmetatable(mL, mClass.c_str());
+			int metatable = lua_gettop(mL);
+
+			lua_pushvalue(mL, methods);
 			lua_setglobal(mL, mClass.c_str());
+
+			lua_pushvalue(mL, methods);
+			lua_setfield(mL, metatable, "__metatable");
+
+			lua_pushvalue(mL, methods);
+			lua_setfield(mL, metatable, "__index");
+
+			lua_setmetatable(mL, metatable);
+			lua_settable(mL, methods);
 		}
 
 		virtual ~CLuaClass() noexcept = default;
@@ -140,9 +147,8 @@ namespace XPX::Lua
 		XPLICIT_COPY_DEFAULT(CLuaClass);
 
 	public:
-		bool insert(const String symbol,
-			void* value,
-			int type)
+		bool insert_userdata(const String symbol,
+			void* value)
 		{
 			if (!symbol.empty() &&
 				value)
@@ -156,21 +162,17 @@ namespace XPX::Lua
 
 					lua_newtable(mL);
 
-					if (type == ReadOnly)
-					{
-						lua_pushcfunction(mL, [](lua_State* L) -> int { lua_error(L); return 0; });
-						lua_setfield(mL, -2, "__newindex");
-					}
+					lua_pushcfunction(mL, [](lua_State* L) -> int { lua_error(L); return 0; });
+					lua_setfield(mL, -2, "__newindex");
 
 					lua_pushlightuserdata(mL, value);
 					lua_setfield(mL, -2, "__CxxData");
 					lua_setfield(mL, -1, symbol.c_str());
 
-					lua_pop(mL, 2);
+					lua_pop(mL, 3);
 
 					return true;
 				}
-
 			}
 
 			return false;
@@ -181,15 +183,8 @@ namespace XPX::Lua
 			if (!symbol.empty() &&
 				!value.empty())
 			{
-				//! Just push this symbol to the symbols list!
-//! So that we're aware of it.
-				mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
-				++mSymbolCnt;
-
-				auto fmt = fmt::format("{}.{} = {}", mClass, symbol, value);
-				bool ret = luaL_dostring(mL, fmt.c_str()) == 0;
-
-				return ret;
+				if (this->run_string(fmt::format("{}.{} = {}", mClass, symbol, value)).empty())
+					return true;
 			}
 
 			return false;
@@ -235,7 +230,6 @@ namespace XPX::Lua
 				if (lua_isnumber(mL, -1))
 				{
 					ret = lua_tonumber(mL, -1);
-					lua_pop(mL, -1);
 				}
 			}
 
@@ -251,7 +245,6 @@ namespace XPX::Lua
 				if (lua_isboolean(mL, -1))
 				{
 					ret = lua_toboolean(mL, -1);
-					lua_pop(mL, -1);
 				}
 			}
 
@@ -269,7 +262,6 @@ namespace XPX::Lua
 				if (lua_isstring(mL, -1))
 				{
 					ret = lua_tostring(mL, -1);
-					lua_pop(mL, -1);
 				}
 			}
 
@@ -285,10 +277,10 @@ namespace XPX::Lua
 
 			if (!ret)
 			{
-				String ret = lua_tostring(mL, -1);
-				lua_pop(mL, -1);
+				String ret_err = lua_tostring(mL, -1);
+				XPLICIT_ERROR(ret_err);
 
-				return ret;
+				return ret_err;
 			}
 
 			return "";
@@ -299,17 +291,14 @@ namespace XPX::Lua
 			if (lhs.empty())
 				return "";
 
-			static String tmp;
-			tmp = lhs;
-
-			auto ret = (luaL_dofile(mL, tmp.c_str())) == 0;
+			auto ret = (luaL_dofile(mL, lhs.c_str())) == 0;
 			
 			if (!ret)
 			{
-				String ret = lua_tostring(mL, -1);
-				lua_pop(mL, -1);
+				String ret_err = lua_tostring(mL, -1);
+				XPLICIT_ERROR(ret_err);
 
-				return ret;
+				return ret_err;
 			}
 		
 			return "";

@@ -35,7 +35,11 @@ namespace XPX
 		mGears()
 	{}
 
-	HumanoidComponent::~HumanoidComponent() = default;
+	HumanoidComponent::~HumanoidComponent()
+	{
+		if (mClass)
+			delete mClass;
+	}
 
 	GearComponent* HumanoidComponent::get_active_gear() noexcept { return mActiveGear; }
 
@@ -170,14 +174,9 @@ namespace XPX
 			String player_tbl("world.Players.");
 			player_tbl += mPeer->xplicit_id.as_string();
 
-			mClass = std::make_unique<Lua::CLuaClass>(player_tbl);
+			mClass = new Lua::CLuaClass(player_tbl);
 
 			XPLICIT_ASSERT(mClass);
-
-			mHealth = XPX_DEFAULT_HEALTH;
-			mMaxHealth = XPX_DEFAULT_MAXHEALTH;
-			mJumpPower = XPX_DEFAULT_JUMPPOWER;
-			mWalkSpeed = XPX_DEFAULT_WALKSPEED;
 
 			if (mClass)
 			{
@@ -211,8 +210,13 @@ namespace XPX
 		}
 		else
 		{
-			mClass.reset();
-			mClass = nullptr;
+			if (mClass)
+			{
+				XPLICIT_ASSERT(_CrtIsValidHeapPointer(mClass));
+
+				delete mClass;
+				mClass = nullptr;
+			}
 		}
 	}
 
@@ -231,7 +235,7 @@ namespace XPX
 	XPX::Lua::CLuaClass* HumanoidComponent::get_class() const
 	{
 		XPLICIT_ASSERT(mClass);
-		return mClass.get();
+		return mClass;
 	}
 
 	std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY>& HumanoidComponent::get_gears() noexcept

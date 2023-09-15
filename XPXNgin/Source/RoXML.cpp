@@ -558,6 +558,9 @@ namespace XPX::RoXML
 								full_download_path += "Contents/";
 								full_download_path += tmp;
 
+								if (!params.WaitFor)
+									std::this_thread::yield();
+
 								ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
 							}
 						}

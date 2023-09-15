@@ -80,12 +80,10 @@ namespace XPX
 		XPX::Lua::CLuaClass* get_class() const;
 
 	private:
-		std::unique_ptr<Lua::CLuaClass> mClass;
-
-	private:
 		std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY> mGears;
 		GearComponent* mActiveGear;
-		XPXAttribute mAttribute; // XPlicit attribute class. Used to reflect data about the current component.
+		Lua::CLuaClass* mClass;
+		XPXAttribute mAttribute;
 		HUMANOID_STATE mState;
 		NetworkPeer* mPeer;
 		double mWalkSpeed;

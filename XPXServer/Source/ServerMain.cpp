@@ -191,10 +191,7 @@ int main(int argc, char** argv)
 
 		NPLICIT_SPLASH_SCREEN;
 
-#ifdef XPLICIT_DEBUG
 		XPX::Thread job(XplicitLoadShell);
-		job.detach();
-#endif // XPLICIT_DEBUG
 
 		while (XPX::ComponentSystem::get_singleton_ptr() &&
 			XPX::EventSystem::get_singleton_ptr())
