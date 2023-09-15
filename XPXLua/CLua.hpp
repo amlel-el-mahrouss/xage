@@ -153,8 +153,6 @@ namespace XPX::Lua
 					lua_setfield(mL, -2, "__CxxData");
 					lua_setfield(mL, -1, symbol.c_str());
 
-					lua_pop(mL, 3);
-
 					return true;
 				}
 			}

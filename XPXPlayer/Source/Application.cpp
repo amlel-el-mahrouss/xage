@@ -35,11 +35,11 @@ namespace XPX::Bites
 
 		ComponentSystem::get_singleton_ptr()->add<NetworkComponent>();
 
-		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<LoadingComponent>();
-		XPLICIT_ASSERT(loading_screen);
-
 		XplicitLoadBaseLua();
 		XplicitLoadClientLua();
+
+		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<LoadingComponent>();
+		XPLICIT_ASSERT(loading_screen);
 
 		loading_screen->connect(xconnect_to);
 	}
