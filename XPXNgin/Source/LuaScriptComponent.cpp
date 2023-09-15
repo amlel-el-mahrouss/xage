@@ -33,20 +33,35 @@ namespace XPX
 
 		this->insert("Destroy", this->destroy_snippet());
 
-		// Script.Current
-		this->run_string(fmt::format("Script.Current = Script.{}", this->name()));
+		XPX::Thread job([&]() {
+			String name = this->name();
+			String path = this->path();
 
-		// ROBLOX(tm) like syntax
-		this->run_string("script = Script.Current");
+			auto lua_ThisSleep = [](lua_State* L) -> int {
+				std::this_thread::sleep_for(std::chrono::seconds(lua_tointeger(L, 1)));
+				return 0;
+			};
 
-		if (auto err = this->run_path(this->mName);
-			!err.empty())
-		{
-			XPLICIT_CRITICAL(err);
-			ComponentSystem::get_singleton_ptr()->remove(this);
+			// Script.Current
+			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt::format("Script.Current = Script.{}", name));
 
-			return;
-		}
+			// ROBLOX(tm) like syntax
+			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("script = Script.Current");
+
+			XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_ThisSleep, "script.wait");
+
+			if (XPX::Lua::CLuaStateManager::get_singleton_ptr()->run(path) != LUA_OK)
+			{
+				if (lua_isstring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1))
+					XPLICIT_CRITICAL(lua_tostring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
+
+				ComponentSystem::get_singleton_ptr()->remove(this);
+
+				return;
+			}
+		});
+
+		job.detach();
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;

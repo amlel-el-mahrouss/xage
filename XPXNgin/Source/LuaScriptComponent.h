@@ -42,7 +42,6 @@ namespace XPX
 		static bool should_update() noexcept;
 
 	private:
-		Thread mRunningLua;
 		String mName;
 
 	};

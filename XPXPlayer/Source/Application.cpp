@@ -78,7 +78,6 @@ namespace XPX::Bites
                 createDeviceEx(params)
 		);
 
-		CAD->setResizable(false);
 		CAD->setWindowCaption(XPLICIT_APP_NAME);
 
 		Root::get_singleton_ptr()->set(new InputReceiver());
