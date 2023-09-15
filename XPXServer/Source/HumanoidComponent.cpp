@@ -167,7 +167,6 @@ namespace XPX
 
 		if (mPeer)
 		{
-
 			String player_tbl("world.Players.");
 			player_tbl += mPeer->xplicit_id.as_string();
 
@@ -203,12 +202,12 @@ namespace XPX
 				mClass->insert("MaxHealth", std::to_string(mMaxHealth));
 				mClass->insert("JumpPower", std::to_string(mJumpPower));
 				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed));
+
+				XPLICIT_INFO("world:Login [EVENT]");
+
+				String fmt = std::format("world:Login({})", player_tbl);
+				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 			}
-
-			XPLICIT_INFO("world:Login [EVENT]");
-
-			String fmt = std::format("world:Login({})", player_tbl);
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 		}
 		else
 		{

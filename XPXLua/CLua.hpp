@@ -131,6 +131,7 @@ namespace XPX::Lua
 			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
 		{
 			luaL_newmetatable(mL, mClass.c_str());
+			lua_setglobal(mL, mClass.c_str());
 		}
 
 		virtual ~CLuaClass() noexcept = default;
