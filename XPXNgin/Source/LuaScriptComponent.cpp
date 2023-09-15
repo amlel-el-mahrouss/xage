@@ -21,7 +21,15 @@ namespace XPX
 		: mName(name), ClassComponent(
 			"_G.Script", ("XPXRuntimeScript_" + std::to_string(xplicit_get_epoch())).c_str())
 	{
-		this->insert("UniqueID", mName);
+		for (size_t i = 0; i < mName.size(); i++)
+		{
+			if (mName[i] == '\\')
+			{
+				mName[i] = '/';
+			}
+		}
+
+		this->insert("UniqueID", fmt::format("'{}'", mName));
 
 		mRunningLua = Thread([&]() {
 			this->insert("Destroy", this->destroy_snippet());

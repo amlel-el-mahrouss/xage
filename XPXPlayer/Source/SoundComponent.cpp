@@ -63,7 +63,6 @@ namespace XPX
 
 	void SoundComponent::update(ClassPtr class_ptr)
 	{
-		ClassComponent::update(class_ptr);
 		SoundComponent* self = (SoundComponent*)class_ptr;
 
 		self->mLoop = self->index_as_bool("Loop");

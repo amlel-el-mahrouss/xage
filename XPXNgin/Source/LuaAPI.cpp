@@ -38,8 +38,11 @@ static int lua_Wait(lua_State* L)
 	{
 		auto scripts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::LuaScriptComponent>("LuaScriptComponent");
 
-		for (auto& script : scripts)
+		for (auto script : scripts)
 		{
+			if (!script)
+				continue;
+
 			if (strncmp(script->path(), script_id, strlen(script->path()) == 0))
 			{
 				SuspendThread((HANDLE)script->leak_thread().native_handle());
@@ -55,7 +58,6 @@ static int lua_Wait(lua_State* L)
 				return 0;
 			}
 		}
-
 	}
 
 	return 0;
