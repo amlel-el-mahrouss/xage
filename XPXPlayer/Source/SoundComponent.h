@@ -30,7 +30,6 @@ namespace XPX
 
 	public:
 		void play(const String& path) noexcept;
-		void play_2d(const String& path) noexcept;
 
 	public:
 		static void update(void* class_ptr);
@@ -45,6 +44,7 @@ namespace XPX
 	public:
 		void set_volume(float volume = 0.5f) noexcept;
 		void set_position(Vector<float> pos = Vector<float>(0.0f, 0.0f, 0.0f)) noexcept;
+
 		void should_loop(bool enable = true) noexcept;
 
 	private:

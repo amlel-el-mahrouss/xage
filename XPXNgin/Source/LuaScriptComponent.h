@@ -37,11 +37,14 @@ namespace XPX
 		COMPONENT_TYPE type() noexcept;
 		const char* path() noexcept;
 
+		Thread& leak_thread() noexcept;
+
 	public:
 		static void update(void* class_ptr);
 		static bool should_update() noexcept;
 
 	private:
+		Thread mRunningLua;
 		String mName;
 
 	};

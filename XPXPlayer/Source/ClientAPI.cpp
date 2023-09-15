@@ -65,8 +65,7 @@ static int lua_PlaySound(lua_State* L)
 		{
 			// that means if we don't find it, then fail silently.
 			if (url.find(".wav") == XPX::String::npos)
-				if (url.find(".mp3") == XPX::String::npos)
-					return 0;
+				return 0;
 
 			if (url.empty() ||
 				url.find(XPLICIT_XASSET_IDENT) == XPX::String::npos)

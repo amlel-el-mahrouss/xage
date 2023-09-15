@@ -77,25 +77,6 @@ namespace XPX
 		mLoop = enable;
 	}
 
-	void SoundComponent::play_2d(const String& path) noexcept
-	{
-#ifdef XPLICIT_WINDOWS
-        XPX::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
-
-		Thread job([&](String _path, float vol, float pitch, float pan) {
-			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cvt;
-			std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = XPX::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(_path).c_str());
-
-			if (audio)
-				audio->play(vol, pitch, pan);
-		}, path, mVolume, mPitch, mPan);
-
-		job.detach();
-#else
-        XPX::Audio::XAudioEngine::get_singleton_ptr()->openal_load_wave(path.c_str(), mLoop);
-#endif
-	}
-
 	void SoundComponent::play(const String& path) noexcept
 	{
 #ifdef XPLICIT_WINDOWS

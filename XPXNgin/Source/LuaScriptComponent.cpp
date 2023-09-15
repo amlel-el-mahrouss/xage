@@ -19,22 +19,28 @@ namespace XPX
 
 	LuaScriptComponent::LuaScriptComponent(const char* name)
 		: mName(name), ClassComponent(
-			"world", ("XPXRuntimeScript_" + std::to_string(xplicit_get_epoch())).c_str())
+			"_G.Script", ("XPXRuntimeScript_" + std::to_string(xplicit_get_epoch())).c_str())
 	{
-		this->insert("Destroy", this->destroy_snippet());
+		this->insert("UniqueID", mName);
 
-		// Script.Current
-		this->run_string(fmt::format("_G.Script.Current = _G.Script.{}", this->name()));
+		mRunningLua = Thread([&]() {
+			this->insert("Destroy", this->destroy_snippet());
 
-		//! ROBLOX(tm) like syntax
-		this->run_string("_G.script = _G.Script.Current");
+			// Script.Current
+			this->run_string(fmt::format("Script.Current = Script.{}", this->name()));
 
-		if (auto err = this->run_path(this->mName);
-			!err.empty())
-		{
-			XPLICIT_CRITICAL(err);
-			ComponentSystem::get_singleton_ptr()->remove(this);
-		}
+			//! ROBLOX(tm) like syntax
+			this->run_string("script = Script.Current");
+
+			if (auto err = this->run_path(this->mName);
+				!err.empty())
+			{
+				XPLICIT_CRITICAL(err);
+				ComponentSystem::get_singleton_ptr()->remove(this);
+			}
+		});
+
+		mRunningLua.detach();
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;
@@ -44,6 +50,8 @@ namespace XPX
 	bool LuaScriptComponent::should_update() noexcept { return false; }
 
 	const char* LuaScriptComponent::path() noexcept { return mName.c_str(); }
+
+	Thread& LuaScriptComponent::leak_thread() noexcept { return mRunningLua; }
 
 	COMPONENT_TYPE LuaScriptComponent::type() noexcept { return COMPONENT_SCRIPT; }
 }

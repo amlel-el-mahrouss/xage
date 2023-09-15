@@ -90,33 +90,24 @@ namespace XPX
 					mEmitter(),
 					mListener()
 				{
-					assert(mAudio);
+                    XPLICIT_ASSERT(mAudio);
+                    XPLICIT_ASSERT(mAudio->GetFormat());
 				}
 
 			public:
-				void play() noexcept
-				{
-					mAudio->Play();
-				}
+                void play_3d(const Vector<NetworkFloat>& pos, const float volume, const float pitch, const float pan, bool* loop = nullptr) noexcept
+                {
+                    if (!mAudio)
+                        return;
 
-				void play(const float volume, const float pitch, const float pan) noexcept
-				{
-					mAudio->Play(volume, pitch, pan);
-				}
+                    mSource = mAudio->CreateInstance(DirectX::SoundEffectInstance_Use3D);
 
-				void play_3d(const Vector<NetworkFloat>& pos, const float volume, const float pitch, const float pan, bool* loop = nullptr) noexcept
-				{
-					if (!mAudio)
-						return;
+                    mSource->SetPitch(pitch);
+                    mSource->SetVolume(volume);
+                    mSource->SetPan(pan);
 
-					mSource = mAudio->CreateInstance(DirectX::SoundEffectInstance_Use3D);
-					
-					mSource->SetPitch(pitch);
-					mSource->SetVolume(volume);
-					mSource->SetPan(pan);
-
-					mSource->Play(*loop);
-				}
+                    mSource->Play(*loop);
+                }
 
 			private:
 				std::unique_ptr<DirectX::SoundEffectInstance> mSource;

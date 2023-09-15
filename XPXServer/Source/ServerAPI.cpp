@@ -89,20 +89,23 @@ static int lua_CreateGear(lua_State* L)
 		{
 			auto player = players[i];
 
-			if (player->get_gears()[i] == nullptr)
+			for (auto y = 0UL; player->get_gears().max_size(); ++y)
 			{
-				if (player->get_peer() &&
-					player->get_peer()->xplicit_id.as_string() == xplicit_id)
+				if (player->get_gears()[y] == nullptr)
 				{
-					player->get_gears()[i] = gear;
-					player->get_gears()[i]->set_owner(player);
+					if (player->get_peer() &&
+						player->get_peer()->xplicit_id.as_string() == xplicit_id)
+					{
+						player->get_gears()[y] = gear;
+						player->get_gears()[y]->set_owner(player);
 
-					path_player += ".";
-					path_player += name;
+						path_player += ".";
+						path_player += name;
 
-					XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}", path_player).c_str());
+						XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}", path_player).c_str());
 
-					return 1;
+						return 1;
+					}
 				}
 			}
 		}
