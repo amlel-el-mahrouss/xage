@@ -82,7 +82,15 @@ namespace XPX
 		:
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0)
-	{}
+	{
+		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
+		{
+			HumanoidComponent* component = ComponentSystem::get_singleton_ptr()->add<HumanoidComponent>();
+			XPLICIT_ASSERT(component);
+
+			mPlayers.push_back(component);
+		}
+	}
 
 	LoginEvent::~LoginEvent() = default;
 
@@ -107,12 +115,8 @@ namespace XPX
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				HumanoidComponent* player = ComponentSystem::get_singleton_ptr()->add<HumanoidComponent>();
-				XPLICIT_ASSERT(player);
-
-				mPlayers.push_back(player);
-
-				if (XplicitHandleJoin(mNetwork->get(peer_idx), player, mNetwork))
+				if (HumanoidComponent* player = mPlayers[mPlayerCount]; 
+					XplicitHandleJoin(mNetwork->get(peer_idx), player, mNetwork))
 				{
 					mNetwork->get(peer_idx)->ip_address = address_to_string(mNetwork->get(peer_idx));
 					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
@@ -125,6 +129,10 @@ namespace XPX
 
 					memset(mNetwork->get(peer_idx)->packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
 
+					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
+					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
+					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
+					
 					player->set_peer(mNetwork->get(peer_idx));
 				}
 			}
@@ -162,6 +170,10 @@ namespace XPX
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
 
+					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
+					XPLICIT_INFO("[LOGOFF] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
+					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
+
 					String path("_G.world.Players.");
 					path += mNetwork->get(peer_idx)->xplicit_id.as_string();
 
@@ -177,15 +189,7 @@ namespace XPX
 					{
 						if (mPlayers[player]->get_peer() == mNetwork->get(peer_idx))
 						{
-							auto ply = mPlayers[player];
-
-							auto it = std::find(mPlayers.cbegin(), mPlayers.cend(), ply);
-
-							if (it != mPlayers.cend())
-								mPlayers.erase(it);
-
-							ComponentSystem::get_singleton_ptr()->remove(ply);
-
+							mPlayers[player]->set_peer(nullptr);
 							break;
 						}
 					}

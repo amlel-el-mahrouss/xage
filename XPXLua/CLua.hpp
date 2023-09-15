@@ -146,7 +146,7 @@ namespace XPX::Lua
 			if (!symbol.empty() &&
 				value)
 			{
-				luaL_dostring(this->state(), std::format("return {}", mClass.c_str()).c_str());
+				lua_pushstring(this->state(), mClass.c_str());
 
 				if (lua_gettable(mL, -1) == LUA_OK)
 				{
@@ -165,7 +165,7 @@ namespace XPX::Lua
 					lua_setfield(mL, -2, "__CxxData");
 					lua_setfield(mL, -1, symbol.c_str());
 
-					lua_pop(mL, -1);
+					lua_pop(mL, 2);
 
 					return true;
 				}

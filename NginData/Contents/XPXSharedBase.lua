@@ -1,12 +1,3 @@
--- Copyright PlayXPlicit SARL
-
-world.HumanoidState = {}
-world.HumanoidState.ALIVE = 0
-world.HumanoidState.DEAD = 1
-world.HumanoidState.INVALID = 3
-
-world.Cursor = {}
-
 local function __addEvent(Tbl, Func)
     Tbl.Slots[#Tbl.Slots + 1] = Func;
     return #Tbl.Slots - 1;
@@ -214,47 +205,3 @@ world.REPLICATE_SCENE = 2;
 world.REPLICATE_TYPE_CREATE = 522;
 world.REPLICATE_TYPE_REMOVE = 523;
 world.REPLICATE_TYPE_UPDATE = 524;
-
-function world:DumpTable(o)
-    if type(o) == 'table' then
-       local s = '{ '
-       for k,v in pairs(o) do
-          if type(k) ~= 'number' then k = '"'..k..'"' end
-          s = s .. '['..k..'] = ' .. Wolrd:Dump(v) .. ','
-       end
-       return s .. '} '
-    else
-       return tostring(o)
-    end
-end
-
-function world:AnyKeyDown()
-    return XPXKeyDown();
-end
-
-function world:IsKeyDown(key)
-    return XPXIsKeyDown(key);
-end
-
-function world:IsLeftDown()
-    return XPXIsLeftDown();
-end
-
-function world:IsRightDown()
-    return XPXIsRightDown();
-end
-
-function world.Cursor:GetY()
-    return XPXGetY();
-end
-
-function world.Cursor:GetX()
-    return XPXGetX();
-end
-
--- Some part of the specs.
--- world = Root table of components.
--- Script = Root table of scripts.
--- world.Settings = GameVars.
--- world.Players = Players.
--- world.<Object> = C++ or lua exposed object.
