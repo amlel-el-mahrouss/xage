@@ -29,11 +29,11 @@ namespace XPX
 		mGroup(parent), mName(name)
 	{
 		this->insert("Loop", "false");
-		this->insert("Pitch", "1");
+		this->insert("Pitch", "0");
 		this->insert("Pan", "1");
 		
 		this->insert("Volume", "1");
-		this->insert("SoundId", "");
+		this->insert("SoundId", "''");
 
 		this->insert("Play", "function(self) playSound(self.ClassName, self.SoundId); end");
 
@@ -44,7 +44,7 @@ namespace XPX
 
 	COMPONENT_TYPE SoundComponent::type() noexcept { return COMPONENT_SOUND; }
 
-	bool SoundComponent::should_update() noexcept { return true; }
+	bool SoundComponent::should_update() noexcept { return false; }
 
 	PHYSICS_TYPE SoundComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
@@ -63,12 +63,7 @@ namespace XPX
 
 	void SoundComponent::update(ClassPtr class_ptr)
 	{
-		SoundComponent* self = (SoundComponent*)class_ptr;
 
-		self->mLoop = self->index_as_bool("Loop");
-		self->mPan = self->index_as_number<float>("Pan");
-		self->mPitch = self->index_as_number<float>("Pitch");
-		self->mVolume = self->index_as_number<float>("Volume");
 	}
 
 	void SoundComponent::should_loop(bool enable) noexcept
@@ -78,6 +73,11 @@ namespace XPX
 
 	void SoundComponent::play(const String& path) noexcept
 	{
+		this->mLoop = this->index_as_bool("Loop");
+		this->mPan = this->index_as_number<float>("Pan");
+		this->mPitch = this->index_as_number<float>("Pitch");
+		this->mVolume = this->index_as_number<float>("Volume");
+
 #ifdef XPLICIT_WINDOWS
 		XPX::Audio::XAudioEngine::get_singleton_ptr()->set_volume(mVolume);
 
