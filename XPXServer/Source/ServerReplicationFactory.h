@@ -11,8 +11,6 @@
 
 #include "ServerConfig.h"
 
-// this file helps replicates player data.
-
 namespace XPX
 {
 	class ServerReplicationFactory final

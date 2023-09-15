@@ -179,19 +179,22 @@ int main(int argc, char** argv)
 
 		params.Has3D = false;
 		params.NoLua = false;
-
+		params.WaitFor = false;
 		params.Path = path;
 
 		XPX::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);
 
 		// We want to parse any data values needed by the game.
-		// Such as SoundId.ExplosionId. or Textures.Ghost.
+		// Such as SoundId. or Textures.
 		DVFromRoXML(params);
 
 		NPLICIT_SPLASH_SCREEN;
 
-		XPX::Thread job(XplicitLoadShell);
+#ifdef XPLICIT_DEBUG
+		//XPX::Thread job(XplicitLoadShell);
+		//job.detach();
+#endif // XPLICIT_DEBUG
 
 		while (XPX::ComponentSystem::get_singleton_ptr() &&
 			XPX::EventSystem::get_singleton_ptr())

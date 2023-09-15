@@ -214,6 +214,7 @@ public:
 
 			params.Has3D = true;
 			params.NoLua = true;
+			params.WaitFor = false;
 			params.LuaOnly = false;
 
 			XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());

@@ -31,7 +31,7 @@ namespace XPX
 	{
 		if (humanoid && spawner)
 		{
-			const auto pos = spawner->get();
+			const auto& pos = spawner->get();
 
 			humanoid->get_attribute().pos().X = pos.X;
 			humanoid->get_attribute().pos().Y = pos.Y;

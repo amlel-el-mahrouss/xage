@@ -128,17 +128,12 @@ namespace XPX::Lua
 	{
 	public:
 		explicit CLuaClass(const String& klass) noexcept
-			: mClass(klass), mL(lua_newthread(CLuaStateManager::get_singleton_ptr()->state())), mSymbolCnt(0)
+			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
 		{
-			lua_resume(mL, CLuaStateManager::get_singleton_ptr()->state(), 0, nullptr);
 			luaL_newmetatable(mL, mClass.c_str());
 		}
 
-		virtual ~CLuaClass() noexcept 
-		{ 
-			if (mL)
-				lua_close(mL);
-		}
+		virtual ~CLuaClass() noexcept = default;
 
 	public:
 		XPLICIT_COPY_DEFAULT(CLuaClass);
@@ -192,6 +187,7 @@ namespace XPX::Lua
 
 				auto fmt = fmt::format("{}.{} = {}", mClass, symbol, value);
 				bool ret = luaL_dostring(mL, fmt.c_str()) == 0;
+
 				return ret;
 			}
 
@@ -201,8 +197,8 @@ namespace XPX::Lua
 		bool assign(const String lhs, const String rhs) 
 		{ 
 			auto fmt = fmt::format("{}.{} = {}", mClass, lhs, rhs);
-			bool ret = luaL_dostring(mL, fmt.c_str()) == 0;
-			return ret;
+			
+			return luaL_dostring(mL, fmt.c_str()) == 0;;
 		}
 
 	private:
@@ -238,6 +234,7 @@ namespace XPX::Lua
 				if (lua_isnumber(mL, -1))
 				{
 					ret = lua_tonumber(mL, -1);
+					lua_pop(mL, -1);
 				}
 			}
 
@@ -253,6 +250,7 @@ namespace XPX::Lua
 				if (lua_isboolean(mL, -1))
 				{
 					ret = lua_toboolean(mL, -1);
+					lua_pop(mL, -1);
 				}
 			}
 
@@ -270,6 +268,7 @@ namespace XPX::Lua
 				if (lua_isstring(mL, -1))
 				{
 					ret = lua_tostring(mL, -1);
+					lua_pop(mL, -1);
 				}
 			}
 
@@ -284,7 +283,12 @@ namespace XPX::Lua
 			auto ret = (luaL_dostring(mL, lhs.c_str())) == 0;
 
 			if (!ret)
-				return lua_tostring(mL, -1);
+			{
+				String ret = lua_tostring(mL, -1);
+				lua_pop(mL, -1);
+
+				return ret;
+			}
 
 			return "";
 		}
@@ -300,7 +304,12 @@ namespace XPX::Lua
 			auto ret = (luaL_dofile(mL, tmp.c_str())) == 0;
 			
 			if (!ret)
-				return lua_tostring(mL, -1);
+			{
+				String ret = lua_tostring(mL, -1);
+				lua_pop(mL, -1);
+
+				return ret;
+			}
 		
 			return "";
 		}

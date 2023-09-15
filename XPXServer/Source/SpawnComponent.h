@@ -5,7 +5,7 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: SpawnComponent.h
- *			Purpose: Spawn Component
+ *			Purpose: Spawn point component.
  *
  * =====================================================================
  */
@@ -13,10 +13,11 @@
 #pragma once
 
 #include "ServerConfig.h"
+#include <ClassComponent.h>
 
 namespace XPX
 {
-	class SpawnComponent : public Component
+	class SpawnComponent : public ClassComponent
 	{
 	public:
 		SpawnComponent() = delete;
@@ -40,7 +41,6 @@ namespace XPX
 		XPXAttribute& get_attribute() noexcept;
 
 	private:
-		std::unique_ptr<Lua::CLuaClass> mClass;
 		XPXAttribute mAttribute;
 
 	};

@@ -12,20 +12,16 @@
  */
 
 #include "SpawnComponent.h"
-
 #include "HumanoidComponent.h"
-#include <CLua.hpp>
 
-#define XPLICIT_LUA_GLOBAL "_G."
-#define XPLICIT_LUA_NAMESPACE "world."
+#include <CLua.hpp>
 
 namespace XPX
 {
 	SpawnComponent::SpawnComponent(const Vector<NetworkFloat>& vec)
-		: Component(), mClass(std::make_unique<Lua::CLuaClass>("SpawnLocation"))
+		: ClassComponent("world", "SpawnLocation")
 	{
-		XPLICIT_ASSERT(mClass);
-		mClass->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
+		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 
 		this->mAttribute.pos() = vec;
 
@@ -44,13 +40,18 @@ namespace XPX
 
 	void SpawnComponent::update(ClassPtr class_ptr) 
 	{
+		ClassComponent::update(class_ptr);
+
 		SpawnComponent* self = (SpawnComponent*)class_ptr;
 
-		static auto str = "{ X = " + std::to_string(self->mAttribute.pos().X) + ", Y = " +
-			std::to_string(self->mAttribute.pos().Y) + ", Z = " +
-			std::to_string(self->mAttribute.pos().Z) + "," + "}";
+		if (self)
+		{
+			String pos_fmt = "{ X = " + std::to_string(self->mAttribute.pos().X) + ", Y = " +
+				std::to_string(self->mAttribute.pos().Y) + ", Z = " +
+				std::to_string(self->mAttribute.pos().Z) + "," + "}";
 
-		self->mClass->assign("Position", str.c_str());
+			self->assign("Position", pos_fmt);
+		}
 	}
 
 	COMPONENT_TYPE SpawnComponent::type() noexcept { return (COMPONENT_LOGIC); }

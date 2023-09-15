@@ -28,6 +28,7 @@ static int lua_LoadRoXML(lua_State* L)
 		 
 		params.Has3D = false;
 		params.LuaOnly = false;
+		params.WaitFor = false;
 		params.NoLua = false;
 
 		params.Path = _path;
@@ -170,11 +171,13 @@ static int lua_DestroyGear(lua_State* L)
 			{
 				if (part->get_owner())
 				{
-					for (size_t i = 0; i < part->get_owner()->get_gears().size(); i++)
+					auto* owner = part->get_owner();
+
+					for (size_t i = 0; i < owner->get_gears().size(); i++)
 					{
-						if (part->get_owner()->get_gears()[i] == part)
+						if (owner->get_gears()[i] == part)
 						{
-							part->get_owner()->get_gears()[i] = nullptr;
+							owner->get_gears()[i] = nullptr;
 							break;
 						}
 					}

@@ -43,9 +43,9 @@ namespace XPX
 
 	bool HumanoidComponent::has_physics() noexcept { return false; }
 
-	void HumanoidComponent::update(void* _this_ptr)
+	void HumanoidComponent::update(ClassPtr class_ptr)
 	{
-		HumanoidComponent* self = (HumanoidComponent*)_this_ptr;
+		HumanoidComponent* self = (HumanoidComponent*)class_ptr;
 
 		if (self->get_peer() == nullptr)
 		{
@@ -167,26 +167,18 @@ namespace XPX
 
 		if (mPeer)
 		{
-			if (mClass)
-				mClass.reset();
 
-			for (auto& gear : this->mGears)
-			{
-				if (gear)
-					XPX::ComponentSystem::get_singleton_ptr()->remove(gear);
+			String player_tbl("world.Players.");
+			player_tbl += mPeer->xplicit_id.as_string();
 
-				gear = nullptr;
-			}
+			mClass = std::make_unique<Lua::CLuaClass>(player_tbl);
 
-			String path("world.Players.");
-			path += mPeer->xplicit_id.as_string();
+			XPLICIT_ASSERT(mClass);
 
 			mHealth = XPX_DEFAULT_HEALTH;
 			mMaxHealth = XPX_DEFAULT_MAXHEALTH;
 			mJumpPower = XPX_DEFAULT_JUMPPOWER;
 			mWalkSpeed = XPX_DEFAULT_WALKSPEED;
-
-			mClass = std::make_unique<Lua::CLuaClass>(path);
 
 			if (mClass)
 			{
@@ -215,8 +207,13 @@ namespace XPX
 
 			XPLICIT_INFO("world:Login [EVENT]");
 
-			String fmt = std::format("world:Login({})", path);
+			String fmt = std::format("world:Login({})", player_tbl);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
+		}
+		else
+		{
+			mClass.reset();
+			mClass = nullptr;
 		}
 	}
 
