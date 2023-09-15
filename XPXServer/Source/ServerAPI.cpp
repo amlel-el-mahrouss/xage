@@ -91,7 +91,8 @@ static int lua_CreateGear(lua_State* L)
 
 			if (player->get_gears()[i] == nullptr)
 			{
-				if (player->get_peer()->xplicit_id.as_string() == xplicit_id)
+				if (player->get_peer() &&
+					player->get_peer()->xplicit_id.as_string() == xplicit_id)
 				{
 					player->get_gears()[i] = gear;
 					player->get_gears()[i]->set_owner(player);
