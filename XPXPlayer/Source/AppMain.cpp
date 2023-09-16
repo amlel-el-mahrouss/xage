@@ -68,8 +68,7 @@ int main(int argc, char** argv)
 		{
 			if (MessageBox(nullptr, L"You're going to see a demo of the in-coming VRS, proceed?", L"Vulkan Rendering System.", MB_OKCANCEL) == IDOK)
 			{
-
-				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (Vulkan Rendering System)", "XPXPlayerVk", hInst);
+				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (Vulkan Rendering System)", "XPXPlayerVkDev", hInst);
 
 				XPX::SIrrlichtCreationParameters params;
 
@@ -133,19 +132,11 @@ int main(int argc, char** argv)
 
 			std::unique_ptr<XPX::Bites::Application> app_ptr = std::make_unique<XPX::Bites::Application>(uri);
 
-			if (!app_ptr)
-				throw XPX::EngineError("XPXPlayer couldn't continue; we're sorry!");
+			XPLICIT_ASSERT(app_ptr);
 
 			CAD->getSceneManager()->getParameters()->setAttribute(XPX::COLLADA_CREATE_SCENE_INSTANCES, true);
-
 			CAD->getVideoDriver()->setTextureCreationFlag(XPX::ETCF_ALWAYS_32_BIT, true);
 
-			CAD->getSceneManager()->addLightSceneNode(0, XPX::vector3df(200, 200, 200),
-				XPX::SColorf(1.0f, 1.0f, 1.0f), 2000);
-
-			CAD->getSceneManager()->setAmbientLight(XPX::SColorf(0.3f, 0.3f, 0.3f));
-
-			//! The main logic and render loop.
 			while (CAD->run())
 			{
 				CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));

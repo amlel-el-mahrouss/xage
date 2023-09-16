@@ -31,7 +31,7 @@
 #endif // ifndef XPLICIT_INVALID_ADDR
 
 #define XPLICIT_NETWORK_BUF_SZ      (512U)
-#define XPLICIT_NETWORK_VERSION     (3U)
+#define XPLICIT_NETWORK_VERSION     (4U)
 
 #define XPLICIT_MAX_REPLICAS        (4)
 
@@ -167,6 +167,7 @@ namespace XPX
     public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
         std::int8_t           channel; // channel of the packet, that is here which chatroom to print this in. 3 + n
+        std::int16_t          version;
 
         char                  buffer[XPLICIT_NETWORK_BUF_SZ];
 
@@ -177,7 +178,8 @@ namespace XPX
     {
     public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
-        std::int8_t           channel;
+        std::int8_t           channel; // the channel, as always.
+        std::int16_t          version;
         
         char                  serial_data[XPLICIT_NETWORK_BUF_SZ];
 

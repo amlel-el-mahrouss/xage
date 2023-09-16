@@ -83,4 +83,10 @@ INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nC
 		bool mExit;
 
 	};
+
+#ifdef XPLICIT_WINDOWS
+	typedef Win32Window BitesWindow;
+#else
+	typedef GLFWWindow BitesWindow;
+#endif // XPLICIT_WINDOWS
 }
