@@ -20,6 +20,8 @@
 
 namespace XPX
 {
+	static int XPX_MAX_TIMEOUT = 250;
+
 	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(const std::int64_t& priv, const std::int64_t& publ)
 		:
 			mNetwork(nullptr),
@@ -41,31 +43,42 @@ namespace XPX
 	{
 		if (!mNetwork) return;
 
-		/* did we lost connection to peer? */
 		if (mNetwork->is_reset())
 		{
-			ComponentSystem::get_singleton_ptr()->remove(mNetwork);
+			--XPX_MAX_TIMEOUT;
 
-			if (ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ResetPopup") == nullptr)
+			if (XPX_MAX_TIMEOUT < 1)
 			{
-				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+				if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 					CAD->closeDevice();
-				}, POPUP_TYPE::NETWORK, "ResetPopup");
-			}
+					}, POPUP_TYPE::NETWORK, "ResetPopup"))
+				{
+					ComponentSystem::get_singleton_ptr()->remove(mNetwork);
+					mNetwork = nullptr;
 
-			return;
+					return;
+				}
+			}
 		}
 
-		NetworkPacket packet{};
-		mNetwork->read(packet);
+		NetworkPacket packet = mNetwork->get();
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)
 		{
-			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
+			if (packet.hash == mHash)
 			{
-				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					CAD->closeDevice();
-					}, POPUP_TYPE::KICK, "KickPopup", packet.buffer[0] != 0 ? packet.buffer : "You have been kicked.");
+				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
+				{
+					if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+						CAD->closeDevice();
+						}, POPUP_TYPE::KICK, "KickPopup", packet.buffer[0] != 0 ? packet.buffer : "You have been kicked."))
+					{
+						ComponentSystem::get_singleton_ptr()->remove(mNetwork);
+						mNetwork = nullptr;
+
+						return;
+					}
+				}
 			}
 		}
 

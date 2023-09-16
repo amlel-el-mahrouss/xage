@@ -73,11 +73,23 @@ namespace XPX
                     XPLICIT_INFO("[TIMEOUT] IP: " + this->ip_address);
 
                     this->packet.hash = this->hash;
-                    this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+                    this->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
                 }
             }
             else
             {
+                if (this->ip_address.empty())
+                {
+                    XPLICIT_INFO("[INVALID] XPX_ID: " + this->xplicit_id.as_string());
+
+                    this->packet.hash = this->hash;
+                    this->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
+
+                    this->status = NETWORK_STAT_STASIS;
+
+                    return;
+                }
+
                 XPLICIT_INFO("[CHECK] IP: " + this->ip_address);
                 this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
 

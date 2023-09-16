@@ -133,6 +133,8 @@ namespace XPX
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
+
+					NetworkServerContext::send_all(mNetwork);
 				}
 			}
 		}
@@ -156,7 +158,6 @@ namespace XPX
 			//! If it is a kick or a stop or either a ban
 			//! Do this action.
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK ||
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 			{
 				const auto hash_lhs = mNetwork->get(peer_idx)->packet.hash;
@@ -165,9 +166,6 @@ namespace XPX
 				if (hash_lhs == hash_rhs)
 				{
 					--mPlayerCount;
-
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_INVALID;
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_INVALID;
 
 					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGOFF] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
@@ -203,6 +201,8 @@ namespace XPX
 							mNetwork->get(index)->packet.public_hash = public_hash;
 						}
 					}
+
+					NetworkServerContext::send_all(mNetwork);
 				}
 			}
 		}

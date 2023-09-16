@@ -84,6 +84,7 @@ namespace XPX
 
 		if (self->mClass->index_as_bool("Kick"))
 		{
+			self->mPeer->packet.hash = self->mPeer->hash;
 			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
 
 			String reason = "You have been kicked.";

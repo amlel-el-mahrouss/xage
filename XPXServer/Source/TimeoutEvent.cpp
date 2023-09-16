@@ -29,13 +29,6 @@ namespace XPX
 	{
 		for (std::size_t index = 0; index < mNetwork->size(); ++index)
 		{
-			if (mNetwork->get(index)->ip_address.empty() &&
-				mNetwork->get(index)->status == NETWORK_STAT_CONNECTED)
-			{
-				mNetwork->get(index)->timeout();
-				continue;
-			}
-
 			if (mNetwork->get(index)->status == NETWORK_STAT_DISCONNECTED ||
 				mNetwork->get(index)->status == NETWORK_STAT_INVALID ||
 				mNetwork->get(index)->status == NETWORK_STAT_STASIS)
