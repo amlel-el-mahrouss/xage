@@ -151,22 +151,35 @@ namespace XPX
         NetworkFloat          pos_third[XPLICIT_NETWORK_POS_MAX];
         NetworkFloat          pos_fourth[XPLICIT_NETWORK_POS_MAX];
 
+        // replicas code
     public:
         char                  replicas[XPLICIT_MAX_REPLICAS][XPLICIT_NETWORK_BUF_SZ];
 
         // additional data.
     public:
-        char                  buffer[XPLICIT_NETWORK_BUF_SZ];
+        char                  additional_data[XPLICIT_NETWORK_BUF_SZ];
 
     };
 
-    // chat packet.
+    // Chatbox/VoiceChat packet.
     struct XPLICIT_API NetworkPacketChat final
     {
     public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
         std::int8_t           channel; // channel of the packet, that is here which chatroom to print this in. 3 + n
+
         char                  buffer[XPLICIT_NETWORK_BUF_SZ];
+
+    };
+
+    // Replication packet.
+    struct XPLICIT_API NetworkPacketRepl final
+    {
+    public:
+        char                  magic[XPLICIT_NETWORK_MAG_COUNT];
+        std::int8_t           channel;
+        
+        char                  serial_data[XPLICIT_NETWORK_BUF_SZ];
 
     };
 

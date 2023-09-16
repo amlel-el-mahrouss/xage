@@ -71,7 +71,7 @@ namespace XPX
 				{
 					if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 						CAD->closeDevice();
-						}, POPUP_TYPE::KICK, "KickPopup", packet.buffer[0] != 0 ? packet.buffer : "You have been kicked."))
+						}, POPUP_TYPE::KICK, "KickPopup", packet.additional_data[0] != 0 ? packet.additional_data : "You have been kicked."))
 					{
 						ComponentSystem::get_singleton_ptr()->remove(mNetwork);
 						mNetwork = nullptr;
@@ -109,7 +109,7 @@ namespace XPX
 			XPLICIT_INFO("world:Login [EVENT]");
 #endif
 
-			ComponentSystem::get_singleton_ptr()->add<XPX::LocalHumanoidComponent>(networkPacket.public_hash, false, networkPacket.buffer);
+			ComponentSystem::get_singleton_ptr()->add<XPX::LocalHumanoidComponent>(networkPacket.public_hash, false, networkPacket.additional_data);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:Login()");
 
 			/*! invalidate command right there. */

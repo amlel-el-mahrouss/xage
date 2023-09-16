@@ -115,7 +115,7 @@ namespace XPX
             local_player->attach(cam);
             self->mNetwork->set_hash(hash);
 
-            monitor->ID = packet.buffer;
+            monitor->ID = packet.additional_data;
 
             local_player->get_class()->insert("PlayerId", fmt::format("'{}'", monitor->ID).c_str());
 

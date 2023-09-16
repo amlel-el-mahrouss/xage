@@ -33,6 +33,8 @@ void XPXMacInitStuff();
 
 static void XplicitThrowException(XPX::EngineError& err);
 
+extern void XplicitLoadClientLua() noexcept;
+
 #ifdef _WIN32
 static void XplicitThrowException(XPX::Win32Error& err);
 #endif
@@ -57,61 +59,113 @@ int main(int argc, char** argv)
 		XPX::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
 
 #ifdef _WIN32
-        std::string cmd_line = pCmdLine;
+        XPX::String cmd_line = pCmdLine;
 #else
-        XPLICIT_ASSERT(argv[1]);
-        std::string cmd_line = argv[1];
-#endif
-		
-		if (cmd_line.empty() ||
-			cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == XPX::String::npos)
-			return 1;
-
-		cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
-
-		uri /= cmd_line;
-
-		XPX::Utils::InternetProtocolChecker checker;
-
-		if (!checker(uri.get().c_str()))
-			return 1;
-
-#ifdef __APPLE__
-        XPXMacInitStuff();
+        XPX::String cmd_line = argv[1];
 #endif
 
-		std::unique_ptr<XPX::Bites::Application> app_ptr = std::make_unique<XPX::Bites::Application>(uri);
-
-		if (!app_ptr)
-			throw XPX::EngineError("XPXPlayer couldn't continue; we're sorry!");
-
-		CAD->getSceneManager()->getParameters()->setAttribute(XPX::COLLADA_CREATE_SCENE_INSTANCES, true);
-
-		CAD->getVideoDriver()->setTextureCreationFlag(XPX::ETCF_ALWAYS_32_BIT, true);
-
-		CAD->getSceneManager()->addLightSceneNode(0, XPX::vector3df(200, 200, 200),
-			XPX::SColorf(1.0f, 1.0f, 1.0f), 2000);
-
-		CAD->getSceneManager()->setAmbientLight(XPX::SColorf(0.3f, 0.3f, 0.3f));
-
-		//! The main logic and render loop.
-		while (CAD->run())
+		if (cmd_line == "/VkInDev")
 		{
-			CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
+			if (MessageBox(nullptr, L"You're going to see a demo of the in-coming VRS, proceed?", L"Vulkan Rendering System.", MB_OKCANCEL) == IDOK)
+			{
+
+				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (Vulkan Rendering System)", "XPXPlayerVk", hInst);
+
+				XPX::SIrrlichtCreationParameters params;
+
+				params.DriverMultithreaded = true;
+				params.DriverType = XPX::EDT_DIRECT3D9;
+				params.Fullscreen = false;
+				params.WindowSize = XPX::dimension2d<irr::u32>(XPLICIT_MIN_WIDTH, XPLICIT_MIN_HEIGHT);
+				params.WindowId = win->get().WindowHandle;
+
+				XPX::Root::get_singleton_ptr()->set(
+					createDeviceEx(params)
+				);
+
+				XplicitLoadBaseLua();
+				XplicitLoadClientLua();
+
+				while (CAD->run())
+				{
+					win->update();
+
+					CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
 
 #ifdef _WIN32
-			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
+					XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
 #endif
 
-			CAD->getSceneManager()->drawAll();
-			CAD->getGUIEnvironment()->drawAll();
+					CAD->getSceneManager()->drawAll();
+					CAD->getGUIEnvironment()->drawAll();
 
-			XPX::ComponentSystem::get_singleton_ptr()->update();
-			XPX::EventSystem::get_singleton_ptr()->update();
+					XPX::ComponentSystem::get_singleton_ptr()->update();
+					XPX::EventSystem::get_singleton_ptr()->update();
 
-			CAD->getVideoDriver()->endScene();
+					CAD->getVideoDriver()->endScene();
 
-			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:RenderOneFrame()");
+					XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:RenderOneFrame()");
+				}
+
+				delete win;
+				CAD->drop();
+			}
+		}
+		else
+		{
+
+			if (cmd_line.empty() ||
+				cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == XPX::String::npos)
+				return 1;
+
+			cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
+
+			uri /= cmd_line;
+
+			XPX::Utils::InternetProtocolChecker checker;
+
+			if (!checker(uri.get().c_str()))
+				return 1;
+
+#ifdef __APPLE__
+			XPXMacInitStuff();
+#endif
+
+			std::unique_ptr<XPX::Bites::Application> app_ptr = std::make_unique<XPX::Bites::Application>(uri);
+
+			if (!app_ptr)
+				throw XPX::EngineError("XPXPlayer couldn't continue; we're sorry!");
+
+			CAD->getSceneManager()->getParameters()->setAttribute(XPX::COLLADA_CREATE_SCENE_INSTANCES, true);
+
+			CAD->getVideoDriver()->setTextureCreationFlag(XPX::ETCF_ALWAYS_32_BIT, true);
+
+			CAD->getSceneManager()->addLightSceneNode(0, XPX::vector3df(200, 200, 200),
+				XPX::SColorf(1.0f, 1.0f, 1.0f), 2000);
+
+			CAD->getSceneManager()->setAmbientLight(XPX::SColorf(0.3f, 0.3f, 0.3f));
+
+			//! The main logic and render loop.
+			while (CAD->run())
+			{
+				CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
+
+#ifdef _WIN32
+				XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
+#endif
+
+				CAD->getSceneManager()->drawAll();
+				CAD->getGUIEnvironment()->drawAll();
+
+				XPX::ComponentSystem::get_singleton_ptr()->update();
+				XPX::EventSystem::get_singleton_ptr()->update();
+
+				CAD->getVideoDriver()->endScene();
+
+				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:RenderOneFrame()");
+			}
+
+			CAD->drop();
 		}
 	}
 	catch (XPX::EngineError& err)

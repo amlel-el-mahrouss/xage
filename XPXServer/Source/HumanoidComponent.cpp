@@ -93,7 +93,7 @@ namespace XPX
 				self->mClass->index_as_string("KickReason").size() < XPLICIT_NETWORK_BUF_SZ)
 				reason = self->mClass->index_as_string("KickReason");
 
-			memcpy(self->mPeer->packet.buffer, reason.c_str(), reason.size());
+			memcpy(self->mPeer->packet.additional_data, reason.c_str(), reason.size());
 
 			return;
 		}

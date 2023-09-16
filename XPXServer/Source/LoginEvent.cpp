@@ -124,11 +124,11 @@ namespace XPX
 					
 					++mPlayerCount;
 
-					memcpy(mNetwork->get(peer_idx)->packet.buffer, 
+					memcpy(mNetwork->get(peer_idx)->packet.additional_data, 
 						mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
 						mNetwork->get(peer_idx)->xplicit_id.as_string().size());
 
-					memset(mNetwork->get(peer_idx)->packet.buffer, 0, XPLICIT_NETWORK_BUF_SZ);
+					memset(mNetwork->get(peer_idx)->packet.additional_data, 0, XPLICIT_NETWORK_BUF_SZ);
 
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());

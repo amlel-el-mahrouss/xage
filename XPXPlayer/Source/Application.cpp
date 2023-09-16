@@ -48,8 +48,6 @@ namespace XPX::Bites
 
 	void Application::setup_engine()
 	{
-		SIrrlichtCreationParameters params;
-
 		//! Setup program contents path.
 		XPLICIT_GET_DATA_DIR(path);
 		mPath = path;
@@ -65,6 +63,8 @@ namespace XPX::Bites
 		if (traits.window_height < 600 ||
 			traits.window_width < 800)
 			throw EngineError("The Engine doesn't support high DPI displays.");
+
+		SIrrlichtCreationParameters params;
 
 		params.DriverMultithreaded = true;
 		params.DriverType = EDT_OPENGL;
