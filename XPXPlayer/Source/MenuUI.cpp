@@ -101,13 +101,13 @@ namespace XPX
 
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
-		ImGUI::UIFont::get_label_font()->draw(self->mTitle.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 30),
+		ImGUI::UIFontHelper::get_label_font()->draw(self->mTitle.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 30),
 			dimension2d(0, 0)), 
 			self->mHudFrame->TextColor, 
 			true, 
 			true);
 
-		ImGUI::UIFont::get_label_font()->draw(self->mText.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 100),
+		ImGUI::UIFontHelper::get_label_font()->draw(self->mText.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 100),
 			dimension2d(0, 0)),
 			self->mHudFrame->TextColor,
 			true,

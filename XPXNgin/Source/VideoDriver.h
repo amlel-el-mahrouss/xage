@@ -62,7 +62,7 @@ namespace XPX
 		class XPLICIT_API VideoDriver final
 		{
 		public:
-			VideoDriver(HWND hwnd);
+			explicit VideoDriver(HWND hwnd);
 			~VideoDriver();
 
 			VideoDriver& operator=(const VideoDriver&) = default;

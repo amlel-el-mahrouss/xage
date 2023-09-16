@@ -14,7 +14,7 @@
 #include <CLua.hpp>
 #include <RoXML.h>
 
- // RoXML parser
+// RoXML parser
 XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 static int lua_LoadRoXML(lua_State* L)

@@ -70,44 +70,15 @@ int main(int argc, char** argv)
 			{
 				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (Vulkan Rendering System)", "XPXPlayerVkDev", hInst);
 
-				XPX::SIrrlichtCreationParameters params;
-
-				params.DriverMultithreaded = true;
-				params.DriverType = XPX::EDT_DIRECT3D9;
-				params.Fullscreen = false;
-				params.WindowSize = XPX::dimension2d<irr::u32>(XPLICIT_MIN_WIDTH, XPLICIT_MIN_HEIGHT);
-				params.WindowId = win->get().WindowHandle;
-
-				XPX::Root::get_singleton_ptr()->set(
-					createDeviceEx(params)
-				);
-
 				XplicitLoadBaseLua();
 				XplicitLoadClientLua();
 
-				while (CAD->run())
+				while (true)
 				{
 					win->update();
-
-					CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
-
-#ifdef _WIN32
-					XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
-#endif
-
-					CAD->getSceneManager()->drawAll();
-					CAD->getGUIEnvironment()->drawAll();
-
-					XPX::ComponentSystem::get_singleton_ptr()->update();
-					XPX::EventSystem::get_singleton_ptr()->update();
-
-					CAD->getVideoDriver()->endScene();
-
-					XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:RenderOneFrame()");
 				}
 
-				delete win;
-				CAD->drop();
+				delete win; // still though, wanna do that. even though windows still does free the pool.
 			}
 		}
 		else

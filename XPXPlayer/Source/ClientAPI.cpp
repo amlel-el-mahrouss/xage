@@ -26,7 +26,7 @@
 #include <Util.h>
 #include <Uri.h>
 
- // RoXML parser
+// RoXML parser
 static XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 #ifndef XPLICIT_XASSET_IDENT

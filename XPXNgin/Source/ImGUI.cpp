@@ -18,7 +18,7 @@ namespace XPX::ImGUI
 		m_pFrame = new UIFrame();
 		XPLICIT_ASSERT(m_pFrame);
 
-		m_pFont = UIFont::get_font(UIFont::get_label_path().c_str());
+		m_pFont = UIFontHelper::get_font(UIFontHelper::get_label_path().c_str());
 
 		m_pFrame->W = 185;
 		m_pFrame->H = 48;
@@ -188,9 +188,9 @@ namespace XPX::ImGUI
 		}
 
 		if (!mText.empty())
-			UIFont::get_label_font()->draw(mText.c_str(), recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
+			UIFontHelper::get_label_font()->draw(mText.c_str(), recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
 		else
-			UIFont::get_label_font()->draw(mPlaceholder.c_str(), recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
+			UIFontHelper::get_label_font()->draw(mPlaceholder.c_str(), recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
 	}
 
 	UICheckBox::UICheckBox()

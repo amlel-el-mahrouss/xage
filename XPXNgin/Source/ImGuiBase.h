@@ -74,7 +74,7 @@ namespace XPX
 
 		};
 
-		class XPLICIT_API UIFont final
+		class XPLICIT_API UIFontHelper final
 		{
 		public:
 #ifdef __RENDERER_IRR__

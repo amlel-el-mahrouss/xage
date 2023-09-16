@@ -52,7 +52,7 @@ namespace XPX::ImGUI
 		UIFrame* operator->() const;
 
 	private:
-		UIFont::FontPtr m_pFont{ nullptr };
+		UIFontHelper::FontPtr m_pFont{ nullptr };
 		BasicString<PChar> mText{ L"" };
 		UIFrame* m_pFrame{ nullptr };
 		std::uint64_t m_iFadeIn{ 0 };
@@ -230,7 +230,7 @@ namespace XPX::ImGUI
 
 			mHead.mBody->update(mHead.mBody->BackgroundColor);
 
-			UIFont::get_properties_font()->draw(mTitle.c_str(),
+			UIFontHelper::get_properties_font()->draw(mTitle.c_str(),
 				recti(vector2di(mHead.mBody->X + 5, mHead.mBody->Y - 2), dimension2du(0, 0)),
 				SColor(255, 255, 255, 255),
 				false, false);
