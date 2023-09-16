@@ -69,6 +69,15 @@ namespace XPX
 			this->script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script));
 			XPLICIT_ASSERT(this->script());	
 		}
+
+		this->insert("Force", "{ X = 1, Y = 1, Z = 1 }");
+		this->insert("Weight", "{ X = 1, Y = 1, Z = 1 }");
+
+		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementSharedEvent>("NpMovementSharedEvent");
+			mov)
+		{
+			mov->insert_node(this);
+		}
 	}
 
 	ClassComponent::~ClassComponent()

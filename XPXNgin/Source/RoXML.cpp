@@ -149,15 +149,39 @@ namespace XPX::RoXML
 
 								if (klass_to_instantiate == "3DSky")
 								{
-									irr::scene::ISceneNode* sky_dome = nullptr;
-									sky_dome = CAD->getSceneManager()->addSkyDomeSceneNode(CAD->getVideoDriver()->getTexture(node->value()));
-									object = sky_dome;
-
-									if (sky_dome)
+									for (size_t i = 0; i < strlen(node->value()); i++)
 									{
-										sky_dome->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-										sky_dome->setName(node_id);
+										if (isalnum(node->value()[i]) ||
+											node->value()[i] == '.' ||
+											node->value()[i] == '/' ||
+											node->value()[i] == '\\' ||
+											node->value()[i] == ':')
+										{
+											world_node.Value += node->value()[i];
+										}
 									}
+
+									XPLICIT_GET_DATA_DIR(DIR);
+
+									DIR += "Textures/";
+									DIR += world_node.Value;
+
+									XPX::String up = DIR + "_up.png";
+									XPX::String dn = DIR + "_dn.png";
+									XPX::String lf = DIR + "_lf.png";
+									XPX::String rt = DIR + "_rt.png";
+									XPX::String ft = DIR + "_ft.png";
+									XPX::String bk = DIR + "_bk.png";
+
+									auto skybox = CAD->getSceneManager()->addSkyBoxSceneNode(CAD->getVideoDriver()->getTexture(up.c_str()),
+										CAD->getVideoDriver()->getTexture(dn.c_str()),
+										CAD->getVideoDriver()->getTexture(lf.c_str()),
+										CAD->getVideoDriver()->getTexture(rt.c_str()),
+										CAD->getVideoDriver()->getTexture(ft.c_str()),
+										CAD->getVideoDriver()->getTexture(bk.c_str()));
+
+									skybox->setVisible(true);
+
 								}
 
 								if (klass_to_instantiate == "Particle")
@@ -202,22 +226,7 @@ namespace XPX::RoXML
 								ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(parent_id, node_name.c_str());
 
 								if (component)
-								{
-									component->insert("ClassType", fmt::format("'{}'", klass_to_instantiate.c_str()).c_str());
-									component->insert("Force", "{ X = 1, Y = 1, Z = 1 }");
-									component->insert("Weight", "{ X = 1, Y = 1, Z = 1 }");
-
-									if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementSharedEvent>("NpMovementSharedEvent");
-										mov)
-									{
-										mov->insert_node(component);
-									}
-									else
-									{
-										XPLICIT_CRITICAL("No Physics engine currently mounted! Don't except any form of physics.");
-										ComponentSystem::get_singleton_ptr()->remove(component);
-									}
-								}
+									component->insert("ClassType", fmt::format("'{}'", klass_to_instantiate));
 							}
 						}
 					}

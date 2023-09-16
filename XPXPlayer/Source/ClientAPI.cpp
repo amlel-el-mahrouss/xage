@@ -27,7 +27,7 @@
 #include <Uri.h>
 
  // RoXML parser
-XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
+static XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
 
 #ifndef XPLICIT_XASSET_IDENT
 #	define XPLICIT_XASSET_IDENT ("xasset")
@@ -42,7 +42,8 @@ struct XPXSoundCache final
 	XPX::String path = "";
 };
 
-std::vector<XPXSoundCache> XPX_CACHE;
+static std::vector<XPXSoundCache> XPX_CACHE;
+static std::condition_variable XPLICIT_CV;
 
 static int lua_PlaySound(lua_State* L)
 {
@@ -54,7 +55,10 @@ static int lua_PlaySound(lua_State* L)
 		if (!name ||
 			!url_raw)
 		{
-			return 0;
+			XPLICIT_CV.notify_one();
+
+			lua_pushboolean(L, false);
+			return 1;
 		}
 
 		auto it = std::find_if(XPX_CACHE.cbegin(), XPX_CACHE.cend(), [&](const XPXSoundCache cache) {
@@ -67,11 +71,21 @@ static int lua_PlaySound(lua_State* L)
 		{
 			// that means if we don't find it, then fail silently.
 			if (url.find(".wav") == XPX::String::npos)
-				return 0;
+			{
+				XPLICIT_CV.notify_one();
+
+				lua_pushboolean(L, false);
+				return 1;
+			}
 
 			if (url.empty() ||
 				url.find(XPLICIT_XASSET_IDENT) == XPX::String::npos)
-				return 0;
+			{
+				XPLICIT_CV.notify_one();
+
+				lua_pushboolean(L, false);
+				return 1;
+			}
 
 			XPX::String substr_tmp = url.erase(url.find(XPLICIT_XASSET_IDENT), strlen(XPLICIT_XASSET_IDENT) + 3);
 
@@ -132,7 +146,10 @@ static int lua_PlaySound(lua_State* L)
 		XPLICIT_CRITICAL("There was an error executing this procedure!");
 	}
 
-	return 0;
+	XPLICIT_CV.notify_one();
+
+	lua_pushboolean(L, true);
+	return 1;
 }
 
 static int lua_GetX(lua_State* L)
@@ -203,17 +220,18 @@ public:
 				XPX::String value = lua_tostring(L, 3);
 
 				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(value.c_str(), key.c_str());
+
 				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", key, value).c_str());
 
 				return 1;
 			}
 		}
-		else if (component_name == "Scene")
+		else if (component_name == "RoXML")
 		{
 			XPX::RoXML::RoXMLDocumentParameters params;
 
-			params.Has3D = true;
-			params.NoLua = true;
+			params.Has3D = false;
+			params.NoLua = false;
 			params.WaitFor = false;
 			params.LuaOnly = false;
 
@@ -376,7 +394,7 @@ static int lua_DestroyMesh(lua_State* L)
 						part->group_name() == parent)
 					{
 						XPX::ComponentSystem::get_singleton_ptr()->remove(part);
-						return;
+						return 0;
 					}
 				}
 			}
@@ -393,7 +411,7 @@ static int lua_DestroyMesh(lua_State* L)
 void XplicitLoadClientLua() noexcept
 {
 	XPX::RLua::RuntimeClass<XPXInstance> instance;
-	instance.begin_class("Component", &XPXInstance::new_instance).end_class();
+	instance.begin_class("Instance", &XPXInstance::new_instance).end_class();
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "playSound");
 

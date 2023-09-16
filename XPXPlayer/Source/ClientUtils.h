@@ -48,21 +48,19 @@ inline auto LoadSkybox(XPX::String skybox_prefix)
 		CAD->getVideoDriver()->getTexture(ft.c_str()),
 		CAD->getVideoDriver()->getTexture(bk.c_str()));
 
-	skybox->setVisible(true);
-
 	return skybox;
 }
 
 namespace XPX
 {
-	class Explosion final
+	class ExplosionFX final
 	{
 	public:
-		Explosion(vector3df& pos, vector3df& scale);
-		~Explosion();
+		ExplosionFX(vector3df& pos, vector3df& scale);
+		~ExplosionFX();
 
 	public:
-		XPLICIT_COPY_DEFAULT(Explosion);
+		XPLICIT_COPY_DELETE(ExplosionFX);
 
 	};
 }
