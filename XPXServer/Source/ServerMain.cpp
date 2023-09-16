@@ -210,7 +210,6 @@ int main(int argc, char** argv)
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_CRITICAL(err.what());
-
 #endif // ifdef XPLICIT_DEBUG
 
 #ifdef XPLICIT_WINDOWS

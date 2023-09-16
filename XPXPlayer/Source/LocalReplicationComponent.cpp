@@ -20,7 +20,6 @@
 #include <Util.h>
 #include <Uri.h>
 
-
 namespace XPX
 {
 	static XPX::RoXML::RoXMLDocumentParser XPX_PARSER;
@@ -119,10 +118,11 @@ namespace XPX
 				if (auto script = ComponentSystem::get_singleton_ptr()->get<LuaScriptComponent>(name.c_str()))
 				{
 #ifdef XPLICIT_DEBUG
-					XPLICIT_INFO("Removing Script with success!");
+					XPLICIT_INFO("Removing script...");
 #endif
 
-					ComponentSystem::get_singleton_ptr()->remove(script);
+					if (ComponentSystem::get_singleton_ptr()->remove(script))
+						XPLICIT_INFO("Success! script has been deallocated.");
 				}
 
 				break;

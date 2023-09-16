@@ -25,14 +25,16 @@ namespace XPX::RoXML
 		Thread stream_job([&]() {
 			std::unique_ptr<xml_document<>> doc = std::make_unique<xml_document<>>();
 
-			//
+			// open xml file
 			file<char> xml_file(params.Path.c_str());
 
+			// check inline
 			if (!params.Inline)
 				doc->parse<0>(xml_file.data());
 			else
 				doc->parse<0>(params.Path.data());
 
+			// get first node
 			xml_node<>* root_node = doc->first_node();
 			xml_node<>* node = root_node->first_node();
 
@@ -41,22 +43,22 @@ namespace XPX::RoXML
 				const String node_name = node->name();
 				RoXMLNodeDescription world_node;
 
-				if (node_name == "Component")
+				if (node_name == "Item")
 				{
 					if (node->first_attribute())
 					{
-						auto klass = node->last_attribute();
+						auto klass = node->first_attribute();
 						String klass_to_instantiate = klass->name();
 
 						if (klass &&
-							klass_to_instantiate == "ClassName")
+							klass_to_instantiate == "Class")
 							klass_to_instantiate = klass->value();
 
-						// Here is the list of run-time components { "Light", "Mesh", "Sound", "Particle" };
+						// Here is a list of some run-time components { "Light", "Mesh", "Sound", "Particle" };
 
-						if (strcmp(node->first_attribute()->name(), "InstanceName") == 0)
+						if (strcmp(klass->next_attribute()->name(), "Referent") == 0)
 						{
-							auto node_id = node->first_attribute()->value();
+							auto node_id = klass->next_attribute()->value();
 
 							world_node.Name = node_name;
 							world_node.ID = node_id;
@@ -65,14 +67,14 @@ namespace XPX::RoXML
 							const char* parent_id = XPLICIT_CLASS_NAMESPACE;
 
 							// For for a lua attribute!
-							if (node->first_attribute()->next_attribute() &&
-								strcmp(node->first_attribute()->next_attribute()->name(), "AttachedScript") == 0)
-								script_id = node->first_attribute()->next_attribute()->value();
+							if (klass->next_attribute()->next_attribute() &&
+								strcmp(klass->next_attribute()->next_attribute()->name(), "AttachedScript") == 0)
+								script_id = klass->next_attribute()->next_attribute()->value();
 
 							// now check for a parent!
-							if (node->first_attribute()->next_attribute() &&
-								strcmp(node->first_attribute()->next_attribute()->name(), "AttachedParent") == 0)
-								parent_id = node->first_attribute()->next_attribute()->value();
+							if (klass->next_attribute()->next_attribute() &&
+								strcmp(klass->next_attribute()->next_attribute()->name(), "AttachedParent") == 0)
+								parent_id = klass->next_attribute()->next_attribute()->value();
 
 							if (params.Has3D)
 							{
@@ -89,7 +91,7 @@ namespace XPX::RoXML
 								// assign a part component to the said id
 								// so you can use it.
 
-								if (klass_to_instantiate == "Mesh")
+								if (klass_to_instantiate == "AnimatedMesh")
 								{
 									// go on and include that!
 									world_node.ID = node_name;
@@ -131,6 +133,7 @@ namespace XPX::RoXML
 									{
 										_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 										_mesh->setName(node_id);
+
 										object = _mesh;
 									}
 								}
@@ -141,13 +144,16 @@ namespace XPX::RoXML
 
 									if (_mesh)
 									{
+										_mesh->setScale(vector3df(4, 1, 2));
+
 										_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 										_mesh->setName(node_id);
+
 										object = _mesh;
 									}
 								}
 
-								if (klass_to_instantiate == "3DSky")
+								if (klass_to_instantiate == "Skybox")
 								{
 									for (size_t i = 0; i < strlen(node->value()); i++)
 									{
@@ -179,8 +185,6 @@ namespace XPX::RoXML
 										CAD->getVideoDriver()->getTexture(rt.c_str()),
 										CAD->getVideoDriver()->getTexture(ft.c_str()),
 										CAD->getVideoDriver()->getTexture(bk.c_str()));
-
-									skybox->setVisible(true);
 
 								}
 
@@ -226,7 +230,10 @@ namespace XPX::RoXML
 								ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(parent_id, node_name.c_str());
 
 								if (component)
+								{
 									component->insert("ClassType", fmt::format("'{}'", klass_to_instantiate));
+									component->assign("Parent", parent_id ? parent_id : "world");
+								}
 							}
 						}
 					}
