@@ -9,6 +9,8 @@
 
 #include "NpMovementSharedEvent.h"
 
+#include <NetworkProtocol.h>
+
 namespace XPX
 {
 	NpMovementSharedEvent::NpMovementSharedEvent() noexcept

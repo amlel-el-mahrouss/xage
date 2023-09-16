@@ -22,8 +22,16 @@
 
 #include <glfw3.h>
 
+#ifdef XPLICIT_WINDOWS
+
 #define XPLICIT_GET_X_POS(LPARAM) GET_X_LPARAM(LPARAM)
 #define XPLICIT_GET_Y_POS(LPARAM) GET_Y_LPARAM(LPARAM)
+
+#define XPLICIT_MAIN()\
+INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
+
+
+#endif // ifdef XPLICIT_WINDOWS
 
 namespace XPX::Bites
 {
@@ -59,9 +67,6 @@ namespace XPX::Bites
 		bool mExit;
 
 	};
-
-#define XPLICIT_MAIN()\
-INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
 
 #endif // XPLICIT_WINDOWS
 
