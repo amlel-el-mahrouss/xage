@@ -97,7 +97,7 @@ int main(int argc, char** argv)
 		//! The main logic and render loop.
 		while (CAD->run())
 		{
-			CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(150, 50, 50, 50));
+			CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
 
 #ifdef _WIN32
 			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();

@@ -34,7 +34,11 @@ namespace XPX
 
 		this->insert("Destroy", this->destroy_snippet());
 
-		XPX::Thread job([&]() {
+		Thread job;
+
+		job = Thread([&]() {
+			clua_lock();
+
 			String name = this->name();
 			String path = this->path();
 
@@ -51,8 +55,6 @@ namespace XPX
 
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_ThisSleep, "wait");
 
-			clua_lock();
-
 			if (XPX::Lua::CLuaStateManager::get_singleton_ptr()->run(path) != LUA_OK)
 			{
 				if (lua_isstring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1))
@@ -68,7 +70,10 @@ namespace XPX
 			clua_unlock();
 		});
 
-		job.detach();
+		if (!job.joinable())
+			job.detach();
+		else
+			job.join();
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;
