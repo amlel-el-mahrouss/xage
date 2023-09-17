@@ -180,14 +180,15 @@ namespace XPX
 								repl_packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 								repl_packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
-								auto xasset = klass->index_as_string("Path");
+								auto xasset = klass->index_as_string("Url");
 								auto parent = klass->index_as_string("Parent");
 								auto name = klass->index_as_string("ClassName");
 
 								if (name.empty())
 									continue;
 
-								if (repl_packet.node_kind == XPX_MESH_ID && xasset.empty())
+								if (repl_packet.node_kind == XPX_MESH_ID 
+									&& xasset.empty())
 									continue;
 
 								if (parent.empty())

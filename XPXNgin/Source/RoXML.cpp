@@ -90,6 +90,12 @@ namespace XPX::RoXML
 							// assign a part component to the said id
 							// so you can use it.
 
+							enum
+							{
+								MESH_TYPE,
+								PART_TYPE
+							} kind;
+
 							if (klass_to_instantiate == "Mesh")
 							{
 								// go on and include that!
@@ -105,11 +111,13 @@ namespace XPX::RoXML
 									{
 										world_node.Value += node->value()[i];
 									}
+
+									kind = MESH_TYPE;
 								}
 
-								String url = world_node.Value;
-
 								XPLICIT_GET_DATA_DIR(MESH_PATH);
+
+								String url = world_node.Value;
 
 								MESH_PATH += "Contents/";
 								MESH_PATH += std::to_string(xplicit_get_epoch());
@@ -137,6 +145,8 @@ namespace XPX::RoXML
 
 									object = _mesh;
 								}
+
+								kind = PART_TYPE;
 							}
 
 							if (object)
@@ -161,6 +171,9 @@ namespace XPX::RoXML
 
 								if (component)
 								{
+									if (kind == MESH_TYPE)
+										component->insert("Url", world_node.Value);
+
 									component->insert("ClassType", fmt::format("'{}'", klass_to_instantiate));
 									component->assign("Parent", ((nullptr != parent_id) ? parent_id : "world"));
 								}

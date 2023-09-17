@@ -87,14 +87,10 @@ namespace XPX
 				repl_packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 				repl_packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
-				auto xasset = lhsNode->index_as_string("Path");
 				auto parent = lhsNode->index_as_string("Parent");
 				auto name = lhsNode->index_as_string("ClassName");
 
 				if (name.empty())
-					continue;
-
-				if (repl_packet.node_kind == XPX_MESH_ID && xasset.empty())
 					continue;
 
 				if (parent.empty())
@@ -102,7 +98,6 @@ namespace XPX
 
 				memcpy(repl_packet.node_parent, parent.c_str(), parent.size());
 				memcpy(repl_packet.node_name, name.c_str(), parent.size());
-				memcpy(repl_packet.node_path, xasset.c_str(), parent.size());
 
 				NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
 					(NetworkPacket*)&repl_packet);
