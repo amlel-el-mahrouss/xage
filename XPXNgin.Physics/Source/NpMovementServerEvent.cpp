@@ -69,25 +69,17 @@ namespace XPX
 			if (auto kind = lhsNode->index_as_string("ClassType");
 				!kind.empty())
 			{
-				NetworkPacketRepl repl_packet;
+				NetworkPacketRepl repl_packet{};
 
 				// Standard RoXML type typechecker.
 				if (kind == "Mesh")
-				{
 					repl_packet.node_kind = 2;
-				}
 				else if (kind == "Part")
-				{
 					repl_packet.node_kind = 1;
-				}
 				else if (kind == "Sphere")
-				{
 					repl_packet.node_kind = 0;
-				}
 				else
-				{
 					continue;
-				}
 
 				repl_packet.channel = XPLICIT_CHANNEL_PHYSICS;
 				repl_packet.version = XPLICIT_NETWORK_VERSION;

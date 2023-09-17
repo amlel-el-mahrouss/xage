@@ -137,7 +137,6 @@ namespace XPX
 					NetworkServerContext::send_all(mNetwork);
 
 					Thread job([&](const size_t idx) {
-
 						for (size_t network_peer_index = 0; network_peer_index < mNetwork->size(); ++network_peer_index)
 						{
 							if (mNetwork->get(network_peer_index) &&
@@ -151,52 +150,6 @@ namespace XPX
 								mNetwork->get(idx)->packet.public_hash = mNetwork->get(network_peer_index)->public_hash;
 
 								NetworkServerContext::send(mNetwork, mNetwork->get(idx));
-							}
-						}
-
-						auto klasses = ComponentSystem::get_singleton_ptr()->all_of<ClassComponent>();
-
-						for (auto* klass : klasses)
-						{
-							if (!klass)
-								continue;
-
-							if (auto kind = klass->index_as_string("ClassType");
-								!kind.empty())
-							{
-								NetworkPacketRepl* repl_packet = (NetworkPacketRepl*)&mNetwork->get(idx)->packet;
-
-								// Standard RoXML type typechecker.
-								if (kind == "Mesh")
-								{
-									repl_packet->node_kind = 2;
-								}
-								else if (kind == "Part")
-								{
-									repl_packet->node_kind = 1;
-								}
-								else if (kind == "Sphere")
-								{
-									repl_packet->node_kind = 0;
-								}
-								else
-								{
-									continue;
-								}
-
-								repl_packet->channel = XPLICIT_CHANNEL_PHYSICS;
-
-								repl_packet->magic[0] = XPLICIT_NETWORK_MAG_0;
-								repl_packet->magic[1] = XPLICIT_NETWORK_MAG_1;
-								repl_packet->magic[2] = XPLICIT_NETWORK_MAG_2;
-
-								auto parent = klass->index_as_string("Parent");
-								auto name = klass->index_as_string("ClassName");
-
-								memcpy(repl_packet->node_parent, parent.c_str(), parent.size());
-								memcpy(repl_packet->node_path, name.c_str(), parent.size());
-
-								NetworkServerContext::send(mNetwork, mNetwork->get(idx), (NetworkPacket*)repl_packet);
 							}
 						}
 					}, peer_idx);

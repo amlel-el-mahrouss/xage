@@ -134,7 +134,7 @@ namespace XPX
 		}
 		else if (packet.channel == XPLICIT_CHANNEL_PHYSICS)
 		{
-			NetworkPacketRepl repl_packet = *(NetworkPacketRepl*)&packet;
+			NetworkPacketRepl repl_packet = *reinterpret_cast<NetworkPacketRepl*>(&packet);
 
 			ISceneNode* node = CAD->getSceneManager()->getSceneNodeFromName(repl_packet.node_name);
 
