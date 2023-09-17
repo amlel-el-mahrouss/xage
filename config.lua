@@ -155,7 +155,7 @@ NPLICIT_CONFIG = {
         },
         ["_SRC"] = {
             "XPXNgin.Physics/Source/**.cpp",
-            "XPXPlayer/Source/**.c"
+            "XPXNgin.Physics/Source/**.c"
         },
     },
     ["_LIBDIR"] = {

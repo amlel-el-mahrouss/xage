@@ -18,12 +18,7 @@
 #include "Config.h"
 #include "RigidBody.h"
 
-#ifdef __XPLICIT_DLL__
-#include "ClassComponent.h"
-#include "NginCore.h"
-#include "Event.h"
-#include "Root.h"
-#else
+#ifndef __XPLICIT_DLL__
 #include <ClassComponent.h>
 #include <NginCore.h>
 #include <Event.h>
