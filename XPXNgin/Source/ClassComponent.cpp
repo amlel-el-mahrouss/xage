@@ -10,7 +10,7 @@
 #include "LuaScriptComponent.h"
 #include "ClassComponent.h"
 
-#include <NpMovementSharedEvent.h>
+#include <NpMovementServerEvent.h>
 
 namespace XPX
 {
@@ -64,7 +64,8 @@ namespace XPX
 		this->insert("Rotation", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Color", "{ R = 0, G = 0, B = 0, A = 1 }");
 
-		if (script)
+		if (script &&
+			std::filesystem::exists(script))
 		{
 			this->script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script));
 			XPLICIT_ASSERT(this->script());	
@@ -73,7 +74,7 @@ namespace XPX
 		this->insert("Force", "{ X = 1, Y = 1, Z = 1 }");
 		this->insert("Weight", "{ X = 1, Y = 1, Z = 1 }");
 
-		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementSharedEvent>("NpMovementSharedEvent");
+		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
 			mov)
 		{
 			mov->insert_node(this);
@@ -82,7 +83,7 @@ namespace XPX
 
 	ClassComponent::~ClassComponent()
 	{
-		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementSharedEvent>("NpMovementSharedEvent");
+		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
 			mov)
 		{
 			mov->remove_node(this);

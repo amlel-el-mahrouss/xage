@@ -17,7 +17,7 @@
 #include <codecvt>
 #include <XplicitID.h>
 #include <RemoteEventStorage.h>
-#include <NpMovementSharedEvent.h>
+#include <NpMovementServerEvent.h>
 
 #include "LoginEvent.h"
 #include "ServerConfig.h"
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
 
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementSharedEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementServerEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
@@ -170,10 +170,11 @@ int main(int argc, char** argv)
 
 		XPLICIT_GET_DATA_DIR(path);
 		path += "Contents/";
-		path += generated_path;
 
 		if (!DownloadURL(XPLICIT_PLACE_ID, generated_path))
 			generated_path = XPLICIT_PLACE_ID; // probably a local path.
+
+		path += generated_path;
 
 		XPX::RoXML::RoXMLDocumentParameters params;
 

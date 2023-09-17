@@ -9,7 +9,7 @@
 
 #include "RoXML.h"
 
-#include <NpMovementSharedEvent.h>
+#include <NpMovementServerEvent.h>
 
 namespace XPX::RoXML
 {
@@ -47,18 +47,18 @@ namespace XPX::RoXML
 				{
 					if (node->first_attribute())
 					{
-						auto klass = node->first_attribute();
-						String klass_to_instantiate = klass->name();
+						auto first_attr = node->first_attribute();
+						String klass_to_instantiate = first_attr->name();
 
-						if (klass &&
+						if (first_attr &&
 							klass_to_instantiate == "Class")
-							klass_to_instantiate = klass->value();
+							klass_to_instantiate = first_attr->value();
 
 						// Here is a list of some run-time components { "Light", "Mesh", "Sound", "Particle" };
 
-						if (strcmp(klass->next_attribute()->name(), "Referent") == 0)
+						if (strcmp(first_attr->next_attribute()->name(), "Referent") == 0)
 						{
-							auto node_id = klass->next_attribute()->value();
+							auto node_id = first_attr->next_attribute()->value();
 
 							world_node.Name = node_name;
 							world_node.ID = node_id;
@@ -67,20 +67,30 @@ namespace XPX::RoXML
 							const char* parent_id = XPLICIT_CLASS_NAMESPACE;
 
 							// For for a lua attribute!
-							if (klass->next_attribute()->next_attribute() &&
-								strcmp(klass->next_attribute()->next_attribute()->name(), "AttachedScript") == 0)
-								script_id = klass->next_attribute()->next_attribute()->value();
+							if (first_attr->next_attribute()->next_attribute() &&
+								strcmp(first_attr->next_attribute()->next_attribute()->name(), "Script") == 0)
+								script_id = first_attr->next_attribute()->next_attribute()->value();
+							else
+							{
+								if (first_attr->next_attribute()->next_attribute())
+								{
+									if (first_attr->next_attribute()->next_attribute()->next_attribute() &&
+										strcmp(first_attr->next_attribute()->next_attribute()->next_attribute()->name(), "Parent") == 0)
+									{
+										parent_id = first_attr->next_attribute()->next_attribute()->next_attribute()->value();
 
-							// now check for a parent!
-							if (klass->next_attribute()->next_attribute() &&
-								strcmp(klass->next_attribute()->next_attribute()->name(), "AttachedParent") == 0)
-								parent_id = klass->next_attribute()->next_attribute()->value();
+										if (strlen(parent_id) < 1)
+											parent_id = "world";
+									}
+								}
+							}
 
 							void* object = nullptr;
 
 							if (klass_to_instantiate == "Light")
 							{
 								irr::scene::ILightSceneNode* light = nullptr;
+
 								object = light = CAD->getSceneManager()->addLightSceneNode();
 
 								light->setName(node_id);
@@ -89,7 +99,7 @@ namespace XPX::RoXML
 							// assign a part component to the said id
 							// so you can use it.
 
-							if (klass_to_instantiate == "AnimatedMesh")
+							if (klass_to_instantiate == "Collada")
 							{
 								// go on and include that!
 								world_node.ID = node_name;
@@ -223,29 +233,21 @@ namespace XPX::RoXML
 									node->addChild(node);
 							}
 
+							auto scene_node = (ISceneNode*)object;
+
 							// finally create an replicatable instance of the newly created node.
-							ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(parent_id, node_name.c_str());
+							ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(
+								Vector<NetworkFloat>(scene_node->getPosition().X,
+								scene_node->getPosition().Y, 
+								scene_node->getPosition().Z),
+								Vector<NetworkFloat>(scene_node->getScale().X,
+									scene_node->getScale().Y,
+									scene_node->getScale().Z), 
+								Color<NetworkFloat>(255, 255, 255, 255), script_id, parent_id, node_id);
 
 							if (component)
 							{
-								auto scene_node = (ISceneNode*)object;
-
 								component->insert("ClassType", fmt::format("'{}'", klass_to_instantiate));
-
-								component->assign("Scale", fmt::format("{} X = {}, Y = {}, Z = {} {}",
-									"{",
-									std::to_string(scene_node->getScale().X),
-									std::to_string(scene_node->getScale().Y),
-									std::to_string(scene_node->getScale().Z),
-									"}"));
-
-								component->assign("Position", fmt::format("{} X = {}, Y = {}, Z = {} {}", 
-									"{", 
-									std::to_string(scene_node->getPosition().X),
-									std::to_string(scene_node->getPosition().Y),
-									std::to_string(scene_node->getPosition().Z),
-									"}"));
-
 								component->assign("Parent", ((nullptr != parent_id) ? parent_id : "world"));
 							}
 						}

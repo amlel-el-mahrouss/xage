@@ -123,7 +123,8 @@ namespace XPX
 		// select a specific item in our inventory.
 		if (self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_SLOT] == NETWORK_CMD_SLOT)
 		{
-			if (self->mPeer->packet.id < self->mGears.size())
+			if (self->mPeer->packet.id < self->mGears.size() &&
+				self->mPeer->packet.id > -1)
 			{
 				if (self->mActiveGear &&
 					self->mActiveGear->index_as_number("Slot") != self->mPeer->packet.id)

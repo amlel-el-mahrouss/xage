@@ -36,15 +36,15 @@ namespace XPX
 
     typedef ClassComponent* NpSceneNode;
 
-    class NPLICIT_API NpMovementSharedEvent : public Event
+    class NPLICIT_API NpMovementServerEvent : public Event
     {
     public:
-        NpMovementSharedEvent() noexcept;
-        ~NpMovementSharedEvent() noexcept override;
+        NpMovementServerEvent() noexcept;
+        ~NpMovementServerEvent() noexcept override;
 
     public:
-        NpMovementSharedEvent& operator=(const NpMovementSharedEvent&) = default;
-        NpMovementSharedEvent(const NpMovementSharedEvent&) = default;
+        NpMovementServerEvent& operator=(const NpMovementServerEvent&) = default;
+        NpMovementServerEvent(const NpMovementServerEvent&) = default;
 
     public:
         const char* name() noexcept override;

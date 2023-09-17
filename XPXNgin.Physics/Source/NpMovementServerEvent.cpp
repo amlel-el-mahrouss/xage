@@ -7,20 +7,19 @@
  * =====================================================================
  */
 
-#include "NpMovementSharedEvent.h"
-
+#include "NpMovementServerEvent.h"
 #include <NetworkProtocol.h>
 
 namespace XPX
 {
-	NpMovementSharedEvent::NpMovementSharedEvent() noexcept
+	NpMovementServerEvent::NpMovementServerEvent() noexcept
 		: 
 		mWorldNodes(),
 		mTimeStamp(CAD->getTimer()->getTime()),
 		mDeltaTime(0.0)
 	{}
 
-	NpMovementSharedEvent::~NpMovementSharedEvent() noexcept
+	NpMovementServerEvent::~NpMovementServerEvent() noexcept
 	{
 		for (auto* node : mWorldNodes)
 		{
@@ -28,9 +27,9 @@ namespace XPX
 		}
 	}
 
-	const char* NpMovementSharedEvent::name() noexcept { return "NpMovementSharedEvent"; }
+	const char* NpMovementServerEvent::name() noexcept { return "NpMovementServerEvent"; }
 
-	void NpMovementSharedEvent::operator()()
+	void NpMovementServerEvent::operator()()
 	{
 		mDeltaTime = CAD->getTimer()->getTime() - mTimeStamp;
 		mTimeStamp = CAD->getTimer()->getTime();
@@ -67,13 +66,13 @@ namespace XPX
 		}
 	}
 
-	void NpMovementSharedEvent::insert_node(NpSceneNode node)
+	void NpMovementServerEvent::insert_node(NpSceneNode node)
 	{
 		if (node)
 			mWorldNodes.push_back(node);
 	}
 
-	void NpMovementSharedEvent::remove_node(NpSceneNode node)
+	void NpMovementServerEvent::remove_node(NpSceneNode node)
 	{
 		if (node)
 		{

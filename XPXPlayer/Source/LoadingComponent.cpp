@@ -25,7 +25,6 @@
 #include "Application.h"
 #include "MenuUI.h"
 
-#include <NpMovementSharedEvent.h>
 #include <RemoteEventStorage.h>
 #include <XHTTPManager.h>
 #include <Enums.h>
@@ -79,7 +78,7 @@ namespace XPX
             ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
                 []() {
                     CAD->closeDevice();
-                }, POPUP_TYPE::BANNED, "StopPopup");
+            }, POPUP_TYPE::BANNED, "StopPopup");
 
             StartLoad = false;
 
@@ -94,11 +93,8 @@ namespace XPX
 
             ComponentSystem::get_singleton_ptr()->add<RemoteEventStorage>(self->mNetwork);
 
-            auto& hash = packet.hash;
-
-            auto& public_hash = packet.public_hash;
-
-            EventSystem::get_singleton_ptr()->add<NpMovementSharedEvent>();
+            auto hash = packet.hash;
+            auto public_hash = packet.public_hash;
 
             EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(hash);
             EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();

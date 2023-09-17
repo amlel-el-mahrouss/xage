@@ -138,7 +138,7 @@ namespace XPX
 		  mPublicHash(publicHash),
 		  mHealth(0),
 		  mHudFrame(new ImGUI::UIFrame()),
-			mFrameParent(new ImGUI::UIFrame()),
+		  mFrameParent(new ImGUI::UIFrame()),
 		  mSelectedSlot(-1)
 	{
 		// verify hash and network component.

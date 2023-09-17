@@ -19,9 +19,9 @@
 #   define XPLICIT_ADDRESS_ANY_STR "0.0.0.0"
 #endif // ifndef XPLICIT_ADDRESS_ANY
 
-#define XPLICIT_NETWORK_MAG_0 ('X')
-#define XPLICIT_NETWORK_MAG_1 ('P')
-#define XPLICIT_NETWORK_MAG_2 ('X')
+#define XPLICIT_NETWORK_MAG_0 ('P')
+#define XPLICIT_NETWORK_MAG_1 ('X')
+#define XPLICIT_NETWORK_MAG_2 ('P')
 
 #define XPLICIT_NETWORK_MAG_COUNT (3U)
 #define XPLICIT_NETWORK_CMD_MAX (30U)
@@ -30,21 +30,30 @@
 #   define XPLICIT_INVALID_ADDR INADDR_NONE
 #endif // ifndef XPLICIT_INVALID_ADDR
 
-#define XPLICIT_NETWORK_BUF_SZ      (512U)
-#define XPLICIT_NETWORK_VERSION     (4U)
+#define XPLICIT_END_OF_REPL     (0x7F)
 
-#define XPLICIT_MAX_REPLICAS        (4)
+#define XPLICIT_NETWORK_BUF_SZ  (512U)
+#define XPLICIT_NETWORK_VERSION (1U)
 
-#define XPLICIT_NUM_CHANNELS (3)
+#define XPLICIT_MAX_REPLICAS    (4)
 
-#define XPLICIT_CHANNEL_DATA (1)
-#define XPLICIT_CHANNEL_LUA (2)
-#define XPLICIT_CHANNEL_CHAT (3)
+#define XPLICIT_NUM_CHANNELS    (3)
+
+#define XPLICIT_CHANNEL_DATA    (1)
+#define XPLICIT_CHANNEL_LUA     (2)
+#define XPLICIT_CHANNEL_CHAT    (3)
 #define XPLICIT_CHANNEL_PHYSICS (4)
 
+ // player specific data (either lua or roxml)
 #define XPLICIT_REPLICA_PLAYER (0)
+
+// xasset passthrough (lua)
 #define XPLICIT_REPLICA_SCRIPT (1)
+
+// xasset passthrough (roxml)
 #define XPLICIT_REPLICA_ROXML (2)
+
+// remote event storage
 #define XPLICIT_REPLICA_EVENT (3)
 
 /* Used by the protocol to tell the velocity. */
@@ -152,11 +161,11 @@ namespace XPX
         NetworkFloat          pos_third[XPLICIT_NETWORK_POS_MAX];
         NetworkFloat          pos_fourth[XPLICIT_NETWORK_POS_MAX];
 
-        // replicas code
+        // Replicated Lua/RoXML
     public:
         char                  replicas[XPLICIT_MAX_REPLICAS][XPLICIT_NETWORK_BUF_SZ];
 
-        // additional data.
+        // Additional data.
     public:
         char                  additional_data[XPLICIT_NETWORK_BUF_SZ];
 
@@ -167,14 +176,19 @@ namespace XPX
     {
     public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
+
+    // General packet information.
+    public:
         std::int8_t           channel; // channel of the packet, that is here which chatroom to print this in. 3 + n
         std::int16_t          version;
 
+    // Packet data.
         char                  buffer[XPLICIT_NETWORK_BUF_SZ];
 
     };
 
-    // Replication packet.
+    // Replication packet. with additional EOR (end or repl data)
+    // EOR is used to tell if we still have N.P.R packets to read.
     struct XPLICIT_API NetworkPacketRepl final
     {
     public:
@@ -183,6 +197,8 @@ namespace XPX
         std::int16_t          version;
         
         char                  serial_data[XPLICIT_NETWORK_BUF_SZ];
+
+        char                  end_of_repl;
 
     };
 
