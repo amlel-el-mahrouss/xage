@@ -69,7 +69,7 @@ namespace XPX::RLua
 			{
 				{ "new", on_new },
 				{ "__gc", on_delete },
-				{ NULL, NULL }
+				{ nullptr, nullptr }
 			};
 
 			luaL_newmetatable(L, name.c_str());

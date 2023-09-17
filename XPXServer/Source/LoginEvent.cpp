@@ -135,6 +135,22 @@ namespace XPX
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
 					NetworkServerContext::send_all(mNetwork);
+
+					Thread job([&]() {
+						for (size_t network_peer_index = 0; network_peer_index < mNetwork->size(); network_peer_index++)
+						{
+							if (mNetwork->get(network_peer_index) &&
+								mNetwork->get(network_peer_index) != mNetwork->get(peer_idx))
+							{
+								mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+								mNetwork->get(peer_idx)->packet.public_hash = mNetwork->get(network_peer_index)->public_hash;
+
+								NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+							}
+						}
+						});
+
+					job.detach();
 				}
 			}
 		}
