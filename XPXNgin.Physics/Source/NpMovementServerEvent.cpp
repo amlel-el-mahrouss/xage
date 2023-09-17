@@ -91,6 +91,12 @@ namespace XPX
 				auto parent = lhsNode->index_as_string("Parent");
 				auto name = lhsNode->index_as_string("ClassName");
 
+				if (name.empty())
+					continue;
+
+				if (repl_packet.node_kind == XPX_MESH_ID && xasset.empty())
+					continue;
+
 				if (parent.empty())
 					parent = "world";
 

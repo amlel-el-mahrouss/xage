@@ -184,6 +184,12 @@ namespace XPX
 								auto parent = klass->index_as_string("Parent");
 								auto name = klass->index_as_string("ClassName");
 
+								if (name.empty())
+									continue;
+
+								if (repl_packet.node_kind == XPX_MESH_ID && xasset.empty())
+									continue;
+
 								if (parent.empty())
 									parent = "world";
 
