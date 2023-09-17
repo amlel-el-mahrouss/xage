@@ -136,29 +136,31 @@ namespace XPX
 
 					NetworkServerContext::send_all(mNetwork);
 
-					Thread job([&]() {
-						for (size_t network_peer_index = 0; network_peer_index < mNetwork->size(); network_peer_index++)
+					Thread job([&](const size_t idx) {
+
+						for (size_t network_peer_index = 0; network_peer_index < mNetwork->size(); ++network_peer_index)
 						{
 							if (mNetwork->get(network_peer_index) &&
-								mNetwork->get(network_peer_index) != mNetwork->get(peer_idx))
+								mNetwork->get(network_peer_index) != mNetwork->get(idx))
 							{
-								mNetwork->get(peer_idx)->packet.channel = XPLICIT_CHANNEL_DATA;
+								mNetwork->get(idx)->packet.channel = XPLICIT_CHANNEL_DATA;
 
-								mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
-								mNetwork->get(peer_idx)->packet.public_hash = mNetwork->get(network_peer_index)->public_hash;
+								mNetwork->get(idx)->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+								memcpy(mNetwork->get(idx)->packet.additional_data, mNetwork->get(idx)->xplicit_id.as_string().c_str(), mNetwork->get(idx)->xplicit_id.as_string().size());
+								mNetwork->get(idx)->packet.public_hash = mNetwork->get(network_peer_index)->public_hash;
 
-								NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+								NetworkServerContext::send(mNetwork, mNetwork->get(idx));
 							}
 						}
 
-						auto klasses = ComponentSystem::get_singleton_ptr()->all_of<ClassComponent>("ClassComponent");
+						auto klasses = ComponentSystem::get_singleton_ptr()->all_of<ClassComponent>();
 
 						for (auto& klass : klasses)
 						{
 							if (auto kind = klass->index_as_string("ClassType");
 								!kind.empty())
 							{
-								NetworkPacketRepl* repl_packet = (NetworkPacketRepl*)&mNetwork->get(peer_idx)->packet;
+								NetworkPacketRepl* repl_packet = (NetworkPacketRepl*)&mNetwork->get(idx)->packet;
 
 								// Standard RoXML type typechecker.
 								if (kind == "Mesh")
@@ -190,10 +192,10 @@ namespace XPX
 								memcpy(repl_packet->node_parent, parent.c_str(), parent.size());
 								memcpy(repl_packet->node_path, name.c_str(), parent.size());
 
-								NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+								NetworkServerContext::send(mNetwork, mNetwork->get(idx), (NetworkPacket*)repl_packet);
 							}
 						}
-					});
+					}, peer_idx);
 
 					job.detach();
 				}

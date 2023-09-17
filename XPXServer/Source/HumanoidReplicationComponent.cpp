@@ -29,7 +29,7 @@ namespace XPX
 	{
 		HumanoidReplicationComponent* self = (HumanoidReplicationComponent*)ptr;
 
-		self->mPlayers = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+		self->mPlayers = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>();
 
 		for (auto& player : self->mPlayers)
 		{

@@ -48,7 +48,7 @@ static int lua_LoadRoXML(lua_State* L)
 		auto xid = lua_tostring(L, -3);
 
 		XPX::ServerReplicationFactory factory;
-		std::vector<XPX::HumanoidComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>("HumanoidComponent");
+		std::vector<XPX::HumanoidComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>();
 
 		for (auto i = 0UL; i < players.size(); ++i)
 		{
@@ -83,7 +83,7 @@ static int lua_CreateGear(lua_State* L)
 
 	if (gear)
 	{
-		std::vector<XPX::HumanoidComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>("HumanoidComponent");
+		std::vector<XPX::HumanoidComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>();
 
 		for (auto i = 0UL; i < players.size(); ++i)
 		{
@@ -119,7 +119,7 @@ static int lua_CreateGear(lua_State* L)
 
 static int lua_Shutdown(lua_State* L)
 {
-	auto players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>("HumanoidComponent");
+	auto players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>();
 
 	for (auto& ply : players)
 	{

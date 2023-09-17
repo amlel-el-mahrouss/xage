@@ -97,7 +97,7 @@ namespace XPX
 			NetworkPacket networkPacket{};
             networkPacket = mNetwork->get();
 
-			const auto players = ComponentSystem::get_singleton_ptr()->all_of<XPX::LocalHumanoidComponent>("LocalHumanoidComponent");
+			const auto players = ComponentSystem::get_singleton_ptr()->all_of<XPX::LocalHumanoidComponent>();
 
 			for (auto player : players)
 			{
@@ -135,7 +135,7 @@ namespace XPX
 			}
 			else
 			{
-				const auto players = ComponentSystem::get_singleton_ptr()->all_of<LocalHumanoidComponent>("LocalHumanoidComponent");
+				const auto players = ComponentSystem::get_singleton_ptr()->all_of<LocalHumanoidComponent>();
 
 				for (int ply = 0; ply < players.size(); ++ply)
 				{

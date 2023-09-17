@@ -55,7 +55,7 @@ namespace XPX
 		if (!mSpawner)
 			return;
 
-		auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+		auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>();
 
 		for (HumanoidComponent* humanoid : humanoids)
 		{
@@ -103,7 +103,7 @@ namespace XPX
 					{
 						humanoid->can_spawn(true);
 
-						auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>("HumanoidComponent");
+						auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>();
 
 						for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)
 						{

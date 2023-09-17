@@ -57,7 +57,7 @@ namespace XPX
 		 * FIXME: Let MonoScriptComponent have it's own name -> get_all<MonoScriptComponent>("MyScript.dll");
 		 */
 
-		auto scripts = ComponentSystem::get_singleton_ptr()->all_of<MonoScriptComponent>("MonoScriptComponent");
+		auto scripts = ComponentSystem::get_singleton_ptr()->all_of<MonoScriptComponent>();
 
 		for (size_t i = 0; i < scripts.size(); i++)
 		{
@@ -165,7 +165,7 @@ namespace XPX
 		if (m_name.empty())
 			return;
 
-		auto components = ComponentSystem::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
+		auto components = ComponentSystem::get_singleton_ptr()->all_of<MonoClassComponent>();
 
 		for (size_t i = 0; i < components.size(); ++i)
 		{
@@ -197,7 +197,7 @@ namespace XPX
 	{
 		(void)eventPtr;
 
-		auto components = ComponentSystem::get_singleton_ptr()->all_of<MonoClassComponent>(m_name.c_str());
+		auto components = ComponentSystem::get_singleton_ptr()->all_of<MonoClassComponent>();
 
 		for (size_t i = 0; i < components.size(); ++i)
 		{

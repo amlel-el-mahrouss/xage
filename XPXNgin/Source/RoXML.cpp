@@ -87,72 +87,68 @@ namespace XPX::RoXML
 
 							void* object = nullptr;
 
-							if (params.Has3D)
+							// assign a part component to the said id
+							// so you can use it.
+
+							if (klass_to_instantiate == "Mesh")
 							{
+								// go on and include that!
+								world_node.ID = node_name;
 
-								// assign a part component to the said id
-								// so you can use it.
-
-								if (klass_to_instantiate == "Mesh")
+								for (size_t i = 0; i < strlen(node->value()); i++)
 								{
-									// go on and include that!
-									world_node.ID = node_name;
-
-									for (size_t i = 0; i < strlen(node->value()); i++)
+									if (isalnum(node->value()[i]) ||
+										node->value()[i] == '.' ||
+										node->value()[i] == '/' ||
+										node->value()[i] == '\\' ||
+										node->value()[i] == ':')
 									{
-										if (isalnum(node->value()[i]) ||
-											node->value()[i] == '.' ||
-											node->value()[i] == '/' ||
-											node->value()[i] == '\\' ||
-											node->value()[i] == ':')
-										{
-											world_node.Value += node->value()[i];
-										}
-									}
-
-									String url = world_node.Value;
-
-									XPLICIT_GET_DATA_DIR(MESH_PATH);
-
-									MESH_PATH += "Contents/";
-									MESH_PATH += std::to_string(xplicit_get_epoch());
-									MESH_PATH += "-MESH";
-
-									if (DownloadURL(url, MESH_PATH))
-									{
-										auto _mesh = CAD->getSceneManager()->addAnimatedMeshSceneNode(CAD->getSceneManager()->getMesh(MESH_PATH.c_str()));
-
-										if (_mesh)
-											object = _mesh;
+										world_node.Value += node->value()[i];
 									}
 								}
 
-								if (klass_to_instantiate == "Sphere")
+								String url = world_node.Value;
+
+								XPLICIT_GET_DATA_DIR(MESH_PATH);
+
+								MESH_PATH += "Contents/";
+								MESH_PATH += std::to_string(xplicit_get_epoch());
+								MESH_PATH += "-MESH";
+
+								if (DownloadURL(url, MESH_PATH))
 								{
-									auto _mesh = CAD->getSceneManager()->addSphereSceneNode();
+									auto _mesh = CAD->getSceneManager()->addAnimatedMeshSceneNode(CAD->getSceneManager()->getMesh(MESH_PATH.c_str()));
 
 									if (_mesh)
-									{
-										_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-										_mesh->setName(node_id);
-
 										object = _mesh;
-									}
 								}
+							}
 
-								if (klass_to_instantiate == "Part")
+							if (klass_to_instantiate == "Sphere")
+							{
+								auto _mesh = CAD->getSceneManager()->addSphereSceneNode();
+
+								if (_mesh)
 								{
-									auto _mesh = CAD->getSceneManager()->addCubeSceneNode();
+									_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+									_mesh->setName(node_id);
 
-									if (_mesh)
-									{
-										_mesh->setScale(vector3df(4, 1, 2));
+									object = _mesh;
+								}
+							}
 
-										_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-										_mesh->setName(node_id);
+							if (klass_to_instantiate == "Part")
+							{
+								auto _mesh = CAD->getSceneManager()->addCubeSceneNode();
 
-										object = _mesh;
-									}
+								if (_mesh)
+								{
+									_mesh->setScale(vector3df(4, 1, 2));
+
+									_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+									_mesh->setName(node_id);
+
+									object = _mesh;
 								}
 							}
 

@@ -87,6 +87,7 @@ namespace XPX
 			ComponentUpdateEvalAccessor _Eval;
 			ComponentUpdateAccessor _Update;
 			ComponentData _Pointee;
+			String _AbiName;
 			String _Name;
 
 		public:
@@ -110,7 +111,7 @@ namespace XPX
 
 	public:
 		template <typename T>
-		std::vector<T*> all_of(const char* name);
+		std::vector<T*> all_of();
 
 	public:
 		template <typename T, typename... Args>
@@ -122,7 +123,7 @@ namespace XPX
 
 	public:
 		template <typename T>
-		T* get(const char* name);
+		T* get(const char* filter);
 
 	public:
 		void update();

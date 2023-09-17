@@ -103,7 +103,8 @@ namespace XPX
 				memcpy(repl_packet.node_path, name.c_str(), parent.size());
 
 				NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
-					(NetworkPacket*)repl_packet);
+					(NetworkPacket*)&repl_packet);
+			}
 		}
 	}
 

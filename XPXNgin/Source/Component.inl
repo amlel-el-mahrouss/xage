@@ -26,6 +26,7 @@ T* XPX::ComponentSystem::add(Args&&... args)
 #endif
 		Details::ComponentAccessor accessor;
 
+		accessor._AbiName = typeid(T).name();
 		accessor._Name = ptr->name();
 		accessor._Pointee = reinterpret_cast<void*>(ptr);
 		accessor._Update = &T::update;
@@ -60,22 +61,18 @@ T* XPX::ComponentSystem::get(const char* name)
 }
 
 template <typename T>
-std::vector<T*> XPX::ComponentSystem::all_of(const char* name)
+std::vector<T*> XPX::ComponentSystem::all_of()
 {
 	std::vector<T*> list;
-
-	if (!name || *name == 0)
-		return list;
 
 	for (std::size_t i = 0; i < mComponents.size(); ++i)
 	{
 		auto& comp = mComponents[i];
 
-		if (!comp.as_type<T*>())
+		if (typeid(T).name() != comp._AbiName)
 			continue;
 
-		if (name == comp._Name)
-			list.push_back(comp.as_type<T*>());
+		list.push_back(comp.as_type<T*>());
 	}
 
 	return list;

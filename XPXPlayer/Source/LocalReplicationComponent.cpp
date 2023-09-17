@@ -41,7 +41,6 @@ namespace XPX
 
 		if (packet.channel == XPLICIT_CHANNEL_DATA)
 		{
-
 			if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
 			{
 				switch (packet.id)

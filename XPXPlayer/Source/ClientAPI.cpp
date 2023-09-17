@@ -279,7 +279,7 @@ static int lua_DestroyPart(lua_State* L)
 		XPX::String parent_str = parent;
 
 		XPX::Thread job([](XPX::String name, XPX::String parent) {
-			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::PartComponent>("PartComponent");
+			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::PartComponent>();
 
 			for (auto& part : all_of_parts)
 			{
@@ -314,7 +314,7 @@ static int lua_DestroyGear(lua_State* L)
 		XPX::String parent_str = parent;
 
 		XPX::Thread job([](XPX::String name, XPX::String parent) {
-			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::GearComponent>("GearComponent");
+			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::GearComponent>();
 
 			for (auto& part : all_of_parts)
 			{
@@ -349,18 +349,15 @@ static int lua_DestroySound(lua_State* L)
 		XPX::String parent_str = parent;
 
 		XPX::Thread job([](XPX::String name, XPX::String parent) {
-			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::SoundComponent>(name.c_str());
+			auto part = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::SoundComponent>(name.c_str());
 
-			for (auto& part : all_of_parts)
+			if (part)
 			{
-				if (part)
+				if (part->instance_name() == name &&
+					part->group_name() == parent)
 				{
-					if (part->instance_name() == name &&
-						part->group_name() == parent)
-					{
-						XPX::ComponentSystem::get_singleton_ptr()->remove(part);
-						return;
-					}
+					XPX::ComponentSystem::get_singleton_ptr()->remove(part);
+					return;
 				}
 			}
 
@@ -384,7 +381,7 @@ static int lua_DestroyMesh(lua_State* L)
 		XPX::String parent_str = parent;
 
 		XPX::Thread job([](XPX::String name, XPX::String parent) {
-			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::MeshComponent>("MeshComponent");
+			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::MeshComponent>();
 
 			for (auto& part : all_of_parts)
 			{
