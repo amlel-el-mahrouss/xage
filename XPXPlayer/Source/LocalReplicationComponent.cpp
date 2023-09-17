@@ -10,6 +10,7 @@
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
 #include "LuaScriptComponent.h"
+#include "PartComponent.h"
 #include "GearComponent.h"
 #include "Application.h"
 #include "MenuUI.h"
@@ -147,17 +148,14 @@ namespace XPX
 			{
 				switch (repl_packet.node_kind)
 				{
-				case 0: // sphere
+				case XPX_PART_ID: // part
 				{
-					node = CAD->getSceneManager()->addSphereSceneNode(repl_packet.scale_x, repl_packet.scale_y, CAD->getSceneManager()->getSceneNodeFromName(repl_packet.node_parent));
+					auto mesh_component = ComponentSystem::get_singleton_ptr()->add<PartComponent>(repl_packet.node_name, repl_packet.node_parent);
+					XPLICIT_ASSERT(mesh_component);
+
 					break;
 				}
-				case 1: // cube
-				{
-					node = CAD->getSceneManager()->addCubeSceneNode(repl_packet.scale_x, CAD->getSceneManager()->getSceneNodeFromName(repl_packet.node_parent));
-					break;
-				}
-				case 2: // mesh
+				case XPX_MESH_ID: // mesh
 				{
 					auto mesh_component = ComponentSystem::get_singleton_ptr()->add<MeshComponent>(repl_packet.node_path, repl_packet.node_name, repl_packet.node_parent);
 					XPLICIT_ASSERT(mesh_component);

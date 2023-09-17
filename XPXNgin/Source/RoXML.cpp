@@ -124,19 +124,6 @@ namespace XPX::RoXML
 								}
 							}
 
-							if (klass_to_instantiate == "Sphere")
-							{
-								auto _mesh = CAD->getSceneManager()->addSphereSceneNode();
-
-								if (_mesh)
-								{
-									_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-									_mesh->setName(node_id);
-
-									object = _mesh;
-								}
-							}
-
 							if (klass_to_instantiate == "Part")
 							{
 								auto _mesh = CAD->getSceneManager()->addCubeSceneNode();

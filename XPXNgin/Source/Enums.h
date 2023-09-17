@@ -10,7 +10,6 @@
 #pragma once
 
 #include "NginCore.h"
-#include <Nplicit.h>
 
 #include <CLua.hpp>
 
@@ -26,5 +25,11 @@ namespace XPX
 		COMPONENT_ID_ROXML = 2,
 		COMPONENT_ID_COUNT,
 		// NOTE: add more here, don't forget you can easily mod the engine with CLua.
+	};
+
+	enum
+	{
+		XPX_PART_ID,
+		XPX_MESH_ID,
 	};
 }
