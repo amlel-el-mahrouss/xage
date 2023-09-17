@@ -1,10 +1,14 @@
 #pragma once
 
 #if defined(__NPLICIT_DLL__)
+#ifdef _WIN32
 #ifdef __EXPORT_NPLICIT__
 #	define NPLICIT_API __declspec(dllexport)
 #else
 #	define NPLICIT_API __declspec(dllimport)
+#endif
+#else
+#	define NPLICIT_API
 #endif
 #else
 #	define NPLICIT_API

@@ -215,8 +215,6 @@ namespace XPX
 		{
 			if (mClass)
 			{
-				XPLICIT_ASSERT(_CrtIsValidHeapPointer(mClass));
-
 				delete mClass;
 				mClass = nullptr;
 			}
