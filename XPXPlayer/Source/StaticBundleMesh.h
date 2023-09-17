@@ -37,7 +37,7 @@ namespace XPX
 		StaticBundleMesh() = delete;
 
 		explicit StaticBundleMesh(const char* character_path);
-		virtual ~StaticBundleMesh() noexcept;
+		~StaticBundleMesh() noexcept;
 
 	public:
 		StaticBundleMesh& operator=(const StaticBundleMesh&) = default;

@@ -87,6 +87,10 @@ namespace XPX::Bites
 			SettingsManager();
 			~SettingsManager();
 
+		public:
+			XPLICIT_COPY_DEFAULT(SettingsManager);
+
+		public:
 			SettingsManager& operator <<(Traits& traits);
 			SettingsManager& operator >>(Traits& traits);
 

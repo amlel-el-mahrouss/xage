@@ -50,6 +50,12 @@ namespace XPX
 			this->insert("Color", "{ A = 255, R = 255, G = 255, B = 255 }");
 
 			mMdl->setMaterialFlag(video::EMF_LIGHTING, false);
+
+			if (auto group_model = CAD->getSceneManager()->getSceneNodeFromName(group);
+				group_model)
+			{
+				mNode->setParent(group_model);
+			}
 		}
 	}
 

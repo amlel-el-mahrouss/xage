@@ -35,6 +35,9 @@
 #define XPLICIT_NETWORK_BUF_SZ  (512U)
 #define XPLICIT_NETWORK_VERSION (1U)
 
+// applies to usernames and nodes.
+#define XPLICIT_NETWORK_NAME_SZ (32)
+
 #define XPLICIT_MAX_REPLICAS    (4)
 
 #define XPLICIT_NUM_CHANNELS    (3)
@@ -133,11 +136,11 @@ namespace XPX
 
     struct XPLICIT_API NetworkPacket final
     {
-        // magic number.
+    // magic number.
     public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
 
-        // packet and player information.
+    // packet and player information.
     public:
         std::int8_t           channel;
         std::int16_t          version;
@@ -145,16 +148,16 @@ namespace XPX
         std::int16_t          size;
         std::int16_t          id;
 
-        // hash and public hash.
+    // hash and public hash.
     public:
         std::int64_t          public_hash;
         std::int64_t          hash;
 
-        // network commands.
+    // network commands.
     public:
         std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
 
-        // position stuff.
+    // position stuff.
     public:
         NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
         NetworkFloat          pos_second[XPLICIT_NETWORK_POS_MAX];
@@ -193,12 +196,25 @@ namespace XPX
     {
     public:
         char                  magic[XPLICIT_NETWORK_MAG_COUNT];
+
         std::int8_t           channel; // the channel, as always.
         std::int16_t          version;
         
-        char                  serial_data[XPLICIT_NETWORK_BUF_SZ];
+    public:
+        char                  node_kind; // 0 = sphere, 1 = cube, 2 = mesh
 
-        char                  end_of_repl;
+        char                  node_name[XPLICIT_NETWORK_NAME_SZ];
+        char                  node_parent[XPLICIT_NETWORK_NAME_SZ];
+        char                  node_path[XPLICIT_NETWORK_NAME_SZ];
+
+    public:
+        NetworkFloat          pos_x;
+        NetworkFloat          pos_y;
+        NetworkFloat          pos_z;
+
+        NetworkFloat          scale_x;
+        NetworkFloat          scale_y;
+        NetworkFloat          scale_z;
 
     };
 
