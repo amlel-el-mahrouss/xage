@@ -141,7 +141,8 @@ namespace XPX
 						for (size_t network_peer_index = 0; network_peer_index < mNetwork->size(); ++network_peer_index)
 						{
 							if (mNetwork->get(network_peer_index) &&
-								mNetwork->get(network_peer_index) != mNetwork->get(idx))
+								mNetwork->get(network_peer_index) != mNetwork->get(idx) &&
+								mNetwork->get(network_peer_index)->status == NETWORK_STAT_CONNECTED)
 							{
 								mNetwork->get(idx)->packet.channel = XPLICIT_CHANNEL_DATA;
 
@@ -155,8 +156,11 @@ namespace XPX
 
 						auto klasses = ComponentSystem::get_singleton_ptr()->all_of<ClassComponent>();
 
-						for (auto& klass : klasses)
+						for (auto* klass : klasses)
 						{
+							if (!klass)
+								continue;
+
 							if (auto kind = klass->index_as_string("ClassType");
 								!kind.empty())
 							{
@@ -197,7 +201,17 @@ namespace XPX
 						}
 					}, peer_idx);
 
-					job.detach();
+					try
+					{
+						if (job.joinable())
+							job.join();
+						else
+							job.detach();
+					}
+					catch (...)
+					{
+						XPLICIT_CRITICAL("Fatal error in thread execution, aborting thread.");
+					}
 				}
 			}
 		}
