@@ -33,7 +33,7 @@
 #define XPLICIT_END_OF_REPL     (0x7F)
 
 #define XPLICIT_NETWORK_BUF_SZ  (512U)
-#define XPLICIT_NETWORK_VERSION (1U)
+#define XPLICIT_NETWORK_VERSION (2U)
 
 // applies to usernames and nodes.
 #define XPLICIT_NETWORK_NAME_SZ (32)

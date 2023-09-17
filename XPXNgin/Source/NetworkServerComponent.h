@@ -67,11 +67,13 @@ namespace XPX
 	{
 		// try slots.
 	public:
+		static void send_all(const NetworkServerComponent* server, NetworkPacket* packet) noexcept;
 		static void send_all(const NetworkServerComponent* server) noexcept;
 		static void recv_all(const NetworkServerComponent* server) noexcept;
 		
 		static void recv_from(const NetworkServerComponent* server, NetworkPeer* peer, NetworkPacket& packet) noexcept;
 		static bool recv(const NetworkServerComponent* server, NetworkPeer* peer) noexcept;
+		static void send(const NetworkServerComponent* server, NetworkPeer* peer, NetworkPacket* packet) noexcept;
 		static void send(const NetworkServerComponent* server, NetworkPeer* peer) noexcept;
 		
 	};

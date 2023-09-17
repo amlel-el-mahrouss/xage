@@ -230,7 +230,20 @@ namespace XPX
 			send(server, server->get(i));
 		}
 	}
-	
+
+	void NetworkServerContext::send_all(const NetworkServerComponent* server, NetworkPacket* packet) noexcept
+	{
+		if (!packet)
+			return;
+
+		XPLICIT_ASSERT(server);
+
+		for (std::size_t i = 0; i < server->size(); ++i)
+		{
+			send(server, server->get(i), packet);
+		}
+	}
+
 	void NetworkServerContext::send(const NetworkServerComponent* server, NetworkPeer* peer) noexcept
 	{
 		peer->packet.magic[0] = XPLICIT_NETWORK_MAG_0;
@@ -257,6 +270,37 @@ namespace XPX
 				timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
 				::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
 				
+				break;
+			}
+			default:
+				break;
+			}
+		}
+	}
+
+	void NetworkServerContext::send(const NetworkServerComponent* server, NetworkPeer* peer, NetworkPacket* packet) noexcept
+	{
+		if (!packet)
+			return;
+
+		if (::sendto(server->mSocket, reinterpret_cast<const char*>(packet),
+			sizeof(NetworkPacket),
+			0,
+			reinterpret_cast<sockaddr*>(&peer->address),
+			sizeof(PrivateAddressData)) == SOCKET_ERROR)
+		{
+			switch (WSAGetLastError())
+			{
+			case WSAEWOULDBLOCK:
+			{
+				fd_set fd;
+
+				FD_ZERO(&fd);
+				FD_SET(server->mSocket, &fd);
+
+				timeval XPLICIT_TIME = { .tv_sec = 1, .tv_usec = 0 };
+				::select(0, &fd, nullptr, nullptr, &XPLICIT_TIME);
+
 				break;
 			}
 			default:

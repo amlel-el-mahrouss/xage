@@ -8,6 +8,8 @@
  */
 
 #include "NpMovementServerEvent.h"
+
+#include <NetworkServerComponent.h>
 #include <NetworkProtocol.h>
 
 namespace XPX
@@ -63,6 +65,45 @@ namespace XPX
 
 			lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
 			lhsNode->call_method("Update('PhysicsFrame')");
+		
+			if (auto kind = lhsNode->index_as_string("ClassType");
+				!kind.empty())
+			{
+				NetworkPacketRepl repl_packet;
+
+				// Standard RoXML type typechecker.
+				if (kind == "Mesh")
+				{
+					repl_packet.node_kind = 2;
+				}
+				else if (kind == "Part")
+				{
+					repl_packet.node_kind = 1;
+				}
+				else if (kind == "Sphere")
+				{
+					repl_packet.node_kind = 0;
+				}
+				else
+				{
+					continue;
+				}
+
+				repl_packet.channel = XPLICIT_CHANNEL_PHYSICS;
+				repl_packet.version = XPLICIT_NETWORK_VERSION;
+
+				repl_packet.magic[0] = XPLICIT_NETWORK_MAG_0;
+				repl_packet.magic[1] = XPLICIT_NETWORK_MAG_1;
+				repl_packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+
+				auto parent = lhsNode->index_as_string("Parent");
+				auto name = lhsNode->index_as_string("ClassName");
+
+				memcpy(repl_packet.node_parent, parent.c_str(), parent.size());
+				memcpy(repl_packet.node_path, name.c_str(), parent.size());
+
+				NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
+					(NetworkPacket*)repl_packet);
 		}
 	}
 

@@ -87,141 +87,73 @@ namespace XPX::RoXML
 
 							void* object = nullptr;
 
-							if (klass_to_instantiate == "Light")
+							if (params.Has3D)
 							{
-								irr::scene::ILightSceneNode* light = nullptr;
 
-								object = light = CAD->getSceneManager()->addLightSceneNode();
+								// assign a part component to the said id
+								// so you can use it.
 
-								light->setName(node_id);
-							}
-
-							// assign a part component to the said id
-							// so you can use it.
-
-							if (klass_to_instantiate == "Collada")
-							{
-								// go on and include that!
-								world_node.ID = node_name;
-
-								for (size_t i = 0; i < strlen(node->value()); i++)
+								if (klass_to_instantiate == "Mesh")
 								{
-									if (isalnum(node->value()[i]) ||
-										node->value()[i] == '.' ||
-										node->value()[i] == '/' ||
-										node->value()[i] == '\\' ||
-										node->value()[i] == ':')
+									// go on and include that!
+									world_node.ID = node_name;
+
+									for (size_t i = 0; i < strlen(node->value()); i++)
 									{
-										world_node.Value += node->value()[i];
+										if (isalnum(node->value()[i]) ||
+											node->value()[i] == '.' ||
+											node->value()[i] == '/' ||
+											node->value()[i] == '\\' ||
+											node->value()[i] == ':')
+										{
+											world_node.Value += node->value()[i];
+										}
+									}
+
+									String url = world_node.Value;
+
+									XPLICIT_GET_DATA_DIR(MESH_PATH);
+
+									MESH_PATH += "Contents/";
+									MESH_PATH += std::to_string(xplicit_get_epoch());
+									MESH_PATH += "-MESH";
+
+									if (DownloadURL(url, MESH_PATH))
+									{
+										auto _mesh = CAD->getSceneManager()->addAnimatedMeshSceneNode(CAD->getSceneManager()->getMesh(MESH_PATH.c_str()));
+
+										if (_mesh)
+											object = _mesh;
 									}
 								}
 
-								String url = world_node.Value;
-
-								XPLICIT_GET_DATA_DIR(MESH_PATH);
-
-								MESH_PATH += "Contents/";
-								MESH_PATH += std::to_string(xplicit_get_epoch());
-								MESH_PATH += "-MESH";
-
-								if (DownloadURL(url, MESH_PATH))
+								if (klass_to_instantiate == "Sphere")
 								{
-									auto _mesh = CAD->getSceneManager()->addAnimatedMeshSceneNode(CAD->getSceneManager()->getMesh(MESH_PATH.c_str()));
+									auto _mesh = CAD->getSceneManager()->addSphereSceneNode();
 
 									if (_mesh)
-										object = _mesh;
-								}
-							}
-
-							if (klass_to_instantiate == "Sphere")
-							{
-								auto _mesh = CAD->getSceneManager()->addSphereSceneNode();
-
-								if (_mesh)
-								{
-									_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-									_mesh->setName(node_id);
-
-									object = _mesh;
-								}
-							}
-
-							if (klass_to_instantiate == "Part")
-							{
-								auto _mesh = CAD->getSceneManager()->addCubeSceneNode();
-
-								if (_mesh)
-								{
-									_mesh->setScale(vector3df(4, 1, 2));
-
-									_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-									_mesh->setName(node_id);
-
-									object = _mesh;
-								}
-							}
-
-							if (klass_to_instantiate == "Skybox")
-							{
-								for (size_t i = 0; i < strlen(node->value()); i++)
-								{
-									if (isalnum(node->value()[i]) ||
-										node->value()[i] == '.' ||
-										node->value()[i] == '/' ||
-										node->value()[i] == '\\' ||
-										node->value()[i] == ':')
 									{
-										world_node.Value += node->value()[i];
+										_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+										_mesh->setName(node_id);
+
+										object = _mesh;
 									}
 								}
 
-								XPLICIT_GET_DATA_DIR(DIR);
+								if (klass_to_instantiate == "Part")
+								{
+									auto _mesh = CAD->getSceneManager()->addCubeSceneNode();
 
-								DIR += "Textures/";
-								DIR += world_node.Value;
+									if (_mesh)
+									{
+										_mesh->setScale(vector3df(4, 1, 2));
 
-								XPX::String up = DIR + "_up.png";
-								XPX::String dn = DIR + "_dn.png";
-								XPX::String lf = DIR + "_lf.png";
-								XPX::String rt = DIR + "_rt.png";
-								XPX::String ft = DIR + "_ft.png";
-								XPX::String bk = DIR + "_bk.png";
+										_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+										_mesh->setName(node_id);
 
-								auto skybox = CAD->getSceneManager()->addSkyBoxSceneNode(CAD->getVideoDriver()->getTexture(up.c_str()),
-									CAD->getVideoDriver()->getTexture(dn.c_str()),
-									CAD->getVideoDriver()->getTexture(lf.c_str()),
-									CAD->getVideoDriver()->getTexture(rt.c_str()),
-									CAD->getVideoDriver()->getTexture(ft.c_str()),
-									CAD->getVideoDriver()->getTexture(bk.c_str()));
-
-							}
-
-							if (klass_to_instantiate == "Particle")
-							{
-								auto particle_scene_node = CAD->getSceneManager()->addParticleSystemSceneNode(true);
-								particle_scene_node->setName(node_id);
-
-								particle_scene_node->setMaterialTexture(0, CAD->getVideoDriver()->getTexture(node->value()));
-								particle_scene_node->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
-								particle_scene_node->setPosition(irr::core::vector3df(0, 0, 0));
-								particle_scene_node->setScale(irr::core::vector3df(2, 2, 2));
-								particle_scene_node->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-								particle_scene_node->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE, false);
-
-								// TODO: let people edit that shit
-								irr::scene::IParticleEmitter* em = particle_scene_node->createBoxEmitter(
-									irr::core::aabbox3d<irr::f32>(-7, 0, -7, 7, 1, 7), // emitter size
-									irr::core::vector3df(0.0f, 0.06f, 0.0f),   // initial direction
-									80, 100,                             // emit rate
-									irr::video::SColor(0, 255, 255, 255),       // darkest color
-									irr::video::SColor(0, 255, 255, 255),       // brightest color
-									800, 2000, 0,                         // min and max age, angle
-									irr::core::dimension2df(10.f, 10.f),         // min size
-									irr::core::dimension2df(20.f, 20.f));        // max size
-
-								particle_scene_node->setEmitter(em);
-
-								object = particle_scene_node;
+										object = _mesh;
+									}
+								}
 							}
 
 							if (object)
@@ -231,24 +163,24 @@ namespace XPX::RoXML
 								if (node = CAD->getSceneManager()->getSceneNodeFromName(parent_id);
 									node)
 									node->addChild(node);
-							}
 
-							auto scene_node = (ISceneNode*)object;
+								auto scene_node = (ISceneNode*)object;
 
-							// finally create an replicatable instance of the newly created node.
-							ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(
-								Vector<NetworkFloat>(scene_node->getPosition().X,
-								scene_node->getPosition().Y, 
-								scene_node->getPosition().Z),
-								Vector<NetworkFloat>(scene_node->getScale().X,
-									scene_node->getScale().Y,
-									scene_node->getScale().Z), 
-								Color<NetworkFloat>(255, 255, 255, 255), script_id, parent_id, node_id);
+								// finally create an replicatable instance of the newly created node.
+								ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(
+									Vector<NetworkFloat>(scene_node->getPosition().X,
+										scene_node->getPosition().Y,
+										scene_node->getPosition().Z),
+									Vector<NetworkFloat>(scene_node->getScale().X,
+										scene_node->getScale().Y,
+										scene_node->getScale().Z),
+									Color<NetworkFloat>(255, 255, 255, 255), script_id, parent_id, node_id);
 
-							if (component)
-							{
-								component->insert("ClassType", fmt::format("'{}'", klass_to_instantiate));
-								component->assign("Parent", ((nullptr != parent_id) ? parent_id : "world"));
+								if (component)
+								{
+									component->insert("ClassType", fmt::format("'{}'", klass_to_instantiate));
+									component->assign("Parent", ((nullptr != parent_id) ? parent_id : "world"));
+								}
 							}
 						}
 					}
