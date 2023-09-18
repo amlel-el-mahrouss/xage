@@ -39,34 +39,46 @@ namespace XPX
 
 		for (auto* lhsNode : mWorldNodes)
 		{
-			if (lhsNode->index_as_bool("Anchored"))
+			if (!lhsNode)
 				continue;
+
+			bool touching = false;
 
 			for (auto* rhsNode : mWorldNodes)
 			{
+				if (rhsNode->index_as_bool("Anchored"))
+					continue;
+
 				if (rhsNode == lhsNode)
 					continue;
 
-				if (RigidBodyHelper<NetworkFloat>::is_touching(lhsNode->pos(), lhsNode->scale(), rhsNode->pos(), rhsNode->scale()))
+				if (RigidBodyHelper<NetworkFloat>::is_touching(lhsNode->pos(), lhsNode->scale(),
+					rhsNode->pos(), rhsNode->scale()))
 				{
 					rhsNode->call_method("Update('Touched')");
 					lhsNode->call_method("Update('Touched')");
+
+					touching = true;
 				}
 			}
 
-			auto force = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X"),
-				lhsNode->index_as_number<NplicitFloat>("Force.Y"),
-				lhsNode->index_as_number<NplicitFloat>("Force.Z"));
+			if (!lhsNode->index_as_bool("Anchored") &&
+				!touching)
+			{
+				auto force = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X"),
+					lhsNode->index_as_number<NplicitFloat>("Force.Y"),
+					lhsNode->index_as_number<NplicitFloat>("Force.Z"));
 
-			auto velocity = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X") * lhsNode->index_as_number<NplicitFloat>("Weight.X"),
-				lhsNode->index_as_number<NplicitFloat>("Force.Y") * lhsNode->index_as_number<NplicitFloat>("Weight.Y"),
-				lhsNode->index_as_number<NplicitFloat>("Force.Z") * lhsNode->index_as_number<NplicitFloat>("Weight.Z"));
+				auto velocity = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X") * lhsNode->index_as_number<NplicitFloat>("Weight.X"),
+					lhsNode->index_as_number<NplicitFloat>("Force.Y") * lhsNode->index_as_number<NplicitFloat>("Weight.Y"),
+					lhsNode->index_as_number<NplicitFloat>("Force.Z") * lhsNode->index_as_number<NplicitFloat>("Weight.Z"));
 
-			lhsNode->pos() = Vector<NetworkFloat>(velocity.X * mDeltaTime, velocity.Y * mDeltaTime, velocity.Z * mDeltaTime);
+				lhsNode->pos() = Vector<NetworkFloat>(velocity.X * mDeltaTime, velocity.Y * mDeltaTime, velocity.Z * mDeltaTime);
 
-			lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
-			lhsNode->call_method("Update('PhysicsFrame')");
-		
+				lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
+				lhsNode->call_method("Update('PhysicsProcessDone')");
+			}
+			
 			if (auto kind = lhsNode->index_as_string("ClassType");
 				!kind.empty())
 			{
@@ -87,6 +99,14 @@ namespace XPX
 				repl_packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 				repl_packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
+				repl_packet.pos_x = lhsNode->pos().X;
+				repl_packet.pos_y = lhsNode->pos().Y;
+				repl_packet.pos_z = lhsNode->pos().Z;
+
+				repl_packet.scale_x = lhsNode->scale().X;
+				repl_packet.scale_y = lhsNode->scale().Y;
+				repl_packet.scale_z = lhsNode->scale().Z;
+
 				auto parent = lhsNode->index_as_string("Parent");
 				auto name = lhsNode->index_as_string("ClassName");
 
@@ -94,7 +114,7 @@ namespace XPX
 					continue;
 
 				if (parent.empty())
-					parent = "world";
+					parent = XPLICIT_LUA_NAMESPACE;
 
 				memcpy(repl_packet.node_parent, parent.c_str(), parent.size());
 				memcpy(repl_packet.node_name, name.c_str(), parent.size());

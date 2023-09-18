@@ -116,9 +116,7 @@ namespace XPX
 		self->mOk.update();
 
 		if (self->mOk.LeftClicked)
-		{
 			self->mClicked();
-		}
 	}
 
 	const char* PopupComponent::name() noexcept

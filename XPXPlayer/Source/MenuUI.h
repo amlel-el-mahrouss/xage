@@ -124,4 +124,12 @@ namespace XPX
 		ImGUI::UIFrame mFrame;
 
 	};
+
+	class ChatBoxStyleDark final
+	{
+	public:
+		static ImGUI::ImColor get_frame_color() noexcept { return { 50, 0x41, 0x41, 0x41 }; }
+		static ImGUI::ImColor get_text_rgn_color() noexcept { return { 50, 0x1A, 0x1A, 0x1A }; }
+
+	};
 }

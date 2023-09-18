@@ -50,8 +50,6 @@ namespace XPX
 
         auto cam = ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
         CAD->getSceneManager()->setActiveCamera(cam->get());
-        
-		auto skybox = LoadSkybox("noonclouds");
     }
 
     LoadingComponent::~LoadingComponent() = default;

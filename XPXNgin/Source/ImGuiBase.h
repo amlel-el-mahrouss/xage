@@ -82,17 +82,13 @@ namespace XPX
 
 			static FontPtr get_font(const char* path) { return CAD->getGUIEnvironment()->getFont(path); }
 
+		public:
 			static FontPtr get_title_font() noexcept
 			{
 				static FontPtr fnt = nullptr;
 
 				if (!fnt)
-				{
-					XPLICIT_GET_DATA_DIR(dir);
-					dir += "GameFont22.bmp";
-
-					fnt = get_font(dir.c_str());
-				}
+					fnt = get_font(get_title_path().c_str());
 
 				return fnt;
 			}
@@ -104,7 +100,7 @@ namespace XPX
 				if (!fnt)
 				{
 					XPLICIT_GET_DATA_DIR(dir);
-					dir += "GameFont14.bmp";
+					dir += "UIFont14.bmp";
 
 					fnt = get_font(dir.c_str());
 				}
@@ -117,12 +113,7 @@ namespace XPX
 				static FontPtr fnt = nullptr;
 
 				if (!fnt)
-				{
-					XPLICIT_GET_DATA_DIR(dir);
-					dir += "GameFont18.bmp";
-
-					fnt = get_font(dir.c_str());
-				}
+					fnt = get_font(get_label_path().c_str());
 
 				return fnt;
 			}
@@ -130,7 +121,7 @@ namespace XPX
 			static String get_title_path() noexcept
 			{
 				XPLICIT_GET_DATA_DIR(dir);
-				dir += "GameFont22.bmp";
+				dir += "UIFont22.bmp";
 
 				return dir;
 			}
@@ -138,7 +129,7 @@ namespace XPX
 			static String get_label_path() noexcept
 			{
 				XPLICIT_GET_DATA_DIR(dir);
-				dir += "GameFont18.bmp";
+				dir += "UIFont18.bmp";
 
 				return dir;
 			}
