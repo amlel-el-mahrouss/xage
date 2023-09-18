@@ -15,7 +15,7 @@
 #include <CLua.hpp>
 
 #define XPLICIT_CLASS_NAMESPACE "world"
-#define XPLICIT_CLASS_NAME "Class"
+#define XPLICIT_CLASS_NAME "class"
 
 namespace XPX
 {

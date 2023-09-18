@@ -183,10 +183,11 @@ namespace XPX
     // General packet information.
     public:
         std::int8_t           channel; // channel of the packet, that is here which chatroom to print this in. 3 + n
-        std::int16_t          version;
+        std::int16_t          version; // matches xconnect version macro.
 
     // Packet data.
-        char                  buffer[XPLICIT_NETWORK_BUF_SZ];
+        char                  username[64]; // That0neGuy
+        char                  buffer[256]; // Hello guys!
 
     };
 
