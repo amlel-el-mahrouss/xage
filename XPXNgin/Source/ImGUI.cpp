@@ -11,7 +11,6 @@
 
 namespace XPX::ImGUI
 {
-
 	UIButton::UIButton(const PChar* text)
 		: mText(text), Hover(false), LeftClicked(false), RightClicked(false)
 	{
@@ -86,7 +85,7 @@ namespace XPX::ImGUI
 		mBox->BackgroundColor.setRed(0x0D);
 		mBox->BackgroundColor.setGreen(0x0D);
 		mBox->BackgroundColor.setBlue(0x0D);
-		mBox->BackgroundColor.setAlpha(255);
+		mBox->BackgroundColor.setAlpha(0x50);
 
 		mBox->BackgroundHoverColor = mBox->BackgroundHoverColor;
 
@@ -98,7 +97,7 @@ namespace XPX::ImGUI
 		mSelection->BackgroundColor.setRed(0x00);
 		mSelection->BackgroundColor.setGreen(0x89);
 		mSelection->BackgroundColor.setBlue(0xED);
-		mSelection->BackgroundColor.setAlpha(127);
+		mSelection->BackgroundColor.setAlpha(0x50);
 
 		mSelection->BackgroundHoverColor = mSelection->BackgroundHoverColor;
 
@@ -168,18 +167,17 @@ namespace XPX::ImGUI
 					}
 				}
 
-				if (isxdigit(key) ||
-					isalpha(key) ||
-					isprint(key))
+				if (key >= KEY_KEY_0 &&
+					key <= KEY_KEY_Z)
 				{
 					if (this->mText.size() > (this->mBox->W / 12))
 						return;
 
-					this->mText += tolower(key);
+					this->mText += !KEYBOARD->key_down(KEY_CAPITAL) ? key : tolower(key);
 
 					// we double check the size, so that the selection bar doesn't overflow...
 					if (this->mText.size() <= (this->mBox->W / 12))
-						this->mSelection->W += 12;
+						this->mSelection->W = (this->mSelection->W + 12);
 
 					std::this_thread::sleep_for(std::chrono::milliseconds(130));
 				}
@@ -201,7 +199,7 @@ namespace XPX::ImGUI
 		mCheckBox->BackgroundColor.setRed(0x0D);
 		mCheckBox->BackgroundColor.setGreen(0x0D);
 		mCheckBox->BackgroundColor.setBlue(0x0D);
-		mCheckBox->BackgroundColor.setAlpha(255);
+		mCheckBox->BackgroundColor.setAlpha(0x50);
 
 		mCheckBox->W = this->W;
 		mCheckBox->H = this->H;

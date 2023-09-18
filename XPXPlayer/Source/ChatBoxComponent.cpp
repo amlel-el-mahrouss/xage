@@ -18,13 +18,13 @@ namespace XPX
 		mTextBox(platform_string("Type something...").c_str())
 	{
 		mChatFrame.X = 10;
-		mChatFrame.Y = 30;
+		mChatFrame.Y = 40;
 
-		mChatFrame.W = 105;
-		mChatFrame.H = 58;
+		mChatFrame.W = 512;
+		mChatFrame.H = 210;
 
-		mTextBox.set_size(103, 7);
-		mTextBox.set_pos(11, mChatFrame.Y - 1);
+		mTextBox.set_size(512, 30);
+		mTextBox.set_pos(10, mChatFrame.Y + mChatFrame.H);
 
 		mChatFrame.BackgroundHoverColor = ChatBoxStyleDark::get_frame_color();
 		mChatFrame.BackgroundColor = ChatBoxStyleDark::get_frame_color();
