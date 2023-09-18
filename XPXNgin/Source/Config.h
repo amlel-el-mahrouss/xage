@@ -33,6 +33,8 @@
 #   include <WinSock2.h>
 #   include <ws2tcpip.h>
 
+#define IsValidHeapPtr(ptr) _CrtIsValidHeapPointer(ptr)
+
 #else
 
 #   include <sys/socket.h>
@@ -48,6 +50,8 @@
 #define ZeroMemory(ptr, sz) memset(ptr, 0, sz)
 
 #define INVALID_SOCKET -1
+
+#define IsValidHeapPtr(ptr) (void)ptr
 
 #endif
 

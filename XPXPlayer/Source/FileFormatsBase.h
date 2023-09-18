@@ -41,7 +41,7 @@ namespace XPX::Renderer
 	enum
 	{
 		FILE_FORMAT_RIFF,
-		FILE_FORMAT_PBM,
+		FILE_FORMAT_PBM, // XAR CONTAINER FOR PBR MODELS /w TEXTURES.
 		FILE_FORMAT_ROXML, // Mesh RoXML.
 	};
 }

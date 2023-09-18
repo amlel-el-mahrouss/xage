@@ -187,7 +187,7 @@ namespace XPX
 
     // Packet data.
         char                  username[64]; // That0neGuy
-        char                  buffer[256]; // Hello guys!
+        char                  buffer[128]; // Hello guys!
 
     };
 

@@ -19,6 +19,7 @@
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalHumanoidComponent.h"
 #include "LocalCameraComponent.h"
+#include "ChatBoxComponent.h"
 #include "LoadingComponent.h"
 #include "LocalMenuEvent.h"
 #include "ClientUtils.h"
@@ -98,7 +99,6 @@ namespace XPX
             EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
             ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
-
             ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 
             const auto cam = ComponentSystem::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
@@ -109,6 +109,7 @@ namespace XPX
             local_player->attach(cam);
             self->mNetwork->set_hash(hash);
 
+            ComponentSystem::get_singleton_ptr()->add<ChatBoxComponent>(packet.additional_data);
             monitor->ID = packet.additional_data;
 
             local_player->get_class()->insert("PlayerId", fmt::format("'{}'", monitor->ID).c_str());
