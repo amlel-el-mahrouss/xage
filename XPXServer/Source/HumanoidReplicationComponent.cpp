@@ -41,7 +41,8 @@ namespace XPX
 			if (auto replica_xasset = player->get_class()->index_as_string("PacketContent");
 				!replica_xasset.empty())
 			{
-				self->mFactory.send(player->get_class()->index_as_number<int>("PacketDeliveryKind"),
+				self->mFactory.send(
+					player->get_class()->index_as_number<int>("PacketDeliveryKind"),
 					replica_xasset.c_str(),
 					player->get_class()->index_as_number<int>("PacketKind"), 
 					player->get_peer()->public_hash);

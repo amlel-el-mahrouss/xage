@@ -29,8 +29,48 @@ static int lua_DestroyScript(lua_State* L)
 	return 0;
 }
 
+class XPXUri
+{
+public:
+	XPXUri() : mUri(XPLICIT_XASSET_PROTOCOL) {}
+	~XPXUri() = default;
+
+public:
+	XPLICIT_COPY_DEFAULT(XPXUri);
+
+private:
+	XPX::Utils::UriParser mUri;
+
+public:
+	static int parse_url(lua_State* L)
+	{
+		XPXUri* uri = reinterpret_cast<XPXUri*>(lua_touserdata(L, 1));
+
+		if (lua_isstring(L, 2))
+		{
+			XPX::String uri_str = lua_tostring(L, 2);
+			uri_str = uri_str.erase(uri_str.find(XPLICIT_XASSET_PROTOCOL), strlen(XPLICIT_XASSET_PROTOCOL));
+
+			if (!uri_str.empty())
+			{
+				uri->mUri /= uri_str;
+
+				lua_pushstring(L, uri->mUri.get().c_str());
+				return 1;
+			}
+		}
+
+		lua_pushstring(L, "invalid");
+		return 1;
+	}
+
+};
+
 XPLICIT_API void XplicitLoadBaseLua()
 {
+	XPX::RLua::RuntimeClass<XPXUri> uri;
+	uri.begin_class("Uri").append_proc("Parse", &XPXUri::parse_url).end_class();
+
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world = {}");
 

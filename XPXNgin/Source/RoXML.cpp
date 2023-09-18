@@ -107,6 +107,7 @@ namespace XPX::RoXML
 										node->value()[i] == '.' ||
 										node->value()[i] == '/' ||
 										node->value()[i] == '\\' ||
+										node->value()[i] == '-' ||
 										node->value()[i] == ':')
 									{
 										world_node.Value += node->value()[i];
@@ -482,6 +483,7 @@ namespace XPX::RoXML
 								val[i] == '.' ||
 								val[i] == '/' ||
 								val[i] == '\\' ||
+								val[i] == '-' ||
 								val[i] == ':')
 							{
 								world_node.Value += val[i];
