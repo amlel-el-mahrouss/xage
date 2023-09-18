@@ -153,9 +153,15 @@ namespace XPX::ImGUI
 
 		if (this->mShallEdit)
 		{
-			if (auto key = KEYBOARD->key_down();
-				key <= 255 && key > 0)
+			static bool is_caps = false;
+
+			auto key = KEYBOARD->key_down();
+
+			if (key)
 			{
+
+				mShallEdit = false;
+
 				if (key == KEY_BACK)
 				{
 					this->mSelection->W -= 12;
@@ -163,32 +169,36 @@ namespace XPX::ImGUI
 					if (this->mText.size() > 0)
 					{
 						this->mText.erase(this->mText.size() - 1);
-						std::this_thread::sleep_for(std::chrono::milliseconds(130));
+						std::this_thread::sleep_for(std::chrono::milliseconds(100));
 					}
 				}
-
-				if (key >= KEY_KEY_0 &&
-					key <= KEY_KEY_Z)
+				else if (key >= KEY_KEY_0 &&
+					key <= KEY_KEY_Z ||
+					key == KEY_SPACE)
 				{
-					if (this->mText.size() > (this->mBox->W / 12))
-						return;
+					if (this->mText.size() < (this->mBox->W / 12))
+					{
+						this->mText += is_caps ? toupper(key) : tolower(key);
 
-					this->mText += !KEYBOARD->key_down(KEY_CAPITAL) ? key : tolower(key);
+						// we double check the size, so that the selection bar doesn't overflow...
+						if (this->mText.size() <= (this->mBox->W / 12) &&
+							key != KEY_SPACE)
+							this->mSelection->W += 1;
 
-					// we double check the size, so that the selection bar doesn't overflow...
-					if (this->mText.size() <= (this->mBox->W / 12))
-						this->mSelection->W = (this->mSelection->W + 12);
+					}
 
-					std::this_thread::sleep_for(std::chrono::milliseconds(130));
 				}
-			}
+				else if (key == KEY_CAPITAL)
+				{
+					is_caps = !is_caps;
+				}
 
+
+				mShallEdit = true;
+			}
 		}
 
-		if (!mText.empty())
-			UIFontHelper::get_label_font()->draw(mText.c_str(), recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
-		else
-			UIFontHelper::get_label_font()->draw(mPlaceholder.c_str(), recti(vector2di(mSelection->X, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
+		UIFontHelper::get_properties_font()->draw(mText.c_str(), recti(vector2di(mSelection->X + 2, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
 	}
 
 	UICheckBox::UICheckBox()

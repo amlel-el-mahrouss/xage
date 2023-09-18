@@ -45,8 +45,9 @@ namespace XPX
 
 		static float pos_menu = 14;
 
-		if (KEYBOARD->key_down(KEY_F3) &&
-			mTimeout < 0 && !mPopup)
+		if (KEYBOARD->key_down(KEY_F9) &&
+			mTimeout < 0 && 
+			!mPopup)
 		{
 			mEnabled = true;
 			mTimeout = XPLICIT_TIMEOUT_MENU;

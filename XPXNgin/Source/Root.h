@@ -149,20 +149,31 @@ namespace XPX
 			return 0.f;
 		}
 
-		bool key_down(const char key) const
+		bool key_down(const char key) noexcept
 		{
-			return mKeys[key];
+			auto res = mKeys[key];
+			return res;
 		}
 
-		char key_down() const
+		char key_down() noexcept
 		{
 			for (u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
 			{
 				if (mKeys[i])
+				{
 					return i;
+				}
 			}
 
 			return 0;
+		}
+
+		void reset() noexcept
+		{
+			for (u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
+			{
+				mKeys[i] = false;
+			}
 		}
 
 		MouseEventTraits& get_pos() noexcept { return mMousePos; }
