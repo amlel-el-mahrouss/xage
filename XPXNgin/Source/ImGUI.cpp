@@ -181,9 +181,9 @@ namespace XPX::ImGUI
 						this->mText += is_caps ? toupper(key) : tolower(key);
 
 						// we double check the size, so that the selection bar doesn't overflow...
-						if (this->mText.size() <= (this->mBox->W / 12) &&
+						if (this->mSelection->W < this->mBox->W &&
 							key != KEY_SPACE)
-							this->mSelection->W += 1;
+							this->mSelection->W += 12;
 
 					}
 

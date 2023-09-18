@@ -26,7 +26,7 @@ namespace XPX
 	{
 		for (auto* node : mWorldNodes)
 		{
-			node->assign("Anchored", "true");
+			node->assign("Locked", "true");
 		}
 	}
 
@@ -46,7 +46,8 @@ namespace XPX
 
 			for (auto* rhsNode : mWorldNodes)
 			{
-				if (rhsNode->index_as_bool("Anchored"))
+				if (!rhsNode ||
+					rhsNode->index_as_bool("Locked"))
 					continue;
 
 				if (rhsNode == lhsNode)
@@ -62,7 +63,7 @@ namespace XPX
 				}
 			}
 
-			if (!lhsNode->index_as_bool("Anchored") &&
+			if (!lhsNode->index_as_bool("Locked") &&
 				!touching)
 			{
 				auto force = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X"),

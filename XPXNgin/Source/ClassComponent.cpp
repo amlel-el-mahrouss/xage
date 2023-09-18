@@ -32,7 +32,6 @@ namespace XPX
 
 		this->insert("Update", XPLICIT_UPDATE_SNIPPET);
 
-		this->insert("Anchored", "true");
 		this->insert("Archivable", "false");
 		this->insert("Locked", "false");
 		this->insert("Collide", "true");
@@ -101,7 +100,6 @@ namespace XPX
 		self->collide(self->index_as_bool("Collide"));
 		self->locked(self->index_as_bool("Locked"));
 		self->archivable(self->index_as_bool("Archivable"));
-		self->anchor(self->index_as_bool("Anchored"));
 	
 		if (!self->index_as_bool("Locked"))
 		{

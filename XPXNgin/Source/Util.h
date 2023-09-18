@@ -93,7 +93,6 @@ namespace XPX
 			  mArchivable(false),
 			  mLocked(false),
 			  mAlpha(1.0f),
-			  mAnchored(false),
 			  mNoCollide(false)
 		{}
 
@@ -111,7 +110,6 @@ namespace XPX
 		LuaScriptComponent* script() noexcept { return mScript; }
 		bool is_archivable() noexcept { return mArchivable; }
 		bool has_no_collide() noexcept { return !mNoCollide; }
-		bool is_anchored() noexcept { return mAnchored; }
 		bool is_locked() noexcept { return mLocked; }
 		bool alpha() noexcept { return mLocked; }
 
@@ -119,7 +117,6 @@ namespace XPX
 		void script(LuaScriptComponent* script) noexcept { mScript = script; }
 		void archivable(const bool enable) noexcept { mArchivable = enable; }
 		void collide(const bool enable) noexcept { mNoCollide = enable; }
-		void anchor(const bool enable) noexcept { mAnchored = enable; }
 		void locked(const bool enable) noexcept { mLocked = enable; }
 		void alpha(const float alpha) noexcept { mAlpha = alpha;  }
 
@@ -131,7 +128,6 @@ namespace XPX
 
 	private:
 		bool mArchivable;
-		bool mAnchored;
 		bool mNoCollide;
 		bool mLocked;
 		float mAlpha;
