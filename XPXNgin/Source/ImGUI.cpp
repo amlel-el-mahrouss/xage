@@ -138,7 +138,6 @@ namespace XPX::ImGUI
 	void UIEditBox::update()
 	{
 		this->mBox->update(this->mBox->BackgroundColor);
-		this->mSelection->update(this->mSelection->BackgroundColor);
 
 		if (this->mBox->in_region() &&
 			KEYBOARD->left_down())
@@ -198,7 +197,7 @@ namespace XPX::ImGUI
 			}
 		}
 
-		UIFontHelper::get_properties_font()->draw(mText.c_str(), recti(vector2di(mSelection->X + 2, mSelection->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
+		UIFontHelper::get_properties_font()->draw(mText.c_str(), recti(vector2di(mBox->X + 5, mBox->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
 	}
 
 	UICheckBox::UICheckBox()

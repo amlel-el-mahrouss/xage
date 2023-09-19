@@ -100,7 +100,7 @@ namespace XPX
 				if (!fnt)
 				{
 					XPLICIT_GET_DATA_DIR(dir);
-					dir += "UIFont14.bmp";
+					dir += "UIFont14.png";
 
 					fnt = get_font(dir.c_str());
 				}
@@ -121,7 +121,7 @@ namespace XPX
 			static String get_title_path() noexcept
 			{
 				XPLICIT_GET_DATA_DIR(dir);
-				dir += "UIFont22.bmp";
+				dir += "UIFont22.png";
 
 				return dir;
 			}
@@ -129,7 +129,7 @@ namespace XPX
 			static String get_label_path() noexcept
 			{
 				XPLICIT_GET_DATA_DIR(dir);
-				dir += "UIFont18.bmp";
+				dir += "UIFont18.png";
 
 				return dir;
 			}

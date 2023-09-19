@@ -15,7 +15,7 @@ namespace XPX
 		:
 		mUsername(username),
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
-		mTextBox(platform_string("Type something...").c_str())
+		mTextBox(platform_string("...").c_str())
 	{
 		mChatFrame.X = 10;
 		mChatFrame.Y = 40;

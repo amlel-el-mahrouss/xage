@@ -46,18 +46,15 @@ public:
 	{
 		XPXUri* uri = reinterpret_cast<XPXUri*>(lua_touserdata(L, 1));
 
-		if (lua_isstring(L, 2))
+		XPX::String uri_str = lua_tostring(L, 2);
+		uri_str = uri_str.erase(uri_str.find(XPLICIT_XASSET_PROTOCOL), strlen(XPLICIT_XASSET_PROTOCOL));
+
+		if (!uri_str.empty())
 		{
-			XPX::String uri_str = lua_tostring(L, 2);
-			uri_str = uri_str.erase(uri_str.find(XPLICIT_XASSET_PROTOCOL), strlen(XPLICIT_XASSET_PROTOCOL));
+			uri->mUri /= uri_str;
 
-			if (!uri_str.empty())
-			{
-				uri->mUri /= uri_str;
-
-				lua_pushstring(L, uri->mUri.get().c_str());
-				return 1;
-			}
+			lua_pushstring(L, uri->mUri.get().c_str());
+			return 1;
 		}
 
 		lua_pushstring(L, "invalid");
