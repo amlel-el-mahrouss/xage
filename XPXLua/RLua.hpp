@@ -66,6 +66,7 @@ namespace XPX::RLua
 
 			static const luaL_Reg meta[] = {
 				{ "__gc", on_delete },
+				{ "release", on_delete },
 				{ "borrow", on_new },
 				{ nullptr, nullptr }
 			};
@@ -81,7 +82,7 @@ namespace XPX::RLua
 
 		RuntimeClass& append_proc(String fn_name, RLuaProc fn)
 		{
-			RLUA_ASSERT(fn);
+			RLUA_ASSERT(fn && !fn_name.empty());
 
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
@@ -111,16 +112,21 @@ namespace XPX::RLua
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			luaL_newlib(L, this->mFuncs.data());
+			for (auto& tupl : mFuncs)
+			{
+				lua_pushcfunction(L, std::get<1>(tupl)); 
+				lua_setfield(L, -2, std::get<0>(tupl).c_str());
+			}
 
-			lua_setfield(L, -2, "__index");
 			lua_pop(L, 1);
 
 			return *this;
 		}
 
 	private:
-		std::vector<luaL_Reg> mFuncs;
+		std::vector<std::tuple<String, lua_CFunction>> mFuncs;
+
+	private:
 		String mName;
 
 	};
