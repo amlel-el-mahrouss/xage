@@ -91,7 +91,6 @@ int main(int argc, char** argv)
 
 				XPLICIT_ASSERT(component_d3d11);
 
-				component_d3d11->push_shader(shader_pixel);
 				component_d3d11->push_shader(shader_vertex);
 
 				component_d3d11->push(XPX::Color<float>(1, 1, 1, 1));
@@ -118,17 +117,14 @@ int main(int argc, char** argv)
 				polygonLayout[1].SemanticIndex = 0;
 				polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 				polygonLayout[1].InputSlot = 0;
-				polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+				polygonLayout[1].AlignedByteOffset = 12;
 				polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 				polygonLayout[1].InstanceDataStepRate = 0;
 
-				shader_pixel->get().vInputLayouts.push_back(polygonLayout[0]);
-				shader_pixel->get().vInputLayouts.push_back(polygonLayout[1]);
 				shader_vertex->get().vInputLayouts.push_back(polygonLayout[0]);
 				shader_vertex->get().vInputLayouts.push_back(polygonLayout[1]);
 
 				shader_vertex->get().create_input_layout(drv11->get().pDevice.Get());
-				shader_pixel->get().create_input_layout(drv11->get().pDevice.Get());
 
 				component_d3d11->set_driver(drv11);
 				component_d3d11->create();

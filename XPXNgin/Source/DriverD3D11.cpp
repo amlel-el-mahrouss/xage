@@ -423,9 +423,9 @@ namespace XPX::Renderer::DX11
 
 		RtlZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
-		m_pDriver->get().pCtx->Map(m_pIndexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms); 
+		m_pDriver->get().pCtx->Map(m_pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, & ms);
 		memcpy(ms.pData, m_pVertex, sizeof(m_pVertex));
-		m_pDriver->get().pCtx->Unmap(m_pIndexBuffer.Get(), 0);
+		m_pDriver->get().pCtx->Unmap(m_pVertexBuffer.Get(), 0);
 
 		if (FAILED(m_hResult))
 		{
