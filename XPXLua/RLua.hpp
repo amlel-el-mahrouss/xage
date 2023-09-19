@@ -65,8 +65,10 @@ namespace XPX::RLua
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			lua_register(L, name.c_str(), on_new);
 			luaL_newmetatable(L, name.c_str());
+
+			lua_pushcfunction(L, on_new);
+			lua_setfield(L, -2, "borrow");
 
 			lua_pushcfunction(L, on_delete);
 			lua_setfield(L, -2, "__gc");
@@ -108,6 +110,8 @@ namespace XPX::RLua
 		RuntimeClass& end_class()
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
+
+			lua_setglobal(L, mName.c_str());
 
 			lua_pop(L, 1);
 
