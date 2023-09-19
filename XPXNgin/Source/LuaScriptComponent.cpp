@@ -70,10 +70,12 @@ namespace XPX
 			clua_unlock();
 		});
 
-		if (!job.joinable())
-			job.detach();
-		else
-			job.join();
+		job.detach();
+
+		//if (!job.joinable())
+			//job.detach();
+		//else
+			//job.join();
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;
