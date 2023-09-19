@@ -110,10 +110,7 @@ namespace XPX::RLua
 		RuntimeClass& end_class()
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
-
 			lua_setglobal(L, mName.c_str());
-
-			lua_pop(L, 1);
 
 			return *this;
 		}
