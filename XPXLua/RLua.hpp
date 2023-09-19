@@ -64,19 +64,15 @@ namespace XPX::RLua
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			lua_setglobal(L, name.c_str());
-			lua_register(L, (name + ".borrow").c_str(), on_new);
+			static const luaL_Reg meta[] = {
+				{ "__gc", on_delete },
+				{ "borrow", on_new },
+				{ nullptr, nullptr }
+			};
 
 			luaL_newmetatable(L, name.c_str());
 
-			lua_pushcfunction(L, on_delete);
-			lua_setfield(L, -2, "__gc");
-
-			lua_pushvalue(L, -1);
-			lua_setfield(L, -2, "__index");
-
-			lua_pushcfunction(L, on_delete);
-			lua_setfield(L, -2, "release");
+			luaL_setfuncs(L, meta, 0);
 
 			mName = name;
 
@@ -89,8 +85,7 @@ namespace XPX::RLua
 
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			lua_pushcfunction(L, fn);
-			lua_setfield(L, -2, fn_name.c_str());
+			mFuncs.push_back({ fn_name.c_str(), fn});
 
 			return *this;
 		}
@@ -99,10 +94,13 @@ namespace XPX::RLua
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			lua_newtable(L);
+			luaL_newmetatable(L, name.c_str());
 
-			*this = this->append_proc("__index", getter);
-			*this = this->append_proc("__newindex", setter);
+			lua_pushcfunction(L, getter);
+			lua_setfield(L, -3, "__index");
+
+			lua_pushcfunction(L, setter);
+			lua_setfield(L, -3, "__newindex");
 
 			lua_setfield(L, -2, name.c_str());
 
@@ -112,13 +110,17 @@ namespace XPX::RLua
 		RuntimeClass& end_class()
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
-			
+
+			luaL_newlib(L, this->mFuncs.data());
+
+			lua_setfield(L, -2, "__index");
 			lua_pop(L, 1);
 
 			return *this;
 		}
 
 	private:
+		std::vector<luaL_Reg> mFuncs;
 		String mName;
 
 	};
