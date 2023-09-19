@@ -31,7 +31,7 @@ namespace XPX::Renderer
 		XPLICIT_COPY_DEFAULT(IFileReader);
 
 	public:
-		const char* format() { return "*/none"; }
+		const char* xmime() { return "format:*/none"; }
 
 	protected:
 		FILE* mIf;

@@ -69,7 +69,6 @@ static int lua_PlaySound(lua_State* L)
 
 		if (it == XPX_CACHE.cend())
 		{
-			// that means if we don't find it, then fail silently.
 			if (url.find(".wav") == XPX::String::npos)
 			{
 				XPLICIT_CV.notify_one();
@@ -257,6 +256,14 @@ public:
 			}
 
 			XPLICIT_PARSER.parse(params);
+
+			for (auto& additional : params.WorldNodes)
+			{
+				if (additional.Name == "Sound")
+				{
+					XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(additional.ID.c_str(), additional.Value.c_str());
+				}
+			}
 
 			lua_pushboolean(L, true);
 			return 1;

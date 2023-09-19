@@ -16,7 +16,7 @@ namespace XPX
 {
 	static String XPLICIT_CONNECT_SNIPPET = "function(self, UniqueName, Func) self.Slots[UniqueName] = Func end";
 	static String XPLICIT_DISCONNECT_SNIPPET = "function(self, UniqueName) self.Slots[UniqueName] = nil; end";
-
+	static String XPLICIT_CLONE_SNIPPET = "function(self) return false; end";
 	static String XPLICIT_UPDATE_SNIPPET = "function (self, Restrict) for k, v in pairs(self.Slots) do if k == Restrict then v(self); end end end";
 
 	ClassComponent::ClassComponent(
@@ -33,7 +33,8 @@ namespace XPX
 		this->insert("Update", XPLICIT_UPDATE_SNIPPET);
 
 		this->insert("Archivable", "false");
-		this->insert("Locked", "false");
+
+		this->insert("Locked", "true");
 		this->insert("Collide", "true");
 
 		this->insert("Slots", "{ }");
@@ -41,6 +42,7 @@ namespace XPX
 		//! Connect and disconnect methods
 		//! Use this to connect specific functions to this class.
 		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
+		this->insert("Clone", XPLICIT_CLONE_SNIPPET);
 		this->insert("Disconnect", XPLICIT_DISCONNECT_SNIPPET);
 	}
 

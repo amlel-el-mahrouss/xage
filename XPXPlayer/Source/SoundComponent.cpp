@@ -37,7 +37,7 @@ namespace XPX
 
 		this->insert("Play", "function(self) playSound(self.ClassName, self.SoundId); end");
 
-		this->insert("Destroy", sound_destroy(name, parent).c_str());
+		this->assign("Destroy", sound_destroy(name, parent).c_str());
 	}
 
 	SoundComponent::~SoundComponent() = default;

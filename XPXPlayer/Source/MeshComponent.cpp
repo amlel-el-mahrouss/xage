@@ -33,7 +33,7 @@ namespace XPX
 		mMdl = CAD->getSceneManager()->getMesh(_path.c_str());
 
 		this->insert("Visible", "true");
-		this->insert("Destroy", mesh_destroy(name, group).c_str());
+		this->assign("Destroy", mesh_destroy(name, group).c_str());
 
 		mPhysics = PHYSICS_NONE;
 

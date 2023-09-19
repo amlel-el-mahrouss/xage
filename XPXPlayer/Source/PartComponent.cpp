@@ -27,7 +27,7 @@ namespace XPX
 			mStud->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 		}
 
-		this->insert("Destroy", this->part_destroy().c_str());
+		this->assign("Destroy", this->part_destroy().c_str());
 	}
 
 	void PartComponent::update(ClassPtr cls)

@@ -523,6 +523,19 @@ namespace XPX::RoXML
 					}
 				}
 
+				if (node_name == "Sound")
+				{
+					if (node->first_attribute() &&
+						node->first_attribute()->next_attribute())
+					{
+						if (strcmp(node->first_attribute()->name(), "Name") == 0)
+							world_node.ID = node->first_attribute()->value();
+
+						if (strcmp(node->first_attribute()->next_attribute()->name(), "Value") == 0)
+							world_node.Value = node->first_attribute()->next_attribute()->value();
+					}
+				}
+
 				world_node.Name = node_name;
 
 				if (!world_node.Name.empty())

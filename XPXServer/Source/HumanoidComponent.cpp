@@ -194,9 +194,9 @@ namespace XPX
 				mClass->insert("IsLeftClickHold", "false");
 				mClass->insert("IsRightClickHold", "false");
 
-				mClass->insert("PacketKind", "-1");
-				mClass->insert("PacketDeliveryKind", "-1");
-				mClass->insert("PacketContent", "nil");
+				mClass->insert("ContentKind", "-1");
+				mClass->insert("ContentDeliveryKind", "-1");
+				mClass->insert("Content", "nil");
 
 				mClass->insert("PlayerId", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()));
 
