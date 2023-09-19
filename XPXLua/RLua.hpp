@@ -46,7 +46,7 @@ namespace XPX::RLua
 			return 0;
 		}
 
-		static int delete_internal(void* block)
+		static void delete_internal(void* block)
 		{
 #ifdef XPLICIT_WINDOWS
 #ifdef _DEBUG
