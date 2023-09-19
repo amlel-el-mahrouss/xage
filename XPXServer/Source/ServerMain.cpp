@@ -180,7 +180,7 @@ int main(int argc, char** argv)
 
 		params.Has3D = false;
 		params.NoLua = false;
-		params.WaitFor = false;
+		params.WaitFor = true;
 		params.Path = path;
 
 		XPX::RoXML::RoXMLDocumentParser parser;

@@ -93,7 +93,42 @@ namespace XPX
 		}
 	}
 
-	LoginEvent::~LoginEvent() = default;
+	static XPXLoginWatchService* XPX_LOGIN_WATCHER = nullptr;
+
+	class XPXLoginWatchService
+	{
+	public:
+		std::vector<lua_CFunction> mFuncs;
+
+	public:
+		static int connect(lua_State* L)
+		{
+			XPXLoginWatchService* service = (XPXLoginWatchService*)lua_touserdata(L, 1);
+
+			if (!XPX_LOGIN_WATCHER)
+				service = XPX_LOGIN_WATCHER;
+
+			lua_CFunction func = lua_tocfunction(L, 2);
+
+			if (func)
+			{
+				service->mFuncs.push_back(func);
+
+				lua_pushboolean(L, true);
+				return 1;
+			}
+
+			lua_pushboolean(L, false);
+			return 1;
+		}
+
+	};
+
+	LoginEvent::~LoginEvent()
+	{
+		RLua::RuntimeClass<XPXLoginWatchService> watcher;
+		watcher.begin_class("LoginWatchService").append_proc("Connect", &XPXLoginWatchService::connect).end_class();
+	}
 
 	//! @brief Handle player log-in event
 	//! @brief setup humanoid and more...
@@ -200,6 +235,16 @@ namespace XPX
 
 								NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
 									(NetworkPacket*)&repl_packet);
+							}
+						}
+
+						for (auto* fn : XPX_LOGIN_WATCHER->mFuncs)
+						{
+							if (fn)
+							{
+								lua_pushcfunction(Lua::CLuaStateManager::get_singleton_ptr()->state(), fn);
+								lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, LUA_MULTRET, 0);
+								lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 							}
 						}
 					}, peer_idx);

@@ -227,45 +227,49 @@ public:
 		}
 		else if (component_name == "RoXML")
 		{
-			XPX::RoXML::RoXMLDocumentParameters params;
+			XPX::Thread job([&]() {
+				XPX::RoXML::RoXMLDocumentParameters params;
 
-			params.Has3D = false;
-			params.NoLua = false;
-			params.WaitFor = false;
-			params.LuaOnly = false;
+				params.Has3D = false;
+				params.NoLua = false;
+				params.WaitFor = true;
+				params.LuaOnly = false;
 
-			XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
-			generated_path += "-ROXML";
+				XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
+				generated_path += "-ROXML";
 
-			XPLICIT_GET_DATA_DIR(path);
-			path += "Contents/";
-			path += lua_tostring(L, 3);
+				XPLICIT_GET_DATA_DIR(path);
+				path += "Contents/";
+				path += lua_tostring(L, 3);
 
-			if (!DownloadURL(lua_tostring(L, 2), generated_path))
-			{
-				lua_pushboolean(L, false);
-				return 1;
-			}
-
-			params.Path = generated_path;
-
-			if (params.Path.empty())
-			{
-				lua_pushboolean(L, false);
-				return 1;
-			}
-
-			XPLICIT_PARSER.parse(params);
-
-			for (auto& additional : params.WorldNodes)
-			{
-				if (additional.Name == "Sound")
+				if (!DownloadURL(lua_tostring(L, 2), generated_path))
 				{
-					XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(additional.ID.c_str(), additional.Value.c_str());
+					lua_pushboolean(L, false);
+					return 1;
 				}
-			}
 
-			DVFromRoXML(params);
+				params.Path = generated_path;
+
+				if (params.Path.empty())
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}
+
+				XPLICIT_PARSER.parse(params);
+
+				for (auto& additional : params.WorldNodes)
+				{
+					if (additional.Name == "Sound")
+					{
+						XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SoundComponent>(additional.ID.c_str(), additional.Value.c_str());
+					}
+				}
+
+				DVFromRoXML(params);
+			});
+
+			job.detach();
 
 			lua_pushboolean(L, true);
 			return 1;
