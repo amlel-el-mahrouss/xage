@@ -90,7 +90,7 @@ namespace XPX::RLua
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
 			lua_pushcfunction(L, fn);
-			lua_setfield(L, -2, fn_name.c_str());
+			lua_setfield(L, -1, fn_name.c_str());
 
 			return *this;
 		}
