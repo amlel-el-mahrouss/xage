@@ -99,17 +99,16 @@ namespace XPX
 			{
 				XPX_LOGIN_WATCHER = service;
 			}
-			else
+			else if (!service)
 			{
-				delete service;
-				service = XPX_LOGIN_WATCHER;
+				lua_pushboolean(L, false);
+				return 1;
 			}
 
 			const void* func = nullptr;
 
 			if (lua_isfunction(L, 2))
 			{
-				luaL_ref(L, 2);
 				func = lua_topointer(L, 2);
 			}
 
