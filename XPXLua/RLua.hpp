@@ -89,8 +89,10 @@ namespace XPX::RLua
 
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
+			lua_getglobal(L, mName.c_str());
+
 			lua_pushcfunction(L, fn);
-			lua_setfield(L, -1, fn_name.c_str());
+			lua_setfield(L, -2, fn_name.c_str());
 
 			return *this;
 		}
@@ -99,12 +101,14 @@ namespace XPX::RLua
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
+			lua_getglobal(L, mName.c_str());
+
 			lua_newtable(L);
 
 			*this = this->append_proc("__index", getter);
 			*this = this->append_proc("__newindex", setter);
 
-			lua_setfield(L, -1, name.c_str());
+			lua_setfield(L, -2, name.c_str());
 
 			return *this;
 		}
