@@ -373,6 +373,10 @@ namespace XPX::Renderer::DX11
 		m_vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		m_vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
+		m_vertexData.pSysMem = m_pVertex;
+		m_vertexData.SysMemPitch = 0;
+		m_vertexData.SysMemSlicePitch = 0;
+
 		m_hResult = m_pDriver->get().pDevice->CreateBuffer(&m_vertexBufferDesc, &m_vertexData, m_pVertexBuffer.GetAddressOf());
 		
 		if (FAILED(m_hResult))
