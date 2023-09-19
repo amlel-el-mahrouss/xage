@@ -39,6 +39,8 @@ namespace XPX
 		job = Thread([&]() {
 			clua_lock();
 
+			auto self = this;
+
 			String name = this->name();
 			String path = this->path();
 
@@ -55,16 +57,10 @@ namespace XPX
 
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_ThisSleep, "wait");
 
-			if (XPX::Lua::CLuaStateManager::get_singleton_ptr()->run(path) != LUA_OK)
+			if (XPX::Lua::CLuaStateManager::get_singleton_ptr()->run(path))
 			{
 				if (lua_isstring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1))
 					XPLICIT_CRITICAL(lua_tostring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
-
-				clua_unlock();
-
-				ComponentSystem::get_singleton_ptr()->remove(this);
-
-				return;
 			}
 
 			clua_unlock();
