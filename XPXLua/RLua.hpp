@@ -89,8 +89,6 @@ namespace XPX::RLua
 
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			lua_getglobal(L, mName.c_str());
-
 			lua_pushcfunction(L, fn);
 			lua_setfield(L, -2, fn_name.c_str());
 
@@ -100,8 +98,6 @@ namespace XPX::RLua
 		RuntimeClass& append_prop(String name, RLuaProc getter, RLuaProc setter)
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
-
-			lua_getglobal(L, mName.c_str());
 
 			lua_newtable(L);
 
