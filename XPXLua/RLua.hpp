@@ -71,10 +71,10 @@ namespace XPX::RLua
 			lua_setfield(L, -1, "__index");
 
 			lua_pushcfunction(L, on_new);
-			lua_setfield(L, -1, "borrow");
+			lua_setfield(L, -2, "borrow");
 
 			lua_pushcfunction(L, on_delete);
-			lua_setfield(L, -1, "__gc");
+			lua_setfield(L, -2, "__gc");
 
 			lua_setglobal(L, name.c_str());
 

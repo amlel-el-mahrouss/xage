@@ -17,7 +17,7 @@ namespace XPX
 	class LoginEvent final : public Event
 	{
 	public:
-		explicit LoginEvent();
+		LoginEvent();
 		~LoginEvent() override;
 		
 	public:

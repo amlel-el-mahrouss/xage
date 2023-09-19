@@ -14,6 +14,7 @@
  */
 
 #include "LoginEvent.h"
+#include <RLua.hpp>
 
 namespace XPX
 {
@@ -79,19 +80,7 @@ namespace XPX
 		return true;
 	}
 
-	LoginEvent::LoginEvent()
-		:
-		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
-		mPlayerCount(0)
-	{
-		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
-		{
-			HumanoidComponent* component = ComponentSystem::get_singleton_ptr()->add<HumanoidComponent>();
-			XPLICIT_ASSERT(component);
-
-			mPlayers.push_back(component);
-		}
-	}
+	class XPXLoginWatchService;
 
 	static XPXLoginWatchService* XPX_LOGIN_WATCHER = nullptr;
 
@@ -106,7 +95,7 @@ namespace XPX
 			XPXLoginWatchService* service = (XPXLoginWatchService*)lua_touserdata(L, 1);
 
 			if (!XPX_LOGIN_WATCHER)
-				service = XPX_LOGIN_WATCHER;
+				XPX_LOGIN_WATCHER = service;
 
 			lua_CFunction func = lua_tocfunction(L, 2);
 
@@ -124,11 +113,24 @@ namespace XPX
 
 	};
 
-	LoginEvent::~LoginEvent()
+	LoginEvent::LoginEvent()
+		:
+		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
+		mPlayerCount(0)
 	{
 		RLua::RuntimeClass<XPXLoginWatchService> watcher;
 		watcher.begin_class("LoginWatchService").append_proc("Connect", &XPXLoginWatchService::connect).end_class();
+
+		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
+		{
+			HumanoidComponent* component = ComponentSystem::get_singleton_ptr()->add<HumanoidComponent>();
+			XPLICIT_ASSERT(component);
+
+			mPlayers.push_back(component);
+		}
 	}
+
+	LoginEvent::~LoginEvent() = default;
 
 	//! @brief Handle player log-in event
 	//! @brief setup humanoid and more...
@@ -238,13 +240,16 @@ namespace XPX
 							}
 						}
 
-						for (auto* fn : XPX_LOGIN_WATCHER->mFuncs)
+						if (XPX_LOGIN_WATCHER)
 						{
-							if (fn)
+							for (auto* fn : XPX_LOGIN_WATCHER->mFuncs)
 							{
-								lua_pushcfunction(Lua::CLuaStateManager::get_singleton_ptr()->state(), fn);
-								lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, LUA_MULTRET, 0);
-								lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+								if (fn)
+								{
+									lua_pushcfunction(Lua::CLuaStateManager::get_singleton_ptr()->state(), fn);
+									lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, LUA_MULTRET, 0);
+									lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
+								}
 							}
 						}
 					}, peer_idx);
