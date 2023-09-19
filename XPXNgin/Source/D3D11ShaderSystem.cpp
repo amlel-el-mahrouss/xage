@@ -69,7 +69,7 @@ namespace XPX::Renderer::DX11
 		if (!device)
 			return hr;
 
-		hr = device->CreateInputLayout(input_layouts.data(), input_layouts.size(), pBlob->GetBufferPointer(),
+		hr = device->CreateInputLayout(vInputLayouts.data(), vInputLayouts.size(), pBlob->GetBufferPointer(),
 			pBlob->GetBufferSize(), pInputLayout.GetAddressOf());
 
 		XPLICIT_ASSERT(SUCCEEDED(hr));

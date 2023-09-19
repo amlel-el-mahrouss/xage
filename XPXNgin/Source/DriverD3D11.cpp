@@ -294,7 +294,7 @@ namespace XPX::Renderer::DX11
 		XPLICIT_ASSERT(m_private.pSwapChain);
 		XPLICIT_ASSERT(m_private.pCtx);
 
-		HRESULT hr = m_private.pSwapChain->Present(m_private.bVSync ? 1 : 0, 0);
+		HRESULT hr = m_private.pSwapChain->Present(0, 0);
 
 		return !DriverSystemD3D11::check_device_removed(hr);
 	}
@@ -325,6 +325,11 @@ namespace XPX::Renderer::DX11
 	{
 		if (m_pVertex)
 			delete[] m_pVertex;
+	}
+
+	void RenderComponentD3D11::push(const Color<float>& vert)
+	{
+		this->m_colorVectors.push_back(vert);
 	}
 
 	void RenderComponentD3D11::push(const Vector<float>& vert)
@@ -365,6 +370,11 @@ namespace XPX::Renderer::DX11
 				m_arrayVerts[vertex_index].Z,
 				0.f);
 		
+			m_pVertex[vertex_index].color = XMVectorSet(m_colorVectors[vertex_index].R,
+				m_colorVectors[vertex_index].G,
+				m_colorVectors[vertex_index].B,
+				m_colorVectors[vertex_index].A);
+
 			++m_iVertexCnt;
 		}
 
@@ -377,10 +387,17 @@ namespace XPX::Renderer::DX11
 		m_vertexData.SysMemPitch = 0;
 		m_vertexData.SysMemSlicePitch = 0;
 
-		m_hResult = m_pDriver->get().pDevice->CreateBuffer(&m_vertexBufferDesc, &m_vertexData, m_pVertexBuffer.GetAddressOf());
+		m_hResult = m_pDriver->get().pDevice->CreateBuffer(&m_vertexBufferDesc, 
+			&m_vertexData, 
+			m_pVertexBuffer.GetAddressOf());
 		
 		if (FAILED(m_hResult))
+		{
+			delete[] m_pVertex;
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create(CreateBuffer(m_vertex_buffer))");
+		}
+
+		delete[] m_pVertex;
 
 		m_indexBufDesc.Usage = D3D11_USAGE_DEFAULT;
 		m_indexBufDesc.ByteWidth = sizeof(ULONG) * m_iVertexCnt;
@@ -401,6 +418,14 @@ namespace XPX::Renderer::DX11
 		m_indexData.SysMemSlicePitch = 0;
 
 		m_hResult = m_pDriver->get().pDevice->CreateBuffer(&m_indexBufDesc, &m_indexData, m_pIndexBuffer.GetAddressOf());
+
+		D3D11_MAPPED_SUBRESOURCE ms;
+
+		RtlZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+		m_pDriver->get().pCtx->Map(m_pIndexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms); 
+		memcpy(ms.pData, m_pVertex, sizeof(m_pVertex));
+		m_pDriver->get().pCtx->Unmap(m_pIndexBuffer.Get(), 0);
 
 		if (FAILED(m_hResult))
 		{

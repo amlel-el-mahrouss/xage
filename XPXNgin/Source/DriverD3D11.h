@@ -51,13 +51,13 @@ namespace XPX::Renderer::DX11
 {
 	namespace Details
 	{
-		__declspec(align(16)) struct VERTEX
+		struct VERTEX
 		{
 			XMVECTOR position;
 			XMVECTOR color;
 		};
 
-		__declspec(align(16)) struct CBUFFER
+		struct CBUFFER
 		{
 			XMMATRIX view;
 			XMMATRIX world;
@@ -170,18 +170,19 @@ namespace XPX::Renderer::DX11
 			ID3D10Blob* pErrorBlob{ nullptr };
 			D3D11_BUFFER_DESC matrixBufferDesc{};
 
+		public:
 			HRESULT create_input_layout(ID3D11Device* device);
 
 			template <typename StructSz>
 			HRESULT create_matrix_buffer(ID3D11Device* device);
 			
+		public:
 			WRL::ComPtr<ID3D11HullShader> pHull;
 			WRL::ComPtr<ID3D11PixelShader> pPixel;
 			WRL::ComPtr<ID3D11VertexShader> pVertex;
 			WRL::ComPtr<ID3D11Buffer> pMatrixBuffer;
 			WRL::ComPtr<ID3D11InputLayout> pInputLayout;
-			
-			std::vector<D3D11_INPUT_ELEMENT_DESC> input_layouts;
+			std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayouts;
 
 		};
 
@@ -223,6 +224,7 @@ namespace XPX::Renderer::DX11
 		XPLICIT_COPY_DEFAULT(RenderComponentD3D11);
 
 	public:
+		void push(const Color<float>& vert);
 		void push(const Vector<float>& vert);
 		void push_shader(ShaderSystemD3D11* system) noexcept;
 
@@ -244,6 +246,7 @@ namespace XPX::Renderer::DX11
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;
+		std::vector<Color<float>> m_colorVectors;
 		std::vector<Vector<float>> m_arrayVerts;
 
 		D3D11_SUBRESOURCE_DATA m_vertexData;
