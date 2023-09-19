@@ -265,6 +265,8 @@ public:
 				}
 			}
 
+			DVFromRoXML(params);
+
 			lua_pushboolean(L, true);
 			return 1;
 		}
@@ -398,13 +400,13 @@ static int lua_DestroyMesh(lua_State* L)
 						part->group_name() == parent)
 					{
 						XPX::ComponentSystem::get_singleton_ptr()->remove(part);
-						return 0;
+						return;
 					}
 				}
 			}
 
 			XPLICIT_INFO(name + " has not been found on parent: " + parent + ".");
-			}, name_str, parent_str);
+		}, name_str, parent_str);
 
 		job.detach();
 	}
