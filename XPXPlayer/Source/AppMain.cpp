@@ -68,12 +68,37 @@ int main(int argc, char** argv)
 		{
 			if (MessageBox(nullptr, L"You're going to see a demo of the in-coming D11RS, proceed?", L"DirectX 11 Rendering System.", MB_OKCANCEL) == IDOK)
 			{
+				using namespace XPX::Renderer::DX11;
+
 				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (D11RS)", "XPXPlayerDirectXInDev", hInst);
 
 				XplicitLoadBaseLua();
 				XplicitLoadClientLua();
 
-				XPX::Renderer::DX11::DriverSystemD3D11* drv11 = new XPX::Renderer::DX11::DriverSystemD3D11(win->get().WindowHandle);
+				DriverSystemD3D11* drv11 = new DriverSystemD3D11(win->get().WindowHandle);
+
+				auto shader_vertex = D3D11ShaderHelper1::make_shader<XPX::Renderer::DX11::XPLICIT_SHADER_TYPE::Vertex>(
+					L"C:/Users/amlal/XPXEngine/Shaders/Vertex.hlsl", 
+					"VS", 
+					drv11);
+
+				auto shader_pixel = D3D11ShaderHelper1::make_shader<XPX::Renderer::DX11::XPLICIT_SHADER_TYPE::Vertex>(
+					L"C:/Users/amlal/XPXEngine/Shaders/Vertex.hlsl",
+					"VS",
+					drv11);
+
+				RenderComponentD3D11* component_d3d11 = XPX::ComponentSystem::get_singleton_ptr()->add<RenderComponentD3D11>();
+
+				XPLICIT_ASSERT(component_d3d11);
+
+				component_d3d11->push_shader(shader_pixel);
+				component_d3d11->push_shader(shader_vertex);
+
+				component_d3d11->push(XPX::Vector<float>(0, 0.5, 0));
+				component_d3d11->push(XPX::Vector<float>(0.45f, -0.5, 0.0f));
+				component_d3d11->push(XPX::Vector<float>(-0.45f, 0.5, 0.0f));
+
+				component_d3d11->create();
 
 				while (true)
 				{

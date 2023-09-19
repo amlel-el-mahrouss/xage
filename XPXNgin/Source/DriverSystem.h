@@ -65,8 +65,8 @@ namespace XPX::Renderer
 		ShaderSystem() = delete;
 
 	public:
-		explicit ShaderSystem(const PChar* filename, uint8_t format = FORMAT_HLSL)
-			: m_shader(filename), m_type(format)
+		explicit ShaderSystem(const PChar* filename, uint8_t type, uint8_t format = FORMAT_HLSL)
+			: m_shader(filename), m_format(format)
 		{}
 
 		virtual ~ShaderSystem() = default;
@@ -75,12 +75,14 @@ namespace XPX::Renderer
 		ShaderSystem(const ShaderSystem&) = default;
 
 		const PString& shader() noexcept { return m_shader; }
+		const uint8_t& format() noexcept { return m_format; }
 		const uint8_t& type() noexcept { return m_type; }
 
 	public:
 		virtual int compile() = 0;
 
 	protected:
+		uint8_t m_format;
 		PString m_shader;
 		uint8_t m_type;
 

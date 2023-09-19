@@ -142,14 +142,14 @@ template <XPX::Renderer::DX11::XPLICIT_SHADER_TYPE ShaderType>
 XPX::Renderer::DX11::ShaderSystemD3D11* XPX::Renderer::DX11::D3D11ShaderHelper1::make_shader(
 	const PChar* filename,
 	const char* entrypoint,
-	std::unique_ptr<XPX::Renderer::DX11::DriverSystemD3D11>& driver
+	XPX::Renderer::DX11::DriverSystemD3D11* driver
 )
 {
 	if (!entrypoint ||
 		*entrypoint == 0)
 		return nullptr;
 
-	XPX::Renderer::DX11::ShaderSystemD3D11* shader_system = new XPX::Renderer::DX11::ShaderSystemD3D11(filename);
+	XPX::Renderer::DX11::ShaderSystemD3D11* shader_system = new XPX::Renderer::DX11::ShaderSystemD3D11(filename, ShaderType);
 
 	if (shader_system)
 	{
@@ -160,21 +160,21 @@ XPX::Renderer::DX11::ShaderSystemD3D11* XPX::Renderer::DX11::D3D11ShaderHelper1:
 		{
 		case XPLICIT_SHADER_TYPE::Vertex:
 		{
-			if (create_vertex_shader(driver.get(), shader_system))
+			if (create_vertex_shader(driver, shader_system))
 				return shader_system;
 
 			break;
 		}
 		case XPLICIT_SHADER_TYPE::Pixel:
 		{
-			if (create_pixel_shader(driver.get(), shader_system))
+			if (create_pixel_shader(driver, shader_system))
 				return shader_system;
 
 			break;
 		}
 		case XPLICIT_SHADER_TYPE::Hull:
 		{
-			if (create_hull_shader(driver.get(), shader_system))
+			if (create_hull_shader(driver, shader_system))
 				return shader_system;
 
 			break;

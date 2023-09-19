@@ -337,6 +337,15 @@ namespace XPX::Renderer::DX11
 	{
 		if (m_arrayVerts.empty())
 			return;
+		
+		auto it = std::find_if(m_pShader.cbegin(), m_pShader.cend(), [](ShaderSystemD3D11* shader) -> bool {
+			return (XPLICIT_SHADER_TYPE)shader->type() == XPLICIT_SHADER_TYPE::Pixel;
+		});
+
+		bool has_pixel = false;
+
+		if (it != m_pShader.cend())
+			has_pixel = true;
 
 		RtlZeroMemory(&m_vertexData, sizeof(D3D11_SUBRESOURCE_DATA));
 		RtlZeroMemory(&m_vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -356,24 +365,13 @@ namespace XPX::Renderer::DX11
 				m_arrayVerts[vertex_index].Z,
 				0.f);
 		
-			m_pVertex[vertex_index].color = XMVectorSet(1.f,
-				1.f,
-				1.f,
-				1.f);
-
 			++m_iVertexCnt;
 		}
 
-		m_vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		m_vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 		m_vertexBufferDesc.ByteWidth = sizeof(Details::VERTEX) * m_iVertexCnt;
 		m_vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		m_vertexBufferDesc.CPUAccessFlags = 0;
-		m_vertexBufferDesc.MiscFlags = 0;
-		m_vertexBufferDesc.StructureByteStride = 0;
-
-		m_vertexData.pSysMem = m_pVertex;
-		m_vertexData.SysMemPitch = 0;
-		m_vertexData.SysMemSlicePitch = 0;
+		m_vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 		m_hResult = m_pDriver->get().pDevice->CreateBuffer(&m_vertexBufferDesc, &m_vertexData, m_pVertexBuffer.GetAddressOf());
 		

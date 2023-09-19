@@ -135,6 +135,13 @@ namespace XPX::Renderer::DX11
 
 	};
 
+	enum class XPLICIT_SHADER_TYPE
+	{
+		Vertex,
+		Pixel,
+		Hull,
+	};
+
 	XPLICIT_API std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd);
 
 	class XPLICIT_API ShaderSystemD3D11 final : public ShaderSystem
@@ -142,8 +149,8 @@ namespace XPX::Renderer::DX11
 	public:
 		ShaderSystemD3D11() = delete;
 		
-		explicit ShaderSystemD3D11(const PChar* filename)
-			: ShaderSystem(filename, FORMAT_HLSL), m_data()
+		explicit ShaderSystemD3D11(const PChar* filename, XPLICIT_SHADER_TYPE fmt)
+			: ShaderSystem(filename, (uint8_t)fmt, FORMAT_HLSL), m_data()
 		{}
 
 		~ShaderSystemD3D11() override;
@@ -255,13 +262,6 @@ namespace XPX::Renderer::DX11
 
 	};
 
-	enum class XPLICIT_SHADER_TYPE
-	{
-		Vertex,
-		Pixel,
-		Hull,
-	};
-
 	class XPLICIT_API D3D11ShaderHelper1 final
 	{
 	public:
@@ -269,7 +269,7 @@ namespace XPX::Renderer::DX11
 		static ShaderSystemD3D11* make_shader(
 			const PChar* filename,
 			const char* entrypoint,
-			std::unique_ptr<DriverSystemD3D11>& driver
+			DriverSystemD3D11* driver
 		);
 
 	};
