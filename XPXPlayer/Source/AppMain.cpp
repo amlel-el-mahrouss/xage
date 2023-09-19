@@ -64,18 +64,27 @@ int main(int argc, char** argv)
         XPX::String cmd_line = argv[1];
 #endif
 
-		if (cmd_line == "/VkInDev")
+		if (cmd_line == "/DirectXInDev")
 		{
-			if (MessageBox(nullptr, L"You're going to see a demo of the in-coming VRS, proceed?", L"Vulkan Rendering System.", MB_OKCANCEL) == IDOK)
+			if (MessageBox(nullptr, L"You're going to see a demo of the in-coming D11RS, proceed?", L"DirectX 11 Rendering System.", MB_OKCANCEL) == IDOK)
 			{
-				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (Vulkan Rendering System)", "XPXPlayerVkDev", hInst);
+				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (D11RS)", "XPXPlayerDirectXInDev", hInst);
 
 				XplicitLoadBaseLua();
 				XplicitLoadClientLua();
 
+				XPX::Renderer::DX11::DriverSystemD3D11* drv11 = new XPX::Renderer::DX11::DriverSystemD3D11(win->get().WindowHandle);
+
 				while (true)
 				{
 					win->update();
+
+					drv11->begin_scene(1, 0.5, 0.5, 0.5, true, true);
+
+					XPX::ComponentSystem::get_singleton_ptr()->update();
+					XPX::EventSystem::get_singleton_ptr()->update();
+
+					drv11->end_scene();
 				}
 
 				delete win; // still though, wanna do that. even though windows still does free the pool.

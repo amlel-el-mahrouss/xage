@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XPXNgin (XplicitRenderer)
+ *			XPXNgin (RigMan)
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: DriverOpenGL.h
