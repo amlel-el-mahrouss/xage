@@ -72,32 +72,6 @@ static int lua_Info(lua_State* L)
 	return 0;
 }
 
-static bool XPX_PLACE_NAME_SET;
-
-class XPXWorldService
-{
-public:
-	static const char* XPX_PLACE_NAME;
-
-public:
-	static int get_place_name(lua_State* L)
-	{
-		lua_pushstring(L, XPX_PLACE_NAME);
-		return 1;
-	}
-
-	static int set_place_name(lua_State* L)
-	{
-		if (luaL_checkstring(L, 1))
-			XPX_PLACE_NAME = lua_tostring(L, 1);
-
-		return 0;
-	}
-
-};
-
-const char* XPXWorldService::XPX_PLACE_NAME = "";
-
 XPLICIT_API void XplicitLoadBaseLua()
 {
 	XPX::RLua::RuntimeClass<XPXUri> uri;
@@ -106,9 +80,6 @@ XPLICIT_API void XplicitLoadBaseLua()
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world = {}");
 	
-	XPX::RLua::RuntimeClass<XPXWorldService> world_service;
-	world_service.begin_class("WorldService").append_prop("Name", &XPXWorldService::get_place_name, &XPXWorldService::set_place_name).end_class();
-
 	// have a look at GameVar if it ever crashes.
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Settings = {}");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Players = {}");
