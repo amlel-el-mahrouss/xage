@@ -98,6 +98,7 @@ int main(int argc, char** argv)
 				component_d3d11->push(XPX::Vector<float>(0.45f, -0.5, 0.0f));
 				component_d3d11->push(XPX::Vector<float>(-0.45f, 0.5, 0.0f));
 
+				component_d3d11->set_driver(drv11);
 				component_d3d11->create();
 
 				while (true)
