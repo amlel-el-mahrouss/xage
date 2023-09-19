@@ -87,21 +87,35 @@ namespace XPX
 	class XPXLoginWatchService
 	{
 	public:
-		std::vector<lua_CFunction> mFuncs;
+		std::vector<void*> mFuncs;
 
 	public:
 		static int connect(lua_State* L)
 		{
 			XPXLoginWatchService* service = (XPXLoginWatchService*)lua_touserdata(L, 1);
 
-			if (!XPX_LOGIN_WATCHER)
+			if (!XPX_LOGIN_WATCHER &&
+				service)
+			{
 				XPX_LOGIN_WATCHER = service;
+			}
+			else
+			{
+				delete service;
+				service = XPX_LOGIN_WATCHER;
+			}
 
-			lua_CFunction func = lua_tocfunction(L, 2);
+			const void* func = nullptr;
+
+			if (lua_isfunction(L, 2))
+			{
+				luaL_ref(L, 2);
+				func = lua_topointer(L, 2);
+			}
 
 			if (func)
 			{
-				service->mFuncs.push_back(func);
+				service->mFuncs.push_back(const_cast<void*>(func));
 
 				lua_pushboolean(L, true);
 				return 1;
@@ -242,11 +256,11 @@ namespace XPX
 
 						if (XPX_LOGIN_WATCHER)
 						{
-							for (auto* fn : XPX_LOGIN_WATCHER->mFuncs)
+							for (auto fn : XPX_LOGIN_WATCHER->mFuncs)
 							{
 								if (fn)
 								{
-									lua_pushcfunction(Lua::CLuaStateManager::get_singleton_ptr()->state(), fn);
+									lua_pushcclosure(Lua::CLuaStateManager::get_singleton_ptr()->state(), (lua_CFunction)fn, -1);
 									lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, LUA_MULTRET, 0);
 									lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
 								}

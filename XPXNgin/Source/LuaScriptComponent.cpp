@@ -59,8 +59,7 @@ namespace XPX
 
 			if (XPX::Lua::CLuaStateManager::get_singleton_ptr()->run(path))
 			{
-				if (lua_isstring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1))
-					XPLICIT_CRITICAL(lua_tostring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
+				XPLICIT_CRITICAL(lua_tostring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
 			}
 
 			clua_unlock();

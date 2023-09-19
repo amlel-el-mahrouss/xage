@@ -31,5 +31,6 @@ namespace XPX
 	{
 		XPX_PART_ID,
 		XPX_MESH_ID,
+		XPX_SPHERE_ID,
 	};
 }

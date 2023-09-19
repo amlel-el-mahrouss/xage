@@ -100,12 +100,7 @@ namespace XPX::Lua
 
 			if (auto err = (luaL_dofile(mL, file.c_str()));
 				err != LUA_OK)
-			{
-				String _err = lua_tostring(mL, -1);
-				this->i_clean(1);
-
 				return err;
-			}
 
 			return 0;
 		}
@@ -115,15 +110,9 @@ namespace XPX::Lua
 			if (str.empty())
 				return -1;
 
-			if (auto err = (luaL_dostring(mL, str.c_str())); err)
-			{
-				String _err = lua_tostring(mL, -1);
-				XPLICIT_ERROR(_err);
-
-				this->i_clean(1);
-
+			if (auto err = (luaL_dostring(mL, str.c_str())); 
+				err != LUA_OK)
 				return err;
-			}
 
 			return 0;
 		}
