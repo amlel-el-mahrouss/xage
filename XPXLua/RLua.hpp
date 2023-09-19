@@ -42,8 +42,7 @@ namespace XPX::RLua
 		// Free RuntimeClass instance by Lua garbage collection
 		static int on_delete(lua_State* L)
 		{
-			delete delete_internal(lua_touserdata(L, 1));
-
+			delete_internal(lua_touserdata(L, 1));
 			return 0;
 		}
 
@@ -65,8 +64,8 @@ namespace XPX::RLua
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			lua_setglobal(L, name);
-			lua_register(L, name + ".borrow", on_new);
+			lua_setglobal(L, name.c_str());
+			lua_register(L, (name + ".borrow").c_str(), on_new);
 
 			luaL_newmetatable(L, name.c_str());
 
