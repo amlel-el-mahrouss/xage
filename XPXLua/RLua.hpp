@@ -69,6 +69,12 @@ namespace XPX::RLua
 			luaL_newmetatable(L, Class::name());
 
 			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
+			lua_setfield(L, -2, "__gc");
+
+			lua_pushvalue(L, -1);
+			lua_setfield(L, -2, "__index");
+
+			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
 			lua_setfield(L, -2, "release");
 
 			lua_pushcfunction(L, &RuntimeClass<Class>::on_new);
@@ -111,15 +117,6 @@ namespace XPX::RLua
 		RuntimeClass& end_class() noexcept
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
-
-			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
-			lua_setfield(L, -2, "__gc");
-
-			lua_pushvalue(L, -1);
-			lua_setfield(L, -2, "__index");
-
-			lua_setmetatable(L, -2);
-			lua_setglobal(L, mName.c_str());
 
 			return *this;
 		}

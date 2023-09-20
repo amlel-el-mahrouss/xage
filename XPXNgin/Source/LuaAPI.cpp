@@ -51,8 +51,8 @@ public:
 	static int parse_url(lua_State* L)
 	{
 		XPXUri* uri = (XPXUri*)lua_touserdata(L, 1);
-
 		XPX::String uri_str = lua_tostring(L, 2);
+
 		uri_str = uri_str.erase(uri_str.find(XPLICIT_XASSET_PROTOCOL), strlen(XPLICIT_XASSET_PROTOCOL));
 
 		if (!uri_str.empty())
