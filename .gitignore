@@ -37,8 +37,6 @@ obj/
 
 *.d
 
-packages.config
-
 *.cso
 
 Docs/html/
