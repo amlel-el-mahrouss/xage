@@ -37,6 +37,7 @@ namespace XPX::RLua
 		{
 			*reinterpret_cast<Class**>(lua_newuserdata(L, sizeof(Class*))) = new Class();
 
+			XPLICIT_INFO("Class::on_new");
 			return 1;
 		}
 

@@ -57,9 +57,30 @@ namespace XPX
 
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_ThisSleep, "wait");
 
-			if (luaL_dofile(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), path.c_str()))
+			XPX::String code;
+
+			std::ifstream if_path(path);
+			if_path.seekg(SEEK_END);
+
+			auto len = if_path.tellg();
+
+			if_path.seekg(SEEK_SET);
+
+			code.reserve(len);
+
+			XPX::String tmp = "";
+
+			bool comment = false;
+
+			while (std::getline(if_path, tmp))
+				code += tmp + "\r\n";
+
+			clua_lock();
+
+			if (auto ret = self->run_string(code);
+				!ret.empty())
 			{
-				XPLICIT_CRITICAL(lua_tostring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
+				XPLICIT_CRITICAL(ret);
 			}
 
 			clua_unlock();

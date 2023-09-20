@@ -4,6 +4,11 @@ NOTICE:
 There is a WiP effort to port XPXNgin to the Macintosh.
 Feel free to help.
 
+NOTICE:
+=======
+
+Use premake to regenerate if we happen to broke the project files.
+
 REQUIREMENTS:
 =============
 
@@ -27,6 +32,6 @@ INSTALLING:
 - Download DirectXTK for the SoundNgin.h header. (XPXPlayer) via NuGet.
 
 ==============================================================
-Copyright Xplicit Inc, Amlal El Mahrouss, all rights reserved.
+Copyright Xplicit Corp, Amlal El Mahrouss, all rights reserved.
 ==============================================================
 

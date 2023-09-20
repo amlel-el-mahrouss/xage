@@ -80,63 +80,11 @@ namespace XPX
 		return true;
 	}
 
-	class XPXLoginWatchService;
-
-	static XPXLoginWatchService* XPX_LOGIN_WATCHER = nullptr;
-
-	class XPXLoginWatchService
-	{
-	public:
-		static const char* name() { return "LoginWatchService"; }
-
-	public:
-		std::vector<void*> mFuncs;
-
-	public:
-		static int connect(lua_State* L)
-		{
-			XPXLoginWatchService* service = (XPXLoginWatchService*)lua_touserdata(L, 1);
-
-			if (!XPX_LOGIN_WATCHER &&
-				service)
-			{
-				XPX_LOGIN_WATCHER = service;
-			}
-			else if (!service)
-			{
-				lua_pushboolean(L, false);
-				return 1;
-			}
-
-			const void* func = nullptr;
-
-			if (lua_isfunction(L, 2))
-			{
-				func = lua_topointer(L, 2);
-			}
-
-			if (func)
-			{
-				service->mFuncs.push_back(const_cast<void*>(func));
-
-				lua_pushboolean(L, true);
-				return 1;
-			}
-
-			lua_pushboolean(L, false);
-			return 1;
-		}
-
-	};
-
 	LoginEvent::LoginEvent()
 		:
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0)
 	{
-		RLua::RuntimeClass<XPXLoginWatchService> watcher;
-		watcher.begin_class().append_proc("Connect", &XPXLoginWatchService::connect).end_class();
-
 		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
 		{
 			HumanoidComponent* component = ComponentSystem::get_singleton_ptr()->add<HumanoidComponent>();
@@ -253,19 +201,6 @@ namespace XPX
 
 								NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
 									(NetworkPacket*)&repl_packet);
-							}
-						}
-
-						if (XPX_LOGIN_WATCHER)
-						{
-							for (auto fn : XPX_LOGIN_WATCHER->mFuncs)
-							{
-								if (fn)
-								{
-									lua_pushcclosure(Lua::CLuaStateManager::get_singleton_ptr()->state(), (lua_CFunction)fn, -1);
-									lua_pcall(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1, LUA_MULTRET, 0);
-									lua_pop(Lua::CLuaStateManager::get_singleton_ptr()->state(), -1);
-								}
 							}
 						}
 					}, peer_idx);
