@@ -75,9 +75,15 @@ namespace XPX::RLua
 			lua_pushvalue(mL, -1);
 			lua_setfield(mL, -2, "__index");
 
+			lua_pushstring(mL, Class::name());
+			lua_setfield(mL, -2, "__tostring");
+
+			lua_pushvalue(mL, -1);
+			lua_setfield(mL, -2, "__metatable");
+
 			*this = this->append_proc("__gc", &RuntimeClass<Class>::on_delete);
-			*this = this->append_proc("borrow", &RuntimeClass<Class>::on_delete);
-			*this = this->append_proc("release", &RuntimeClass<Class>::on_new);
+			*this = this->append_proc("borrow", &RuntimeClass<Class>::on_new);
+			*this = this->append_proc("release", &RuntimeClass<Class>::on_delete);
 
 			mName = Class::name();
 
@@ -94,7 +100,7 @@ namespace XPX::RLua
 
 		RuntimeClass& end_class() noexcept
 		{
-			lua_pop(mL, 1);
+			lua_setmetatable(mL, -2);
 
 			return *this;
 		}
