@@ -41,14 +41,8 @@ namespace XPX
     LoadingComponent::LoadingComponent()
         :
         mNetwork(nullptr),
-        mTimeout(0),
-        mLoadingFrame()
+        mTimeout(0)
     {
-        mLoadingFrame.BackgroundColor.setRed(45);
-        mLoadingFrame.BackgroundColor.setGreen(45);
-        mLoadingFrame.BackgroundColor.setBlue(45);
-        mLoadingFrame.BackgroundColor.setAlpha(255);
-
         auto cam = ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
         CAD->getSceneManager()->setActiveCamera(cam->get());
     }
@@ -66,8 +60,6 @@ namespace XPX
 
         if (!self ||
             !self->mNetwork) return;
-
-        self->mLoadingFrame.update(self->mLoadingFrame.BackgroundColor);
 
         NetworkPacket packet{};
         self->mNetwork->read(packet);
@@ -167,12 +159,6 @@ namespace XPX
 
         if (mNetwork->connect(ip.get().c_str(), ip.port().c_str()))
         {
-            mLoadingFrame.W = CAD->getVideoDriver()->getScreenSize().Width;
-            mLoadingFrame.H = CAD->getVideoDriver()->getScreenSize().Height;
-
-            mLoadingFrame.X = 0;
-            mLoadingFrame.Y = 0;
-
             Thread thrd([&]() {
                 while (StartLoad)
                 {
@@ -200,6 +186,8 @@ namespace XPX
 
     void LoadingComponent::reset() noexcept
     {
+        ComponentSystem::get_singleton_ptr()->remove(this->mNetwork);
+
         ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
             CAD->closeDevice();
             }, POPUP_TYPE::NETWORK);

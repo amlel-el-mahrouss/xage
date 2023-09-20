@@ -19,7 +19,7 @@ namespace XPX
 	class LoadingComponent final : public Component
 	{
 	public:
-		explicit LoadingComponent();
+		LoadingComponent();
 		~LoadingComponent() override;
 
 	public:
@@ -30,21 +30,20 @@ namespace XPX
 		static void update(void* class_ptr);
 
 	public:
-		// starts to connect to specified IP:PORT.
+		/// <summary>
+		/// Connects with specific ip:port
+		/// </summary>
+		/// <param name="ip">the uri containing the ip;</param>
 		void connect(Utils::UriParser& ip);
 
-		// resets the timeout and run..
-		// in case of a watchdog..
+		/// <summary>
+		/// reset connection, removes network component.
+		/// </summary>
 		void reset() noexcept;
 
 	private:
 		NetworkComponent* mNetwork;
-
-	private:
-		ImGUI::UIFrame mLoadingFrame;
-
-	private:
-		std::int64_t mTimeout; /* Network Timeout, incremented on each connection failure. */
+		std::int64_t mTimeout; /* Network Timeout, incremented on each dial failure. */
 
 	private:
 		static bool StartLoad; /* Should we seek for a connection? */
