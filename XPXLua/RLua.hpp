@@ -37,6 +37,8 @@ namespace XPX::RLua
 		{
 			*reinterpret_cast<Class**>(lua_newuserdata(L, sizeof(Class*))) = new Class();
 
+			luaL_setmetatable(L, Class::name());
+
 			XPLICIT_INFO("Class::on_new");
 			return 1;
 		}
@@ -66,18 +68,16 @@ namespace XPX::RLua
 	public:
 		RuntimeClass& begin_class() noexcept
 		{
-			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
+			mL = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			luaL_newmetatable(L, Class::name());
+			luaL_newmetatable(mL, Class::name());
 
-			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
-			lua_setfield(L, -2, "__gc");
+			lua_pushvalue(mL, -1);
+			lua_setfield(mL, -2, "__index");
 
-			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
-			lua_setfield(L, -2, "release");
-
-			lua_pushcfunction(L, &RuntimeClass<Class>::on_new);
-			lua_setfield(L, -2, "borrow");
+			*this = this->append_proc("__gc", &RuntimeClass<Class>::on_delete);
+			*this = this->append_proc("borrow", &RuntimeClass<Class>::on_delete);
+			*this = this->append_proc("release", &RuntimeClass<Class>::on_new);
 
 			mName = Class::name();
 
@@ -86,41 +86,15 @@ namespace XPX::RLua
 
 		RuntimeClass& append_proc(String fn_name, RLuaProc fn) noexcept
 		{
-			RLUA_ASSERT(fn && !fn_name.empty());
-
-			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
-
-			lua_pushcfunction(L, fn);
-			lua_setfield(L, -2, fn_name.c_str());
-
-			return *this;
-		}
-
-		RuntimeClass& append_prop(String name, RLuaProc getter, RLuaProc setter) noexcept
-		{
-			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
-
-			luaL_newmetatable(L, name.c_str());
-
-			lua_pushcfunction(L, getter);
-			lua_setfield(L, -3, "__index");
-
-			lua_pushcfunction(L, setter);
-			lua_setfield(L, -3, "__newindex");
-
-			lua_setfield(L, -2, name.c_str());
+			lua_pushcfunction(mL, fn);
+			lua_setfield(mL, -2, fn_name.c_str());
 
 			return *this;
 		}
 
 		RuntimeClass& end_class() noexcept
 		{
-			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
-
-			lua_pushvalue(L, -1);
-			lua_setfield(L, -2, "__index");
-
-			lua_setmetatable(L, -2);
+			lua_pop(mL, 1);
 
 			return *this;
 		}
@@ -129,6 +103,7 @@ namespace XPX::RLua
 		std::vector<std::tuple<String, lua_CFunction>> mFuncs;
 
 	private:
+		lua_State* mL;
 		String mName;
 
 	};
