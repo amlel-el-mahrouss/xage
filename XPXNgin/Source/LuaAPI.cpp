@@ -24,7 +24,10 @@ static int lua_DestroyScript(lua_State* L)
 	XPX::LuaScriptComponent* script = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::LuaScriptComponent>(name);
 
 	if (script)
+	{
+		XPLICIT_INFO("Removing ScriptComponent...");
 		XPX::ComponentSystem::get_singleton_ptr()->remove(script);
+	}
 
 	return 0;
 }
@@ -32,9 +35,13 @@ static int lua_DestroyScript(lua_State* L)
 class XPXUri
 {
 public:
+	static const char* name() { return "Engine"; }
+
+public:
 	XPX::Utils::UriParser Uri = { XPLICIT_XASSET_PROTOCOL };
 
-	XPXUri() {}
+public:
+	XPXUri() = default;
 	~XPXUri() = default;
 
 public:
@@ -75,7 +82,7 @@ static int lua_Info(lua_State* L)
 XPLICIT_API void XplicitLoadBaseLua()
 {
 	XPX::RLua::RuntimeClass<XPXUri> uri;
-	uri.begin_class("Uri").append_proc("Parse", &XPXUri::parse_url).end_class();
+	uri.begin_class().append_proc("Parse", &XPXUri::parse_url).end_class();
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world = {}");

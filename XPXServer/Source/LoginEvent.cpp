@@ -87,6 +87,9 @@ namespace XPX
 	class XPXLoginWatchService
 	{
 	public:
+		static const char* name() { return "LoginWatchService"; }
+
+	public:
 		std::vector<void*> mFuncs;
 
 	public:
@@ -132,7 +135,7 @@ namespace XPX
 		mPlayerCount(0)
 	{
 		RLua::RuntimeClass<XPXLoginWatchService> watcher;
-		watcher.begin_class("LoginWatchService").append_proc("Connect", &XPXLoginWatchService::connect).end_class();
+		watcher.begin_class().append_proc("Connect", &XPXLoginWatchService::connect).end_class();
 
 		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
 		{

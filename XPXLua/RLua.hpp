@@ -12,8 +12,8 @@
  /* Author: Amlal El Mahrouss */
  /* ReflectedLua for the XplicitNgine. */
 
-#define XPLICIT_RLUA_NAME "ReflectedLua"
-#define XPLICIT_RLUA_DESCRIPTION "ReflectedLua extension for the XplicitNgine."
+#define XPLICIT_RLUA_NAME "RLua"
+#define XPLICIT_RLUA_DESCRIPTION "RLua extension for the XPXNgine."
 #define XPLICIT_RLUA_AUTHOR "Amlal El Mahrouss"
 
 #define RLUA_ASSERT(X) XPLICIT_ASSERT(X)
@@ -35,7 +35,8 @@ namespace XPX::RLua
 	private:
 		static int on_new(lua_State* L)
 		{
-			*reinterpret_cast<RuntimeClass**>(lua_newuserdata(L, sizeof(RuntimeClass*))) = new RuntimeClass();
+			*reinterpret_cast<Class**>(lua_newuserdata(L, sizeof(Class*))) = new Class();
+
 			return 1;
 		}
 
@@ -60,38 +61,42 @@ namespace XPX::RLua
 		}
 
 	public:
-		RuntimeClass& begin_class(String name, RLuaProc on_new = RuntimeClass<Class>::on_new, RLuaProc on_delete = RuntimeClass<Class>::on_delete)
+		RuntimeClass& begin_class() noexcept
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			static const luaL_Reg meta[] = {
-				{ "__gc", on_delete },
-				{ "release", on_delete },
-				{ "borrow", on_new },
-				{ nullptr, nullptr }
-			};
+			luaL_newmetatable(L, Class::name());
 
-			luaL_newmetatable(L, name.c_str());
+			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
+			lua_setfield(L, -2, "__gc");
 
-			luaL_setfuncs(L, meta, 0);
+			lua_pushvalue(L, -1);
+			lua_setfield(L, -2, "__index");
 
-			mName = name;
+			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
+			lua_setfield(L, -2, "release");
+
+			lua_pushcfunction(L, &RuntimeClass<Class>::on_new);
+			lua_setfield(L, -2, "borrow");
+
+			mName = Class::name();
 
 			return *this;
 		}
 
-		RuntimeClass& append_proc(String fn_name, RLuaProc fn)
+		RuntimeClass& append_proc(String fn_name, RLuaProc fn) noexcept
 		{
 			RLUA_ASSERT(fn && !fn_name.empty());
 
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			mFuncs.push_back({ fn_name.c_str(), fn});
+			lua_pushcfunction(L, fn);
+			lua_setfield(L, -2, fn_name.c_str());
 
 			return *this;
 		}
 
-		RuntimeClass& append_prop(String name, RLuaProc getter, RLuaProc setter)
+		RuntimeClass& append_prop(String name, RLuaProc getter, RLuaProc setter) noexcept
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
@@ -108,17 +113,11 @@ namespace XPX::RLua
 			return *this;
 		}
 
-		RuntimeClass& end_class()
+		RuntimeClass& end_class() noexcept
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
-			for (auto& tupl : mFuncs)
-			{
-				lua_pushcfunction(L, std::get<1>(tupl)); 
-				lua_setfield(L, -2, std::get<0>(tupl).c_str());
-			}
-
-			lua_pop(L, 1);
+			lua_setmetatable(L, -2);
 
 			return *this;
 		}

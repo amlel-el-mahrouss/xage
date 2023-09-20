@@ -192,6 +192,9 @@ static int lua_IsRightDown(lua_State* L)
 class XPXEngineBridge
 {
 public:
+	static const char* name() { return "Engine"; }
+
+public:
 	static int new_instance(lua_State* L)
 	{
 		XPX::String component_name = lua_tostring(L, 1);
@@ -421,7 +424,7 @@ static int lua_DestroyMesh(lua_State* L)
 void XplicitLoadClientLua() noexcept
 {
 	XPX::RLua::RuntimeClass<XPXEngineBridge> instance;
-	instance.begin_class("Engine", &XPXEngineBridge::new_instance).end_class();
+	instance.begin_class().append_proc("new", &XPXEngineBridge::new_instance).end_class();
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "playSound");
 
