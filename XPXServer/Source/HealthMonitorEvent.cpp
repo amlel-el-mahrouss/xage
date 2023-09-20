@@ -5,7 +5,7 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: HealthMonitorEvent.cpp
- *			Purpose: Spawn and Death handling
+ *			Purpose: Spawn and Death handler
  *
  * =====================================================================
  */
