@@ -57,7 +57,7 @@ namespace XPX
 
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_ThisSleep, "wait");
 
-			if (XPX::Lua::CLuaStateManager::get_singleton_ptr()->run(path))
+			if (luaL_dofile(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), path.c_str()))
 			{
 				XPLICIT_CRITICAL(lua_tostring(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), -1));
 			}
