@@ -36,6 +36,10 @@ namespace XPX::RLua
 		static int on_new(lua_State* L)
 		{
 			*reinterpret_cast<Class**>(lua_newuserdata(L, sizeof(Class*))) = new Class();
+
+			XPLICIT_INFO("Class::on_new");
+
+			lua_pushvalue(L, -1);
 			luaL_setmetatable(L, Class::name());
 
 			return 1;
@@ -44,7 +48,9 @@ namespace XPX::RLua
 		// Free RuntimeClass instance by Lua garbage collection
 		static int on_delete(lua_State* L)
 		{
+			XPLICIT_INFO("Class::on_delete");
 			delete_internal(lua_touserdata(L, 1));
+			
 			return 0;
 		}
 
@@ -70,9 +76,6 @@ namespace XPX::RLua
 
 			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
 			lua_setfield(L, -2, "__gc");
-
-			lua_pushvalue(L, -1);
-			lua_setfield(L, -2, "__index");
 
 			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
 			lua_setfield(L, -2, "release");
@@ -117,6 +120,11 @@ namespace XPX::RLua
 		RuntimeClass& end_class() noexcept
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
+
+			lua_pushvalue(L, -1);
+			lua_setfield(L, -2, "__index");
+
+			lua_setmetatable(L, -2);
 
 			return *this;
 		}

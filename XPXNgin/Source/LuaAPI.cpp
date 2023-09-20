@@ -50,7 +50,7 @@ public:
 public:
 	static int parse_url(lua_State* L)
 	{
-		XPXUri* uri = (XPXUri*)lua_touserdata(L, 1);
+		XPXUri* uri = (XPXUri*)luaL_checkudata(L, 1, XPXUri::name());
 		XPX::String uri_str = lua_tostring(L, 2);
 
 		uri_str = uri_str.erase(uri_str.find(XPLICIT_XASSET_PROTOCOL), strlen(XPLICIT_XASSET_PROTOCOL));
@@ -82,7 +82,7 @@ static int lua_Info(lua_State* L)
 XPLICIT_API void XplicitLoadBaseLua()
 {
 	XPX::RLua::RuntimeClass<XPXUri> uri;
-	uri.begin_class().append_proc("Parse", &XPXUri::parse_url).end_class();
+	uri.begin_class().append_proc("parse", &XPXUri::parse_url).end_class();
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world = {}");
