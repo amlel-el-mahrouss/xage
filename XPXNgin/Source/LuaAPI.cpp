@@ -35,7 +35,7 @@ static int lua_DestroyScript(lua_State* L)
 class XPXUri
 {
 public:
-	static const char* name() { return "Engine"; }
+	static const char* name() { return "Uri"; }
 
 public:
 	XPX::Utils::UriParser Uri = { XPLICIT_XASSET_PROTOCOL };

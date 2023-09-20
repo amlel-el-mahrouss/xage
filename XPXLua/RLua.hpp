@@ -36,6 +36,7 @@ namespace XPX::RLua
 		static int on_new(lua_State* L)
 		{
 			*reinterpret_cast<Class**>(lua_newuserdata(L, sizeof(Class*))) = new Class();
+			luaL_setmetatable(L, Class::name());
 
 			return 1;
 		}
@@ -66,12 +67,6 @@ namespace XPX::RLua
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
 			luaL_newmetatable(L, Class::name());
-
-			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
-			lua_setfield(L, -2, "__gc");
-
-			lua_pushvalue(L, -1);
-			lua_setfield(L, -2, "__index");
 
 			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
 			lua_setfield(L, -2, "release");
@@ -117,7 +112,14 @@ namespace XPX::RLua
 		{
 			auto L = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
+			lua_pushcfunction(L, &RuntimeClass<Class>::on_delete);
+			lua_setfield(L, -2, "__gc");
+
+			lua_pushvalue(L, -1);
+			lua_setfield(L, -2, "__index");
+
 			lua_setmetatable(L, -2);
+			lua_setglobal(L, mName.c_str());
 
 			return *this;
 		}
