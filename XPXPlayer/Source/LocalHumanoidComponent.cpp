@@ -35,7 +35,7 @@ namespace XPX
 		mClass(nullptr),
 		mCharacter(nullptr)
 	{
-		String path = "Contents/Bundles/Idle.dae";
+		String path = "Contents/Humanoid.dae";
 
 		if (is_local_player)
 		{
