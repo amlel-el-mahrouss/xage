@@ -39,8 +39,7 @@ namespace XPX
 
 		for (auto* lhsNode : mWorldNodes)
 		{
-			if (!lhsNode ||
-				lhsNode->is_locked())
+			if (!lhsNode)
 				continue;
 
 			bool touching = false;
@@ -60,25 +59,27 @@ namespace XPX
 				}
 			}
 
-			if (touching)
-				continue;
+			if (!touching &&
+				!lhsNode->is_locked())
+			{
 
-			auto force = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X"),
-				lhsNode->index_as_number<NplicitFloat>("Force.Y"),
-				lhsNode->index_as_number<NplicitFloat>("Force.Z"));
+				auto force = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X"),
+					lhsNode->index_as_number<NplicitFloat>("Force.Y"),
+					lhsNode->index_as_number<NplicitFloat>("Force.Z"));
 
-			auto velocity = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X") * lhsNode->index_as_number<NplicitFloat>("Weight.X"),
-				lhsNode->index_as_number<NplicitFloat>("Force.Y") * lhsNode->index_as_number<NplicitFloat>("Weight.Y"),
-				lhsNode->index_as_number<NplicitFloat>("Force.Z") * lhsNode->index_as_number<NplicitFloat>("Weight.Z"));
+				auto velocity = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X") * lhsNode->index_as_number<NplicitFloat>("Weight.X"),
+					lhsNode->index_as_number<NplicitFloat>("Force.Y") * lhsNode->index_as_number<NplicitFloat>("Weight.Y"),
+					lhsNode->index_as_number<NplicitFloat>("Force.Z") * lhsNode->index_as_number<NplicitFloat>("Weight.Z"));
 
-			lhsNode->pos().add(velocity.X * mDeltaTime,
-				velocity.Y * mDeltaTime,
-				velocity.Z * mDeltaTime);
+				lhsNode->pos().add(velocity.X * mDeltaTime,
+					velocity.Y * mDeltaTime,
+					velocity.Z * mDeltaTime);
 
-			ClassComponent::update(lhsNode);
+				ClassComponent::update(lhsNode);
 
-			lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
-			lhsNode->call_method("Update('PhysicsProcessDone')");
+				lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
+				lhsNode->call_method("Update('PhysicsProcessDone')");
+			}
 
 			NetworkPacket repl_packet{};
 

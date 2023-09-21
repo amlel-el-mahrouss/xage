@@ -101,9 +101,7 @@ namespace XPX
             ComponentSystem::get_singleton_ptr()->add<ChatBoxComponent>(packet.additional_data);
             monitor->ID = packet.additional_data;
 
-            local_player->get_class()->insert("PlayerId", fmt::format("'{}'", monitor->ID).c_str());
-
-            XPLICIT_INFO(monitor->ID);
+            XPLICIT_INFO("XPX_ID:" + monitor->ID);
 
             monitor->Endpoint = XPLICIT_XASSET_ENDPOINT;
 

@@ -24,10 +24,11 @@ namespace XPX
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
 		mCamera = CAD->getSceneManager()->addCameraSceneNode(nullptr);
-
-		mCamera->setFarValue(200.f);
-
+		
 		XPLICIT_ASSERT(mCamera);
+		
+		mCamera->setPosition(vector3df(0, 5, 0));
+		mCamera->setFarValue(200.f);
 
 		mCamera->setName("Camera");
 
