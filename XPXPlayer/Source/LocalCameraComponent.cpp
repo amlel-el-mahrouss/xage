@@ -14,6 +14,7 @@
 #include "LocalCameraComponent.h"
 #include "Application.h"
 #include "MenuUI.h"
+#include "ClientUtils.h"
 
 namespace XPX
 {
@@ -23,9 +24,15 @@ namespace XPX
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = CAD->getSceneManager()->addCameraSceneNode(nullptr);
+		mCamera = CAD->getSceneManager()->addCameraSceneNodeFPS(nullptr);
 		
+		mLight = CAD->getSceneManager()->addLightSceneNode(0, core::vector3df(0, 5, 0),
+		video::SColorf(1.f, 1.0f, 1.0f, 1.0f), 800.0f);
+
 		XPLICIT_ASSERT(mCamera);
+		XPLICIT_ASSERT(mLight);
+
+		LoadSkybox("noonclouds")->setParent(mCamera);
 		
 		mCamera->setPosition(vector3df(0, 5, 0));
 		mCamera->setFarValue(200.f);
@@ -53,6 +60,8 @@ namespace XPX
 
         if (!self)
             return;
+
+		self->mLight->setParent(self->mCamera);
 
 		self->get()->setFOV(self->index_as_number("FOV"));
 

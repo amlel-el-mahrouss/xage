@@ -108,8 +108,6 @@ namespace XPX
             monitor->HTTP = std::make_unique<XHTTPManager>();
             monitor->HTTP->set_endpoint(monitor->Endpoint);
 
-            ImGUI::UIFontHelper::get_label_font()->draw("Acknowledged by server, jumping in...", irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
-
             StartLoad = false;
         }
         else

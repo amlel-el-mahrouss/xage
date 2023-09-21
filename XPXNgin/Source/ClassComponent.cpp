@@ -47,13 +47,13 @@ namespace XPX
 	}
 
 	ClassComponent::ClassComponent(
-		const Vector<NetworkFloat>& position, 
+		const Vector<NetworkFloat>& position,
 		const Vector<NetworkFloat>& size,
 		const Color<NetworkFloat>& color,
 		const char* script,
 		const char* parent,
 		const char* name)
-		: 
+		:
 		ClassComponent::ClassComponent(parent, name)
 	{
 		this->pos() = position;
@@ -73,7 +73,7 @@ namespace XPX
 			std::filesystem::exists(script))
 		{
 			this->script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script));
-			XPLICIT_ASSERT(this->script());	
+			XPLICIT_ASSERT(this->script());
 		}
 
 		this->insert("Force", "{ X = 1, Y = 1, Z = 1 }");
@@ -91,7 +91,18 @@ namespace XPX
 		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
 			mov)
 		{
-			mov->remove_node(this);
+			if (mov->remove_node(this))
+			{
+				NetworkPacket pckt{};
+
+				memcpy(pckt.additional_data, this->mName.data(), this->mName.size());
+
+				pckt.cmd[XPLICIT_REPL_DESTROY] = NETWORK_REPL_CMD_DESTROY;
+
+				static auto server = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+
+				NetworkServerContext::send_all(server, &pckt);
+			}
 		}
 	}
 
@@ -134,6 +145,10 @@ namespace XPX
 				self->pos().Y = self->index_as_number<float>("Position.Y");
 				self->pos().Z = self->index_as_number<float>("Position.Z");
 			}
+
+			self->scale().X = self->index_as_number<float>("Scale.X");
+			self->scale().Y = self->index_as_number<float>("Scale.Y");
+			self->scale().Z = self->index_as_number<float>("Scale.Z");
 		}
 		else
 		{

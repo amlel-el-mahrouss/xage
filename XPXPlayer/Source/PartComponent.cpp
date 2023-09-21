@@ -19,7 +19,7 @@ namespace XPX
 		ClassComponent(pos, scale, clr, nullptr, parent, name),
 		mStud(nullptr)
 	{
-		mStud = CAD->getSceneManager()->addMeshSceneNode(CAD->getSceneManager()->getGeometryCreator()->createCubeMesh());
+		mStud = CAD->getSceneManager()->addCubeSceneNode();
 
 		if (mStud)
 		{

@@ -120,13 +120,18 @@ namespace XPX
 		}
 	}
 
-	void NpMovementServerEvent::insert_node(NpSceneNode node)
+	bool NpMovementServerEvent::insert_node(NpSceneNode node)
 	{
 		if (node)
+		{
 			mWorldNodes.push_back(node);
+			return true;
+		}
+
+		return false;
 	}
 
-	void NpMovementServerEvent::remove_node(NpSceneNode node)
+	bool NpMovementServerEvent::remove_node(NpSceneNode node)
 	{
 		if (node)
 		{
@@ -135,7 +140,10 @@ namespace XPX
 			if (it != mWorldNodes.cend())
 			{
 				mWorldNodes.erase(it);
+				return true;
 			}
 		}
+
+		return false;
 	}
 }

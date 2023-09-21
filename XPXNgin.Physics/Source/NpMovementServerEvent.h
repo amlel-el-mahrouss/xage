@@ -46,8 +46,8 @@ namespace XPX
         void operator()() override;
 
     public:
-        void remove_node(NpSceneNode node);
-        void insert_node(NpSceneNode node);
+        bool remove_node(NpSceneNode node);
+        bool insert_node(NpSceneNode node);
 
     private:
         std::vector<NpSceneNode> mWorldNodes;
