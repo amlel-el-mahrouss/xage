@@ -14,6 +14,10 @@
 
 #include "NginCore.h"
 
+#ifndef XPLICIT_XPATH_PROTOCOL
+#define XPLICIT_XPATH_PROTOCOL ("xpath://")
+#endif // XPLICIT_XPATH_PROTOCOL
+
 #ifndef XPLICIT_XASSET_PROTOCOL
 #define XPLICIT_XASSET_PROTOCOL ("xasset://")
 #endif // XPLICIT_XASSET_PROTOCOL

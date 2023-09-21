@@ -128,14 +128,6 @@ namespace XPX
 
                 StartLoad = false;
             }
-            else
-            {
-                String fmt("Dialing to server... (");
-                fmt += std::to_string(self->mTimeout);
-                fmt += ")";
-
-                ImGUI::UIFontHelper::get_label_font()->draw(fmt.c_str(), irr::core::recti(10, 10, 10, 10), ImGUI::ImColor(255, 255, 255, 255));
-            }
         }
     }
 

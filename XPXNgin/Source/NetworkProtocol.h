@@ -191,34 +191,6 @@ namespace XPX
 
     };
 
-    // Replication packet. with additional EOR (end or repl data)
-    // EOR is used to tell if we still have N.P.R packets to read.
-    struct XPLICIT_API NetworkPacketRepl final
-    {
-    public:
-        char                  magic[XPLICIT_NETWORK_MAG_COUNT];
-
-        std::int8_t           channel; // the channel, as always.
-        std::int16_t          version;
-        
-    public:
-        char                  node_kind; // 0 = sphere, 1 = cube, 2 = mesh
-
-        char                  node_name[XPLICIT_NETWORK_NAME_SZ];
-        char                  node_parent[XPLICIT_NETWORK_NAME_SZ];
-        char                  node_path[XPLICIT_NETWORK_NAME_SZ];
-
-    public:
-        NetworkFloat          pos_x;
-        NetworkFloat          pos_y;
-        NetworkFloat          pos_z;
-
-        NetworkFloat          scale_x;
-        NetworkFloat          scale_y;
-        NetworkFloat          scale_z;
-
-    };
-
     class XPLICIT_API NetworkPeer final
     {
     public:

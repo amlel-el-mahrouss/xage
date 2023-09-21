@@ -83,15 +83,7 @@ namespace XPX
 			if (auto kind = lhsNode->index_as_string("ClassType");
 				!kind.empty())
 			{
-				NetworkPacketRepl repl_packet{};
-
-				// Standard RoXML type typechecker.
-				if (kind == "Mesh")
-					repl_packet.node_kind = XPX_MESH_ID;
-				else if (kind == "Part")
-					repl_packet.node_kind = XPX_PART_ID;
-				else
-					continue;
+				NetworkPacket repl_packet{};
 
 				repl_packet.channel = XPLICIT_CHANNEL_PHYSICS;
 				repl_packet.version = XPLICIT_NETWORK_VERSION;
@@ -100,28 +92,18 @@ namespace XPX
 				repl_packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 				repl_packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
-				repl_packet.pos_x = lhsNode->pos().X;
-				repl_packet.pos_y = lhsNode->pos().Y;
-				repl_packet.pos_z = lhsNode->pos().Z;
+				repl_packet.pos[XPLICIT_NETWORK_X] = lhsNode->pos().X;
+				repl_packet.pos[XPLICIT_NETWORK_Y] = lhsNode->pos().Y;
+				repl_packet.pos[XPLICIT_NETWORK_Z] = lhsNode->pos().Z;
 
-				repl_packet.scale_x = lhsNode->scale().X;
-				repl_packet.scale_y = lhsNode->scale().Y;
-				repl_packet.scale_z = lhsNode->scale().Z;
+				repl_packet.pos_second[XPLICIT_NETWORK_X] = lhsNode->scale().X;
+				repl_packet.pos_second[XPLICIT_NETWORK_Y] = lhsNode->scale().Y;
+				repl_packet.pos_second[XPLICIT_NETWORK_Z] = lhsNode->scale().Z;
 
-				auto parent = lhsNode->index_as_string("Parent");
-				auto name = lhsNode->index_as_string("ClassName");
-
-				if (name.empty())
-					continue;
-
-				if (parent.empty())
-					parent = XPLICIT_LUA_NAMESPACE;
-
-				memcpy(repl_packet.node_parent, parent.c_str(), parent.size());
-				memcpy(repl_packet.node_name, name.c_str(), parent.size());
+				memcpy(repl_packet.additional_data, lhsNode->index_as_string("ClassName").c_str(), lhsNode->index_as_string("ClassName").size());
 
 				NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
-					(NetworkPacket*)&repl_packet);
+					&repl_packet);
 			}
 		}
 	}

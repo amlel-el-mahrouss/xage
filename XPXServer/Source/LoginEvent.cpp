@@ -153,56 +153,6 @@ namespace XPX
 								NetworkServerContext::send(mNetwork, mNetwork->get(idx));
 							}
 						}
-
-						auto klasses = ComponentSystem::get_singleton_ptr()->all_of<ClassComponent>();
-
-						for (auto* klass : klasses)
-						{
-							if (!klass)
-								continue;
-
-							if (auto kind = klass->index_as_string("ClassType");
-								!kind.empty())
-							{
-								NetworkPacketRepl repl_packet{};
-
-								// Standard RoXML type typechecker.
-								if (kind == "Mesh")
-									repl_packet.node_kind = XPX_MESH_ID;
-								else if (kind == "Part")
-									repl_packet.node_kind = XPX_PART_ID;
-								else
-									continue;
-
-								repl_packet.channel = XPLICIT_CHANNEL_PHYSICS;
-								repl_packet.version = XPLICIT_NETWORK_VERSION;
-
-								repl_packet.magic[0] = XPLICIT_NETWORK_MAG_0;
-								repl_packet.magic[1] = XPLICIT_NETWORK_MAG_1;
-								repl_packet.magic[2] = XPLICIT_NETWORK_MAG_2;
-
-								auto xasset = klass->index_as_string("Url");
-								auto parent = klass->index_as_string("Parent");
-								auto name = klass->index_as_string("ClassName");
-
-								if (name.empty())
-									continue;
-
-								if (repl_packet.node_kind == XPX_MESH_ID 
-									&& xasset.empty())
-									continue;
-
-								if (parent.empty())
-									parent = "world";
-
-								memcpy(repl_packet.node_parent, parent.c_str(), parent.size());
-								memcpy(repl_packet.node_name, name.c_str(), parent.size());
-								memcpy(repl_packet.node_path, xasset.c_str(), parent.size());
-
-								NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
-									(NetworkPacket*)&repl_packet);
-							}
-						}
 					}, peer_idx);
 
 					try

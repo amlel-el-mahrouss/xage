@@ -91,7 +91,8 @@ namespace XPX
 
 		if (!self->mNetwork->read(self->mPacket)) return;
 
-		if (self->mPacket.hash == self->mHash)
+		if (self->mPacket.channel == XPLICIT_CHANNEL_DATA && 
+			self->mPacket.hash == self->mHash)
 		{
 			if (self->mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
 				self->mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)

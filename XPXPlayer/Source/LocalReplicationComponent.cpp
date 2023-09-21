@@ -135,36 +135,22 @@ namespace XPX
 		}
 		else if (packet.channel == XPLICIT_CHANNEL_PHYSICS)
 		{
-			NetworkPacketRepl repl_packet = *reinterpret_cast<NetworkPacketRepl*>(&packet);
-
-			ISceneNode* node = CAD->getSceneManager()->getSceneNodeFromName(repl_packet.node_name);
+			ISceneNode* node = CAD->getSceneManager()->getSceneNodeFromName(packet.additional_data);
 
 			if (node)
 			{
-				node->setPosition(vector3df(repl_packet.pos_x, repl_packet.pos_y, repl_packet.pos_z));
-				node->setScale(vector3df(repl_packet.scale_x, repl_packet.scale_y, repl_packet.scale_z));
+				node->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
+				node->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
 			}
 			else
 			{
-				switch (repl_packet.node_kind)
-				{
-				case XPX_PART_ID: // part
-				{
-					auto mesh_component = ComponentSystem::get_singleton_ptr()->add<PartComponent>(repl_packet.node_name, repl_packet.node_parent);
-					XPLICIT_ASSERT(mesh_component);
+				String parent = String(packet.additional_data);
+				String name = String(packet.additional_data, parent.find("."));
 
-					break;
-				}
-				case XPX_MESH_ID: // mesh
-				{
-					auto mesh_component = ComponentSystem::get_singleton_ptr()->add<MeshComponent>(repl_packet.node_path, repl_packet.node_name, repl_packet.node_parent);
-					XPLICIT_ASSERT(mesh_component);
-					
-					break;
-				}
-				default:
-					break;
-				}
+				parent = parent.substr(parent.find(".") + 1);
+
+				auto mesh_component = ComponentSystem::get_singleton_ptr()->add<PartComponent>(name.c_str(), parent.c_str());
+				XPLICIT_ASSERT(mesh_component);
 			}
 		}
 	}

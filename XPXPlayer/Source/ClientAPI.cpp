@@ -199,21 +199,7 @@ public:
 	{
 		XPX::String component_name = lua_tostring(L, 1);
 
-		if (component_name == "Part")
-		{
-			if (lua_tostring(L, 2) &&
-				lua_tostring(L, 3))
-			{
-				XPX::String key = lua_tostring(L, 2);
-				XPX::String value = lua_tostring(L, 3);
-
-				XPX::ComponentSystem::get_singleton_ptr()->add<XPX::PartComponent>(value.c_str(), key.c_str());
-				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}.{}", key, value).c_str());
-
-				return 1;
-			}
-		}
-		else if (component_name == "Sound")
+		if (component_name == "Sound")
 		{
 			if (lua_tostring(L, 2) &&
 				lua_tostring(L, 3))
@@ -228,7 +214,7 @@ public:
 				return 1;
 			}
 		}
-		else if (component_name == "XMLScene")
+		else if (component_name == "XSceneLoader")
 		{
 			XPX::Thread job([&]() {
 				XPX::RoXML::RoXMLDocumentParameters params;
@@ -239,7 +225,7 @@ public:
 				params.LuaOnly = false;
 
 				XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
-				generated_path += "-ROXML";
+				generated_path += "-XMLSCENE";
 
 				XPLICIT_GET_DATA_DIR(path);
 				path += "Contents/";

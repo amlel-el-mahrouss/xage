@@ -57,6 +57,11 @@ namespace XPX
 				mNode->setParent(group_model);
 			}
 		}
+		else
+		{
+			XPLICIT_CRITICAL("Uh oh model not found!");
+			XPLICIT_CRITICAL(path);
+		}
 	}
 
 	MeshComponent::~MeshComponent() noexcept

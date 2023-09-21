@@ -13,6 +13,9 @@
 
 #include "Config.h"
 
+// replace this with pbm after TODO
+#define XPLICIT_OBJ_FORMAT ".obj"
+
 #ifndef XPLICIT_WINDOWS
 
 inline int fopen_s(FILE** fp, const char* path, const char* res) noexcept

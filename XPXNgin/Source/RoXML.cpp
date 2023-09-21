@@ -90,49 +90,6 @@ namespace XPX::RoXML
 							// assign a part component to the said id
 							// so you can use it.
 
-							enum
-							{
-								MESH_TYPE,
-								PART_TYPE
-							} kind;
-
-							if (klass_to_instantiate == "Mesh")
-							{
-								// go on and include that!
-								world_node.ID = node_name;
-
-								for (size_t i = 0; i < strlen(node->value()); i++)
-								{
-									if (isalnum(node->value()[i]) ||
-										node->value()[i] == '.' ||
-										node->value()[i] == '/' ||
-										node->value()[i] == '\\' ||
-										node->value()[i] == '-' ||
-										node->value()[i] == ':')
-									{
-										world_node.Value += node->value()[i];
-									}
-
-									kind = MESH_TYPE;
-								}
-
-								XPLICIT_GET_DATA_DIR(MESH_PATH);
-
-								String url = world_node.Value;
-
-								MESH_PATH += "Contents/";
-								MESH_PATH += std::to_string(xplicit_get_epoch());
-								MESH_PATH += "-MESH";
-
-								if (DownloadURL(url, MESH_PATH))
-								{
-									auto _mesh = CAD->getSceneManager()->addAnimatedMeshSceneNode(CAD->getSceneManager()->getMesh(MESH_PATH.c_str()));
-
-									if (_mesh)
-										object = _mesh;
-								}
-							}
-
 							if (klass_to_instantiate == "Part")
 							{
 								auto _mesh = CAD->getSceneManager()->addCubeSceneNode();
@@ -146,8 +103,6 @@ namespace XPX::RoXML
 
 									object = _mesh;
 								}
-
-								kind = PART_TYPE;
 							}
 
 							if (object)
@@ -172,9 +127,6 @@ namespace XPX::RoXML
 
 								if (component)
 								{
-									if (kind == MESH_TYPE)
-										component->insert("Url", world_node.Value);
-
 									component->insert("ClassType", fmt::format("'{}'", klass_to_instantiate));
 									component->assign("Parent", ((nullptr != parent_id) ? parent_id : "world"));
 								}
@@ -473,7 +425,8 @@ namespace XPX::RoXML
 					// go on and include that!
 					world_node.ID = node_name;
 
-					if (strcmp(node->first_attribute()->name(), "Path") == 0)
+					if (node->first_attribute() &&
+						strcmp(node->first_attribute()->name(), "Path") == 0)
 					{
 						auto val = node->first_attribute()->value();
 
@@ -520,6 +473,22 @@ namespace XPX::RoXML
 								ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
 							}
 						}
+					}
+					else
+					{
+						auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-LUA";
+
+						XPLICIT_GET_DATA_DIR(full_path);
+
+						String full_write_path = full_path;
+						full_write_path += "Contents/";
+						full_write_path += tmp;
+
+						std::ofstream file(full_write_path);
+
+						file << node->value();
+
+						ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_write_path.c_str());
 					}
 				}
 

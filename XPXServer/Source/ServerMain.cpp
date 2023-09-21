@@ -162,16 +162,26 @@ int main(int argc, char** argv)
 
 		XPLICIT_PLACE_ID = argv[2];
 
-		XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
-		generated_path += "-ROXML";
-
 		XPLICIT_GET_DATA_DIR(path);
 		path += "Contents/";
 
-		if (!DownloadURL(XPLICIT_PLACE_ID, generated_path))
-			generated_path = XPLICIT_PLACE_ID; // probably a local path.
+		if (XPLICIT_PLACE_ID.find(XPLICIT_XPATH_PROTOCOL) == XPX::String::npos)
+		{
+			XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
+			generated_path += "-ROXML";
+			
+			path += generated_path;
 
-		path += generated_path;
+			if (!DownloadURL(XPLICIT_PLACE_ID, generated_path))
+				return 1;
+		}
+		else
+		{
+			XPX::String _url = "";
+
+			_url += XPLICIT_PLACE_ID.erase(XPLICIT_PLACE_ID.find(XPLICIT_XPATH_PROTOCOL), strlen(XPLICIT_XPATH_PROTOCOL));
+			path += _url;
+		}
 
 		XPX::RoXML::RoXMLDocumentParameters params;
 
