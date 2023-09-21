@@ -60,60 +60,62 @@ namespace XPX
 				}
 			}
 
-			if (!touching)
-			{
-				auto force = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X"),
-					lhsNode->index_as_number<NplicitFloat>("Force.Y"),
-					lhsNode->index_as_number<NplicitFloat>("Force.Z"));
+			if (touching)
+				continue;
 
-				auto velocity = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X") * lhsNode->index_as_number<NplicitFloat>("Weight.X"),
-					lhsNode->index_as_number<NplicitFloat>("Force.Y") * lhsNode->index_as_number<NplicitFloat>("Weight.Y"),
-					lhsNode->index_as_number<NplicitFloat>("Force.Z") * lhsNode->index_as_number<NplicitFloat>("Weight.Z"));
+			auto force = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X"),
+				lhsNode->index_as_number<NplicitFloat>("Force.Y"),
+				lhsNode->index_as_number<NplicitFloat>("Force.Z"));
 
-				lhsNode->pos() = Vector<NetworkFloat>(velocity.X * mDeltaTime, 
-					velocity.Y * mDeltaTime, 
-					velocity.Z * mDeltaTime);
+			auto velocity = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X") * lhsNode->index_as_number<NplicitFloat>("Weight.X"),
+				lhsNode->index_as_number<NplicitFloat>("Force.Y") * lhsNode->index_as_number<NplicitFloat>("Weight.Y"),
+				lhsNode->index_as_number<NplicitFloat>("Force.Z") * lhsNode->index_as_number<NplicitFloat>("Weight.Z"));
 
-				ClassComponent::update(lhsNode);
+			lhsNode->pos().add(velocity.X * mDeltaTime,
+				velocity.Y * mDeltaTime,
+				velocity.Z * mDeltaTime);
 
-				lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
-				lhsNode->call_method("Update('PhysicsProcessDone')");
+			ClassComponent::update(lhsNode);
 
-				NetworkPacket repl_packet{};
+			lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
+			lhsNode->call_method("Update('PhysicsProcessDone')");
 
-				repl_packet.channel = XPLICIT_CHANNEL_PHYSICS;
-				repl_packet.version = XPLICIT_NETWORK_VERSION;
+			NetworkPacket repl_packet{};
 
-				repl_packet.magic[0] = XPLICIT_NETWORK_MAG_0;
-				repl_packet.magic[1] = XPLICIT_NETWORK_MAG_1;
-				repl_packet.magic[2] = XPLICIT_NETWORK_MAG_2;
+			repl_packet.channel = XPLICIT_CHANNEL_PHYSICS;
+			repl_packet.version = XPLICIT_NETWORK_VERSION;
 
-				repl_packet.pos[XPLICIT_NETWORK_X] = lhsNode->pos().X;
-				repl_packet.pos[XPLICIT_NETWORK_Y] = lhsNode->pos().Y;
-				repl_packet.pos[XPLICIT_NETWORK_Z] = lhsNode->pos().Z;
+			repl_packet.magic[0] = XPLICIT_NETWORK_MAG_0;
+			repl_packet.magic[1] = XPLICIT_NETWORK_MAG_1;
+			repl_packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
-				repl_packet.pos_second[XPLICIT_NETWORK_X] = lhsNode->scale().X;
-				repl_packet.pos_second[XPLICIT_NETWORK_Y] = lhsNode->scale().Y;
-				repl_packet.pos_second[XPLICIT_NETWORK_Z] = lhsNode->scale().Z;
+			repl_packet.pos[XPLICIT_NETWORK_X] = lhsNode->pos().X;
+			repl_packet.pos[XPLICIT_NETWORK_Y] = lhsNode->pos().Y;
+			repl_packet.pos[XPLICIT_NETWORK_Z] = lhsNode->pos().Z;
 
-				repl_packet.pos_fourth[XPLICIT_NETWORK_X] = lhsNode->color().R;
-				repl_packet.pos_fourth[XPLICIT_NETWORK_Y] = lhsNode->color().G;
-				repl_packet.pos_fourth[XPLICIT_NETWORK_Z] = lhsNode->color().B;
+			repl_packet.pos_second[XPLICIT_NETWORK_X] = lhsNode->scale().X;
+			repl_packet.pos_second[XPLICIT_NETWORK_Y] = lhsNode->scale().Y;
+			repl_packet.pos_second[XPLICIT_NETWORK_Z] = lhsNode->scale().Z;
 
-				repl_packet.pos_third[XPLICIT_NETWORK_X] = lhsNode->color().A;
+			repl_packet.pos_fourth[XPLICIT_NETWORK_X] = lhsNode->color().R;
+			repl_packet.pos_fourth[XPLICIT_NETWORK_Y] = lhsNode->color().G;
+			repl_packet.pos_fourth[XPLICIT_NETWORK_Z] = lhsNode->color().B;
 
-				String fmt = lhsNode->index_as_string("Parent").c_str();
+			repl_packet.pos_third[XPLICIT_NETWORK_X] = lhsNode->color().A;
 
-				if (!fmt.empty())
-					fmt += ".";
+			String fmt = lhsNode->index_as_string("Parent").c_str();
 
-				fmt += lhsNode->index_as_string("ClassName").c_str();
+			if (!fmt.empty())
+				fmt += ".";
 
-				memcpy(repl_packet.additional_data, fmt.c_str(), fmt.size());
+			fmt += lhsNode->index_as_string("ClassName").c_str();
 
-				NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
-					&repl_packet);
-			}
+			memcpy(repl_packet.additional_data, fmt.c_str(), fmt.size());
+
+			NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
+				&repl_packet);
+
+			lhsNode->assign("Position", "{ X = 0, Y = 0, Z = 0 }");
 		}
 	}
 

@@ -72,7 +72,7 @@ namespace XPX
 		if (self->get_owner() &&
 			self->get_owner()->get_peer())
 		{
-			self->pos() = self->get_owner()->get_attribute().pos();
+			self->pos() = self->get_owner()->get_class()->pos();
 		
 			if (self->get_owner()->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_TARGET] == NETWORK_CMD_TARGET)
 			{

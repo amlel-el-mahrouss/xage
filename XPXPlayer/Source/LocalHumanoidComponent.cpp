@@ -33,32 +33,8 @@ namespace XPX
 		mPos(0.f, 0.f, 0.f),
 		mState(HUMANOID_STATE::ALIVE),
 		mIsLocalPlayer(is_local_player),
-		mClass(nullptr),
-		mCharacter(nullptr)
+		mClass(nullptr)
 	{
-		String path = "Contents/Humanoid.dae";
-
-		if (is_local_player)
-		{
-			mClass = new Lua::CLuaClass("world.Players.LocalPlayer");
-			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), "Players.LocalPlayer.RootPart", "world");
-		}
-		else
-		{
-			// make sure that the server passes an xplicitid.
-			XPLICIT_ASSERT(optional_xid);
-
-			String path_xid = "Players.";
-			path_xid += optional_xid;
-
-			// ugly ass hack, as always.
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string("world." + path_xid + " = {}");
-
-			path_xid += ".RootPart";
-
-			mCharacter = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponent>(path.c_str(), path_xid.c_str(), "world");
-		}
-
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);
@@ -94,33 +70,6 @@ namespace XPX
 		if (self->mPacket.channel == XPLICIT_CHANNEL_DATA && 
 			self->mPacket.hash == self->mHash)
 		{
-			if (self->mPacket.cmd[XPLICIT_NETWORK_CMD_POS] == NETWORK_CMD_POS &&
-				self->mPacket.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
-			{
-				const NetworkFloat delta = self->mPacket.pos[XPLICIT_NETWORK_DELTA];
-
-				const NetworkFloat xSpeed = self->mPacket.pos[XPLICIT_NETWORK_X];
-				const NetworkFloat zSpeed = self->mPacket.pos[XPLICIT_NETWORK_Z];
-				const NetworkFloat ySpeed = self->mPacket.pos[XPLICIT_NETWORK_Y];
-
-				self->mPos.Z += zSpeed * delta;
-				self->mPos.X += xSpeed * delta;
-				self->mPos.Y += ySpeed * delta;
-
-				self->mCharacter->node()->setPosition(vector3df(self->mPos.X, self->mPos.Y, self->mPos.Z));
-
-				self->mCharacter->node()->setRotation(
-					vector3df(self->mPacket.pos_second[XPLICIT_NETWORK_X],
-					0, 
-						self->mPacket.pos_second[XPLICIT_NETWORK_Z]));
-
-				XPLICIT_INFO("world:LocalMove [EVENT]");
-
-				String fmt = fmt::format("world:LocalMove({},{},{})", std::to_string(self->mPos.X), std::to_string(self->mPos.Y), std::to_string(self->mPos.Z));
-
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-			}
-
 			if (self->mIsLocalPlayer)
 			{
 				if (KEYBOARD->left_down())
@@ -155,10 +104,7 @@ namespace XPX
 	void LocalHumanoidComponent::attach(LocalCameraComponent* cam) noexcept
 	{ 
 		if (cam)
-		{
 			mCam = cam;
-			mCam->get()->setTarget(mCharacter->node()->getPosition());
-		}
 	}
 
 	Vector<float> LocalHumanoidComponent::get_pos() noexcept { return mPos; }

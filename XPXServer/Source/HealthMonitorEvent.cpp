@@ -33,15 +33,15 @@ namespace XPX
 		{
 			const auto& pos = spawner->get();
 
-			humanoid->get_attribute().pos().X = pos.X;
-			humanoid->get_attribute().pos().Y = pos.Y;
-			humanoid->get_attribute().pos().Z = pos.Z;
+			humanoid->get_class()->pos().X = pos.X;
+			humanoid->get_class()->pos().Y = pos.Y;
+			humanoid->get_class()->pos().Z = pos.Z;
 		}
 		else if (humanoid)
 		{
-			humanoid->get_attribute().pos().X = 0.f;
-			humanoid->get_attribute().pos().Y = 0.f;
-			humanoid->get_attribute().pos().Z = 0.f;
+			humanoid->get_class()->pos().X = 0;
+			humanoid->get_class()->pos().Y = 100;
+			humanoid->get_class()->pos().Z = 0;
 		}
 	}
 
@@ -75,8 +75,6 @@ namespace XPX
 			{
 				humanoid->can_spawn(false);
 				humanoid->set_state(HUMANOID_STATE::DEAD);
-
-				humanoid->get_attribute().pos() = mSpawner->get();
 
 #ifdef XPLICIT_DEBUG
 				XPLICIT_INFO("world:Death [EVENT]");

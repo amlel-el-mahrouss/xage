@@ -59,20 +59,20 @@ namespace XPX
 				NetworkFloat speed = humanoid->get_walk_speed();
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP &&
-					humanoid->get_attribute().pos().Y < 1)
-					humanoid->get_attribute().pos().Y = humanoid->get_jump_power();
+					humanoid->get_class()->pos().Y < 1)
+					humanoid->get_class()->pos().Y = humanoid->get_jump_power();
 				
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					humanoid->get_attribute().pos().Z += speed;
+					humanoid->get_class()->pos().Z += speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					humanoid->get_attribute().pos().Z -= speed;
+					humanoid->get_class()->pos().Z -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					humanoid->get_attribute().pos().X -= speed;
+					humanoid->get_class()->pos().X -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					humanoid->get_attribute().pos().X += speed;
+					humanoid->get_class()->pos().X += speed;
 
 				peer->packet.pos[XPLICIT_NETWORK_X] = speed;
 				peer->packet.pos[XPLICIT_NETWORK_Y] = speed;

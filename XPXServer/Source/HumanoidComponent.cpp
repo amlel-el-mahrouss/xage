@@ -76,9 +76,9 @@ namespace XPX
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(xpx_player_path);
 		}
 
-		String str = "{" + std::to_string(self->mAttribute.pos().X) + "," +
-						 std::to_string(self->mAttribute.pos().Y) + "," +
-						 std::to_string(self->mAttribute.pos().Z) + "," + "}";
+		String str = "{" + std::to_string(self->mClass->pos().X) + "," +
+						 std::to_string(self->mClass->pos().Y) + "," +
+						 std::to_string(self->mClass->pos().Z) + "," + "}";
 
 		self->mClass->assign("Position", str);
 
@@ -177,12 +177,16 @@ namespace XPX
 			String player_tbl("world.Players.");
 			player_tbl += mPeer->xplicit_id.as_string();
 
-			mClass = new Lua::CLuaClass(player_tbl);
+			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>("world.Players", mPeer->xplicit_id.as_string().c_str());
 
 			XPLICIT_ASSERT(mClass);
 
 			if (mClass)
 			{
+				mClass->assign("Locked", "false");
+
+				mClass->assign("Scale", "{ X = 5, Y = 5, Z = 1 }");
+
 				mClass->insert("UserName", "'Unconnected'");
 				mClass->insert("Parent", "world.Players");
 
@@ -221,15 +225,13 @@ namespace XPX
 					gear = nullptr;
 				}
 
-				delete mClass;
+				ComponentSystem::get_singleton_ptr()->remove(mClass);
 				mClass = nullptr;
 			}
 		}
 	}
 
 	bool HumanoidComponent::can_spawn() const noexcept { return mCanSpawn; }
-
-	XPXAttribute& HumanoidComponent::get_attribute() noexcept { return mAttribute; }
 
 	void HumanoidComponent::can_spawn(const bool enable) noexcept { mCanSpawn = enable; }
 
@@ -239,7 +241,7 @@ namespace XPX
 
 	void HumanoidComponent::set_state(const HUMANOID_STATE state) noexcept { mState = state; }
 
-	XPX::Lua::CLuaClass* HumanoidComponent::get_class() const
+	ClassComponent* HumanoidComponent::get_class() const
 	{
 		XPLICIT_ASSERT(mClass);
 		return mClass;

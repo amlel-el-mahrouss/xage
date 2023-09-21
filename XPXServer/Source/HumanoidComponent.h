@@ -52,9 +52,6 @@ namespace XPX
 		bool has_physics() noexcept override;
 
 	public:
-		XPXAttribute& get_attribute() noexcept;
-
-	public:
 		void set_health(const double& health) noexcept;
 		const double& get_health() noexcept;
 		bool is_alive() const noexcept;
@@ -77,13 +74,12 @@ namespace XPX
 		GearComponent* get_active_gear() noexcept;
 
 	public:
-		XPX::Lua::CLuaClass* get_class() const;
+		ClassComponent* get_class() const;
 
 	private:
 		std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY> mGears;
 		GearComponent* mActiveGear;
-		Lua::CLuaClass* mClass;
-		XPXAttribute mAttribute;
+		ClassComponent* mClass;
 		HUMANOID_STATE mState;
 		NetworkPeer* mPeer;
 		double mWalkSpeed;
