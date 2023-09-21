@@ -42,7 +42,7 @@ namespace XPX
 			if (!lhsNode)
 				continue;
 
-			if (lhsNode->index_as_bool("Anchored"))
+			if (!lhsNode->index_as_bool("Anchored"))
 			{
 				static bool collide = false;
 
@@ -78,8 +78,6 @@ namespace XPX
 					lhsNode->pos().add(velocity.X * mDeltaTime,
 						velocity.Y * mDeltaTime,
 						velocity.Z * mDeltaTime);
-
-					ClassComponent::update(lhsNode);
 
 					lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
 					lhsNode->call_method("Update('PhysicsProcessDone')");
