@@ -34,14 +34,8 @@ namespace XPX
 
 	void NpMovementServerEvent::operator()()
 	{
-		if (mDeltaTime >= mTimeStamp)
-		{
-			--mDeltaTime;
-			return;
-		}
-
-		mDeltaTime = 5;
-		--mDeltaTime;
+		mDeltaTime = mTimeStamp;
+		++mDeltaTime;
 
 		for (auto* lhsNode : mWorldNodes)
 		{
@@ -76,7 +70,11 @@ namespace XPX
 					lhsNode->index_as_number<NplicitFloat>("Force.Y") * lhsNode->index_as_number<NplicitFloat>("Weight.Y"),
 					lhsNode->index_as_number<NplicitFloat>("Force.Z") * lhsNode->index_as_number<NplicitFloat>("Weight.Z"));
 
-				lhsNode->pos() = Vector<NetworkFloat>(velocity.X, velocity.Y, velocity.Z);
+				lhsNode->pos() = Vector<NetworkFloat>(velocity.X * mDeltaTime, 
+					velocity.Y * mDeltaTime, 
+					velocity.Z * mDeltaTime);
+
+				ClassComponent::update(lhsNode);
 
 				lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
 				lhsNode->call_method("Update('PhysicsProcessDone')");

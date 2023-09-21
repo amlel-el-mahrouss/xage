@@ -130,11 +130,10 @@ namespace XPX
 				self->pos().Y = self->index_as_number<float>("Position.Y");
 				self->pos().Z = self->index_as_number<float>("Position.Z");
 			}
-
-			self->scale().X = self->index_as_number<float>("Scale.X");
-			self->scale().Y = self->index_as_number<float>("Scale.Y");
-			self->scale().Z = self->index_as_number<float>("Scale.Z");
 		}
-
+		else
+		{
+			self->assign("Position", "{ X =  " + std::to_string(self->scale().X) + ", Y = " + std::to_string(self->scale().X) + ", Z = " + std::to_string(self->scale().X) + " }");
+		}
 	}
 }
