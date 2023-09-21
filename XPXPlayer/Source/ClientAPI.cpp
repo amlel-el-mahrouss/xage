@@ -228,7 +228,7 @@ public:
 				return 1;
 			}
 		}
-		else if (component_name == "RoXML")
+		else if (component_name == "XMLScene")
 		{
 			XPX::Thread job([&]() {
 				XPX::RoXML::RoXMLDocumentParameters params;

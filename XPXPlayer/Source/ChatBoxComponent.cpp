@@ -38,10 +38,9 @@ namespace XPX
 	{
 		ChatBoxComponent* self = (ChatBoxComponent*)cls;
 
-		if (self)
+		if (self && 
+			IsValidHeapPtr(self))
 		{
-			XPLICIT_ASSERT(IsValidHeapPtr(self));
-
 			if (self->mNetwork->get().channel == XPLICIT_CHANNEL_CHAT)
 			{
 				NetworkPacketChat chat_pckt = *(NetworkPacketChat*)&self->mNetwork->get();

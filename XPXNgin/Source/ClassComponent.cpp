@@ -99,10 +99,9 @@ namespace XPX
 	{
 		ClassComponent* self = static_cast<ClassComponent*>(_self);
 
-		if (!self)
+		if (!self ||
+			!IsValidHeapPtr(self))
 			return;
-
-		XPLICIT_ASSERT(IsValidHeapPtr(self));
 
 		self->collide(self->index_as_bool("Collide"));
 		self->locked(self->index_as_bool("Locked"));

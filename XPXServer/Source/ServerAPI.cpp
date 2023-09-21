@@ -146,11 +146,11 @@ public:
 	{
 		XPX::String component_name = lua_tostring(L, 1);
 
-		if (component_name == "Gear")
+		if (component_name == "PlayerGear")
 		{
 			return lua_CreateGear(L);
 		}
-		else if (component_name == "RoXML")
+		else if (component_name == "XMLScene")
 		{
 			return lua_LoadRoXML(L);
 		}

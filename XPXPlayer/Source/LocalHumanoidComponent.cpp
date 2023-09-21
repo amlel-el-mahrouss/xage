@@ -85,7 +85,10 @@ namespace XPX
 	{
 		LocalHumanoidComponent* self = (LocalHumanoidComponent*)class_ptr;
 
+		if (self == nullptr) return;
+		if (!IsValidHeapPtr(self)) return;
 		if (self->mNetwork == nullptr) return;
+
 		if (!self->mNetwork->read(self->mPacket)) return;
 
 		if (self->mPacket.hash == self->mHash)
@@ -106,9 +109,11 @@ namespace XPX
 				self->mCharacter->node()->setPosition(vector3df(self->mPos.X, self->mPos.Y, self->mPos.Z));
 
 				self->mCharacter->node()->setRotation(
-					vector3df(self->mCam->get()->getPosition().X, 
+					vector3df(self->mPacket.pos_second[XPLICIT_NETWORK_X],
 					0, 
-					self->mCam->get()->getPosition().Z));
+						self->mPacket.pos_second[XPLICIT_NETWORK_Z]));
+
+				self->mCam->get()->setTarget(self->mCharacter->node()->getAbsolutePosition());
 
 				XPLICIT_INFO("world:LocalMove [EVENT]");
 

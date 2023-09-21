@@ -215,6 +215,12 @@ namespace XPX
 		{
 			if (mClass)
 			{
+				for (auto* gear : mGears)
+				{
+					ComponentSystem::get_singleton_ptr()->remove(gear);
+					gear = nullptr;
+				}
+
 				delete mClass;
 				mClass = nullptr;
 			}
