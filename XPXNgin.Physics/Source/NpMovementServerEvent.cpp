@@ -18,7 +18,7 @@ namespace XPX
 	NpMovementServerEvent::NpMovementServerEvent() noexcept
 		: 
 		mWorldNodes(),
-		mTimeStamp(CAD->getTimer()->getTime()),
+		mTimeStamp(2),
 		mDeltaTime(0.0)
 	{}
 
@@ -34,8 +34,14 @@ namespace XPX
 
 	void NpMovementServerEvent::operator()()
 	{
-		mDeltaTime = CAD->getTimer()->getTime() - mTimeStamp;
-		mTimeStamp = CAD->getTimer()->getTime();
+		if (mDeltaTime >= mTimeStamp)
+		{
+			--mDeltaTime;
+			return;
+		}
+
+		mDeltaTime = 5;
+		--mDeltaTime;
 
 		for (auto* lhsNode : mWorldNodes)
 		{
@@ -47,9 +53,6 @@ namespace XPX
 
 			for (auto* rhsNode : mWorldNodes)
 			{
-				if (!rhsNode)
-					continue;
-
 				if (rhsNode == lhsNode)
 					continue;
 
@@ -73,7 +76,7 @@ namespace XPX
 					lhsNode->index_as_number<NplicitFloat>("Force.Y") * lhsNode->index_as_number<NplicitFloat>("Weight.Y"),
 					lhsNode->index_as_number<NplicitFloat>("Force.Z") * lhsNode->index_as_number<NplicitFloat>("Weight.Z"));
 
-				lhsNode->pos() = Vector<NetworkFloat>(velocity.X * mDeltaTime, velocity.Y * mDeltaTime, velocity.Z * mDeltaTime);
+				lhsNode->pos() = Vector<NetworkFloat>(velocity.X, velocity.Y, velocity.Z);
 
 				lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
 				lhsNode->call_method("Update('PhysicsProcessDone')");

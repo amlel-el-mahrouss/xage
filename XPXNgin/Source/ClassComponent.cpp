@@ -99,31 +99,26 @@ namespace XPX
 	{
 		ClassComponent* self = static_cast<ClassComponent*>(_self);
 
-		if (!self ||
-			!IsValidHeapPtr(self))
+		if (!IsValidHeapPtr(self))
 			return;
 
 		self->collide(self->index_as_bool("Collide"));
 		self->locked(self->index_as_bool("Locked"));
 		self->archivable(self->index_as_bool("Archivable"));
-	
-		if (!self->index_as_bool("Locked"))
+
+		self->alpha(self->index_as_number<float>("Color.A"));
+		self->color().A = self->alpha();
+
+		self->color().R = self->index_as_number<float>("Color.R");
+		self->color().G = self->index_as_number<float>("Color.G");
+		self->color().B = self->index_as_number<float>("Color.B");
+
+		// if do not depend on physics engine, then do.
+		if (self->is_locked())
 		{
-			self->alpha(self->index_as_number<float>("Color.A"));
-
-			self->color().A = self->index_as_number<float>("Color.A");
-
-			self->color().R = self->index_as_number<float>("Color.R");
-			self->color().G = self->index_as_number<float>("Color.G");
-			self->color().B = self->index_as_number<float>("Color.B");
-
-			self->scale().X = self->index_as_number<float>("Scale.X");
-			self->scale().Y = self->index_as_number<float>("Scale.Y");
-			self->scale().Z = self->index_as_number<float>("Scale.Z");
-
 			if (self->parent() &&
-				strcmp(self->parent(), XPLICIT_LUA_NAMESPACE) == 0 &&
-				strcmp(self->parent(), "_G.Script") == 0) // _G. is the global table, to avois any clashes.
+				strcmp(self->parent(), XPLICIT_LUA_NAMESPACE) != 0 &&
+				strcmp(self->parent(), "Script") != 0) // _G. is the global table, to avois any clashes.
 			{
 				self->pos().X = self->index_as_number<float>("Parent.Position.X");
 				self->pos().Y = self->index_as_number<float>("Parent.Position.Y");
@@ -135,6 +130,11 @@ namespace XPX
 				self->pos().Y = self->index_as_number<float>("Position.Y");
 				self->pos().Z = self->index_as_number<float>("Position.Z");
 			}
+
+			self->scale().X = self->index_as_number<float>("Scale.X");
+			self->scale().Y = self->index_as_number<float>("Scale.Y");
+			self->scale().Z = self->index_as_number<float>("Scale.Z");
 		}
+
 	}
 }
