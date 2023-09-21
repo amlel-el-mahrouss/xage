@@ -12,6 +12,7 @@
  */
 
 #include "LocalHumanoidComponent.h"
+#include "ChatBoxComponent.h"
 #include "LocalMenuEvent.h"
 #include "Application.h"
 #include "MenuUI.h"
@@ -180,8 +181,10 @@ namespace XPX
 			return;
 
 		LocalMenuEvent* menu = EventSystem::get_singleton_ptr()->get<LocalMenuEvent>("LocalMenuEvent");
+		ChatBoxComponent* chat_box = ComponentSystem::get_singleton_ptr()->get<ChatBoxComponent>("ChatBoxComponent");
 
-		if (menu && menu->enabled())
+		if (menu && menu->enabled() ||
+			chat_box->is_typing())
 			return;
 
 		auto& traits = Bites::ObjectInputSystem::get_singleton_ptr()->Layout;

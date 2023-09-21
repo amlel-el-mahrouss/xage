@@ -30,14 +30,13 @@ namespace XPX
 		mChatFrame.BackgroundColor = ChatBoxStyleDark::get_frame_color();
 	}
 	
-	ChatBoxComponent::~ChatBoxComponent()
-	{
+	ChatBoxComponent::~ChatBoxComponent() = default;
 
-	}
+	bool ChatBoxComponent::is_typing() noexcept { return mTextBox.focus(); }
 
-	void ChatBoxComponent::update(ClassPtr selfcls)
+	void ChatBoxComponent::update(ClassPtr cls)
 	{
-		ChatBoxComponent* self = (ChatBoxComponent*)selfcls;
+		ChatBoxComponent* self = (ChatBoxComponent*)cls;
 
 		if (self)
 		{
@@ -47,14 +46,15 @@ namespace XPX
 			{
 				NetworkPacketChat chat_pckt = *(NetworkPacketChat*)&self->mNetwork->get();
 
-				String buffer;
-				buffer.reserve(192);
+				register String chat_buffer = "";
 
-				buffer += chat_pckt.username;
-				buffer += ": ";
-				buffer += chat_pckt.buffer;
+				chat_buffer.reserve(192);
 
-				self->mChatQueue.push(buffer);
+				chat_buffer += chat_pckt.username;
+				chat_buffer += ": ";
+				chat_buffer += chat_pckt.buffer;
+
+				self->mChatQueue.push(chat_buffer);
 			}
 
 			self->mChatFrame.update(self->mChatFrame.BackgroundColor);

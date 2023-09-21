@@ -25,8 +25,12 @@ namespace XPX
 	public:
 		const char* name() noexcept override { return "ChatBoxComponent"; }
 
+	public:
+		static void update(ClassPtr self);
 		static bool should_update();
-		static void update(ClassPtr selfcls);
+
+	public:
+		bool is_typing() noexcept;
 
 	private:
 		std::queue<String> mChatQueue;

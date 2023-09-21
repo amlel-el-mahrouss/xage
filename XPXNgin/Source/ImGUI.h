@@ -70,6 +70,7 @@ namespace XPX::ImGUI
 
 	public:
 		void set_text(const PChar*);
+
 		void set_pos(const int X, const int Y);
 
 		void set_size(const int w, const int h)
@@ -87,6 +88,9 @@ namespace XPX::ImGUI
 		}
 
 		Vector<int> get_pos() noexcept;
+
+	public:
+		bool focus() noexcept { return mShallEdit; }
 
 	public:
 		void update() override;

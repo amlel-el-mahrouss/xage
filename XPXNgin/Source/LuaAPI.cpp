@@ -25,7 +25,7 @@ static int lua_DestroyScript(lua_State* L)
 
 	if (script)
 	{
-		XPLICIT_INFO("Removing ScriptComponent...");
+		XPLICIT_INFO("Removing LuaScriptComponent...");
 		XPX::ComponentSystem::get_singleton_ptr()->remove(script);
 	}
 
