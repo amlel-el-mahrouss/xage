@@ -56,7 +56,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 			if (player->get_peer()->xplicit_id.as_string() == xid)
 			{
-				factory.send(XPX::COMPONENT_ID_ROXML, _path, XPX::NETWORK_REPL_CMD_CREATE, player->get_peer()->public_hash);
+				factory.send(XPX::COMPONENT_ID_ROXML, _path, player->get_peer()->public_hash);
 			}
 		}
 	}

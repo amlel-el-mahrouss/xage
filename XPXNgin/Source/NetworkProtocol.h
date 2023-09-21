@@ -110,17 +110,10 @@ namespace XPX
         NETWORK_CMD_RCLICK,
         NETWORK_CMD_TARGET,
         NETWORK_CMD_SLOT,
+        NETWORK_CMD_DOWNLOAD,
+        NETWORK_CMD_DESTROY,
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 20,
-    };
-
-    /* replication network commands. */
-    enum NETWORK_REPL_CMD : std::int16_t
-    {
-        NETWORK_REPL_CMD_CREATE = NETWORK_CMD_INVALID + 1,
-        NETWORK_REPL_CMD_DESTROY,
-        NETWORK_REPL_CMD_UPDATE,
-        NETWORK_REPL_CMD_COUNT = 3,
     };
 
     enum NETWORK_STAT : std::int16_t
@@ -285,7 +278,6 @@ typedef int socklen_t;
 
 #define XPLICIT_REPL_CREATE (18)
 #define XPLICIT_REPL_DESTROY (19)
-#define XPLICIT_REPL_UPDATE (20)
 
 namespace XPX::Utils
 {

@@ -22,7 +22,7 @@ namespace XPX
 	 * It fills a buffer to tell what class/asset to load.
 	 */
 
-	void ServerReplicationFactory::send(const std::int32_t& id, const char* path, const std::int32_t& type, const std::int64_t& public_hash) const noexcept
+	void ServerReplicationFactory::send(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
 	{
 		if (!mNetwork)
 			return;
@@ -35,15 +35,7 @@ namespace XPX
 
 			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
 
-			if (type == NETWORK_REPL_CMD_UPDATE)
-				mNetwork->get(i)->packet.cmd[XPLICIT_REPL_UPDATE] = NETWORK_REPL_CMD_UPDATE;
-			else if (type == NETWORK_REPL_CMD_CREATE)
-				mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_REPL_CMD_CREATE;
-			else if (type == NETWORK_REPL_CMD_DESTROY)
-				mNetwork->get(i)->packet.cmd[XPLICIT_REPL_DESTROY] = NETWORK_REPL_CMD_DESTROY;
-			else
-				return;
-			
+			mNetwork->get(i)->packet.cmd[XPLICIT_REPL_CREATE] = NETWORK_CMD_DOWNLOAD;
 			mNetwork->get(i)->packet.id = id;
 
 			memset(mNetwork->get(i)->packet.replicas[XPLICIT_REPLICA_PLAYER], 0, XPLICIT_NETWORK_BUF_SZ);

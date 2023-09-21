@@ -200,9 +200,8 @@ namespace XPX
 				mClass->insert("IsLeftClickHold", "false");
 				mClass->insert("IsRightClickHold", "false");
 
-				mClass->insert("ContentKind", "-1");
-				mClass->insert("ContentDeliveryKind", "-1");
-				mClass->insert("Content", "nil");
+				mClass->insert("ContentType", "-1");
+				mClass->insert("ContentBody", "nil");
 
 				mClass->insert("PlayerId", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()));
 

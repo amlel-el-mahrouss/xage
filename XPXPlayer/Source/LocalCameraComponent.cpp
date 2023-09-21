@@ -27,16 +27,14 @@ namespace XPX
 		mCamera = CAD->getSceneManager()->addCameraSceneNode(nullptr);
 		
 		mLight = CAD->getSceneManager()->addLightSceneNode(0, core::vector3df(0, 0, 0),
-		video::SColorf(1.f, 1.0f, 1.0f, 1.0f), 800.0f);
+		video::SColorf(1.f, 1.0f, 1.0f, 1.0f), 1000.0f);
 
 		XPLICIT_ASSERT(mCamera);
 		XPLICIT_ASSERT(mLight);
 
 		LoadSkybox("noonclouds")->setParent(mCamera);
 		
-		mCamera->setPosition(vector3df(0, 0, 0));
 		mCamera->setFarValue(200.f);
-
 		mCamera->setName("Camera");
 
 		this->insert("FOV", "30");

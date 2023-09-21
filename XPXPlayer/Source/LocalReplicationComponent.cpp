@@ -42,95 +42,69 @@ namespace XPX
 
 		if (packet.channel == XPLICIT_CHANNEL_DATA)
 		{
-			if (packet.cmd[XPLICIT_REPL_CREATE] == NETWORK_REPL_CMD_CREATE)
+			switch (packet.id)
 			{
-				switch (packet.id)
+			case COMPONENT_ID_SCRIPT:
+			{
+				String url;
+
+				url = packet.replicas[XPLICIT_REPLICA_PLAYER];
+
+				if (url.empty() ||
+					url.find("xasset://") == String::npos)
+					return;
+
+				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
+
+				if (DownloadURL(url, tmp))
 				{
-				case COMPONENT_ID_SCRIPT:
-				{
-					String url;
+					XPLICIT_GET_DATA_DIR(full_path);
 
-					url = packet.replicas[XPLICIT_REPLICA_PLAYER];
+					String full_download_path;
 
-					if (url.empty() ||
-						url.find("xasset://") == String::npos)
-						return;
+					full_download_path += full_path;
+					full_download_path += "Contents/";
+					full_download_path += tmp;
 
-					auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
-
-					if (DownloadURL(url, tmp))
-					{
-						XPLICIT_GET_DATA_DIR(full_path);
-
-						String full_download_path;
-
-						full_download_path += full_path;
-						full_download_path += "Contents/";
-						full_download_path += tmp;
-
-						ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
-					}
-
-					break;
+					ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
 				}
-				case COMPONENT_ID_ROXML:
-				{
-					String url;
 
-					url = packet.replicas[XPLICIT_REPLICA_PLAYER];
-
-					if (url.empty() ||
-						url.find("xasset://") == String::npos)
-						return;
-
-					auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
-
-					if (DownloadURL(url, tmp))
-					{
-						XPLICIT_GET_DATA_DIR(full_path);
-
-						String full_download_path;
-
-						full_download_path += full_path;
-						full_download_path += "Contents/";
-						full_download_path += tmp;
-
-						RoXML::RoXMLDocumentParameters params;
-
-						params.Inline = false;
-						params.Path = tmp;
-
-						XPX_PARSER.parse(params);
-					}
-
-					break;
-				}
-				default:
-					break;
-				}
+				break;
 			}
-			else if (packet.cmd[XPLICIT_REPL_DESTROY] == NETWORK_REPL_CMD_DESTROY)
+			case COMPONENT_ID_ROXML:
 			{
-				switch (packet.id)
+				String url;
+
+				url = packet.replicas[XPLICIT_REPLICA_PLAYER];
+
+				if (url.empty() ||
+					url.find("xasset://") == String::npos)
+					return;
+
+				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
+
+				if (DownloadURL(url, tmp))
 				{
-				case COMPONENT_ID_SCRIPT:
-				{
-					String name;
-					name = packet.replicas[XPLICIT_REPLICA_PLAYER];
+					XPLICIT_GET_DATA_DIR(full_path);
 
-					if (auto script = ComponentSystem::get_singleton_ptr()->get<LuaScriptComponent>(name.c_str()))
-					{
-#ifdef XPLICIT_DEBUG
-						XPLICIT_INFO("Removing script...");
-#endif
+					String full_download_path;
 
-						if (ComponentSystem::get_singleton_ptr()->remove(script))
-							XPLICIT_INFO("Success! script has been deallocated.");
-					}
+					full_download_path += full_path;
+					full_download_path += "Contents/";
+					full_download_path += tmp;
 
-					break;
+					RoXML::RoXMLDocumentParameters params;
+
+					params.Inline = false;
+					params.Path = tmp;
+
+					XPX_PARSER.parse(params);
 				}
-				}
+
+				break;
+			}
+			default:
+				break;
 			}
 		}
 		else if (packet.channel == XPLICIT_CHANNEL_PHYSICS)
@@ -139,7 +113,7 @@ namespace XPX
 
 			if (node)
 			{
-				if (packet.cmd[XPLICIT_REPL_DESTROY] == NETWORK_REPL_CMD_DESTROY)
+				if (packet.cmd[XPLICIT_REPL_DESTROY] == NETWORK_CMD_DESTROY)
 				{
 					node->drop();
 					return;

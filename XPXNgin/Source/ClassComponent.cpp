@@ -61,9 +61,6 @@ namespace XPX
 		this->scale() = size;
 		this->color() = color;
 
-		this->insert("Force", "{ X = 1, Y = 1, Z = 1 }");
-		this->insert("Weight", "{ X = 1, Y = 1, Z = 1 }");
-
 		this->insert("Scale", "{ X =  " + std::to_string(size.X) + ", Y = " + std::to_string(size.X) + ", Z = " + std::to_string(size.X) + " }");
 		this->insert("Position", "{ X =  " + std::to_string(position.X) + ", Y = " + std::to_string(position.X) + ", Z = " + std::to_string(position.X) + " }");
 
@@ -102,7 +99,7 @@ namespace XPX
 
 				memcpy(pckt.additional_data, this->mName.data(), this->mName.size());
 
-				pckt.cmd[XPLICIT_REPL_DESTROY] = NETWORK_REPL_CMD_DESTROY;
+				pckt.cmd[XPLICIT_REPL_DESTROY] = NETWORK_CMD_DESTROY;
 
 				static auto server = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 

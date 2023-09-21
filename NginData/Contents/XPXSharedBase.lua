@@ -119,7 +119,7 @@ world.Events = {
 }
 
 function world:Login(ply)
-    for _, v in pairs(world.Slots.Login.Slots) do
+    for _, v in pairs(world.Events.Login.Slots) do
         v(ply)
     end
 end
@@ -194,7 +194,3 @@ end
 world.DOWNLOAD_NOTHING = -1;
 world.DOWNLOAD_SCRIPT = 1;
 world.DOWNLOAD_XMLSCENE = 2;
-
-world.DOWNLOAD_TYPE_CREATE = 522;
-world.DOWNLOAD_TYPE_REMOVE = 523;
-world.DOWNLOAD_TYPE_UPDATE = 524;

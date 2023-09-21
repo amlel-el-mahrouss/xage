@@ -29,6 +29,9 @@ namespace XPX
 	{
 		HumanoidReplicationComponent* self = (HumanoidReplicationComponent*)ptr;
 
+		if (!IsValidHeapPtr(self))
+			return;
+
 		self->mPlayers = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>();
 
 		for (auto& player : self->mPlayers)
@@ -38,20 +41,18 @@ namespace XPX
 
 			// xasset is a wrapper over http, it downloads any contents from play-xplicit.com.
 
-			if (auto replica_xasset = player->get_class()->index_as_string("Content");
+			if (auto replica_xasset = player->get_class()->index_as_string("ContentBody");
 				!replica_xasset.empty())
 			{
 				self->mFactory.send(
-					player->get_class()->index_as_number<int>("ContentDeliveryKind"),
+					player->get_class()->index_as_number<int>("ContentType"),
 					replica_xasset.c_str(),
-					player->get_class()->index_as_number<int>("ContentKind"), 
 					player->get_peer()->public_hash);
 			
 				// you wanna do that, so we avoid calling this guy again.
 
-				player->get_class()->assign("ContentKind", "-1");
-				player->get_class()->assign("ContentDeliveryKind", "-1");
-				player->get_class()->assign("Content", "nil");
+				player->get_class()->assign("ContentType", "-1");
+				player->get_class()->assign("ContentBody", "nil");
 			}
 		}
 	}
