@@ -35,13 +35,20 @@ namespace XPX
 	{
 		LocalReplicationComponent* self = (LocalReplicationComponent*)class_ptr;
 
-		if (!self->mNetwork)
+		if (!self ||
+			!self->mNetwork)
 			return;
 
-		NetworkPacket packet = self->mNetwork->get();
+		NetworkPacket packet;
+
+		if (!self->mNetwork->read(packet))
+			return;
 
 		if (packet.channel == XPLICIT_CHANNEL_DATA)
 		{
+			if (packet.cmd[XPLICIT_NETWORK_CMD_DOWNLOAD] != NETWORK_CMD_DOWNLOAD)
+				return;
+
 			switch (packet.id)
 			{
 			case COMPONENT_ID_SCRIPT:
@@ -113,7 +120,7 @@ namespace XPX
 
 			if (node)
 			{
-				if (packet.cmd[XPLICIT_REPL_DESTROY] == NETWORK_CMD_DESTROY)
+				if (packet.cmd[XPLICIT_NETWORK_CMD_DESTROY] == NETWORK_CMD_DESTROY)
 				{
 					node->drop();
 					return;

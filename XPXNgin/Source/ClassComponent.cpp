@@ -99,7 +99,7 @@ namespace XPX
 
 				memcpy(pckt.additional_data, this->mName.data(), this->mName.size());
 
-				pckt.cmd[XPLICIT_REPL_DESTROY] = NETWORK_CMD_DESTROY;
+				pckt.cmd[XPLICIT_NETWORK_CMD_DESTROY] = NETWORK_CMD_DESTROY;
 
 				static auto server = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
