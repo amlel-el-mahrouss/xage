@@ -24,9 +24,9 @@ namespace XPX
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = CAD->getSceneManager()->addCameraSceneNodeFPS(nullptr);
+		mCamera = CAD->getSceneManager()->addCameraSceneNode(nullptr);
 		
-		mLight = CAD->getSceneManager()->addLightSceneNode(0, core::vector3df(0, 5, 0),
+		mLight = CAD->getSceneManager()->addLightSceneNode(0, core::vector3df(0, 0, 0),
 		video::SColorf(1.f, 1.0f, 1.0f, 1.0f), 800.0f);
 
 		XPLICIT_ASSERT(mCamera);
@@ -34,7 +34,7 @@ namespace XPX
 
 		LoadSkybox("noonclouds")->setParent(mCamera);
 		
-		mCamera->setPosition(vector3df(0, 5, 0));
+		mCamera->setPosition(vector3df(0, 0, 0));
 		mCamera->setFarValue(200.f);
 
 		mCamera->setName("Camera");

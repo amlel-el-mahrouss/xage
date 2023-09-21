@@ -193,10 +193,11 @@ namespace XPX
 	{
 		auto* self = (HUDComponent*)class_ptr;
 
-		if (!self->mNetwork)
+		if (!self ||
+			!self->mNetwork)
 			return;
 
-		auto& packet = self->mNetwork->get();
+		auto packet = self->mNetwork->get();
 
 		packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] = KEYBOARD->left_down() ? NETWORK_CMD_LCLICK : NETWORK_CMD_INVALID;
 		packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] = KEYBOARD->right_down() ? NETWORK_CMD_RCLICK : NETWORK_CMD_INVALID;

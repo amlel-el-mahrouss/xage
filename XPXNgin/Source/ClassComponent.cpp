@@ -34,8 +34,8 @@ namespace XPX
 
 		this->insert("Archivable", "false");
 
-		this->insert("Anchored", "true");
-		this->insert("Locked", "true");
+		this->insert("Anchored", "false");
+		this->insert("Locked", "false");
 		this->insert("Collide", "true");
 
 		this->insert("Slots", "{ }");
@@ -76,9 +76,6 @@ namespace XPX
 			this->script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script));
 			XPLICIT_ASSERT(this->script());
 		}
-
-		this->insert("Force", "{ X = 1, Y = 1, Z = 1 }");
-		this->insert("Weight", "{ X = 1, Y = 1, Z = 1 }");
 
 		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
 			mov)

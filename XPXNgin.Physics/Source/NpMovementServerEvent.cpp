@@ -39,48 +39,59 @@ namespace XPX
 
 		for (auto* lhsNode : mWorldNodes)
 		{
-			if (!lhsNode)
+			if (!lhsNode ||
+				lhsNode->index_as_bool("Anchored"))
 				continue;
 
+			lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
+			
 			if (!lhsNode->index_as_bool("Anchored"))
 			{
-				static bool collide = false;
-
-				if (collide = lhsNode->can_collide();
-					collide)
+				for (auto* rhsNode : mWorldNodes)
 				{
-					for (auto* rhsNode : mWorldNodes)
+					if (!rhsNode)
+						return;
+
+					if (rhsNode == lhsNode ||
+						rhsNode->pos() == lhsNode->pos())
+						continue;
+
+					auto x1 = lhsNode->pos().X;
+					auto x2 = lhsNode->scale().X;
+
+					auto rx1 = rhsNode->pos().X;
+					auto rx2 = rhsNode->scale().X;
+
+					if (auto where = (x1 / x2) * (rx1 / rx2);
+						where <= (rx1 / rx2))
 					{
-						if (rhsNode == lhsNode)
-							continue;
+						auto res = Vector<NplicitFloat>((x1 + rx1) / where, (x2 + rx2) / where, (x1 + x2) / where);
+						lhsNode->pos() = res;
 
-						if (RigidBodyHelper<NetworkFloat>::is_touching(lhsNode->pos(), lhsNode->scale(),
-							rhsNode->pos(), rhsNode->scale()))
+						if (rhsNode->index_as_bool("Anchored"))
 						{
-							rhsNode->call_method("Update('Touched')");
-							lhsNode->call_method("Update('Touched')");
+							lhsNode->pos() = res;
 
-							collide = true;
+							if (auto formula = lhsNode->pos().X * where;
+								formula > lhsNode->pos().X)
+								lhsNode->pos().X += formula;
+
+							if (auto formula = lhsNode->pos().Y * where;
+								formula > lhsNode->pos().Y)
+								lhsNode->pos().Y += formula;
+
+							if (auto formula = lhsNode->pos().Z * where;
+								formula > lhsNode->pos().Z)
+								lhsNode->pos().Z += formula;
 						}
+
+						rhsNode->call_method("Update('Touched')");
+						lhsNode->call_method("Update('Touched')");
+
+						continue;
 					}
-				}
 
-				if (collide)
-				{
-					auto force = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X"),
-						lhsNode->index_as_number<NplicitFloat>("Force.Y"),
-						lhsNode->index_as_number<NplicitFloat>("Force.Z"));
-
-					auto velocity = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X") * lhsNode->index_as_number<NplicitFloat>("Weight.X"),
-						lhsNode->index_as_number<NplicitFloat>("Force.Y") * lhsNode->index_as_number<NplicitFloat>("Weight.Y"),
-						lhsNode->index_as_number<NplicitFloat>("Force.Z") * lhsNode->index_as_number<NplicitFloat>("Weight.Z"));
-
-					lhsNode->pos().add(velocity.X * mDeltaTime,
-						velocity.Y * mDeltaTime,
-						velocity.Z * mDeltaTime);
-
-					lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
-					lhsNode->call_method("Update('PhysicsProcessDone')");
+					lhsNode->pos().Y -= mDeltaTime;
 				}
 			}
 
@@ -105,7 +116,7 @@ namespace XPX
 			repl_packet.pos_fourth[XPLICIT_NETWORK_Y] = lhsNode->color().G;
 			repl_packet.pos_fourth[XPLICIT_NETWORK_Z] = lhsNode->color().B;
 
-			repl_packet.pos_third[XPLICIT_NETWORK_X] = lhsNode->color().A;
+			repl_packet.pos_third[XPLICIT_NETWORK_X] = lhsNode->alpha();
 
 			String fmt = lhsNode->index_as_string("Parent").c_str();
 
@@ -118,8 +129,6 @@ namespace XPX
 
 			NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
 				&repl_packet);
-
-			lhsNode->assign("Position", "{ X = 0, Y = 0, Z = 0 }");
 		}
 	}
 

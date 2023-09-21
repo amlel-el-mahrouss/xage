@@ -132,7 +132,7 @@ namespace XPX
         NETWORK_STAT_COUNT        = 2,
     };
 
-    using NetworkFloat = double;
+    using NetworkFloat = float;
 
     struct XPLICIT_API NetworkPacket final
     {

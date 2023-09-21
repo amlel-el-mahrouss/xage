@@ -95,30 +95,6 @@ namespace XPX
 			}
 		}
 
-		if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
-		{
-			NetworkPacket networkPacket{};
-            networkPacket = mNetwork->get();
-
-			const auto players = ComponentSystem::get_singleton_ptr()->all_of<XPX::LocalHumanoidComponent>();
-
-			for (auto player : players)
-			{
-				if (player->id() == networkPacket.public_hash)
-					return;
-			}
-
-#ifdef XPLICIT_DEBUG
-			XPLICIT_INFO("world:Login [EVENT]");
-#endif
-
-			ComponentSystem::get_singleton_ptr()->add<XPX::LocalHumanoidComponent>(networkPacket.public_hash, false, networkPacket.additional_data);
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:Login()");
-
-			/*! invalidate command right there. */
-			networkPacket.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_INVALID;
-		}
-
 		if (packet.cmd[XPLICIT_NETWORK_CMD_SHUTDOWN] == NETWORK_CMD_SHUTDOWN ||
 			packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP)
 		{
@@ -135,25 +111,6 @@ namespace XPX
 				}
 
 				mNetwork = nullptr;
-			}
-			else
-			{
-				const auto players = ComponentSystem::get_singleton_ptr()->all_of<LocalHumanoidComponent>();
-
-				for (int ply = 0; ply < players.size(); ++ply)
-				{
-					if (packet.public_hash == players[ply]->id())
-					{
-#ifdef XPLICIT_DEBUG
-						XPLICIT_INFO("world:Logoff [EVENT]");
-#endif
-
-						Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:Logoff()");
-						ComponentSystem::get_singleton_ptr()->remove(players[ply]);
-
-						break;
-					}
-				}
 			}
 		}
 	}

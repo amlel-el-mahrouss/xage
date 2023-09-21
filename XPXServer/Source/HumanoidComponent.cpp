@@ -149,6 +149,7 @@ namespace XPX
 				}
 
 				self->mPeer->packet.id = -1;
+				self->mPeer->packet.health = self->mHealth;
 				self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_SLOT] = NETWORK_CMD_INVALID;
 			}
 		}
