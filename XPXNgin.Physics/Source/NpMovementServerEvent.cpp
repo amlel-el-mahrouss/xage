@@ -39,7 +39,8 @@ namespace XPX
 
 		for (auto* lhsNode : mWorldNodes)
 		{
-			if (!lhsNode)
+			if (!lhsNode ||
+				lhsNode->is_locked())
 				continue;
 
 			bool touching = false;
@@ -62,8 +63,7 @@ namespace XPX
 				}
 			}
 
-			if (!lhsNode->index_as_bool("Locked") &&
-				!touching)
+			if (!touching)
 			{
 				auto force = Vector<NetworkFloat>(lhsNode->index_as_number<NplicitFloat>("Force.X"),
 					lhsNode->index_as_number<NplicitFloat>("Force.Y"),
@@ -77,11 +77,7 @@ namespace XPX
 
 				lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
 				lhsNode->call_method("Update('PhysicsProcessDone')");
-			}
-			
-			if (auto kind = lhsNode->index_as_string("ClassType");
-				!kind.empty())
-			{
+
 				NetworkPacket repl_packet{};
 
 				repl_packet.channel = XPLICIT_CHANNEL_PHYSICS;
@@ -104,12 +100,12 @@ namespace XPX
 				repl_packet.pos_fourth[XPLICIT_NETWORK_Z] = lhsNode->color().B;
 
 				repl_packet.pos_third[XPLICIT_NETWORK_X] = lhsNode->color().A;
-				
+
 				String fmt = lhsNode->index_as_string("Parent").c_str();
 
 				if (!fmt.empty())
 					fmt += ".";
-					
+
 				fmt += lhsNode->index_as_string("ClassName").c_str();
 
 				memcpy(repl_packet.additional_data, fmt.c_str(), fmt.size());
