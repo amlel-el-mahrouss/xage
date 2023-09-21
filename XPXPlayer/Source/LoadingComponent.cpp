@@ -26,7 +26,6 @@
 #include "Application.h"
 #include "MenuUI.h"
 
-#include <RemoteEventStorage.h>
 #include <XHTTPManager.h>
 #include <Enums.h>
 #include <CLua.hpp>
@@ -81,8 +80,6 @@ namespace XPX
         if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
         {
             packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-
-            ComponentSystem::get_singleton_ptr()->add<RemoteEventStorage>(self->mNetwork);
 
             auto hash = packet.hash;
             auto public_hash = packet.public_hash;

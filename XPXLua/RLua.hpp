@@ -47,6 +47,7 @@ namespace XPX::RLua
 		static int on_delete(lua_State* L)
 		{
 			XPLICIT_INFO("Class::on_delete");
+
 			delete_internal(lua_touserdata(L, 1));
 			
 			return 0;
@@ -71,6 +72,7 @@ namespace XPX::RLua
 			mL = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
 			luaL_newmetatable(mL, Class::name());
+			mMetatableIndex = lua_gettop(mL);
 
 			lua_pushvalue(mL, -1);
 			lua_setfield(mL, -2, "__index");
@@ -100,7 +102,7 @@ namespace XPX::RLua
 
 		RuntimeClass& end_class() noexcept
 		{
-			lua_setmetatable(mL, -2);
+			lua_setmetatable(mL, mMetatableIndex);
 
 			return *this;
 		}
@@ -109,6 +111,7 @@ namespace XPX::RLua
 		std::vector<std::tuple<String, lua_CFunction>> mFuncs;
 
 	private:
+		std::size_t mMetatableIndex;
 		lua_State* mL;
 		String mName;
 

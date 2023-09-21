@@ -141,42 +141,18 @@ namespace XPX::Lua
 		XPLICIT_COPY_DEFAULT(CLuaClass);
 
 	public:
-		bool insert_userdata(const String symbol,
-			void* value)
-		{
-			if (!symbol.empty() &&
-				value)
-			{
-				lua_pushstring(this->state(), mClass.c_str());
-
-				if (lua_gettable(mL, -1) == LUA_OK)
-				{
-					mSymbols.push_back(std::make_pair(mSymbolCnt, CLUA_USER_DATA_SYMBOL));
-					++mSymbolCnt;
-
-					lua_newtable(mL);
-
-					lua_pushcfunction(mL, [](lua_State* L) -> int { lua_error(L); return 0; });
-					lua_setfield(mL, -2, "__newindex");
-
-					lua_pushlightuserdata(mL, value);
-					lua_setfield(mL, -2, "__CxxData");
-					lua_setfield(mL, -1, symbol.c_str());
-
-					return true;
-				}
-			}
-
-			return false;
-		}
-
 		bool insert(const String symbol, const String value)
 		{
 			if (!symbol.empty() &&
 				!value.empty())
 			{
 				if (this->run_string(fmt::format("{}.{} = {}", mClass, symbol, value)).empty())
+				{
+					mSymbols.push_back(std::make_pair(mSymbolCnt, symbol));
+					++mSymbolCnt;
+
 					return true;
+				}
 			}
 
 			return false;

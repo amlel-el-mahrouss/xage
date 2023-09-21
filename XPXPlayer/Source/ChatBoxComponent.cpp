@@ -21,7 +21,7 @@ namespace XPX
 		mChatFrame.Y = 40;
 
 		mChatFrame.W = 512;
-		mChatFrame.H = 210;
+		mChatFrame.H = 310;
 
 		mTextBox.set_size(512, 30);
 		mTextBox.set_pos(10, mChatFrame.Y + mChatFrame.H);

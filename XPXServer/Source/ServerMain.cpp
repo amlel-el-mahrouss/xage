@@ -16,7 +16,6 @@
 #include <RoXML.h>
 #include <codecvt>
 #include <XplicitID.h>
-#include <RemoteEventStorage.h>
 #include <NpMovementServerEvent.h>
 
 #include "LoginEvent.h"
@@ -151,8 +150,6 @@ int main(int argc, char** argv)
 		XplicitLoadServerLua();
 
 		XPX::Root::get_singleton_ptr()->set(XPX::createDevice(XPX::EDT_NULL));
-
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::RemoteEventStorage>(network);
 
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);

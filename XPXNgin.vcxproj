@@ -129,7 +129,6 @@
     <ClInclude Include="XPXNgin\Source\NetworkProtocol.h" />
     <ClInclude Include="XPXNgin\Source\NetworkServerComponent.h" />
     <ClInclude Include="XPXNgin\Source\NginCore.h" />
-    <ClInclude Include="XPXNgin\Source\RemoteEventStorage.h" />
     <ClInclude Include="XPXNgin\Source\RoXML.h" />
     <ClInclude Include="XPXNgin\Source\Root.h" />
     <ClInclude Include="XPXNgin\Source\SocketWrapper.h" />
@@ -170,7 +169,6 @@
     <ClCompile Include="XPXNgin\Source\NetworkProtocol.cpp" />
     <ClCompile Include="XPXNgin\Source\NetworkServerComponent.cpp" />
     <ClCompile Include="XPXNgin\Source\NginCore.cpp" />
-    <ClCompile Include="XPXNgin\Source\RemoteEventStorage.cpp" />
     <ClCompile Include="XPXNgin\Source\RoXML.cpp" />
     <ClCompile Include="XPXNgin\Source\SocketWrapper.cpp" />
     <ClCompile Include="XPXNgin\Source\Uri.cpp" />
