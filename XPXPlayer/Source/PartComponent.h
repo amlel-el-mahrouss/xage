@@ -25,12 +25,13 @@ namespace XPX
 			Vector<NetworkFloat> scale = Vector<NetworkFloat>(0, 0, 0),
 			Color<NetworkFloat> clr = Color<NetworkFloat>(0, 0, 0));
 
-		~PartComponent() noexcept;
+		~PartComponent() noexcept override;
 
 	private:
 		String part_destroy() noexcept;
 
 	public:
+		static bool should_update() noexcept;
 		static void update(ClassPtr cls);
 
 	public:

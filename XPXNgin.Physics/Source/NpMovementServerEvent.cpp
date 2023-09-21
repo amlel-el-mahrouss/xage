@@ -46,8 +46,7 @@ namespace XPX
 
 			for (auto* rhsNode : mWorldNodes)
 			{
-				if (!rhsNode ||
-					rhsNode->index_as_bool("Locked"))
+				if (!rhsNode)
 					continue;
 
 				if (rhsNode == lhsNode)
@@ -100,7 +99,20 @@ namespace XPX
 				repl_packet.pos_second[XPLICIT_NETWORK_Y] = lhsNode->scale().Y;
 				repl_packet.pos_second[XPLICIT_NETWORK_Z] = lhsNode->scale().Z;
 
-				memcpy(repl_packet.additional_data, lhsNode->index_as_string("ClassName").c_str(), lhsNode->index_as_string("ClassName").size());
+				repl_packet.pos_fourth[XPLICIT_NETWORK_X] = lhsNode->color().R;
+				repl_packet.pos_fourth[XPLICIT_NETWORK_Y] = lhsNode->color().G;
+				repl_packet.pos_fourth[XPLICIT_NETWORK_Z] = lhsNode->color().B;
+
+				repl_packet.pos_third[XPLICIT_NETWORK_X] = lhsNode->color().A;
+				
+				String fmt = lhsNode->index_as_string("Parent").c_str();
+
+				if (!fmt.empty())
+					fmt += ".";
+					
+				fmt += lhsNode->index_as_string("ClassName").c_str();
+
+				memcpy(repl_packet.additional_data, fmt.c_str(), fmt.size());
 
 				NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
 					&repl_packet);

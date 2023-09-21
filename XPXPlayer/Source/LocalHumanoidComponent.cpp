@@ -114,8 +114,6 @@ namespace XPX
 					0, 
 						self->mPacket.pos_second[XPLICIT_NETWORK_Z]));
 
-				self->mCam->get()->setTarget(self->mCharacter->node()->getAbsolutePosition());
-
 				XPLICIT_INFO("world:LocalMove [EVENT]");
 
 				String fmt = fmt::format("world:LocalMove({},{},{})", std::to_string(self->mPos.X), std::to_string(self->mPos.Y), std::to_string(self->mPos.Z));

@@ -141,11 +141,31 @@ namespace XPX
 			{
 				node->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
 				node->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
+			
+				static auto stud = ComponentSystem::get_singleton_ptr()->get<PartComponent>(packet.additional_data);
+				
+				if (stud)
+					stud->color() = Color<NetworkFloat>(
+						packet.pos_fourth[XPLICIT_NETWORK_X], 
+						packet.pos_fourth[XPLICIT_NETWORK_Y], 
+						packet.pos_fourth[XPLICIT_NETWORK_Z],
+						packet.pos_third[XPLICIT_NETWORK_X]);
 			}
 			else
 			{
 				String parent = String(packet.additional_data);
-				String name = String(packet.additional_data, parent.find("."));
+
+				String name;
+
+				if (parent.find(".") != String::npos)
+				{
+					name = String(packet.additional_data, parent.find("."));
+				}
+				else
+				{
+					name = parent;
+					parent = "world";
+				}
 
 				parent = parent.substr(parent.find(".") + 1);
 

@@ -24,35 +24,15 @@ namespace XPX
 		if (mStud)
 		{
 			mStud->setName(name);
-			mStud->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+			mStud->setMaterialFlag(irr::video::EMF_LIGHTING, true);
 		}
 
 		this->assign("Destroy", this->part_destroy().c_str());
 	}
 
-	void PartComponent::update(ClassPtr cls)
-	{
-		ClassComponent::update(cls);
+	bool PartComponent::should_update() noexcept { return false; }
 
-		PartComponent* self = (PartComponent*)cls;
-
-		if (CAD)
-		{
-			if (self->index_as_bool("Locked"))
-				return;
-
-			if (self->mStud)
-			{
-				self->mStud->setScale(vector3df(self->scale().X, self->scale().Y, self->scale().Z));
-				self->mStud->setPosition(vector3df(self->pos().X, self->pos().Y, self->pos().Z));
-
-				self->mStud->setRotation(vector3df(self->index_as_number("Rotation.X"), self->index_as_number("Rotation.Y"), self->index_as_number("Rotation.Z")));
-
-				self->mStud->getMaterial(0).DiffuseColor.set(self->color().A, self->color().R, self->color().G, self->color().B);
-				self->mStud->getMaterial(0).AmbientColor.set(self->color().A, self->color().R, self->color().G, self->color().B);
-			}
-		}
-	}
+	void PartComponent::update(ClassPtr self) {  }
 
 	String PartComponent::part_destroy() noexcept
 	{

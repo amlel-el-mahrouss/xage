@@ -242,7 +242,9 @@ namespace XPX
 		self->mFrameParent->update(self->mFrameParent->BackgroundHoverColor);
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
-		if (packet.health != self->mHealth)
+		if (packet.channel == XPLICIT_CHANNEL_DATA &&
+			packet.public_hash == self->mPublicHash &&
+			packet.health != self->mHealth)
 		{
 			self->mHealth = packet.health;
 			self->mHudFrame->W = self->mHealth * 2;
