@@ -60,10 +60,14 @@ namespace XPX
 		this->scale() = size;
 		this->color() = color;
 
-		this->insert("Scale", "{ X = 0, Y = 0, Z = 0 }");
-		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
+		this->insert("Force", "{ X = 1, Y = 1, Z = 1 }");
+		this->insert("Weight", "{ X = 1, Y = 1, Z = 1 }");
+
+		this->insert("Scale", "{ X =  " + std::to_string(size.X) + ", Y = " + std::to_string(size.X) + ", Z = " + std::to_string(size.X) + " }");
+		this->insert("Position", "{ X =  " + std::to_string(position.X) + ", Y = " + std::to_string(position.X) + ", Z = " + std::to_string(position.X) + " }");
+
 		this->insert("Rotation", "{ X = 0, Y = 0, Z = 0 }");
-		this->insert("Color", "{ R = 0, G = 0, B = 0, A = 1 }");
+		this->insert("Color", "{ R = 1, G = 1, B = 1, A = 1 }");
 
 		if (script &&
 			std::filesystem::exists(script))

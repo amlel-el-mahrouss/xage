@@ -177,15 +177,16 @@ namespace XPX
 			String player_tbl("world.Players.");
 			player_tbl += mPeer->xplicit_id.as_string();
 
-			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>("world.Players", mPeer->xplicit_id.as_string().c_str());
+			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(Vector<NetworkFloat>(0, 0, 0),
+				Vector<NetworkFloat>(5, 5, 1),
+				Color<NetworkFloat>(0, 0, 0),
+				"world.Players", mPeer->xplicit_id.as_string().c_str());
 
 			XPLICIT_ASSERT(mClass);
 
 			if (mClass)
 			{
 				mClass->assign("Locked", "false");
-
-				mClass->assign("Scale", "{ X = 5, Y = 5, Z = 1 }");
 
 				mClass->insert("UserName", "'Unconnected'");
 				mClass->insert("Parent", "world.Players");

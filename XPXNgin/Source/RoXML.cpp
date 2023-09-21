@@ -127,8 +127,6 @@ namespace XPX::RoXML
 
 								if (component)
 								{
-									component->insert("Force", "{ X = 1, Y = 1, Z = 1 }");
-									component->insert("Weight", "{ X = 1, Y = 1, Z = 1 }");
 									component->assign("Parent", ((nullptr != parent_id) ? parent_id : "world"));
 								}
 							}
