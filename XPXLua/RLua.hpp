@@ -100,7 +100,7 @@ namespace XPX::RLua
 
 		RuntimeClass& end_class() noexcept
 		{
-			lua_setmetatable(mL, -1);
+			lua_setmetatable(mL, -2);
 
 			return *this;
 		}
