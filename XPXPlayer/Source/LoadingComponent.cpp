@@ -84,6 +84,13 @@ namespace XPX
             auto hash = packet.hash;
             auto public_hash = packet.public_hash;
 
+            const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
+
+            ComponentSystem::get_singleton_ptr()->add<ChatBoxComponent>(packet.additional_data);
+            monitor->ID = packet.additional_data;
+
+            XPLICIT_INFO("XPX_ID:" + monitor->ID);
+
             EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(hash);
             EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
@@ -93,15 +100,8 @@ namespace XPX
             const auto cam = ComponentSystem::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
             const auto local_player = ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash, true);
 
-            const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
-
             local_player->attach(cam);
             self->mNetwork->set_hash(hash);
-
-            ComponentSystem::get_singleton_ptr()->add<ChatBoxComponent>(packet.additional_data);
-            monitor->ID = packet.additional_data;
-
-            XPLICIT_INFO("XPX_ID:" + monitor->ID);
 
             monitor->Endpoint = XPLICIT_XASSET_ENDPOINT;
 

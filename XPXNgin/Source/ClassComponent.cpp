@@ -34,6 +34,7 @@ namespace XPX
 
 		this->insert("Archivable", "false");
 
+		this->insert("Anchored", "true");
 		this->insert("Locked", "true");
 		this->insert("Collide", "true");
 
@@ -95,6 +96,13 @@ namespace XPX
 			{
 				NetworkPacket pckt{};
 
+				pckt.channel = XPLICIT_CHANNEL_PHYSICS;
+				pckt.version = XPLICIT_NETWORK_VERSION;
+
+				pckt.magic[0] = XPLICIT_NETWORK_MAG_0;
+				pckt.magic[1] = XPLICIT_NETWORK_MAG_1;
+				pckt.magic[2] = XPLICIT_NETWORK_MAG_2;
+
 				memcpy(pckt.additional_data, this->mName.data(), this->mName.size());
 
 				pckt.cmd[XPLICIT_REPL_DESTROY] = NETWORK_REPL_CMD_DESTROY;
@@ -139,19 +147,13 @@ namespace XPX
 				self->pos().Y = self->index_as_number<float>("Parent.Position.Y");
 				self->pos().Z = self->index_as_number<float>("Parent.Position.Z");
 			}
-			else
-			{
-				self->pos().X = self->index_as_number<float>("Position.X");
-				self->pos().Y = self->index_as_number<float>("Position.Y");
-				self->pos().Z = self->index_as_number<float>("Position.Z");
-			}
-
-			self->scale().X = self->index_as_number<float>("Scale.X");
-			self->scale().Y = self->index_as_number<float>("Scale.Y");
-			self->scale().Z = self->index_as_number<float>("Scale.Z");
 		}
 		else
 		{
+			self->scale().X = self->index_as_number<float>("Scale.X");
+			self->scale().Y = self->index_as_number<float>("Scale.Y");
+			self->scale().Z = self->index_as_number<float>("Scale.Z");
+
 			self->assign("Position", "{ X =  " + std::to_string(self->scale().X) + ", Y = " + std::to_string(self->scale().X) + ", Z = " + std::to_string(self->scale().X) + " }");
 		}
 	}
