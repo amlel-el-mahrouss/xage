@@ -19,7 +19,7 @@
 namespace XPX
 {
 	LocalCameraComponent::LocalCameraComponent() noexcept
-		: ClassComponent("world", "Camera"),
+		: ClassComponent(Vector<NetworkFloat>(0, 0, 0), Vector<NetworkFloat>(1, 1, 1), Color<NetworkFloat>(0, 0, 0), nullptr, "world", "Camera"),
 		mCamera(nullptr),
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
@@ -59,6 +59,7 @@ namespace XPX
         if (!self)
             return;
 
+		self->get()->setPosition(vector3df(self->pos().X, self->pos().Y, self->pos().Z));
 		self->mLight->setParent(self->mCamera);
 
 		self->get()->setFOV(self->index_as_number("FOV"));

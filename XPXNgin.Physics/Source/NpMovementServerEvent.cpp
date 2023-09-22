@@ -8,6 +8,7 @@
  */
 
 #include "NpMovementServerEvent.h"
+#include "AABB.h"
 
 #include <NetworkServerComponent.h>
 #include <NetworkProtocol.h>
@@ -33,8 +34,7 @@ namespace XPX
 
 		for (auto* lhsNode : mWorldNodes)
 		{
-			if (!lhsNode ||
-				lhsNode->index_as_bool("Anchored"))
+			if (!lhsNode)
 				continue;
 
 			lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
@@ -49,38 +49,17 @@ namespace XPX
 					if (rhsNode == lhsNode)
 						continue;
 
-					auto x1 = lhsNode->pos().X;
-					auto x2 = lhsNode->scale().X;
-
-					auto rx1 = rhsNode->pos().X;
-					auto rx2 = rhsNode->scale().X;
-					
-					auto where = (x1 / x2) * (rx1 / rx2);
-
-					if (where <= (rx1 / rx2) &&
-						where >= (x1 / x2))
+					if (RigidBodyHelper<NplicitFloat>::is_touching(rhsNode->pos(), lhsNode->pos(), lhsNode->scale(), rhsNode->scale()))
 					{
-						auto res = Vector<NplicitFloat>((x1 + rx1) / where, (x2 + rx2) / where, (x1 + x2) / where);
-
-						if (auto formula = res.X * where;
-							formula > res.X)
-							lhsNode->pos().X *= formula;
-
-						if (auto formula = res.Y * where;
-							formula > res.Y)
-							lhsNode->pos().Y -= formula;
-
-						if (auto formula = res.Z * where;
-							formula > res.Z)
-							lhsNode->pos().Z *= formula;
-
 						rhsNode->call_method("Update('Touched')");
 						lhsNode->call_method("Update('Touching')");
-
-						continue;
+					
+						break;
 					}
-
-					lhsNode->pos().Y -= where;
+					else
+					{
+						lhsNode->pos().mul(rhsNode->pos().X, rhsNode->pos().Y, rhsNode->pos().Z);
+					}
 				}
 			}
 
