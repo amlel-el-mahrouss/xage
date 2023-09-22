@@ -21,6 +21,14 @@ namespace XPX
 	class XPLICIT_API LuaScriptComponent final : public ClassComponent
 	{
 	public:
+		enum
+		{
+			LUA_LOADING,
+			LUA_RUNNING,
+			LUA_STOP,
+		};
+
+	public:
 		LuaScriptComponent() = delete;
 
 	private:
@@ -37,12 +45,15 @@ namespace XPX
 		COMPONENT_TYPE type() noexcept;
 		const char* path() noexcept;
 
+		std::int32_t status() noexcept { return mStatus; }
+
 	public:
 		static void update(void* class_ptr);
 		static bool should_update() noexcept;
 
 	private:
 		String mName;
+		std::int32_t mStatus;
 
 	};
 }

@@ -59,7 +59,7 @@ namespace XPX
 					url.find("xasset://") == String::npos)
 					return;
 
-				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-TMP-LUA";
+				auto tmp = uuids::to_string(UUIDFactory::version<4>()) + "-LUA";
 
 				if (DownloadURL(url, tmp))
 				{
@@ -71,7 +71,14 @@ namespace XPX
 					full_download_path += "Contents/";
 					full_download_path += tmp;
 
-					ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
+					auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
+
+					if (script &&
+						script->status() == LuaScriptComponent::LUA_STOP)
+					{
+						std::remove(full_download_path.c_str());
+						ComponentSystem::get_singleton_ptr()->remove(script);
+					}
 				}
 
 				break;

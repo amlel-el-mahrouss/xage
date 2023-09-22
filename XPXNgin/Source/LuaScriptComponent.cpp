@@ -47,7 +47,7 @@ namespace XPX
 			auto lua_ThisSleep = [](lua_State* L) -> int {
 				std::this_thread::sleep_for(std::chrono::seconds(lua_tointeger(L, 1)));
 				return 0;
-			};
+				};
 
 			// Script.Current
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("Script.Current = Script.{}", name));
@@ -72,10 +72,14 @@ namespace XPX
 
 			bool comment = false;
 
+			mStatus = LUA_LOADING;
+
 			while (std::getline(if_path, tmp))
 				code += tmp + "\r\n";
 
 			clua_lock();
+
+			mStatus = LUA_RUNNING;
 
 			if (auto ret = self->run_string(code);
 				!ret.empty())
@@ -83,15 +87,12 @@ namespace XPX
 				XPLICIT_CRITICAL(ret);
 			}
 
+			mStatus = LUA_STOP;
+
 			clua_unlock();
 		});
 
 		job.detach();
-
-		//if (!job.joinable())
-			//job.detach();
-		//else
-			//job.join();
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;

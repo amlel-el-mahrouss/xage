@@ -464,7 +464,14 @@ namespace XPX::RoXML
 								full_download_path += "Contents/";
 								full_download_path += tmp;
 
-								ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
+								auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
+								
+								if (script &&
+									script->status() == LuaScriptComponent::LUA_STOP)
+								{
+									std::remove(full_download_path.c_str());
+									ComponentSystem::get_singleton_ptr()->remove(script);
+								}
 							}
 						}
 					}
