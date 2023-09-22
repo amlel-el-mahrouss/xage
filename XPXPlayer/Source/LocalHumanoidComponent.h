@@ -56,7 +56,6 @@ namespace XPX
 	private:
 		NetworkComponent* mNetwork;
 		LocalCameraComponent* mCam;
-		bool mIsLocalPlayer;
 
 	private:
 		std::int64_t mHash;

@@ -59,17 +59,6 @@ namespace XPX
 					mParts.push_back(std::make_pair(mesh, mesh->getMesh()));
 			}
 		}
-
-		XPLICIT_ASSERT(this->count_parts() == XPLICIT_BUNDLE_MAX);
-
-		auto torso = this->node_at(XPLICIT_BUNDLE_TORSO);
-
-		for (auto& part : mParts)
-		{
-			if (part.first &&
-				part.first != torso)
-				part.first->setParent(torso);
-		}
 	}
 
 	StaticBundleMesh::~StaticBundleMesh() noexcept

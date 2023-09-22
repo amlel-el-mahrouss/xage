@@ -31,8 +31,7 @@ namespace XPX
 		mCam(nullptr), 
 		mPacket(),
 		mPos(0.f, 0.f, 0.f),
-		mState(HUMANOID_STATE::ALIVE),
-		mIsLocalPlayer(is_local_player)
+		mState(HUMANOID_STATE::ALIVE)
 	{
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -69,33 +68,16 @@ namespace XPX
 		if ((self->mPacket.channel & XPLICIT_CHANNEL_DATA) &&
 			self->mPacket.hash == self->mHash)
 		{
-			if (self->mIsLocalPlayer)
+			if (KEYBOARD->left_down())
 			{
-				if (KEYBOARD->left_down())
-				{
-					self->mPacket.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_LCLICK;
-					self->mNetwork->send(self->mPacket);
-				}
+				self->mPacket.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_LCLICK;
+				self->mNetwork->send(self->mPacket);
+			}
 
-				if (KEYBOARD->right_down())
-				{
-					self->mPacket.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_RCLICK;
-					self->mNetwork->send(self->mPacket);
-				}
-
-				if (self->mPacket.health > 0 &&
-					self->mState == HUMANOID_STATE::DEAD)
-				{
-					XPLICIT_INFO("world:LocalSpawn [EVENT]");
-
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:LocalSpawn()");
-
-					self->mState = HUMANOID_STATE::ALIVE;
-				}
-				else if (self->mPacket.health <= 0)
-				{
-					self->mState = HUMANOID_STATE::DEAD;
-				}
+			if (KEYBOARD->right_down())
+			{
+				self->mPacket.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_RCLICK;
+				self->mNetwork->send(self->mPacket);
 			}
 		}
 	}

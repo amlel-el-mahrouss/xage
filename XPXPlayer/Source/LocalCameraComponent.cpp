@@ -31,7 +31,7 @@ namespace XPX
 		CAD->getSceneManager()->setActiveCamera(mCamera);
 		
 		mLight = CAD->getSceneManager()->addLightSceneNode(mCamera, core::vector3df(0, 0, 0),
-		video::SColorf(1.f, 1.0f, 1.0f, 1.0f), 1000.0f);
+		video::SColorf(1.f, 1.0f, 0.2f, 0.5f), 1000.0f);
 
 		XPLICIT_ASSERT(mCamera);
 		XPLICIT_ASSERT(mLight);
