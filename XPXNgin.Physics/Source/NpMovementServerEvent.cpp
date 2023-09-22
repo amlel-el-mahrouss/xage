@@ -64,36 +64,7 @@ namespace XPX
 
 	void NpMovementServerEvent::operator()()
 	{
-		for (auto* lhsNode : mWorldNodes)
-		{
-			if (!lhsNode)
-				continue;
-
-			ClassComponent::update(lhsNode);
-
-			if (!lhsNode->index_as_bool("Anchor"))
-			{
-				for (auto* rhsNode : mWorldNodes)
-				{
-					if (!rhsNode)
-						continue;
-
-					if (rhsNode == lhsNode)
-						continue;
-
-					if (AABBHelper::is_touching(lhsNode->pos(), rhsNode->pos()))
-					{
-						rhsNode->call_method("Update('Touched')");
-						lhsNode->call_method("Update('Touching')");
-
-						xpxSendToWorldNode(rhsNode);
-						xpxSendToWorldNode(lhsNode);
-
-						break;
-					}
-				}
-			}
-		}
+		
 	}
 
 	bool NpMovementServerEvent::insert_node(NpSceneNode node)
