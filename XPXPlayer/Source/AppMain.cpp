@@ -16,6 +16,7 @@
 
 #include "App.h"
 #include "ClientUtils.h"
+#include "LocalCameraComponent.h"
 
 #include <NetworkProtocol.h>
 #include <DriverD3D11.h>
@@ -146,7 +147,6 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-
 			if (cmd_line.empty() ||
 				cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == XPX::String::npos)
 				return 1;
@@ -171,9 +171,13 @@ int main(int argc, char** argv)
 			CAD->getSceneManager()->getParameters()->setAttribute(XPX::COLLADA_CREATE_SCENE_INSTANCES, true);
 			CAD->getVideoDriver()->setTextureCreationFlag(XPX::ETCF_ALWAYS_32_BIT, true);
 
-			while (CAD->run())
+			while (CAD->run() && 
+				XPX::ComponentSystem::get_singleton_ptr() &&
+				XPX::EventSystem::get_singleton_ptr())
 			{
-				CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
+				CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 40, 40, 40));
+
+				CAD->getSceneManager()->drawAll();
 
 #ifdef _WIN32
 				XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
@@ -181,8 +185,6 @@ int main(int argc, char** argv)
 
 				XPX::ComponentSystem::get_singleton_ptr()->update();
 				XPX::EventSystem::get_singleton_ptr()->update();
-
-				CAD->getSceneManager()->drawAll();
 
 				CAD->getVideoDriver()->endScene();
 

@@ -25,7 +25,7 @@ namespace XPX
 
 namespace XPX::Bites
 {
-	constexpr const PChar* XPLICIT_APP_NAME = L"XAGE";
+	constexpr const PChar* XPLICIT_APP_NAME = L"XPXPlayer";
 
 	class ObjectInputSystem final
 	{

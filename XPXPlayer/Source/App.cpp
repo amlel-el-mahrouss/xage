@@ -67,7 +67,7 @@ namespace XPX::Bites
 
 		SIrrlichtCreationParameters params;
 
-		params.DriverMultithreaded = true;
+		params.DriverMultithreaded = false;
 		params.DriverType = EDT_OPENGL;
 		params.Fullscreen = false;
 		params.WindowSize = dimension2d<irr::u32>(traits.window_width, traits.window_height);

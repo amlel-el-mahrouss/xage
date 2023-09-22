@@ -49,6 +49,7 @@ namespace XPX
         mTimeout(0)
     {
         mLoadingTexture = CAD->getVideoDriver()->getTexture(verified ? "UIBadgeVerified.png" : "UIBadge.png");
+        LocalCameraComponent* cam = ComponentSystem::get_singleton_ptr()->add<LocalCameraComponent>();
     }
 
     LoadingComponent::~LoadingComponent() = default;
