@@ -37,8 +37,6 @@ namespace XPX::RLua
 		{
 			*reinterpret_cast<Class**>(lua_newuserdata(L, sizeof(Class*))) = new Class();
 
-			luaL_setmetatable(L, Class::name());
-
 			XPLICIT_INFO("Class::on_new");
 			return 1;
 		}
@@ -72,17 +70,8 @@ namespace XPX::RLua
 			mL = Lua::CLuaStateManager::get_singleton_ptr()->state();
 
 			luaL_newmetatable(mL, Class::name());
-			mMetatableIndex = lua_gettop(mL);
-
-			lua_pushvalue(mL, mMetatableIndex);
-			lua_setfield(mL, -2, "__index");
-
-			lua_pushstring(mL, Class::name());
-			lua_setfield(mL, -2, "__tostring");
 
 			*this = this->append_proc("__gc", &RuntimeClass<Class>::on_delete);
-			*this = this->append_proc("borrow", &RuntimeClass<Class>::on_new);
-			*this = this->append_proc("release", &RuntimeClass<Class>::on_delete);
 
 			mName = Class::name();
 
@@ -99,8 +88,14 @@ namespace XPX::RLua
 
 		RuntimeClass& end_class() noexcept
 		{
-			lua_setmetatable(mL, mMetatableIndex);
-			lua_setglobal(mL, Class::name());
+			lua_pushvalue(mL, -1);
+			lua_setfield(mL, -2, "__index");
+
+			lua_pushvalue(mL, -1);
+			lua_setfield(mL, -2, "__metatable");
+
+			lua_pushstring(mL, Class::name());
+			lua_setfield(mL, -2, "__tostring");
 
 			return *this;
 		}

@@ -40,7 +40,14 @@ namespace XPX
 		this->assign("Destroy", sound_destroy(name, parent).c_str());
 	}
 
-	SoundComponent::~SoundComponent() = default;
+	SoundComponent::~SoundComponent()
+	{
+		for (auto audio : mAudios)
+		{
+			if (audio)
+				audio.reset();
+		}
+	}
 
 	COMPONENT_TYPE SoundComponent::type() noexcept { return COMPONENT_SOUND; }
 
@@ -61,10 +68,7 @@ namespace XPX
 		mVolume = volume;
 	}
 
-	void SoundComponent::update(ClassPtr class_ptr)
-	{
-
-	}
+	void SoundComponent::update(ClassPtr class_ptr) {}
 
 	void SoundComponent::should_loop(bool enable) noexcept
 	{
@@ -85,7 +89,10 @@ namespace XPX
 		std::shared_ptr<Audio::XAudioEngine::XAudioHandle> audio = XPX::Audio::XAudioEngine::get_singleton_ptr()->make_audio(cvt.from_bytes(path).c_str());
 
 		if (audio)
+		{
+			mAudios.push_back(audio);
 			audio->play_3d(this->pos(), mVolume, mPitch, mPan, &mLoop);
+		}
 #else
         Vector<float> vel(0, 0, 0);
 

@@ -86,6 +86,8 @@ namespace XPX
 
             const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
 
+            self->mNetwork->read(packet);
+
             ComponentSystem::get_singleton_ptr()->add<ChatBoxComponent>(packet.additional_data);
             monitor->ID = packet.additional_data;
 

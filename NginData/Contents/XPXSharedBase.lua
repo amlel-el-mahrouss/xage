@@ -191,6 +191,5 @@ function world:RenderOneFrame()
 end
 
 -- Replications enums
-world.DOWNLOAD_NOTHING = -1;
 world.DOWNLOAD_SCRIPT = 1;
-world.DOWNLOAD_XMLSCENE = 2;
+world.DOWNLOAD_ROXML = 2;

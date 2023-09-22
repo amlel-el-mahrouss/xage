@@ -197,7 +197,7 @@ namespace XPX
 			!self->mNetwork)
 			return;
 
-		auto packet = self->mNetwork->get();
+		NetworkPacket packet = self->mNetwork->get();
 
 		packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] = KEYBOARD->left_down() ? NETWORK_CMD_LCLICK : NETWORK_CMD_INVALID;
 		packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] = KEYBOARD->right_down() ? NETWORK_CMD_RCLICK : NETWORK_CMD_INVALID;
@@ -243,13 +243,8 @@ namespace XPX
 		self->mFrameParent->update(self->mFrameParent->BackgroundHoverColor);
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
-		if ((packet.channel & XPLICIT_CHANNEL_DATA) &&
-			packet.public_hash == self->mPublicHash &&
-			packet.health != self->mHealth)
-		{
-			self->mHealth = packet.health;
-			self->mHudFrame->W = self->mHealth * 2;
-		}
+		self->mHealth = packet.health;
+		self->mHudFrame->W = self->mHealth * 2;
 	}
 
 	RectComponent::RectComponent(const char* parent, const char* name)

@@ -215,15 +215,28 @@ static int lua_DestroyGear(lua_State* L)
 	return 0;
 }
 
+static int from_scheme(lua_State* L)
+{
+	auto uri = *reinterpret_cast<XPXUri**>(lua_newuserdata(L, sizeof(XPXUri*))) = new XPXUri();
+	uri->Uri = XPX::Utils::UriParser(lua_tostring(L, 1));
+
+	XPLICIT_INFO("XPXUri::on_new");
+
+	return 1;
+}
+
 void XplicitLoadServerLua() noexcept
 {
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Shutdown, "shutdown");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyGear, "destroyGear");
 
+	XPX::RLua::RuntimeClass<XPXUri> uri;
+	uri.begin_class().append_proc("from_scheme", from_scheme).append_proc("parse", &XPXUri::parse_url).end_class();
+
+	lua_setglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), XPXUri::name());
+
 	XPX::RLua::RuntimeClass<XPXEngineBridge> instance;
 	instance.begin_class().append_proc("new", &XPXEngineBridge::new_instance).end_class();
 
-	XPX::RLua::RuntimeClass<XPXUri> uri;
-	uri.begin_class().append_proc("parse", &XPXUri::parse_url).end_class();
-
+	lua_setglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), XPXEngineBridge::name());
 }

@@ -54,6 +54,7 @@ namespace XPX
 		float mPan{ 0 };
 
 	private:
+		std::vector<std::shared_ptr<Audio::XAudioEngine::XAudioHandle>> mAudios;
 		String mGroup;
 		String mName;
 

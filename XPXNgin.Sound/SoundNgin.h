@@ -83,7 +83,7 @@ namespace XPX
 			struct XAudioHandle final
 			{
 			public:
-				XAudioHandle(DirectX::AudioEngine* engine, const wchar_t* path)
+				XAudioHandle(DirectX::AudioEngine* engine, const wchar_t* path) noexcept
 					: 
 					mAudio(std::make_unique<DirectX::SoundEffect>(engine, path)),
 					mPos(0.f, 0.0f, 0.0f),

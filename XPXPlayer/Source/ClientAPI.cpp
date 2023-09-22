@@ -407,13 +407,27 @@ static int lua_DestroyMesh(lua_State* L)
 	return 0;
 }
 
+static int from_scheme(lua_State* L)
+{
+	auto uri = *reinterpret_cast<XPXUri**>(lua_newuserdata(L, sizeof(XPXUri*))) = new XPXUri();
+	uri->Uri = XPX::Utils::UriParser(lua_tostring(L, 1));
+
+	XPLICIT_INFO("XPXUri::on_new");
+
+	return 1;
+}
+
 void XplicitLoadClientLua() noexcept
 {
 	XPX::RLua::RuntimeClass<XPXEngineBridge> instance;
 	instance.begin_class().append_proc("new", &XPXEngineBridge::new_instance).end_class();
 
+	lua_setglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), XPXEngineBridge::name());
+
 	XPX::RLua::RuntimeClass<XPXUri> uri;
-	uri.begin_class().append_proc("parse", &XPXUri::parse_url).end_class();
+	uri.begin_class().append_proc("from_scheme", from_scheme).append_proc("parse", &XPXUri::parse_url).end_class();
+
+	lua_setglobal(XPX::Lua::CLuaStateManager::get_singleton_ptr()->state(), XPXUri::name());
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "playSound");
 

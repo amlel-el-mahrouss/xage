@@ -34,8 +34,29 @@ namespace XPXUpdate {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::ProgressBar^ progressBar1;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
+	protected:
+
+	protected:
+
+
+	protected:
+
+	protected:
+
+	protected:
+
+
+
+
+
+
+
+
+
+	protected:
+
+
 
 	protected:
 
@@ -53,28 +74,17 @@ namespace XPXUpdate {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
-			this->progressBar1 = (gcnew System::Windows::Forms::ProgressBar());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
-			// progressBar1
-			// 
-			this->progressBar1->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
-				static_cast<System::Int32>(static_cast<System::Byte>(192)));
-			this->progressBar1->Location = System::Drawing::Point(12, 311);
-			this->progressBar1->Name = L"progressBar1";
-			this->progressBar1->Size = System::Drawing::Size(302, 23);
-			this->progressBar1->Style = System::Windows::Forms::ProgressBarStyle::Marquee;
-			this->progressBar1->TabIndex = 0;
-			// 
 			// pictureBox1
 			// 
 			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
-			this->pictureBox1->Location = System::Drawing::Point(12, 172);
-			this->pictureBox1->Name = L"XPXLogo";
-			this->pictureBox1->Size = System::Drawing::Size(131, 133);
-			this->pictureBox1->TabIndex = 2;
+			this->pictureBox1->Location = System::Drawing::Point(76, 298);
+			this->pictureBox1->Name = L"pictureBox1";
+			this->pictureBox1->Size = System::Drawing::Size(147, 113);
+			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			// 
 			// MainForm
@@ -82,10 +92,12 @@ namespace XPXUpdate {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::White;
-			this->ClientSize = System::Drawing::Size(326, 346);
+			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
+			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
+			this->ClientSize = System::Drawing::Size(298, 464);
 			this->Controls->Add(this->pictureBox1);
-			this->Controls->Add(this->progressBar1);
 			this->Cursor = System::Windows::Forms::Cursors::AppStarting;
+			this->DoubleBuffered = true;
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;

@@ -37,10 +37,7 @@ namespace XPX
 			!self->mNetwork)
 			return;
 
-		NetworkPacket packet;
-
-		if (!self->mNetwork->read(packet))
-			return;
+		NetworkPacket packet = self->mNetwork->get();
 
 		if (packet.channel & XPLICIT_CHANNEL_DATA)
 		{
