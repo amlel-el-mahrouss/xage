@@ -52,8 +52,6 @@ namespace XPX::RoXML
 							klass_to_instantiate == "Class")
 							klass_to_instantiate = first_attr->value();
 
-						// Here is a list of some run-time components { "Light", "Mesh", "Sound", "Particle" };
-
 						if (strcmp(first_attr->next_attribute()->name(), "Referent") == 0)
 						{
 							auto node_id = first_attr->next_attribute()->value();
@@ -90,16 +88,77 @@ namespace XPX::RoXML
 
 							if (klass_to_instantiate == "Part")
 							{
-								auto _mesh = CAD->getSceneManager()->addCubeSceneNode();
+								auto node_mesh = CAD->getSceneManager()->addCubeSceneNode();
 
-								if (_mesh)
+								if (node_mesh)
 								{
-									_mesh->setScale(vector3df(4, 1, 2));
+									if (auto parent = CAD->getSceneManager()->getSceneNodeFromName(parent_id);
+										parent)
+										node_mesh->setParent(parent);
 
-									_mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
-									_mesh->setName(node_id);
+									node_mesh->setName(node_id);
+									object = node_mesh;
+								}
+							}
 
-									object = _mesh;
+							if (klass_to_instantiate == "Mesh")
+							{
+								auto val = node->first_attribute()->value();
+
+								for (size_t i = 0; i < strlen(val); i++)
+								{
+									if (isalnum(val[i]) ||
+										val[i] == '.' ||
+										val[i] == '/' ||
+										val[i] == '\\' ||
+										val[i] == '-' ||
+										val[i] == ':' ||
+										val[i] == '_')
+									{
+										world_node.Value += val[i];
+									}
+								}
+
+								String url = world_node.Value;
+
+								std::unique_ptr<XHTTPManager> HTTP = std::make_unique<XHTTPManager>();
+
+								if (HTTP &&
+									url.find("xasset://") != String::npos)
+								{
+									String substr = url.erase(url.find("xasset://"), strlen("xasset://"));
+
+									url.clear();
+									url = "/";
+									url += substr;
+
+									HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
+
+									XPLICIT_GET_DATA_DIR(full_path);
+
+									auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-DAE";
+									tmp += XPLICIT_OBJ_FORMAT;
+
+									if (HTTP->download(url, tmp))
+									{
+										XPLICIT_GET_DATA_DIR(full_path);
+
+										String full_download_path = full_path;
+										full_download_path += "Contents/";
+										full_download_path += tmp;
+
+										auto node_mesh = CAD->getSceneManager()->addMeshSceneNode(CAD->getSceneManager()->getMesh(full_download_path.c_str()));
+
+										if (node_mesh)
+										{
+											if (auto parent = CAD->getSceneManager()->getSceneNodeFromName(parent_id);
+												parent)
+												node_mesh->setParent(parent);
+
+											node_mesh->setName(node_id);
+											object = node_mesh;
+										}
+									}
 								}
 							}
 
@@ -246,7 +305,9 @@ namespace XPX::RoXML
 							const auto pos = irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()));
 
 							if (scene_node)
+							{
 								scene_node->setRotation(pos);
+							}
 						}
 					}
 				}

@@ -1,23 +1,24 @@
 <RenderRig>
-	<Item Class="Part" Referent="Torso" Script="" Parent="world"/>
-	<Item Class="Mesh" Referent="Head" Script="" Parent="world">
+	<Item Class="Mesh" Referent="Head" Script="" Parent="Camera">
 		xasset://content/Head.dae
 	</Item>
 
-	<Item Class="Part" Referent="LeftArm" Script="" Parent="world"/>
-	<Item Class="Part" Referent="LeftLeg" Script="" Parent="world"/>
-	<Item Class="Part" Referent="RightArm" Script="" Parent="world"/>
-	<Item Class="Part" Referent="RightLeg" Script="" Parent="world"/>
+	<Item Class="Part" Referent="Torso" Script="" Parent="Head"/>
 
-	<Scale3 X="2" Y="1" Z="2" Referent="Torso"/>
-	<Scale3 X="1" Y="1" Z="2" Referent="LeftLeg"/>
-	<Scale3 X="1" Y="1" Z="2" Referent="RightLeg"/>
-	<Scale3 X="1" Y="1" Z="2" Referent="LeftArm"/>
-	<Scale3 X="1" Y="1" Z="2" Referent="RightArm"/>
+	<Item Class="Part" Referent="LeftArm" Script="" Parent="Torso"/>
+	<Item Class="Part" Referent="LeftLeg" Script="" Parent="Torso"/>
+	<Item Class="Part" Referent="RightArm" Script="" Parent="Torso"/>
+	<Item Class="Part" Referent="RightLeg" Script="" Parent="Torso"/>
 
-	<Position3 X="2" Y="1" Z="2" Referent="Torso"/>
-	<Position3 X="1" Y="0" Z="-4" Referent="LeftLeg"/>
-	<Position3 X="-1" Y="0" Z="-4" Referent="RightLeg"/>
-	<Position3 X="-3" Y="0" Z="0" Referent="RightArm"/>
-	<Position3 X="3" Y="0" Z="0" Referent="LeftArm"/>
+	<Scale3 X="1.0" Y="2.0" Z="2.0" Referent="Torso"/>
+	<Scale3 X="1" Y="2" Z="1" Referent="LeftLeg"/>
+	<Scale3 X="1" Y="2" Z="1" Referent="RightLeg"/>
+	<Scale3 X="1" Y="2" Z="1" Referent="LeftArm"/>
+	<Scale3 X="1" Y="2" Z="1" Referent="RightArm"/>
+
+	<Position3 X="0" Y="0" Z="-8.021833" Referent="Torso"/>
+	<Position3 X="0" Y="-20.15626" Z="-3.579265" Referent="LeftLeg"/>
+	<Position3 X="0" Y="-20.15626" Z="-13.428468" Referent="RightLeg"/>
+	<Position3 X="0" Y="0" Z="-23.000542" Referent="RightArm"/>
+	<Position3 X="0" Y="0" Z="6.853872" Referent="LeftArm"/>
 </RenderRig>
