@@ -10,12 +10,15 @@
 	<Item Class="Part" Referent="RightArm" Script="" Parent="Torso"/>
 	<Item Class="Part" Referent="RightLeg" Script="" Parent="Torso"/>
 
+	<!-- 1.0, 0.886678, 1.098497 -->
+	<Scale3 X="1.0" Y="0.886678" Z="1.098497" Referent="Head"/>
 	<Scale3 X="1.0" Y="2.0" Z="2.0" Referent="Torso"/>
 	<Scale3 X="1" Y="2" Z="1" Referent="LeftLeg"/>
 	<Scale3 X="1" Y="2" Z="1" Referent="RightLeg"/>
 	<Scale3 X="1" Y="2" Z="1" Referent="LeftArm"/>
 	<Scale3 X="1" Y="2" Z="1" Referent="RightArm"/>
 
+	<Position3 X="0.0" Y="14.654087" Z="-8.021833" Referent="Head"/>
 	<Position3 X="0" Y="0" Z="-8.021833" Referent="Torso"/>
 	<Position3 X="0" Y="-20.15626" Z="-3.579265" Referent="LeftLeg"/>
 	<Position3 X="0" Y="-20.15626" Z="-13.428468" Referent="RightLeg"/>

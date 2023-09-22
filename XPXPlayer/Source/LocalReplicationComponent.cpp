@@ -168,15 +168,27 @@ namespace XPX
 					for (auto* bundle : bundles)
 					{
 						if (bundle &&
-							bundle->count_parts() > 1 &&
+							bundle->count_parts() == XPLICIT_BUNDLE_MAX &&
 							bundle->xplicit_id() == name)
 						{
-							for (size_t i = 0; i < bundle->count_parts(); ++i)
+							//! should be the camera.
+							if (bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent())
 							{
-								auto part = bundle->node_at(i);
+								//! let's check it
+								XPLICIT_ASSERT(strcmp(bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent()->getName(), "Camera") == 0);
 
-								// part->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
-								// part->setRotation(vector3df(packet.pos_third[XPLICIT_NETWORK_X], packet.pos_third[XPLICIT_NETWORK_Y], packet.pos_third[XPLICIT_NETWORK_Z]));
+								bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent()->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X],
+									packet.pos[XPLICIT_NETWORK_Y],
+									packet.pos[XPLICIT_NETWORK_Z]));
+
+								for (size_t i = 0; i < bundle->count_parts(); ++i)
+								{
+									auto part = bundle->node_at(i);
+
+									part->setRotation(vector3df(packet.pos[XPLICIT_NETWORK_X],
+										packet.pos[XPLICIT_NETWORK_Y],
+										packet.pos[XPLICIT_NETWORK_Z]));
+								}
 							}
 
 							return;
