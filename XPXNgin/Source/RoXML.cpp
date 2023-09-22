@@ -387,7 +387,9 @@ namespace XPX::RoXML
 							if (params.Has3D)
 							{
 								const auto scene_node = CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
-								scene_node->setScale(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+								
+								if (scene_node)
+									scene_node->setScale(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 							}
 						}
 					}
