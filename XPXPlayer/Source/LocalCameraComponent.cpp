@@ -26,15 +26,17 @@ namespace XPX
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = CAD->getSceneManager()->addCameraSceneNode(0, vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z), 
-			vector3df(0, 5, 0));
+		mCamera = CAD->getSceneManager()->addCameraSceneNodeMaya();
+
+		XPLICIT_ASSERT(mCamera);
+
+		mCamera->setPosition(vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z));
+		mCamera->setTarget(vector3df(0, 5, 0));
+
 		CAD->getSceneManager()->setActiveCamera(mCamera);
 		
 		mLight = CAD->getSceneManager()->addLightSceneNode(mCamera, core::vector3df(0, 0, 0),
 		video::SColorf(1.f, 1.0f, 0.2f, 0.5f), 1000.0f);
-
-		XPLICIT_ASSERT(mCamera);
-		XPLICIT_ASSERT(mLight);
 
 		LoadSkybox("noonclouds")->setParent(mCamera);
 		mCamera->setName("Camera");
@@ -77,8 +79,6 @@ namespace XPX
 			packet.pos[XPLICIT_NETWORK_X] = self->mLookAt.X;
 			packet.pos[XPLICIT_NETWORK_Y] = self->mLookAt.Y;
 			packet.pos[XPLICIT_NETWORK_Z] = self->mLookAt.Z;
-
-			self->mNetwork->set_channel(XPLICIT_CHANNEL_DATA);
 
 			self->mNetwork->send(packet);
 		}

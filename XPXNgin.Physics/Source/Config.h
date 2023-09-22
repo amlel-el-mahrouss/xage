@@ -24,8 +24,3 @@
 
 #define NPLICIT_RELEASE "1.1.1-LasVegas"
 #define NPLICIT_SPLASH_SCREEN printf("NplicitNgin - (c) XPX Corporation, all rights reserved.\n")
-
-namespace XPX
-{
-
-}

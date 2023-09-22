@@ -27,8 +27,10 @@ namespace XPX
 			vector3df(5, 2, 1));
 
 		if (mStud)
+		{
 			mStud->setName(name);
-
+			mStud->setMaterialFlag(EMF_LIGHTING, false);
+		}
 	}
 
 	bool PartComponent::should_update() noexcept { return false; }

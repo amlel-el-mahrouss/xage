@@ -178,7 +178,21 @@ namespace XPX
 				return;
 			}
 
-			return;
+			if (KEYBOARD->key_down(traits.mJump))
+			{
+				mPacket.cmd[XPLICIT_NETWORK_CMD_BACKWARD] = NETWORK_CMD_INVALID;
+				mPacket.cmd[XPLICIT_NETWORK_CMD_FORWARD] = NETWORK_CMD_INVALID;
+				mPacket.cmd[XPLICIT_NETWORK_CMD_RIGHT] = NETWORK_CMD_INVALID;
+				mPacket.cmd[XPLICIT_NETWORK_CMD_LEFT] = NETWORK_CMD_INVALID;
+
+				mPacket.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
+				mPacket.cmd[XPLICIT_NETWORK_CMD_JUMP] = NETWORK_CMD_JUMP;
+
+				mNetwork->send(mPacket);
+
+				return;
+			}
+
 		}
 	}
 }

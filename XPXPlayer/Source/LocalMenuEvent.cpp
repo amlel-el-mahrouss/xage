@@ -57,8 +57,7 @@ namespace XPX
 					NetworkPacket packet{};
 
 					packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
-					mNetwork->set_channel(XPLICIT_CHANNEL_DATA);
-
+					
 					mNetwork->send(packet);
 
 					mEnabled = false;

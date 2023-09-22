@@ -343,13 +343,15 @@ namespace XPX::RoXML
 							world_node.Position.Y = std::atof(y.c_str());
 							world_node.Position.Z = std::atof(z.c_str());
 
-
 							if (params.Has3D)
 							{
 								const auto scene_node = CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
 
 								if (scene_node)
-									scene_node->setPosition(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
+								{
+									auto pos = irr::core::vector3df(world_node.Position.X, world_node.Position.Y, world_node.Position.Z);
+									scene_node->setPosition(pos);
+								}
 							}
 
 						}

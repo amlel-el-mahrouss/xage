@@ -3,12 +3,13 @@
  *
  *			XPXNgin.Physics
  *			Copyright XPX Corporation, all rights reserved.
+ * 
+ *			Purpose: Built-in Physics engine for XPX tech.
  *
  * =====================================================================
  */
 
 #include "NpMovementServerEvent.h"
-#include "AABB.h"
 
 #include <NetworkServerComponent.h>
 #include <NetworkProtocol.h>
@@ -16,7 +17,7 @@
 
 namespace XPX
 {
-	static void xpxSendToWorldNode(ClassComponent* node)
+	static void xpxSendToClient(ClassComponent* node)
 	{
 		NetworkPacket repl_packet{};
 
@@ -64,7 +65,13 @@ namespace XPX
 
 	void NpMovementServerEvent::operator()()
 	{
-		
+		for (auto* node : mWorldNodes)
+		{
+			if (!node)
+				continue;
+
+			xpxSendToClient(node);
+		}
 	}
 
 	bool NpMovementServerEvent::insert_node(NpSceneNode node)

@@ -182,7 +182,7 @@ namespace XPX
 			player_tbl += mPeer->xplicit_id.as_string();
 
 			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(Vector<NetworkFloat>(0, 0, 0),
-				Vector<NetworkFloat>(5, 5, 1),
+				XPLICIT_CHARACTER_SCALE,
 				Color<NetworkFloat>(0, 0, 0),
 				nullptr, "world.Players", mPeer->xplicit_id.as_string().c_str());
 
