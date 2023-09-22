@@ -63,7 +63,7 @@ namespace XPX
 		if (self->index_as_bool("Drop") &&
 			self->get_owner())
 		{
-			self->assign("Parent", "world");
+			self->assign("Parent", XPLICIT_LUA_NAMESPACE);
 
 			self->get_owner()->get_class()->assign(self->name(), "nil");
 			self->set_owner(nullptr);

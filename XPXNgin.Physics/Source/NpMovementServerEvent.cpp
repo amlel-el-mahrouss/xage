@@ -37,18 +37,17 @@ namespace XPX
 				for (auto* rhsNode : mWorldNodes)
 				{
 					if (!rhsNode)
-						return;
-
-					if (rhsNode == lhsNode ||
-						rhsNode->pos() == lhsNode->pos())
 						continue;
 
-					if (AABBHelper<NetworkFloat>::is_touching(lhsNode->pos(), rhsNode->scale(), rhsNode->pos(), lhsNode->scale()))
+					if (rhsNode == lhsNode)
+						continue;
+
+					if (AABBHelper::is_touching(lhsNode->pos(), rhsNode->pos()))
 					{
 						rhsNode->call_method("Update('Touched')");
-						lhsNode->call_method("Update('Touched')");
+						lhsNode->call_method("Update('Touching')");
 
-						continue;
+						break;
 					}
 				}
 			}
@@ -78,18 +77,6 @@ namespace XPX
 			repl_packet.pos_third[XPLICIT_NETWORK_X] = lhsNode->index_as_number<NetworkFloat>("Rotation.X");
 			repl_packet.pos_third[XPLICIT_NETWORK_Y] = lhsNode->index_as_number<NetworkFloat>("Rotation.Y");
 			repl_packet.pos_third[XPLICIT_NETWORK_Z] = lhsNode->index_as_number<NetworkFloat>("Rotation.Z");
-
-			std::cout << "SCALE:" << std::endl;
-
-			std::cout << repl_packet.pos_second[XPLICIT_NETWORK_X] << std::endl;
-			std::cout << repl_packet.pos_second[XPLICIT_NETWORK_Y] << std::endl;
-			std::cout << repl_packet.pos_second[XPLICIT_NETWORK_Z] << std::endl;
-
-			std::cout << "POS:" << std::endl;
-
-			std::cout << repl_packet.pos[XPLICIT_NETWORK_X] << std::endl;
-			std::cout << repl_packet.pos[XPLICIT_NETWORK_Y] << std::endl;
-			std::cout << repl_packet.pos[XPLICIT_NETWORK_Z] << std::endl;
 
 			String fmt = lhsNode->index_as_string("Parent").c_str();
 

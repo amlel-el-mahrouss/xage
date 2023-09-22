@@ -78,7 +78,7 @@ namespace XPX::RoXML
 										parent_id = first_attr->next_attribute()->next_attribute()->next_attribute()->value();
 
 										if (strlen(parent_id) < 1)
-											parent_id = "world";
+											parent_id = XPLICIT_LUA_NAMESPACE;
 									}
 								}
 							}

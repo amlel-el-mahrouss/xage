@@ -123,43 +123,19 @@ namespace XPX
 		}
 		else if (packet.channel == XPLICIT_CHANNEL_PHYSICS)
 		{
-			ISceneNode* node = CAD->getSceneManager()->getSceneNodeFromName(packet.additional_data);
+			PartComponent* node = ComponentSystem::get_singleton_ptr()->get<PartComponent>(packet.additional_data);
 
 			if (node)
 			{
 				if (packet.cmd[XPLICIT_NETWORK_CMD_DESTROY] == NETWORK_CMD_DESTROY)
 				{
-					node->drop();
+					ComponentSystem::get_singleton_ptr()->remove(node);
 					return;
 				}
 
-				std::cout << "SCALE:" << std::endl;
-
-				std::cout << packet.pos_second[XPLICIT_NETWORK_X] << std::endl;
-				std::cout << packet.pos_second[XPLICIT_NETWORK_Y] << std::endl;
-				std::cout << packet.pos_second[XPLICIT_NETWORK_Z] << std::endl;
-
-				std::cout << "POS:" << std::endl;
-
-				std::cout << packet.pos[XPLICIT_NETWORK_X] << std::endl;
-				std::cout << packet.pos[XPLICIT_NETWORK_Y] << std::endl;
-				std::cout << packet.pos[XPLICIT_NETWORK_Z] << std::endl;
-
-				node->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
-				node->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
-				node->setRotation(vector3df(packet.pos_third[XPLICIT_NETWORK_X], packet.pos_third[XPLICIT_NETWORK_Y], packet.pos_third[XPLICIT_NETWORK_Z]));
-
-				node->getMaterial(0).AmbientColor.setRed(packet.pos_fourth[XPLICIT_NETWORK_X]);
-				node->getMaterial(0).AmbientColor.setGreen(packet.pos_fourth[XPLICIT_NETWORK_Y]);
-				node->getMaterial(0).AmbientColor.setBlue(packet.pos_fourth[XPLICIT_NETWORK_Z]);
-
-				node->getMaterial(0).AmbientColor.setAlpha(packet.pos_fourth[XPLICIT_NETWORK_DELTA]);
-
-				node->getMaterial(0).DiffuseColor.setRed(packet.pos_fourth[XPLICIT_NETWORK_X]);
-				node->getMaterial(0).DiffuseColor.setGreen(packet.pos_fourth[XPLICIT_NETWORK_Y]);
-				node->getMaterial(0).DiffuseColor.setBlue(packet.pos_fourth[XPLICIT_NETWORK_Z]);
-
-				node->getMaterial(0).DiffuseColor.setAlpha(packet.pos_third[XPLICIT_NETWORK_X]);
+				node->node()->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
+				node->node()->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
+				node->node()->setRotation(vector3df(packet.pos_third[XPLICIT_NETWORK_X], packet.pos_third[XPLICIT_NETWORK_Y], packet.pos_third[XPLICIT_NETWORK_Z]));
 			}
 			else
 			{
@@ -173,7 +149,7 @@ namespace XPX
 				else
 				{
 					name = parent;
-					parent = "world";
+					parent = XPLICIT_LUA_NAMESPACE;
 				}
 
 				parent = parent.substr(parent.find(".") + 1);
@@ -194,7 +170,7 @@ namespace XPX
 			else
 			{
 				name = parent;
-				parent = "world";
+				parent = XPLICIT_LUA_NAMESPACE;
 			}
 
 			parent = parent.substr(parent.find(".") + 1);

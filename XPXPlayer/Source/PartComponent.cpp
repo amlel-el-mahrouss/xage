@@ -23,24 +23,15 @@ namespace XPX
 
 		if (mStud)
 		{
+			mStud->setParent(CAD->getSceneManager()->getActiveCamera());
 			mStud->setName(name);
-
-			mStud->setPosition(vector3df(pos.X, pos.Y, pos.Z));
-			mStud->setScale(vector3df(scale.X, scale.Y, scale.Z));
 		}
 
-		this->assign("Destroy", this->part_destroy().c_str());
 	}
 
 	bool PartComponent::should_update() noexcept { return false; }
 
 	void PartComponent::update(ClassPtr self) {  }
-
-	String PartComponent::part_destroy() noexcept
-	{
-		String func_proto = fmt::format("function(self) destroyPart(\"{}\", \"{}\"); end", this->name(), this->parent());
-		return func_proto;
-	}
 
 	PartComponent::~PartComponent() noexcept
 	{

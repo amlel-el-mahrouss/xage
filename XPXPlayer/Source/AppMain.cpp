@@ -175,14 +175,14 @@ int main(int argc, char** argv)
 			{
 				CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
 
-				CAD->getSceneManager()->drawAll();
-
 #ifdef _WIN32
 				XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
 #endif
 
 				XPX::ComponentSystem::get_singleton_ptr()->update();
 				XPX::EventSystem::get_singleton_ptr()->update();
+
+				CAD->getSceneManager()->drawAll();
 
 				CAD->getVideoDriver()->endScene();
 

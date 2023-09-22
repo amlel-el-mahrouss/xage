@@ -19,23 +19,23 @@
 namespace XPX
 {
 	LocalCameraComponent::LocalCameraComponent() noexcept
-		: ClassComponent(Vector<NetworkFloat>(0, 0, 0), Vector<NetworkFloat>(1, 1, 1), Color<NetworkFloat>(0, 0, 0), nullptr, "world", "Camera"),
+		: ClassComponent(Vector<NetworkFloat>(0, 0, 0), Vector<NetworkFloat>(1, 1, 1), Color<NetworkFloat>(0, 0, 0), nullptr, XPLICIT_LUA_NAMESPACE, "Camera"),
 		mCamera(nullptr),
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
 		mCamera = CAD->getSceneManager()->addCameraSceneNode(nullptr);
+		CAD->getSceneManager()->setActiveCamera(mCamera);
 		
-		mLight = CAD->getSceneManager()->addLightSceneNode(0, core::vector3df(0, 0, 0),
+		mLight = CAD->getSceneManager()->addLightSceneNode(mCamera, core::vector3df(0, 0, 0),
 		video::SColorf(1.f, 1.0f, 1.0f, 1.0f), 1000.0f);
 
 		XPLICIT_ASSERT(mCamera);
 		XPLICIT_ASSERT(mLight);
 
-		mCamera->setFarValue(200.f);
 		mCamera->setName("Camera");
 
-		this->insert("FOV", "30");
+		this->insert("FOV", std::to_string(mCamera->getFOV()));
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept
@@ -59,7 +59,8 @@ namespace XPX
 
 		self->mLight->setParent(self->mCamera);
 
-		self->get()->setFOV(self->index_as_number("FOV"));
+		if (self->index_as_number("FOV") != self->get()->getFOV())
+			self->get()->setFOV(self->index_as_number("FOV"));
 
 		if (self->mLookAt != self->mCamera->getTarget())
 		{

@@ -13,19 +13,33 @@
 
 namespace XPX
 {
-	template <typename TypeFloat = double>
 	class NPLICIT_API AABBHelper final
 	{
 	public:
-		static bool is_touching(Vector<NplicitFloat>& min, Vector<NplicitFloat>& max,
-								Vector<NplicitFloat>& min_rhs, Vector<NplicitFloat>& max_rhs) noexcept
+		static bool is_touching(Vector<NplicitFloat>& min, Vector<NplicitFloat>& max) noexcept
 		{
-			return (max.X > min_rhs.X &&
-				min.X < max_rhs.X &&
-				max.Y > min_rhs.Y &&
-				min.Y < max_rhs.Y &&
-				max.Z > min_rhs.Z &&
-				min.Z < max_rhs.Z);
+			if (max == min)
+				return true;
+
+			if (max > min)
+			{
+				if ((max.sub(min.X, min.Y, min.Z) == Vector<NplicitFloat>(0, 0, 0)))
+					return true;
+
+				auto upscaled = min.mul(2, 2, 2);
+
+				if (upscaled == max)
+					return true;
+			}
+			else
+			{
+				auto downscaled = max.div(2, 2, 2);
+
+				if (downscaled == min)
+					return true;
+			}
+
+			return false;
 		}
 
 	};

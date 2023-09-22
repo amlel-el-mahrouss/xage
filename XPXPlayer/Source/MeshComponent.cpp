@@ -40,11 +40,15 @@ namespace XPX
 		if (mMdl)
 		{
 			mNode = CAD->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
+			mNode->setParent(CAD->getSceneManager()->getActiveCamera());
+
+			// for the physics engine;
 			mPhysics = PHYSICS_COMPLEX;
 
 			mNode->setName(mName.c_str());
 			mNode->setPosition(vector3df(0, 0, 0));
 
+			this->insert("Rotation", "{ X = 0, Y = 0, Z = 0 }");
 			this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 			this->insert("Scale", "{ X = 0, Y = 0, Z = 0}");
 			this->insert("Color", "{ A = 255, R = 255, G = 255, B = 255 }");

@@ -27,12 +27,12 @@ namespace XPX
 
 		~PartComponent() noexcept override;
 
-	private:
-		String part_destroy() noexcept;
-
 	public:
 		static bool should_update() noexcept;
 		static void update(ClassPtr cls);
+
+	public:
+		CorePartPtr node() noexcept { return mStud; }
 
 	public:
 		XPLICIT_COPY_DEFAULT(PartComponent);

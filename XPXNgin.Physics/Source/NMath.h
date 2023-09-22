@@ -99,9 +99,19 @@ namespace XPX
 		Vector() = default;
 		~Vector() = default;
 
+	public:
 		Vector(TypeFloat x = 0, TypeFloat y = 0, TypeFloat z = 0) noexcept
 		{
-			this->add(x, y, z);
+#ifdef NPLICIT_USE_VECTORS
+			__m256d x1{ X, Y, Z };
+			__m256d x2{ x, y, z };
+
+			x1 = _mm256_load_pd(x2);
+#else
+			X = x;
+			Y = y;
+			Z = z;
+#endif
 		}
 
 		Vector& operator=(const Vector&) = default;
@@ -150,6 +160,22 @@ namespace XPX
 			this->X *= x;
 			this->Y *= y;
 			this->Z *= z;
+#endif
+
+			return *this;
+		}
+
+		Vector& div(TypeFloat x = 1.f, TypeFloat y = 1.f, TypeFloat z = 1.f) noexcept
+		{
+#ifdef NPLICIT_USE_VECTORS
+			__m256d x1{ X, Y, Z };
+			__m256d x2{ x, y, z };
+
+			__m256d sum = _mm256_div_pd(x1, x2);
+#else
+			this->X /= x;
+			this->Y /= y;
+			this->Z /= z;
 #endif
 
 			return *this;
