@@ -134,7 +134,7 @@ namespace XPX
 		:
 		  mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		  mPublicHash(publicHash),
-		  mHealth(0),
+		  mHealth(XPLICIT_DEFAULT_HEALTH),
 		  mHudFrame(new ImGUI::UIFrame()),
 		  mFrameParent(new ImGUI::UIFrame()),
 		  mSelectedSlot(-1)
@@ -243,7 +243,9 @@ namespace XPX
 		self->mFrameParent->update(self->mFrameParent->BackgroundHoverColor);
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
-		self->mHealth = packet.health;
+		if (packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] == NETWORK_CMD_DAMAGE)
+			self->mHealth = packet.health;
+
 		self->mHudFrame->W = self->mHealth * 2;
 	}
 

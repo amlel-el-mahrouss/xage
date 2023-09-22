@@ -105,6 +105,9 @@ namespace XPX
 
 			XPLICIT_INFO("world:Damage [EVENT]");
 
+			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] = NETWORK_CMD_DAMAGE;
+			self->mPeer->packet.health = self->mHealth;
+
 			String fmt = fmt::format("world:Damage({})", path);
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 		}

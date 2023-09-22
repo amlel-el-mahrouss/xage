@@ -41,7 +41,7 @@ namespace XPX
 
 			// xasset is a wrapper over http, it downloads any contents from play-xplicit.com.
 
-			if (auto replica_xasset = player->get_class()->index_as_string("ContentBody");
+			if (auto replica_xasset = player->get_class()->index_as_string("Content");
 				!replica_xasset.empty())
 			{
 				self->mFactory.send(
@@ -52,7 +52,7 @@ namespace XPX
 				// you wanna do that, so we avoid calling this guy again.
 
 				player->get_class()->assign("ContentType", "-1");
-				player->get_class()->assign("ContentBody", "nil");
+				player->get_class()->assign("Content", "nil");
 			}
 		}
 	}

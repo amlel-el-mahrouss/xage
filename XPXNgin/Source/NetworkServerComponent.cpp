@@ -228,7 +228,6 @@ namespace XPX
 		for (std::size_t i = 0; i < server->size(); ++i)
 		{
 			send(server, server->get(i));
-			server->get(i)->packet.channel = 0;
 		}
 	}
 
