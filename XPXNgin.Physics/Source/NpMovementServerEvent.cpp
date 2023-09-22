@@ -46,8 +46,7 @@ namespace XPX
 					if (!rhsNode)
 						return;
 
-					if (rhsNode == lhsNode ||
-						rhsNode->pos() == lhsNode->pos())
+					if (rhsNode == lhsNode)
 						continue;
 
 					auto x1 = lhsNode->pos().X;
@@ -55,37 +54,33 @@ namespace XPX
 
 					auto rx1 = rhsNode->pos().X;
 					auto rx2 = rhsNode->scale().X;
+					
+					auto where = (x1 / x2) * (rx1 / rx2);
 
-					if (auto where = (x1 / x2) * (rx1 / rx2);
-						where <= (rx1 / rx2))
+					if (where <= (rx1 / rx2) &&
+						where >= (x1 / x2))
 					{
 						auto res = Vector<NplicitFloat>((x1 + rx1) / where, (x2 + rx2) / where, (x1 + x2) / where);
-						lhsNode->pos() = res;
 
-						if (rhsNode->index_as_bool("Anchored"))
-						{
-							lhsNode->pos() = res;
+						if (auto formula = res.X * where;
+							formula > res.X)
+							lhsNode->pos().X *= formula;
 
-							if (auto formula = lhsNode->pos().X * where;
-								formula > lhsNode->pos().X)
-								lhsNode->pos().X += formula;
+						if (auto formula = res.Y * where;
+							formula > res.Y)
+							lhsNode->pos().Y -= formula;
 
-							if (auto formula = lhsNode->pos().Y * where;
-								formula > lhsNode->pos().Y)
-								lhsNode->pos().Y += formula;
-
-							if (auto formula = lhsNode->pos().Z * where;
-								formula > lhsNode->pos().Z)
-								lhsNode->pos().Z += formula;
-						}
+						if (auto formula = res.Z * where;
+							formula > res.Z)
+							lhsNode->pos().Z *= formula;
 
 						rhsNode->call_method("Update('Touched')");
-						lhsNode->call_method("Update('Touched')");
+						lhsNode->call_method("Update('Touching')");
 
 						continue;
 					}
 
-					lhsNode->pos().Y -= mDeltaTime;
+					lhsNode->pos().Y -= where;
 				}
 			}
 

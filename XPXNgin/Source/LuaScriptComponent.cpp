@@ -33,16 +33,20 @@ namespace XPX
 		this->insert("FilesystemPath", fmt::format("'{}'", mName));
 
 		this->insert("Destroy", this->destroy_snippet());
+	}
 
-		Thread job;
+	std::int32_t LuaScriptComponent::status() noexcept { return mStatus; }
 
-		job = Thread([&]() {
+	void LuaScriptComponent::run_script()
+	{
+		if (!std::filesystem::exists(this->path()))
+			return;
+
+		Thread job([](LuaScriptComponent* self) {
 			clua_lock();
 
-			auto self = this;
-
-			String name = this->name();
-			String path = this->path();
+			String name = self->name();
+			String path = self->path();
 
 			auto lua_ThisSleep = [](lua_State* L) -> int {
 				std::this_thread::sleep_for(std::chrono::seconds(lua_tointeger(L, 1)));
@@ -72,14 +76,12 @@ namespace XPX
 
 			bool comment = false;
 
-			mStatus = LUA_LOADING;
+			self->mStatus = LUA_LOADING;
 
 			while (std::getline(if_path, tmp))
 				code += tmp + "\r\n";
 
-			clua_lock();
-
-			mStatus = LUA_RUNNING;
+			self->mStatus = LUA_RUNNING;
 
 			if (auto ret = self->run_string(code);
 				!ret.empty())
@@ -87,12 +89,12 @@ namespace XPX
 				XPLICIT_CRITICAL(ret);
 			}
 
-			mStatus = LUA_STOP;
+			self->mStatus = LUA_STOP;
 
 			clua_unlock();
-		});
 
-		job.detach();
+			std::this_thread::yield();
+			}, this);
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;

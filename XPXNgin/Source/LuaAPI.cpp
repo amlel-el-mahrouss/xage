@@ -49,7 +49,9 @@ XPLICIT_API void XplicitLoadBaseLua()
 	
 	// have a look at GameVar if it ever crashes.
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Settings = {}");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Settings.Parent = world");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Players = {}");
+	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world.Players.Parent = world");
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_DestroyScript, "destroyScript");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_Info, "info");

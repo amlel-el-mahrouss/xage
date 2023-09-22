@@ -44,8 +44,8 @@ namespace XPX
 	public:
 		COMPONENT_TYPE type() noexcept;
 		const char* path() noexcept;
-
-		std::int32_t status() noexcept { return mStatus; }
+		void run_script();
+		std::int32_t status() noexcept;
 
 	public:
 		static void update(void* class_ptr);

@@ -67,11 +67,13 @@ namespace XPX
 		this->insert("Rotation", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Color", "{ R = 1, G = 1, B = 1, A = 1 }");
 
-		if (script &&
-			std::filesystem::exists(script))
+		if (script)
 		{
 			this->script(ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(script));
 			XPLICIT_ASSERT(this->script());
+
+			if (this->script())
+				this->script()->run_script();
 		}
 
 		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");

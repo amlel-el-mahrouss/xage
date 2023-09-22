@@ -467,6 +467,9 @@ namespace XPX::RoXML
 
 								auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
 								
+								if (script)
+									script->run_script();
+
 								if (script &&
 									script->status() == LuaScriptComponent::LUA_STOP)
 								{
