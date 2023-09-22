@@ -431,7 +431,8 @@ namespace XPX::RoXML
 								val[i] == '/' ||
 								val[i] == '\\' ||
 								val[i] == '-' ||
-								val[i] == ':')
+								val[i] == ':' ||
+								val[i] == '_')
 							{
 								world_node.Value += val[i];
 							}
