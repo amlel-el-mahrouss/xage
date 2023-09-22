@@ -23,8 +23,8 @@
 #include "LoadingComponent.h"
 #include "LocalMenuEvent.h"
 #include "ClientUtils.h"
-#include "Application.h"
 #include "MenuUI.h"
+#include "App.h"
 
 #include <XHTTPManager.h>
 #include <Enums.h>
@@ -37,13 +37,18 @@ namespace XPX
     // connection timeout until client stops trying to ACK.
     constexpr int XPLICIT_TIMEOUT = 100;
 
-    LoadingComponent::LoadingComponent()
+    /// <summary>
+    /// Loading Component constructor.
+    /// </summary>
+    /// <param name="verified">is it a verified place?</param>
+    /// <param name="img_path">Image (must be alpha set and png.)</param>
+    LoadingComponent::LoadingComponent(const bool verified, const char* img_path)
         :
+        mLoadingTexture(nullptr),
         mNetwork(nullptr),
         mTimeout(0)
     {
-        auto cam = ComponentSystem::get_singleton_ptr()->add<XPX::LocalCameraComponent>();
-        CAD->getSceneManager()->setActiveCamera(cam->get());
+        mLoadingTexture = CAD->getVideoDriver()->getTexture(verified ? "UIBadgeVerified.png" : "UIBadge.png");
     }
 
     LoadingComponent::~LoadingComponent() = default;
@@ -99,10 +104,8 @@ namespace XPX
             ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
             ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 
-            const auto cam = ComponentSystem::get_singleton_ptr()->get<LocalCameraComponent>("LocalCameraComponent");
-            const auto local_player = ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash, true);
+            ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash, true);
 
-            local_player->attach(cam);
             self->mNetwork->set_hash(hash);
 
             monitor->Endpoint = XPLICIT_XASSET_ENDPOINT;

@@ -11,7 +11,8 @@
  @file
  */
 
-#include "Application.h"
+#include "App.h"
+
 #include "LoadingComponent.h"
 
 #include <LuaAPI.h>

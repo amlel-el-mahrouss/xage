@@ -14,7 +14,7 @@
  @file
  */
 
-#include "Application.h"
+#include "App.h"
 #include "ClientUtils.h"
 
 #include <NetworkProtocol.h>

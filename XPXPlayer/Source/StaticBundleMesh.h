@@ -31,12 +31,12 @@ namespace XPX
 	/* this class combines meshes to make a bundle */
 	/* example: Epic Bundle */
 
-	class StaticBundleMesh final
+	class StaticBundleMesh final : public Component
 	{
 	public:
 		StaticBundleMesh() = delete;
 
-		explicit StaticBundleMesh(const char* character_path);
+		explicit StaticBundleMesh(const char* character_path, const char* xpx_id);
 		~StaticBundleMesh() noexcept;
 
 	public:
@@ -48,9 +48,14 @@ namespace XPX
 		irr::scene::IMesh* model_at(const std::size_t& index) const { return mParts[index].second; }
 
 		std::size_t count_parts() const { return mParts.size(); }
+		const String& xplicit_id() noexcept { return mXplicitId; }
+
+		static bool should_update() { return false }
+		static void update(ClassPtr ptr) {  }
 
 	protected:
 		std::vector<std::pair<irr::scene::IMeshSceneNode*, irr::scene::IMesh*>> mParts;
+		String mXplicitId;
 		
 	};
 }

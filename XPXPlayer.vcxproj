@@ -92,7 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="XPXPlayer\Source\Application.h" />
+    <ClInclude Include="XPXPlayer\Source\App.h" />
     <ClInclude Include="XPXPlayer\Source\ChatBoxComponent.h" />
     <ClInclude Include="XPXPlayer\Source\ClientUtils.h" />
     <ClInclude Include="XPXPlayer\Source\GearComponent.h" />
@@ -111,7 +111,7 @@
     <ClInclude Include="XPXPlayer\Source\StaticBundleMesh.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="XPXPlayer\Source\Application.cpp" />
+    <ClCompile Include="XPXPlayer\Source\App.cpp" />
     <ClCompile Include="XPXPlayer\Source\ChatBoxComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\ClientAPI.cpp" />
     <ClCompile Include="XPXPlayer\Source\ClientUtils.cpp" />

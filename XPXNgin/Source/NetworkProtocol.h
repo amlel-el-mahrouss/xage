@@ -47,7 +47,7 @@
 #define XPLICIT_CHANNEL_PHYSICS     (6)
 
 // we wanna make specific replication calls for specific core features (such as gears, meshes...)
-#define XPLICIT_CHANNEL_REPL_GEAR   (4)
+#define XPLICIT_CHANNEL_GEAR   (4)
 
  // player specific data (either lua or roxml)
 #define XPLICIT_REPLICA_PLAYER (0)

@@ -1,10 +1,10 @@
 /*
  * =====================================================================
  *
- *			XPXNgin
+ *			XPXPlayer
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			File: LocalActor.h
+ *			File: LocalHumanoidComponent.h
  *			Purpose: Client-side Player
  *
  * =====================================================================
@@ -50,10 +50,8 @@ namespace XPX
 		static bool should_update() noexcept { return true; }
 
 	public:
-		void attach(LocalCameraComponent* cam) noexcept;
 		Vector<float> get_pos() noexcept;
 		const int64_t& id() noexcept;
-		Lua::CLuaClass* get_class() { return mClass; }
 
 	private:
 		NetworkComponent* mNetwork;
@@ -62,7 +60,6 @@ namespace XPX
 
 	private:
 		std::int64_t mHash;
-		Lua::CLuaClass* mClass;
 		HUMANOID_STATE mState;
 		NetworkPacket mPacket;
 		Vector<float> mPos;

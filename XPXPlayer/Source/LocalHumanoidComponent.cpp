@@ -14,7 +14,7 @@
 #include "LocalHumanoidComponent.h"
 #include "ChatBoxComponent.h"
 #include "LocalMenuEvent.h"
-#include "Application.h"
+#include "App.h"
 #include "MenuUI.h"
 
 #include <Enums.h>
@@ -32,8 +32,7 @@ namespace XPX
 		mPacket(),
 		mPos(0.f, 0.f, 0.f),
 		mState(HUMANOID_STATE::ALIVE),
-		mIsLocalPlayer(is_local_player),
-		mClass(nullptr)
+		mIsLocalPlayer(is_local_player)
 	{
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -99,12 +98,6 @@ namespace XPX
 				}
 			}
 		}
-	}
-
-	void LocalHumanoidComponent::attach(LocalCameraComponent* cam) noexcept
-	{ 
-		if (cam)
-			mCam = cam;
 	}
 
 	Vector<float> LocalHumanoidComponent::get_pos() noexcept { return mPos; }

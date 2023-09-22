@@ -12,14 +12,14 @@
  */
 
 #include "LocalCameraComponent.h"
-#include "Application.h"
+#include "App.h"
 #include "MenuUI.h"
 #include "ClientUtils.h"
 
 namespace XPX
 {
 	LocalCameraComponent::LocalCameraComponent() noexcept
-		: ClassComponent(Vector<NetworkFloat>(0, 0, 0), Vector<NetworkFloat>(1, 1, 1), Color<NetworkFloat>(0, 0, 0), nullptr, XPLICIT_LUA_NAMESPACE, "Camera"),
+		: ClassComponent(XPLICIT_ORIGIN, Vector<NetworkFloat>(1, 1, 1), Color<NetworkFloat>(0, 0, 0), nullptr, XPLICIT_LUA_NAMESPACE, "Camera"),
 		mCamera(nullptr),
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
@@ -33,6 +33,7 @@ namespace XPX
 		XPLICIT_ASSERT(mCamera);
 		XPLICIT_ASSERT(mLight);
 
+		mCamera->setPosition(vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z));
 		mCamera->setName("Camera");
 
 		this->insert("FOV", std::to_string(mCamera->getFOV()));

@@ -12,7 +12,7 @@
 #include "LuaScriptComponent.h"
 #include "PartComponent.h"
 #include "GearComponent.h"
-#include "Application.h"
+#include "App.h"
 #include "MenuUI.h"
 
 #include <CLua.hpp>
@@ -152,13 +152,40 @@ namespace XPX
 					parent = XPLICIT_LUA_NAMESPACE;
 				}
 
-				parent = parent.substr(parent.find(".") + 1);
+				if (name.find("XPX_") == String::npos)
+				{
+					parent = parent.substr(parent.find(".") + 1);
 
-				auto part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(name.c_str(), parent.c_str());
-				XPLICIT_ASSERT(part);
+					auto part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(name.c_str(), parent.c_str());
+					XPLICIT_ASSERT(part);
+				}
+				else
+				{
+					auto bundles = ComponentSystem::get_singleton_ptr()->all_of<StaticBundleMesh>();
+
+					for (auto* bundle : bundles)
+					{
+						if (bundle && 
+							bundle->count_parts() > 1 &&
+							bundle->xplicit_id() == name)
+						{
+							auto torso = bundle->node_at(XPLICIT_BUNDLE_TORSO);
+
+							torso->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
+							torso->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
+							torso->setRotation(vector3df(packet.pos_third[XPLICIT_NETWORK_X], packet.pos_third[XPLICIT_NETWORK_Y], packet.pos_third[XPLICIT_NETWORK_Z]));
+
+							return;
+						}
+					}
+
+					auto bundle = ComponentSystem::get_singleton_ptr()->add<StaticBundleMesh>("Character.rrs", name.c_str());
+					
+					XPLICIT_ASSERT(bundle);
+				}
 			}
 		}
-		else if (packet.channel == XPLICIT_CHANNEL_REPL_GEAR)
+		else if (packet.channel == XPLICIT_CHANNEL_GEAR)
 		{
 			String parent = String(packet.additional_data);
 			String name = "";

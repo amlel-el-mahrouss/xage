@@ -19,13 +19,15 @@ namespace XPX
 		ClassComponent(pos, scale, clr, nullptr, parent, name),
 		mStud(nullptr)
 	{
-		mStud = CAD->getSceneManager()->addCubeSceneNode();
+		mStud = CAD->getSceneManager()->addCubeSceneNode(10.F, 
+			CAD->getSceneManager()->getActiveCamera(),
+			-1, 
+			vector3df(0, 0, 0), 
+			vector3df(0, 0, 0),
+			vector3df(5, 2, 1));
 
 		if (mStud)
-		{
-			mStud->setParent(CAD->getSceneManager()->getActiveCamera());
 			mStud->setName(name);
-		}
 
 	}
 

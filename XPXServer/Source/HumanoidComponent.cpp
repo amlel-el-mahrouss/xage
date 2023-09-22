@@ -76,9 +76,9 @@ namespace XPX
 			Lua::CLuaStateManager::get_singleton_ptr()->run_string(xpx_player_path);
 		}
 
-		String str = "{" + std::to_string(self->mClass->pos().X) + "," +
-						 std::to_string(self->mClass->pos().Y) + "," +
-						 std::to_string(self->mClass->pos().Z) + "," + "}";
+		String str = "{ X = " + std::to_string(self->mClass->pos().X) + ", Y = " +
+						 std::to_string(self->mClass->pos().Y) + ", Z = " +
+						 std::to_string(self->mClass->pos().Z) + "}";
 
 		self->mClass->assign("Position", str);
 
@@ -191,6 +191,7 @@ namespace XPX
 			if (mClass)
 			{
 				mClass->assign("Locked", "false");
+				mClass->assign("Anchor", "false");
 
 				mClass->insert("UserName", "'Unconnected'");
 				mClass->insert("Parent", "world.Players");

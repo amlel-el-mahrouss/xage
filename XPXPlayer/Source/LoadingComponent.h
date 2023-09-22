@@ -19,7 +19,7 @@ namespace XPX
 	class LoadingComponent final : public Component
 	{
 	public:
-		LoadingComponent();
+		LoadingComponent(const bool verified = false, const char* path = "");
 		~LoadingComponent() override;
 
 	public:
@@ -42,6 +42,7 @@ namespace XPX
 		void reset() noexcept;
 
 	private:
+		ITexture* mLoadingTexture;
 		NetworkComponent* mNetwork;
 		std::int64_t mTimeout; /* Network Timeout, incremented on each dial failure. */
 

@@ -12,7 +12,7 @@
  */
 
 #include "LocalMenuEvent.h"
-#include "Application.h"
+#include "App.h"
 
 namespace XPX
 {

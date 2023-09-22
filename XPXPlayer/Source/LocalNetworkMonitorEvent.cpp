@@ -13,7 +13,7 @@
 
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalHumanoidComponent.h"
-#include "Application.h"
+#include "App.h"
 #include "MenuUI.h"
 
 #include <CLua.hpp>

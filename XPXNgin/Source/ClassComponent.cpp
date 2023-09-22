@@ -34,7 +34,7 @@ namespace XPX
 
 		this->insert("Archivable", "false");
 
-		this->insert("Anchored", "false");
+		this->insert("Anchor", "false");
 		this->insert("Locked", "false");
 		this->insert("Collide", "true");
 
@@ -113,7 +113,7 @@ namespace XPX
 
 	const char* ClassComponent::parent() noexcept { return mParent.c_str(); }
 	
-	bool ClassComponent::should_update() noexcept { return true; }
+	bool ClassComponent::should_update() noexcept { return false; }
 
 	void ClassComponent::update(ClassPtr _self)
 	{

@@ -18,7 +18,8 @@
 
 namespace XPX
 {
-	StaticBundleMesh::StaticBundleMesh(const char* character_path)
+	StaticBundleMesh::StaticBundleMesh(const char* character_path, const char* xplicit_id)
+		: mXplicitId(xplicit_id)
 	{
 		static XPLICIT_GET_DATA_DIR(XPLICIT_DIR);
 
