@@ -11,6 +11,8 @@
  @file
  */
 
+// fields: FOV, DefaultCameraStyle, Inherits from ClassComponent.
+
 #include "LocalCameraComponent.h"
 #include "App.h"
 #include "MenuUI.h"
@@ -36,6 +38,8 @@ namespace XPX
 		mCamera->setPosition(vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z));
 		mCamera->setName("Camera");
 
+		this->mLight->setParent(this->mCamera);
+
 		this->insert("FOV", std::to_string(mCamera->getFOV()));
 	}
 
@@ -57,8 +61,6 @@ namespace XPX
 
         if (!self)
             return;
-
-		self->mLight->setParent(self->mCamera);
 
 		if (self->index_as_number("FOV") != self->get()->getFOV())
 			self->get()->setFOV(self->index_as_number("FOV"));

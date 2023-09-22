@@ -60,6 +60,8 @@ namespace XPX
 			}
 		}
 
+		XPLICIT_ASSERT(this->count_parts() == XPLICIT_BUNDLE_MAX);
+
 		auto torso = this->node_at(XPLICIT_BUNDLE_TORSO);
 
 		for (auto& part : mParts)
