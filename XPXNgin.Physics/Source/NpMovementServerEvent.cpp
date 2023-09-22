@@ -22,13 +22,7 @@ namespace XPX
 		mDeltaTime(0.0)
 	{}
 
-	NpMovementServerEvent::~NpMovementServerEvent() noexcept
-	{
-		for (auto* node : mWorldNodes)
-		{
-			node->assign("Locked", "true");
-		}
-	}
+	NpMovementServerEvent::~NpMovementServerEvent() noexcept = default;
 
 	const char* NpMovementServerEvent::name() noexcept { return "NpMovementServerEvent"; }
 

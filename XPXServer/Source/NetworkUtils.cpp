@@ -7,22 +7,17 @@
  * =====================================================================
  */
 
-#include "ServerReplicationFactory.h"
+#include "NetworkUtils.h"
 
 namespace XPX
 {
-	ServerReplicationFactory::ServerReplicationFactory()
+	NetworkFileTransferFactory::NetworkFileTransferFactory()
 		: mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"))
 	{
 		XPLICIT_ASSERT(mNetwork);
 	}
 
-	/*
-	 * These methods handles replication events.
-	 * It fills a buffer to tell what class/asset to load.
-	 */
-
-	void ServerReplicationFactory::send(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
+	void NetworkFileTransferFactory::send(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
 	{
 		if (!mNetwork)
 			return;

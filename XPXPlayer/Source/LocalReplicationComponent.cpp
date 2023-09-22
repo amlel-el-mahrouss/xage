@@ -23,8 +23,6 @@
 
 namespace XPX
 {
-	static XPX::RoXML::RoXMLDocumentParser XPX_PARSER;
-
 	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_REPLICATION; }
 
 	const char* LocalReplicationComponent::name() noexcept { return "LocalReplicationManager"; }
@@ -92,6 +90,8 @@ namespace XPX
 
 				if (DownloadURL(url, tmp))
 				{
+					XPX::RoXML::RoXMLDocumentParser XPX_PARSER;
+
 					XPLICIT_GET_DATA_DIR(full_path);
 
 					String full_download_path;

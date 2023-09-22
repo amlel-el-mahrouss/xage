@@ -9,8 +9,6 @@
 
 #include "RoXML.h"
 
-#include <NpMovementServerEvent.h>
-
 namespace XPX::RoXML
 {
 	void RoXMLDocumentParser::parse(RoXMLDocumentParameters& params) noexcept
@@ -125,10 +123,7 @@ namespace XPX::RoXML
 										scene_node->getScale().Z),
 									Color<NetworkFloat>(255, 255, 255, 255), script_id, parent_id, node_id);
 
-								if (component)
-								{
-									component->assign("Parent", ((nullptr != parent_id) ? parent_id : "world"));
-								}
+								XPLICIT_ASSERT(component);
 							}
 						}
 					}

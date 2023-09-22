@@ -14,7 +14,7 @@
 
 #include <CLua.hpp>
 
-//! Renderering engine.
+//! CAD core rendering engine.
 #include <irrlicht.h>
 
  /* common engine macros for Root */
@@ -236,7 +236,7 @@ namespace XPX
 		}
 
 	public:
-		void set(irr::IrrlichtDevice* dev) noexcept
+		void set(IrrlichtDevice* dev) noexcept
 		{
 			if (dev)
 				Dev = dev;
@@ -249,7 +249,7 @@ namespace XPX
 		}
 
 	public:
-		irr::IrrlichtDevice* Dev;
+		IrrlichtDevice* Dev;
 		InputReceiver* Keyboard;
 		bool ShouldExit;
 

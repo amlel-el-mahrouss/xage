@@ -7,7 +7,8 @@
  * =====================================================================
  */
 
-#include "ServerReplicationFactory.h"
+#include "NetworkUtils.h"
+
 #include "HumanoidComponent.h"
 #include "GearComponent.h"
 
@@ -47,7 +48,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 		auto xid = lua_tostring(L, -3);
 
-		XPX::ServerReplicationFactory factory;
+		XPX::NetworkFileTransferFactory factory;
 		std::vector<XPX::HumanoidComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>();
 
 		for (auto i = 0UL; i < players.size(); ++i)

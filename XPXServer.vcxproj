@@ -99,7 +99,7 @@
     <ClInclude Include="XPXServer\Source\LoginEvent.h" />
     <ClInclude Include="XPXServer\Source\HumanoidMovementEvent.h" />
     <ClInclude Include="XPXServer\Source\ServerConfig.h" />
-    <ClInclude Include="XPXServer\Source\ServerReplicationFactory.h" />
+    <ClInclude Include="XPXServer\Source\NetworkUtils.h" />
     <ClInclude Include="XPXServer\Source\SpawnComponent.h" />
     <ClInclude Include="XPXServer\Source\TimeoutEvent.h" />
   </ItemGroup>
@@ -112,7 +112,7 @@
     <ClCompile Include="XPXServer\Source\HumanoidMovementEvent.cpp" />
     <ClCompile Include="XPXServer\Source\ServerAPI.cpp" />
     <ClCompile Include="XPXServer\Source\ServerMain.cpp" />
-    <ClCompile Include="XPXServer\Source\ServerReplicationFactory.cpp" />
+    <ClCompile Include="XPXServer\Source\NetworkUtils.cpp" />
     <ClCompile Include="XPXServer\Source\SpawnComponent.cpp" />
     <ClCompile Include="XPXServer\Source\TimeoutEvent.cpp" />
   </ItemGroup>

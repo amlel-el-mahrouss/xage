@@ -13,14 +13,14 @@
 
 namespace XPX
 {
-	class ServerReplicationFactory final
+	class NetworkFileTransferFactory final
 	{
 	public:
-		explicit ServerReplicationFactory();
-		~ServerReplicationFactory() = default;
+		explicit NetworkFileTransferFactory();
+		~NetworkFileTransferFactory() = default;
 
 	public:
-		XPLICIT_COPY_DEFAULT(ServerReplicationFactory);
+		XPLICIT_COPY_DEFAULT(NetworkFileTransferFactory);
 
 	public:
 		void send(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept;

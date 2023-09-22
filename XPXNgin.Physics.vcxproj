@@ -98,15 +98,13 @@
     <ClInclude Include="XPXNgin.Physics\Source\NMath.h" />
     <ClInclude Include="XPXNgin.Physics\Source\Nplicit.h" />
     <ClInclude Include="XPXNgin.Physics\Source\NpMovementServerEvent.h" />
-    <ClInclude Include="XPXNgin.Physics\Source\RigidBody.h" />
-    <ClInclude Include="XPXNgin.Physics\Source\SoftBody.h" />
+    <ClInclude Include="XPXNgin.Physics\Source\AABB.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XPXNgin.Physics\Source\NMath.cpp" />
     <ClCompile Include="XPXNgin.Physics\Source\Nplicit.cpp" />
     <ClCompile Include="XPXNgin.Physics\Source\NpMovementServerEvent.cpp" />
-    <ClCompile Include="XPXNgin.Physics\Source\RigidBody.cpp" />
-    <ClCompile Include="XPXNgin.Physics\Source\SoftBody.cpp" />
+    <ClCompile Include="XPXNgin.Physics\Source\AABB.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

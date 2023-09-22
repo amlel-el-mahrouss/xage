@@ -11,7 +11,7 @@
 
 #include "ServerConfig.h"
 #include "HumanoidComponent.h"
-#include "ServerReplicationFactory.h"
+#include "NetworkUtils.h"
 
 namespace XPX
 {
@@ -36,7 +36,7 @@ namespace XPX
 
 	private:
 		std::vector<HumanoidComponent*> mPlayers;
-		ServerReplicationFactory mFactory;
+		NetworkFileTransferFactory mFactory;
 		NetworkServerComponent* mNetwork;
 		std::size_t mPlayerCount;
 

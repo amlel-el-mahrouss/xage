@@ -23,7 +23,7 @@ namespace XPX
 		const char* parent,
 		const char* name)
 		:
-		Lua::CLuaClass((String(parent) + "." + name)),
+		Lua::CLuaClass(fmt::format("{}{}{}", parent, ".", name)),
 		mName(name),
 		mParent(parent)
 	{

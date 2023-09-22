@@ -16,7 +16,7 @@
 #pragma once
 
 #include "Config.h"
-#include "RigidBody.h"
+#include "AABB.h"
 
 #ifndef __XPLICIT_DLL__
 #include <ClassComponent.h>

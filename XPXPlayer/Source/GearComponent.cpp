@@ -7,7 +7,6 @@
  * =====================================================================
  */
 
-// The component itself 
 #include "GearComponent.h"
 
 namespace XPX
