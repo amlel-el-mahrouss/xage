@@ -179,20 +179,14 @@ namespace XPX::RoXML
 					String attr_x = node->first_attribute()->name();
 					String attr_y = node->first_attribute()->next_attribute()->name();
 					String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
+					String attr_referent = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->name();
 
 					if (attr_x == "X" &&
 						attr_y == "Y" &&
-						attr_z == "Z")
+						attr_z == "Z" &&
+						attr_referent == "Referent")
 					{
-						String id;
-
-						for (std::size_t i = 0; i < strlen(node->value()); i++)
-						{
-							if (isalnum(node->value()[i]))
-							{
-								id += node->value()[i];
-							}
-						}
+						String id = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->value();
 
 						String x = node->first_attribute()->value();
 						String y = node->first_attribute()->next_attribute()->value();
@@ -228,20 +222,14 @@ namespace XPX::RoXML
 					String attr_x = node->first_attribute()->name();
 					String attr_y = node->first_attribute()->next_attribute()->name();
 					String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
+					String attr_referent = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->name();
 
 					if (attr_x == "X" &&
 						attr_y == "Y" &&
-						attr_z == "Z")
+						attr_z == "Z" &&
+						attr_referent == "Referent")
 					{
-						String id;
-
-						for (std::size_t i = 0; i < strlen(node->value()); i++)
-						{
-							if (isalnum(node->value()[i]))
-							{
-								id += node->value()[i];
-							}
-						}
+						String id = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->value();
 
 						String x = node->first_attribute()->value();
 						String y = node->first_attribute()->next_attribute()->value();
@@ -332,25 +320,20 @@ namespace XPX::RoXML
 				{
 					if (node->first_attribute() &&
 						node->first_attribute()->next_attribute() &&
-						node->first_attribute()->next_attribute()->next_attribute())
+						node->first_attribute()->next_attribute()->next_attribute() &&
+						node->first_attribute()->next_attribute()->next_attribute()->next_attribute())
 					{
 						String attr_x = node->first_attribute()->name();
 						String attr_y = node->first_attribute()->next_attribute()->name();
 						String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
+						String attr_referent = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->name();
 
 						if (attr_x == "X" &&
 							attr_y == "Y" &&
-							attr_z == "Z")
+							attr_z == "Z" &&
+							attr_referent == "Referent")
 						{
-							String id;
-
-							for (std::size_t i = 0; i < strlen(node->value()); i++)
-							{
-								if (isalnum(node->value()[i]))
-								{
-									id += node->value()[i];
-								}
-							}
+							String id = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->value();
 
 							String x = node->first_attribute()->value();
 							String y = node->first_attribute()->next_attribute()->value();
@@ -382,20 +365,14 @@ namespace XPX::RoXML
 						String attr_x = node->first_attribute()->name();
 						String attr_y = node->first_attribute()->next_attribute()->name();
 						String attr_z = node->first_attribute()->next_attribute()->next_attribute()->name();
+						String attr_referent = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->name();
 
 						if (attr_x == "X" &&
 							attr_y == "Y" &&
-							attr_z == "Z")
-						{
-							String id;
-
-							for (std::size_t i = 0; i < strlen(node->value()); i++)
+							attr_z == "Z" &&
+							attr_referent == "Referent")
 							{
-								if (isalnum(node->value()[i]))
-								{
-									id += node->value()[i];
-								}
-							}
+								String id = node->first_attribute()->next_attribute()->next_attribute()->next_attribute()->value();
 
 							String x = node->first_attribute()->value();
 							String y = node->first_attribute()->next_attribute()->value();

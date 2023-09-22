@@ -34,7 +34,7 @@ namespace XPX
 		//! Load a specific character and show it to screen.
 		
 		params.Path = XPLICIT_DIR;
-		params.Path += "/";
+		params.Path += "Contents/";
 		params.Path += character_path;
 		params.WaitFor = true;
 
@@ -58,6 +58,15 @@ namespace XPX
 				if (mesh)
 					mParts.push_back(std::make_pair(mesh, mesh->getMesh()));
 			}
+		}
+
+		auto torso = this->node_at(XPLICIT_BUNDLE_TORSO);
+
+		for (auto& part : mParts)
+		{
+			if (part.first &&
+				part.first != torso)
+				part.first->setParent(torso);
 		}
 	}
 

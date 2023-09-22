@@ -50,7 +50,7 @@ namespace XPX
 		std::size_t count_parts() const { return mParts.size(); }
 		const String& xplicit_id() noexcept { return mXplicitId; }
 
-		static bool should_update() { return false }
+		static bool should_update() { return false; }
 		static void update(ClassPtr ptr) {  }
 
 	protected:
