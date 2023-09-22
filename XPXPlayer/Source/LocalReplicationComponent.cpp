@@ -122,82 +122,84 @@ namespace XPX
 		}
 		else if (packet.channel == XPLICIT_CHANNEL_PHYSICS)
 		{
-			PartComponent* node = ComponentSystem::get_singleton_ptr()->get<PartComponent>(packet.additional_data);
+			String xplicit_id = String(packet.additional_data);
 
-			if (node)
+			if (xplicit_id.find("XPX_") != String::npos)
 			{
-				if (packet.cmd[XPLICIT_NETWORK_CMD_DESTROY] == NETWORK_CMD_DESTROY)
+				auto bundles = ComponentSystem::get_singleton_ptr()->all_of<StaticBundleMesh>();
+
+				auto it = std::find_if(bundles.begin(), bundles.end(), [&](StaticBundleMesh* mesh) -> bool {
+					return mesh->xplicit_id() == xplicit_id;
+					});
+
+				if (it != bundles.cend())
 				{
-					ComponentSystem::get_singleton_ptr()->remove(node);
+					auto bundle = *it;
+
+					if (bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent())
+					{
+						//! let's check it
+						XPLICIT_ASSERT(strcmp(bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent()->getName(), "Camera") == 0);
+
+						bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent()->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X],
+							packet.pos[XPLICIT_NETWORK_Y],
+							packet.pos[XPLICIT_NETWORK_Z]));
+
+						for (size_t i = 0; i < bundle->count_parts(); ++i)
+						{
+							auto part = bundle->node_at(i);
+
+							part->setRotation(vector3df(packet.pos[XPLICIT_NETWORK_X],
+								packet.pos[XPLICIT_NETWORK_Y],
+								packet.pos[XPLICIT_NETWORK_Z]));
+						}
+					}
 				}
 				else
 				{
-					auto part = node->node();
-
-					part->setPosition(vector3df(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z])));
-					part->setRotation(vector3df(packet.pos_third[XPLICIT_NETWORK_X], packet.pos_third[XPLICIT_NETWORK_Y], packet.pos_third[XPLICIT_NETWORK_Z]));
-					part->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
+					auto bundle = ComponentSystem::get_singleton_ptr()->add<StaticBundleMesh>("Character.rrs", xplicit_id.c_str());
+					XPLICIT_ASSERT(bundle);
 				}
 			}
 			else
 			{
-				String parent = String(packet.additional_data);
-				String name = "";
+				PartComponent* node = ComponentSystem::get_singleton_ptr()->get<PartComponent>(packet.additional_data);
 
-				if (parent.find(".") != String::npos)
+				if (node)
 				{
-					name = String(packet.additional_data, parent.find("."));
+					if (packet.cmd[XPLICIT_NETWORK_CMD_DESTROY] == NETWORK_CMD_DESTROY)
+					{
+						ComponentSystem::get_singleton_ptr()->remove(node);
+					}
+					else
+					{
+						// get the part.
+						auto part = node->node();
+
+						part->setPosition(vector3df(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z])));
+						part->setRotation(vector3df(packet.pos_third[XPLICIT_NETWORK_X], packet.pos_third[XPLICIT_NETWORK_Y], packet.pos_third[XPLICIT_NETWORK_Z]));
+						part->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
+					}
 				}
 				else
 				{
-					name = parent;
-					parent = XPLICIT_LUA_NAMESPACE;
-				}
+					String parent = String(packet.additional_data);
+					String name = "";
 
-				if (name.find("XPX_") == String::npos)
-				{
+					if (parent.find(".") != String::npos)
+					{
+						name = String(packet.additional_data, parent.find("."));
+					}
+					else
+					{
+						name = parent;
+						parent = XPLICIT_LUA_NAMESPACE;
+					}
+
 					parent = parent.substr(parent.find(".") + 1);
 
 					auto part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(name.c_str(), parent.c_str());
 					XPLICIT_ASSERT(part);
-				}
-				else
-				{
-					auto bundles = ComponentSystem::get_singleton_ptr()->all_of<StaticBundleMesh>();
-
-					for (auto* bundle : bundles)
-					{
-						if (bundle &&
-							bundle->count_parts() == XPLICIT_BUNDLE_MAX &&
-							bundle->xplicit_id() == name)
-						{
-							//! should be the camera.
-							if (bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent())
-							{
-								//! let's check it
-								XPLICIT_ASSERT(strcmp(bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent()->getName(), "Camera") == 0);
-
-								bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent()->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X],
-									packet.pos[XPLICIT_NETWORK_Y],
-									packet.pos[XPLICIT_NETWORK_Z]));
-
-								for (size_t i = 0; i < bundle->count_parts(); ++i)
-								{
-									auto part = bundle->node_at(i);
-
-									part->setRotation(vector3df(packet.pos[XPLICIT_NETWORK_X],
-										packet.pos[XPLICIT_NETWORK_Y],
-										packet.pos[XPLICIT_NETWORK_Z]));
-								}
-							}
-
-							return;
-						}
-					}
-
-					auto bundle = ComponentSystem::get_singleton_ptr()->add<StaticBundleMesh>("Character.rrs", name.c_str());
-
-					XPLICIT_ASSERT(bundle);
 				}
 			}
 		}

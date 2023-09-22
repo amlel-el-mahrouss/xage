@@ -103,7 +103,7 @@ namespace XPX::RoXML
 
 							if (klass_to_instantiate == "Mesh")
 							{
-								auto val = node->first_attribute()->value();
+								auto val = node->value();
 
 								for (size_t i = 0; i < strlen(val); i++)
 								{
