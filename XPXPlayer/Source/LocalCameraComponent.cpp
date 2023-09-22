@@ -75,7 +75,7 @@ namespace XPX
 			packet.pos[XPLICIT_NETWORK_Y] = self->mLookAt.Y;
 			packet.pos[XPLICIT_NETWORK_Z] = self->mLookAt.Z;
 
-			packet.channel = XPLICIT_CHANNEL_DATA;
+			packet.channel |= XPLICIT_CHANNEL_DATA;
 
 			self->mNetwork->send(packet);
 		}

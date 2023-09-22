@@ -135,4 +135,5 @@ namespace XPX
 	};
 }
 
+#include "Uri.h"
 #include "LuaAPI.h"

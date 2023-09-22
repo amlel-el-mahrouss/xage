@@ -80,7 +80,7 @@ namespace XPX
 				self->assign("LookAt.Y", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_Y]));
 				self->assign("LookAt.Z", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_Z]));
 
-				self->call_method("Update('LookingAt')");
+				self->call_method("Update('LookAt')");
 			}
 		}
 	}

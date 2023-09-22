@@ -42,10 +42,12 @@
 
 #define XPLICIT_NUM_CHANNELS    (3)
 
-#define XPLICIT_CHANNEL_DATA    (1)
-#define XPLICIT_CHANNEL_LUA     (2)
-#define XPLICIT_CHANNEL_CHAT    (3)
-#define XPLICIT_CHANNEL_PHYSICS (4)
+#define XPLICIT_CHANNEL_DATA        (2)
+#define XPLICIT_CHANNEL_CHAT        (4)
+#define XPLICIT_CHANNEL_PHYSICS     (6)
+
+// we wanna make specific replication calls for specific core features (such as gears, meshes...)
+#define XPLICIT_CHANNEL_REPL_GEAR   (4)
 
  // player specific data (either lua or roxml)
 #define XPLICIT_REPLICA_PLAYER (0)
@@ -56,7 +58,7 @@
 // xasset passthrough (roxml)
 #define XPLICIT_REPLICA_ROXML (2)
 
-// remote event storage
+// anything
 #define XPLICIT_REPLICA_EVENT (3)
 
 /* Used by the protocol to tell the velocity. */
@@ -112,6 +114,7 @@ namespace XPX
         NETWORK_CMD_SLOT,
         NETWORK_CMD_DOWNLOAD,
         NETWORK_CMD_DESTROY,
+        NETWORK_CMD_CREATE,
         NETWORK_CMD_INVALID, // can be used to indicate an invalid or wrong state.
         NETWORK_CMD_COUNT = 20,
     };
@@ -164,23 +167,6 @@ namespace XPX
         // Additional data.
     public:
         char                  additional_data[XPLICIT_NETWORK_BUF_SZ];
-
-    };
-
-    // Chatbox/VoiceChat packet.
-    struct XPLICIT_API NetworkPacketChat final
-    {
-    public:
-        char                  magic[XPLICIT_NETWORK_MAG_COUNT];
-
-    // General packet information.
-    public:
-        std::int8_t           channel; // channel of the packet, that is here which chatroom to print this in. 3 + n
-        std::int16_t          version; // matches xconnect version macro.
-
-    // Packet data.
-        char                  username[64]; // That0neGuy
-        char                  buffer[128]; // Hello guys!
 
     };
 
@@ -262,7 +248,7 @@ typedef int socklen_t;
 #define XPLICIT_NETWORK_CMD_SPAWN (12)
 #define XPLICIT_NETWORK_CMD_DAMAGE (13)
 #define XPLICIT_NETWORK_CMD_SHUTDOWN (14)
-#define XPLICIT_NETWORK_CMD_REPL (15)
+#define XPLICIT_NETWORK_CMD_CREATE (15)
 #define XPLICIT_NETWORK_CMD_CHAT (16)
 #define XPLICIT_NETWORK_CMD_JUMP (17)
 #define XPLICIT_NETWORK_CMD_LCLICK (18)

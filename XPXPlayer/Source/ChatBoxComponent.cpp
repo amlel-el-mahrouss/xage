@@ -41,17 +41,15 @@ namespace XPX
 		if (self && 
 			IsValidHeapPtr(self))
 		{
-			if (self->mNetwork->get().channel == XPLICIT_CHANNEL_CHAT)
+			if (self->mNetwork->get().channel & XPLICIT_CHANNEL_CHAT)
 			{
-				NetworkPacketChat chat_pckt = *(NetworkPacketChat*)&self->mNetwork->get();
+				NetworkPacket chat_pckt = self->mNetwork->get();
 
 				register String chat_buffer = "";
 
 				chat_buffer.reserve(192);
 
-				chat_buffer += chat_pckt.username;
-				chat_buffer += ": ";
-				chat_buffer += chat_pckt.buffer;
+				chat_buffer += chat_pckt.additional_data;
 
 				self->mChatQueue.push(chat_buffer);
 			}

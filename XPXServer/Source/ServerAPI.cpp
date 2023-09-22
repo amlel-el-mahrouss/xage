@@ -69,9 +69,11 @@ static int lua_CreateGear(lua_State* L)
 {
 	const char* name = lua_tostring(L, 2);
 	const char* xplicit_id = lua_tostring(L, 3);
+	const char* mesh = lua_tostring(L, 4);
 
 	if (xplicit_id == nullptr ||
-		name == nullptr)
+		name == nullptr ||
+		mesh == nullptr)
 	{
 		lua_pushnil(L);
 		return 1;
@@ -97,6 +99,11 @@ static int lua_CreateGear(lua_State* L)
 					if (player->get_peer() &&
 						player->get_peer()->xplicit_id.as_string() == xplicit_id)
 					{
+						player->get_peer()[y].packet.cmd[XPLICIT_NETWORK_CMD_CREATE] = XPX::NETWORK_CMD_CREATE;
+						player->get_peer()[y].packet.channel |= XPLICIT_CHANNEL_REPL_GEAR;
+
+						memcpy(player->get_peer()[y].packet.replicas[XPLICIT_REPLICA_EVENT], mesh, strlen(mesh));
+
 						player->get_gears()[y] = gear;
 						player->get_gears()[y]->set_owner(player);
 
@@ -147,11 +154,11 @@ public:
 	{
 		XPX::String component_name = lua_tostring(L, 1);
 
-		if (component_name == "Weapon")
+		if (component_name == "Gear")
 		{
 			return lua_CreateGear(L);
 		}
-		else if (component_name == "XSceneLoader")
+		else if (component_name == "RoXML")
 		{
 			return lua_LoadRoXML(L);
 		}
@@ -215,4 +222,8 @@ void XplicitLoadServerLua() noexcept
 
 	XPX::RLua::RuntimeClass<XPXEngineBridge> instance;
 	instance.begin_class().append_proc("new", &XPXEngineBridge::new_instance).end_class();
+
+	XPX::RLua::RuntimeClass<XPXUri> uri;
+	uri.begin_class().append_proc("parse", &XPXUri::parse_url).end_class();
+
 }

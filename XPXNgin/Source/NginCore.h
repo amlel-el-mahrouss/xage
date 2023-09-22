@@ -14,7 +14,7 @@
 #include "Config.h"
 
 // replace this with pbm after TODO
-#define XPLICIT_OBJ_FORMAT ".obj"
+#define XPLICIT_OBJ_FORMAT ".dae"
 
 #ifndef XPLICIT_WINDOWS
 

@@ -67,7 +67,7 @@ namespace XPX
 
 		if (!self->mNetwork->read(self->mPacket)) return;
 
-		if (self->mPacket.channel == XPLICIT_CHANNEL_DATA && 
+		if ((self->mPacket.channel & XPLICIT_CHANNEL_DATA) &&
 			self->mPacket.hash == self->mHash)
 		{
 			if (self->mIsLocalPlayer)
@@ -143,9 +143,7 @@ namespace XPX
 		{
 			mPacket = mNetwork->get();
 
-			auto prev_channel = mPacket.channel;
-
-			mPacket.channel = XPLICIT_CHANNEL_DATA;
+			mPacket.channel |= XPLICIT_CHANNEL_DATA;
 
 			if (KEYBOARD->key_down(traits.mForward))
 			{
@@ -205,7 +203,6 @@ namespace XPX
 				return;
 			}
 
-			mPacket.channel = prev_channel;
 			return;
 		}
 	}

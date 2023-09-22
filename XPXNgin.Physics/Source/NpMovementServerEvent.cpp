@@ -91,7 +91,7 @@ namespace XPX
 
 			NetworkPacket repl_packet{};
 
-			repl_packet.channel = XPLICIT_CHANNEL_PHYSICS;
+			repl_packet.channel |= XPLICIT_CHANNEL_PHYSICS;
 			repl_packet.version = XPLICIT_NETWORK_VERSION;
 
 			repl_packet.magic[0] = XPLICIT_NETWORK_MAG_0;

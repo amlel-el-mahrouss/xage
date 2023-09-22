@@ -109,7 +109,7 @@ namespace XPX
 	bool NetworkComponent::send(NetworkPacket& packet)
 	{
 		packet.hash = mHash;
-		packet.channel = mChannelID;
+		packet.channel |= mChannelID;
 		packet.size = sizeof(NetworkPacket);
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;

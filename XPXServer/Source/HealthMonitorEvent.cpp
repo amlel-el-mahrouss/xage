@@ -65,7 +65,7 @@ namespace XPX
 			
 			auto* peer_ptr = humanoid->get_peer();
 
-			if (peer_ptr->packet.channel == XPLICIT_CHANNEL_CHAT)
+			if (peer_ptr->packet.channel & XPLICIT_CHANNEL_CHAT)
 				continue;
 
 			peer_ptr->packet.health = humanoid->get_health();

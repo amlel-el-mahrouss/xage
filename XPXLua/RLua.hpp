@@ -74,14 +74,11 @@ namespace XPX::RLua
 			luaL_newmetatable(mL, Class::name());
 			mMetatableIndex = lua_gettop(mL);
 
-			lua_pushvalue(mL, -1);
+			lua_pushvalue(mL, mMetatableIndex);
 			lua_setfield(mL, -2, "__index");
 
 			lua_pushstring(mL, Class::name());
 			lua_setfield(mL, -2, "__tostring");
-
-			lua_pushvalue(mL, -1);
-			lua_setfield(mL, -2, "__metatable");
 
 			*this = this->append_proc("__gc", &RuntimeClass<Class>::on_delete);
 			*this = this->append_proc("borrow", &RuntimeClass<Class>::on_new);
@@ -103,6 +100,7 @@ namespace XPX::RLua
 		RuntimeClass& end_class() noexcept
 		{
 			lua_setmetatable(mL, mMetatableIndex);
+			lua_setglobal(mL, Class::name());
 
 			return *this;
 		}

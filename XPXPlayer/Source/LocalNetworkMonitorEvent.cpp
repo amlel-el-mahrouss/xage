@@ -63,7 +63,7 @@ namespace XPX
 
 		NetworkPacket packet = mNetwork->get();
 
-		if (packet.channel != XPLICIT_CHANNEL_DATA)
+		if (!(packet.channel & XPLICIT_CHANNEL_DATA))
 			return;
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)

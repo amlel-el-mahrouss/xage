@@ -214,7 +214,7 @@ public:
 				return 1;
 			}
 		}
-		else if (component_name == "XSceneLoader")
+		else if (component_name == "RoXML")
 		{
 			XPX::Thread job([&]() {
 				XPX::RoXML::RoXMLDocumentParameters params;
@@ -411,6 +411,9 @@ void XplicitLoadClientLua() noexcept
 {
 	XPX::RLua::RuntimeClass<XPXEngineBridge> instance;
 	instance.begin_class().append_proc("new", &XPXEngineBridge::new_instance).end_class();
+
+	XPX::RLua::RuntimeClass<XPXUri> uri;
+	uri.begin_class().append_proc("parse", &XPXUri::parse_url).end_class();
 
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_PlaySound, "playSound");
 

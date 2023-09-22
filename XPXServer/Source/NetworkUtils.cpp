@@ -28,8 +28,6 @@ namespace XPX
 				mNetwork->get(i)->public_hash != public_hash)
 				continue;
 
-			mNetwork->get(i)->packet.channel = XPLICIT_CHANNEL_DATA;
-
 			mNetwork->get(i)->packet.cmd[XPLICIT_NETWORK_CMD_DOWNLOAD] = NETWORK_CMD_DOWNLOAD;
 			mNetwork->get(i)->packet.id = id;
 

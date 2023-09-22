@@ -32,44 +32,6 @@ static int lua_DestroyScript(lua_State* L)
 	return 0;
 }
 
-class XPXUri
-{
-public:
-	static const char* name() { return "Uri"; }
-
-public:
-	XPX::Utils::UriParser Uri = { XPLICIT_XASSET_PROTOCOL };
-
-public:
-	XPXUri() = default;
-	~XPXUri() = default;
-
-public:
-	XPLICIT_COPY_DEFAULT(XPXUri);
-
-public:
-	static int parse_url(lua_State* L)
-	{
-		XPXUri* uri = (XPXUri*)lua_touserdata(L, 1);
-		XPX::String uri_str = lua_tostring(L, 2);
-
-		uri_str = uri_str.erase(uri_str.find(XPLICIT_XASSET_PROTOCOL), strlen(XPLICIT_XASSET_PROTOCOL));
-
-		if (uri &&
-			!uri_str.empty())
-		{
-			uri->Uri /= uri_str;
-
-			lua_pushstring(L, uri->Uri.get().c_str());
-			return 1;
-		}
-
-		lua_pushstring(L, "invalid-asset");
-		return 1;
-	}
-
-};
-
 static int lua_Info(lua_State* L)
 {
 	if (lua_isstring(L, 1))
@@ -82,9 +44,6 @@ static int lua_Info(lua_State* L)
 
 XPLICIT_API void XplicitLoadBaseLua()
 {
-	XPX::RLua::RuntimeClass<XPXUri> uri;
-	uri.begin_class().append_proc("parse", &XPXUri::parse_url).end_class();
-
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("Script = {}");
 	XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world = {}");
 	

@@ -42,7 +42,7 @@ namespace XPX
 		if (!self->mNetwork->read(packet))
 			return;
 
-		if (packet.channel == XPLICIT_CHANNEL_DATA)
+		if (packet.channel & XPLICIT_CHANNEL_DATA)
 		{
 			if (packet.cmd[XPLICIT_NETWORK_CMD_DOWNLOAD] != NETWORK_CMD_DOWNLOAD)
 				return;
@@ -121,7 +121,7 @@ namespace XPX
 				break;
 			}
 		}
-		else if (packet.channel == XPLICIT_CHANNEL_PHYSICS)
+		else if (packet.channel & XPLICIT_CHANNEL_PHYSICS)
 		{
 			ISceneNode* node = CAD->getSceneManager()->getSceneNodeFromName(packet.additional_data);
 
@@ -151,8 +151,7 @@ namespace XPX
 			else
 			{
 				String parent = String(packet.additional_data);
-
-				String name;
+				String name = "";
 
 				if (parent.find(".") != String::npos)
 				{
@@ -166,9 +165,66 @@ namespace XPX
 
 				parent = parent.substr(parent.find(".") + 1);
 
-				auto mesh_component = ComponentSystem::get_singleton_ptr()->add<PartComponent>(name.c_str(), parent.c_str());
-				XPLICIT_ASSERT(mesh_component);
+				auto part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(name.c_str(), parent.c_str());
+				XPLICIT_ASSERT(part);
 			}
+		}
+		else if (packet.channel & XPLICIT_CHANNEL_REPL_GEAR)
+		{
+			String parent = String(packet.additional_data);
+			String name = "";
+
+			if (parent.find(".") != String::npos)
+			{
+				name = String(packet.additional_data, parent.find("."));
+			}
+			else
+			{
+				name = parent;
+				parent = "world";
+			}
+
+			parent = parent.substr(parent.find(".") + 1);
+
+			auto gears = ComponentSystem::get_singleton_ptr()->all_of<GearComponent>();
+
+			for (auto* gear : gears)
+			{
+				if (gear &&
+					gear->instance_name() == name &&
+					gear->group_name() == parent)
+				{
+					auto node = gear->get_mesh()->node();
+
+					if (!node)
+					{
+						gear->assign("Path", packet.replicas[XPLICIT_REPLICA_EVENT]);
+						return;
+					}
+
+					node->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
+					node->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
+
+					node->getMaterial(0).AmbientColor.setRed(packet.pos_fourth[XPLICIT_NETWORK_X]);
+					node->getMaterial(0).AmbientColor.setGreen(packet.pos_fourth[XPLICIT_NETWORK_Y]);
+					node->getMaterial(0).AmbientColor.setBlue(packet.pos_fourth[XPLICIT_NETWORK_Z]);
+
+					node->getMaterial(0).AmbientColor.setAlpha(packet.pos_third[XPLICIT_NETWORK_X]);
+
+					node->getMaterial(0).DiffuseColor.setRed(packet.pos_fourth[XPLICIT_NETWORK_X]);
+					node->getMaterial(0).DiffuseColor.setGreen(packet.pos_fourth[XPLICIT_NETWORK_Y]);
+					node->getMaterial(0).DiffuseColor.setBlue(packet.pos_fourth[XPLICIT_NETWORK_Z]);
+
+					node->getMaterial(0).DiffuseColor.setAlpha(packet.pos_third[XPLICIT_NETWORK_X]);
+
+					return;
+				}
+			}
+
+			GearComponent* gear = ComponentSystem::get_singleton_ptr()->add<GearComponent>(name.c_str(), 
+				packet.replicas[XPLICIT_REPLICA_EVENT], parent.c_str());
+
+			XPLICIT_ASSERT(gear);
 		}
 	}
 }
