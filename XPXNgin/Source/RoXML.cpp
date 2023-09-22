@@ -62,23 +62,20 @@ namespace XPX::RoXML
 							const char* script_id = "";
 							const char* parent_id = XPLICIT_CLASS_NAMESPACE;
 
-							// For for a lua attribute!
+							
 							if (first_attr->next_attribute()->next_attribute() &&
 								strcmp(first_attr->next_attribute()->next_attribute()->name(), "Script") == 0)
-								script_id = first_attr->next_attribute()->next_attribute()->value();
-							else
 							{
-								if (first_attr->next_attribute()->next_attribute())
-								{
-									if (first_attr->next_attribute()->next_attribute()->next_attribute() &&
-										strcmp(first_attr->next_attribute()->next_attribute()->next_attribute()->name(), "Parent") == 0)
-									{
-										parent_id = first_attr->next_attribute()->next_attribute()->next_attribute()->value();
+								script_id = first_attr->next_attribute()->next_attribute()->value();
+							}
+							
+							if (first_attr->next_attribute()->next_attribute()->next_attribute() &&
+								strcmp(first_attr->next_attribute()->next_attribute()->next_attribute()->name(), "Parent") == 0)
+							{
+								parent_id = first_attr->next_attribute()->next_attribute()->next_attribute()->value();
 
-										if (strlen(parent_id) < 1)
-											parent_id = XPLICIT_LUA_NAMESPACE;
-									}
-								}
+								if (strlen(parent_id) < 1)
+									parent_id = XPLICIT_LUA_NAMESPACE;
 							}
 
 							void* object = nullptr;
