@@ -8,7 +8,6 @@
  */
 
 #include "LuaScriptComponent.h"
-#include "LuaUser.h"
 
 namespace XPX
 {
@@ -43,8 +42,6 @@ namespace XPX
 			return;
 
 		Thread job([](LuaScriptComponent* self) {
-			clua_lock();
-
 			String name = self->name();
 			String path = self->path();
 
@@ -90,11 +87,9 @@ namespace XPX
 			}
 
 			self->mStatus = LUA_STOP;
-
-			clua_unlock();
-
-			std::this_thread::yield();
 			}, this);
+
+		job.detach();
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;

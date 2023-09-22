@@ -18,6 +18,8 @@ extern "C" {
 #	include "lauxlib.h"
 }
 
+#include "LuaUser.h"
+
 #ifndef __XPLICIT_H__
 #	include <NginCore.h>
 #endif // ifndef __XPLICIT_H__
@@ -98,8 +100,11 @@ namespace XPX::Lua
 			if (file.empty())
 				return -1;
 
-			if (auto err = (luaL_dofile(mL, file.c_str()));
-				err != LUA_OK)
+			clua_lock();
+			auto err = (luaL_dofile(mL, file.c_str()));
+			clua_unlock();
+
+			if (err != LUA_OK)
 				return err;
 
 			return 0;
@@ -110,8 +115,11 @@ namespace XPX::Lua
 			if (str.empty())
 				return -1;
 
-			if (auto err = (luaL_dostring(mL, str.c_str())); 
-				err != LUA_OK)
+			clua_lock();
+			auto err = (luaL_dostring(mL, str.c_str()));
+			clua_unlock();
+
+			if (err != LUA_OK)
 				return err;
 
 			return 0;
@@ -132,7 +140,10 @@ namespace XPX::Lua
 		explicit CLuaClass(const String& klass) noexcept
 			: mClass(klass), mL(CLuaStateManager::get_singleton_ptr()->state()), mSymbolCnt(0)
 		{
+			clua_lock();
 			luaL_dostring(mL, fmt::format("{} = {}", klass, "{}").c_str());
+			clua_unlock();
+
 		}
 
 		virtual ~CLuaClass() noexcept = default;
@@ -161,7 +172,12 @@ namespace XPX::Lua
 		bool assign(const String lhs, const String rhs) 
 		{ 
 			auto fmt = fmt::format("{}.{} = {}", mClass, lhs, rhs);
-			return luaL_dostring(mL, fmt.c_str()) == 0;
+			
+			clua_lock();
+			bool ret = luaL_dostring(mL, fmt.c_str()) == 0;
+			clua_unlock();
+
+			return ret;
 		}
 
 	private:
@@ -177,7 +193,9 @@ namespace XPX::Lua
 			fmt += ".";
 			fmt += lhs;
 
+			clua_lock();
 			auto ret = luaL_dostring(mL, fmt.c_str()) == 0;
+			clua_unlock();
 
 			if (!ret)
 			{
@@ -250,7 +268,9 @@ namespace XPX::Lua
 			if (lhs.empty())
 				return "";
 
+			clua_lock();
 			auto ret = (luaL_dostring(mL, lhs.c_str())) == 0;
+			clua_unlock();
 
 			if (!ret)
 			{
@@ -269,8 +289,10 @@ namespace XPX::Lua
 			if (lhs.empty())
 				return "";
 
+			clua_lock();
 			auto ret = (luaL_dofile(mL, lhs.c_str())) == 0;
-			
+			clua_unlock();
+
 			if (!ret)
 			{
 				String ret_err = lua_tostring(mL, -1);
