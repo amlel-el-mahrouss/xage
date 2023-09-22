@@ -39,7 +39,7 @@ namespace XPX
 
 		NetworkPacket packet = self->mNetwork->get();
 
-		if (packet.channel & XPLICIT_CHANNEL_DATA)
+		if (packet.channel == XPLICIT_CHANNEL_DATA)
 		{
 			if (packet.cmd[XPLICIT_NETWORK_CMD_DOWNLOAD] != NETWORK_CMD_DOWNLOAD)
 				return;
@@ -121,7 +121,7 @@ namespace XPX
 				break;
 			}
 		}
-		else if (packet.channel & XPLICIT_CHANNEL_PHYSICS)
+		else if (packet.channel == XPLICIT_CHANNEL_PHYSICS)
 		{
 			ISceneNode* node = CAD->getSceneManager()->getSceneNodeFromName(packet.additional_data);
 
@@ -133,14 +133,27 @@ namespace XPX
 					return;
 				}
 
+				std::cout << "SCALE:" << std::endl;
+
+				std::cout << packet.pos_second[XPLICIT_NETWORK_X] << std::endl;
+				std::cout << packet.pos_second[XPLICIT_NETWORK_Y] << std::endl;
+				std::cout << packet.pos_second[XPLICIT_NETWORK_Z] << std::endl;
+
+				std::cout << "POS:" << std::endl;
+
+				std::cout << packet.pos[XPLICIT_NETWORK_X] << std::endl;
+				std::cout << packet.pos[XPLICIT_NETWORK_Y] << std::endl;
+				std::cout << packet.pos[XPLICIT_NETWORK_Z] << std::endl;
+
 				node->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
 				node->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
+				node->setRotation(vector3df(packet.pos_third[XPLICIT_NETWORK_X], packet.pos_third[XPLICIT_NETWORK_Y], packet.pos_third[XPLICIT_NETWORK_Z]));
 
 				node->getMaterial(0).AmbientColor.setRed(packet.pos_fourth[XPLICIT_NETWORK_X]);
 				node->getMaterial(0).AmbientColor.setGreen(packet.pos_fourth[XPLICIT_NETWORK_Y]);
 				node->getMaterial(0).AmbientColor.setBlue(packet.pos_fourth[XPLICIT_NETWORK_Z]);
 
-				node->getMaterial(0).AmbientColor.setAlpha(packet.pos_third[XPLICIT_NETWORK_X]);
+				node->getMaterial(0).AmbientColor.setAlpha(packet.pos_fourth[XPLICIT_NETWORK_DELTA]);
 
 				node->getMaterial(0).DiffuseColor.setRed(packet.pos_fourth[XPLICIT_NETWORK_X]);
 				node->getMaterial(0).DiffuseColor.setGreen(packet.pos_fourth[XPLICIT_NETWORK_Y]);
@@ -169,7 +182,7 @@ namespace XPX
 				XPLICIT_ASSERT(part);
 			}
 		}
-		else if (packet.channel & XPLICIT_CHANNEL_REPL_GEAR)
+		else if (packet.channel == XPLICIT_CHANNEL_REPL_GEAR)
 		{
 			String parent = String(packet.additional_data);
 			String name = "";

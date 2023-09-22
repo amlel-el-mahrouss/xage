@@ -131,7 +131,7 @@ namespace XPX
 
 					memset(mNetwork->get(peer_idx)->packet.additional_data, 0, XPLICIT_NETWORK_BUF_SZ);
 
-					mNetwork->get(peer_idx)->packet.channel |= XPLICIT_CHANNEL_DATA;
+					mNetwork->get(peer_idx)->packet.channel = XPLICIT_CHANNEL_DATA;
 
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
@@ -156,7 +156,7 @@ namespace XPX
 				mNetwork->get(peer_idx)->status == NETWORK_STAT_INVALID)
 				continue;
 
-			if (mNetwork->get(peer_idx)->packet.channel & XPLICIT_CHANNEL_CHAT)
+			if (mNetwork->get(peer_idx)->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
 
 			//! If it is a kick or a stop or either a ban

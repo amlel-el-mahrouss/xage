@@ -18,9 +18,7 @@ namespace XPX
 {
 	NpMovementServerEvent::NpMovementServerEvent() noexcept
 		: 
-		mWorldNodes(),
-		mTimeStamp(2),
-		mDeltaTime(0.0)
+		mWorldNodes()
 	{}
 
 	NpMovementServerEvent::~NpMovementServerEvent() noexcept = default;
@@ -29,16 +27,11 @@ namespace XPX
 
 	void NpMovementServerEvent::operator()()
 	{
-		mDeltaTime = mTimeStamp;
-		++mDeltaTime;
-
 		for (auto* lhsNode : mWorldNodes)
 		{
 			if (!lhsNode)
 				continue;
 
-			lhsNode->assign("DeltaTime", std::to_string(mDeltaTime).c_str());
-			
 			if (!lhsNode->index_as_bool("Anchored"))
 			{
 				for (auto* rhsNode : mWorldNodes)
@@ -46,26 +39,23 @@ namespace XPX
 					if (!rhsNode)
 						return;
 
-					if (rhsNode == lhsNode)
+					if (rhsNode == lhsNode ||
+						rhsNode->pos() == lhsNode->pos())
 						continue;
 
-					if (RigidBodyHelper<NplicitFloat>::is_touching(rhsNode->pos(), lhsNode->pos(), lhsNode->scale(), rhsNode->scale()))
+					if (AABBHelper<NetworkFloat>::is_touching(lhsNode->pos(), rhsNode->scale(), rhsNode->pos(), lhsNode->scale()))
 					{
 						rhsNode->call_method("Update('Touched')");
-						lhsNode->call_method("Update('Touching')");
-					
-						break;
-					}
-					else
-					{
-						lhsNode->pos().mul(rhsNode->pos().X, rhsNode->pos().Y, rhsNode->pos().Z);
+						lhsNode->call_method("Update('Touched')");
+
+						continue;
 					}
 				}
 			}
 
 			NetworkPacket repl_packet{};
 
-			repl_packet.channel |= XPLICIT_CHANNEL_PHYSICS;
+			repl_packet.channel = XPLICIT_CHANNEL_PHYSICS;
 			repl_packet.version = XPLICIT_NETWORK_VERSION;
 
 			repl_packet.magic[0] = XPLICIT_NETWORK_MAG_0;
@@ -83,8 +73,23 @@ namespace XPX
 			repl_packet.pos_fourth[XPLICIT_NETWORK_X] = lhsNode->color().R;
 			repl_packet.pos_fourth[XPLICIT_NETWORK_Y] = lhsNode->color().G;
 			repl_packet.pos_fourth[XPLICIT_NETWORK_Z] = lhsNode->color().B;
+			repl_packet.pos_fourth[XPLICIT_NETWORK_DELTA] = lhsNode->alpha();
 
-			repl_packet.pos_third[XPLICIT_NETWORK_X] = lhsNode->alpha();
+			repl_packet.pos_third[XPLICIT_NETWORK_X] = lhsNode->index_as_number<NetworkFloat>("Rotation.X");
+			repl_packet.pos_third[XPLICIT_NETWORK_Y] = lhsNode->index_as_number<NetworkFloat>("Rotation.Y");
+			repl_packet.pos_third[XPLICIT_NETWORK_Z] = lhsNode->index_as_number<NetworkFloat>("Rotation.Z");
+
+			std::cout << "SCALE:" << std::endl;
+
+			std::cout << repl_packet.pos_second[XPLICIT_NETWORK_X] << std::endl;
+			std::cout << repl_packet.pos_second[XPLICIT_NETWORK_Y] << std::endl;
+			std::cout << repl_packet.pos_second[XPLICIT_NETWORK_Z] << std::endl;
+
+			std::cout << "POS:" << std::endl;
+
+			std::cout << repl_packet.pos[XPLICIT_NETWORK_X] << std::endl;
+			std::cout << repl_packet.pos[XPLICIT_NETWORK_Y] << std::endl;
+			std::cout << repl_packet.pos[XPLICIT_NETWORK_Z] << std::endl;
 
 			String fmt = lhsNode->index_as_string("Parent").c_str();
 

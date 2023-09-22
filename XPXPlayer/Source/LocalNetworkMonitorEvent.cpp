@@ -18,9 +18,11 @@
 
 #include <CLua.hpp>
 
+#define XPX_MAX_TIMEOUT_MACRO (250)
+
 namespace XPX
 {
-	static int XPX_MAX_TIMEOUT = 250;
+	static int XPX_MAX_TIMEOUT = XPX_MAX_TIMEOUT_MACRO;
 
 	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(const std::int64_t& priv, const std::int64_t& publ)
 		:
@@ -60,10 +62,14 @@ namespace XPX
 				}
 			}
 		}
+		else
+		{
+			XPX_MAX_TIMEOUT = XPX_MAX_TIMEOUT_MACRO;
+		}
 
 		NetworkPacket packet = mNetwork->get();
 
-		if (!(packet.channel & XPLICIT_CHANNEL_DATA))
+		if (packet.channel != XPLICIT_CHANNEL_DATA)
 			return;
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK)

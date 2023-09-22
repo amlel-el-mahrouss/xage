@@ -218,6 +218,9 @@ namespace XPX
 				if (KEYBOARD->left_down() &&
 					self->mSelectedSlot != i)
 					self->mSelectedSlot = i;
+				else if (KEYBOARD->left_down() &&
+					self->mSelectedSlot == i)
+					self->mSelectedSlot = -1;
 
 				self->mInventorySlots[i].update(self->mInventorySlots[i].BackgroundHoverColor);
 			}

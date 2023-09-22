@@ -99,16 +99,20 @@ static int lua_CreateGear(lua_State* L)
 					if (player->get_peer() &&
 						player->get_peer()->xplicit_id.as_string() == xplicit_id)
 					{
-						player->get_peer()[y].packet.cmd[XPLICIT_NETWORK_CMD_CREATE] = XPX::NETWORK_CMD_CREATE;
-						player->get_peer()[y].packet.channel |= XPLICIT_CHANNEL_REPL_GEAR;
+						XPX::NetworkPacket packet = player->get_peer()[y].packet;
 
-						memcpy(player->get_peer()[y].packet.replicas[XPLICIT_REPLICA_EVENT], mesh, strlen(mesh));
+						packet.cmd[XPLICIT_NETWORK_CMD_CREATE] = XPX::NETWORK_CMD_CREATE;
+						packet.channel = XPLICIT_CHANNEL_REPL_GEAR;
+
+						memcpy(packet.replicas[XPLICIT_REPLICA_EVENT], mesh, strlen(mesh));
 
 						player->get_gears()[y] = gear;
 						player->get_gears()[y]->set_owner(player);
 
 						path_player += ".";
 						path_player += name;
+
+						XPX::NetworkServerContext::send_all(XPX::ComponentSystem::get_singleton_ptr()->get<XPX::NetworkServerComponent>("NetworkServerComponent"), &packet);
 
 						XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string(std::format("return {}", path_player).c_str());
 

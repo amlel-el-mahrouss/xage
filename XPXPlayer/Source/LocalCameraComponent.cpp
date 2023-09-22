@@ -32,8 +32,6 @@ namespace XPX
 		XPLICIT_ASSERT(mCamera);
 		XPLICIT_ASSERT(mLight);
 
-		LoadSkybox("noonclouds")->setParent(mCamera);
-		
 		mCamera->setFarValue(200.f);
 		mCamera->setName("Camera");
 
@@ -59,7 +57,6 @@ namespace XPX
         if (!self)
             return;
 
-		self->get()->setPosition(vector3df(self->pos().X, self->pos().Y, self->pos().Z));
 		self->mLight->setParent(self->mCamera);
 
 		self->get()->setFOV(self->index_as_number("FOV"));
@@ -76,7 +73,7 @@ namespace XPX
 			packet.pos[XPLICIT_NETWORK_Y] = self->mLookAt.Y;
 			packet.pos[XPLICIT_NETWORK_Z] = self->mLookAt.Z;
 
-			packet.channel |= XPLICIT_CHANNEL_DATA;
+			self->mNetwork->set_channel(XPLICIT_CHANNEL_DATA);
 
 			self->mNetwork->send(packet);
 		}

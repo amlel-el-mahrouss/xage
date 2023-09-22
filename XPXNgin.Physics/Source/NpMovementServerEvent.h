@@ -52,9 +52,5 @@ namespace XPX
     private:
         std::vector<NpSceneNode> mWorldNodes;
 
-    private:
-        NplicitFloat mTimeStamp;
-        NplicitFloat mDeltaTime;
-
     };
 }

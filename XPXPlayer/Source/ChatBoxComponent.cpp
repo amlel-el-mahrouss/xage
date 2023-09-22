@@ -41,7 +41,7 @@ namespace XPX
 		if (self && 
 			IsValidHeapPtr(self))
 		{
-			if (self->mNetwork->get().channel & XPLICIT_CHANNEL_CHAT)
+			if (self->mNetwork->get().channel == XPLICIT_CHANNEL_CHAT)
 			{
 				NetworkPacket chat_pckt = self->mNetwork->get();
 

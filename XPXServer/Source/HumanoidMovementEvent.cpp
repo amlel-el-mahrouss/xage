@@ -39,7 +39,7 @@ namespace XPX
 
 			NetworkPeer* peer = humanoid->get_peer();
 
-			if (peer->packet.channel & XPLICIT_CHANNEL_CHAT)
+			if (peer->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
 
 			//! No need to edit this piece of code, WorldCollisionEvent will take care of this.

@@ -176,7 +176,6 @@ int main(int argc, char** argv)
 				CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 135, 206, 235));
 
 				CAD->getSceneManager()->drawAll();
-				CAD->getGUIEnvironment()->drawAll();
 
 #ifdef _WIN32
 				XPX::Audio::XAudioEngine::get_singleton_ptr()->update();

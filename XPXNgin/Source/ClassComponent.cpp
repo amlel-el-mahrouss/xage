@@ -61,8 +61,9 @@ namespace XPX
 		this->scale() = size;
 		this->color() = color;
 
-		this->insert("Scale", "{ X =  " + std::to_string(size.X) + ", Y = " + std::to_string(size.X) + ", Z = " + std::to_string(size.X) + " }");
-		this->insert("Position", "{ X =  " + std::to_string(position.X) + ", Y = " + std::to_string(position.X) + ", Z = " + std::to_string(position.X) + " }");
+		this->insert("Scale", "{ X =  0, Y = 0, Z = 0 }");
+		this->insert("Position", "{ X =  0, Y = 0, Z = 0 }");
+		this->insert("Rotation", "{ X =  0, Y = 0, Z = 0 }");
 
 		this->insert("Rotation", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Color", "{ R = 1, G = 1, B = 1, A = 1 }");
@@ -125,32 +126,19 @@ namespace XPX
 		self->locked(self->index_as_bool("Locked"));
 		self->archivable(self->index_as_bool("Archivable"));
 
-		self->alpha(self->index_as_number<float>("Color.A"));
+		self->alpha(self->index_as_number<int>("Color.A"));
 		self->color().A = self->alpha();
 
-		self->color().R = self->index_as_number<float>("Color.R");
-		self->color().G = self->index_as_number<float>("Color.G");
-		self->color().B = self->index_as_number<float>("Color.B");
+		self->color().R = self->index_as_number<int>("Color.R");
+		self->color().G = self->index_as_number<int>("Color.G");
+		self->color().B = self->index_as_number<int>("Color.B");
 
-		// if do not depend on physics engine, then do.
-		if (self->is_locked())
-		{
-			if (self->parent() &&
-				strcmp(self->parent(), XPLICIT_LUA_NAMESPACE) != 0 &&
-				strcmp(self->parent(), "Script") != 0) // _G. is the global table, to avois any clashes.
-			{
-				self->pos().X = self->index_as_number<float>("Parent.Position.X");
-				self->pos().Y = self->index_as_number<float>("Parent.Position.Y");
-				self->pos().Z = self->index_as_number<float>("Parent.Position.Z");
-			}
-		}
-		else
-		{
-			self->scale().X = self->index_as_number<float>("Scale.X");
-			self->scale().Y = self->index_as_number<float>("Scale.Y");
-			self->scale().Z = self->index_as_number<float>("Scale.Z");
+		self->scale().X = self->index_as_number<NetworkFloat>("Scale.X");
+		self->scale().Y = self->index_as_number<NetworkFloat>("Scale.Y");
+		self->scale().Z = self->index_as_number<NetworkFloat>("Scale.Z");
 
-			self->assign("Position", "{ X =  " + std::to_string(self->scale().X) + ", Y = " + std::to_string(self->scale().X) + ", Z = " + std::to_string(self->scale().X) + " }");
-		}
+		self->pos().X = self->index_as_number<NetworkFloat>("Position.X");
+		self->pos().Y = self->index_as_number<NetworkFloat>("Position.Y");
+		self->pos().Z = self->index_as_number<NetworkFloat>("Position.Z");
 	}
 }

@@ -13,8 +13,8 @@
 
 namespace XPX
 {
-	template <typename TypeFloat = float>
-	class NPLICIT_API RigidBodyHelper final
+	template <typename TypeFloat = double>
+	class NPLICIT_API AABBHelper final
 	{
 	public:
 		static bool is_touching(Vector<NplicitFloat>& min, Vector<NplicitFloat>& max,

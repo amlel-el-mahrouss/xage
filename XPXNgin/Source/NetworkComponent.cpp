@@ -109,7 +109,7 @@ namespace XPX
 	bool NetworkComponent::send(NetworkPacket& packet)
 	{
 		packet.hash = mHash;
-		packet.channel |= mChannelID;
+		packet.channel = mChannelID;
 		packet.size = sizeof(NetworkPacket);
 		packet.magic[0] = XPLICIT_NETWORK_MAG_0;
 		packet.magic[1] = XPLICIT_NETWORK_MAG_1;
@@ -158,10 +158,12 @@ namespace XPX
 	{
 		mReset = false;
 
+		NetworkPacket pckt;
+
 		socklen_t len = sizeof(PrivateAddressData);
 
 		const std::int32_t err = ::recvfrom(mSocket.PublicSocket, 
-			reinterpret_cast<char*>(&mPacket), 
+			reinterpret_cast<char*>(&pckt),
 			sizeof(NetworkPacket), 
 			0,
 			reinterpret_cast<sockaddr*>(&mTargetAddress),
@@ -185,14 +187,17 @@ namespace XPX
 			}
 		}
 
-		if (mPacket.magic[0] == XPLICIT_NETWORK_MAG_0 && 
-			mPacket.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-			mPacket.magic[2] == XPLICIT_NETWORK_MAG_2 && 
-			mPacket.version == XPLICIT_NETWORK_VERSION)
+		if (pckt.magic[0] == XPLICIT_NETWORK_MAG_0 &&
+			pckt.magic[1] == XPLICIT_NETWORK_MAG_1 &&
+			pckt.magic[2] == XPLICIT_NETWORK_MAG_2 &&
+			pckt.version == XPLICIT_NETWORK_VERSION &&
+			pckt.channel > 0)
 		{
 			//! packet valid, validate.
 
-			packet = mPacket;
+			packet = pckt;
+			mPacket = pckt;
+
 			return true;
 		}
 

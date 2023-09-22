@@ -173,6 +173,9 @@ namespace XPX
 			{
 				mKeys[i] = false;
 			}
+
+			mMouseRight.Down = false;
+			mMouseLeft.Down = false;
 		}
 
 		MouseEventTraits& get_pos() noexcept { return mMousePos; }

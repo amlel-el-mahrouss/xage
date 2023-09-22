@@ -24,7 +24,9 @@ namespace XPX
 		if (mStud)
 		{
 			mStud->setName(name);
-			mStud->setMaterialFlag(irr::video::EMF_LIGHTING, true);
+
+			mStud->setPosition(vector3df(pos.X, pos.Y, pos.Z));
+			mStud->setScale(vector3df(scale.X, scale.Y, scale.Z));
 		}
 
 		this->assign("Destroy", this->part_destroy().c_str());
