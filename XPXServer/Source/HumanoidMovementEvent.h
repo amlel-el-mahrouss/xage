@@ -12,9 +12,6 @@
 #include "ServerConfig.h"
 #include "HumanoidComponent.h"
 
-// NplicitNgin Rigid bodies include.
-#include <RigidBody.h>
-
 namespace XPX
 {
 	/// <summary>
@@ -31,16 +28,11 @@ namespace XPX
 		~HumanoidMovementEvent() override;
 
 	public:
-		HumanoidMovementEvent& operator=(const HumanoidMovementEvent&) = default;
-		HumanoidMovementEvent(const HumanoidMovementEvent&) = default;
-		
+		XPLICIT_COPY_DEFAULT(HumanoidMovementEvent);
+
 	public:
 		const char* name() noexcept override;
 		void operator()() override;
-
-	private:
-		float mDeltaTime;
-		float mTimeStamp;
 
 	};
 }

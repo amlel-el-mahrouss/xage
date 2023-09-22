@@ -17,23 +17,13 @@
 
 namespace XPX
 {
-	constexpr const float XPLICIT_DELTA = 1000.f;
-
-	HumanoidMovementEvent::HumanoidMovementEvent() 
-		: 
-		mDeltaTime(0UL),
-		mTimeStamp(CAD->getTimer()->getTime())
-	{}
-
+	HumanoidMovementEvent::HumanoidMovementEvent() = default;
 	HumanoidMovementEvent::~HumanoidMovementEvent() = default;
 
 	const char* HumanoidMovementEvent::name() noexcept { return ("HumanoidMovementEvent"); }
 
 	void HumanoidMovementEvent::operator()()
 	{
-		mDeltaTime = (CAD->getTimer()->getTime() - mTimeStamp) / XPLICIT_DELTA;
-		mTimeStamp = CAD->getTimer()->getTime();
-
 		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>();
 		
 		for (std::size_t i = 0; i < humanoids.size(); ++i)
@@ -77,9 +67,6 @@ namespace XPX
 				peer->packet.pos[XPLICIT_NETWORK_X] = speed;
 				peer->packet.pos[XPLICIT_NETWORK_Y] = speed;
 				peer->packet.pos[XPLICIT_NETWORK_Z] = speed;
-
-				/* send server delta to player, so that he is not out of touch. */
-				peer->packet.pos[XPLICIT_NETWORK_DELTA] = mDeltaTime;
 
 				/* finally accept request */
 

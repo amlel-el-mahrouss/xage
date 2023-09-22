@@ -11,6 +11,8 @@
 
 //! ImGUI Base Classes
 #include "ImGuiBase.h"
+
+//! NPlicit Math library;
 #include <NMath.h>
 
 namespace XPX::ImGUI

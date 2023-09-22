@@ -32,7 +32,7 @@ namespace XPX
 	class InputReceiver final : public irr::IEventReceiver
 	{
 	public:
-		explicit InputReceiver()
+		InputReceiver() noexcept
 			:
 			mMouseLeft(),
 			mMouseRight(),
@@ -40,8 +40,7 @@ namespace XPX
 			mWheelEnable(false),
 			mWheel(0.0f)
 		{
-			for (irr::u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
-				mKeys[i] = 0;
+			this->reset();
 		}
 
 		bool OnEvent(const SEvent& env) override
@@ -209,7 +208,7 @@ namespace XPX
 	class XPLICIT_API Root final
 	{
 	private:
-		explicit Root()
+		Root() noexcept
 			: Keyboard(nullptr), ShouldExit(false), Dev(nullptr)
 		{}
 

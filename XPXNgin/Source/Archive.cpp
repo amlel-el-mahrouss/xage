@@ -5,7 +5,7 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: Ar.cpp
- *			Purpose: Xplicit Archive Format
+ *			Purpose: XPX Archive Format
  *
  * =====================================================================
  */

@@ -2,17 +2,22 @@
 
 #pragma once
 
+#include <NginCore.h>
+
 #include <Uri.h>
 #include <Util.h>
-#include <Event.h>
-#include <NginCore.h>
-#include <GameVar.h>
-#include <Component.h>
-#include <MonoInterop.h>
 #include <Enums.h>
 #include <HelperMacros.h>
+
+#include <GameVar.h>
+
+#include <Event.h>
+#include <Component.h>
+
+#include <MonoInterop.h>
 #include <MonoComponent.h>
 #include <SocketWrapper.h>
+
 #include <NetworkServerComponent.h>
 
 #ifdef XPLICIT_WINDOWS
@@ -25,7 +30,8 @@ extern "C"
 #endif
 
 #include <Nplicit.h>
-#include <RigidBody.h>
+#include <NMath.h>
+
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
 
