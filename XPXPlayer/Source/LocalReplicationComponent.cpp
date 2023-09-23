@@ -143,6 +143,10 @@ namespace XPX
 					if (!node_bundle)
 						return;
 
+					CAD->getSceneManager()->addLightSceneNode(node_bundle, node_bundle->getPosition(),
+						SColorf(1.0f, 1.0f, 1.0f),
+						300.0f);
+
 					(bundle->xplicit_id() == self->mXpxId &&
 						node_bundle) ? node_bundle->setParent(CAD->getSceneManager()->getActiveCamera()) :
 						node_bundle->setParent(CAD->getSceneManager()->addEmptySceneNode());
@@ -198,7 +202,14 @@ namespace XPX
 				
 					XPLICIT_ASSERT(part);
 
-					part->node()->setMaterialTexture(0, CAD->getVideoDriver()->getTexture("NoTex.png"));
+					CAD->getSceneManager()->addLightSceneNode(part->node(), part->node()->getPosition(),
+						SColorf(1.0f, 1.0f, 1.0f),
+						300.0f);
+					
+					for (size_t mat_idx = 0; mat_idx < part->node()->getMaterialCount(); ++mat_idx)
+					{
+						part->node()->setMaterialTexture(mat_idx, CAD->getVideoDriver()->getTexture("NoTex.png"));
+					}
 				}
 			}
 		}

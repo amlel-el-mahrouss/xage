@@ -32,14 +32,7 @@ namespace XPX
 
 		CAD->getSceneManager()->setActiveCamera(mCamera);
 		
-		mLight = CAD->getSceneManager()->addLightSceneNode(mCamera, vector3df(XPLICIT_ORIGIN.X,
-			XPLICIT_ORIGIN.Y, 
-			XPLICIT_ORIGIN.Z),
-		SColorf(1.f, 1.f, 0.f, 1.0f), 1000.0f);
-
 		mCamera->setName("Camera");
-
-		this->mLight->setParent(this->mCamera);
 
 		this->insert("FOV", std::to_string(mCamera->getFOV()));
 	}

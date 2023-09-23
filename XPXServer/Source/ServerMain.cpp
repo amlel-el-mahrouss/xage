@@ -138,8 +138,6 @@ int main(int argc, char** argv)
 
 		title += ":";
 		title += std::to_string(network->port());
-		title += ":";
-		title += port4;
 		title += " (xconnect v";
 		title += std::to_string(XPLICIT_NETWORK_VERSION);
 		title += ")";

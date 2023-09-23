@@ -47,6 +47,11 @@ namespace XPX
 		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
 		this->insert("Clone", XPLICIT_CLONE_SNIPPET);
 		this->insert("Disconnect", XPLICIT_DISCONNECT_SNIPPET);
+
+		static auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
+
+		if (mov)
+			mov->insert_node(this);
 	}
 
 	ClassComponent::ClassComponent(
@@ -98,13 +103,6 @@ namespace XPX
 
 			if (this->script())
 				this->script()->run_script();
-		}
-
-		static auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
-
-		if (mov)
-		{
-			mov->insert_node(this);
 		}
 	}
 

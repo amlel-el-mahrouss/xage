@@ -34,12 +34,11 @@ namespace XPX
 		static void update(void* class_ptr);
 
 	public:
-		irr::scene::ICameraSceneNode* get() noexcept;
+		ICameraSceneNode* get() noexcept;
 
 	private:
-		irr::scene::ICameraSceneNode* mCamera;
-		irr::scene::ILightSceneNode* mLight;
-		irr::core::vector3df mLookAt;
+		ICameraSceneNode* mCamera;
+		vector3df mLookAt;
 		NetworkComponent* mNetwork;
 
 	};

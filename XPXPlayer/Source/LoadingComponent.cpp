@@ -48,6 +48,7 @@ namespace XPX
     {
         mLoadingTexture = CAD->getVideoDriver()->getTexture("UIBadgeVerified.png");
         LocalCameraComponent* cam = ComponentSystem::get_singleton_ptr()->add<LocalCameraComponent>();
+        LoadSkybox("noonclouds");
     }
 
     LoadingComponent::~LoadingComponent() = default;

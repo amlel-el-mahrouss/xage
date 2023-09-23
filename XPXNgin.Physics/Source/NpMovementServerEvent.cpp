@@ -19,7 +19,8 @@
 
  //! pvd default port
 #define NP_PHYSX_DEFAULT_PORT (5425)
-#define XPX_DEFAULT_GRAVITY PxVec3(0, -9.81f, 0)
+#define NP_INCREMENT_DT (0.0001)
+#define NP_DEFAULT_GRAVITY PxVec3(0, -9.81f, 0)
 
 namespace XPX
 {
@@ -235,7 +236,7 @@ namespace XPX
 			throw EngineError("PxInitExtensions failed!");
 
 		PxSceneDesc desc(gPhysics->getTolerancesScale());
-		desc.gravity = XPX_DEFAULT_GRAVITY;
+		desc.gravity = NP_DEFAULT_GRAVITY;
 
 		SYSTEM_LOGICAL_PROCESSOR_INFORMATION info;
 		RtlZeroMemory(&info, sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
@@ -280,11 +281,6 @@ namespace XPX
 		{
 			gDefaultAllocatorCallback.trace_pointer(gScene);
 
-			gScene->simulate(gDeltaTime);
-			++gDeltaTime;
-
-			gScene->fetchResults(true);
-
 			for (auto* node : mWorldNodes)
 			{
 				if (!node)
@@ -292,17 +288,26 @@ namespace XPX
 
 				PxRigidStatic* actor = static_cast<PxRigidStatic*>(node->PhysicsDelegate);
 
-				actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
-
 				if (actor)
 				{
 					PxVec3 input(node->pos().X, node->pos().Y, node->pos().Z);
+					const auto pos = PxTransform(input);
 
-					auto pos = actor->getGlobalPose().transform(input);
+					actor->setGlobalPose(pos);
 
-					node->pos().X = pos.x;
-					node->pos().Y = pos.y;
-					node->pos().Z = pos.z;
+					actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+
+					gScene->collide(gDeltaTime);
+					gScene->fetchCollision(true);
+					gScene->advance(nullptr);
+
+					gDeltaTime += NP_INCREMENT_DT;
+
+					gScene->fetchResults(true);
+
+					node->pos().X = actor->getGlobalPose().p.x;
+					node->pos().Y = actor->getGlobalPose().p.y;
+					node->pos().Z = actor->getGlobalPose().p.z;
 
 					xpxSendToClient(node);
 				}

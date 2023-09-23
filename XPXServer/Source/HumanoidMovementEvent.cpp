@@ -49,6 +49,7 @@ namespace XPX
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP &&
 					humanoid->get_class()->pos().Y < 1)
 					humanoid->get_class()->pos().Y += humanoid->get_jump_power();
+		
 				
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 					humanoid->get_class()->pos().Z += speed;
@@ -57,28 +58,12 @@ namespace XPX
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
 					humanoid->get_class()->pos().Z -= speed;
-				else
-					peer->packet.pos_second[XPLICIT_NETWORK_Z] -= 5;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
 					humanoid->get_class()->pos().X -= speed;
-				else
-					peer->packet.pos_second[XPLICIT_NETWORK_X] -= 5;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
 					humanoid->get_class()->pos().X += speed;
-				else
-					peer->packet.pos_second[XPLICIT_NETWORK_X] += 5;
-
-				peer->packet.pos[XPLICIT_NETWORK_X] = speed;
-				peer->packet.pos[XPLICIT_NETWORK_Y] = speed;
-				peer->packet.pos[XPLICIT_NETWORK_Z] = speed;
-
-				/* finally accept request */
-
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_POS] = NETWORK_CMD_POS;
-				peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
-				peer->packet.public_hash = peer->public_hash;
 
 #ifdef XPLICIT_DEBUG
 				XPLICIT_INFO("world:Move [EVENT]");
