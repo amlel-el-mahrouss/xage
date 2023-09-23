@@ -58,5 +58,8 @@ namespace XPX
 		String mParent;
 		String mName;
 
+	public:
+		void* PhysicsDelegate;
+
 	};
 }

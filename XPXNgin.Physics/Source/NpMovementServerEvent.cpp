@@ -35,11 +35,15 @@ namespace XPX
 				const char* filename,
 				int line) 
 			{
-				mTypes.push_back(typeName);
-				mLine.push_back(line);
-				mFilename.push_back(filename);
+				if (typeName)
+					mTypes.push_back(typeName);
 
-				auto ptr = _aligned_malloc(size, 16);;
+				mLine.push_back(line);
+
+				if (filename)
+					mFilename.push_back(filename);
+
+				auto ptr = _aligned_malloc(size, 16);
 
 				mPat.push_back((intptr_t)ptr);
 
@@ -87,7 +91,14 @@ namespace XPX
 							continue;
 						}
 
-						fmt::print("FILE: {}, LINE: {}, VIRTUAL-MEMORY: {}", mFilename[i], mLine[i], mPat[i]);
+						try
+						{
+							fmt::print("FILE: {}, LINE: {}, VIRTUAL-MEMORY: {}", mFilename[i], mLine[i], mPat[i]);
+						}
+						catch (...)
+						{
+
+						}
 
 						return;
 					}
@@ -213,6 +224,7 @@ namespace XPX
 
 		if (!PxInitExtensions(*gPhysics, gPvd))
 			throw EngineError("PxInitExtensions failed!");
+
 	}
 
 	NpMovementServerEvent::~NpMovementServerEvent() noexcept
@@ -226,19 +238,37 @@ namespace XPX
 
 	const char* NpMovementServerEvent::name() noexcept { return "NpMovementServerEvent"; }
 
+	static physx::PxReal gDeltaTime = 0.0;
+	static physx::PxScene* gScene = nullptr;
+
 	void NpMovementServerEvent::operator()()
 	{
-		for (auto* node : mWorldNodes)
+		using namespace physx;
+
+		if (!gScene)
+			gPhysics->getScenes(&gScene, 0, 0);
+
+		if (IsValidHeapPtr(gScene))
 		{
-			if (!node)
-				continue;
+			gDefaultAllocatorCallback.trace_pointer(gScene);
 
-			if (!node->anchor())
+			gScene->simulate(gDeltaTime);
+			++gDeltaTime;
+
+			for (auto* node : mWorldNodes)
 			{
+				if (!node)
+					continue;
 
+				PxActor* actor = static_cast<PxActor*>(node->PhysicsDelegate);
+
+				if (actor)
+				{
+
+				}
+
+				xpxSendToClient(node);
 			}
-
-			xpxSendToClient(node);
 		}
 	}
 
@@ -247,7 +277,29 @@ namespace XPX
 		if (node)
 		{
 			mWorldNodes.push_back(node);
-			return true;
+		
+			using namespace physx;
+
+			auto static_rigid = gPhysics->createRigidStatic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));;
+			XPLICIT_ASSERT(static_rigid);
+
+			static_rigid->setName(node->name());
+
+			static_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+			
+			node->PhysicsDelegate = static_rigid;
+
+			// ???
+			if (auto actor_ptr = dynamic_cast<PxActor*>(static_rigid);
+				actor_ptr &&
+				actor_ptr == static_rigid)
+			{
+				gScene->addActor(*actor_ptr);
+				return true;
+			}
+
+			static_rigid->release();
+			node->PhysicsDelegate = nullptr;
 		}
 
 		return false;
