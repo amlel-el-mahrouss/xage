@@ -276,26 +276,25 @@ namespace XPX
 			gScene->simulate(gDeltaTime);
 			++gDeltaTime;
 
-			if (gScene->fetchResults())
+			gScene->fetchResults(true);
+
+			for (auto* node : mWorldNodes)
 			{
-				for (auto* node : mWorldNodes)
+				if (!node)
+					continue;
+
+				PxRigidStatic* actor = static_cast<PxRigidStatic*>(node->PhysicsDelegate);
+
+				if (actor)
 				{
-					if (!node)
-						continue;
+					PxVec3 input;
+					auto pos = actor->getGlobalPose().transform(input);
 
-					PxRigidStatic* actor = static_cast<PxRigidStatic*>(node->PhysicsDelegate);
+					node->pos().X = pos.x;
+					node->pos().Y = pos.y;
+					node->pos().Z = pos.z;
 
-					if (actor)
-					{
-						PxVec3 input;
-						auto pos = actor->getGlobalPose().transform(input);
-
-						node->pos().X = pos.x;
-						node->pos().Y = pos.y;
-						node->pos().Z = pos.z;
-
-						xpxSendToClient(node);
-					}
+					xpxSendToClient(node);
 				}
 			}
 		}
