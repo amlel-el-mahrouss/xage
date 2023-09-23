@@ -285,6 +285,8 @@ namespace XPX
 
 				PxRigidStatic* actor = static_cast<PxRigidStatic*>(node->PhysicsDelegate);
 
+				actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+
 				if (actor)
 				{
 					PxVec3 input;

@@ -144,7 +144,7 @@ namespace XPX
 
 	const char* ClassComponent::parent() noexcept { return mParent.c_str(); }
 	
-	bool ClassComponent::should_update() noexcept { return false; }
+	bool ClassComponent::should_update() noexcept { return true; }
 
 	void ClassComponent::update(ClassPtr _self)
 	{
