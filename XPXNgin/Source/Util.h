@@ -97,7 +97,8 @@ namespace XPX
 			  mArchivable(false),
 			  mLocked(false),
 			  mAlpha(1.0f),
-			  mNoCollide(false)
+			  mNoCollide(false),
+			  mAnchor(false)
 		{}
 
 		virtual ~XPXAttribute() = default;
