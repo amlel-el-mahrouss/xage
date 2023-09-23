@@ -159,7 +159,8 @@ namespace XPX::RoXML
 								}
 							}
 
-							if (object)
+							if (object &&
+								!params.Has3D)
 							{
 								irr::scene::ISceneNode* node = nullptr;
 

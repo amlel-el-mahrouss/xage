@@ -75,9 +75,23 @@ namespace XPX
 
 			if (node)
 			{
-				node->setPosition(vector3df(self->mPacket.pos[XPLICIT_NETWORK_X],
+				matrix4 pos_translate;
+
+				auto translation = vector3df(self->mPacket.pos[XPLICIT_NETWORK_X],
 					self->mPacket.pos[XPLICIT_NETWORK_Y],
-					self->mPacket.pos[XPLICIT_NETWORK_Z]));
+					self->mPacket.pos[XPLICIT_NETWORK_Z]);
+
+				auto& pos = const_cast<vector3df&>(node->getPosition());
+
+				pos_translate.transformVect(translation, pos);
+
+				translation = vector3df(self->mPacket.pos_second[XPLICIT_NETWORK_X],
+					self->mPacket.pos_second[XPLICIT_NETWORK_Y],
+					self->mPacket.pos_second[XPLICIT_NETWORK_Z]);
+
+				pos = const_cast<vector3df&>(node->getRotation());
+
+				pos_translate.transformVect(translation, pos);
 			}
 
 			if (KEYBOARD->left_down())

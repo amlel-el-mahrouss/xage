@@ -63,9 +63,17 @@ namespace XPX
 
             this->status = NETWORK_STAT_STASIS;
 
-			// Sleep for tirty seconds, let the client be aware of our packet.
+            if (this->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
+                this->status == NETWORK_STAT_CONNECTED)
+            {
+                this->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+                return;
+            }
+
+			// Sleep for five seconds, let the client be aware of our packet.
             std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_MAX_TIMEOUT));
 
+            // check for either no acknowledge
             if (this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
             {
                 if (this->status == NETWORK_STAT_STASIS)
