@@ -159,6 +159,9 @@ namespace XPX::RoXML
 								}
 							}
 
+							//! here you can see that Has3D is strictly reserved for headless implementations of XPX tech.
+							//! however, the classcomponent asks for it the mesh/part specs.
+							//! that's fine just ask for it, cad still loads it with np.
 							if (object &&
 								!params.Has3D)
 							{

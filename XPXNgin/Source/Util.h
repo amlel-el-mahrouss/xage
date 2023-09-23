@@ -117,6 +117,7 @@ namespace XPX
 		bool has_no_collide() noexcept { return !mNoCollide; }
 		bool is_locked() noexcept { return mLocked; }
 		bool alpha() noexcept { return mLocked; }
+		bool anchor() noexcept { return mAnchor; }
 
 	public:
 		void script(LuaScriptComponent* script) noexcept { mScript = script; }
@@ -124,6 +125,7 @@ namespace XPX
 		void collide(const bool enable) noexcept { mNoCollide = enable; }
 		void locked(const bool enable) noexcept { mLocked = enable; }
 		void alpha(const float alpha) noexcept { mAlpha = alpha;  }
+		void anchor(const bool enable) noexcept { mAnchor = enable; }
 
 	private:
 		LuaScriptComponent* mScript;
@@ -135,6 +137,7 @@ namespace XPX
 	private:
 		bool mArchivable;
 		bool mNoCollide;
+		bool mAnchor;
 		bool mLocked;
 		float mAlpha;
 

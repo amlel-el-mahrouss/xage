@@ -18,8 +18,16 @@
     <ClCompile Include="App.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="RRRecentProjects.cpp">
+      <Filter>Headers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RRRecentProjects.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

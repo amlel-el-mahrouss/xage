@@ -11,6 +11,7 @@
 #include "ClassComponent.h"
 
 #include <NpMovementServerEvent.h>
+#include <numeric>
 
 namespace XPX
 {
@@ -48,7 +49,7 @@ namespace XPX
 	}
 
 	ClassComponent::ClassComponent(
-		const Vector<NetworkFloat>& position,
+		const Vector<NetworkFloat>& pos,
 		const Vector<NetworkFloat>& size,
 		const Color<NetworkFloat>& color,
 		const char* script,
@@ -57,15 +58,34 @@ namespace XPX
 		:
 		ClassComponent::ClassComponent(parent, name)
 	{
-		this->pos() = position;
+		this->pos() = pos;
 		this->scale() = size;
 		this->color() = color;
 
-		this->insert("Scale", "{ X =  0, Y = 0, Z = 0 }");
-		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
-		this->insert("Rotation", "{ X = 0, Y = 0, Z = 0 }");
+		this->insert("Scale", "{}");
 
-		this->insert("Color", "{ R = 1, G = 1, B = 1, A = 1 }");
+		this->insert("Scale.X", std::to_string(size.X));
+		this->insert("Scale.Y", std::to_string(size.Y));
+		this->insert("Scale.Z", std::to_string(size.Z));
+
+		this->insert("Position", "{}");
+
+		this->insert("Position.X", std::to_string(pos.X));
+		this->insert("Position.Y", std::to_string(pos.Y));
+		this->insert("Position.Z", std::to_string(pos.Z));
+
+		this->insert("Rotation", "{}");
+
+		this->insert("Rotation.X", "0");
+		this->insert("Rotation.Y", "0");
+		this->insert("Rotation.Z", "0");
+
+		this->insert("Color", "{}");
+
+		this->insert("Color.R", std::to_string(color.R));
+		this->insert("Color.G", std::to_string(color.G));
+		this->insert("Color.B", std::to_string(color.B));
+		this->insert("Color.A", std::to_string(color.A));
 
 		if (script)
 		{
@@ -76,8 +96,9 @@ namespace XPX
 				this->script()->run_script();
 		}
 
-		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
-			mov)
+		static auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
+
+		if (mov)
 		{
 			mov->insert_node(this);
 		}
@@ -85,28 +106,28 @@ namespace XPX
 
 	ClassComponent::~ClassComponent()
 	{
-		if (auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
-			mov)
+		static auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
+
+		if (mov &&
+			mov->remove_node(this))
 		{
-			if (mov->remove_node(this))
-			{
-				NetworkPacket pckt{};
+			//! tell ALL of the players to delete this class.
+			NetworkPacket pckt{};
 
-				pckt.channel = XPLICIT_CHANNEL_PHYSICS;
-				pckt.version = XPLICIT_NETWORK_VERSION;
+			pckt.channel = XPLICIT_CHANNEL_PHYSICS;
+			pckt.version = XPLICIT_NETWORK_VERSION;
 
-				pckt.magic[0] = XPLICIT_NETWORK_MAG_0;
-				pckt.magic[1] = XPLICIT_NETWORK_MAG_1;
-				pckt.magic[2] = XPLICIT_NETWORK_MAG_2;
+			pckt.magic[0] = XPLICIT_NETWORK_MAG_0;
+			pckt.magic[1] = XPLICIT_NETWORK_MAG_1;
+			pckt.magic[2] = XPLICIT_NETWORK_MAG_2;
 
-				memcpy(pckt.additional_data, this->mName.data(), this->mName.size());
+			memcpy(pckt.additional_data, this->mName.data(), this->mName.size());
 
-				pckt.cmd[XPLICIT_NETWORK_CMD_DESTROY] = NETWORK_CMD_DESTROY;
+			pckt.cmd[XPLICIT_NETWORK_CMD_DESTROY] = NETWORK_CMD_DESTROY;
 
-				static auto server = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+			static auto server = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
-				NetworkServerContext::send_all(server, &pckt);
-			}
+			NetworkServerContext::send_all(server, &pckt);
 		}
 	}
 
@@ -124,8 +145,10 @@ namespace XPX
 		self->collide(self->index_as_bool("Collide"));
 		self->locked(self->index_as_bool("Locked"));
 		self->archivable(self->index_as_bool("Archivable"));
+		self->anchor(self->index_as_bool("Anchor"));
 
 		self->alpha(self->index_as_number<int>("Color.A"));
+
 		self->color().A = self->alpha();
 
 		self->color().R = self->index_as_number<int>("Color.R");
