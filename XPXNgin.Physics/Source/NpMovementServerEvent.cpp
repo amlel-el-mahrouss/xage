@@ -260,14 +260,19 @@ namespace XPX
 				if (!node)
 					continue;
 
-				PxActor* actor = static_cast<PxActor*>(node->PhysicsDelegate);
+				PxRigidStatic* actor = static_cast<PxRigidStatic*>(node->PhysicsDelegate);
 
 				if (actor)
 				{
+					PxVec3 input;
+					auto pos = actor->getGlobalPose().transform(input);
 
+					node->pos().X = pos.x;
+					node->pos().Y = pos.y;
+					node->pos().Z = pos.z;
+
+					xpxSendToClient(node);
 				}
-
-				xpxSendToClient(node);
 			}
 		}
 	}
@@ -313,6 +318,20 @@ namespace XPX
 
 			if (it != mWorldNodes.cend())
 			{
+				using namespace physx;
+
+				PxActor* actor = static_cast<PxActor*>(node->PhysicsDelegate);
+
+				if (actor)
+				{
+					Thread job([](PxActor* actor) {
+						if (actor->isReleasable())
+							actor->release();
+						}, actor);
+
+					job.detach();
+				}
+
 				mWorldNodes.erase(it);
 				return true;
 			}
