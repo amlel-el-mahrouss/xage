@@ -190,6 +190,8 @@ namespace XPX
 
 			if (mClass)
 			{
+				mClass->assign("Anchor", "false");
+
 				mClass->insert("UserName", "'Unconnected'");
 
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
