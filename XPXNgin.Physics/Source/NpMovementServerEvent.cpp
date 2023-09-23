@@ -181,6 +181,8 @@ namespace XPX
 	static Details::NpUserErrorCallback gDefaultErrorCallback;
 	static Details::NpAllocatorTracker gDefaultAllocatorCallback;
 
+	static physx::PxScene* gScene = nullptr;
+
 	static physx::PxFoundation* gFoundation = nullptr;
 	static physx::PxPhysics* gPhysics = nullptr;
 	static physx::PxPvd* gPvd = nullptr;
@@ -225,6 +227,10 @@ namespace XPX
 		if (!PxInitExtensions(*gPhysics, gPvd))
 			throw EngineError("PxInitExtensions failed!");
 
+		if (!gScene)
+			gPhysics->getScenes(&gScene, 1, 0);
+
+		XPLICIT_ASSERT(IsValidHeapPtr(gScene));
 	}
 
 	NpMovementServerEvent::~NpMovementServerEvent() noexcept
@@ -239,14 +245,10 @@ namespace XPX
 	const char* NpMovementServerEvent::name() noexcept { return "NpMovementServerEvent"; }
 
 	static physx::PxReal gDeltaTime = 0.0;
-	static physx::PxScene* gScene = nullptr;
 
 	void NpMovementServerEvent::operator()()
 	{
 		using namespace physx;
-
-		if (!gScene)
-			gPhysics->getScenes(&gScene, 0, 0);
 
 		if (IsValidHeapPtr(gScene))
 		{
