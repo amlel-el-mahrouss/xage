@@ -133,7 +133,7 @@ namespace XPX
 				}
 				default:
 				{
-					fmt::format("[WARN PhysX] ERR: {}, FILE: {}, LINE: {}", message, file, line);
+					fmt::print("[WARN PhysX] ERR: {}, FILE: {}, LINE: {}", message, file, line);
 					break;
 				}
 				}
@@ -227,10 +227,29 @@ namespace XPX
 		if (!PxInitExtensions(*gPhysics, gPvd))
 			throw EngineError("PxInitExtensions failed!");
 
-		if (!gScene)
-			gPhysics->getScenes(&gScene, 1, 0);
+		PxSceneDesc desc(gPhysics->getTolerancesScale());
+		desc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 
-		XPLICIT_ASSERT(IsValidHeapPtr(gScene));
+		SYSTEM_LOGICAL_PROCESSOR_INFORMATION info;
+		RtlZeroMemory(&info, sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
+
+		DWORD len = 0U;
+		GetLogicalProcessorInformation(&info, &len);
+
+		std::size_t numCores = (len / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
+
+		auto cpuDispatcher = PxDefaultCpuDispatcherCreate(numCores);
+
+		if (!cpuDispatcher)
+			throw EngineError("PxDefaultCpuDispatcherCreate failed!");
+
+		desc.filterShader = &PxDefaultSimulationFilterShader;
+		desc.cpuDispatcher = cpuDispatcher;
+
+		gScene = gPhysics->createScene(desc);
+
+		if (!gScene)
+			throw EngineError("createScene failed! Refer to XPX support for help.");
 	}
 
 	NpMovementServerEvent::~NpMovementServerEvent() noexcept
