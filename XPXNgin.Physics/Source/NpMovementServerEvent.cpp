@@ -321,7 +321,7 @@ namespace XPX
 
 			static_rigid->setName(node->name());
 
-			static_rigid->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, node->anchor());
+			static_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
 
 			node->PhysicsDelegate = static_rigid;
 
