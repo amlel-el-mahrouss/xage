@@ -1,8 +1,8 @@
 /*
  * =====================================================================
  *
- *			XPXUpdate
- * 
+ *			XPXStudioApp
+ *
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: MainForm.cpp
@@ -11,7 +11,7 @@
  * =====================================================================
  */
 
-#include "MainForm.h"
+#include "Editor.h"
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -22,6 +22,6 @@ void main(array<String^>^ args)
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
 
-	XPXUpdate::MainForm form;
+	XPXStudioApp::EditForm form;
 	Application::Run(% form);
 }

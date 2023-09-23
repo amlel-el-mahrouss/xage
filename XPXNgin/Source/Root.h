@@ -14,11 +14,11 @@
 
 #include <CLua.hpp>
 
-//! CAD core rendering engine.
+//! CAD rendering engine.
 #include <irrlicht.h>
 
- /* common engine macros for Root */
-#define CAD XPX::Root::get_singleton_ptr()->Dev
+//! Helper macros
+#define CAD XPX::Root::get_singleton_ptr()->Renderer
 #define KEYBOARD XPX::Root::get_singleton_ptr()->Keyboard
 
 namespace XPX
@@ -208,21 +208,27 @@ namespace XPX
 
 	};
 
+	/// <summary>
+	/// Class: Root
+	/// Purpose: Rendering device class.
+	/// </summary>
 	class XPLICIT_API Root final
 	{
 	private:
 		Root() noexcept
-			: Keyboard(nullptr), ShouldExit(false), Dev(nullptr)
+			: 
+			Keyboard(nullptr), 
+			Renderer(nullptr)
 		{}
 
 		~Root() noexcept
 		{
-			if (Dev)
-				Dev->drop();
+			if (Renderer)
+				Renderer->drop();
 
-			ShouldExit = true;
 		}
 
+	public:
 		Root& operator=(const Root&) = default;
 		Root(const Root&) = default;
 
@@ -241,7 +247,7 @@ namespace XPX
 		void set(IrrlichtDevice* dev) noexcept
 		{
 			if (dev)
-				Dev = dev;
+				Renderer = dev;
 		}
 
 		void set(InputReceiver* kb) noexcept
@@ -251,9 +257,8 @@ namespace XPX
 		}
 
 	public:
-		IrrlichtDevice* Dev;
+		IrrlichtDevice* Renderer;
 		InputReceiver* Keyboard;
-		bool ShouldExit;
 
 	};
 }

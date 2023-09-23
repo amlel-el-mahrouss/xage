@@ -175,7 +175,7 @@ int main(int argc, char** argv)
 				XPX::ComponentSystem::get_singleton_ptr() &&
 				XPX::EventSystem::get_singleton_ptr())
 			{
-				CAD->getVideoDriver()->beginScene(true, true, irr::video::SColor(255, 40, 40, 40));
+				CAD->getVideoDriver()->beginScene(true, true, XPX::ImGUI::ImColor(255, 40, 40, 40));
 
 				CAD->getSceneManager()->drawAll();
 

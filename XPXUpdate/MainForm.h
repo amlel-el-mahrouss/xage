@@ -104,7 +104,7 @@ namespace XPXUpdate {
 			this->MinimizeBox = false;
 			this->Name = L"MainForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-			this->Text = L"XPXPlayer";
+			this->Text = L"XPX Update - Checking...";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 
