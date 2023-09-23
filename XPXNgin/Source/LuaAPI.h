@@ -41,9 +41,8 @@ public:
 			return 1;
 		}
 
-		lua_pushstring(L, "invalid-asset");
+		lua_pushstring(L, "invalid");
 		return 1;
 	}
 
 };
-

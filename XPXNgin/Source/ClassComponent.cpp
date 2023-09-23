@@ -62,10 +62,9 @@ namespace XPX
 		this->color() = color;
 
 		this->insert("Scale", "{ X =  0, Y = 0, Z = 0 }");
-		this->insert("Position", "{ X =  0, Y = 0, Z = 0 }");
-		this->insert("Rotation", "{ X =  0, Y = 0, Z = 0 }");
-
+		this->insert("Position", "{ X = 0, Y = 0, Z = 0 }");
 		this->insert("Rotation", "{ X = 0, Y = 0, Z = 0 }");
+
 		this->insert("Color", "{ R = 1, G = 1, B = 1, A = 1 }");
 
 		if (script)
@@ -136,6 +135,10 @@ namespace XPX
 		self->scale().X = self->index_as_number<NetworkFloat>("Scale.X");
 		self->scale().Y = self->index_as_number<NetworkFloat>("Scale.Y");
 		self->scale().Z = self->index_as_number<NetworkFloat>("Scale.Z");
+
+		self->rotation().X = self->index_as_number<NetworkFloat>("Rotation.X");
+		self->rotation().Y = self->index_as_number<NetworkFloat>("Rotation.Y");
+		self->rotation().Z = self->index_as_number<NetworkFloat>("Rotation.Z");
 
 		self->pos().X = self->index_as_number<NetworkFloat>("Position.X");
 		self->pos().Y = self->index_as_number<NetworkFloat>("Position.Y");

@@ -29,8 +29,7 @@ namespace XPX
 			}
 		}
 
-		this->insert("FilesystemPath", fmt::format("'{}'", mName));
-
+		this->insert("Uri", fmt::format("'{}'", mName));
 		this->insert("Destroy", this->destroy_snippet());
 	}
 
@@ -58,7 +57,7 @@ namespace XPX
 
 			XPX::Lua::CLuaStateManager::get_singleton_ptr()->global_set(lua_ThisSleep, "wait");
 
-			XPX::String code;
+			XPX::String code = "";
 
 			std::ifstream if_path(path);
 			if_path.seekg(SEEK_END);

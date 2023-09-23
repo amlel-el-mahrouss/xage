@@ -9,10 +9,9 @@
 
 #pragma once
 
-#include "StaticBundleMesh.h"
+#include "MeshComponent.h"
 
 #include <Util.h>
-#include <Component.h>
 #include <Enums.h>
 #include <ClassComponent.h>
 

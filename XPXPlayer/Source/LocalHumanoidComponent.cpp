@@ -68,6 +68,18 @@ namespace XPX
 		if ((self->mPacket.channel & XPLICIT_CHANNEL_DATA) &&
 			self->mPacket.hash == self->mHash)
 		{
+			static auto node = CAD->getSceneManager()->getSceneNodeFromName("Camera");
+
+			if (!node)
+				node = CAD->getSceneManager()->getSceneNodeFromName("Camera");
+
+			if (node)
+			{
+				node->setPosition(vector3df(self->mPacket.pos[XPLICIT_NETWORK_X],
+					self->mPacket.pos[XPLICIT_NETWORK_Y],
+					self->mPacket.pos[XPLICIT_NETWORK_Z]));
+			}
+
 			if (KEYBOARD->left_down())
 			{
 				self->mPacket.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_LCLICK;
@@ -118,7 +130,7 @@ namespace XPX
 		{
 			mPacket = mNetwork->get();
 
-			mPacket.channel |= XPLICIT_CHANNEL_DATA;
+			mPacket.channel = XPLICIT_CHANNEL_DATA;
 
 			if (KEYBOARD->key_down(traits.mForward))
 			{

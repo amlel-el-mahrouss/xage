@@ -35,8 +35,8 @@ namespace XPX
 
 		CAD->getSceneManager()->setActiveCamera(mCamera);
 		
-		mLight = CAD->getSceneManager()->addLightSceneNode(mCamera, core::vector3df(0, 0, 0),
-		video::SColorf(1.f, 1.0f, 0.2f, 0.5f), 1000.0f);
+		mLight = CAD->getSceneManager()->addLightSceneNode(mCamera, vector3df(0, 0, 0),
+		SColorf(1.f, 1.f, 1.f, 1.0f), 1000.0f);
 
 		LoadSkybox("noonclouds")->setParent(mCamera);
 		mCamera->setName("Camera");

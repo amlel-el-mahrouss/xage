@@ -36,14 +36,9 @@ namespace XPX
 		repl_packet.pos_second[XPLICIT_NETWORK_Y] = node->scale().Y;
 		repl_packet.pos_second[XPLICIT_NETWORK_Z] = node->scale().Z;
 
-		repl_packet.pos_fourth[XPLICIT_NETWORK_X] = node->color().R;
-		repl_packet.pos_fourth[XPLICIT_NETWORK_Y] = node->color().G;
-		repl_packet.pos_fourth[XPLICIT_NETWORK_Z] = node->color().B;
-		repl_packet.pos_fourth[XPLICIT_NETWORK_DELTA] = node->alpha();
-
-		repl_packet.pos_third[XPLICIT_NETWORK_X] = node->index_as_number<NetworkFloat>("Rotation.X");
-		repl_packet.pos_third[XPLICIT_NETWORK_Y] = node->index_as_number<NetworkFloat>("Rotation.Y");
-		repl_packet.pos_third[XPLICIT_NETWORK_Z] = node->index_as_number<NetworkFloat>("Rotation.Z");
+		repl_packet.pos_third[XPLICIT_NETWORK_X] = node->rotation().X;
+		repl_packet.pos_third[XPLICIT_NETWORK_Y] = node->rotation().Y;
+		repl_packet.pos_third[XPLICIT_NETWORK_Z] = node->rotation().Z;
 
 		String fmt = node->index_as_string("Parent").c_str();
 
@@ -69,6 +64,8 @@ namespace XPX
 		{
 			if (!node)
 				continue;
+
+			ClassComponent::update((ClassPtr)node);
 
 			xpxSendToClient(node);
 		}

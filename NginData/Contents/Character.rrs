@@ -1,17 +1,15 @@
 <RenderRig>
-	<Item Class="Mesh" Referent="Head" Script="" Parent="Camera">
+	<Item Class="Mesh" Referent="Head" Script="" Parent="world">
 		xasset://content/Head.dae
 	</Item>
 
-	<Item Class="Part" Referent="Torso" Script="" Parent="Head"/>
+	<Item Class="Part" Referent="Torso" Script="" Parent="world"/>
 
-	<Item Class="Part" Referent="LeftArm" Script="" Parent="Torso"/>
-	<Item Class="Part" Referent="LeftLeg" Script="" Parent="Torso"/>
-	<Item Class="Part" Referent="RightArm" Script="" Parent="Torso"/>
-	<Item Class="Part" Referent="RightLeg" Script="" Parent="Torso"/>
+	<Item Class="Part" Referent="LeftArm" Script="" Parent="world"/>
+	<Item Class="Part" Referent="LeftLeg" Script="" Parent="world"/>
+	<Item Class="Part" Referent="RightArm" Script="" Parent="world"/>
+	<Item Class="Part" Referent="RightLeg" Script="" Parent="world"/>
 
-	<!-- 1.0, 0.886678, 1.098497 -->
-	<Scale3 X="1.0" Y="0.886678" Z="1.098497" Referent="Head"/>
 	<Scale3 X="1.0" Y="2.0" Z="2.0" Referent="Torso"/>
 	<Scale3 X="1" Y="2" Z="1" Referent="LeftLeg"/>
 	<Scale3 X="1" Y="2" Z="1" Referent="RightLeg"/>

@@ -9,7 +9,6 @@
 
 #include "LocalNetworkMonitorEvent.h"
 
-#include "StaticBundleMesh.h"
 #include "SoundComponent.h"
 #include "GearComponent.h"
 #include "PartComponent.h"

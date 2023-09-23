@@ -108,7 +108,7 @@
     <ClInclude Include="XPXPlayer\Source\FileFormatBase.h" />
     <ClInclude Include="XPXPlayer\Source\PlayerConfig.h" />
     <ClInclude Include="XPXPlayer\Source\SoundComponent.h" />
-    <ClInclude Include="XPXPlayer\Source\StaticBundleMesh.h" />
+    <ClInclude Include="XPXPlayer\Source\BundleMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XPXPlayer\Source\App.cpp" />
@@ -126,7 +126,7 @@
     <ClCompile Include="XPXPlayer\Source\MeshComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\PartComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\SoundComponent.cpp" />
-    <ClCompile Include="XPXPlayer\Source\StaticBundleMesh.cpp" />
+    <ClCompile Include="XPXPlayer\Source\BundleMesh.cpp" />
     <ClCompile Include="XPXPlayer\Source\AppMain.cpp" />
     <ClCompile Include="XPXPlayer\Source\AppMainMac.cpp" />
   </ItemGroup>

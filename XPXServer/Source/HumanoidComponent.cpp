@@ -178,8 +178,8 @@ namespace XPX
 
 		if (mPeer)
 		{
-			String player_tbl("world.Players.");
-			player_tbl += mPeer->xplicit_id.as_string();
+			String player_lua_arr("world.Players.");
+			player_lua_arr += mPeer->xplicit_id.as_string();
 
 			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(Vector<NetworkFloat>(0, 0, 0),
 				XPLICIT_CHARACTER_SCALE,
@@ -190,11 +190,7 @@ namespace XPX
 
 			if (mClass)
 			{
-				mClass->assign("Locked", "false");
-				mClass->assign("Anchor", "false");
-
 				mClass->insert("UserName", "'Unconnected'");
-				mClass->insert("Parent", "world.Players");
 
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
 				
@@ -216,7 +212,7 @@ namespace XPX
 
 				XPLICIT_INFO("world:Login [EVENT]");
 
-				String fmt = std::format("world:Login({})", player_tbl);
+				String fmt = std::format("world:Login({})", player_lua_arr);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 			}
 		}

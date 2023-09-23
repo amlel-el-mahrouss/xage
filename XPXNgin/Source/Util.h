@@ -93,6 +93,7 @@ namespace XPX
 			  mColor(0.0f, 0.0f, 0.0f),
 			  mPos(0.0f, 0.0f, 0.0f), 
 			  mScale(0.0f, 0.0f, 0.0f),
+			  mRot(0.0f, 0.0f, 0.0f),
 			  mArchivable(false),
 			  mLocked(false),
 			  mAlpha(1.0f),
@@ -106,6 +107,7 @@ namespace XPX
 
 	public:
 		Color<NetworkFloat>& color() noexcept { return mColor; }
+		Vector<NetworkFloat>& rotation() noexcept { return mRot; }
 		Vector<NetworkFloat>& scale() noexcept { return mScale; }
 		Vector<NetworkFloat>& pos() noexcept { return mPos; }
 
@@ -127,6 +129,7 @@ namespace XPX
 		LuaScriptComponent* mScript;
 		Vector<NetworkFloat> mScale;
 		Color<NetworkFloat> mColor;
+		Vector<NetworkFloat> mRot;
 		Vector<NetworkFloat> mPos;
 
 	private:

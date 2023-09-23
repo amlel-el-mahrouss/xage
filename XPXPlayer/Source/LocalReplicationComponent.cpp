@@ -12,8 +12,9 @@
 #include "LuaScriptComponent.h"
 #include "PartComponent.h"
 #include "GearComponent.h"
-#include "App.h"
+#include "BundleMesh.h"
 #include "MenuUI.h"
+#include "App.h"
 
 #include <CLua.hpp>
 #include <Enums.h>
@@ -126,38 +127,15 @@ namespace XPX
 
 			if (xplicit_id.find("XPX_") != String::npos)
 			{
-				auto bundles = ComponentSystem::get_singleton_ptr()->all_of<StaticBundleMesh>();
+				auto bundles = ComponentSystem::get_singleton_ptr()->all_of<BundleMesh>();
 
-				auto it = std::find_if(bundles.begin(), bundles.end(), [&](StaticBundleMesh* mesh) -> bool {
+				auto it = std::find_if(bundles.begin(), bundles.end(), [&](BundleMesh* mesh) -> bool {
 					return mesh->xplicit_id() == xplicit_id;
 					});
 
-				if (it != bundles.cend())
+				if (it == bundles.cend())
 				{
-					auto bundle = *it;
-
-					if (bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent())
-					{
-						//! let's check it
-						XPLICIT_ASSERT(strcmp(bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent()->getName(), "Camera") == 0);
-
-						bundle->node_at(XPLICIT_BUNDLE_HEAD)->getParent()->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X],
-							packet.pos[XPLICIT_NETWORK_Y],
-							packet.pos[XPLICIT_NETWORK_Z]));
-
-						for (size_t i = 0; i < bundle->count_parts(); ++i)
-						{
-							auto part = bundle->node_at(i);
-
-							part->setRotation(vector3df(packet.pos[XPLICIT_NETWORK_X],
-								packet.pos[XPLICIT_NETWORK_Y],
-								packet.pos[XPLICIT_NETWORK_Z]));
-						}
-					}
-				}
-				else
-				{
-					auto bundle = ComponentSystem::get_singleton_ptr()->add<StaticBundleMesh>("Character.rrs", xplicit_id.c_str());
+					auto bundle = ComponentSystem::get_singleton_ptr()->add<BundleMesh>("Character.rrs", xplicit_id.c_str());
 					XPLICIT_ASSERT(bundle);
 				}
 			}

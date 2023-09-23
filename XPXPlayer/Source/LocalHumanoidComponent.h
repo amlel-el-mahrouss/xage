@@ -13,7 +13,6 @@
 #pragma once
 
 #include "LocalCameraComponent.h"
-#include "StaticBundleMesh.h"
 
 #include <NetworkComponent.h>
 #include <XplicitID.h>
