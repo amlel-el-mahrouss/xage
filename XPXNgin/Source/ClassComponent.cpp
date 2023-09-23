@@ -36,7 +36,7 @@ namespace XPX
 
 		this->insert("Archivable", "false");
 
-		this->insert("Anchor", "false");
+		this->insert("Anchor", "true");
 		this->insert("Locked", "false");
 		this->insert("Collide", "true");
 
@@ -59,39 +59,32 @@ namespace XPX
 		:
 		ClassComponent::ClassComponent(parent, name)
 	{
-		if (pos.X == 0 &&
+		this->pos() = (pos.X == 0 &&
 			pos.Y == 0 &&
-			pos.Z == 0)
-		{
-			this->pos() = XPLICIT_ORIGIN;
-		}
-		else
-		{
-			this->pos() = pos;
-		}
+			pos.Z == 0) ? XPLICIT_ORIGIN : pos;
 
 		this->scale() = size;
 		this->color() = color;
 
-		this->insert("Scale", "{}");
+		this->insert("Scale", "{ X = 0, Y = 0, Z = 0}");
 
 		this->insert("Scale.X", std::to_string(size.X));
 		this->insert("Scale.Y", std::to_string(size.Y));
 		this->insert("Scale.Z", std::to_string(size.Z));
 
-		this->insert("Position", "{}");
+		this->insert("Position", "{ X = 0, Y = 0, Z = 0}");
 
 		this->insert("Position.X", std::to_string(pos.X));
 		this->insert("Position.Y", std::to_string(pos.Y));
 		this->insert("Position.Z", std::to_string(pos.Z));
 
-		this->insert("Rotation", "{}");
+		this->insert("Rotation", "{ X = 0, Y = 0, Z = 0}");
 
 		this->insert("Rotation.X", "0");
 		this->insert("Rotation.Y", "0");
 		this->insert("Rotation.Z", "0");
 
-		this->insert("Color", "{}");
+		this->insert("Color", "{ A = 0, R = 0, G = 0, B = 0}");
 
 		this->insert("Color.R", std::to_string(color.R));
 		this->insert("Color.G", std::to_string(color.G));

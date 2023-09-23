@@ -137,6 +137,27 @@ namespace XPX
 				{
 					auto bundle = ComponentSystem::get_singleton_ptr()->add<BundleMesh>("Character.rrs", xplicit_id.c_str());
 					XPLICIT_ASSERT(bundle);
+
+					auto node_bundle = bundle->look_for("Head");
+
+					if (bundle->xplicit_id() == self->mXpxId &&
+						node_bundle)
+					{
+						node_bundle->setParent(CAD->getSceneManager()->getActiveCamera());
+					}
+					else if (node_bundle)
+					{
+						node_bundle->setParent(CAD->getSceneManager()->addEmptySceneNode());
+					}
+				}
+				else
+				{
+					auto bundle = *it;
+					auto head = bundle->look_for("Head");
+
+					// the parent should either be, BundlePivot or the player's camera.
+					if (head)
+						head->getParent()->setPosition(vector3df(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z])));
 				}
 			}
 			else
@@ -177,6 +198,7 @@ namespace XPX
 					parent = parent.substr(parent.find(".") + 1);
 
 					auto part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(name.c_str(), parent.c_str());
+				
 					XPLICIT_ASSERT(part);
 				}
 			}
@@ -223,7 +245,7 @@ namespace XPX
 			}
 
 			GearComponent* gear = ComponentSystem::get_singleton_ptr()->add<GearComponent>(name.c_str(), 
-				packet.replicas[XPLICIT_REPLICA_EVENT], parent.c_str());
+																						   packet.replicas[XPLICIT_REPLICA_EVENT], parent.c_str());
 
 			XPLICIT_ASSERT(gear);
 		}

@@ -40,15 +40,13 @@ namespace XPX
     /// <summary>
     /// Loading Component constructor.
     /// </summary>
-    /// <param name="verified">is it a verified place?</param>
-    /// <param name="img_path">Image (must be alpha set and png.)</param>
-    LoadingComponent::LoadingComponent(const bool verified, const char* img_path)
+    LoadingComponent::LoadingComponent() noexcept
         :
         mLoadingTexture(nullptr),
         mNetwork(nullptr),
         mTimeout(0)
     {
-        mLoadingTexture = CAD->getVideoDriver()->getTexture(verified ? "UIBadgeVerified.png" : "UIBadge.png");
+        mLoadingTexture = CAD->getVideoDriver()->getTexture("UIBadgeVerified.png");
         LocalCameraComponent* cam = ComponentSystem::get_singleton_ptr()->add<LocalCameraComponent>();
     }
 
@@ -102,7 +100,7 @@ namespace XPX
             EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(hash);
             EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
 
-            ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash);
+            ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash, monitor->ID);
             ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 
             ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash, true);
@@ -129,6 +127,13 @@ namespace XPX
                 ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
 
                 StartLoad = false;
+            }
+            else
+            {
+                CAD->getVideoDriver()->draw2DImage(self->mLoadingTexture,
+                    recti(vector2d(10, 10), dimension2di(self->mLoadingTexture->getSize().Width,
+                        self->mLoadingTexture->getSize().Height)),
+                    recti(), nullptr, nullptr, true);
             }
         }
     }

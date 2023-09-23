@@ -1,11 +1,11 @@
 <RenderRig>
-	<Item Class="Part" Referent="Head" Script="" Parent="world"/>
-	<Item Class="Part" Referent="Torso" Script="" Parent="world"/>
+	<Item Class="Part" Referent="Head" Script="" Parent="Camera"/>
+	<Item Class="Part" Referent="Torso" Script="" Parent="Head"/>
 
-	<Item Class="Part" Referent="LeftArm" Script="" Parent="world"/>
-	<Item Class="Part" Referent="LeftLeg" Script="" Parent="world"/>
-	<Item Class="Part" Referent="RightArm" Script="" Parent="world"/>
-	<Item Class="Part" Referent="RightLeg" Script="" Parent="world"/>
+	<Item Class="Part" Referent="LeftArm" Script="" Parent="Torso"/>
+	<Item Class="Part" Referent="LeftLeg" Script="" Parent="Torso"/>
+	<Item Class="Part" Referent="RightArm" Script="" Parent="Torso"/>
+	<Item Class="Part" Referent="RightLeg" Script="" Parent="Torso"/>
 
 	<Scale3 X="1.0" Y="1.0" Z="1.0" Referent="Head"/>
 	<Scale3 X="1.0" Y="2.0" Z="2.0" Referent="Torso"/>

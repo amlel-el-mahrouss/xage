@@ -19,10 +19,11 @@ namespace XPX
 	public:
 		LocalReplicationComponent() = delete;
 		
-		explicit LocalReplicationComponent(const std::int64_t& hash)
+		explicit LocalReplicationComponent(const std::int64_t& hash, const String& myId)
 			: 
 			mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
-			mHash(hash)
+			mHash(hash),
+			mXpxId(myId)
 		{}
 
 		~LocalReplicationComponent() override = default;
@@ -38,6 +39,7 @@ namespace XPX
 	private:
 		NetworkComponent* mNetwork;
 		std::int64_t mHash;
+		String mXpxId;
 
 	};
 }

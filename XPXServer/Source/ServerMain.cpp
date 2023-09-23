@@ -156,8 +156,8 @@ int main(int argc, char** argv)
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
 
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementServerEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementServerEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();

@@ -33,7 +33,7 @@ inline XPX::Color<XPX::NetworkFloat> Black(0, 0, 0, 0xFF);
 inline XPX::Color<XPX::NetworkFloat> Red(0xFF, 0, 0, 0xFF);
 
 inline XPX::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, UINT32_MAX);
-inline XPX::Vector<XPX::NetworkFloat> XPLICIT_ORIGIN(0, 30, -40);
+inline XPX::Vector<XPX::NetworkFloat> XPLICIT_ORIGIN(0, 0, 0);
 
 //! standard rig-5 character.
 inline XPX::Vector<XPX::NetworkFloat> XPLICIT_CHARACTER_SCALE(3, 3, 1);

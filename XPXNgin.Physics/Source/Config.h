@@ -23,4 +23,4 @@
 #endif
 
 #define NPLICIT_RELEASE "1.1.1-LasVegas"
-#define NPLICIT_SPLASH_SCREEN printf("NplicitNgin - (c) XPX Corporation, all rights reserved.\nNplicitNgin 'Network Physics' is based on either NVIDIa(tm) PhysX or XPX own VRCL(tm) both of them are property of their respective owners.")
+#define NPLICIT_SPLASH_SCREEN printf("NplicitNgin - (c) XPX Corporation, all rights reserved.\nNplicitNgin 'Network Physics' is based on either NVIDIa(tm) PhysX or XPX own VRCL(tm) both of them are property of their respective owners.\n")

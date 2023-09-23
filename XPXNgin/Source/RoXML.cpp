@@ -536,7 +536,17 @@ namespace XPX::RoXML
 
 						file << node->value();
 
-						ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_write_path.c_str());
+						auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_write_path.c_str());
+
+						if (script)
+							script->run_script();
+
+						if (script &&
+							script->status() == LuaScriptComponent::LUA_STOP)
+						{
+							std::remove(full_write_path.c_str());
+							ComponentSystem::get_singleton_ptr()->remove(script);
+						}
 					}
 				}
 

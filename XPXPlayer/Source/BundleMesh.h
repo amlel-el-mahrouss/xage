@@ -22,12 +22,16 @@ namespace XPX
 	/* this class combines meshes to make a bundle */
 	/* example: Player */
 
+	/// <summary>
+	/// A set of multiple animated meshes. Updated according to speed.
+	/// </summary>
 	class BundleMesh final : public Component
 	{
 	public:
 		BundleMesh() = delete;
 
-		explicit BundleMesh(const char* character_path, const char* xpx_id);
+	public:
+		BundleMesh(const char* character_path, const char* xpx_id);
 		~BundleMesh() noexcept;
 
 	public:
@@ -35,8 +39,22 @@ namespace XPX
 		BundleMesh(const BundleMesh&) = default;
 
 	public:
-		irr::scene::IMeshSceneNode* node_at(const std::size_t& index) const { return mParts[index].first; }
-		irr::scene::IMesh* model_at(const std::size_t& index) const { return mParts[index].second; }
+		typedef IAnimatedMeshSceneNode BundleNode;
+
+	public:
+		BundleNode* look_for(const String& name) noexcept
+		{
+			for (auto& part : mParts)
+			{
+				if (part->getName() == name)
+					return part;
+			}
+
+			return nullptr;
+		}
+
+	public:
+		BundleNode* node_at(const std::size_t& index) const { return mParts[index]; }
 
 		std::size_t count_parts() const { return mParts.size(); }
 		const String& xplicit_id() noexcept { return mXplicitId; }
@@ -45,7 +63,7 @@ namespace XPX
 		static void update(ClassPtr ptr) {  }
 
 	protected:
-		std::vector<std::pair<irr::scene::IMeshSceneNode*, irr::scene::IMesh*>> mParts;
+		std::vector<BundleNode*> mParts;
 		String mXplicitId;
 		
 	};

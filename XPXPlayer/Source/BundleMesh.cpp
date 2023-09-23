@@ -54,12 +54,12 @@ namespace XPX
 
 			if (it != params.WorldNodes.cend())
 			{
-				irr::scene::IMeshSceneNode* mesh = static_cast<irr::scene::IMeshSceneNode*>(CAD->getSceneManager()->getSceneNodeFromName(XPX_PARTS[i]));
+				BundleNode* mesh = static_cast<BundleNode*>(CAD->getSceneManager()->getSceneNodeFromName(XPX_PARTS[i]));
 
 				if (mesh)
 				{
 					mesh->setName(fmt::format("{}{}{}", mXplicitId, "_", XPX_PARTS[i]).c_str());
-					mParts.push_back(std::make_pair(mesh, mesh->getMesh()));
+					mParts.push_back(mesh);
 				}
 			}
 		}
@@ -69,11 +69,8 @@ namespace XPX
 	{
 		for (auto& part : mParts)
 		{
-			if (part.first)
-				part.first->drop();
-
-			if (part.second)
-				part.second->drop();
+			if (part)
+				part->drop();
 		}
 	}
 }

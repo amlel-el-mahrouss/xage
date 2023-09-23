@@ -19,7 +19,7 @@ namespace XPX
 	class LoadingComponent final : public Component
 	{
 	public:
-		LoadingComponent(const bool verified = false, const char* path = "");
+		explicit LoadingComponent() noexcept;
 		~LoadingComponent() override;
 
 	public:

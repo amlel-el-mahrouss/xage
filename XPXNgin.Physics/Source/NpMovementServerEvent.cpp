@@ -17,6 +17,10 @@
 #include <NetworkProtocol.h>
 #include <Enums.h>
 
+ //! pvd default port
+#define NP_PHYSX_DEFAULT_PORT (5425)
+#define XPX_DEFAULT_GRAVITY PxVec3(9.81f, 9.81f, 9.81f)
+
 namespace XPX
 {
 	namespace Details
@@ -190,9 +194,6 @@ namespace XPX
 
 	static bool gPhysicsEnabled = false;
 
-	//! pvd default port
-#define NP_PHYSX_DEFAULT_PORT (5425)
-
 	NpMovementServerEvent::NpMovementServerEvent() noexcept : mWorldNodes()
 	{
 		XPLICIT_ASSERT(!gPhysicsEnabled);
@@ -228,7 +229,7 @@ namespace XPX
 			throw EngineError("PxInitExtensions failed!");
 
 		PxSceneDesc desc(gPhysics->getTolerancesScale());
-		desc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+		desc.gravity = XPX_DEFAULT_GRAVITY;
 
 		SYSTEM_LOGICAL_PROCESSOR_INFORMATION info;
 		RtlZeroMemory(&info, sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
@@ -289,7 +290,8 @@ namespace XPX
 
 				if (actor)
 				{
-					PxVec3 input;
+					PxVec3 input(node->pos().X, node->pos().Y, node->pos().Z);
+
 					auto pos = actor->getGlobalPose().transform(input);
 
 					node->pos().X = pos.x;
@@ -313,7 +315,7 @@ namespace XPX
 
 			static_rigid->setName(node->name());
 
-			static_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+			static_rigid->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, node->anchor());
 
 			node->PhysicsDelegate = static_rigid;
 
