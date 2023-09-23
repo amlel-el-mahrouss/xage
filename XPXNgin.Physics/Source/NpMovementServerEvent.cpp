@@ -133,7 +133,7 @@ namespace XPX
 				}
 				default:
 				{
-					fmt::print("[WARN PhysX] ERR: {}, FILE: {}, LINE: {}", message, file, line);
+					fmt::print("[PhysX] ERR: {}, FILE: {}, LINE: {}\n", message, file, line);
 					break;
 				}
 				}
@@ -263,36 +263,39 @@ namespace XPX
 
 	const char* NpMovementServerEvent::name() noexcept { return "NpMovementServerEvent"; }
 
-	static physx::PxReal gDeltaTime = 0.0;
+	static physx::PxReal gDeltaTime = 1;
 
 	void NpMovementServerEvent::operator()()
 	{
 		using namespace physx;
 
-		if (IsValidHeapPtr(gScene))
+		if (gScene)
 		{
 			gDefaultAllocatorCallback.trace_pointer(gScene);
 
 			gScene->simulate(gDeltaTime);
 			++gDeltaTime;
 
-			for (auto* node : mWorldNodes)
+			if (gScene->fetchResults())
 			{
-				if (!node)
-					continue;
-
-				PxRigidStatic* actor = static_cast<PxRigidStatic*>(node->PhysicsDelegate);
-
-				if (actor)
+				for (auto* node : mWorldNodes)
 				{
-					PxVec3 input;
-					auto pos = actor->getGlobalPose().transform(input);
+					if (!node)
+						continue;
 
-					node->pos().X = pos.x;
-					node->pos().Y = pos.y;
-					node->pos().Z = pos.z;
+					PxRigidStatic* actor = static_cast<PxRigidStatic*>(node->PhysicsDelegate);
 
-					xpxSendToClient(node);
+					if (actor)
+					{
+						PxVec3 input;
+						auto pos = actor->getGlobalPose().transform(input);
+
+						node->pos().X = pos.x;
+						node->pos().Y = pos.y;
+						node->pos().Z = pos.z;
+
+						xpxSendToClient(node);
+					}
 				}
 			}
 		}
@@ -302,8 +305,6 @@ namespace XPX
 	{
 		if (node)
 		{
-			mWorldNodes.push_back(node);
-		
 			using namespace physx;
 
 			auto static_rigid = gPhysics->createRigidStatic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));;
@@ -312,7 +313,7 @@ namespace XPX
 			static_rigid->setName(node->name());
 
 			static_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
-			
+
 			node->PhysicsDelegate = static_rigid;
 
 			// ???
@@ -320,6 +321,7 @@ namespace XPX
 				actor_ptr &&
 				actor_ptr == static_rigid)
 			{
+				mWorldNodes.push_back(node);
 				gScene->addActor(*actor_ptr);
 				return true;
 			}

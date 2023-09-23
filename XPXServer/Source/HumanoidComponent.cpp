@@ -212,6 +212,8 @@ namespace XPX
 
 				XPLICIT_INFO("world:Login [EVENT]");
 
+				mClass->assign("Anchor", "true");
+
 				String fmt = std::format("world:Login({})", player_lua_arr);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 			}

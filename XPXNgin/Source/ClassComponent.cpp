@@ -26,7 +26,8 @@ namespace XPX
 		:
 		Lua::CLuaClass(fmt::format("{}{}{}", parent, ".", name)),
 		mName(name),
-		mParent(parent)
+		mParent(parent),
+		PhysicsDelegate(nullptr)
 	{
 		this->insert("ClassName", fmt::format("\'{}\'", mName));
 		this->insert("Parent", mParent.c_str());
