@@ -170,6 +170,7 @@ int main(int argc, char** argv)
 
 			CAD->getSceneManager()->getParameters()->setAttribute(XPX::COLLADA_CREATE_SCENE_INSTANCES, true);
 			CAD->getVideoDriver()->setTextureCreationFlag(XPX::ETCF_ALWAYS_32_BIT, true);
+			CAD->getVideoDriver()->setTextureCreationFlag(XPX::ETCF_CREATE_MIP_MAPS, true);
 
 			while (CAD->run() && 
 				XPX::ComponentSystem::get_singleton_ptr() &&

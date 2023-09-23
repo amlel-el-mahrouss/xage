@@ -140,15 +140,12 @@ namespace XPX
 
 					auto node_bundle = bundle->look_for("Head");
 
-					if (bundle->xplicit_id() == self->mXpxId &&
-						node_bundle)
-					{
-						node_bundle->setParent(CAD->getSceneManager()->getActiveCamera());
-					}
-					else if (node_bundle)
-					{
+					if (!node_bundle)
+						return;
+
+					(bundle->xplicit_id() == self->mXpxId &&
+						node_bundle) ? node_bundle->setParent(CAD->getSceneManager()->getActiveCamera()) :
 						node_bundle->setParent(CAD->getSceneManager()->addEmptySceneNode());
-					}
 				}
 				else
 				{
@@ -157,7 +154,7 @@ namespace XPX
 
 					// the parent should either be, BundlePivot or the player's camera.
 					if (head)
-						head->getParent()->setPosition(vector3df(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z])));
+						head->getParent()->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
 				}
 			}
 			else
@@ -200,6 +197,8 @@ namespace XPX
 					auto part = ComponentSystem::get_singleton_ptr()->add<PartComponent>(name.c_str(), parent.c_str());
 				
 					XPLICIT_ASSERT(part);
+
+					part->node()->setMaterialTexture(0, CAD->getVideoDriver()->getTexture("NoTex.png"));
 				}
 			}
 		}

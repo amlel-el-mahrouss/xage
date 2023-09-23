@@ -40,8 +40,7 @@ namespace XPX
 		if (mMdl)
 		{
 			mNode = CAD->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
-			mNode->setParent(CAD->getSceneManager()->getActiveCamera());
-
+			
 			// for the physics engine;
 			mPhysics = PHYSICS_COMPLEX;
 

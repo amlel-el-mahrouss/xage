@@ -30,21 +30,13 @@ namespace XPX
 
 		XPLICIT_ASSERT(mCamera);
 
-		mCamera->setPosition(vector3df(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y + 10, XPLICIT_ORIGIN.Z));
-
-		mCamera->setTarget(vector3df(0, 5, 0));
-
-		auto rot = mCamera->getRotation();
-		
-		rot.Y += 10;
-		
-
 		CAD->getSceneManager()->setActiveCamera(mCamera);
 		
-		mLight = CAD->getSceneManager()->addLightSceneNode(mCamera, vector3df(0, 0, 0),
-		SColorf(1.f, 1.f, 1.f, 1.0f), 1000.0f);
+		mLight = CAD->getSceneManager()->addLightSceneNode(mCamera, vector3df(XPLICIT_ORIGIN.X,
+			XPLICIT_ORIGIN.Y, 
+			XPLICIT_ORIGIN.Z),
+		SColorf(1.f, 1.f, 0.f, 1.0f), 1000.0f);
 
-		LoadSkybox("noonclouds")->setParent(mCamera);
 		mCamera->setName("Camera");
 
 		this->mLight->setParent(this->mCamera);

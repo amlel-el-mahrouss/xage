@@ -36,7 +36,7 @@ namespace XPX
 
 		this->insert("Archivable", "false");
 
-		this->insert("Anchor", "true");
+		this->insert("Anchor", "false");
 		this->insert("Locked", "false");
 		this->insert("Collide", "true");
 

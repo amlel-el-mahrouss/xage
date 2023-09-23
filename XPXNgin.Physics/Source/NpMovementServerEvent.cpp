@@ -19,7 +19,7 @@
 
  //! pvd default port
 #define NP_PHYSX_DEFAULT_PORT (5425)
-#define XPX_DEFAULT_GRAVITY PxVec3(9.81f, 9.81f, 9.81f)
+#define XPX_DEFAULT_GRAVITY PxVec3(0, -9.81f, 0)
 
 namespace XPX
 {
@@ -168,6 +168,12 @@ namespace XPX
 		repl_packet.pos_third[XPLICIT_NETWORK_X] = node->rotation().X;
 		repl_packet.pos_third[XPLICIT_NETWORK_Y] = node->rotation().Y;
 		repl_packet.pos_third[XPLICIT_NETWORK_Z] = node->rotation().Z;
+
+
+		repl_packet.pos_fourth[XPLICIT_NETWORK_X] = node->color().R;
+		repl_packet.pos_fourth[XPLICIT_NETWORK_Y] = node->color().G;
+		repl_packet.pos_fourth[XPLICIT_NETWORK_Z] = node->color().B;
+		repl_packet.pos_fourth[XPLICIT_NETWORK_Z + 1] = node->color().A;
 
 		String fmt = node->index_as_string("Parent").c_str();
 

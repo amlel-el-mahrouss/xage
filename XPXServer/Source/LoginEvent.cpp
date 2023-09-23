@@ -125,11 +125,11 @@ namespace XPX
 					
 					++mPlayerCount;
 
+					memset(mNetwork->get(peer_idx)->packet.additional_data, 0, XPLICIT_NETWORK_BUF_SZ);
+
 					memcpy(mNetwork->get(peer_idx)->packet.additional_data, 
 						mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
 						mNetwork->get(peer_idx)->xplicit_id.as_string().size());
-
-					memset(mNetwork->get(peer_idx)->packet.additional_data, 0, XPLICIT_NETWORK_BUF_SZ);
 
 					mNetwork->get(peer_idx)->packet.channel = XPLICIT_CHANNEL_DATA;
 

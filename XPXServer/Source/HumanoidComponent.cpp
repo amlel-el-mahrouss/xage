@@ -182,7 +182,7 @@ namespace XPX
 			player_lua_arr += ".Players.";
 			player_lua_arr += mPeer->xplicit_id.as_string();
 
-			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(Vector<NetworkFloat>(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y + this->get_jump_power(), XPLICIT_ORIGIN.Z),
+			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(Vector<NetworkFloat>(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z),
 				XPLICIT_CHARACTER_SCALE,
 				Color<NetworkFloat>(0, 0, 0),
 				nullptr, "world.Players", mPeer->xplicit_id.as_string().c_str());
