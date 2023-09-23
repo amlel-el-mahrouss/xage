@@ -59,7 +59,17 @@ namespace XPX
 		:
 		ClassComponent::ClassComponent(parent, name)
 	{
-		this->pos() = pos;
+		if (pos.X == 0 &&
+			pos.Y == 0 &&
+			pos.Z == 0)
+		{
+			this->pos() = XPLICIT_ORIGIN;
+		}
+		else
+		{
+			this->pos() = pos;
+		}
+
 		this->scale() = size;
 		this->color() = color;
 
