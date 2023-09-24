@@ -48,7 +48,7 @@ namespace XPX
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP &&
 					humanoid->get_jump_power() < humanoid->get_class()->pos().Y)
-					humanoid->get_class()->pos().Y += humanoid->get_jump_power();
+					humanoid->get_class()->pos().Y = humanoid->get_jump_power();
 		
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
 					humanoid->get_class()->pos().Z = speed;

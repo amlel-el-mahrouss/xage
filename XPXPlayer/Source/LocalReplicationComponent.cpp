@@ -174,9 +174,24 @@ namespace XPX
 						// get the part.
 						auto part = node->node();
 
-						part->setPosition(vector3df(packet.pos[0][XPLICIT_NETWORK_X], packet.pos[0][XPLICIT_NETWORK_Y], packet.pos[0][XPLICIT_NETWORK_Z]));
-						part->setRotation(vector3df(packet.pos[2][XPLICIT_NETWORK_X], packet.pos[2][XPLICIT_NETWORK_Y], packet.pos[2][XPLICIT_NETWORK_Z]));
-						part->setScale(vector3df(packet.pos[3][XPLICIT_NETWORK_X], packet.pos[3][XPLICIT_NETWORK_Y], packet.pos[3][XPLICIT_NETWORK_Z]));
+						if (auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
+							packet.pos[0][XPLICIT_NETWORK_Y], 
+							packet.pos[0][XPLICIT_NETWORK_Z]);
+							vec != part->getPosition())
+							part->setPosition(vec);
+
+						if (auto vec = vector3df(packet.pos[1][XPLICIT_NETWORK_X], 
+							packet.pos[1][XPLICIT_NETWORK_Y], 
+							packet.pos[1][XPLICIT_NETWORK_Z]);
+							vec != part->getRotation())
+							part->setRotation(vec);
+
+						
+						if (auto vec = vector3df(packet.pos[2][XPLICIT_NETWORK_X],
+							packet.pos[2][XPLICIT_NETWORK_Y],
+							packet.pos[2][XPLICIT_NETWORK_Z]);
+							vec != part->getScale())
+							part->setScale(vec);
 					}
 				}
 				else

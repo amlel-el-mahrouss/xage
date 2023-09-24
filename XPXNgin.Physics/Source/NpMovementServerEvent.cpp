@@ -269,14 +269,6 @@ namespace XPX
 
 
 				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
-
-				actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
-				actor->wakeUp();
-
-				auto compute = PxVec3(node->pos().X, node->pos().Y, node->pos().Z);
-				actor->addForce(compute, PxForceMode::eIMPULSE);
-
-				node->pos() = Vector<NetworkFloat>(0, 0, 0);
 			}
 
 			gScene->simulate(NP_DELTATIME);
@@ -300,10 +292,6 @@ namespace XPX
 				node->pos().X = world_pose.p.x;
 				node->pos().Y = world_pose.p.y;
 				node->pos().Z = world_pose.p.z;
-
-				node->rotation().X = world_pose.q.x;
-				node->rotation().Y = world_pose.q.y;
-				node->rotation().Z = world_pose.q.z;
 
 				xpxSendToClients(node);
 			}
@@ -331,6 +319,8 @@ namespace XPX
 
 				XPLICIT_ASSERT(shape);
 				XPLICIT_ASSERT(dynamic_rigid->attachShape(*shape));
+
+				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
 
 				dynamic_rigid->setName(node->name());
 
