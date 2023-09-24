@@ -9,17 +9,20 @@
 
 #pragma once
 
-#include <Root.h>
+#include "NginCore.h"
+#include "Root.h"
 #include <fstream>
 
-namespace XPX::Renderer
+namespace XPX
 {
 	class IFileReader
 	{
 	public:
 		explicit IFileReader(const char* path)
 			: mIf(fopen(path, "rb"))
-		{}
+		{
+			XPLICIT_ASSERT(mIf);
+		}
 
 		virtual ~IFileReader() noexcept
 		{

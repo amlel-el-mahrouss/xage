@@ -36,7 +36,7 @@ inline XPX::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, UINT32_MAX);
 inline XPX::Vector<XPX::NetworkFloat> XPLICIT_ORIGIN(0, 0, 0);
 
 //! standard rig-5 character.
-inline XPX::Vector<XPX::NetworkFloat> XPLICIT_CHARACTER_SCALE(3, 3, 1);
+inline XPX::Vector<XPX::NetworkFloat> XPLICIT_CHARACTER_SCALE(5, 4, 1);
 
 /// <summary>
 /// Gets the XPLICIT_ID of a specific peer.
@@ -98,7 +98,7 @@ namespace XPX
 			  mLocked(false),
 			  mAlpha(1.0f),
 			  mNoCollide(false),
-			  mAnchor(false)
+			  mAnchor(true)
 		{}
 
 		virtual ~XPXAttribute() = default;
@@ -117,7 +117,7 @@ namespace XPX
 		bool is_archivable() noexcept { return mArchivable; }
 		bool has_no_collide() noexcept { return !mNoCollide; }
 		bool is_locked() noexcept { return mLocked; }
-		bool alpha() noexcept { return mLocked; }
+		float alpha() noexcept { return mAlpha; }
 		bool anchor() noexcept { return mAnchor; }
 
 	public:

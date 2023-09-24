@@ -459,16 +459,15 @@ namespace XPX::RoXML
 					}
 				}
 
-				if (node_name == "RigidBody")
+				if (node_name == "Plane")
 				{
-
 					if (node->first_attribute() &&
 						strcmp(node->first_attribute()->name(), "Referent") == 0)
 					{
 						auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
 
 						if (mov)
-							mov->insert_node(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()));
+							mov->insert_node(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()), NpMovementServerEvent::NP_STATIC);
 					}
 				}
 

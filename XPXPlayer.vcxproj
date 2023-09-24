@@ -105,7 +105,6 @@
     <ClInclude Include="XPXPlayer\Source\MenuUI.h" />
     <ClInclude Include="XPXPlayer\Source\MeshComponent.h" />
     <ClInclude Include="XPXPlayer\Source\PartComponent.h" />
-    <ClInclude Include="XPXPlayer\Source\FileFormatBase.h" />
     <ClInclude Include="XPXPlayer\Source\PlayerConfig.h" />
     <ClInclude Include="XPXPlayer\Source\SoundComponent.h" />
     <ClInclude Include="XPXPlayer\Source\BundleMesh.h" />

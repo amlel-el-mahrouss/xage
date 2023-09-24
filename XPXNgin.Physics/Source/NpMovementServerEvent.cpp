@@ -4,7 +4,7 @@
  *			XPXNgin.Physics
  *			Copyright XPX Corporation, all rights reserved.
  * 
- *			Purpose: Built-in Physics engine for XPX tech.
+ *			Purpose: PhysX backend;
  *
  * =====================================================================
  */
@@ -17,13 +17,16 @@
 #include <NetworkProtocol.h>
 #include <Enums.h>
 
+#define NP_RIGID_TYPE PxRigidDynamic
+#define NP_CREATE_RIGID createRigidDynamic
+
+#define NpDefaultGravity() PxVec3(0.0f, -9.81f, 0.0f)
+
  //! pvd default port
 #define NP_PHYSX_DEFAULT_PORT (5425)
 #define NP_DELTATIME (1.0/60.f)
 
-#define NpDefaultGravity() PxVec3(0.0f, -9.81f, 0.0f)
-#define NpDefaultVelocity() PxVec3(1.0f, 1.0f, 0.0f)
-#define NpGetHowManyWorkers() 8
+#define NpGetHowManyWorkers() (16)
 
 namespace XPX
 {
@@ -44,12 +47,12 @@ namespace XPX
 				int line) 
 			{
 				if (typeName)
-					mTypes.push_back(typeName);
+					mTypes.push_back(String(typeName));
 
 				mLine.push_back(line);
 
 				if (filename)
-					mFilename.push_back(filename);
+					mFilename.push_back(String(filename));
 
 				auto ptr = _aligned_malloc(size, 16);
 
@@ -62,7 +65,7 @@ namespace XPX
 			{
 				_aligned_free(ptr);
 			}
-
+			
 		public:
 			void trace_pointer(void* pointer)
 			{
@@ -73,42 +76,20 @@ namespace XPX
 
 					bool reverse = false;
 
-					for (std::size_t i = 0; 
-						(reverse ? (i > sz) : (i < sz)); 
-						(reverse ? --i : ++i))
+					for (std::size_t i = 0; i < sz; ++i)
 					{
-						if (mPat[i] > ptr)
+						if (mPat[i] == ptr)
 						{
-							auto sz_clone = sz - 1;
-							sz = i;
-							i = sz_clone;
-
-							reverse = true;
-							
-							continue;
+							try
+							{
+								fmt::print("FILE: {}, LINE: {}, MEMORY: {}", mFilename[i], mLine[i], mPat[i]);
+								return;
+							}
+							catch (...)
+							{
+								fmt::print("FAILED TO RETRIEVE MEMORY INFORMATION ABOUT THIS POINTER!");
+							}
 						}
-
-						if (mPat[i] < ptr)
-						{
-							auto sz_clone = sz + 1;
-							sz = i;
-							i = sz_clone;
-
-							reverse = false;
-
-							continue;
-						}
-
-						try
-						{
-							fmt::print("FILE: {}, LINE: {}, VIRTUAL-MEMORY: {}", mFilename[i], mLine[i], mPat[i]);
-						}
-						catch (...)
-						{
-
-						}
-
-						return;
 					}
 				}
 			}
@@ -176,7 +157,7 @@ namespace XPX
 		repl_packet.pos[3][XPLICIT_NETWORK_X] = node->color().R;
 		repl_packet.pos[3][XPLICIT_NETWORK_Y] = node->color().G;
 		repl_packet.pos[3][XPLICIT_NETWORK_Z] = node->color().B;
-		repl_packet.pos[3][XPLICIT_NETWORK_Z + 1] = node->color().A;
+		repl_packet.pos[3][XPLICIT_NETWORK_DELTA] = node->color().A;
 
 		String fmt = node->index_as_string("Parent").c_str();
 
@@ -221,7 +202,9 @@ namespace XPX
 
 		gPvd = PxCreatePvd(*gFoundation);
 		PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(getenv("XPLICIT_SERVER_ADDR"), NP_PHYSX_DEFAULT_PORT, 10);
-		gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+		
+		// we don't have pvd
+		// gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
 		physx::PxTolerancesScale       toleranceScale;
 		toleranceScale.length = 100;        // typical length of an object
@@ -267,7 +250,6 @@ namespace XPX
 			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 		}
-
 	}
 
 	NpMovementServerEvent::~NpMovementServerEvent() noexcept
@@ -277,6 +259,9 @@ namespace XPX
 		
 		if (gFoundation)
 			gFoundation->release();
+
+		if (gScene)
+			gScene->release();
 	}
 
 	const char* NpMovementServerEvent::name() noexcept { return "NpMovementServerEvent"; }
@@ -287,6 +272,18 @@ namespace XPX
 
 		if (gScene)
 		{
+			for (auto* node : mWorldNodes)
+			{
+				if (!node ||
+					!node->PhysicsDelegate)
+					continue;
+
+				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
+
+				auto compute = PxVec3(node->pos().X, node->pos().Y, node->pos().Z);
+				actor->addForce(compute, PxForceMode::eIMPULSE);
+			}
+
 			gScene->simulate(NP_DELTATIME);
 			gScene->fetchResults(true);
 
@@ -298,47 +295,51 @@ namespace XPX
 					!node->PhysicsDelegate)
 					continue;
 
-				PxRigidDynamic* actor = static_cast<PxRigidDynamic*>(node->PhysicsDelegate);
+				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
 
-				XPLICIT_ASSERT(actor);
+				PxShape* shape = nullptr;
+				actor->getShapes(&shape, 1);
 
-				node->pos().X = actor->getGlobalPose().p.x;
-				node->pos().Y = actor->getGlobalPose().p.y;
-				node->pos().Z = actor->getGlobalPose().p.z;
+				auto world_pose = actor->getGlobalPose() * shape->getLocalPose();
 
-				node->rotation().X = actor->getGlobalPose().q.x;
-				node->rotation().Y = actor->getGlobalPose().q.y;
-				node->rotation().Z = actor->getGlobalPose().q.z;
+				node->pos().X = world_pose.p.x;
+				node->pos().Y = world_pose.p.y;
+				node->pos().Z = world_pose.p.z;
+
+				node->rotation().X = world_pose.q.x;
+				node->rotation().Y = world_pose.q.y;
+				node->rotation().Z = world_pose.q.z;
 
 				xpxSendToClients(node);
-
-				actor->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, node->anchor());
 			}
 		}
 	}
 
-	bool NpMovementServerEvent::insert_node(NpSceneNode node)
+	bool NpMovementServerEvent::insert_node(NpSceneNode node, int node_kind)
 	{
+		(void)node_kind;
+
 		if (node)
 		{
 			using namespace physx;
 
-			auto dynamic_rigid = gPhysics->createRigidDynamic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));
+			auto dynamic_rigid = gPhysics->NP_CREATE_RIGID(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));
 			node->PhysicsDelegate = dynamic_rigid;
-
-			auto mat = gPhysics->createMaterial(0, 0, 0);
-			PxBoxGeometry geom(node->scale().X, node->scale().Y, node->scale().Z);
-
-			auto shape = gPhysics->createShape(geom, *mat);
-
-			XPLICIT_ASSERT(shape);
-			XPLICIT_ASSERT(dynamic_rigid->attachShape(*shape));
 
 			if (dynamic_rigid)
 			{
-				dynamic_rigid->setName(node->name());
+				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
 
-				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, node->anchor());
+				auto mat = gPhysics->createMaterial(1, 1, 1);
+
+				PxCapsuleGeometry geom(PxVec3(node->scale().X, node->scale().Y, node->scale().Z).normalize(), node->scale().Y);
+
+				auto shape = gPhysics->createShape(geom, *mat);
+
+				XPLICIT_ASSERT(shape);
+				XPLICIT_ASSERT(dynamic_rigid->attachShape(*shape));
+
+				dynamic_rigid->setName(node->name());
 
 				mWorldNodes.push_back(node);
 				gScene->addActor(*dynamic_rigid);
@@ -347,6 +348,8 @@ namespace XPX
 			}
 
 			node->PhysicsDelegate = nullptr;
+
+			return false;
 		}
 
 		return false;
@@ -362,14 +365,18 @@ namespace XPX
 			{
 				using namespace physx;
 
-				PxActor* actor = static_cast<PxActor*>(node->PhysicsDelegate);
+				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
+
+				node->PhysicsDelegate = nullptr;
 
 				if (actor)
 				{
-					Thread job([](PxActor* actor) {
-						if (actor->isReleasable())
-							actor->release();
-						}, actor);
+					Thread job([](NP_RIGID_TYPE* actor) {
+						while (!actor->isReleasable())
+							;
+						
+						actor->release();
+					}, actor);
 
 					job.detach();
 				}

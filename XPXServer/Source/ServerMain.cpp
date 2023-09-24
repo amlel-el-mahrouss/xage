@@ -151,15 +151,6 @@ int main(int argc, char** argv)
 
 		XPX::Root::get_singleton_ptr()->set(XPX::createDevice(XPX::EDT_NULL));
 
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
-
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementServerEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
-
 		XPLICIT_PLACE_ID = argv[2];
 
 		XPLICIT_GET_DATA_DIR(path);
@@ -187,11 +178,20 @@ int main(int argc, char** argv)
 
 		params.Has3D = false;
 		params.NoLua = false;
-		params.WaitFor = true;
+		params.WaitFor = false;
 		params.Path = path;
 
 		XPX::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);
+
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
+
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementServerEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
 
 		// We want to parse any data values needed by the game.
 		// Such as SoundId. or Textures.
