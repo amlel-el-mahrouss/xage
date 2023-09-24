@@ -246,7 +246,7 @@ namespace XPX
 
 					node->setPosition(vector3df(packet.pos[0][XPLICIT_NETWORK_X], packet.pos[0][XPLICIT_NETWORK_Y], packet.pos[0][XPLICIT_NETWORK_Z]));
 					node->setRotation(vector3df(packet.pos[2][XPLICIT_NETWORK_X], packet.pos[2][XPLICIT_NETWORK_Y], packet.pos[2][XPLICIT_NETWORK_Z]));
-					node->setScale(vector3df(packet.pos[3][XPLICIT_NETWORK_X], packet.pos[3][XPLICIT_NETWORK_Y], packet.pos[3][XPLICIT_NETWORK_Z]));
+					node->setScale(vector3df(packet.pos[1][XPLICIT_NETWORK_X], packet.pos[1][XPLICIT_NETWORK_Y], packet.pos[1][XPLICIT_NETWORK_Z]));
 
 					return;
 				}

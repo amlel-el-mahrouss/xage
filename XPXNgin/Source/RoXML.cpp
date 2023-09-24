@@ -165,8 +165,7 @@ namespace XPX::RoXML
 							//! here you can see that Has3D is strictly reserved for headless implementations of XPX tech.
 							//! however, the classcomponent asks for it the mesh/part specs.
 							//! that's fine just ask for it, cad still loads it with np.
-							if (object &&
-								!params.Has3D)
+							if (object)
 							{
 								irr::scene::ISceneNode* node = nullptr;
 
@@ -528,7 +527,7 @@ namespace XPX::RoXML
 								
 								if (script)
 								{
-									script->run_script(!params.WaitFor);
+									script->run_script(params.WaitFor ? false : true);
 
 									if (script->status() == LuaScriptComponent::LUA_STOP)
 									{
@@ -557,7 +556,7 @@ namespace XPX::RoXML
 
 						if (script)
 						{
-							script->run_script(!params.WaitFor);
+							script->run_script(params.WaitFor ? false : true);
 
 							if (script->status() == LuaScriptComponent::LUA_STOP)
 							{

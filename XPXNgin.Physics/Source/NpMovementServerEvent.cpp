@@ -223,8 +223,12 @@ namespace XPX
 		PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(getenv("XPLICIT_SERVER_ADDR"), NP_PHYSX_DEFAULT_PORT, 10);
 		gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
+		physx::PxTolerancesScale       toleranceScale;
+		toleranceScale.length = 100;        // typical length of an object
+		toleranceScale.speed = 981;         // typical speed of an object, gravity*1s is a reasonable choice
+
 		gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation,
-			PxTolerancesScale(), recordMemoryAllocations, gPvd);
+			toleranceScale, recordMemoryAllocations, gPvd);
 
 		if (!gPhysics)
 			throw EngineError("PxCreatePhysics failed!");
@@ -298,15 +302,17 @@ namespace XPX
 
 				XPLICIT_ASSERT(actor);
 
-				node->pos().X += actor->getGlobalPose().p.x;
-				node->pos().Y += actor->getGlobalPose().p.y;
-				node->pos().Z += actor->getGlobalPose().p.z;
+				node->pos().X = actor->getGlobalPose().p.x;
+				node->pos().Y = actor->getGlobalPose().p.y;
+				node->pos().Z = actor->getGlobalPose().p.z;
 
-				node->rotation().X += actor->getGlobalPose().q.x;
-				node->rotation().Y += actor->getGlobalPose().q.y;
-				node->rotation().Z += actor->getGlobalPose().q.z;
+				node->rotation().X = actor->getGlobalPose().q.x;
+				node->rotation().Y = actor->getGlobalPose().q.y;
+				node->rotation().Z = actor->getGlobalPose().q.z;
 
 				xpxSendToClients(node);
+
+				actor->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, node->anchor());
 			}
 		}
 	}
@@ -315,16 +321,24 @@ namespace XPX
 	{
 		if (node)
 		{
-			ClassComponent::update(node);
-
 			using namespace physx;
 
 			auto dynamic_rigid = gPhysics->createRigidDynamic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));
 			node->PhysicsDelegate = dynamic_rigid;
 
+			auto mat = gPhysics->createMaterial(0, 0, 0);
+			PxBoxGeometry geom(node->scale().X, node->scale().Y, node->scale().Z);
+
+			auto shape = gPhysics->createShape(geom, *mat);
+
+			XPLICIT_ASSERT(shape);
+			XPLICIT_ASSERT(dynamic_rigid->attachShape(*shape));
+
 			if (dynamic_rigid)
 			{
 				dynamic_rigid->setName(node->name());
+
+				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, node->anchor());
 
 				mWorldNodes.push_back(node);
 				gScene->addActor(*dynamic_rigid);
