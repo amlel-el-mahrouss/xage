@@ -469,8 +469,7 @@ namespace XPX::RoXML
 						auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
 
 						if (mov)
-							mov->insert_node(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()), 
-								npIsRigid);
+							mov->insert_node(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()));
 					}
 				}
 
@@ -528,13 +527,14 @@ namespace XPX::RoXML
 								auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
 								
 								if (script)
-									script->run_script();
-
-								if (script &&
-									script->status() == LuaScriptComponent::LUA_STOP)
 								{
-									std::remove(full_download_path.c_str());
-									ComponentSystem::get_singleton_ptr()->remove(script);
+									script->run_script(!params.WaitFor);
+
+									if (script->status() == LuaScriptComponent::LUA_STOP)
+									{
+										std::remove(full_download_path.c_str());
+										ComponentSystem::get_singleton_ptr()->remove(script);
+									}
 								}
 							}
 						}
@@ -556,13 +556,14 @@ namespace XPX::RoXML
 						auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_write_path.c_str());
 
 						if (script)
-							script->run_script();
-
-						if (script &&
-							script->status() == LuaScriptComponent::LUA_STOP)
 						{
-							std::remove(full_write_path.c_str());
-							ComponentSystem::get_singleton_ptr()->remove(script);
+							script->run_script(!params.WaitFor);
+
+							if (script->status() == LuaScriptComponent::LUA_STOP)
+							{
+								std::remove(full_write_path.c_str());
+								ComponentSystem::get_singleton_ptr()->remove(script);
+							}
 						}
 					}
 				}

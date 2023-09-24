@@ -135,7 +135,7 @@ namespace XPX
 	{
 		ClassComponent* self = static_cast<ClassComponent*>(_self);
 
-		if (!IsValidHeapPtr(self))
+		if (!self)
 			return;
 
 		self->collide(self->index_as_bool("Collide"));

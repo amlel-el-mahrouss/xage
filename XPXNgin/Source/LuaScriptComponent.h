@@ -44,7 +44,7 @@ namespace XPX
 	public:
 		COMPONENT_TYPE type() noexcept;
 		const char* path() noexcept;
-		void run_script();
+		void run_script(const bool detach = true);
 		std::int32_t status() noexcept;
 
 	public:

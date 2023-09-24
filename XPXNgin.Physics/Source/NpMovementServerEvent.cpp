@@ -19,10 +19,11 @@
 
  //! pvd default port
 #define NP_PHYSX_DEFAULT_PORT (5425)
-#define NP_INCREMENT_DT (1.0/60.f)
+#define NP_DELTATIME (1.0/60.f)
 
 #define NpDefaultGravity() PxVec3(0.0f, -9.81f, 0.0f)
 #define NpDefaultVelocity() PxVec3(1.0f, 1.0f, 0.0f)
+#define NpGetHowManyWorkers() 8
 
 namespace XPX
 {
@@ -239,13 +240,7 @@ namespace XPX
 		PxSceneDesc desc(gPhysics->getTolerancesScale());
 		desc.gravity = NpDefaultGravity();
 
-		SYSTEM_LOGICAL_PROCESSOR_INFORMATION info;
-		RtlZeroMemory(&info, sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
-
-		DWORD len = 0U;
-		GetLogicalProcessorInformation(&info, &len);
-
-		std::size_t numCores = (len / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
+		std::size_t numCores = NpGetHowManyWorkers();
 
 		auto cpuDispatcher = PxDefaultCpuDispatcherCreate(numCores);
 
@@ -268,6 +263,7 @@ namespace XPX
 			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 		}
+
 	}
 
 	NpMovementServerEvent::~NpMovementServerEvent() noexcept
@@ -287,35 +283,35 @@ namespace XPX
 
 		if (gScene)
 		{
-			gScene->simulate(NP_INCREMENT_DT);
+			gScene->simulate(NP_DELTATIME);
+			gScene->fetchResults(true);
 
 			gDefaultAllocatorCallback.trace_pointer(gScene);
 
-			if (gScene->fetchResults(true))
+			for (auto* node : mWorldNodes)
 			{
-				for (auto* node : mWorldNodes)
-				{
-					if (!node ||
-						!node->PhysicsDelegate)
-						continue;
+				if (!node ||
+					!node->PhysicsDelegate)
+					continue;
 
-					PxRigidDynamic* actor = static_cast<PxRigidDynamic*>(node->PhysicsDelegate);
+				PxRigidDynamic* actor = static_cast<PxRigidDynamic*>(node->PhysicsDelegate);
 
-					XPLICIT_ASSERT(actor);
+				XPLICIT_ASSERT(actor);
 
-					node->pos().X = actor->getGlobalPose().p.x;
-					node->pos().Y = actor->getGlobalPose().p.y;
-					node->pos().Z = actor->getGlobalPose().p.z;
+				node->pos().X += actor->getGlobalPose().p.x;
+				node->pos().Y += actor->getGlobalPose().p.y;
+				node->pos().Z += actor->getGlobalPose().p.z;
 
-					xpxSendToClients(node);
+				node->rotation().X += actor->getGlobalPose().q.x;
+				node->rotation().Y += actor->getGlobalPose().q.y;
+				node->rotation().Z += actor->getGlobalPose().q.z;
 
-					actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
-				}
+				xpxSendToClients(node);
 			}
 		}
 	}
 
-	bool NpMovementServerEvent::insert_node(NpSceneNode node, bool is_static)
+	bool NpMovementServerEvent::insert_node(NpSceneNode node)
 	{
 		if (node)
 		{
@@ -323,31 +319,15 @@ namespace XPX
 
 			using namespace physx;
 
-			if (!is_static)
+			auto dynamic_rigid = gPhysics->createRigidDynamic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));
+			node->PhysicsDelegate = dynamic_rigid;
+
+			if (dynamic_rigid)
 			{
-				auto dynamic_rigid = gPhysics->createRigidDynamic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));
-				XPLICIT_ASSERT(dynamic_rigid);
-
-				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
-				dynamic_rigid->setLinearVelocity(NpDefaultVelocity());
-
-				node->PhysicsDelegate = dynamic_rigid;
-			}
-			else
-			{
-				auto static_rigid = gPhysics->createRigidStatic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));
-				node->PhysicsDelegate = static_rigid;
-			}
-
-			auto actor_ptr = static_cast<PxActor*>(node->PhysicsDelegate);
-
-			if (actor_ptr)
-			{
-				actor_ptr->setName(node->name());
-				actor_ptr->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+				dynamic_rigid->setName(node->name());
 
 				mWorldNodes.push_back(node);
-				gScene->addActor(*actor_ptr);
+				gScene->addActor(*dynamic_rigid);
 
 				return true;
 			}

@@ -35,7 +35,7 @@ namespace XPX
 
 	std::int32_t LuaScriptComponent::status() noexcept { return mStatus; }
 
-	void LuaScriptComponent::run_script()
+	void LuaScriptComponent::run_script(const bool detach)
 	{
 		if (!std::filesystem::exists(this->path()))
 			return;
@@ -88,7 +88,14 @@ namespace XPX
 			self->mStatus = LUA_STOP;
 			}, this);
 
-		job.detach();
+		if (detach)
+		{
+			job.detach();
+		}
+		else
+		{
+			job.join();
+		}
 	}
 
 	LuaScriptComponent::~LuaScriptComponent() = default;
