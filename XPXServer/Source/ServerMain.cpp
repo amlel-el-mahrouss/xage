@@ -46,6 +46,7 @@ static void XplicitLoadShell()
 
 		if (strcmp(cmd_buf, "exit") == 0)
 		{
+
 			std::exit(-30);
 			break;
 		}
@@ -132,6 +133,15 @@ int main(int argc, char** argv)
 
 		const auto network = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::NetworkServerComponent>(ip4, port4);
 
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
+
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementServerEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
+
 #ifdef XPLICIT_WINDOWS
 
 		XPX::String title = XPLICIT_ENV("XPLICIT_SERVER_ADDR");
@@ -178,20 +188,11 @@ int main(int argc, char** argv)
 
 		params.Has3D = false;
 		params.NoLua = false;
-		params.WaitFor = false;
+		params.WaitFor = true;
 		params.Path = path;
 
 		XPX::RoXML::RoXMLDocumentParser parser;
 		parser.parse(params);
-
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
-
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementServerEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
 
 		// We want to parse any data values needed by the game.
 		// Such as SoundId. or Textures.

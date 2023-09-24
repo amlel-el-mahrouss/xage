@@ -14,5 +14,5 @@
 
 namespace XPX
 {
-	typedef double NplicitFloat;
+	typedef float NplicitFloat;
 }

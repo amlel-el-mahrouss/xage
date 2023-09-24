@@ -526,13 +526,12 @@ namespace XPX::RoXML
 								
 								if (script)
 								{
-									script->run_script(params.WaitFor ? false : true);
+									script->run_script(true);
 
-									if (script->status() == LuaScriptComponent::LUA_STOP)
-									{
-										std::remove(full_download_path.c_str());
-										ComponentSystem::get_singleton_ptr()->remove(script);
-									}
+									while (script->status() != LuaScriptComponent::LUA_STOP);
+
+									std::remove(full_download_path.c_str());
+									ComponentSystem::get_singleton_ptr()->remove(script);
 								}
 							}
 						}
@@ -555,13 +554,12 @@ namespace XPX::RoXML
 
 						if (script)
 						{
-							script->run_script(params.WaitFor ? false : true);
+							script->run_script(true);
 
-							if (script->status() == LuaScriptComponent::LUA_STOP)
-							{
-								std::remove(full_write_path.c_str());
-								ComponentSystem::get_singleton_ptr()->remove(script);
-							}
+							while (script->status() != LuaScriptComponent::LUA_STOP);
+
+							std::remove(full_write_path.c_str());
+							ComponentSystem::get_singleton_ptr()->remove(script);
 						}
 					}
 				}

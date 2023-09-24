@@ -26,7 +26,7 @@
 #define NP_PHYSX_DEFAULT_PORT (5425)
 #define NP_DELTATIME (1.0/60.f)
 
-#define NpGetHowManyWorkers() (16)
+#define NpGetHowManyWorkers() (8)
 
 namespace XPX
 {
@@ -46,14 +46,6 @@ namespace XPX
 				const char* filename,
 				int line) 
 			{
-				if (typeName)
-					mTypes.push_back(String(typeName));
-
-				mLine.push_back(line);
-
-				if (filename)
-					mFilename.push_back(String(filename));
-
 				auto ptr = _aligned_malloc(size, 16);
 
 				mPat.push_back((intptr_t)ptr);
@@ -82,7 +74,7 @@ namespace XPX
 						{
 							try
 							{
-								fmt::print("FILE: {}, LINE: {}, MEMORY: {}", mFilename[i], mLine[i], mPat[i]);
+								fmt::print("MEMORY: {}", mPat[i]);
 								return;
 							}
 							catch (...)
@@ -96,9 +88,6 @@ namespace XPX
 
 		private:
 			std::vector<std::intptr_t> mPat; //! pointer allocation table.
-			std::vector<String> mFilename;
-			std::vector<String> mTypes;
-			std::vector<int> mLine;
 
 		};
 
@@ -278,10 +267,16 @@ namespace XPX
 					!node->PhysicsDelegate)
 					continue;
 
+
 				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
+
+				actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+				actor->wakeUp();
 
 				auto compute = PxVec3(node->pos().X, node->pos().Y, node->pos().Z);
 				actor->addForce(compute, PxForceMode::eIMPULSE);
+
+				node->pos() = Vector<NetworkFloat>(0, 0, 0);
 			}
 
 			gScene->simulate(NP_DELTATIME);
@@ -328,8 +323,6 @@ namespace XPX
 
 			if (dynamic_rigid)
 			{
-				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
-
 				auto mat = gPhysics->createMaterial(1, 1, 1);
 
 				PxCapsuleGeometry geom(PxVec3(node->scale().X, node->scale().Y, node->scale().Z).normalize(), node->scale().Y);

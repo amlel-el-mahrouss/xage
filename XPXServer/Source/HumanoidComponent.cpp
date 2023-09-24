@@ -16,8 +16,8 @@
 #include <NpMovementServerEvent.h>
 
 #define XPX_DEFAULT_MAXHEALTH (100)
-#define XPX_DEFAULT_WALKSPEED (16)
-#define XPX_DEFAULT_JUMPPOWER (10)
+#define XPX_DEFAULT_WALKSPEED (1)
+#define XPX_DEFAULT_JUMPPOWER (1)
 #define XPX_DEFAULT_HEALTH (100)
 
 namespace XPX

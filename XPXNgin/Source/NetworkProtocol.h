@@ -128,7 +128,7 @@ namespace XPX
         NETWORK_STAT_COUNT        = 2,
     };
 
-    using NetworkFloat = double;
+    using NetworkFloat = float;
 
     typedef NetworkFloat NetworkVec3[XPLICIT_NETWORK_POS_MAX];
     typedef char         NetworkReplica[XPLICIT_NETWORK_BUF_SZ];
