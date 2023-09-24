@@ -13,10 +13,12 @@
 
 #include "HumanoidComponent.h"
 
-#define XPX_DEFAULT_MAXHEALTH 100
-#define XPX_DEFAULT_WALKSPEED 16
-#define XPX_DEFAULT_JUMPPOWER 10
-#define XPX_DEFAULT_HEALTH 100
+#include <NpMovementServerEvent.h>
+
+#define XPX_DEFAULT_MAXHEALTH (100)
+#define XPX_DEFAULT_WALKSPEED (16)
+#define XPX_DEFAULT_JUMPPOWER (10)
+#define XPX_DEFAULT_HEALTH (100)
 
 namespace XPX
 {
@@ -191,6 +193,11 @@ namespace XPX
 
 			if (mClass)
 			{
+				auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
+
+				if (mov)
+					mov->insert_node(mClass, npIsRigid);
+
 				mClass->assign("Anchor", "false");
 				mClass->anchor(false);
 
@@ -215,8 +222,6 @@ namespace XPX
 				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed));
 
 				XPLICIT_INFO("world:Login [EVENT]");
-
-				mClass->assign("Anchor", "true");
 
 				String fmt = std::format("world:Login({})", player_lua_arr);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);

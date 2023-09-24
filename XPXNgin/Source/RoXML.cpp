@@ -9,6 +9,8 @@
 
 #include "RoXML.h"
 
+#include <NpMovementServerEvent.h>
+
 namespace XPX::RoXML
 {
 	void RoXMLDocumentParser::parse(RoXMLDocumentParameters& params) noexcept
@@ -62,7 +64,6 @@ namespace XPX::RoXML
 							const char* script_id = "";
 							const char* parent_id = XPLICIT_CLASS_NAMESPACE;
 
-							
 							if (first_attr->next_attribute()->next_attribute() &&
 								strcmp(first_attr->next_attribute()->next_attribute()->name(), "Script") == 0)
 							{
@@ -89,6 +90,8 @@ namespace XPX::RoXML
 
 								if (node_mesh)
 								{
+									node_mesh->setMaterialFlag(EMF_LIGHTING, false);
+
 									if (auto parent = CAD->getSceneManager()->getSceneNodeFromName(parent_id);
 										parent)
 										node_mesh->setParent(parent);
@@ -454,6 +457,20 @@ namespace XPX::RoXML
 									scene_node->setScale(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 							}
 						}
+					}
+				}
+
+				if (node_name == "RigidBody")
+				{
+
+					if (node->first_attribute() &&
+						strcmp(node->first_attribute()->name(), "Referent") == 0)
+					{
+						auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
+
+						if (mov)
+							mov->insert_node(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()), 
+								npIsRigid);
 					}
 				}
 

@@ -46,10 +46,13 @@ namespace XPX
 
     public:
         bool remove_node(NpSceneNode node);
-        bool insert_node(NpSceneNode node);
+        bool insert_node(NpSceneNode node, bool is_static = false);
 
     private:
         std::vector<NpSceneNode> mWorldNodes;
 
     };
 }
+
+#define npIsStatic true
+#define npIsRigid false

@@ -19,9 +19,9 @@
 namespace XPX
 {
 	SpawnComponent::SpawnComponent(const Vector<NetworkFloat>& vec)
-		: mPos(0, 0, 0)
+		: mPos(vec)
 	{
-		this->mPos = vec;
+
 	}
 
 	SpawnComponent::~SpawnComponent() = default;

@@ -24,7 +24,7 @@ namespace XPX
 		if (mStud)
 		{
 			mStud->setName(name);
-			mStud->setMaterialFlag(EMF_LIGHTING, true);
+			mStud->setMaterialFlag(EMF_LIGHTING, false);
 		}
 	}
 

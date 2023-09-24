@@ -34,7 +34,7 @@ namespace XPX
 			const auto& pos = spawner->get();
 
 			humanoid->get_class()->pos().X = pos.X;
-			humanoid->get_class()->pos().Y = pos.Y + humanoid->get_jump_power();
+			humanoid->get_class()->pos().Y = pos.Y;
 			humanoid->get_class()->pos().Z = pos.Z;
 		}
 		else if (humanoid)

@@ -26,12 +26,23 @@ namespace XPX
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = CAD->getSceneManager()->addCameraSceneNodeMaya();
+		mCamera = CAD->getSceneManager()->addCameraSceneNodeMaya(nullptr);
+
+		mCamera->setPosition(vector3df(XPLICIT_ORIGIN.X,
+			XPLICIT_ORIGIN.Y,
+			XPLICIT_ORIGIN.Z));
+
+		mCamera->setTarget(vector3df(0, 5, 0));
 
 		XPLICIT_ASSERT(mCamera);
 
 		CAD->getSceneManager()->setActiveCamera(mCamera);
 		
+		CAD->getSceneManager()->addLightSceneNode(mCamera, vector3df(XPLICIT_ORIGIN.X,
+			XPLICIT_ORIGIN.Y, 
+			XPLICIT_ORIGIN.Z),
+		SColorf(1.0f, 0.1f, 0.1f, 1.0f), 1000);
+
 		mCamera->setName("Camera");
 
 		this->insert("FOV", std::to_string(mCamera->getFOV()));
@@ -67,9 +78,9 @@ namespace XPX
 
 			packet.cmd[XPLICIT_NETWORK_CMD_TARGET] = NETWORK_CMD_TARGET;
 
-			packet.pos[XPLICIT_NETWORK_X] = self->mLookAt.X;
-			packet.pos[XPLICIT_NETWORK_Y] = self->mLookAt.Y;
-			packet.pos[XPLICIT_NETWORK_Z] = self->mLookAt.Z;
+			packet.pos[0][XPLICIT_NETWORK_X] = self->mLookAt.X;
+			packet.pos[0][XPLICIT_NETWORK_Y] = self->mLookAt.Y;
+			packet.pos[0][XPLICIT_NETWORK_Z] = self->mLookAt.Z;
 
 			self->mNetwork->send(packet);
 		}

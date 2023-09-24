@@ -19,8 +19,10 @@
 
  //! pvd default port
 #define NP_PHYSX_DEFAULT_PORT (5425)
-#define NP_INCREMENT_DT (0.0001)
-#define NP_DEFAULT_GRAVITY PxVec3(0, -9.81f, 0)
+#define NP_INCREMENT_DT (1.0/60.f)
+
+#define NpDefaultGravity() PxVec3(0.0f, -9.81f, 0.0f)
+#define NpDefaultVelocity() PxVec3(1.0f, 1.0f, 0.0f)
 
 namespace XPX
 {
@@ -147,7 +149,7 @@ namespace XPX
 		};
 	}
 
-	static void xpxSendToClient(ClassComponent* node)
+	static void xpxSendToClients(ClassComponent* node)
 	{
 		NetworkPacket repl_packet{};
 
@@ -158,23 +160,22 @@ namespace XPX
 		repl_packet.magic[1] = XPLICIT_NETWORK_MAG_1;
 		repl_packet.magic[2] = XPLICIT_NETWORK_MAG_2;
 
-		repl_packet.pos[XPLICIT_NETWORK_X] = node->pos().X;
-		repl_packet.pos[XPLICIT_NETWORK_Y] = node->pos().Y;
-		repl_packet.pos[XPLICIT_NETWORK_Z] = node->pos().Z;
+		repl_packet.pos[0][XPLICIT_NETWORK_X] = node->pos().X;
+		repl_packet.pos[0][XPLICIT_NETWORK_Y] = node->pos().Y;
+		repl_packet.pos[0][XPLICIT_NETWORK_Z] = node->pos().Z;
 
-		repl_packet.pos_second[XPLICIT_NETWORK_X] = node->scale().X;
-		repl_packet.pos_second[XPLICIT_NETWORK_Y] = node->scale().Y;
-		repl_packet.pos_second[XPLICIT_NETWORK_Z] = node->scale().Z;
+		repl_packet.pos[1][XPLICIT_NETWORK_X] = node->scale().X;
+		repl_packet.pos[1][XPLICIT_NETWORK_Y] = node->scale().Y;
+		repl_packet.pos[1][XPLICIT_NETWORK_Z] = node->scale().Z;
 
-		repl_packet.pos_third[XPLICIT_NETWORK_X] = node->rotation().X;
-		repl_packet.pos_third[XPLICIT_NETWORK_Y] = node->rotation().Y;
-		repl_packet.pos_third[XPLICIT_NETWORK_Z] = node->rotation().Z;
+		repl_packet.pos[2][XPLICIT_NETWORK_X] = node->rotation().X;
+		repl_packet.pos[2][XPLICIT_NETWORK_Y] = node->rotation().Y;
+		repl_packet.pos[2][XPLICIT_NETWORK_Z] = node->rotation().Z;
 
-
-		repl_packet.pos_fourth[XPLICIT_NETWORK_X] = node->color().R;
-		repl_packet.pos_fourth[XPLICIT_NETWORK_Y] = node->color().G;
-		repl_packet.pos_fourth[XPLICIT_NETWORK_Z] = node->color().B;
-		repl_packet.pos_fourth[XPLICIT_NETWORK_Z + 1] = node->color().A;
+		repl_packet.pos[3][XPLICIT_NETWORK_X] = node->color().R;
+		repl_packet.pos[3][XPLICIT_NETWORK_Y] = node->color().G;
+		repl_packet.pos[3][XPLICIT_NETWORK_Z] = node->color().B;
+		repl_packet.pos[3][XPLICIT_NETWORK_Z + 1] = node->color().A;
 
 		String fmt = node->index_as_string("Parent").c_str();
 
@@ -236,7 +237,7 @@ namespace XPX
 			throw EngineError("PxInitExtensions failed!");
 
 		PxSceneDesc desc(gPhysics->getTolerancesScale());
-		desc.gravity = NP_DEFAULT_GRAVITY;
+		desc.gravity = NpDefaultGravity();
 
 		SYSTEM_LOGICAL_PROCESSOR_INFORMATION info;
 		RtlZeroMemory(&info, sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
@@ -258,6 +259,15 @@ namespace XPX
 
 		if (!gScene)
 			throw EngineError("createScene failed! Refer to XPX support for help.");
+
+		physx::PxPvdSceneClient* cl = gScene->getScenePvdClient();
+
+		if (cl)
+		{
+			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+		}
 	}
 
 	NpMovementServerEvent::~NpMovementServerEvent() noexcept
@@ -271,76 +281,77 @@ namespace XPX
 
 	const char* NpMovementServerEvent::name() noexcept { return "NpMovementServerEvent"; }
 
-	static physx::PxReal gDeltaTime = 1;
-
 	void NpMovementServerEvent::operator()()
 	{
 		using namespace physx;
 
 		if (gScene)
 		{
+			gScene->simulate(NP_INCREMENT_DT);
+
 			gDefaultAllocatorCallback.trace_pointer(gScene);
 
-			for (auto* node : mWorldNodes)
+			if (gScene->fetchResults(true))
 			{
-				if (!node)
-					continue;
-
-				PxRigidStatic* actor = static_cast<PxRigidStatic*>(node->PhysicsDelegate);
-
-				if (actor)
+				for (auto* node : mWorldNodes)
 				{
-					PxVec3 input(node->pos().X, node->pos().Y, node->pos().Z);
-					const auto pos = PxTransform(input);
+					if (!node ||
+						!node->PhysicsDelegate)
+						continue;
 
-					actor->setGlobalPose(pos);
+					PxRigidDynamic* actor = static_cast<PxRigidDynamic*>(node->PhysicsDelegate);
 
-					actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
-
-					gScene->collide(gDeltaTime);
-					gScene->fetchCollision(true);
-					gScene->advance(nullptr);
-
-					gDeltaTime += NP_INCREMENT_DT;
-
-					gScene->fetchResults(true);
+					XPLICIT_ASSERT(actor);
 
 					node->pos().X = actor->getGlobalPose().p.x;
 					node->pos().Y = actor->getGlobalPose().p.y;
 					node->pos().Z = actor->getGlobalPose().p.z;
 
-					xpxSendToClient(node);
+					xpxSendToClients(node);
+
+					actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
 				}
 			}
 		}
 	}
 
-	bool NpMovementServerEvent::insert_node(NpSceneNode node)
+	bool NpMovementServerEvent::insert_node(NpSceneNode node, bool is_static)
 	{
 		if (node)
 		{
+			ClassComponent::update(node);
+
 			using namespace physx;
 
-			auto static_rigid = gPhysics->createRigidStatic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));;
-			XPLICIT_ASSERT(static_rigid);
-
-			static_rigid->setName(node->name());
-
-			static_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
-
-			node->PhysicsDelegate = static_rigid;
-
-			// ???
-			if (auto actor_ptr = dynamic_cast<PxActor*>(static_rigid);
-				actor_ptr &&
-				actor_ptr == static_rigid)
+			if (!is_static)
 			{
+				auto dynamic_rigid = gPhysics->createRigidDynamic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));
+				XPLICIT_ASSERT(dynamic_rigid);
+
+				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+				dynamic_rigid->setLinearVelocity(NpDefaultVelocity());
+
+				node->PhysicsDelegate = dynamic_rigid;
+			}
+			else
+			{
+				auto static_rigid = gPhysics->createRigidStatic(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));
+				node->PhysicsDelegate = static_rigid;
+			}
+
+			auto actor_ptr = static_cast<PxActor*>(node->PhysicsDelegate);
+
+			if (actor_ptr)
+			{
+				actor_ptr->setName(node->name());
+				actor_ptr->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+
 				mWorldNodes.push_back(node);
 				gScene->addActor(*actor_ptr);
+
 				return true;
 			}
 
-			static_rigid->release();
 			node->PhysicsDelegate = nullptr;
 		}
 

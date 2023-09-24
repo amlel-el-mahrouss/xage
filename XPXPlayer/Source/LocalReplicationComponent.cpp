@@ -153,12 +153,10 @@ namespace XPX
 				}
 				else
 				{
-					auto bundle = *it;
-					auto head = bundle->look_for("Head");
-
-					// the parent should either be, BundlePivot or the player's camera.
-					if (head)
-						head->getParent()->setPosition(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z]));
+					if (packet.cmd[XPLICIT_NETWORK_CMD_DESTROY] == NETWORK_CMD_DESTROY)
+					{
+						ComponentSystem::get_singleton_ptr()->remove(*it);
+					}
 				}
 			}
 			else
@@ -176,9 +174,9 @@ namespace XPX
 						// get the part.
 						auto part = node->node();
 
-						part->setPosition(vector3df(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z])));
-						part->setRotation(vector3df(packet.pos_third[XPLICIT_NETWORK_X], packet.pos_third[XPLICIT_NETWORK_Y], packet.pos_third[XPLICIT_NETWORK_Z]));
-						part->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
+						part->setPosition(vector3df(packet.pos[0][XPLICIT_NETWORK_X], packet.pos[0][XPLICIT_NETWORK_Y], packet.pos[0][XPLICIT_NETWORK_Z]));
+						part->setRotation(vector3df(packet.pos[2][XPLICIT_NETWORK_X], packet.pos[2][XPLICIT_NETWORK_Y], packet.pos[2][XPLICIT_NETWORK_Z]));
+						part->setScale(vector3df(packet.pos[3][XPLICIT_NETWORK_X], packet.pos[3][XPLICIT_NETWORK_Y], packet.pos[3][XPLICIT_NETWORK_Z]));
 					}
 				}
 				else
@@ -246,9 +244,9 @@ namespace XPX
 						return;
 					}
 
-					node->setPosition(vector3df(vector3df(packet.pos[XPLICIT_NETWORK_X], packet.pos[XPLICIT_NETWORK_Y], packet.pos[XPLICIT_NETWORK_Z])));
-					node->setRotation(vector3df(packet.pos_third[XPLICIT_NETWORK_X], packet.pos_third[XPLICIT_NETWORK_Y], packet.pos_third[XPLICIT_NETWORK_Z]));
-					node->setScale(vector3df(packet.pos_second[XPLICIT_NETWORK_X], packet.pos_second[XPLICIT_NETWORK_Y], packet.pos_second[XPLICIT_NETWORK_Z]));
+					node->setPosition(vector3df(packet.pos[0][XPLICIT_NETWORK_X], packet.pos[0][XPLICIT_NETWORK_Y], packet.pos[0][XPLICIT_NETWORK_Z]));
+					node->setRotation(vector3df(packet.pos[2][XPLICIT_NETWORK_X], packet.pos[2][XPLICIT_NETWORK_Y], packet.pos[2][XPLICIT_NETWORK_Z]));
+					node->setScale(vector3df(packet.pos[3][XPLICIT_NETWORK_X], packet.pos[3][XPLICIT_NETWORK_Y], packet.pos[3][XPLICIT_NETWORK_Z]));
 
 					return;
 				}

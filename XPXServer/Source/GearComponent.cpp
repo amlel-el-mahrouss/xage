@@ -76,9 +76,9 @@ namespace XPX
 		
 			if (self->get_owner()->get_peer()->packet.cmd[XPLICIT_NETWORK_CMD_TARGET] == NETWORK_CMD_TARGET)
 			{
-				self->assign("LookAt.X", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_X]));
-				self->assign("LookAt.Y", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_Y]));
-				self->assign("LookAt.Z", std::to_string(self->get_owner()->get_peer()->packet.pos[XPLICIT_NETWORK_Z]));
+				self->assign("LookAt.X", std::to_string(self->get_owner()->get_peer()->packet.pos[0][XPLICIT_NETWORK_X]));
+				self->assign("LookAt.Y", std::to_string(self->get_owner()->get_peer()->packet.pos[0][XPLICIT_NETWORK_Y]));
+				self->assign("LookAt.Z", std::to_string(self->get_owner()->get_peer()->packet.pos[0][XPLICIT_NETWORK_Z]));
 
 				self->call_method("Update('LookAt')");
 			}

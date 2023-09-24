@@ -130,6 +130,10 @@ namespace XPX
 
     using NetworkFloat = double;
 
+    typedef NetworkFloat NetworkVec3[XPLICIT_NETWORK_POS_MAX];
+    typedef char         NetworkReplica[XPLICIT_NETWORK_BUF_SZ];
+    typedef char         NetworkChar;
+
     struct XPLICIT_API NetworkPacket final
     {
     // magic number.
@@ -149,24 +153,13 @@ namespace XPX
         std::int64_t          public_hash;
         std::int64_t          hash;
 
-    // network commands.
+    // body.
     public:
         std::int16_t          cmd[XPLICIT_NETWORK_CMD_MAX];
 
-    // position stuff.
-    public:
-        NetworkFloat          pos[XPLICIT_NETWORK_POS_MAX];
-        NetworkFloat          pos_second[XPLICIT_NETWORK_POS_MAX];
-        NetworkFloat          pos_third[XPLICIT_NETWORK_POS_MAX];
-        NetworkFloat          pos_fourth[XPLICIT_NETWORK_POS_MAX];
-
-        // Replicated Lua/RoXML
-    public:
-        char                  replicas[XPLICIT_MAX_REPLICAS][XPLICIT_NETWORK_BUF_SZ];
-
-        // Additional data.
-    public:
-        char                  additional_data[XPLICIT_NETWORK_BUF_SZ];
+        NetworkVec3           pos[XPLICIT_NETWORK_POS_MAX];
+        NetworkReplica        replicas[XPLICIT_MAX_REPLICAS];
+        NetworkChar           additional_data[XPLICIT_NETWORK_BUF_SZ];
 
     };
 

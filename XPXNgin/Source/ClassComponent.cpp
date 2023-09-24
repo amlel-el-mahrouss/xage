@@ -11,7 +11,6 @@
 #include "ClassComponent.h"
 
 #include <NpMovementServerEvent.h>
-#include <numeric>
 
 namespace XPX
 {
@@ -47,11 +46,6 @@ namespace XPX
 		this->insert("Connect", XPLICIT_CONNECT_SNIPPET);
 		this->insert("Clone", XPLICIT_CLONE_SNIPPET);
 		this->insert("Disconnect", XPLICIT_DISCONNECT_SNIPPET);
-
-		static auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
-
-		if (mov)
-			mov->insert_node(this);
 	}
 
 	ClassComponent::ClassComponent(

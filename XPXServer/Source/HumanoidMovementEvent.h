@@ -15,12 +15,9 @@
 namespace XPX
 {
 	/// <summary>
-	/// Either accepts of refuses player movement.
-	/// Refuses if:
-	///		- Player is dead
-	///		- Player is nil (disconnected player)
+	/// This class takes care of player movements.
+	/// Only works if the player is alive.
 	/// </summary>
-	
 	class HumanoidMovementEvent : public Event
 	{
 	public:
