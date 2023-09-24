@@ -62,6 +62,7 @@ namespace XPX::RoXML
 	{
 		String Path{ "" };
 
+		bool Done{ false };
 		bool Inline{ false };
 		bool Has3D{ false };
 		bool LuaOnly{ false };

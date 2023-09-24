@@ -267,8 +267,9 @@ namespace XPX
 					!node->PhysicsDelegate)
 					continue;
 
-
 				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
+
+				actor->addForce(PxVec3(node->pos().X, node->pos().Y, node->pos().Z), PxForceMode::eIMPULSE);
 			}
 
 			gScene->simulate(NP_DELTATIME);
@@ -287,13 +288,15 @@ namespace XPX
 				PxShape* shape = nullptr;
 				actor->getShapes(&shape, 1);
 
-				auto world_pose = actor->getGlobalPose() * shape->getLocalPose();
+				auto world_pose = actor->getGlobalPose();
 
-				node->pos().X = world_pose.p.x;
-				node->pos().Y = world_pose.p.y;
-				node->pos().Z = world_pose.p.z;
+				node->pos().X = world_pose.transform(world_pose.p).x;
+				node->pos().Y = world_pose.transform(world_pose.p).y;
+				node->pos().Z = world_pose.transform(world_pose.p).z;
 
 				xpxSendToClients(node);
+
+				actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !node->anchor());
 			}
 		}
 	}
@@ -315,17 +318,19 @@ namespace XPX
 
 				PxCapsuleGeometry geom(PxVec3(node->scale().X, node->scale().Y, node->scale().Z).normalize(), node->scale().Y);
 
-				auto shape = gPhysics->createShape(geom, *mat);
+				auto shape = gPhysics->createShape(geom, *mat, true);
 
 				XPLICIT_ASSERT(shape);
 				XPLICIT_ASSERT(dynamic_rigid->attachShape(*shape));
 
-				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !node->anchor());
 
 				dynamic_rigid->setName(node->name());
 
 				mWorldNodes.push_back(node);
 				gScene->addActor(*dynamic_rigid);
+
+				shape->release();
 
 				return true;
 			}

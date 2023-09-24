@@ -47,10 +47,10 @@ namespace XPX
 
 		for (size_t i = 0; i < XPX_BUNDLE_MAX; ++i)
 		{
-			auto it = std::find_if(params.WorldNodes.cbegin(), params.WorldNodes.cend(), 
+			auto it = std::find_if(params.WorldNodes.cbegin(), params.WorldNodes.cend(),
 				[&](RoXML::RoXMLNodeDescription desc) -> bool {
-				return XPX_PARTS[i] == desc.ID;
-			});
+					return XPX_PARTS[i] == desc.ID;
+				});
 
 			if (it != params.WorldNodes.cend())
 			{
@@ -58,7 +58,7 @@ namespace XPX
 
 				if (mesh)
 				{
-					mesh->setName(fmt::format("{}{}{}", mXplicitId, "_", XPX_PARTS[i]).c_str());
+					mesh->setName(XPX_PARTS[i]);
 					mParts.push_back(mesh);
 				}
 			}

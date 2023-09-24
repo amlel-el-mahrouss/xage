@@ -177,9 +177,7 @@ namespace XPX::RoXML
 
 								// finally create an replicatable instance of the newly created node.
 								ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(
-									Vector<NetworkFloat>(scene_node->getPosition().X,
-										scene_node->getPosition().Y,
-										scene_node->getPosition().Z),
+									XPLICIT_ORIGIN,
 									Vector<NetworkFloat>(scene_node->getScale().X,
 										scene_node->getScale().Y,
 										scene_node->getScale().Z),
@@ -584,6 +582,8 @@ namespace XPX::RoXML
 
 				node = node->next_sibling();
 			}
+
+			params.Done = true;
 			});
 
 		if (!params.WaitFor)

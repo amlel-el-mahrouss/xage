@@ -42,12 +42,10 @@ namespace XPX
     /// </summary>
     LoadingComponent::LoadingComponent() noexcept
         :
-        mLoadingTexture(nullptr),
         mNetwork(nullptr),
         mTimeout(0)
     {
-        mLoadingTexture = CAD->getVideoDriver()->getTexture("UIBadgeVerified.png");
-        LocalCameraComponent* cam = ComponentSystem::get_singleton_ptr()->add<LocalCameraComponent>();
+         LocalCameraComponent* cam = ComponentSystem::get_singleton_ptr()->add<LocalCameraComponent>();
         LoadSkybox("noonclouds");
     }
 
@@ -128,13 +126,6 @@ namespace XPX
                 ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
 
                 StartLoad = false;
-            }
-            else
-            {
-                CAD->getVideoDriver()->draw2DImage(self->mLoadingTexture,
-                    recti(vector2d(10, 10), dimension2di(self->mLoadingTexture->getSize().Width,
-                        self->mLoadingTexture->getSize().Height)),
-                    recti(), nullptr, nullptr, true);
             }
         }
     }

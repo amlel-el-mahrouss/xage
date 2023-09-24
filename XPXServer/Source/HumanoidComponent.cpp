@@ -184,7 +184,7 @@ namespace XPX
 			player_lua_arr += ".Players.";
 			player_lua_arr += mPeer->xplicit_id.as_string();
 
-			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(Vector<NetworkFloat>(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y + this->get_jump_power(), XPLICIT_ORIGIN.Z),
+			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(Vector<NetworkFloat>(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z),
 				XPLICIT_CHARACTER_SCALE,
 				Color<NetworkFloat>(0, 0, 0),
 				nullptr, "world.Players", mPeer->xplicit_id.as_string().c_str());
@@ -194,8 +194,6 @@ namespace XPX
 			if (mClass)
 			{
 				mClass->assign("Anchor", "false");
-				mClass->anchor(false);
-
 				mClass->insert("UserName", "'Unconnected'");
 
 				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
@@ -220,6 +218,8 @@ namespace XPX
 
 				String fmt = std::format("world:Login({})", player_lua_arr);
 				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
+
+				ClassComponent::update(mClass);
 
 				auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
 

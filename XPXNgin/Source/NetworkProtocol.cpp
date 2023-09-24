@@ -49,7 +49,7 @@ namespace XPX
         this->public_hash = XPLICIT_INVALID_HASH;
     }
 
-    constexpr std::int32_t XPLICIT_MAX_TIMEOUT = 5;
+    constexpr std::int32_t XPLICIT_MAX_TIMEOUT = 30;
 
     void NetworkPeer::timeout() noexcept
     {

@@ -186,7 +186,7 @@ int main(int argc, char** argv)
 
 		XPX::RoXML::RoXMLDocumentParameters params;
 
-		params.Has3D = false;
+		params.Has3D = true;
 		params.NoLua = false;
 		params.WaitFor = true;
 		params.Path = path;
@@ -209,6 +209,8 @@ int main(int argc, char** argv)
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
+
+			XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:RenderOneFrame()");
 
 			XPX::NetworkServerContext::send_all(network);
 		};

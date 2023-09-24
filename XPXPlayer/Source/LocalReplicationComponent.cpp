@@ -138,7 +138,7 @@ namespace XPX
 					auto bundle = ComponentSystem::get_singleton_ptr()->add<BundleMesh>("Character.rrs", xplicit_id.c_str());
 					XPLICIT_ASSERT(bundle);
 
-					auto node_bundle = bundle->look_for("Head");
+					auto node_bundle = bundle->look_for("Torso");
 
 					if (!node_bundle)
 						return;
@@ -156,6 +156,19 @@ namespace XPX
 					if (packet.cmd[XPLICIT_NETWORK_CMD_DESTROY] == NETWORK_CMD_DESTROY)
 					{
 						ComponentSystem::get_singleton_ptr()->remove(*it);
+
+						return;
+					}
+
+					auto node_bundle = (*it)->look_for("Torso");
+
+					if (node_bundle)
+					{
+						auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
+							packet.pos[0][XPLICIT_NETWORK_Y],
+							packet.pos[0][XPLICIT_NETWORK_Z]);
+						
+						node_bundle->setPosition(vec);
 					}
 				}
 			}
@@ -173,25 +186,23 @@ namespace XPX
 					{
 						// get the part.
 						auto part = node->node();
-
-						if (auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
-							packet.pos[0][XPLICIT_NETWORK_Y], 
+						auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
+							packet.pos[0][XPLICIT_NETWORK_Y],
 							packet.pos[0][XPLICIT_NETWORK_Z]);
-							vec != part->getPosition())
-							part->setPosition(vec);
 
-						if (auto vec = vector3df(packet.pos[1][XPLICIT_NETWORK_X], 
-							packet.pos[1][XPLICIT_NETWORK_Y], 
+						part->setPosition(vec);
+
+						vec = vector3df(packet.pos[1][XPLICIT_NETWORK_X],
+							packet.pos[1][XPLICIT_NETWORK_Y],
 							packet.pos[1][XPLICIT_NETWORK_Z]);
-							vec != part->getRotation())
-							part->setRotation(vec);
 
-						
-						if (auto vec = vector3df(packet.pos[2][XPLICIT_NETWORK_X],
+						part->setRotation(vec);
+
+						vec = vector3df(packet.pos[2][XPLICIT_NETWORK_X],
 							packet.pos[2][XPLICIT_NETWORK_Y],
 							packet.pos[2][XPLICIT_NETWORK_Z]);
-							vec != part->getScale())
-							part->setScale(vec);
+
+						part->setScale(vec);
 					}
 				}
 				else

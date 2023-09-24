@@ -32,7 +32,9 @@ namespace XPX
 			XPLICIT_ORIGIN.Y,
 			XPLICIT_ORIGIN.Z));
 
-		mCamera->setTarget(vector3df(0, 5, 0));
+		mCamera->setTarget(vector3df(0,
+			5,
+			0));
 
 		XPLICIT_ASSERT(mCamera);
 
@@ -41,7 +43,7 @@ namespace XPX
 		CAD->getSceneManager()->addLightSceneNode(mCamera, vector3df(XPLICIT_ORIGIN.X,
 			XPLICIT_ORIGIN.Y, 
 			XPLICIT_ORIGIN.Z),
-		SColorf(1.0f, 0.1f, 0.1f, 1.0f), 1000);
+		SColorf(1.0f, 1.0f, 0.1f, 1.0f), 1000.f);
 
 		mCamera->setName("Camera");
 
