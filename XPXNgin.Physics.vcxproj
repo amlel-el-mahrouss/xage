@@ -99,12 +99,12 @@
     <ClInclude Include="XPXNgin.Physics\Source\NMath.h" />
     <ClInclude Include="XPXNgin.Physics\Source\NpCharacterController.h" />
     <ClInclude Include="XPXNgin.Physics\Source\NplicitNgine.h" />
-    <ClInclude Include="XPXNgin.Physics\Source\NpMovementServerEvent.h" />
+    <ClInclude Include="XPXNgin.Physics\Source\NpPhysicsEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XPXNgin.Physics\Source\NMath.cpp" />
     <ClCompile Include="XPXNgin.Physics\Source\NplicitNgine.cpp" />
-    <ClCompile Include="XPXNgin.Physics\Source\NpMovementServerEvent.cpp" />
+    <ClCompile Include="XPXNgin.Physics\Source\NpPhysicsEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

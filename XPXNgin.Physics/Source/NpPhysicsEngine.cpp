@@ -9,7 +9,7 @@
  * =====================================================================
  */
 
-#include "NpMovementServerEvent.h"
+#include "NpPhysicsEngine.h"
 
 #include <NetworkServerComponent.h>
 #include <PxPhysicsAPI.h>
@@ -172,7 +172,7 @@ namespace XPX
 
 	static bool gPhysicsEnabled = false;
 
-	NpMovementServerEvent::NpMovementServerEvent() noexcept : mWorldNodes()
+	NpPhysicsEvent::NpPhysicsEvent() noexcept : mWorldNodes()
 	{
 		XPLICIT_ASSERT(!gPhysicsEnabled);
 
@@ -240,7 +240,7 @@ namespace XPX
 
 	}
 
-	NpMovementServerEvent::~NpMovementServerEvent() noexcept
+	NpPhysicsEvent::~NpPhysicsEvent() noexcept
 	{
 		if (gPhysics)
 			gPhysics->release();
@@ -252,9 +252,9 @@ namespace XPX
 			gScene->release();
 	}
 
-	const char* NpMovementServerEvent::name() noexcept { return "NpMovementServerEvent"; }
+	const char* NpPhysicsEvent::name() noexcept { return "NpPhysicsEvent"; }
 
-	void NpMovementServerEvent::operator()()
+	void NpPhysicsEvent::operator()()
 	{
 		using namespace physx;
 
@@ -305,7 +305,7 @@ namespace XPX
 		}
 	}
 
-	bool NpMovementServerEvent::insert_node(NpSceneNode node, int node_kind)
+	bool NpPhysicsEvent::insert_node(NpSceneNode node, int node_kind)
 	{
 		(void)node_kind;
 
@@ -319,7 +319,6 @@ namespace XPX
 			if (dynamic_rigid)
 			{
 				PxReal friction = node->scale().X * node->scale().Y * node->scale().Z;
-
 				auto mat = gPhysics->createMaterial(friction, friction, 1);
 				
 				PxBoxGeometry geom(node->scale().X, node->scale().Y, node->scale().Z);
@@ -348,7 +347,7 @@ namespace XPX
 		return false;
 	}
 
-	bool NpMovementServerEvent::remove_node(NpSceneNode node)
+	bool NpPhysicsEvent::remove_node(NpSceneNode node)
 	{
 		if (node)
 		{
@@ -379,6 +378,32 @@ namespace XPX
 			}
 		}
 
+		return false;
+	}
+
+	bool NplicitAddGround(NpSceneNode node)
+	{
+		XPLICIT_ASSERT(node);
+
+		using namespace physx;
+		PxReal friction = node->scale().X * node->scale().Y * node->scale().Z;
+
+		auto mat = gPhysics->createMaterial(friction, friction, 1);
+
+		auto plane = PxCreatePlane(*gPhysics, PxPlane(node->scale().X, node->scale().Y, node->scale().Z, 1), *mat);
+
+		mat->release();
+
+		if (plane)
+		{
+			gScene->addActor(*plane);
+			plane->release();
+
+			XPLICIT_INFO("NplicitAddGround: Create plane with success!!!");
+			return true;
+		}
+
+		XPLICIT_CRITICAL("NplicitAddGround: Failed to create plane!!!");
 		return false;
 	}
 }

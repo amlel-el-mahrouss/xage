@@ -30,7 +30,7 @@ namespace XPX
 
     typedef ClassComponent* NpSceneNode;
 
-    class NPLICIT_API NpMovementServerEvent : public Event
+    class NPLICIT_API NpPhysicsEvent : public Event
     {
     public:
         enum
@@ -40,12 +40,12 @@ namespace XPX
         };
 
     public:
-        NpMovementServerEvent() noexcept;
-        ~NpMovementServerEvent() noexcept override;
+        NpPhysicsEvent() noexcept;
+        ~NpPhysicsEvent() noexcept override;
 
     public:
-        NpMovementServerEvent& operator=(const NpMovementServerEvent&) = default;
-        NpMovementServerEvent(const NpMovementServerEvent&) = default;
+        NpPhysicsEvent& operator=(const NpPhysicsEvent&) = default;
+        NpPhysicsEvent(const NpPhysicsEvent&) = default;
 
     public:
         const char* name() noexcept override;
@@ -59,5 +59,7 @@ namespace XPX
         std::vector<NpSceneNode> mWorldNodes;
 
     };
+
+    NPLICIT_API bool NplicitAddGround(NpSceneNode node);
 }
 

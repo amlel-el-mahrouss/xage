@@ -13,7 +13,7 @@
 
 #include "HumanoidComponent.h"
 
-#include <NpMovementServerEvent.h>
+#include <NpPhysicsEngine.h>
 
 #define XPX_DEFAULT_MAXHEALTH (100)
 #define XPX_DEFAULT_WALKSPEED (5)
@@ -221,7 +221,7 @@ namespace XPX
 
 				ClassComponent::update(mClass);
 
-				auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
+				auto mov = EventSystem::get_singleton_ptr()->get<NpPhysicsEvent>("NpPhysicsEvent");
 
 				if (mov)
 					mov->insert_node(mClass);

@@ -16,7 +16,7 @@
 #include <RoXML.h>
 #include <codecvt>
 #include <XplicitID.h>
-#include <NpMovementServerEvent.h>
+#include <NpPhysicsEngine.h>
 
 #include "LoginEvent.h"
 #include "ServerConfig.h"
@@ -137,7 +137,7 @@ int main(int argc, char** argv)
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
 
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementServerEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpPhysicsEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidHealthMonitorEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();

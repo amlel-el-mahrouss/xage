@@ -9,7 +9,7 @@
 
 #include "RoXML.h"
 
-#include <NpMovementServerEvent.h>
+#include <NpPhysicsEngine.h>
 
 namespace XPX::RoXML
 {
@@ -457,15 +457,15 @@ namespace XPX::RoXML
 					}
 				}
 
-				if (node_name == "NplicitAware")
+				if (node_name == "NplicitGround")
 				{
 					if (node->first_attribute() &&
 						strcmp(node->first_attribute()->name(), "Referent") == 0)
 					{
-						auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
+						auto mov = EventSystem::get_singleton_ptr()->get<NpPhysicsEvent>("NpPhysicsEvent");
 
 						if (mov)
-							mov->insert_node(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()), NpMovementServerEvent::NP_STATIC);
+							XPX::NplicitAddGround(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()));
 					}
 				}
 
