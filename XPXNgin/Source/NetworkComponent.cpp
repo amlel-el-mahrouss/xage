@@ -190,8 +190,7 @@ namespace XPX
 		if (pckt.magic[0] == XPLICIT_NETWORK_MAG_0 &&
 			pckt.magic[1] == XPLICIT_NETWORK_MAG_1 &&
 			pckt.magic[2] == XPLICIT_NETWORK_MAG_2 &&
-			pckt.version == XPLICIT_NETWORK_VERSION &&
-			pckt.channel > 0)
+			pckt.version == XPLICIT_NETWORK_VERSION)
 		{
 			//! packet valid, validate.
 
