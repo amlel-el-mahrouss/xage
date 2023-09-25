@@ -283,9 +283,7 @@ namespace XPX
 				}
 
 				actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
-
-				if (!node->anchor())
-					actor->addForce(PxVec3(node->pos().X, node->pos().Y, node->pos().Z), PxForceMode::eIMPULSE);
+				actor->addForce(PxVec3(node->pos().X, node->pos().Y, node->pos().Z), PxForceMode::eIMPULSE);
 			}
 
 			gScene->simulate(NP_DELTATIME);
@@ -406,7 +404,7 @@ namespace XPX
 
 		auto mat = gPhysics->createMaterial(friction, friction, 1);
 
-		auto plane = PxCreatePlane(*gPhysics, PxPlane(node->scale().X, node->scale().Y, node->scale().Z, 0.6), *mat);
+		auto plane = PxCreatePlane(*gPhysics, PxPlane(PxVec3(node->scale().X, node->scale().Y, node->scale().Z).getNormalized(), 0.6), *mat);
 
 		mat->release();
 

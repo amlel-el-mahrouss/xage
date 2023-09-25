@@ -457,7 +457,7 @@ namespace XPX::RoXML
 					}
 				}
 
-				if (node_name == "NplicitGround")
+				if (node_name == "NplicitDynamic")
 				{
 					if (node->first_attribute() &&
 						strcmp(node->first_attribute()->name(), "Referent") == 0)
@@ -465,7 +465,16 @@ namespace XPX::RoXML
 						auto mov = EventSystem::get_singleton_ptr()->get<NpPhysicsEvent>("NpPhysicsEvent");
 
 						if (mov)
-							XPX::NplicitAddGround(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()));
+							mov->insert_node(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()), NpPhysicsEvent::NP_DYNAMIC);
+					}
+				}
+
+				if (node_name == "NplicitGround")
+				{
+					if (node->first_attribute() &&
+						strcmp(node->first_attribute()->name(), "Referent") == 0)
+					{
+						XPX::NplicitAddGround(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()));
 					}
 				}
 
