@@ -118,8 +118,14 @@ namespace XPX
 		};
 	}
 
+	static NetworkServerComponent* gNetwork = nullptr;
+
 	static void xpxSendToClients(ClassComponent* node)
 	{
+		if (!gNetwork ||
+			gNetwork->size() < 1)
+			return;
+
 		NetworkPacket repl_packet{};
 
 		repl_packet.channel = XPLICIT_CHANNEL_3D;
@@ -155,7 +161,7 @@ namespace XPX
 
 		memcpy(repl_packet.additional_data, fmt.c_str(), fmt.size());
 
-		NetworkServerContext::send_all(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent"),
+		NetworkServerContext::send_all(gNetwork,
 			&repl_packet);
 	}
 
@@ -175,6 +181,8 @@ namespace XPX
 		XPLICIT_ASSERT(!gPhysicsEnabled);
 
 		using namespace physx;
+
+		gNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
 
 		gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocatorCallback,
 			gDefaultErrorCallback);
@@ -252,7 +260,8 @@ namespace XPX
 	{
 		using namespace physx;
 
-		if (gScene)
+		if (gScene &&
+			gNetwork->size() > 0)
 		{
 			for (auto* node : mWorldNodes)
 			{
@@ -262,7 +271,10 @@ namespace XPX
 
 				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
 
-				actor->addForce(PxVec3(node->pos().X, node->pos().Y, node->pos().Z), PxForceMode::eIMPULSE);
+				actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
+
+				if (!node->anchor())
+					actor->addForce(PxVec3(node->pos().X, node->pos().Y, node->pos().Z), PxForceMode::eIMPULSE);
 			}
 
 			gScene->simulate(NP_DELTATIME);
@@ -284,6 +296,12 @@ namespace XPX
 				node->pos().X = world_pose.transform(world_pose.p).x;
 				node->pos().Y = world_pose.transform(world_pose.p).y;
 				node->pos().Z = world_pose.transform(world_pose.p).z;
+
+#ifdef XPLICIT_DEBUG
+				std::cout << node->pos().X << std::endl;
+				std::cout << node->pos().Y << std::endl;
+				std::cout << node->pos().Z << std::endl;
+#endif
 
 				xpxSendToClients(node);
 			}
