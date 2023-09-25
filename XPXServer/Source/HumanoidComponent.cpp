@@ -43,7 +43,7 @@ namespace XPX
 			delete mClass;
 	}
 
-	GearComponent* HumanoidComponent::get_active_gear() noexcept { return mActiveGear; }
+	WeaponComponent* HumanoidComponent::get_active_gear() noexcept { return mActiveGear; }
 
 	PHYSICS_TYPE HumanoidComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
@@ -260,7 +260,7 @@ namespace XPX
 		return mClass;
 	}
 
-	std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY>& HumanoidComponent::get_gears() noexcept
+	std::array<WeaponComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY>& HumanoidComponent::get_gears() noexcept
 	{
 		return mGears;
 	}

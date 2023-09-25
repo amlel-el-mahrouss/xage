@@ -29,7 +29,7 @@
 #include <XHTTPManager.h>
 #include <Enums.h>
 #include <CLua.hpp>
-#include <RoXML.h>
+#include <RXML.h>
 #include <codecvt>
 
 namespace XPX
@@ -45,7 +45,7 @@ namespace XPX
         mNetwork(nullptr),
         mTimeout(0)
     {
-         LocalCameraComponent* cam = ComponentSystem::get_singleton_ptr()->add<LocalCameraComponent>();
+        LocalCameraComponent* cam = ComponentSystem::get_singleton_ptr()->add<LocalCameraComponent>();
         LoadSkybox("noonclouds");
     }
 

@@ -11,14 +11,14 @@
 #include "LocalNetworkMonitorEvent.h"
 #include "LuaScriptComponent.h"
 #include "PartComponent.h"
-#include "GearComponent.h"
+#include "WeaponComponent.h"
 #include "BundleMesh.h"
 #include "MenuUI.h"
 #include "App.h"
 
 #include <CLua.hpp>
 #include <Enums.h>
-#include <RoXML.h>
+#include <RXML.h>
 #include <Util.h>
 #include <Uri.h>
 
@@ -97,7 +97,7 @@ namespace XPX
 
 				if (DownloadURL(url, tmp))
 				{
-					XPX::RoXML::RoXMLDocumentParser XPX_PARSER;
+					XPX::RXML::RXMLDocument XPX_PARSER;
 
 					XPLICIT_GET_DATA_DIR(full_path);
 
@@ -107,7 +107,7 @@ namespace XPX
 					full_download_path += "Contents/";
 					full_download_path += tmp;
 
-					RoXML::RoXMLDocumentParameters params;
+					RXML::RXMLDocumentParams params;
 
 					params.Inline = false;
 					params.Path = tmp;
@@ -228,7 +228,7 @@ namespace XPX
 				}
 			}
 		}
-		else if (packet.channel == XPLICIT_CHANNEL_GEAR)
+		else if (packet.channel == XPLICIT_CHANNEL_WEAPON)
 		{
 			String parent = String(packet.additional_data);
 			String name = "";
@@ -240,7 +240,7 @@ namespace XPX
 
 			parent = parent.substr(parent.find(".") + 1);
 
-			auto gears = ComponentSystem::get_singleton_ptr()->all_of<GearComponent>();
+			auto gears = ComponentSystem::get_singleton_ptr()->all_of<WeaponComponent>();
 
 			for (auto* gear : gears)
 			{
@@ -264,7 +264,7 @@ namespace XPX
 				}
 			}
 
-			GearComponent* gear = ComponentSystem::get_singleton_ptr()->add<GearComponent>(name.c_str(), 
+			WeaponComponent* gear = ComponentSystem::get_singleton_ptr()->add<WeaponComponent>(name.c_str(), 
 																						   packet.replicas[XPLICIT_REPLICA_4], parent.c_str());
 
 			XPLICIT_ASSERT(gear);

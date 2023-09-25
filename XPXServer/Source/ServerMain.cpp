@@ -13,7 +13,7 @@
 
 #include <Http.h>
 #include <Root.h>
-#include <RoXML.h>
+#include <RXML.h>
 #include <codecvt>
 #include <XplicitID.h>
 #include <NpPhysicsEngine.h>
@@ -184,14 +184,14 @@ int main(int argc, char** argv)
 			path += _url;
 		}
 
-		XPX::RoXML::RoXMLDocumentParameters params;
+		XPX::RXML::RXMLDocumentParams params;
 
 		params.Has3D = true;
 		params.NoLua = false;
 		params.WaitFor = true;
 		params.Path = path;
 
-		XPX::RoXML::RoXMLDocumentParser parser;
+		XPX::RXML::RXMLDocument parser;
 		parser.parse(params);
 
 		// We want to parse any data values needed by the game.

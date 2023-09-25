@@ -7,7 +7,7 @@
  * =====================================================================
  */
 
-#include "GearComponent.h"
+#include "WeaponComponent.h"
 
 namespace XPX
 {
@@ -17,7 +17,7 @@ namespace XPX
 		return func_proto;
 	}
 
-	GearComponent::GearComponent(
+	WeaponComponent::WeaponComponent(
 		const char* name,
 		const char* mesh, 
 		const char* parent) noexcept
@@ -38,23 +38,23 @@ namespace XPX
 			mMeshPtr = std::make_unique<MeshComponent>(mesh, mName.c_str(), mParent.c_str());
 	}
 
-	const char* GearComponent::name() noexcept { return "GearComponent"; }
+	const char* WeaponComponent::name() noexcept { return "WeaponComponent"; }
 
-	COMPONENT_TYPE GearComponent::type() noexcept { return COMPONENT_LOGIC; }
+	COMPONENT_TYPE WeaponComponent::type() noexcept { return COMPONENT_LOGIC; }
 
-	PHYSICS_TYPE GearComponent::physics() noexcept { return PHYSICS_SIMPLE; }
+	PHYSICS_TYPE WeaponComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
-	GearComponent::~GearComponent() = default;
+	WeaponComponent::~WeaponComponent() = default;
 
-	MeshComponent* GearComponent::get_mesh() const noexcept { return mMeshPtr.get(); }
+	MeshComponent* WeaponComponent::get_mesh() const noexcept { return mMeshPtr.get(); }
 
-	bool GearComponent::should_update() noexcept { return true; }
+	bool WeaponComponent::should_update() noexcept { return true; }
 
-	void GearComponent::update(ClassPtr class_ptr)
+	void WeaponComponent::update(ClassPtr class_ptr)
 	{
 		ClassComponent::update(class_ptr);
 
-		GearComponent* self = (GearComponent*)class_ptr;
+		WeaponComponent* self = (WeaponComponent*)class_ptr;
 
 		String path = self->index_as_string("Path");
 

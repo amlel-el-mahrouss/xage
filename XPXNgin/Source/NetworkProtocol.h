@@ -45,7 +45,7 @@
 #define XPLICIT_CHANNEL_DATA        (0)
 #define XPLICIT_CHANNEL_CHAT        (1)
 #define XPLICIT_CHANNEL_3D     (2)
-#define XPLICIT_CHANNEL_GEAR        (3)
+#define XPLICIT_CHANNEL_WEAPON        (3)
 
 ///!
 ///!

@@ -10,26 +10,26 @@
 #pragma once
 
 #include <Util.h>
-#include <Component.h>
 #include <Enums.h>
+#include <Component.h>
 #include <ClassComponent.h>
 
 namespace XPX
 {
 	class HumanoidComponent;
 
-	class GearComponent final : public ClassComponent
+	class WeaponComponent final : public ClassComponent
 	{
 	public:
-		GearComponent(const char* name, 
-					  const char* parent) noexcept;
+		WeaponComponent(const char* name, 
+					    const char* parent) noexcept;
 
 	public:
-		GearComponent() = delete;
-		~GearComponent() override;
+		WeaponComponent() = delete;
+		~WeaponComponent() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(GearComponent);
+		XPLICIT_COPY_DEFAULT(WeaponComponent);
 
 	public:
 		const char* name() noexcept override;

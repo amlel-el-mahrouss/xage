@@ -92,7 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="XPXServer\Source\GearComponent.h" />
+    <ClInclude Include="XPXServer\Source\WeaponComponent.h" />
     <ClInclude Include="XPXServer\Source\HumanoidHealthMonitorEvent.h" />
     <ClInclude Include="XPXServer\Source\HumanoidComponent.h" />
     <ClInclude Include="XPXServer\Source\HumanoidReplicationComponent.h" />
@@ -104,7 +104,7 @@
     <ClInclude Include="XPXServer\Source\TimeoutEvent.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="XPXServer\Source\GearComponent.cpp" />
+    <ClCompile Include="XPXServer\Source\WeaponComponent.cpp" />
     <ClCompile Include="XPXServer\Source\HumanoidHealthMonitorEvent.cpp" />
     <ClCompile Include="XPXServer\Source\HumanoidComponent.cpp" />
     <ClCompile Include="XPXServer\Source\HumanoidReplicationComponent.cpp" />

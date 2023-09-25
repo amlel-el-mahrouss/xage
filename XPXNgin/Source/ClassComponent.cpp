@@ -85,10 +85,10 @@ namespace XPX
 
 		this->insert("Color", "{ A = 0, R = 0, G = 0, B = 0}");
 
+		this->insert("Color.A", std::to_string(color.A));
 		this->insert("Color.R", std::to_string(color.R));
 		this->insert("Color.G", std::to_string(color.G));
 		this->insert("Color.B", std::to_string(color.B));
-		this->insert("Color.A", std::to_string(color.A));
 
 		if (script)
 		{

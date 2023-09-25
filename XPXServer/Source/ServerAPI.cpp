@@ -10,13 +10,13 @@
 #include "NetworkUtils.h"
 
 #include "HumanoidComponent.h"
-#include "GearComponent.h"
+#include "WeaponComponent.h"
 
 #include <CLua.hpp>
-#include <RoXML.h>
+#include <RXML.h>
 
-// RoXML parser
-XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
+// RXML parser
+XPX::RXML::RXMLDocument XPLICIT_PARSER;
 
 static int lua_LoadRoXML(lua_State* L)
 {
@@ -25,7 +25,7 @@ static int lua_LoadRoXML(lua_State* L)
 
 	if (!_client)
 	{
-		XPX::RoXML::RoXMLDocumentParameters params;
+		XPX::RXML::RXMLDocumentParams params;
 		 
 		params.Has3D = false;
 		params.LuaOnly = false;
@@ -83,7 +83,7 @@ static int lua_CreateGear(lua_State* L)
 	path_player += ".Players.";
 	path_player += xplicit_id;
 
-	XPX::GearComponent* gear = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::GearComponent>(name, path_player.c_str());
+	XPX::WeaponComponent* gear = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::WeaponComponent>(name, path_player.c_str());
 
 	if (gear)
 	{
@@ -103,7 +103,7 @@ static int lua_CreateGear(lua_State* L)
 						XPX::NetworkPacket packet = player->get_peer()[y].packet;
 
 						packet.cmd[XPLICIT_NETWORK_CMD_CREATE] = XPX::NETWORK_CMD_CREATE;
-						packet.channel = XPLICIT_CHANNEL_GEAR;
+						packet.channel = XPLICIT_CHANNEL_WEAPON;
 
 						memcpy(packet.replicas[XPLICIT_REPLICA_4], mesh, strlen(mesh));
 
@@ -163,7 +163,7 @@ public:
 		{
 			return lua_CreateGear(L);
 		}
-		else if (component_name == "RoXML")
+		else if (component_name == "RXML")
 		{
 			return lua_LoadRoXML(L);
 		}
@@ -185,7 +185,7 @@ static int lua_DestroyGear(lua_State* L)
 		XPX::String parent_str = parent;
 
 		XPX::Thread job([](XPX::String name, XPX::String parent) {
-			auto part = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::GearComponent>(name.c_str());
+			auto part = XPX::ComponentSystem::get_singleton_ptr()->get<XPX::WeaponComponent>(name.c_str());
 
 			if (part)
 			{

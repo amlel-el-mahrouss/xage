@@ -7,13 +7,12 @@
  * =====================================================================
  */
 
-#include "RoXML.h"
-
+#include "RXML.h"
 #include <NpPhysicsEngine.h>
 
-namespace XPX::RoXML
+namespace XPX::RXML
 {
-	void RoXMLDocumentParser::parse(RoXMLDocumentParameters& params) noexcept
+	void RXMLDocument::parse(RXMLDocumentParams& params) noexcept
 	{
 		if (!params.Inline)
 		{
@@ -606,9 +605,9 @@ namespace XPX::RoXML
 	}
 }
 
-void DVFromRoXML(XPX::RoXML::RoXMLDocumentParameters& params) noexcept
+void DVFromRoXML(XPX::RXML::RXMLDocumentParams& params) noexcept
 {
-	XPX::Thread data_values_job([](XPX::RoXML::RoXMLDocumentParameters params) {
+	XPX::Thread data_values_job([](XPX::RXML::RXMLDocumentParams params) {
 		XPX::String fmt;
 
 		if (params.DataValues.size() > 0)

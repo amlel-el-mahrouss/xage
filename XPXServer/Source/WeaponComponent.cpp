@@ -9,7 +9,7 @@
 
 // Include the component class.
 
-#include "GearComponent.h"
+#include "WeaponComponent.h"
 #include "HumanoidComponent.h"
 
 //! This file handles Gears (Sword, Pistol, Build Tools...)
@@ -24,7 +24,7 @@ namespace XPX
 		return func_proto;
 	}
 
-	GearComponent::GearComponent(const char* name, const char* parent) noexcept
+	WeaponComponent::WeaponComponent(const char* name, const char* parent) noexcept
 		:
 		ClassComponent(Vector<NetworkFloat>(0, 0, 0),
 			Vector<NetworkFloat>(0, 0, 0),
@@ -42,23 +42,23 @@ namespace XPX
 		this->assign("Destroy", destroy_gear_class_snippet(name).c_str());
 	}
 
-	const char* GearComponent::name() noexcept { return mName.c_str(); }
+	const char* WeaponComponent::name() noexcept { return mName.c_str(); }
 
-	COMPONENT_TYPE GearComponent::type() noexcept { return COMPONENT_LOGIC; }
+	COMPONENT_TYPE WeaponComponent::type() noexcept { return COMPONENT_LOGIC; }
 
-	PHYSICS_TYPE GearComponent::physics() noexcept { return PHYSICS_SIMPLE; }
+	PHYSICS_TYPE WeaponComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
-	GearComponent::~GearComponent() = default;
+	WeaponComponent::~WeaponComponent() = default;
 
-	bool GearComponent::should_update() noexcept { return true; }
+	bool WeaponComponent::should_update() noexcept { return true; }
 
-	void GearComponent::update(ClassPtr this_ptr) 
+	void WeaponComponent::update(ClassPtr this_ptr) 
 	{ 
 		if (!this_ptr)
 			return;
 
 		ClassComponent::update(this_ptr);
-		GearComponent* self = (GearComponent*)this_ptr;
+		WeaponComponent* self = (WeaponComponent*)this_ptr;
 
 		if (self->index_as_bool("Drop") &&
 			self->get_owner())
@@ -85,6 +85,6 @@ namespace XPX
 		}
 	}
 
-	HumanoidComponent* GearComponent::get_owner() noexcept { return mOwner; }
-	void GearComponent::set_owner(HumanoidComponent* owner) noexcept { mOwner = owner; }
+	HumanoidComponent* WeaponComponent::get_owner() noexcept { return mOwner; }
+	void WeaponComponent::set_owner(HumanoidComponent* owner) noexcept { mOwner = owner; }
 }

@@ -13,7 +13,7 @@
 
 #include "BundleMesh.h"
 
-#include <RoXML.h>
+#include <RXML.h>
 #include <Root.h>
 
 namespace XPX
@@ -23,7 +23,7 @@ namespace XPX
 	{
 		static XPLICIT_GET_DATA_DIR(XPLICIT_DIR);
 
-		RoXML::RoXMLDocumentParameters params;
+		RXML::RXMLDocumentParams params;
 
 		params.Has3D = true; //! We're delaing with 3D Graphics...
 		params.NoLua = true; //! No Lua, we don't want RCE...
@@ -38,17 +38,17 @@ namespace XPX
 		params.Path += character_path;
 		params.WaitFor = true;
 
-		RoXML::RoXMLDocumentParser parser;
+		RXML::RXMLDocument parser;
 		parser.parse(params);
 
-		//! RoXML provides uses cusotmization of these characters.
+		//! RXML provides uses cusotmization of these characters.
 		//! So that the user can express himself.
 		static const const char* XPX_PARTS[XPX_BUNDLE_MAX] = { "Head", "LeftLeg", "RightLeg", "Torso", "LeftArm", "RightArm" };
 
 		for (size_t i = 0; i < XPX_BUNDLE_MAX; ++i)
 		{
 			auto it = std::find_if(params.WorldNodes.cbegin(), params.WorldNodes.cend(),
-				[&](RoXML::RoXMLNodeDescription desc) -> bool {
+				[&](RXML::RoXMLNodeDescription desc) -> bool {
 					return XPX_PARTS[i] == desc.ID;
 				});
 

@@ -26,7 +26,7 @@ namespace XPX
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = CAD->getSceneManager()->addCameraSceneNodeMaya(nullptr);
+		mCamera = CAD->getSceneManager()->addCameraSceneNodeFPS();
 
 		mCamera->setPosition(vector3df(XPLICIT_ORIGIN.X,
 			XPLICIT_ORIGIN.Y,

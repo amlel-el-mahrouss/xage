@@ -9,7 +9,7 @@
 
 #pragma once
 
-/* RoXML format */
+/* RXML format */
 /* This format describes scene-nodes and stuff like that. */
 
 // XML
@@ -31,7 +31,7 @@
 #	define XPLICIT_XASSET_ENDPOINT "play-xplicit.com"
 #endif // ifndef XPLICIT_XASSET_ENDPOINT
 
-namespace XPX::RoXML
+namespace XPX::RXML
 {
 	using namespace rapidxml;
 
@@ -58,7 +58,7 @@ namespace XPX::RoXML
 
 	};
 
-	struct RoXMLDocumentParameters
+	struct RXMLDocumentParams
 	{
 		String Path{ "" };
 
@@ -74,21 +74,21 @@ namespace XPX::RoXML
 
 	};
 
-	class XPLICIT_API RoXMLDocumentParser final
+	class XPLICIT_API RXMLDocument final
 	{
 	public:
-		RoXMLDocumentParser() = default;
-		~RoXMLDocumentParser() = default;
+		RXMLDocument() = default;
+		~RXMLDocument() = default;
 
 	public:
-		XPLICIT_COPY_DEFAULT(RoXMLDocumentParser);
+		XPLICIT_COPY_DEFAULT(RXMLDocument);
 
 	public:
-		void parse(RoXMLDocumentParameters& params) noexcept;
+		void parse(RXMLDocumentParams& params) noexcept;
 
 	};
 }
 
 // Utilities related to data values.
 
-XPLICIT_API void DVFromRoXML(XPX::RoXML::RoXMLDocumentParameters& params) noexcept;
+XPLICIT_API void DVFromRoXML(XPX::RXML::RXMLDocumentParams& params) noexcept;

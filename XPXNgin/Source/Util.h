@@ -82,7 +82,7 @@ namespace XPX
 
 	/// <summary>
 	/// Xplicit Attribute Class.
-	/// Reserved for RoXML and scripting API.
+	/// Reserved for RXML and scripting API.
 	/// </summary>
 	class XPXAttribute
 	{

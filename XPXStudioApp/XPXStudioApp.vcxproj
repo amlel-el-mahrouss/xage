@@ -185,6 +185,11 @@
       <FileType>CppForm</FileType>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RRRecentProjects.resx">
+      <DependentUpon>RRRecentProjects.h</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\NVIDIA.PhysX.4.1.229882250\build\native\NVIDIA.PhysX.targets" Condition="Exists('..\packages\NVIDIA.PhysX.4.1.229882250\build\native\NVIDIA.PhysX.targets')" />

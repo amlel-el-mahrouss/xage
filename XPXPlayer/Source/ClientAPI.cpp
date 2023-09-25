@@ -10,7 +10,7 @@
 #include "LocalNetworkMonitorEvent.h"
 
 #include "SoundComponent.h"
-#include "GearComponent.h"
+#include "WeaponComponent.h"
 #include "PartComponent.h"
 #include "MeshComponent.h"
 #include "ClientFX.h"
@@ -21,12 +21,12 @@
 #include <CLua.hpp>
 #include <LuaAPI.h>
 #include <codecvt>
-#include <RoXML.h>
+#include <RXML.h>
 #include <Util.h>
 #include <Uri.h>
 
-// RoXML parser
-static XPX::RoXML::RoXMLDocumentParser XPLICIT_PARSER;
+// RXML parser
+static XPX::RXML::RXMLDocument XPLICIT_PARSER;
 
 #ifndef XPLICIT_XASSET_IDENT
 #	define XPLICIT_XASSET_IDENT ("xasset")
@@ -213,10 +213,10 @@ public:
 				return 1;
 			}
 		}
-		else if (component_name == "RoXML")
+		else if (component_name == "RXML")
 		{
 			XPX::Thread job([&]() {
-				XPX::RoXML::RoXMLDocumentParameters params;
+				XPX::RXML::RXMLDocumentParams params;
 
 				params.Has3D = false;
 				params.NoLua = false;
@@ -315,7 +315,7 @@ static int lua_DestroyGear(lua_State* L)
 		XPX::String parent_str = parent;
 
 		XPX::Thread job([](XPX::String name, XPX::String parent) {
-			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::GearComponent>();
+			auto all_of_parts = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::WeaponComponent>();
 
 			for (auto& part : all_of_parts)
 			{

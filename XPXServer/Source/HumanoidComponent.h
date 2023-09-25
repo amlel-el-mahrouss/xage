@@ -10,7 +10,7 @@
 #pragma once
 
 #include "ServerConfig.h"
-#include "GearComponent.h"
+#include "WeaponComponent.h"
 
 #include <CLua.hpp>
 
@@ -70,15 +70,15 @@ namespace XPX
 		bool can_spawn() const noexcept;
 
 	public:
-		std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY>& get_gears() noexcept;
-		GearComponent* get_active_gear() noexcept;
+		std::array<WeaponComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY>& get_gears() noexcept;
+		WeaponComponent* get_active_gear() noexcept;
 
 	public:
 		ClassComponent* get_class() const;
 
 	private:
-		std::array<GearComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY> mGears;
-		GearComponent* mActiveGear;
+		std::array<WeaponComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY> mGears;
+		WeaponComponent* mActiveGear;
 		ClassComponent* mClass;
 		HUMANOID_STATE mState;
 		NetworkPeer* mPeer;

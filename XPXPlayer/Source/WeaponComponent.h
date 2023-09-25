@@ -17,14 +17,14 @@
 
 namespace XPX
 {
-	class GearComponent final : public ClassComponent
+	class WeaponComponent final : public ClassComponent
 	{
 	public:
-		GearComponent() = delete;
-		~GearComponent() override;
+		WeaponComponent() = delete;
+		~WeaponComponent() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(GearComponent);
+		XPLICIT_COPY_DEFAULT(WeaponComponent);
 
 	public:
 		const char* name() noexcept override;
@@ -36,7 +36,7 @@ namespace XPX
 		static void update(void* class_ptr);
 
 	public:
-		explicit GearComponent(const char* name, 
+		explicit WeaponComponent(const char* name, 
 			const char* mesh = nullptr,
 			const char* parent = XPLICIT_LUA_NAMESPACE) noexcept;
 

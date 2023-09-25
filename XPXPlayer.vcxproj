@@ -95,7 +95,7 @@
     <ClInclude Include="XPXPlayer\Source\App.h" />
     <ClInclude Include="XPXPlayer\Source\ChatBoxComponent.h" />
     <ClInclude Include="XPXPlayer\Source\ClientFX.h" />
-    <ClInclude Include="XPXPlayer\Source\GearComponent.h" />
+    <ClInclude Include="XPXPlayer\Source\WeaponComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LoadingComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalCameraComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalHumanoidComponent.h" />
@@ -114,7 +114,7 @@
     <ClCompile Include="XPXPlayer\Source\ChatBoxComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\ClientAPI.cpp" />
     <ClCompile Include="XPXPlayer\Source\ClientFX.cpp" />
-    <ClCompile Include="XPXPlayer\Source\GearComponent.cpp" />
+    <ClCompile Include="XPXPlayer\Source\WeaponComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LoadingComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalCameraComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalHumanoidComponent.cpp" />
@@ -127,7 +127,6 @@
     <ClCompile Include="XPXPlayer\Source\SoundComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\BundleMesh.cpp" />
     <ClCompile Include="XPXPlayer\Source\AppMain.cpp" />
-    <ClCompile Include="XPXPlayer\Source\AppMainMac.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

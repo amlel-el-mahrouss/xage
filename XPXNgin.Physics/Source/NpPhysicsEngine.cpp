@@ -170,6 +170,8 @@ namespace XPX
 	static physx::PxPhysics*	gPhysics			= nullptr;
 	static physx::PxCooking*	gCooking			= nullptr;
 
+	static NpPhysicsEvent*		gEventPtr			= nullptr;
+
 	static bool gPhysicsEnabled = false;
 
 	NpPhysicsEvent::NpPhysicsEvent() noexcept 
@@ -178,6 +180,7 @@ namespace XPX
 		XPLICIT_ASSERT(!gPhysicsEnabled);
 
 		gPhysicsEnabled = true;
+		gEventPtr = this;
 
 		using namespace physx;
 
@@ -397,6 +400,9 @@ namespace XPX
 	{
 		XPLICIT_ASSERT(node);
 
+		if (!node)
+			return false;
+
 		ClassComponent::update(node);
 
 		using namespace physx;
@@ -413,11 +419,12 @@ namespace XPX
 			gScene->addActor(*plane);
 			plane->release();
 
-			XPLICIT_INFO("NplicitAddGround: Create plane with success!!!");
+			XPLICIT_INFO("NplicitAddGround: Create a new plane with success.");
+
 			return true;
 		}
 
-		XPLICIT_CRITICAL("NplicitAddGround: Failed to create plane!!!");
+		XPLICIT_CRITICAL("NplicitAddGround: Failed to create a new plane.");
 		return false;
 	}
 }

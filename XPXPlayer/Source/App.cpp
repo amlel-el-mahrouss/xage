@@ -140,25 +140,25 @@ namespace XPX::Bites
 		try
 		{
 			mINI::INIStructure ini;
-			mIni->read(ini);
+			if (!mIni->read(ini))
+				throw EngineError("File not found!");
 
 			const auto width_int = std::atoi(ini["Window"]["Width"].c_str());
 			const auto height_int = std::atoi(ini["Window"]["Height"].c_str());
 
 			traits.window_width = width_int;
 			traits.window_height = height_int;
-
-			if (traits.window_width < 1280 ||
-				traits.window_height < 720)
-			{
-				traits.window_width = 1280;
-				traits.window_height = 720;
-			}
 		}
 		catch (...)
 		{
-			traits.window_height = 720;
-			traits.window_width = 1280;
+			XPLICIT_CRITICAL("NOT FOUND! Configuration file for XAGE wasn't found!");
+		}
+
+		if (traits.window_width < XPLICIT_DEFAULT_WIDTH ||
+			traits.window_height < XPLICIT_DEFAULT_HEIGHT)
+		{
+			traits.window_width = XPLICIT_DEFAULT_WIDTH;
+			traits.window_height = XPLICIT_DEFAULT_HEIGHT;
 		}
 
 		return *this;
