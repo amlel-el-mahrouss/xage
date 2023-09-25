@@ -97,7 +97,18 @@ namespace XPX
 		return mPeers.at(idx); 
 	}
 
-	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
+	size_t NetworkServerComponent::size() const noexcept 
+	{ 
+		std::size_t cnt = 0UL;
+
+		for (auto& peer : mPeers)
+		{
+			if (peer->status == NETWORK_STAT_CONNECTED)
+				++cnt;
+		}
+
+		return cnt;
+	}
 
 	static bool xplicit_register_packet(const NetworkPacket& packet, NetworkPeer* peer)
 	{
