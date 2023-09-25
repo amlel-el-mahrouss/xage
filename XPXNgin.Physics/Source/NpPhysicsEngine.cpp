@@ -172,9 +172,12 @@ namespace XPX
 
 	static bool gPhysicsEnabled = false;
 
-	NpPhysicsEvent::NpPhysicsEvent() noexcept : mWorldNodes()
+	NpPhysicsEvent::NpPhysicsEvent() noexcept 
+		: mWorldNodes()
 	{
 		XPLICIT_ASSERT(!gPhysicsEnabled);
+
+		gPhysicsEnabled = true;
 
 		using namespace physx;
 
@@ -187,6 +190,8 @@ namespace XPX
 
 		if (!gFoundation)
 			throw EngineError("PxCreateFoundation failed!");
+
+		gPvd = PxCreatePvd(*gFoundation);
 
 		physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
 		gPvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
