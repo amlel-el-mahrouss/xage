@@ -13,9 +13,9 @@
 #include "GearComponent.h"
 #include "PartComponent.h"
 #include "MeshComponent.h"
-#include "App.h"
-#include "ClientUtils.h"
+#include "ClientFX.h"
 #include "MenuUI.h"
+#include "App.h"
 
 #include <SoundNgin.h>
 #include <CLua.hpp>

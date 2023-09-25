@@ -79,7 +79,8 @@ static int lua_CreateGear(lua_State* L)
 		return 1;
 	}
 
-	XPX::String path_player("world.Players.");
+	XPX::String path_player = XPLICIT_LUA_NAMESPACE;
+	path_player += ".Players.";
 	path_player += xplicit_id;
 
 	XPX::GearComponent* gear = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::GearComponent>(name, path_player.c_str());

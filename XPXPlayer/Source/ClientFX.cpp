@@ -7,7 +7,7 @@
  * =====================================================================
  */
 
-#include "ClientUtils.h"
+#include "ClientFX.h"
 #include "SoundComponent.h"
 
 namespace XPX

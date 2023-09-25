@@ -52,13 +52,13 @@ namespace XPX
 
 	bool GearComponent::should_update() noexcept { return true; }
 
-	void GearComponent::update(ClassPtr _self) 
+	void GearComponent::update(ClassPtr this_ptr) 
 	{ 
-		if (!_self)
+		if (!this_ptr)
 			return;
 
-		ClassComponent::update(_self);
-		GearComponent* self = (GearComponent*)_self;
+		ClassComponent::update(this_ptr);
+		GearComponent* self = (GearComponent*)this_ptr;
 
 		if (self->index_as_bool("Drop") &&
 			self->get_owner())

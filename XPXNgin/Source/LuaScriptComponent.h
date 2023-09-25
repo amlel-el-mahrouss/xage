@@ -13,11 +13,9 @@
 
 namespace XPX
 {
-	/*
-	 * @brief Lua Script Instance.
-	 * NOTE: only one LuaScriptComponent should be created. you don't need a lot of them.
-	 */
-
+	/// <summary>
+	/// This class loads a script for use in the engine.
+	/// </summary>
 	class XPLICIT_API LuaScriptComponent final : public ClassComponent
 	{
 	public:

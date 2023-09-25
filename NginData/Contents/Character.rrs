@@ -1,5 +1,23 @@
 <RenderRig>
-	<Item Class="Mesh" Referent="Character" Script="" Parent="world">
-		xasset://content/Idle.dae
-	</Item>
+	<Item Class="Part" Referent="Head" Script="" Parent="world"/>
+	<Item Class="Part" Referent="Torso" Script="" Parent="world"/>
+
+	<Item Class="Part" Referent="LeftArm" Script="" Parent="world"/>
+	<Item Class="Part" Referent="LeftLeg" Script="" Parent="world"/>
+	<Item Class="Part" Referent="RightArm" Script="" Parent="world"/>
+	<Item Class="Part" Referent="RightLeg" Script="" Parent="world"/>
+
+	<Scale3 X="1.0" Y="1.0" Z="1.0" Referent="Head"/>
+	<Scale3 X="1.0" Y="2.0" Z="2.0" Referent="Torso"/>
+	<Scale3 X="1" Y="2" Z="1" Referent="LeftLeg"/>
+	<Scale3 X="1" Y="2" Z="1" Referent="RightLeg"/>
+	<Scale3 X="1" Y="2" Z="1" Referent="LeftArm"/>
+	<Scale3 X="1" Y="2" Z="1" Referent="RightArm"/>
+
+	<Position3 X="0.0" Y="16.119808" Z="-8.021833" Referent="Head"/>
+	<Position3 X="0" Y="0" Z="-8.021833" Referent="Torso"/>
+	<Position3 X="0" Y="-20.15626" Z="-4.579265" Referent="LeftLeg"/>
+	<Position3 X="0" Y="-20.15626" Z="-14.428468" Referent="RightLeg"/>
+	<Position3 X="0" Y="0" Z="-22.000542" Referent="RightArm"/>
+	<Position3 X="0" Y="0" Z="5.853872" Referent="LeftArm"/>
 </RenderRig>

@@ -156,19 +156,19 @@ namespace XPX
 					if (packet.cmd[XPLICIT_NETWORK_CMD_DESTROY] == NETWORK_CMD_DESTROY)
 					{
 						ComponentSystem::get_singleton_ptr()->remove(*it);
-
-						return;
 					}
-
-					auto node_bundle = (*it)->look_for("Torso");
-
-					if (node_bundle)
+					else
 					{
-						auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
-							packet.pos[0][XPLICIT_NETWORK_Y],
-							packet.pos[0][XPLICIT_NETWORK_Z]);
-						
-						node_bundle->setPosition(vec);
+						auto node_bundle = (*it)->look_for("Torso");
+
+						if (node_bundle)
+						{
+							auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
+								packet.pos[0][XPLICIT_NETWORK_Y],
+								packet.pos[0][XPLICIT_NETWORK_Z]);
+
+							node_bundle->setPosition(vec);
+						}
 					}
 				}
 			}

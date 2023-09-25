@@ -22,8 +22,6 @@
 
 #define NpDefaultGravity() PxVec3(0.0f, -9.81f, 0.0f)
 
- //! pvd default port
-#define NP_PHYSX_DEFAULT_PORT (5425)
 #define NP_DELTATIME (1.0/60.f)
 
 #define NpGetHowManyWorkers() (8)
@@ -162,14 +160,13 @@ namespace XPX
 	}
 
 	static Details::NpUserErrorCallback gDefaultErrorCallback;
-	static Details::NpAllocatorTracker gDefaultAllocatorCallback;
+	static Details::NpAllocatorTracker	gDefaultAllocatorCallback;
 
-	static physx::PxScene* gScene = nullptr;
+	static physx::PxScene*		gScene				= nullptr;
 
-	static physx::PxFoundation* gFoundation = nullptr;
-	static physx::PxPhysics* gPhysics = nullptr;
-	static physx::PxPvd* gPvd = nullptr;
-	static physx::PxCooking* gCooking = nullptr;
+	static physx::PxFoundation* gFoundation			= nullptr;
+	static physx::PxPhysics*	gPhysics			= nullptr;
+	static physx::PxCooking*	gCooking			= nullptr;
 
 	static bool gPhysicsEnabled = false;
 
@@ -189,18 +186,12 @@ namespace XPX
 
 		bool recordMemoryAllocations = true;
 
-		gPvd = PxCreatePvd(*gFoundation);
-		PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(getenv("XPLICIT_SERVER_ADDR"), NP_PHYSX_DEFAULT_PORT, 10);
-		
-		// we don't have pvd
-		// gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
-
 		physx::PxTolerancesScale       toleranceScale;
 		toleranceScale.length = 100;        // typical length of an object
 		toleranceScale.speed = 981;         // typical speed of an object, gravity*1s is a reasonable choice
 
 		gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation,
-			toleranceScale, recordMemoryAllocations, gPvd);
+			toleranceScale, recordMemoryAllocations, nullptr);
 
 		if (!gPhysics)
 			throw EngineError("PxCreatePhysics failed!");
@@ -210,7 +201,7 @@ namespace XPX
 		if (!gCooking)
 			throw EngineError("PxCreateCooking failed!");
 
-		if (!PxInitExtensions(*gPhysics, gPvd))
+		if (!PxInitExtensions(*gPhysics, nullptr))
 			throw EngineError("PxInitExtensions failed!");
 
 		PxSceneDesc desc(gPhysics->getTolerancesScale());
@@ -231,14 +222,16 @@ namespace XPX
 		if (!gScene)
 			throw EngineError("createScene failed! Refer to XPX support for help.");
 
-		physx::PxPvdSceneClient* cl = gScene->getScenePvdClient();
+		physx::PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 
-		if (cl)
+		if (pvdClient)
 		{
-			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-			cl->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 		}
+
+
 	}
 
 	NpMovementServerEvent::~NpMovementServerEvent() noexcept
@@ -275,8 +268,6 @@ namespace XPX
 			gScene->simulate(NP_DELTATIME);
 			gScene->fetchResults(true);
 
-			gDefaultAllocatorCallback.trace_pointer(gScene);
-
 			for (auto* node : mWorldNodes)
 			{
 				if (!node ||
@@ -295,8 +286,6 @@ namespace XPX
 				node->pos().Z = world_pose.transform(world_pose.p).z;
 
 				xpxSendToClients(node);
-
-				actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !node->anchor());
 			}
 		}
 	}
@@ -314,22 +303,23 @@ namespace XPX
 
 			if (dynamic_rigid)
 			{
-				auto mat = gPhysics->createMaterial(1, 1, 1);
+				PxReal friction = node->scale().X * node->scale().Y * node->scale().Z;
 
-				PxCapsuleGeometry geom(PxVec3(node->scale().X, node->scale().Y, node->scale().Z).normalize(), node->scale().Y);
+				auto mat = gPhysics->createMaterial(friction, friction, 1);
+				
+				PxBoxGeometry geom(node->scale().X, node->scale().Y, node->scale().Z);
 
 				auto shape = gPhysics->createShape(geom, *mat, true);
 
 				XPLICIT_ASSERT(shape);
 				XPLICIT_ASSERT(dynamic_rigid->attachShape(*shape));
 
-				dynamic_rigid->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !node->anchor());
-
 				dynamic_rigid->setName(node->name());
 
 				mWorldNodes.push_back(node);
 				gScene->addActor(*dynamic_rigid);
 
+				mat->release();
 				shape->release();
 
 				return true;

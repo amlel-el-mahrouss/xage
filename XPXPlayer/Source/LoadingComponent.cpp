@@ -22,7 +22,7 @@
 #include "ChatBoxComponent.h"
 #include "LoadingComponent.h"
 #include "LocalMenuEvent.h"
-#include "ClientUtils.h"
+#include "ClientFX.h"
 #include "MenuUI.h"
 #include "App.h"
 

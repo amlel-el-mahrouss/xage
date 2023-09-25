@@ -15,7 +15,7 @@
  */
 
 #include "App.h"
-#include "ClientUtils.h"
+#include "ClientFX.h"
 #include "LocalCameraComponent.h"
 
 #include <NetworkProtocol.h>

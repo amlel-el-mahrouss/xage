@@ -452,29 +452,27 @@ namespace XPX::Renderer::DX11
 			m_pShader.push_back(shaderSystem);
 	}
 	
-	void RenderComponentD3D11::update(ClassPtr self) 
+	void RenderComponentD3D11::update(ClassPtr this_ptr) 
 	{
-		RenderComponentD3D11* _this_ptr = (RenderComponentD3D11*)self;
+		RenderComponentD3D11* self = (RenderComponentD3D11*)this_ptr;
 
-		if (_this_ptr->m_pShader.empty() ||
-			!_this_ptr->m_pDriver ||
-			_this_ptr->m_iVertexCnt < 1)
+		if (!self)
 			return;
 
-		static const uint32_t stride[] = { sizeof(Details::VERTEX) };
-		static const uint32_t offset = 0;
+		if (self->m_pShader.empty() ||
+			!self->m_pDriver ||
+			self->m_iVertexCnt < 1)
+			return;
 
-		_this_ptr->m_pDriver->get().pCtx->IASetVertexBuffers(1, 1, _this_ptr->m_pVertexBuffer.GetAddressOf(), stride, &offset);
-		_this_ptr->m_pDriver->get().pCtx->IASetIndexBuffer(_this_ptr->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		const uint32_t stride[] = { sizeof(Details::VERTEX) };
+		const uint32_t offset = 0;
 
-		_this_ptr->m_pDriver->get().pCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		self->m_pDriver->get().pCtx->IASetVertexBuffers(1, 1, self->m_pVertexBuffer.GetAddressOf(), stride, &offset);
+		self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-		for (size_t shader_index = 0; shader_index < _this_ptr->m_pShader.size(); ++shader_index)
-		{
-			_this_ptr->m_pShader[shader_index]->update(_this_ptr);
-		}
+		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		_this_ptr->m_pDriver->get().pCtx->DrawIndexed(_this_ptr->m_iVertexCnt, 0, 0);
+		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iVertexCnt, 0, 0);
 	}
 
 	size_t RenderComponentD3D11::size() noexcept
