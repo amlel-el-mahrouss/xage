@@ -4,6 +4,8 @@
  *			XPXPlayer
  *			Copyright XPX Corporation, all rights reserved.
  *
+ *			Purpose: XPXNgin 'DELTA' implementation class.
+ * 
  * =====================================================================
  */
 
@@ -11,8 +13,8 @@
 
 #include <Root.h>
 #include <NplicitNgine.h>
-#include <Component.h>
 
+#include <Component.h>
 #include "MeshComponent.h"
 
 #define XPX_BUNDLE_MAX (6)

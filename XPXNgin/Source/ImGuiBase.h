@@ -23,6 +23,8 @@ namespace XPX
 {
 	namespace ImGUI
 	{
+		typedef ITexture ImTexture;
+
 		typedef SColor ImColor;
 		typedef recti ImRect;
 
