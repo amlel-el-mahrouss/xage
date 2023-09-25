@@ -49,6 +49,7 @@ namespace XPX
 	public:
 		NetworkPeer* get(const std::size_t& idx) const noexcept;
 		const std::uint16_t port() const noexcept;
+		size_t active_peers() const noexcept;
 		const char* dns() const noexcept;
 		size_t size() const noexcept;
 

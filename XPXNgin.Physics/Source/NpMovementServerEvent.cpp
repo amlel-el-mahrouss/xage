@@ -261,7 +261,7 @@ namespace XPX
 		using namespace physx;
 
 		if (gScene &&
-			gNetwork->size() > 0)
+			gNetwork->active_peers() > 0)
 		{
 			for (auto* node : mWorldNodes)
 			{

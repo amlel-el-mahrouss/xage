@@ -97,7 +97,9 @@ namespace XPX
 		return mPeers.at(idx); 
 	}
 
-	size_t NetworkServerComponent::size() const noexcept 
+	size_t NetworkServerComponent::size() const noexcept { return mPeers.size(); }
+
+	size_t NetworkServerComponent::active_peers() const noexcept 
 	{ 
 		std::size_t cnt = 0UL;
 
