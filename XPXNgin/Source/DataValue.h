@@ -10,7 +10,7 @@
 #pragma once
 
 #include "NginCore.h"
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 
 namespace XPX
 {

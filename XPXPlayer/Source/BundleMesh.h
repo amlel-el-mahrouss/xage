@@ -10,7 +10,7 @@
 #pragma once
 
 #include <Root.h>
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 #include <Component.h>
 
 #include "MeshComponent.h"

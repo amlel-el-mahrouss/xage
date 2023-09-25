@@ -17,7 +17,7 @@
 #include "NginCore.h"
 #include "Avx.h"
 
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 
 #ifdef XPLICIT_WINDOWS
 

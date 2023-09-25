@@ -11,7 +11,7 @@
 
 #include <NginCore.h>
 #include <CLua.hpp>
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 #include <Component.h>
 #include <Root.h>
 

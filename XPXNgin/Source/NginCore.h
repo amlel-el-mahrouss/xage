@@ -552,28 +552,32 @@ namespace XPX
 
 	};
 
-	template <typename PtrType, std::size_t Size>
+	template <typename PtrType, std::size_t Size, std::size_t Align>
 	class Pool final
 	{
 	public:
-		explicit Pool() noexcept
+		explicit Pool()
 			:
 			mIndex(0UL),
 			mPointer(nullptr)
 		{
 			/* allocate these shits */										// type			  size
-			this->mPointer = static_cast<char*>(malloc(sizeof(char) * (sizeof(PtrType) * Size)));
+			this->mPointer = static_cast<char*>(_aligned_malloc(sizeof(char) * (sizeof(PtrType) * Size), Align));
 			XPLICIT_ASSERT(mPointer); // assert that shit
 
 			/* zero memory that shit */
 			ZeroMemory(this->mPointer, sizeof(PtrType) * Size);
 		}
 
-		~Pool() noexcept
+		~Pool()
 		{
 			if (this->mPointer)
 			{
-				free(this->mPointer);
+#ifdef XPLICIT_DEBUG
+				_aligned_free_dbg(this->mPointer);
+#else
+				_aligned_free(this->mPointer);
+#endif
 			}
 		}
 

@@ -4,7 +4,7 @@
  *			XPXNgin.Physics
  *			Copyright XPX Corporation, all rights reserved.
  * 
- *			Purpose: PhysX backend;
+ *			Purpose: PhysX backend for the Nplicit ragdoll engine.
  *
  * =====================================================================
  */
@@ -122,10 +122,6 @@ namespace XPX
 
 	static void xpxSendToClients(ClassComponent* node)
 	{
-		if (!gNetwork ||
-			gNetwork->size() < 1)
-			return;
-
 		NetworkPacket repl_packet{};
 
 		repl_packet.channel = XPLICIT_CHANNEL_3D;
@@ -183,6 +179,8 @@ namespace XPX
 		using namespace physx;
 
 		gNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
+
+		XPLICIT_ASSERT(gNetwork);
 
 		gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocatorCallback,
 			gDefaultErrorCallback);
@@ -260,8 +258,7 @@ namespace XPX
 	{
 		using namespace physx;
 
-		if (gScene &&
-			gNetwork->active_peers() > 0)
+		if (gScene)
 		{
 			for (auto* node : mWorldNodes)
 			{

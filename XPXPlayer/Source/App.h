@@ -12,7 +12,7 @@
 #include "PlayerConfig.h"
 
 #include <CLua.hpp>
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 #include <Bites.h>
 #include <Root.h>
 #include <Uri.h>

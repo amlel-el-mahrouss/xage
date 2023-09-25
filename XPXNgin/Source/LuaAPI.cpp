@@ -12,7 +12,7 @@
 #include "HelperMacros.h"
 #include "NginCore.h"
 
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 #include <CLua.hpp>
 
 #include "LuaAPI.h"

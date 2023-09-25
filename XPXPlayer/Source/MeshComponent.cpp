@@ -56,13 +56,11 @@ namespace XPX
 
 			if (auto group_model = CAD->getSceneManager()->getSceneNodeFromName(group);
 				group_model)
-			{
 				mNode->setParent(group_model);
-			}
 		}
 		else
 		{
-			XPLICIT_CRITICAL("Uh oh model not found!");
+			XPLICIT_CRITICAL("Model not found!");
 			XPLICIT_CRITICAL(path);
 		}
 	}

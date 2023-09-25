@@ -13,7 +13,7 @@
 #pragma once
 
 #include "NginCore.h"
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 
 #include <map>
 #include <CLua.hpp>

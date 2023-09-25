@@ -11,7 +11,7 @@
 
 #include "SoundComponent.h"
 #include <XHTTPManager.h>
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 #include <NginCore.h>
 #include <Root.h>
 

@@ -11,7 +11,7 @@
 
 #include <ClassComponent.h>
 #include <NetworkProtocol.h>
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 
 namespace XPX
 {

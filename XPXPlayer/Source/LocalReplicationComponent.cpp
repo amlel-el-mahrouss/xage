@@ -127,29 +127,18 @@ namespace XPX
 
 			if (xplicit_id.find("XPX_") != String::npos)
 			{
-				auto bundles = ComponentSystem::get_singleton_ptr()->all_of<BundleMesh>();
+				xplicit_id = xplicit_id.substr(xplicit_id.find("XPX_"));
 
-				auto it = std::find_if(bundles.begin(), bundles.end(), [&](BundleMesh* mesh) -> bool {
-					return mesh->xplicit_id() == xplicit_id;
+				auto bundles = ComponentSystem::get_singleton_ptr()->all_of<MeshComponent>();
+
+				auto it = std::find_if(bundles.begin(), bundles.end(), [&](MeshComponent* mesh) -> bool {
+					return mesh->instance_name() == xplicit_id;
 					});
 
 				if (it == bundles.cend())
 				{
-					auto bundle = ComponentSystem::get_singleton_ptr()->add<BundleMesh>("Character.rrs", xplicit_id.c_str());
+					auto bundle = ComponentSystem::get_singleton_ptr()->add<MeshComponent>("Media/NBot.dae", xplicit_id.c_str(), "world");
 					XPLICIT_ASSERT(bundle);
-
-					auto node_bundle = bundle->look_for("Torso");
-
-					if (!node_bundle)
-						return;
-
-					CAD->getSceneManager()->addLightSceneNode(node_bundle, node_bundle->getPosition(),
-						SColorf(1.0f, 1.0f, 1.0f),
-						300.0f);
-
-					(bundle->xplicit_id() == self->mXpxId &&
-						node_bundle) ? node_bundle->setParent(CAD->getSceneManager()->getActiveCamera()) :
-						node_bundle->setParent(CAD->getSceneManager()->addEmptySceneNode());
 				}
 				else
 				{
@@ -159,18 +148,15 @@ namespace XPX
 					}
 					else
 					{
-						for (std::size_t i = 0; i < (*it)->count_parts(); ++i)
+						auto node_bundle = (*it);
+
+						if (node_bundle)
 						{
-							auto node_bundle = (*it)->part_at(i);
+							auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
+								packet.pos[0][XPLICIT_NETWORK_Y],
+								packet.pos[0][XPLICIT_NETWORK_Z]);
 
-							if (node_bundle)
-							{
-								auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
-									packet.pos[0][XPLICIT_NETWORK_Y],
-									packet.pos[0][XPLICIT_NETWORK_Z]);
-
-								node_bundle->setPosition(vec);
-							}
+							node_bundle->node()->setPosition(vec);
 						}
 
 						return;

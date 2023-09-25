@@ -23,7 +23,7 @@
 #include "TimeoutEvent.h"
 #include "HumanoidMovementEvent.h"
 #include "SpawnComponent.h"
-#include "HealthMonitorEvent.h"
+#include "HumanoidHealthMonitorEvent.h"
 #include "HumanoidReplicationComponent.h"
 
 static void XplicitPrintHelp()
@@ -138,7 +138,7 @@ int main(int argc, char** argv)
 
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpMovementServerEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::HealthMonitorEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidHealthMonitorEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
 

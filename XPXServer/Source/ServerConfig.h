@@ -29,7 +29,7 @@ extern "C"
 
 #endif
 
-#include <Nplicit.h>
+#include <NplicitNgine.h>
 #include <NMath.h>
 
 #include <rapidxml/rapidxml.hpp>
