@@ -457,7 +457,7 @@ namespace XPX::RoXML
 					}
 				}
 
-				if (node_name == "Plane")
+				if (node_name == "NplicitAware")
 				{
 					if (node->first_attribute() &&
 						strcmp(node->first_attribute()->name(), "Referent") == 0)

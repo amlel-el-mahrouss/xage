@@ -42,24 +42,19 @@
 
 #define XPLICIT_NUM_CHANNELS    (3)
 
-#define XPLICIT_CHANNEL_DATA        (2)
-#define XPLICIT_CHANNEL_CHAT        (4)
-#define XPLICIT_CHANNEL_PHYSICS     (6)
+#define XPLICIT_CHANNEL_DATA        (0)
+#define XPLICIT_CHANNEL_CHAT        (1)
+#define XPLICIT_CHANNEL_3D     (2)
+#define XPLICIT_CHANNEL_GEAR        (3)
 
-// we wanna make specific replication calls for specific core features (such as gears, meshes...)
-#define XPLICIT_CHANNEL_GEAR   (4)
+///!
+///!
+///!
 
- // player specific data (either lua or roxml)
-#define XPLICIT_REPLICA_PLAYER (0)
-
-// xasset passthrough (lua)
-#define XPLICIT_REPLICA_SCRIPT (1)
-
-// xasset passthrough (roxml)
-#define XPLICIT_REPLICA_ROXML (2)
-
-// anything
-#define XPLICIT_REPLICA_EVENT (3)
+#define XPLICIT_REPLICA_1 (0)
+#define XPLICIT_REPLICA_2 (1)
+#define XPLICIT_REPLICA_3 (2)
+#define XPLICIT_REPLICA_4 (3)
 
 /* Used by the protocol to tell the velocity. */
 

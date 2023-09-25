@@ -54,7 +54,7 @@ namespace XPX
 		}
 
 	public:
-		BundleNode* node_at(const std::size_t& index) const { return mParts[index]; }
+		BundleNode* part_at(const std::size_t& index) const { return mParts[index]; }
 
 		std::size_t count_parts() const { return mParts.size(); }
 		const String& xplicit_id() noexcept { return mXplicitId; }

@@ -110,7 +110,7 @@ namespace XPX
 			//! tell ALL of the players to delete this class.
 			NetworkPacket pckt{};
 
-			pckt.channel = XPLICIT_CHANNEL_PHYSICS;
+			pckt.channel = XPLICIT_CHANNEL_3D;
 			pckt.version = XPLICIT_NETWORK_VERSION;
 
 			pckt.magic[0] = XPLICIT_NETWORK_MAG_0;

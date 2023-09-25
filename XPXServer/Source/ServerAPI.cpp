@@ -105,7 +105,7 @@ static int lua_CreateGear(lua_State* L)
 						packet.cmd[XPLICIT_NETWORK_CMD_CREATE] = XPX::NETWORK_CMD_CREATE;
 						packet.channel = XPLICIT_CHANNEL_GEAR;
 
-						memcpy(packet.replicas[XPLICIT_REPLICA_EVENT], mesh, strlen(mesh));
+						memcpy(packet.replicas[XPLICIT_REPLICA_4], mesh, strlen(mesh));
 
 						player->get_gears()[y] = gear;
 						player->get_gears()[y]->set_owner(player);

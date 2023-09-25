@@ -50,7 +50,7 @@ namespace XPX
 			{
 				String url;
 
-				url = packet.replicas[XPLICIT_REPLICA_PLAYER];
+				url = packet.replicas[XPLICIT_REPLICA_1];
 
 				if (url.empty() ||
 					url.find("xasset://") == String::npos)
@@ -87,7 +87,7 @@ namespace XPX
 			{
 				String url;
 
-				url = packet.replicas[XPLICIT_REPLICA_PLAYER];
+				url = packet.replicas[XPLICIT_REPLICA_1];
 
 				if (url.empty() ||
 					url.find("xasset://") == String::npos)
@@ -121,9 +121,9 @@ namespace XPX
 				break;
 			}
 		}
-		else if (packet.channel == XPLICIT_CHANNEL_PHYSICS)
+		else if (packet.channel == XPLICIT_CHANNEL_3D)
 		{
-			String xplicit_id = String(packet.additional_data);
+			String xplicit_id = packet.additional_data;
 
 			if (xplicit_id.find("XPX_") != String::npos)
 			{
@@ -159,16 +159,21 @@ namespace XPX
 					}
 					else
 					{
-						auto node_bundle = (*it)->look_for("Torso");
-
-						if (node_bundle)
+						for (std::size_t i = 0; i < (*it)->count_parts(); ++i)
 						{
-							auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
-								packet.pos[0][XPLICIT_NETWORK_Y],
-								packet.pos[0][XPLICIT_NETWORK_Z]);
+							auto node_bundle = (*it)->part_at(i);
 
-							node_bundle->setPosition(vec);
+							if (node_bundle)
+							{
+								auto vec = vector3df(packet.pos[0][XPLICIT_NETWORK_X],
+									packet.pos[0][XPLICIT_NETWORK_Y],
+									packet.pos[0][XPLICIT_NETWORK_Z]);
+
+								node_bundle->setPosition(vec);
+							}
 						}
+
+						return;
 					}
 				}
 			}
@@ -242,15 +247,10 @@ namespace XPX
 			String parent = String(packet.additional_data);
 			String name = "";
 
-			if (parent.find(".") != String::npos)
-			{
-				name = String(packet.additional_data, parent.find("."));
-			}
-			else
-			{
-				name = parent;
-				parent = XPLICIT_LUA_NAMESPACE;
-			}
+			bool eval = (parent.find(".") != String::npos);
+			
+			name = eval ? parent : String(packet.additional_data, parent.find("."));
+			parent = eval ? parent : XPLICIT_LUA_NAMESPACE;
 
 			parent = parent.substr(parent.find(".") + 1);
 
@@ -266,7 +266,7 @@ namespace XPX
 
 					if (!node)
 					{
-						gear->assign("Path", packet.replicas[XPLICIT_REPLICA_EVENT]);
+						gear->assign("Path", packet.replicas[XPLICIT_REPLICA_4]);
 						return;
 					}
 
@@ -279,7 +279,7 @@ namespace XPX
 			}
 
 			GearComponent* gear = ComponentSystem::get_singleton_ptr()->add<GearComponent>(name.c_str(), 
-																						   packet.replicas[XPLICIT_REPLICA_EVENT], parent.c_str());
+																						   packet.replicas[XPLICIT_REPLICA_4], parent.c_str());
 
 			XPLICIT_ASSERT(gear);
 		}
