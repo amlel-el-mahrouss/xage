@@ -165,10 +165,8 @@ namespace XPX
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED ||
-				mNetwork->get(peer_idx)->status == NETWORK_STAT_INVALID)
-				continue;
-
-			if (mNetwork->get(peer_idx)->packet.channel == XPLICIT_CHANNEL_CHAT)
+				mNetwork->get(peer_idx)->status == NETWORK_STAT_INVALID ||
+				mNetwork->get(peer_idx)->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
 
 			//! If it is a kick or a stop or either a ban
