@@ -10,7 +10,7 @@
 #include "LuaScriptComponent.h"
 #include "ClassComponent.h"
 
-#include <NpMovementServerEvent.h>
+#include <NpPhysicsEngine.h>
 
 namespace XPX
 {
@@ -102,7 +102,7 @@ namespace XPX
 
 	ClassComponent::~ClassComponent()
 	{
-		static auto mov = EventSystem::get_singleton_ptr()->get<NpMovementServerEvent>("NpMovementServerEvent");
+		static auto mov = EventSystem::get_singleton_ptr()->get<NpPhysicsEvent>("NpMovementServerEvent");
 
 		if (mov &&
 			mov->remove_node(this))

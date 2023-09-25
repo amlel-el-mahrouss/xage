@@ -165,7 +165,7 @@ namespace XPX
 	static Details::NpAllocatorTracker	gDefaultAllocatorCallback;
 
 	static physx::PxScene*		gScene				= nullptr;
-
+	static physx::PxPvd*		gPvd				= nullptr;
 	static physx::PxFoundation* gFoundation			= nullptr;
 	static physx::PxPhysics*	gPhysics			= nullptr;
 	static physx::PxCooking*	gCooking			= nullptr;
@@ -188,6 +188,9 @@ namespace XPX
 		if (!gFoundation)
 			throw EngineError("PxCreateFoundation failed!");
 
+		physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+		gPvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
+
 		// create root object.
 
 		bool recordMemoryAllocations = true;
@@ -197,7 +200,7 @@ namespace XPX
 		toleranceScale.speed = 981;         // typical speed of an object, gravity*1s is a reasonable choice
 
 		gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation,
-			toleranceScale, recordMemoryAllocations, nullptr);
+			toleranceScale, recordMemoryAllocations, gPvd);
 
 		if (!gPhysics)
 			throw EngineError("PxCreatePhysics failed!");
@@ -267,6 +270,12 @@ namespace XPX
 					continue;
 
 				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
+
+				if (!IsValidHeapPtr(actor))
+				{
+					node->PhysicsDelegate = nullptr;
+					continue;
+				}
 
 				actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, node->anchor());
 
@@ -385,12 +394,14 @@ namespace XPX
 	{
 		XPLICIT_ASSERT(node);
 
+		ClassComponent::update(node);
+
 		using namespace physx;
 		PxReal friction = node->scale().X * node->scale().Y * node->scale().Z;
 
 		auto mat = gPhysics->createMaterial(friction, friction, 1);
 
-		auto plane = PxCreatePlane(*gPhysics, PxPlane(node->scale().X, node->scale().Y, node->scale().Z, 1), *mat);
+		auto plane = PxCreatePlane(*gPhysics, PxPlane(node->scale().X, node->scale().Y, node->scale().Z, 0.6), *mat);
 
 		mat->release();
 
