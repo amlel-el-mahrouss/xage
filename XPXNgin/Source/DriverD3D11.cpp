@@ -99,17 +99,13 @@ namespace XPX::Renderer::DX11
 
 	void DriverSystemD3D11::setup()
 	{
-		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
+		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
 
 		auto hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
 			nullptr,
-#ifdef XPLICIT_DEBUG
-			D3D11_CREATE_DEVICE_DEBUG,
-#else
 			0,
-#endif
 			feature,
 			ARRAYSIZE(feature),
 			D3D11_SDK_VERSION,

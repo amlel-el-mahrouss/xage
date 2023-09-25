@@ -4,11 +4,7 @@ struct VS_OUTPUT
 	float4 color : COLOR;
 };
 
-VS_OUTPUT VS(float3 pos : POSITION)
+VS_OUTPUT VS(float2 pos : POSITION) : SV_Position
 {
-	VS_OUTPUT outVert;
-	outVert.position = float4(pos, 0.f);
-	outVert.color = float4(1.f, 1.f, 1.f, 1.f);
-
-	return outVert;
+    return float4(pos, 0, 1);
 }
