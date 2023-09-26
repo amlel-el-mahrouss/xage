@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 				component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
 				component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
 
-				std::vector<UINT> indices{ 0, 1, 2 };
+				std::vector<UINT> indices{ 2, 1, 0 };
 
 				for (auto& indice : indices)
 				{
@@ -100,13 +100,13 @@ int main(int argc, char** argv)
 
 				component_d3d11->create();
 
-				drv11->get().pCamera->set_position(XPX::Vector<float>(0, 0, -5.0f));
-
 				auto ret = 0;
 
 				while (ret != WM_QUIT)
 				{
 					drv11->begin_scene(1, 0.5, 0.2, 0.5, true, true);
+
+					drv11->get().pCamera->set_position(XPX::Vector<float>(0, 0, -5.0f));
 
 					XPX::ComponentSystem::get_singleton_ptr()->update();
 					XPX::EventSystem::get_singleton_ptr()->update();

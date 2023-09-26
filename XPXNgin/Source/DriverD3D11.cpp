@@ -55,21 +55,29 @@ namespace XPX::Renderer::DX11
 		return result;
 	}
 
-	static void xplicit_d3d11_make_swapchain(DXGI_SWAP_CHAIN_DESC& swapDesc, DriverSystemD3D11::DriverTraits& privateData)
+	static void xplicit_d3d11_make_swapchain(DXGI_SWAP_CHAIN_DESC& swapDesc, 
+		DriverSystemD3D11::DriverTraits& privateData,
+		DWORD numerator,
+		DWORD denominator,
+		DWORD width,
+		DWORD height,
+		DXGI_FORMAT format,
+		DXGI_MODE_SCALING scaling,
+		DXGI_MODE_SCANLINE_ORDER scalineOrdering)
 	{
 		RtlZeroMemory(&swapDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
 		swapDesc.BufferCount = 1;
-		swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		swapDesc.BufferDesc.Width = XPLICIT_DEFAULT_WIDTH;
-		swapDesc.BufferDesc.Height = XPLICIT_DEFAULT_HEIGHT;
+		swapDesc.BufferDesc.Format = format;
+		swapDesc.BufferDesc.Width = width;
+		swapDesc.BufferDesc.Height = height;
 
-		swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-		swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		swapDesc.BufferDesc.ScanlineOrdering = scalineOrdering;
+		swapDesc.BufferDesc.Scaling = scaling;
 		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-		swapDesc.BufferDesc.RefreshRate.Denominator = 0;
-		swapDesc.BufferDesc.RefreshRate.Numerator = 1;
+		swapDesc.BufferDesc.RefreshRate.Denominator = denominator;
+		swapDesc.BufferDesc.RefreshRate.Numerator = numerator;
 
 		swapDesc.SampleDesc.Count = 1;
 		swapDesc.SampleDesc.Quality = 0;
@@ -90,16 +98,78 @@ namespace XPX::Renderer::DX11
 	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd)
 		: m_private()
 	{
-		m_private.pWindowHandle = hwnd;
-		xplicit_d3d11_make_swapchain(m_private.SwapDesc, m_private);
+		IDXGIFactory* pFactory = nullptr;
+		auto hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
 
-		get().pCamera = std::make_unique<CameraSystemD3D11>();
+		Details::ThrowIfFailed(hr);
 
-		get().pCamera->set_position(Vector(0.f, 0.f, -1.f));
-		get().pCamera->set_rotation(Vector(0.f, 0.f, 0.f));
+		IDXGIAdapter* pAdapter = nullptr;
 
-		this->setup_rendering_system();
+		hr = pFactory->EnumAdapters(0, &pAdapter);
 
+		Details::ThrowIfFailed(hr);
+
+		IDXGIOutput* pOutput = nullptr;
+
+		hr = pAdapter->EnumOutputs(0, &pOutput);
+
+		Details::ThrowIfFailed(hr);
+
+		UINT numModes = 0U;
+		hr = pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
+
+		Details::ThrowIfFailed(hr);
+
+		DXGI_MODE_DESC* displayModeList = new DXGI_MODE_DESC[numModes];
+
+		hr = pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
+
+		Details::ThrowIfFailed(hr);
+
+		if (!displayModeList)
+		{
+			pOutput->Release();
+			pAdapter->Release();
+			pFactory->Release();
+
+			throw EngineError("Out of memory!");
+		}
+
+		UINT i = 0U;
+		auto numerator = 0U;
+		auto denominator = 0U;
+
+		for (i = 0; i < numModes; i++)
+		{
+			if (displayModeList[i].Width == (unsigned int)XPLICIT_MIN_WIDTH)
+			{
+				if (displayModeList[i].Height == (unsigned int)XPLICIT_MIN_HEIGHT)
+				{
+					numerator = displayModeList[i].RefreshRate.Numerator;
+					denominator = displayModeList[i].RefreshRate.Denominator;
+
+					m_private.pWindowHandle = hwnd;
+
+					xplicit_d3d11_make_swapchain(m_private.SwapDesc,
+						m_private,
+						numerator,
+						denominator,
+						XPLICIT_MIN_WIDTH,
+						XPLICIT_MIN_HEIGHT,
+						displayModeList[i].Format,
+						displayModeList[i].Scaling,
+						displayModeList[i].ScanlineOrdering);
+
+					get().pCamera = std::make_unique<CameraSystemD3D11>();
+
+					this->setup_rendering_system();
+
+					return;
+				}
+			}
+		}
+
+		Details::ThrowIfFailed(E_FAIL);
 	}
 
 	DriverSystemD3D11::~DriverSystemD3D11() 
@@ -143,12 +213,12 @@ namespace XPX::Renderer::DX11
 		if (FAILED(hr))
 			throw Win32Error("[GetBuffer] Failed to call function correctly!");
 
-		m_private.pRenderTexture->Release();
-
 		hr = m_private.pDevice->CreateRenderTargetView(m_private.pRenderTexture.Get(), nullptr, m_private.pRenderTarget.GetAddressOf());
 
 		if (FAILED(hr))
 			throw Win32Error("[CreateRenderTargetView] Failed to call function correctly!");
+
+		m_private.pRenderTexture->Release();
 
 		D3D11_TEXTURE2D_DESC depthBufferDesc;
 		RtlZeroMemory(&depthBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -178,7 +248,6 @@ namespace XPX::Renderer::DX11
 		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
 		depthStencilDesc.StencilEnable = true;
-
 		depthStencilDesc.StencilReadMask = 0xFF;
 		depthStencilDesc.StencilWriteMask = 0xFF;
 
@@ -197,18 +266,25 @@ namespace XPX::Renderer::DX11
 		if (FAILED(hr))
 			throw Win32Error("[CreateDepthStencilState] Failed to call function correctly!");
 
-		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-		RtlZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+		m_private.pCtx->OMSetDepthStencilState(m_private.pDepthStencilState.Get(), 1);
 
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+		ZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+		hr = m_private.pDevice->CreateDepthStencilView(m_private.pDepthTexture.Get(), &depthStencilViewDesc, m_private.pDepthStencil.GetAddressOf());
+
+		Details::ThrowIfFailed(hr);
+
+		m_private.pCtx->OMSetRenderTargets(1, m_private.pRenderTarget.GetAddressOf(), m_private.pDepthStencil.Get());
 
 		D3D11_RASTERIZER_DESC rasterDesc;
 		RtlZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
 		rasterDesc.FillMode = D3D11_FILL_SOLID;
-		rasterDesc.CullMode = D3D11_CULL_FRONT;
+		rasterDesc.CullMode = D3D11_CULL_BACK;
 		rasterDesc.FrontCounterClockwise = true;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
@@ -220,8 +296,9 @@ namespace XPX::Renderer::DX11
 
 		hr = m_private.pDevice->CreateRasterizerState(&rasterDesc, m_private.pRasterState.GetAddressOf());
 
-		if (FAILED(hr))
-			throw Win32Error("[CreateRasterizerState] Failed to call function correctly!");
+		Details::ThrowIfFailed(hr);
+
+		m_private.pCtx->RSSetState(m_private.pRasterState.Get());
 
 		RtlZeroMemory(&m_private.Viewport, sizeof(D3D11_VIEWPORT));
 
@@ -233,7 +310,7 @@ namespace XPX::Renderer::DX11
 		m_private.Viewport.TopLeftX = 0.0f;
 		m_private.Viewport.TopLeftY = 0.0f;
 
-		float fieldOfView = 3.141592654f / 4.0f;
+		float fieldOfView = NPLICIT_PI / 4.0f;
 		float screenAspect = (float)m_private.Viewport.Width / (float)m_private.Viewport.Height;
 
 		// Create the projection matrix for 3D rendering.
@@ -245,7 +322,7 @@ namespace XPX::Renderer::DX11
 
 		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] driver created.");
 
-
+		this->get().pCtx->RSSetViewports(this->get().ViewportCnt, &this->get().Viewport);
 	}
 
 	const char* DriverSystemD3D11::name() noexcept { return ("DriverSystemD3D11"); }
@@ -259,11 +336,15 @@ namespace XPX::Renderer::DX11
 		XPLICIT_ASSERT(m_private.pCtx);
 		XPLICIT_ASSERT(m_private.pRenderTarget);
 
-		const float rgba[4]{ r, g, b, a };
+		float rgba[4];
+
+		rgba[0] = r;
+		rgba[1] = g;
+		rgba[2] = b;
+		rgba[3] = a;
 
 		m_private.pCtx->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
-		
-		get().pCamera->render();
+		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? D3D11_CLEAR_DEPTH : 0, 1.0f, 0);
 	}
 
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
@@ -294,7 +375,16 @@ namespace XPX::Renderer::DX11
 		XPLICIT_ASSERT(m_private.pSwapChain);
 		XPLICIT_ASSERT(m_private.pCtx);
 
-		HRESULT hr = m_private.pSwapChain->Present(1, 0);
+		HRESULT hr = S_OK;
+
+		if (m_private.bVSync)
+		{
+			m_private.pSwapChain->Present(1, 0);
+		}
+		else
+		{
+			m_private.pSwapChain->Present(0, 0);
+		}
 
 		return this->check_device_removed(hr);
 	}
@@ -464,15 +554,16 @@ namespace XPX::Renderer::DX11
 			return;
 
 		XPLICIT_ASSERT(self->m_pDriver);
-
+		
 		self->m_viewMatrix = self->m_pDriver->get().pCamera->m_viewMatrix;
 
-		const uint32_t stride = { sizeof(Details::VERTEX) };
+		const uint32_t stride = { (sizeof(float) * 4) + (sizeof(float) * 4) };
 		const uint32_t offset = { 0u };
 
 		try
 		{
 			self->m_pDriver->get().pCtx->IASetVertexBuffers(0, 1, self->m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+			self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 			self->m_pVertexShader->update(self);
 			self->m_pColorShader->update_cbuf(self);
@@ -490,14 +581,7 @@ namespace XPX::Renderer::DX11
 		GetClientRect(self->m_pDriver->get().pWindowHandle, &winRect);
 		self->m_pDriver->get().Viewport = { 0.0f, 0.0f, (FLOAT)(winRect.right - winRect.left), (FLOAT)(winRect.bottom - winRect.top), 0.0f, 1.0f };
 
-		self->m_pDriver->get().pCtx->RSSetState(self->m_pDriver->get().pRasterState.Get());
-		self->m_pDriver->get().pCtx->RSSetViewports(self->m_pDriver->get().ViewportCnt, &self->m_pDriver->get().Viewport);
-
-		self->m_pDriver->get().pCtx->OMSetRenderTargets(1,
-			self->m_pDriver->get().pRenderTarget.GetAddressOf(),
-			nullptr);
-
-		self->m_pDriver->get().pCtx->Draw(self->m_iIndices, 0);
+		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
 	size_t RenderComponentD3D11::size() noexcept

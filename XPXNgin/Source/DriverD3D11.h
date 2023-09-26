@@ -64,9 +64,9 @@ namespace XPX::Renderer::DX11
 
 		struct CBUFFER
 		{
-			XMMATRIX view;
-			XMMATRIX world;
-			XMMATRIX projection;
+			XMMATRIX VIEW;
+			XMMATRIX WORLD;
+			XMMATRIX PROJECTION;
 		};
 
 		void ThrowIfFailed(HRESULT hr);
@@ -327,6 +327,10 @@ namespace XPX::Renderer::DX11
 			up = XMVector3TransformCoord(up, rotationMatrix);
 
 			lookAtVec = lookAtVec + position;
+
+			// Finally create the view matrix from the three updated vectors.
+			m_viewMatrix = XMMatrixLookAtLH(position, lookAtVec, up);
+
 		}
 
 		XMMATRIX view_matrix() { return m_viewMatrix; }

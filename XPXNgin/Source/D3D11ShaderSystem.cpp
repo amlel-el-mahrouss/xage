@@ -106,10 +106,12 @@ namespace XPX::Renderer::DX11
 
 		for (size_t bufferIndex = 0; bufferIndex < cBufferCnt; ++bufferIndex)
 		{
-			cBuffer[bufferIndex].projection = transPoseProjectionMatrix;
-			cBuffer[bufferIndex].world = transPoseWorldMatrix;
-			cBuffer[bufferIndex].view = transPoseViewMatrix;
+			cBuffer[bufferIndex].PROJECTION = transPoseProjectionMatrix;
+			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
+			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
 		}
+
+		cBufferCnt = 0U;
 
 		component->m_pDriver->get().pCtx->Unmap(component->m_pMatrixBuffer.Get(), 0);
 		component->m_pDriver->get().pCtx->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
