@@ -522,7 +522,7 @@ namespace XPX::Renderer::DX11
 		D3D11_BUFFER_DESC matrixBufferDesc;
 
 		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		matrixBufferDesc.ByteWidth = sizeof(Details::CBUFFER);
+		matrixBufferDesc.ByteWidth = (sizeof(float) * 4) + (sizeof(float) * 4);
 		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		matrixBufferDesc.MiscFlags = 0;

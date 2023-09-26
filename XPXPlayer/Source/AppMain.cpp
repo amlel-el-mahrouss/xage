@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 				component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
 				component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
 
-				std::vector<UINT> indices{ 2, 1, 0 };
+				std::vector<UINT> indices{ 0, 1, 2 };
 
 				for (auto& indice : indices)
 				{
