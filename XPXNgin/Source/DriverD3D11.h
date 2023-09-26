@@ -58,7 +58,7 @@ namespace XPX::Renderer::DX11
 	{
 		struct VERTEX
 		{
-			FLOAT X, Y, Z;
+			FLOAT X, Y, Z, W;
 			XMVECTOR COLOR;
 		};
 

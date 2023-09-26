@@ -66,7 +66,7 @@ namespace XPX::Renderer
 
 	public:
 		explicit ShaderSystem(const PChar* filename, uint8_t type, uint8_t format = FORMAT_HLSL)
-			: m_shader(filename), m_format(format)
+			: m_shader(filename), m_format(format), m_type(type)
 		{}
 
 		virtual ~ShaderSystem() = default;

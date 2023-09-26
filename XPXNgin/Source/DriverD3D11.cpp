@@ -373,23 +373,12 @@ namespace XPX::Renderer::DX11
 
 		m_iVertexCnt = 0;
 
-		XPLICIT_GET_DATA_DIR_W(DIR);
-
-		PString path_vertex = DIR;
-		path_vertex += L"Shaders/Vertex.hlsl";
-
-		m_pVertexShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", this->m_pDriver);
-
-		PString path_pixel = DIR;
-		path_pixel += L"Shaders/Pixel.hlsl";
-		
-		m_pColorShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", this->m_pDriver);
-
 		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{
 			m_pVertex[vertex_index].X = m_arrayVerts[vertex_index].X;
 			m_pVertex[vertex_index].Y = m_arrayVerts[vertex_index].Y;
 			m_pVertex[vertex_index].Z = m_arrayVerts[vertex_index].Z;
+			m_pVertex[vertex_index].W = 0.f;
 
 			m_pVertex[vertex_index].COLOR = XMVectorSet(m_colorVectors[vertex_index].A,
 				m_colorVectors[vertex_index].R,
@@ -406,7 +395,7 @@ namespace XPX::Renderer::DX11
 		m_vertexBufferDesc.MiscFlags = 0;
 		m_vertexBufferDesc.StructureByteStride = 0;
 		
-		m_vertexData.pSysMem = m_pVertex;
+		m_vertexData.pSysMem = &m_pVertex[0];
 		m_vertexData.SysMemPitch = 0;
 		m_vertexData.SysMemSlicePitch = 0;
 
@@ -440,10 +429,24 @@ namespace XPX::Renderer::DX11
 		polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		polygonLayout[1].InstanceDataStepRate = 0;
 
+		XPLICIT_GET_DATA_DIR_W(DIR);
+
+		PString path_pixel = DIR;
+		path_pixel += L"Shaders/Pixel.hlsl";
+
+		m_pColorShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", this->m_pDriver);
+
+		PString path_vertex = DIR;
+		path_vertex += L"Shaders/Vertex.hlsl";
+
+		m_pVertexShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", this->m_pDriver);
+
 		m_pDriver->get().pDevice->CreateInputLayout(polygonLayout, 2,
 			m_pVertexShader->get().pBlob->GetBufferPointer(),
 			m_pVertexShader->get().pBlob->GetBufferSize(),
 			m_pDriver->get().pInputLayout.GetAddressOf());
+
+		m_pDriver->get().pCtx->IASetInputLayout(m_pDriver->get().pInputLayout.Get());
 
 		UINT* indices = new UINT[m_arrayVerts.size()];
 
@@ -461,7 +464,7 @@ namespace XPX::Renderer::DX11
 		m_indexBufDesc.MiscFlags = 0;
 		m_indexBufDesc.StructureByteStride = 0;
 
-		m_indexData.pSysMem = indices;
+		m_indexData.pSysMem = &indices[0];
 		m_indexData.SysMemPitch = 0;
 		m_indexData.SysMemSlicePitch = 0;
 
@@ -507,15 +510,12 @@ namespace XPX::Renderer::DX11
 
 		XPLICIT_ASSERT(self->m_pDriver);
 
-		self->m_pDriver->get().pCtx->RSSetState(self->m_pDriver->get().pRasterState.Get());
-		self->m_pDriver->get().pCtx->OMSetDepthStencilState(self->m_pDriver->get().pDepthStencilState.Get(), 1U);
-
 		self->m_viewMatrix = self->m_pDriver->get().pCamera->m_viewMatrix;
 
-		const uint32_t stride[] = { sizeof(Details::VERTEX) };
-		const uint32_t offset[] = { 0u, 0u };
+		const uint32_t stride = { sizeof(Details::VERTEX) };
+		const uint32_t offset = { 0u };
 
-		self->m_pDriver->get().pCtx->IASetVertexBuffers(0, 1, self->m_pVertexBuffer.GetAddressOf(), stride, offset);
+		self->m_pDriver->get().pCtx->IASetVertexBuffers(0, 1, self->m_pVertexBuffer.GetAddressOf(), &stride, &offset);
 		self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		self->m_pColorShader->update(self);
@@ -523,10 +523,9 @@ namespace XPX::Renderer::DX11
 
 		self->m_pDriver->get().pCtx->IASetInputLayout(self->m_pDriver->get().pInputLayout.Get());
 
-		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
-
 		self->m_pDriver->get().pCtx->RSSetViewports(self->m_pDriver->get().ViewportCnt, &self->m_pDriver->get().Viewport);
 
+		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
 		self->m_pDriver->get().pCtx->Draw(self->m_iIndices, 0);
 	}
 
