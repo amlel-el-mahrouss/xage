@@ -89,7 +89,6 @@ int main(int argc, char** argv)
 				component_d3d11->push(XPX::Vector<float>(0.45f, -num, 0.0f));
 				component_d3d11->push(XPX::Vector<float>(-0.45f, -num, 0.0f));
 
-				component_d3d11->topology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 				component_d3d11->set_driver(drv11);
 				component_d3d11->create();
 
