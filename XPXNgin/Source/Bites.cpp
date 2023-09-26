@@ -30,6 +30,7 @@ namespace XPX::Bites
 		mTraits.WndClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
 		mTraits.WndClass.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
 		mTraits.WndClass.lpszMenuName = nullptr;
+		mTraits.WndClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 		mTraits.WndClass.lpszClassName = wndClass;
 
 		RegisterClassExA(&mTraits.WndClass);

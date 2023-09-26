@@ -51,8 +51,31 @@ namespace XPX::Renderer::DX11
 		if (!component)
 			return;
 
-		if (this->m_data.pInputLayout)
-			component->m_pDriver->get().pCtx->IASetInputLayout(this->m_data.pInputLayout.Get());
+		HRESULT result;
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		Details::CBUFFER* dataPtr;
+		unsigned int bufferNumber = 0U;
+
+		auto viewMatrix = component->m_viewMatrix;
+
+		component->m_pDriver->get().WorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
+		viewMatrix = XMMatrixTranspose(viewMatrix);
+		component->m_pDriver->get().ProjectionMatrix = XMMatrixTranspose(component->m_pDriver->get().ProjectionMatrix);
+
+		result = component->m_pDriver->get().pCtx->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+		if (FAILED(result))
+			return;
+
+		dataPtr = (Details::CBUFFER*)mappedResource.pData;
+
+		dataPtr->world = component->m_pDriver->get().WorldMatrix;
+		dataPtr->view = viewMatrix;
+		dataPtr->projection = component->m_pDriver->get().ProjectionMatrix;
+
+		component->m_pDriver->get().pCtx->Unmap(component->m_pMatrixBuffer.Get(), 0);
+
+		component->m_pDriver->get().pCtx->VSSetConstantBuffers(bufferNumber, 1, component->m_pMatrixBuffer.GetAddressOf());
 	
 		if (this->m_data.pVertex)
 			component->m_pDriver->get().pCtx->VSSetShader(this->m_data.pVertex.Get(), nullptr, 0);
@@ -62,6 +85,7 @@ namespace XPX::Renderer::DX11
 
 		if (this->m_data.pHull)
 			component->m_pDriver->get().pCtx->HSSetShader(this->m_data.pHull.Get(), nullptr, 0);
+
 	}
 
 	HRESULT ShaderSystemD3D11::ShaderTraits::create_input_layout(ID3D11Device* device)
@@ -75,6 +99,9 @@ namespace XPX::Renderer::DX11
 			pBlob->GetBufferSize(), pInputLayout.GetAddressOf());
 
 		XPLICIT_ASSERT(SUCCEEDED(hr));
+		
+		pBlob->Release();
+
 		return hr;
 	}
 }

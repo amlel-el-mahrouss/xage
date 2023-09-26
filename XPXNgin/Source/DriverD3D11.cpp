@@ -54,8 +54,8 @@ namespace XPX::Renderer::DX11
 	{
 		RtlZeroMemory(&swapDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-		swapDesc.BufferCount = 2;
-		swapDesc.BufferDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		swapDesc.BufferCount = 1;
+		swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swapDesc.BufferDesc.Width = XPLICIT_DEFAULT_WIDTH;
 		swapDesc.BufferDesc.Height = XPLICIT_DEFAULT_HEIGHT;
 
@@ -82,8 +82,6 @@ namespace XPX::Renderer::DX11
 
 	}
 
-	static std::unique_ptr<CameraSystemD3D11> gCamera;
-
 	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd)
 		: m_private()
 	{
@@ -92,8 +90,10 @@ namespace XPX::Renderer::DX11
 
 		this->setup_rendering_system();
 
-		gCamera = std::make_unique<CameraSystemD3D11>();
-		gCamera->set_position(Vector(0.f, 0.f, 0.f));
+		get().pCamera = std::make_unique<CameraSystemD3D11>();
+
+		get().pCamera->set_position(Vector(0.f, 0.f, 0.f));
+		get().pCamera->set_rotation(Vector(0.f, 0.f, 0.f));
 	}
 
 	DriverSystemD3D11::~DriverSystemD3D11() 
@@ -101,6 +101,9 @@ namespace XPX::Renderer::DX11
 		if (m_private.pSwapChain)
 			m_private.pSwapChain->SetFullscreenState(false, nullptr);
 	}
+
+	constexpr const float SCREEN_DEPTH = 1000.0f;
+	constexpr const float SCREEN_NEAR = 0.3f;
 
 	void DriverSystemD3D11::setup_rendering_system()
 	{
@@ -127,30 +130,8 @@ namespace XPX::Renderer::DX11
 			m_private.pCtx.GetAddressOf()
 		);
 
-		
 		if (FAILED(hr))
-		{
-			m_private.SwapDesc.BufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-
-			hr = D3D11CreateDeviceAndSwapChain(
-				nullptr,
-				D3D_DRIVER_TYPE_HARDWARE,
-				nullptr,
-				creationFlags,
-				feature,
-				ARRAYSIZE(feature),
-				D3D11_SDK_VERSION,
-				&m_private.SwapDesc,
-				m_private.pSwapChain.GetAddressOf(),
-				m_private.pDevice.GetAddressOf(),
-				nullptr,
-				m_private.pCtx.GetAddressOf()
-			);
-
-			if (FAILED(hr))
-				throw Win32Error("[D3D11CreateDeviceAndSwapChain] Failed to call function correctly!");
-
-		}
+			throw Win32Error("[D3D11CreateDeviceAndSwapChain] Failed to call function correctly!");
 
 		hr = m_private.pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(m_private.pRenderTexture.GetAddressOf()));
 
@@ -225,26 +206,28 @@ namespace XPX::Renderer::DX11
 		if (FAILED(hr))
 			throw Win32Error("[CreateDepthStencilView] Failed to call function correctly!");
 
+		m_private.pCtx->OMSetRenderTargets(1,
+			m_private.pRenderTarget.GetAddressOf(),
+			m_private.pDepthStencil.Get());
+
 		D3D11_RASTERIZER_DESC rasterDesc;
 		RtlZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
-		rasterDesc.AntialiasedLineEnable = false;
-		rasterDesc.CullMode = D3D11_CULL_BACK;
+		rasterDesc.FillMode = D3D11_FILL_SOLID;
+		rasterDesc.CullMode = D3D11_CULL_NONE;
+		rasterDesc.FrontCounterClockwise = false;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
-		rasterDesc.DepthClipEnable = true;
-		rasterDesc.FillMode = D3D11_FILL_SOLID;
-		rasterDesc.FrontCounterClockwise = false;
-		rasterDesc.MultisampleEnable = false;
-		rasterDesc.ScissorEnable = false;
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
+		rasterDesc.DepthClipEnable = true;
+		rasterDesc.ScissorEnable = false;
+		rasterDesc.MultisampleEnable = false;
+		rasterDesc.AntialiasedLineEnable = false;
 
 		hr = m_private.pDevice->CreateRasterizerState(&rasterDesc, m_private.pRasterState.GetAddressOf());
 
 		if (FAILED(hr))
 			throw Win32Error("[CreateRasterizerState] Failed to call function correctly!");
-
-		m_private.pCtx->RSSetState(m_private.pRasterState.Get());
 
 		RtlZeroMemory(&m_private.Viewport, sizeof(D3D11_VIEWPORT));
 
@@ -257,6 +240,14 @@ namespace XPX::Renderer::DX11
 		m_private.Viewport.TopLeftY = 0.0f;
 
 		m_private.pCtx->RSSetViewports(1U, &m_private.Viewport);
+
+		float fieldOfView = 3.141592654f / 4.0f;
+		float screenAspect = (float)m_private.Viewport.Width / (float)m_private.Viewport.Height;
+
+		// Create the projection matrix for 3D rendering.
+		m_private.ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
+		m_private.WorldMatrix = XMMatrixIdentity();
+		m_private.OrthoMatrix = XMMatrixOrthographicLH(fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
 
 		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] driver created.");
 	}
@@ -275,14 +266,10 @@ namespace XPX::Renderer::DX11
 
 		const float rgba[4]{ r, g, b, a };
 
-		m_private.pCtx->OMSetRenderTargets(1, 
-			m_private.pRenderTarget.GetAddressOf(), 
-			m_private.pDepthStencil.Get());
-
 		m_private.pCtx->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
-		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? D3D11_CLEAR_DEPTH : 0, 1.f, 0);
 
-		gCamera->render();
+		get().pCamera->render();
 	}
 
 	void DriverSystemD3D11::handle_device_removed()
@@ -325,7 +312,7 @@ namespace XPX::Renderer::DX11
 		XPLICIT_ASSERT(m_private.pSwapChain);
 		XPLICIT_ASSERT(m_private.pCtx);
 
-		HRESULT hr = m_private.pSwapChain->Present(1, 0);
+		HRESULT hr = m_private.pSwapChain->Present(m_private.bVSync ? 1 : 0, 0);
 
 		return !DriverSystemD3D11::check_device_removed(hr);
 	}
@@ -343,12 +330,14 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 
+	const float gOriginMatrix[3] = { 0.f, 0.f, 0.f };
+
 	RenderComponentD3D11::RenderComponentD3D11()
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
 		 m_pDriver(nullptr), m_pVertex(nullptr),
 		m_indexData(), m_iVertexCnt(0), m_iTopology(XPLICIT_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
-		m_pMatrixBuffer(nullptr)
+		m_pMatrixBuffer(nullptr), m_viewMatrix(gOriginMatrix)
 	{}
 
 	RenderComponentD3D11::~RenderComponentD3D11()
@@ -435,14 +424,14 @@ namespace XPX::Renderer::DX11
 		m_indexBufDesc.MiscFlags = 0;
 		m_indexBufDesc.StructureByteStride = 0;
 
-		UINT* pIndices = new UINT[m_iVertexCnt];
+		std::vector<UINT> indices;
 
-		for (size_t i = 0; i < m_iVertexCnt; i++)
+		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{
-			pIndices[i] = i;
+			indices.push_back(vertex_index);
 		}
 
-		m_indexData.pSysMem = pIndices;
+		m_indexData.pSysMem = indices.data();
 		m_indexData.SysMemPitch = 0;
 		m_indexData.SysMemSlicePitch = 0;
 
@@ -457,12 +446,7 @@ namespace XPX::Renderer::DX11
 		m_pDriver->get().pCtx->Unmap(m_pVertexBuffer.Get(), 0);
 
 		if (FAILED(m_hResult))
-		{
-			delete[] pIndices;
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create(CreateBuffer(m_pIndexBuffer))");
-		}
-
-		delete[] pIndices;
 
 		D3D11_BUFFER_DESC matrixBufferDesc;
 
@@ -507,45 +491,33 @@ namespace XPX::Renderer::DX11
 			self->m_iVertexCnt < 1)
 			return;
 
-		auto viewMatrix = gCamera->view_matrix();
+		self->m_pDriver->get().pCtx->RSSetState(self->m_pDriver->get().pRasterState.Get());
 
-		HRESULT result;
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
-		Details::CBUFFER* dataPtr;
-		unsigned int bufferNumber = 0U;
-
-		self->m_pDriver->get().WorldMatrix = XMMatrixTranspose(self->m_pDriver->get().WorldMatrix);
-		viewMatrix = XMMatrixTranspose(viewMatrix);
-		self->m_pDriver->get().ProjectionMatrix = XMMatrixTranspose(self->m_pDriver->get().ProjectionMatrix);
-
-		result = self->m_pDriver->get().pCtx->Map(self->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-
-		if (FAILED(result))
-			return;
-
-		dataPtr = (Details::CBUFFER*)mappedResource.pData;
-
-		dataPtr->world = self->m_pDriver->get().WorldMatrix;
-		dataPtr->view = viewMatrix;
-		dataPtr->projection = self->m_pDriver->get().ProjectionMatrix;
-
-		self->m_pDriver->get().pCtx->Unmap(self->m_pMatrixBuffer.Get(), 0);
+		self->m_viewMatrix = self->m_pDriver->get().pCamera->m_viewMatrix;
 
 		const uint32_t stride[] = { sizeof(Details::VERTEX) };
-		const uint32_t offset = 0;
+		const uint32_t offset[] = { 0u, 0u };
 
-		self->m_pDriver->get().pCtx->VSSetConstantBuffers(bufferNumber, 1, self->m_pMatrixBuffer.GetAddressOf());
-		self->m_pDriver->get().pCtx->IASetVertexBuffers(1, 1, self->m_pVertexBuffer.GetAddressOf(), stride, &offset);
+		self->m_pDriver->get().pCtx->IASetVertexBuffers(0, 1, self->m_pVertexBuffer.GetAddressOf(), stride, offset);
 		self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+		ID3D11InputLayout* input_layout = nullptr;
+
+		for (auto& shader : self->m_pShader)
+		{
+			if (shader->m_data.pInputLayout)
+				input_layout = shader->m_data.pInputLayout.Get();
+
+			shader->update(self);
+		}
+
+		self->m_pDriver->get().pCtx->IASetInputLayout(input_layout);
 
 		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
 
-		for (auto& shader : self->m_pShader)
-			shader->update(self);
+		self->m_pDriver->get().pCtx->RSSetViewports(self->m_pDriver->get().ViewportCnt, & self->m_pDriver->get().Viewport);
 
-		self->m_pDriver->get().pCtx->Draw(self->m_iVertexCnt, 0);
-
-		self->m_pDriver->get().pSwapChain->Present(1, 0);
+		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iVertexCnt, 0, 0);
 	}
 
 	size_t RenderComponentD3D11::size() noexcept

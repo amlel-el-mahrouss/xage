@@ -49,6 +49,8 @@ using namespace DirectX;
 
 namespace XPX::Renderer::DX11
 {
+	class CameraSystemD3D11;
+
 	namespace Details
 	{
 		struct VERTEX
@@ -92,13 +94,13 @@ namespace XPX::Renderer::DX11
 		public:
 			bool bVSync{ false };
 			char szCardDesc[128];
+			UINT ViewportCnt{ 1 };
 			bool bEndRendering{ false };
 			HWND pWindowHandle{ nullptr };
 
 		public:
 			D3D11_VIEWPORT Viewport;
 			DXGI_SWAP_CHAIN_DESC SwapDesc;
-
 			XMMATRIX ProjectionMatrix;
 			XMMATRIX WorldMatrix;
 			XMMATRIX OrthoMatrix;
@@ -113,6 +115,7 @@ namespace XPX::Renderer::DX11
 			WRL::ComPtr<ID3D11RasterizerState> pRasterState;
 			WRL::ComPtr<ID3D11DepthStencilView> pDepthStencil;
 			WRL::ComPtr<ID3D11RenderTargetView> pRenderTarget;
+			std::unique_ptr<CameraSystemD3D11> pCamera;
 			WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
 
 		};
@@ -190,6 +193,7 @@ namespace XPX::Renderer::DX11
 
 		};
 
+	public:
 		ShaderTraits& get();
 		
 		/// <summary>
@@ -268,6 +272,7 @@ namespace XPX::Renderer::DX11
 	private:
 		std::vector<ShaderSystemD3D11*> m_pShader;
 		XPLICIT_PRIMITIVE_TOPOLOGY m_iTopology;
+		XMMATRIX m_viewMatrix;
 		DriverSystemD3D11* m_pDriver;
 		Details::VERTEX* m_pVertex;
 		size_t m_iVertexCnt;
