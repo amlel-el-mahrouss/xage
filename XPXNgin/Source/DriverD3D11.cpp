@@ -528,12 +528,9 @@ namespace XPX::Renderer::DX11
 		matrixBufferDesc.MiscFlags = 0;
 		matrixBufferDesc.StructureByteStride = 0;
 
-		HRESULT result;
-		result = m_pDriver->get().pDevice->CreateBuffer(&matrixBufferDesc, nullptr, m_pMatrixBuffer.GetAddressOf());
+		m_hResult = m_pDriver->get().pDevice->CreateBuffer(&matrixBufferDesc, nullptr, m_pMatrixBuffer.GetAddressOf());
 
-		Details::ThrowIfFailed(result);
-
-		delete[] indices;
+		Details::ThrowIfFailed(m_hResult);
 	}
 
 	const char* RenderComponentD3D11::name() noexcept { return ("D3D11RenderComponent"); }
