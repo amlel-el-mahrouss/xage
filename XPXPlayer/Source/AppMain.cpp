@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 				{
 					win->update();
 
-					drv11->begin_scene(1, 0.5, 0.5, 0.5, false, false);
+					drv11->begin_scene(1, 0.5, 0.5, 0.5, true, true);
 
 					XPX::ComponentSystem::get_singleton_ptr()->update();
 					XPX::EventSystem::get_singleton_ptr()->update();

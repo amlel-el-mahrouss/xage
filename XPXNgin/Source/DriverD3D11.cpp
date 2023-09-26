@@ -54,8 +54,8 @@ namespace XPX::Renderer::DX11
 	{
 		RtlZeroMemory(&swapDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-		swapDesc.BufferCount = 1;
-		swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapDesc.BufferCount = 2;
+		swapDesc.BufferDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		swapDesc.BufferDesc.Width = XPLICIT_DEFAULT_WIDTH;
 		swapDesc.BufferDesc.Height = XPLICIT_DEFAULT_HEIGHT;
 
@@ -73,7 +73,7 @@ namespace XPX::Renderer::DX11
 		
 		swapDesc.Flags = 0;
 
-		swapDesc.Windowed = false;
+		swapDesc.Windowed = true;
 		swapDesc.OutputWindow = privateData.pWindowHandle;
 
 #ifdef XPLICIT_DEBUG
@@ -104,9 +104,9 @@ namespace XPX::Renderer::DX11
 
 	void DriverSystemD3D11::setup_rendering_system()
 	{
-		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
+		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
 
-		UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+		UINT creationFlags = 0;
 #if defined(XPLICIT_DEBUG) && defined(XPLICIT_USE_DIRECTX_DEBUG)
 		// If the project is in a debug build, enable the debug layer.
 		creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -127,8 +127,30 @@ namespace XPX::Renderer::DX11
 			m_private.pCtx.GetAddressOf()
 		);
 
+		
 		if (FAILED(hr))
-			throw Win32Error("[D3D11CreateDeviceAndSwapChain] Failed to call function correctly!");
+		{
+			m_private.SwapDesc.BufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+
+			hr = D3D11CreateDeviceAndSwapChain(
+				nullptr,
+				D3D_DRIVER_TYPE_HARDWARE,
+				nullptr,
+				creationFlags,
+				feature,
+				ARRAYSIZE(feature),
+				D3D11_SDK_VERSION,
+				&m_private.SwapDesc,
+				m_private.pSwapChain.GetAddressOf(),
+				m_private.pDevice.GetAddressOf(),
+				nullptr,
+				m_private.pCtx.GetAddressOf()
+			);
+
+			if (FAILED(hr))
+				throw Win32Error("[D3D11CreateDeviceAndSwapChain] Failed to call function correctly!");
+
+		}
 
 		hr = m_private.pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(m_private.pRenderTexture.GetAddressOf()));
 
