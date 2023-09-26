@@ -73,7 +73,7 @@ namespace XPX::Renderer::DX11
 		
 		swapDesc.Flags = 0;
 
-		swapDesc.Windowed = true;
+		swapDesc.Windowed = false;
 		swapDesc.OutputWindow = privateData.pWindowHandle;
 
 #ifdef XPLICIT_DEBUG
@@ -106,11 +106,17 @@ namespace XPX::Renderer::DX11
 	{
 		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
 
+		UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#if defined(XPLICIT_DEBUG) && defined(XPLICIT_USE_DIRECTX_DEBUG)
+		// If the project is in a debug build, enable the debug layer.
+		creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
 		auto hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
 			nullptr,
-			0,
+			creationFlags,
 			feature,
 			ARRAYSIZE(feature),
 			D3D11_SDK_VERSION,
@@ -484,7 +490,7 @@ namespace XPX::Renderer::DX11
 		HRESULT result;
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		Details::CBUFFER* dataPtr;
-		unsigned int bufferNumber;
+		unsigned int bufferNumber = 0U;
 
 		self->m_pDriver->get().WorldMatrix = XMMatrixTranspose(self->m_pDriver->get().WorldMatrix);
 		viewMatrix = XMMatrixTranspose(viewMatrix);

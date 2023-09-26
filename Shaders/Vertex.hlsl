@@ -1,37 +1,14 @@
-cbuffer MatrixBuffer
+struct VS_OUTPUT
 {
-    matrix worldMatrix;
-    matrix viewMatrix;
-    matrix projectionMatrix;
+	float4 position : SV_POSITION;
+	float4 color : COLOR;
 };
 
-struct VertexInputType
+VS_OUTPUT VS(float3 pos : POSITION)
 {
-    float4 position : POSITION;
-    float4 color : COLOR;
-};
+	VS_OUTPUT outVert;
+	outVert.position = float4(pos, 0.f);
+	outVert.color = float4(1.f, 1.f, 1.f, 1.f);
 
-struct PixelInputType
-{
-    float4 position : SV_POSITION;
-    float4 color : COLOR;
-};
-
-float4 PS() : SV_TARGET
-{
-    return float4(1.0f, 1.0f, 1.0f, 1.0f);
-}
-
-PixelInputType VS(VertexInputType input)
-{
-    PixelInputType output;
-    
-    input.position.w = 1.0f;
-    output.position = mul(input.position, worldMatrix);
-    output.position = mul(output.position, viewMatrix);
-    output.position = mul(output.position, projectionMatrix);
-    
-    output.color = input.color;
-    
-    return output;
+	return outVert;
 }
