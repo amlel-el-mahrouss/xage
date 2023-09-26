@@ -21,6 +21,8 @@
 
 #ifdef XPLICIT_WINDOWS
 
+#include <comdef.h>
+
 namespace XPX::Renderer::DX11
 {
 	namespace Details
@@ -65,7 +67,7 @@ namespace XPX::Renderer::DX11
 		swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-		swapDesc.BufferDesc.RefreshRate.Denominator = 1;
+		swapDesc.BufferDesc.RefreshRate.Denominator = 0;
 		swapDesc.BufferDesc.RefreshRate.Numerator = 0;
 
 		swapDesc.SampleDesc.Count = 1;
@@ -90,12 +92,13 @@ namespace XPX::Renderer::DX11
 		m_private.pWindowHandle = hwnd;
 		xplicit_d3d11_make_swapchain(m_private.SwapDesc, m_private);
 
-		this->setup_rendering_system();
-
 		get().pCamera = std::make_unique<CameraSystemD3D11>();
 
 		get().pCamera->set_position(Vector(0.f, 0.f, 0.f));
 		get().pCamera->set_rotation(Vector(0.f, 0.f, 0.f));
+
+		this->setup_rendering_system();
+
 	}
 
 	DriverSystemD3D11::~DriverSystemD3D11() 
@@ -109,9 +112,8 @@ namespace XPX::Renderer::DX11
 
 	void DriverSystemD3D11::setup_rendering_system()
 	{
-		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
-
 		UINT creationFlags = 0;
+
 #if defined(XPLICIT_DEBUG) && defined(XPLICIT_USE_DIRECTX_DEBUG)
 		// If the project is in a debug build, enable the debug layer.
 		creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -122,8 +124,8 @@ namespace XPX::Renderer::DX11
 			D3D_DRIVER_TYPE_HARDWARE,
 			nullptr,
 			creationFlags,
-			feature,
-			ARRAYSIZE(feature),
+			nullptr,
+			0,
 			D3D11_SDK_VERSION,
 			&m_private.SwapDesc,
 			m_private.pSwapChain.GetAddressOf(),
@@ -249,6 +251,10 @@ namespace XPX::Renderer::DX11
 		m_private.WorldMatrix = XMMatrixIdentity();
 		m_private.OrthoMatrix = XMMatrixOrthographicLH(fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
 
+		this->get().ViewportCnt = 1U;
+
+		this->get().pCtx->RSSetViewports(this->get().ViewportCnt, &this->get().Viewport);
+
 		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] driver created.");
 	}
 
@@ -272,39 +278,27 @@ namespace XPX::Renderer::DX11
 		get().pCamera->render();
 	}
 
-	void DriverSystemD3D11::handle_device_removed()
-	{
-		XPLICIT_INFO("Device removed!!!");
-
-		Details::ThrowIfFailed(E_FAIL);
-	}
-
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
 	{
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
-			try
-			{
-				DriverSystemD3D11::handle_device_removed();
-			}
-			catch (...)
-			{
-				DialogHelper::message_box(L"XPX Rendering System",
-					L"Device has been removed!",
-					L"Direct3D driver crashed! Engine has to exit.", TD_ERROR_ICON,
-					TDCBF_OK_BUTTON);
+			HRESULT hr = get().pDevice->GetDeviceRemovedReason();
 
-				std::exit(0);
-			}
+			_com_error com(hr);
 
-			return true;
+			DialogHelper::message_box(L"XPX Rendering System",
+				L"Device has been removed!",
+				com.ErrorMessage(), TD_ERROR_ICON,
+				TDCBF_OK_BUTTON);
+
+			return false;
 		}
 		else
 		{
 			Details::ThrowIfFailed(hr);
 		}
 
-		return false;
+		return true;
 	}
 
 	bool DriverSystemD3D11::end_scene() 
@@ -314,7 +308,7 @@ namespace XPX::Renderer::DX11
 
 		HRESULT hr = m_private.pSwapChain->Present(m_private.bVSync ? 1 : 0, 0);
 
-		return !DriverSystemD3D11::check_device_removed(hr);
+		return this->check_device_removed(hr);
 	}
 
 	void DriverSystemD3D11::close() noexcept { m_private.bEndRendering = true; }
@@ -446,14 +440,14 @@ namespace XPX::Renderer::DX11
 
 		m_pDriver->get().pCtx->IASetInputLayout(m_pDriver->get().pInputLayout.Get());
 
-		UINT* indices = new UINT[m_arrayVerts.size()];
+		UINT* indices = new UINT[m_arrayIndices.size()];
 
 		for (size_t vertex_index = m_arrayIndices.size() - 1; vertex_index > 1; --vertex_index)
 		{
 			indices[vertex_index] = m_arrayIndices[vertex_index];
 		}
 
-		m_iIndices = m_arrayVerts.size();
+		m_iIndices = m_arrayIndices.size();
 
 		m_indexBufDesc.Usage = D3D11_USAGE_DEFAULT;
 		m_indexBufDesc.ByteWidth = sizeof(ULONG) * m_iIndices;

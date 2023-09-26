@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 			{
 				using namespace XPX::Renderer::DX11;
 
-				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (D3D 11)", "XPXPlayerDirectXInDev", hInst);
+				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XAGE (D3D11)", "XPXPlayerDirectXInDev", hInst);
 
 				XplicitLoadBaseLua();
 				XplicitLoadClientLua();
@@ -76,6 +76,8 @@ int main(int argc, char** argv)
 				win->get().DriverSystem = drv11;
 
 				RenderComponentD3D11* component_d3d11 = XPX::ComponentSystem::get_singleton_ptr()->add<RenderComponentD3D11>();
+
+				component_d3d11->set_driver(drv11);
 
 				XPLICIT_ASSERT(component_d3d11);
 
@@ -96,7 +98,6 @@ int main(int argc, char** argv)
 					component_d3d11->push(indice);
 				}
 
-				component_d3d11->set_driver(drv11);
 				component_d3d11->create();
 
 				win->update();

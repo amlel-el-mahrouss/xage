@@ -121,7 +121,8 @@ namespace XPX::Bites
 				XPX::ComponentSystem::get_singleton_ptr()->update();
 				XPX::EventSystem::get_singleton_ptr()->update();
 
-				get().DriverSystem->end_scene();
+				if (!get().DriverSystem->end_scene())
+					this->mExit = true;
 			}
 		}
 

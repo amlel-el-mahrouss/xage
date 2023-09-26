@@ -140,8 +140,7 @@ namespace XPX::Renderer::DX11
 		operator bool();
 
 	private:
-		static void handle_device_removed();
-		static bool check_device_removed(HRESULT hr);
+		bool check_device_removed(HRESULT hr);
 
 	private:
 		DriverTraits m_private;
