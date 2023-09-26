@@ -181,7 +181,7 @@ XPX::Renderer::DX11::ShaderSystemD3D11* XPX::Renderer::DX11::D3D11ShaderHelper1:
 		}
 		}
 
-		return shader_system;
+		delete shader_system;
 	}
 
 	return nullptr;

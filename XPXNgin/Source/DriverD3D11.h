@@ -99,6 +99,10 @@ namespace XPX::Renderer::DX11
 			D3D11_VIEWPORT Viewport;
 			DXGI_SWAP_CHAIN_DESC SwapDesc;
 
+			XMMATRIX ProjectionMatrix;
+			XMMATRIX WorldMatrix;
+			XMMATRIX OrthoMatrix;
+
 		public:
 			WRL::ComPtr<ID3D11Device> pDevice;
 			WRL::ComPtr<IDXGIAdapter> pAdapter;
@@ -114,7 +118,7 @@ namespace XPX::Renderer::DX11
 		};
 
 	private:
-		void setup();
+		void setup_rendering_system();
 
 	public:
 		void begin_scene(const float& a, const float& r, const float& g, const float& b, const bool zBuffer, const bool depth);
@@ -205,6 +209,8 @@ namespace XPX::Renderer::DX11
 
 	};
 
+	typedef enum D3D_PRIMITIVE_TOPOLOGY XPLICIT_PRIMITIVE_TOPOLOGY;
+
 	/*
      *
 	 * RenderComponentD3D11
@@ -243,8 +249,13 @@ namespace XPX::Renderer::DX11
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 
+	public:
+		auto topology() noexcept { return m_iTopology; }
+		void topology(const XPLICIT_PRIMITIVE_TOPOLOGY& topology) { m_iTopology = topology; }
+
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pMatrixBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;
 		std::vector<Color<float>> m_colorVectors;
 		std::vector<Vector<float>> m_arrayVerts;
@@ -256,6 +267,7 @@ namespace XPX::Renderer::DX11
 
 	private:
 		std::vector<ShaderSystemD3D11*> m_pShader;
+		XPLICIT_PRIMITIVE_TOPOLOGY m_iTopology;
 		DriverSystemD3D11* m_pDriver;
 		Details::VERTEX* m_pVertex;
 		size_t m_iVertexCnt;
@@ -274,6 +286,44 @@ namespace XPX::Renderer::DX11
 			const char* entrypoint,
 			DriverSystemD3D11* driver
 		);
+
+	};
+
+	class XPLICIT_API CameraSystemD3D11 : public DriverCameraSystem
+	{
+	public:
+		explicit CameraSystemD3D11() noexcept : DriverCameraSystem() {}
+		~CameraSystemD3D11() override {}
+
+	public:
+		void render() noexcept
+		{
+			float zero_vec[3]  = {0.0, 0.0, 0.0};
+			XMVECTOR lookAtVec(_mm_load_ps(zero_vec));
+			XMVECTOR up(_mm_load_ps(zero_vec));
+
+			float pos_vec[3] = { position().X, position().Y, position().Z };
+			XMVECTOR position(_mm_load_ps(pos_vec));
+
+			float pitch = rotation().X * 0.0174532925f;
+			float yaw = rotation().Y * 0.0174532925f;
+			float roll = rotation().Z * 0.0174532925f;
+
+			auto rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+			lookAtVec = XMVector3TransformCoord(lookAtVec, m_viewMatrix);
+			up = XMVector3TransformCoord(up, rotationMatrix);
+
+			lookAtVec = lookAtVec + position;
+		}
+
+		XMMATRIX view_matrix() { return m_viewMatrix; }
+
+	public:
+		XPLICIT_COPY_DEFAULT(CameraSystemD3D11);
+
+	public:
+		XMMATRIX m_viewMatrix;
 
 	};
 }

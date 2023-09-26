@@ -24,10 +24,12 @@ namespace XPX::Renderer::DX11
 {
 	ShaderSystemD3D11::~ShaderSystemD3D11()
 	{
-		if (m_data.pBlob)
+		if (m_data.pBlob &&
+			IsValidHeapPtr(m_data.pBlob))
 			m_data.pBlob->Release();
 
-		if (m_data.pErrorBlob)
+		if (m_data.pErrorBlob &&
+			IsValidHeapPtr(m_data.pErrorBlob))
 			m_data.pErrorBlob->Release();
 	}
 

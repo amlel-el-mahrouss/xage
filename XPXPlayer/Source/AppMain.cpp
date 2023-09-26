@@ -75,15 +75,13 @@ int main(int argc, char** argv)
 				DriverSystemD3D11* drv11 = new DriverSystemD3D11(win->get().WindowHandle);
 
 				auto shader_vertex = D3D11ShaderHelper1::make_shader<XPX::Renderer::DX11::XPLICIT_SHADER_TYPE::Vertex>(
-					L"C:/Users/amlal/XPXEngine/Shaders/Vertex.hlsl", 
+					L"C:/Users/amlal/XGE/Shaders/Vertex.hlsl", 
 					"VS", 
 					drv11);
 
 				RenderComponentD3D11* component_d3d11 = XPX::ComponentSystem::get_singleton_ptr()->add<RenderComponentD3D11>();
 
 				XPLICIT_ASSERT(component_d3d11);
-
-				component_d3d11->push_shader(shader_vertex);
 
 				component_d3d11->push(XPX::Color<float>(1, 1, 1, 1));
 				component_d3d11->push(XPX::Color<float>(1, 1, 1, 1));
@@ -93,21 +91,22 @@ int main(int argc, char** argv)
 				component_d3d11->push(XPX::Vector<float>(0.45f, -0.5, 0.0f));
 				component_d3d11->push(XPX::Vector<float>(-0.45f, 0.5, 0.0f));
 
-				D3D11_INPUT_ELEMENT_DESC  polygonLayout;
+				D3D11_INPUT_ELEMENT_DESC polygonLayout;
 				
 				RtlZeroMemory(&polygonLayout, sizeof(D3D11_INPUT_ELEMENT_DESC));
 
 				polygonLayout.SemanticName = "POSITION";
 				polygonLayout.SemanticIndex = 0;
-				polygonLayout.Format = DXGI_FORMAT_R32G32_FLOAT;
+				polygonLayout.Format = DXGI_FORMAT_R32G32B32_FLOAT;
 				polygonLayout.InputSlot = 0;
 				polygonLayout.AlignedByteOffset = 0;
 				polygonLayout.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 				polygonLayout.InstanceDataStepRate = 0;
 
 				shader_vertex->get().vInputLayouts.push_back(polygonLayout);
-
 				shader_vertex->get().create_input_layout(drv11->get().pDevice.Get());
+
+				component_d3d11->push_shader(shader_vertex);
 
 				component_d3d11->set_driver(drv11);
 				component_d3d11->create();
@@ -116,7 +115,7 @@ int main(int argc, char** argv)
 				{
 					win->update();
 
-					drv11->begin_scene(1, 0.5, 0.5, 0.5, true, true);
+					drv11->begin_scene(1, 0.5, 0.5, 0.5, false, false);
 
 					XPX::ComponentSystem::get_singleton_ptr()->update();
 					XPX::EventSystem::get_singleton_ptr()->update();

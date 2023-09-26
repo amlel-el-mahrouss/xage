@@ -101,6 +101,29 @@ namespace XPX::Renderer
 		RENDER_LIGHT,
 		RENDER_TYPE_COUNT,
 	};
+
+	class XPLICIT_API DriverCameraSystem
+	{
+	public:
+		explicit DriverCameraSystem() noexcept : m_vPos(0, 0, 0), m_vRot(0, 0, 0) {}
+		virtual ~DriverCameraSystem() {}
+
+	public:
+		XPLICIT_COPY_DEFAULT(DriverCameraSystem);
+
+	public:
+		void set_position(const Vector<NplicitFloat>& pos) { m_vPos = pos; }
+		void set_rotation(const Vector<NplicitFloat>& rot) { m_vRot = rot; }
+
+	public:
+		Vector<NplicitFloat>& position() noexcept { return m_vPos; }
+		Vector<NplicitFloat>& rotation() noexcept { return m_vRot; }
+
+	protected:
+		Vector<NplicitFloat> m_vPos;
+		Vector<NplicitFloat> m_vRot;
+
+	};
 }
 
 #define XPLICIT_DRIVER_SYSTEM_OVERRIDE()\

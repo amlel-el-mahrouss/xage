@@ -82,13 +82,18 @@ namespace XPX::Renderer::DX11
 
 	}
 
+	static std::unique_ptr<CameraSystemD3D11> gCamera;
+
 	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd)
 		: m_private()
 	{
 		m_private.pWindowHandle = hwnd;
 		xplicit_d3d11_make_swapchain(m_private.SwapDesc, m_private);
 
-		this->setup();
+		this->setup_rendering_system();
+
+		gCamera = std::make_unique<CameraSystemD3D11>();
+		gCamera->set_position(Vector(0.f, 0.f, 0.f));
 	}
 
 	DriverSystemD3D11::~DriverSystemD3D11() 
@@ -97,7 +102,7 @@ namespace XPX::Renderer::DX11
 			m_private.pSwapChain->SetFullscreenState(false, nullptr);
 	}
 
-	void DriverSystemD3D11::setup()
+	void DriverSystemD3D11::setup_rendering_system()
 	{
 		const D3D_FEATURE_LEVEL feature[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
 
@@ -248,6 +253,8 @@ namespace XPX::Renderer::DX11
 
 		m_private.pCtx->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
 		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+		gCamera->render();
 	}
 
 	void DriverSystemD3D11::handle_device_removed()
@@ -290,7 +297,7 @@ namespace XPX::Renderer::DX11
 		XPLICIT_ASSERT(m_private.pSwapChain);
 		XPLICIT_ASSERT(m_private.pCtx);
 
-		HRESULT hr = m_private.pSwapChain->Present(0, 0);
+		HRESULT hr = m_private.pSwapChain->Present(1, 0);
 
 		return !DriverSystemD3D11::check_device_removed(hr);
 	}
@@ -312,10 +319,9 @@ namespace XPX::Renderer::DX11
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
 		 m_pDriver(nullptr), m_pVertex(nullptr),
-		m_indexData(), m_iVertexCnt(0)
-	{
-		
-	}
+		m_indexData(), m_iVertexCnt(0), m_iTopology(XPLICIT_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
+		m_pMatrixBuffer(nullptr)
+	{}
 
 	RenderComponentD3D11::~RenderComponentD3D11()
 	{
@@ -333,7 +339,6 @@ namespace XPX::Renderer::DX11
 		this->m_arrayVerts.push_back(vert);
 	}
 
-	// this needs to be more generic.
 	void RenderComponentD3D11::create()
 	{
 		if (m_arrayVerts.empty())
@@ -430,6 +435,20 @@ namespace XPX::Renderer::DX11
 		}
 
 		delete[] pIndices;
+
+		D3D11_BUFFER_DESC matrixBufferDesc;
+
+		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		matrixBufferDesc.ByteWidth = sizeof(Details::CBUFFER);
+		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		matrixBufferDesc.MiscFlags = 0;
+		matrixBufferDesc.StructureByteStride = 0;
+
+		HRESULT result;
+		result = m_pDriver->get().pDevice->CreateBuffer(&matrixBufferDesc, nullptr, m_pMatrixBuffer.GetAddressOf());
+
+		Details::ThrowIfFailed(result);
 	}
 
 	const char* RenderComponentD3D11::name() noexcept { return ("D3D11RenderComponent"); }
@@ -460,15 +479,45 @@ namespace XPX::Renderer::DX11
 			self->m_iVertexCnt < 1)
 			return;
 
+		auto viewMatrix = gCamera->view_matrix();
+
+		HRESULT result;
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		Details::CBUFFER* dataPtr;
+		unsigned int bufferNumber;
+
+		self->m_pDriver->get().WorldMatrix = XMMatrixTranspose(self->m_pDriver->get().WorldMatrix);
+		viewMatrix = XMMatrixTranspose(viewMatrix);
+		self->m_pDriver->get().ProjectionMatrix = XMMatrixTranspose(self->m_pDriver->get().ProjectionMatrix);
+
+		result = self->m_pDriver->get().pCtx->Map(self->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+		if (FAILED(result))
+			return;
+
+		dataPtr = (Details::CBUFFER*)mappedResource.pData;
+
+		dataPtr->world = self->m_pDriver->get().WorldMatrix;
+		dataPtr->view = viewMatrix;
+		dataPtr->projection = self->m_pDriver->get().ProjectionMatrix;
+
+		self->m_pDriver->get().pCtx->Unmap(self->m_pMatrixBuffer.Get(), 0);
+
 		const uint32_t stride[] = { sizeof(Details::VERTEX) };
 		const uint32_t offset = 0;
 
+		self->m_pDriver->get().pCtx->VSSetConstantBuffers(bufferNumber, 1, self->m_pMatrixBuffer.GetAddressOf());
 		self->m_pDriver->get().pCtx->IASetVertexBuffers(1, 1, self->m_pVertexBuffer.GetAddressOf(), stride, &offset);
 		self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
 
-		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iVertexCnt, 0, 0);
+		for (auto& shader : self->m_pShader)
+			shader->update(self);
+
+		self->m_pDriver->get().pCtx->Draw(self->m_iVertexCnt, 0);
+
+		self->m_pDriver->get().pSwapChain->Present(1, 0);
 	}
 
 	size_t RenderComponentD3D11::size() noexcept
