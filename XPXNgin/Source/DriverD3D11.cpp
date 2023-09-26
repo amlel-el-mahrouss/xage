@@ -192,8 +192,6 @@ namespace XPX::Renderer::DX11
 		if (FAILED(hr))
 			throw Win32Error("[CreateDepthStencilState] Failed to call function correctly!");
 
-		m_private.pCtx->OMSetDepthStencilState(m_private.pDepthStencilState.Get(), 1u);
-
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 		RtlZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 
@@ -332,7 +330,7 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 
-	constexpr const float gOriginMatrix[3] = { 0.f, 0.f, 0.f };
+	constexpr const float gOriginMatrix[4] = { 0.f, 0.f, 0.f, 0.0f };
 
 	RenderComponentD3D11::RenderComponentD3D11()
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
@@ -397,14 +395,14 @@ namespace XPX::Renderer::DX11
 				m_colorVectors[vertex_index].R,
 				m_colorVectors[vertex_index].G,
 				m_colorVectors[vertex_index].B);
-
-			++m_iVertexCnt;
 		}
+
+		m_iVertexCnt = m_arrayVerts.size();
 
 		m_vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		m_vertexBufferDesc.ByteWidth = sizeof(Details::VERTEX) * m_iVertexCnt;
 		m_vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		m_vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		m_vertexBufferDesc.CPUAccessFlags = 0;
 		m_vertexBufferDesc.MiscFlags = 0;
 		m_vertexBufferDesc.StructureByteStride = 0;
 		
@@ -422,18 +420,9 @@ namespace XPX::Renderer::DX11
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create(CreateBuffer(m_vertex_buffer))");
 		}
 
-		D3D11_MAPPED_SUBRESOURCE ms;
-		ZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
-
-		m_pDriver->get().pCtx->Map(m_pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
-		memcpy(ms.pData, m_pVertex, sizeof(m_pVertex));  
-		m_pDriver->get().pCtx->Unmap(m_pVertexBuffer.Get(), 0);
-
 		delete[] m_pVertex;
 
-		D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
-
-		RtlZeroMemory(&polygonLayout, sizeof(D3D11_INPUT_ELEMENT_DESC) * 3);
+		D3D11_INPUT_ELEMENT_DESC* polygonLayout = new D3D11_INPUT_ELEMENT_DESC[2];
 
 		polygonLayout[0].SemanticName = "POSITION";
 		polygonLayout[0].SemanticIndex = 0;
@@ -456,11 +445,11 @@ namespace XPX::Renderer::DX11
 			m_pVertexShader->get().pBlob->GetBufferSize(),
 			m_pDriver->get().pInputLayout.GetAddressOf());
 
-		std::vector<UINT> indices;
+		UINT* indices = new UINT[m_arrayVerts.size()];
 
 		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{
-			indices.push_back(vertex_index);
+			indices[vertex_index] = vertex_index;
 		}
 
 		m_iIndices = m_arrayVerts.size();
@@ -472,7 +461,7 @@ namespace XPX::Renderer::DX11
 		m_indexBufDesc.MiscFlags = 0;
 		m_indexBufDesc.StructureByteStride = 0;
 
-		m_indexData.pSysMem = indices.data();
+		m_indexData.pSysMem = indices;
 		m_indexData.SysMemPitch = 0;
 		m_indexData.SysMemSlicePitch = 0;
 
@@ -494,6 +483,9 @@ namespace XPX::Renderer::DX11
 		result = m_pDriver->get().pDevice->CreateBuffer(&matrixBufferDesc, nullptr, m_pMatrixBuffer.GetAddressOf());
 
 		Details::ThrowIfFailed(result);
+
+		delete polygonLayout;
+		delete indices;
 	}
 
 	const char* RenderComponentD3D11::name() noexcept { return ("D3D11RenderComponent"); }
@@ -513,11 +505,10 @@ namespace XPX::Renderer::DX11
 		if (!self)
 			return;
 
-		if (!self->m_pDriver ||
-			self->m_iVertexCnt < 1)
-			return;
+		XPLICIT_ASSERT(self->m_pDriver);
 
 		self->m_pDriver->get().pCtx->RSSetState(self->m_pDriver->get().pRasterState.Get());
+		self->m_pDriver->get().pCtx->OMSetDepthStencilState(self->m_pDriver->get().pDepthStencilState.Get(), 1U);
 
 		self->m_viewMatrix = self->m_pDriver->get().pCamera->m_viewMatrix;
 
@@ -527,12 +518,10 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pCtx->IASetVertexBuffers(0, 1, self->m_pVertexBuffer.GetAddressOf(), stride, offset);
 		self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-		ID3D11InputLayout* input_layout = nullptr;
-
 		self->m_pColorShader->update(self);
 		self->m_pVertexShader->update(self);
 
-		self->m_pDriver->get().pCtx->IASetInputLayout(input_layout);
+		self->m_pDriver->get().pCtx->IASetInputLayout(self->m_pDriver->get().pInputLayout.Get());
 
 		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
 

@@ -51,6 +51,8 @@ namespace XPX::Renderer::DX11
 
 			m_pDriver->get().pCtx->VSSetShader(pShader, nullptr, 0);
 
+			m_type = (uint8_t)XPLICIT_SHADER_TYPE::Vertex;
+
 			pShader->Release();
 		}
 		else if (m_data.shader_type == XPLICIT_PIXEL_SHADER)
@@ -61,6 +63,8 @@ namespace XPX::Renderer::DX11
 				m_data.pBlob->GetBufferSize(), nullptr, &pShader);
 
 			m_pDriver->get().pCtx->PSSetShader(pShader, nullptr, 0);
+
+			m_type = (uint8_t)XPLICIT_SHADER_TYPE::Pixel;
 
 			pShader->Release();
 		}
@@ -75,32 +79,57 @@ namespace XPX::Renderer::DX11
 		if (!component)
 			return;
 
-		HRESULT result;
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
-		Details::CBUFFER* dataPtr;
-		unsigned int bufferNumber = 0U;
+		switch ((XPLICIT_SHADER_TYPE)m_type)
+		{
+		case XPLICIT_SHADER_TYPE::Vertex:
+		{
+			HRESULT result;
+			D3D11_MAPPED_SUBRESOURCE mappedResource;
+			Details::CBUFFER* dataPtr;
+			unsigned int bufferNumber = 0U;
 
-		auto viewMatrix = component->m_viewMatrix;
+			auto viewMatrix = component->m_viewMatrix;
 
-		component->m_pDriver->get().WorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
-		viewMatrix = XMMatrixTranspose(viewMatrix);
-		component->m_pDriver->get().ProjectionMatrix = XMMatrixTranspose(component->m_pDriver->get().ProjectionMatrix);
+			component->m_pDriver->get().WorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
+			viewMatrix = XMMatrixTranspose(viewMatrix);
+			component->m_pDriver->get().ProjectionMatrix = XMMatrixTranspose(component->m_pDriver->get().ProjectionMatrix);
 
-		result = component->m_pDriver->get().pCtx->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+			result = component->m_pDriver->get().pCtx->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
-		if (FAILED(result))
-			return;
+			XPLICIT_ASSERT(SUCCEEDED(result));
 
-		dataPtr = (Details::CBUFFER*)mappedResource.pData;
+			dataPtr = (Details::CBUFFER*)mappedResource.pData;
 
-		dataPtr->world = component->m_pDriver->get().WorldMatrix;
-		dataPtr->view = viewMatrix;
-		dataPtr->projection = component->m_pDriver->get().ProjectionMatrix;
+			if (sizeof(dataPtr) == sizeof(Details::CBUFFER))
+			{
+				dataPtr->world = component->m_pDriver->get().WorldMatrix;
+				dataPtr->view = viewMatrix;
+				dataPtr->projection = component->m_pDriver->get().ProjectionMatrix;
 
-		component->m_pDriver->get().pCtx->Unmap(component->m_pMatrixBuffer.Get(), 0);
+				component->m_pDriver->get().pCtx->Unmap(component->m_pMatrixBuffer.Get(), 0);
 
-		component->m_pDriver->get().pCtx->VSSetConstantBuffers(bufferNumber, 1, component->m_pMatrixBuffer.GetAddressOf());
+				component->m_pDriver->get().pCtx->VSSetConstantBuffers(bufferNumber, 1, component->m_pMatrixBuffer.GetAddressOf());
+			}
 
+			component->m_pDriver->get().pCtx->Unmap(component->m_pMatrixBuffer.Get(), 0);
+
+			result = component->m_pDriver->get().pCtx->Map(component->m_pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+			if (sizeof(dataPtr) == sizeof(Details::VERTEX))
+			{
+				Details::VERTEX** vert = (Details::VERTEX**)dataPtr;
+
+				for (size_t i = 0; i < component->m_iVertexCnt; ++i)
+				{
+					vert[i]->COLOR = XMVectorSet(component->m_colorVectors[i].A, component->m_colorVectors[i].R, component->m_colorVectors[i].G, component->m_colorVectors[i].B);
+					
+					vert[i]->X = component->m_arrayVerts[i].X;
+					vert[i]->Y = component->m_arrayVerts[i].Y;
+					vert[i]->Z = component->m_arrayVerts[i].Z;
+				}
+			}
+		}
+		}
 	}
 }
 

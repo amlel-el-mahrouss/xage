@@ -27,6 +27,9 @@
 #include <d3dcommon.h>
 #include <DirectXMath.h>
 
+#include <Effects.h>
+#include <DirectXHelpers.h>
+
 #ifdef XPLICIT_DEBUG
 
 #include <nuklear/nuklear.h>
@@ -118,6 +121,8 @@ namespace XPX::Renderer::DX11
 			std::unique_ptr<CameraSystemD3D11> pCamera;
 			WRL::ComPtr<ID3D11InputLayout> pInputLayout;
 			WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
+			std::unique_ptr<PBREffect> pPBREffect;
+			std::unique_ptr<SkinnedPBREffect> pSkinnedPBR;
 
 		};
 
