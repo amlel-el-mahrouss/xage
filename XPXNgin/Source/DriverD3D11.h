@@ -203,6 +203,11 @@ namespace XPX::Renderer::DX11
 		/// </summary>
 		void update(RenderComponentD3D11* component);
 
+		/// <summary>
+		/// Updates the Constant buffer.
+		/// </summary>
+		void update_cbuf(RenderComponentD3D11* component);
+
 	private:
 		ShaderTraits m_data;
 		DriverSystemD3D11* m_pDriver;

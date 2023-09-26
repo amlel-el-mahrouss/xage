@@ -47,7 +47,6 @@ namespace XPX::Renderer::DX11
 			&m_data.pBlob,
 			&m_data.pErrorBlob);
 
-		
 		if (m_data.shader_type == XPLICIT_VERTEX_SHADER)
 		{
 			m_pDriver->get().pDevice->CreateVertexShader(m_data.pBlob->GetBufferPointer(),
@@ -65,10 +64,52 @@ namespace XPX::Renderer::DX11
 
 	ShaderSystemD3D11::ShaderTraits& ShaderSystemD3D11::get() { return m_data; }
 
+	void ShaderSystemD3D11::update_cbuf(RenderComponentD3D11* component)
+	{
+		if (!component)
+			return;
+
+		HRESULT result;
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		Details::CBUFFER* cBuffer;
+		unsigned int cBufferCnt = 0U;
+
+		auto transPoseWorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
+		auto transPoseOrthoMatrix = XMMatrixTranspose(component->m_pDriver->get().OrthoMatrix);
+		auto transPoseProjectionMatrix = XMMatrixTranspose(component->m_pDriver->get().ProjectionMatrix);
+
+		HRESULT hr = component->m_pDriver->get().pCtx->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+		Details::ThrowIfFailed(hr);
+
+		cBuffer = (Details::CBUFFER*)mappedResource.pData;
+
+		cBufferCnt = sizeof(cBuffer) / sizeof(cBuffer[0]);
+
+		for (size_t bufferIndex = 0; bufferIndex < cBufferCnt; bufferIndex++)
+		{
+			cBuffer[bufferIndex].projection = transPoseProjectionMatrix;
+			cBuffer[bufferIndex].world = transPoseWorldMatrix;
+			cBuffer[bufferIndex].view = transPoseOrthoMatrix;
+		}
+
+		component->m_pDriver->get().pCtx->Unmap(component->m_pMatrixBuffer.Get(), 0);
+		component->m_pDriver->get().pCtx->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
+	}
+
 	void ShaderSystemD3D11::update(RenderComponentD3D11* component)
 	{
 		if (!component)
 			return;
+
+		try
+		{
+			this->update_cbuf(component);
+		}
+		catch (...)
+		{
+			XPLICIT_INFO("WARNING: No CBuf attached to shader.");
+		}
 
 		switch ((XPLICIT_SHADER_TYPE)m_type)
 		{

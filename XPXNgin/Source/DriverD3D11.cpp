@@ -510,14 +510,14 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pCtx->IASetVertexBuffers(0, 1, self->m_pVertexBuffer.GetAddressOf(), &stride, &offset);
 		self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-		self->m_pColorShader->update(self);
-		self->m_pVertexShader->update(self);
-
 		self->m_pDriver->get().pCtx->IASetInputLayout(self->m_pDriver->get().pInputLayout.Get());
 
 		self->m_pDriver->get().pCtx->RSSetViewports(self->m_pDriver->get().ViewportCnt, &self->m_pDriver->get().Viewport);
-
 		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
+
+		self->m_pColorShader->update(self);
+		self->m_pVertexShader->update(self);
+
 		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
