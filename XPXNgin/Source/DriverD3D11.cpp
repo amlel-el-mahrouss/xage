@@ -215,7 +215,7 @@ namespace XPX::Renderer::DX11
 
 		rasterDesc.FillMode = D3D11_FILL_SOLID;
 		rasterDesc.CullMode = D3D11_CULL_NONE;
-		rasterDesc.FrontCounterClockwise = false;
+		rasterDesc.FrontCounterClockwise = true;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
@@ -330,7 +330,7 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 
-	constexpr const float gOriginMatrix[4] = { 0.f, 0.f, 0.f, 0.0f };
+	static const float gOriginMatrix[4] = { 0.f, 0.f, 0.f, 0.0f };
 
 	RenderComponentD3D11::RenderComponentD3D11()
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
@@ -357,6 +357,8 @@ namespace XPX::Renderer::DX11
 		this->m_arrayVerts.push_back(vert);
 	}
 
+	void RenderComponentD3D11::push(const UINT& indice) { this->m_arrayIndices.push_back(indice); }
+
 	void RenderComponentD3D11::create()
 	{
 		if (m_arrayVerts.empty())
@@ -375,13 +377,9 @@ namespace XPX::Renderer::DX11
 
 		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{
-			m_pVertex[vertex_index].X = m_arrayVerts[vertex_index].X;
-			m_pVertex[vertex_index].Y = m_arrayVerts[vertex_index].Y;
-			m_pVertex[vertex_index].Z = m_arrayVerts[vertex_index].Z;
-			m_pVertex[vertex_index].W = 0.f;
+			m_pVertex[vertex_index].POSITION = XMFLOAT3(m_arrayVerts[vertex_index].X, m_arrayVerts[vertex_index].Y, m_arrayVerts[vertex_index].Z);
 
-			m_pVertex[vertex_index].COLOR = XMVectorSet(m_colorVectors[vertex_index].A,
-				m_colorVectors[vertex_index].R,
+			m_pVertex[vertex_index].COLOR = XMFLOAT3(m_colorVectors[vertex_index].R,
 				m_colorVectors[vertex_index].G,
 				m_colorVectors[vertex_index].B);
 		}
@@ -450,9 +448,9 @@ namespace XPX::Renderer::DX11
 
 		UINT* indices = new UINT[m_arrayVerts.size()];
 
-		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
+		for (size_t vertex_index = m_arrayIndices.size() - 1; vertex_index > 1; --vertex_index)
 		{
-			indices[vertex_index] = vertex_index;
+			indices[vertex_index] = m_arrayIndices[vertex_index];
 		}
 
 		m_iIndices = m_arrayVerts.size();
@@ -526,7 +524,7 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pCtx->RSSetViewports(self->m_pDriver->get().ViewportCnt, &self->m_pDriver->get().Viewport);
 
 		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
-		self->m_pDriver->get().pCtx->Draw(self->m_iIndices, 0);
+		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
 	size_t RenderComponentD3D11::size() noexcept

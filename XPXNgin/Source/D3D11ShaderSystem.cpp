@@ -50,26 +50,14 @@ namespace XPX::Renderer::DX11
 		
 		if (m_data.shader_type == XPLICIT_VERTEX_SHADER)
 		{
-			ID3D11VertexShader* pShader = nullptr;
-
 			m_pDriver->get().pDevice->CreateVertexShader(m_data.pBlob->GetBufferPointer(),
 				m_data.pBlob->GetBufferSize(), nullptr, m_data.pVertex.GetAddressOf());
-
-			m_pDriver->get().pCtx->VSSetShader(pShader, nullptr, 0);
-
-			m_type = (uint8_t)XPLICIT_SHADER_TYPE::Vertex;
-
 		}
 		else if (m_data.shader_type == XPLICIT_PIXEL_SHADER)
 		{
-			ID3D11PixelShader* pShader;
 
 			m_pDriver->get().pDevice->CreatePixelShader(m_data.pBlob->GetBufferPointer(),
 				m_data.pBlob->GetBufferSize(), nullptr, m_data.pPixel.GetAddressOf());
-
-			m_pDriver->get().pCtx->PSSetShader(pShader, nullptr, 0);
-
-			m_type = (uint8_t)XPLICIT_SHADER_TYPE::Pixel;
 		}
 
 		return SUCCEEDED(hr) ? 0 : 1;

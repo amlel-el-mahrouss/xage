@@ -58,8 +58,8 @@ namespace XPX::Renderer::DX11
 	{
 		struct VERTEX
 		{
-			FLOAT X, Y, Z, W;
-			XMVECTOR COLOR;
+			XMFLOAT3 POSITION;
+			XMFLOAT3 COLOR;
 		};
 
 		struct CBUFFER
@@ -233,8 +233,9 @@ namespace XPX::Renderer::DX11
 		XPLICIT_COPY_DEFAULT(RenderComponentD3D11);
 
 	public:
-		void push(const Color<float>& vert);
+		void push(const Color<float>& clr);
 		void push(const Vector<float>& vert);
+		void push(const UINT& indice);
 
 	public:
 		void set_driver(DriverSystemD3D11* dx11) noexcept;
@@ -261,6 +262,7 @@ namespace XPX::Renderer::DX11
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;
 		std::vector<Color<float>> m_colorVectors;
 		std::vector<Vector<float>> m_arrayVerts;
+		std::vector<UINT> m_arrayIndices;
 
 		D3D11_SUBRESOURCE_DATA m_vertexData;
 		D3D11_SUBRESOURCE_DATA m_indexData;
