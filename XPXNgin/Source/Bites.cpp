@@ -29,9 +29,9 @@ namespace XPX::Bites
 		mTraits.WndClass.hIcon = LoadIcon(hInstance, IDI_WINLOGO);
 		mTraits.WndClass.hIconSm = mTraits.WndClass.hIcon;
 		mTraits.WndClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
-		mTraits.WndClass.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
+		mTraits.WndClass.hbrBackground = nullptr;
 		mTraits.WndClass.lpszMenuName = nullptr;
-		mTraits.WndClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+		mTraits.WndClass.style = CS_OWNDC;
 		mTraits.WndClass.lpszClassName = wndClass;
 
 		RegisterClassExA(&mTraits.WndClass);
@@ -44,7 +44,7 @@ namespace XPX::Bites
 
 		mTraits.WindowHandle = CreateWindowA(wndClass,
 			wndName,
-			WS_BORDER,
+			WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 			x,
 			y, 
 			XPLICIT_MIN_WIDTH,
@@ -55,9 +55,8 @@ namespace XPX::Bites
 			this);
 
 		XPLICIT_ASSERT(mTraits.WindowHandle);
-
 		ShowWindow(mTraits.WindowHandle, SW_SHOW);
-		UpdateWindow(mTraits.WindowHandle);
+
 	}
 
 	LRESULT Win32Window::window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -92,6 +91,8 @@ namespace XPX::Bites
 
 	Win32Window::~Win32Window()
 	{
+		UnregisterClassA(mTraits.WndClass.lpszClassName, mTraits.WndClass.hInstance);
+
 		if (mTraits.WindowHandle)
 			DestroyWindow(mTraits.WindowHandle);
 	}
@@ -100,7 +101,7 @@ namespace XPX::Bites
 
 	int Win32Window::update() noexcept
 	{
-		while (!this->mExit)
+		if (!this->mExit)
 		{
 			static MSG msg{ 0 };
 
@@ -112,17 +113,7 @@ namespace XPX::Bites
 
 			if (msg.message == WM_QUIT)
 			{
-				this->mExit = true;
-			}
-			else
-			{
-				get().DriverSystem->begin_scene(1, 0.0, 0.0, 0.0, true, true);
-
-				XPX::ComponentSystem::get_singleton_ptr()->update();
-				XPX::EventSystem::get_singleton_ptr()->update();
-
-				if (!get().DriverSystem->end_scene())
-					this->mExit = true;
+				return (int)msg.message;
 			}
 		}
 

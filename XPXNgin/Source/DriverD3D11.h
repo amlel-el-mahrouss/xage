@@ -187,6 +187,7 @@ namespace XPX::Renderer::DX11
 			WRL::ComPtr<ID3D11PixelShader> pPixel;
 			WRL::ComPtr<ID3D11VertexShader> pVertex;
 			WRL::ComPtr<ID3D11Buffer> pMatrixBuffer;
+			ID3D11InputLayout* pInputLayout;
 
 		};
 

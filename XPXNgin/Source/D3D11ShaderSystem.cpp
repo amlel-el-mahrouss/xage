@@ -37,25 +37,43 @@ namespace XPX::Renderer::DX11
 
 		if (m_data.pVertex)
 			m_data.pVertex->Release();
+
+		if (m_data.pInputLayout)
+			m_data.pInputLayout->Release();
 	}
 
 	int ShaderSystemD3D11::compile() noexcept
 	{
-		HRESULT hr = D3DCompileFromFile(m_shader.c_str(), nullptr, nullptr, m_data.entrypoint.c_str(), m_data.shader_type.c_str(),
+		HRESULT hr = D3DCompileFromFile(m_shader.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, m_data.entrypoint.c_str(), m_data.shader_type.c_str(),
 			m_data.iFlags1,
 			m_data.iFlags2,
 			&m_data.pBlob,
 			&m_data.pErrorBlob);
 
+		if (FAILED(hr))
+			throw Win32Error("Could not compile shader from file!");
+
 		if (m_data.shader_type == XPLICIT_VERTEX_SHADER)
 		{
-			m_pDriver->get().pDevice->CreateVertexShader(m_data.pBlob->GetBufferPointer(),
+			hr = m_pDriver->get().pDevice->CreateVertexShader(m_data.pBlob->GetBufferPointer(),
 				m_data.pBlob->GetBufferSize(), nullptr, m_data.pVertex.GetAddressOf());
+
+			if (SUCCEEDED(hr))
+			{
+				D3D11_INPUT_ELEMENT_DESC inputLayout[] = {
+					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					 { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				};
+
+				auto lSize = sizeof(inputLayout) / sizeof(inputLayout[0]);
+
+				Details::ThrowIfFailed(m_pDriver->get().pDevice->CreateInputLayout(inputLayout, lSize,
+					m_data.pBlob->GetBufferPointer(), m_data.pBlob->GetBufferSize(), &m_data.pInputLayout));
+			}
 		}
 		else if (m_data.shader_type == XPLICIT_PIXEL_SHADER)
 		{
-
-			m_pDriver->get().pDevice->CreatePixelShader(m_data.pBlob->GetBufferPointer(),
+			hr = m_pDriver->get().pDevice->CreatePixelShader(m_data.pBlob->GetBufferPointer(),
 				m_data.pBlob->GetBufferSize(), nullptr, m_data.pPixel.GetAddressOf());
 		}
 
@@ -71,11 +89,11 @@ namespace XPX::Renderer::DX11
 
 		HRESULT result;
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
-		Details::CBUFFER* cBuffer;
+		Details::CBUFFER* cBuffer = nullptr;
 		unsigned int cBufferCnt = 0U;
 
 		auto transPoseWorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
-		auto transPoseOrthoMatrix = XMMatrixTranspose(component->m_pDriver->get().OrthoMatrix);
+		auto transPoseViewMatrix = XMMatrixTranspose(component->m_viewMatrix);
 		auto transPoseProjectionMatrix = XMMatrixTranspose(component->m_pDriver->get().ProjectionMatrix);
 
 		HRESULT hr = component->m_pDriver->get().pCtx->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -84,13 +102,13 @@ namespace XPX::Renderer::DX11
 
 		cBuffer = (Details::CBUFFER*)mappedResource.pData;
 
-		cBufferCnt = sizeof(cBuffer) / sizeof(cBuffer[0]);
+		cBufferCnt = (sizeof(Details::CBUFFER) / sizeof(cBuffer[0]));
 
-		for (size_t bufferIndex = 0; bufferIndex < cBufferCnt; bufferIndex++)
+		for (size_t bufferIndex = 0; bufferIndex < cBufferCnt; ++bufferIndex)
 		{
 			cBuffer[bufferIndex].projection = transPoseProjectionMatrix;
 			cBuffer[bufferIndex].world = transPoseWorldMatrix;
-			cBuffer[bufferIndex].view = transPoseOrthoMatrix;
+			cBuffer[bufferIndex].view = transPoseViewMatrix;
 		}
 
 		component->m_pDriver->get().pCtx->Unmap(component->m_pMatrixBuffer.Get(), 0);
@@ -102,14 +120,8 @@ namespace XPX::Renderer::DX11
 		if (!component)
 			return;
 
-		try
-		{
-			this->update_cbuf(component);
-		}
-		catch (...)
-		{
-			XPLICIT_INFO("WARNING: No CBuf attached to shader.");
-		}
+		if (m_data.pInputLayout)
+			m_pDriver->get().pCtx->IASetInputLayout(m_data.pInputLayout);
 
 		switch ((XPLICIT_SHADER_TYPE)m_type)
 		{

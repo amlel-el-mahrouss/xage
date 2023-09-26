@@ -85,13 +85,13 @@ int main(int argc, char** argv)
 				component_d3d11->push(XPX::Color<float>(0, 0.5, 0, 1));
 				component_d3d11->push(XPX::Color<float>(0.5, 0, 0, 1));
 
-				float num = 0.5f;
+				float num = 1.0f;
 
-				component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
-				component_d3d11->push(XPX::Vector<float>(num, -num, 0.0f));
 				component_d3d11->push(XPX::Vector<float>(-num, -num, 0.0f));
+				component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
+				component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
 
-				std::vector<UINT> indices{ 0, 1, 3, 3, 1, 2 };
+				std::vector<UINT> indices{ 0, 1, 2 };
 
 				for (auto& indice : indices)
 				{
@@ -100,7 +100,21 @@ int main(int argc, char** argv)
 
 				component_d3d11->create();
 
-				win->update();
+				drv11->get().pCamera->set_position(XPX::Vector<float>(0, 0, -5.0f));
+
+				auto ret = 0;
+
+				while (ret != WM_QUIT)
+				{
+					drv11->begin_scene(1, 0.5, 0.2, 0.5, true, true);
+
+					XPX::ComponentSystem::get_singleton_ptr()->update();
+					XPX::EventSystem::get_singleton_ptr()->update();
+
+					drv11->end_scene();
+
+					ret = win->update();
+				}
 
 				delete win; // still though, wanna do that. even though windows still does free the pool.
 			}
