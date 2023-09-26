@@ -12,6 +12,7 @@
 
 #include "GLad.h"
 #include "Bites.h"
+#include "Event.h"
 
 namespace XPX::Bites
 {
@@ -95,11 +96,11 @@ namespace XPX::Bites
 			DestroyWindow(mTraits.WindowHandle);
 	}
 
-	const Win32Window::Traits& Win32Window::get() const noexcept { return mTraits; }
+	Win32Window::Traits& Win32Window::get() noexcept { return mTraits; }
 
 	int Win32Window::update() noexcept
 	{
-		if (!this->mExit)
+		while (!this->mExit)
 		{
 			static MSG msg{ 0 };
 
@@ -110,7 +111,18 @@ namespace XPX::Bites
 			}
 
 			if (msg.message == WM_QUIT)
-				return 1;
+			{
+				this->mExit = true;
+			}
+			else
+			{
+				get().DriverSystem->begin_scene(1, 0.0, 0.0, 0.0, true, true);
+
+				XPX::ComponentSystem::get_singleton_ptr()->update();
+				XPX::EventSystem::get_singleton_ptr()->update();
+
+				get().DriverSystem->end_scene();
+			}
 		}
 
 		return 0;

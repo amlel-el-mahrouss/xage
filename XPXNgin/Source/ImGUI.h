@@ -40,7 +40,7 @@ namespace XPX::ImGUI
 	public:
 		XPLICIT_COPY_DEFAULT(UIButton);
 
-	slots:
+	imgui_slots:
 		bool LeftClicked;
 		bool RightClicked;
 		bool Hover;

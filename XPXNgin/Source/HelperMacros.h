@@ -21,6 +21,11 @@ XPX::String DIR = getenv("APPDATA");\
 DIR += "/NginData/";
 
 
+#define XPLICIT_GET_DATA_DIR_W(DIR)\
+XPX::PString DIR = _wgetenv(L"APPDATA");\
+DIR += L"/NginData/";
+
+
 #else
 #define XPLICIT_GET_DATA_DIR(DIR)\
 XPX::String DIR = getenv("HOME");\

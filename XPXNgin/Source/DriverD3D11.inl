@@ -149,7 +149,7 @@ XPX::Renderer::DX11::ShaderSystemD3D11* XPX::Renderer::DX11::D3D11ShaderHelper1:
 		*entrypoint == 0)
 		return nullptr;
 
-	XPX::Renderer::DX11::ShaderSystemD3D11* shader_system = new XPX::Renderer::DX11::ShaderSystemD3D11(filename, ShaderType);
+	XPX::Renderer::DX11::ShaderSystemD3D11* shader_system = new XPX::Renderer::DX11::ShaderSystemD3D11(filename, ShaderType, driver);
 
 	if (shader_system)
 	{

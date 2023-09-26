@@ -17,6 +17,8 @@
 #include "DriverD3D11.h"
 #include "Bites.h"
 
+#include "HelperMacros.h"
+
 #ifdef XPLICIT_WINDOWS
 
 namespace XPX::Renderer::DX11
@@ -330,14 +332,15 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 
-	const float gOriginMatrix[3] = { 0.f, 0.f, 0.f };
+	constexpr const float gOriginMatrix[3] = { 0.f, 0.f, 0.f };
 
 	RenderComponentD3D11::RenderComponentD3D11()
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
 		 m_pDriver(nullptr), m_pVertex(nullptr),
 		m_indexData(), m_iVertexCnt(0), m_iTopology(XPLICIT_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
-		m_pMatrixBuffer(nullptr), m_viewMatrix(gOriginMatrix)
+		m_pMatrixBuffer(nullptr), m_viewMatrix(gOriginMatrix), m_iIndices(0),
+		m_pVertexShader(nullptr), m_pColorShader(nullptr)
 	{}
 
 	RenderComponentD3D11::~RenderComponentD3D11()
@@ -361,15 +364,6 @@ namespace XPX::Renderer::DX11
 		if (m_arrayVerts.empty())
 			return;
 		
-		auto it = std::find_if(m_pShader.cbegin(), m_pShader.cend(), [](ShaderSystemD3D11* shader) -> bool {
-			return (XPLICIT_SHADER_TYPE)shader->type() == XPLICIT_SHADER_TYPE::Pixel;
-		});
-
-		bool has_pixel = false;
-
-		if (it != m_pShader.cend())
-			has_pixel = true;
-
 		RtlZeroMemory(&m_vertexData, sizeof(D3D11_SUBRESOURCE_DATA));
 		RtlZeroMemory(&m_vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 		RtlZeroMemory(&m_indexBufDesc, sizeof(D3D11_BUFFER_DESC));
@@ -381,26 +375,39 @@ namespace XPX::Renderer::DX11
 
 		m_iVertexCnt = 0;
 
+		XPLICIT_GET_DATA_DIR_W(DIR);
+
+		PString path_vertex = DIR;
+		path_vertex += L"Shaders/Vertex.hlsl";
+
+		m_pVertexShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", this->m_pDriver);
+
+		PString path_pixel = DIR;
+		path_pixel += L"Shaders/Pixel.hlsl";
+		
+		m_pColorShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", this->m_pDriver);
+
 		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{
-			m_pVertex[vertex_index].position = XMVectorSet(m_arrayVerts[vertex_index].X, 
-				m_arrayVerts[vertex_index].Y,
-				m_arrayVerts[vertex_index].Z,
-				0.f);
-		
-			m_pVertex[vertex_index].color = XMVectorSet(m_colorVectors[vertex_index].R,
+			m_pVertex[vertex_index].X = m_arrayVerts[vertex_index].X;
+			m_pVertex[vertex_index].Y = m_arrayVerts[vertex_index].Y;
+			m_pVertex[vertex_index].Z = m_arrayVerts[vertex_index].Z;
+
+			m_pVertex[vertex_index].COLOR = XMVectorSet(m_colorVectors[vertex_index].A,
+				m_colorVectors[vertex_index].R,
 				m_colorVectors[vertex_index].G,
-				m_colorVectors[vertex_index].B,
-				m_colorVectors[vertex_index].A);
+				m_colorVectors[vertex_index].B);
 
 			++m_iVertexCnt;
 		}
 
-		m_vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		m_vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		m_vertexBufferDesc.ByteWidth = sizeof(Details::VERTEX) * m_iVertexCnt;
 		m_vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		m_vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
+		m_vertexBufferDesc.MiscFlags = 0;
+		m_vertexBufferDesc.StructureByteStride = 0;
+		
 		m_vertexData.pSysMem = m_pVertex;
 		m_vertexData.SysMemPitch = 0;
 		m_vertexData.SysMemSlicePitch = 0;
@@ -415,14 +422,39 @@ namespace XPX::Renderer::DX11
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create(CreateBuffer(m_vertex_buffer))");
 		}
 
+		D3D11_MAPPED_SUBRESOURCE ms;
+		ZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+		m_pDriver->get().pCtx->Map(m_pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
+		memcpy(ms.pData, m_pVertex, sizeof(m_pVertex));  
+		m_pDriver->get().pCtx->Unmap(m_pVertexBuffer.Get(), 0);
+
 		delete[] m_pVertex;
 
-		m_indexBufDesc.Usage = D3D11_USAGE_DEFAULT;
-		m_indexBufDesc.ByteWidth = sizeof(ULONG) * m_iVertexCnt;
-		m_indexBufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		m_indexBufDesc.CPUAccessFlags = 0;
-		m_indexBufDesc.MiscFlags = 0;
-		m_indexBufDesc.StructureByteStride = 0;
+		D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
+
+		RtlZeroMemory(&polygonLayout, sizeof(D3D11_INPUT_ELEMENT_DESC) * 3);
+
+		polygonLayout[0].SemanticName = "POSITION";
+		polygonLayout[0].SemanticIndex = 0;
+		polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		polygonLayout[0].InputSlot = 0;
+		polygonLayout[0].AlignedByteOffset = 0;
+		polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		polygonLayout[0].InstanceDataStepRate = 0;
+
+		polygonLayout[1].SemanticName = "COLOR";
+		polygonLayout[1].SemanticIndex = 0;
+		polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		polygonLayout[1].InputSlot = 0;
+		polygonLayout[1].AlignedByteOffset = 12;
+		polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		polygonLayout[1].InstanceDataStepRate = 0;
+
+		m_pDriver->get().pDevice->CreateInputLayout(polygonLayout, 2,
+			m_pVertexShader->get().pBlob->GetBufferPointer(),
+			m_pVertexShader->get().pBlob->GetBufferSize(),
+			m_pDriver->get().pInputLayout.GetAddressOf());
 
 		std::vector<UINT> indices;
 
@@ -431,19 +463,20 @@ namespace XPX::Renderer::DX11
 			indices.push_back(vertex_index);
 		}
 
+		m_iIndices = m_arrayVerts.size();
+
+		m_indexBufDesc.Usage = D3D11_USAGE_DEFAULT;
+		m_indexBufDesc.ByteWidth = sizeof(ULONG) * m_iIndices;
+		m_indexBufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		m_indexBufDesc.CPUAccessFlags = 0;
+		m_indexBufDesc.MiscFlags = 0;
+		m_indexBufDesc.StructureByteStride = 0;
+
 		m_indexData.pSysMem = indices.data();
 		m_indexData.SysMemPitch = 0;
 		m_indexData.SysMemSlicePitch = 0;
 
 		m_hResult = m_pDriver->get().pDevice->CreateBuffer(&m_indexBufDesc, &m_indexData, m_pIndexBuffer.GetAddressOf());
-
-		D3D11_MAPPED_SUBRESOURCE ms;
-
-		RtlZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
-
-		m_pDriver->get().pCtx->Map(m_pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, & ms);
-		memcpy(ms.pData, m_pVertex, sizeof(m_pVertex));
-		m_pDriver->get().pCtx->Unmap(m_pVertexBuffer.Get(), 0);
 
 		if (FAILED(m_hResult))
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create(CreateBuffer(m_pIndexBuffer))");
@@ -473,12 +506,6 @@ namespace XPX::Renderer::DX11
 			m_pDriver = driver;
 	}
 
-	void RenderComponentD3D11::push_shader(ShaderSystemD3D11* shaderSystem) noexcept
-	{
-		if (shaderSystem)
-			m_pShader.push_back(shaderSystem);
-	}
-	
 	void RenderComponentD3D11::update(ClassPtr this_ptr) 
 	{
 		RenderComponentD3D11* self = (RenderComponentD3D11*)this_ptr;
@@ -486,8 +513,7 @@ namespace XPX::Renderer::DX11
 		if (!self)
 			return;
 
-		if (self->m_pShader.empty() ||
-			!self->m_pDriver ||
+		if (!self->m_pDriver ||
 			self->m_iVertexCnt < 1)
 			return;
 
@@ -503,21 +529,16 @@ namespace XPX::Renderer::DX11
 
 		ID3D11InputLayout* input_layout = nullptr;
 
-		for (auto& shader : self->m_pShader)
-		{
-			if (shader->m_data.pInputLayout)
-				input_layout = shader->m_data.pInputLayout.Get();
-
-			shader->update(self);
-		}
+		self->m_pColorShader->update(self);
+		self->m_pVertexShader->update(self);
 
 		self->m_pDriver->get().pCtx->IASetInputLayout(input_layout);
 
 		self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
 
-		self->m_pDriver->get().pCtx->RSSetViewports(self->m_pDriver->get().ViewportCnt, & self->m_pDriver->get().Viewport);
+		self->m_pDriver->get().pCtx->RSSetViewports(self->m_pDriver->get().ViewportCnt, &self->m_pDriver->get().Viewport);
 
-		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iVertexCnt, 0, 0);
+		self->m_pDriver->get().pCtx->Draw(self->m_iIndices, 0);
 	}
 
 	size_t RenderComponentD3D11::size() noexcept

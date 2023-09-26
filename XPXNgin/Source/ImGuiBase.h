@@ -17,7 +17,7 @@
 
 #define __RENDERER_IRR__ 1
 
-#define slots public
+#define imgui_slots public
 
 namespace XPX
 {
@@ -37,12 +37,12 @@ namespace XPX
 		public:
 			XPLICIT_COPY_DEFAULT(UIFrame);
 
-		slots:
+		imgui_slots:
 			ImColor BackgroundHoverColor{ 0xA7, 0x0C, 0x0C, 0x0C };
 			ImColor BackgroundColor{ 0xA5, 0x26, 0x26, 0x26 };
 			ImColor TextColor{ 0xFF, 0xFF, 0xFF, 0xFF };
 
-		slots:
+		imgui_slots:
 			std::uint32_t X{ 0 };
 			std::uint32_t Y{ 0 };
 			std::uint32_t W{ 0 };

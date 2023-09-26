@@ -55,8 +55,8 @@ namespace XPX::Renderer::DX11
 	{
 		struct VERTEX
 		{
-			XMVECTOR position;
-			XMVECTOR color;
+			FLOAT X, Y, Z;
+			XMVECTOR COLOR;
 		};
 
 		struct CBUFFER
@@ -116,6 +116,7 @@ namespace XPX::Renderer::DX11
 			WRL::ComPtr<ID3D11DepthStencilView> pDepthStencil;
 			WRL::ComPtr<ID3D11RenderTargetView> pRenderTarget;
 			std::unique_ptr<CameraSystemD3D11> pCamera;
+			WRL::ComPtr<ID3D11InputLayout> pInputLayout;
 			WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
 
 		};
@@ -156,8 +157,8 @@ namespace XPX::Renderer::DX11
 	public:
 		ShaderSystemD3D11() = delete;
 		
-		explicit ShaderSystemD3D11(const PChar* filename, XPLICIT_SHADER_TYPE fmt)
-			: ShaderSystem(filename, (uint8_t)fmt, FORMAT_HLSL), m_data()
+		explicit ShaderSystemD3D11(const PChar* filename, XPLICIT_SHADER_TYPE fmt, DriverSystemD3D11* pDriver)
+			: ShaderSystem(filename, (uint8_t)fmt, FORMAT_HLSL), m_data(), m_pDriver(pDriver)
 		{}
 
 		~ShaderSystemD3D11() override;
@@ -178,18 +179,10 @@ namespace XPX::Renderer::DX11
 			D3D11_BUFFER_DESC matrixBufferDesc{};
 
 		public:
-			HRESULT create_input_layout(ID3D11Device* device);
-
-			template <typename StructSz>
-			HRESULT create_matrix_buffer(ID3D11Device* device);
-			
-		public:
 			WRL::ComPtr<ID3D11HullShader> pHull;
 			WRL::ComPtr<ID3D11PixelShader> pPixel;
 			WRL::ComPtr<ID3D11VertexShader> pVertex;
 			WRL::ComPtr<ID3D11Buffer> pMatrixBuffer;
-			WRL::ComPtr<ID3D11InputLayout> pInputLayout;
-			std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayouts;
 
 		};
 
@@ -208,6 +201,7 @@ namespace XPX::Renderer::DX11
 
 	private:
 		ShaderTraits m_data;
+		DriverSystemD3D11* m_pDriver;
 		
 		friend RenderComponentD3D11;
 
@@ -236,7 +230,6 @@ namespace XPX::Renderer::DX11
 	public:
 		void push(const Color<float>& vert);
 		void push(const Vector<float>& vert);
-		void push_shader(ShaderSystemD3D11* system) noexcept;
 
 	public:
 		void set_driver(DriverSystemD3D11* dx11) noexcept;
@@ -270,11 +263,13 @@ namespace XPX::Renderer::DX11
 		D3D11_BUFFER_DESC m_indexBufDesc;
 
 	private:
-		std::vector<ShaderSystemD3D11*> m_pShader;
 		XPLICIT_PRIMITIVE_TOPOLOGY m_iTopology;
+		ShaderSystemD3D11* m_pVertexShader;
+		ShaderSystemD3D11* m_pColorShader;
 		XMMATRIX m_viewMatrix;
 		DriverSystemD3D11* m_pDriver;
 		Details::VERTEX* m_pVertex;
+		size_t m_iIndices;
 		size_t m_iVertexCnt;
 		HRESULT m_hResult;
 

@@ -67,22 +67,13 @@ int main(int argc, char** argv)
 			{
 				using namespace XPX::Renderer::DX11;
 
-				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (D11RS)", "XPXPlayerDirectXInDev", hInst);
+				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XPXPlayer (D3D 11)", "XPXPlayerDirectXInDev", hInst);
 
 				XplicitLoadBaseLua();
 				XplicitLoadClientLua();
 
 				DriverSystemD3D11* drv11 = new DriverSystemD3D11(win->get().WindowHandle);
-
-				auto shader_vertex = D3D11ShaderHelper1::make_shader<XPX::Renderer::DX11::XPLICIT_SHADER_TYPE::Vertex>(
-					L"C:/Users/amlal/XGE/Shaders/Vertex.hlsl", 
-					"VS", 
-					drv11);
-
-				auto shader_pixel = D3D11ShaderHelper1::make_shader<XPX::Renderer::DX11::XPLICIT_SHADER_TYPE::Pixel>(
-					L"C:/Users/amlal/XGE/Shaders/Pixel.hlsl",
-					"PS",
-					drv11);
+				win->get().DriverSystem = drv11;
 
 				RenderComponentD3D11* component_d3d11 = XPX::ComponentSystem::get_singleton_ptr()->add<RenderComponentD3D11>();
 
@@ -95,51 +86,13 @@ int main(int argc, char** argv)
 				float num = 0.5f;
 
 				component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
-				component_d3d11->push(XPX::Vector<float>(num, -num, 0.0f));
-				component_d3d11->push(XPX::Vector<float>(-num, -num, 0.0f));
-
-				D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
-				
-				RtlZeroMemory(&polygonLayout, sizeof(D3D11_INPUT_ELEMENT_DESC) * 3);
-
-				polygonLayout[0].SemanticName = "POSITION";
-				polygonLayout[0].SemanticIndex = 0;
-				polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-				polygonLayout[0].InputSlot = 0;
-				polygonLayout[0].AlignedByteOffset = 0;
-				polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-				polygonLayout[0].InstanceDataStepRate = 0;
-
-				polygonLayout[1].SemanticName = "COLOR";
-				polygonLayout[1].SemanticIndex = 0;
-				polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-				polygonLayout[1].InputSlot = 0;
-				polygonLayout[1].AlignedByteOffset = 12;
-				polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-				polygonLayout[1].InstanceDataStepRate = 0;
-
-				shader_vertex->get().vInputLayouts.push_back(polygonLayout[0]);
-				shader_vertex->get().vInputLayouts.push_back(polygonLayout[1]);
-
-				shader_vertex->get().create_input_layout(drv11->get().pDevice.Get());
-				
-				component_d3d11->push_shader(shader_vertex);
-				component_d3d11->push_shader(shader_pixel);
-
-				component_d3d11->topology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+				component_d3d11->push(XPX::Vector<float>(0.45f, -num, 0.0f));
+				component_d3d11->push(XPX::Vector<float>(-0.45f, -num, 0.0f));
 
 				component_d3d11->set_driver(drv11);
 				component_d3d11->create();
 
-				while (true)
-				{
-					drv11->begin_scene(1, 0.2, 0.5, 0.5, false, true);
-
-					XPX::ComponentSystem::get_singleton_ptr()->update();
-					XPX::EventSystem::get_singleton_ptr()->update();
-
-					drv11->end_scene();
-				}
+				win->update();
 
 				delete win; // still though, wanna do that. even though windows still does free the pool.
 			}

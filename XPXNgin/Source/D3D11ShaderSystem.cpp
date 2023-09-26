@@ -41,6 +41,30 @@ namespace XPX::Renderer::DX11
 			&m_data.pBlob,
 			&m_data.pErrorBlob);
 
+		
+		if (m_data.shader_type == XPLICIT_VERTEX_SHADER)
+		{
+			ID3D11VertexShader* pShader = nullptr;
+
+			m_pDriver->get().pDevice->CreateVertexShader(m_data.pBlob->GetBufferPointer(),
+				m_data.pBlob->GetBufferSize(), nullptr, &pShader);
+
+			m_pDriver->get().pCtx->VSSetShader(pShader, nullptr, 0);
+
+			pShader->Release();
+		}
+		else if (m_data.shader_type == XPLICIT_PIXEL_SHADER)
+		{
+			ID3D11PixelShader* pShader;
+
+			m_pDriver->get().pDevice->CreatePixelShader(m_data.pBlob->GetBufferPointer(),
+				m_data.pBlob->GetBufferSize(), nullptr, &pShader);
+
+			m_pDriver->get().pCtx->PSSetShader(pShader, nullptr, 0);
+
+			pShader->Release();
+		}
+
 		return SUCCEEDED(hr) ? 0 : 1;
 	}
 
@@ -76,33 +100,7 @@ namespace XPX::Renderer::DX11
 		component->m_pDriver->get().pCtx->Unmap(component->m_pMatrixBuffer.Get(), 0);
 
 		component->m_pDriver->get().pCtx->VSSetConstantBuffers(bufferNumber, 1, component->m_pMatrixBuffer.GetAddressOf());
-	
-		if (this->m_data.pVertex)
-			component->m_pDriver->get().pCtx->VSSetShader(this->m_data.pVertex.Get(), nullptr, 0);
 
-		if (this->m_data.pPixel)
-			component->m_pDriver->get().pCtx->PSSetShader(this->m_data.pPixel.Get(), nullptr, 0);
-
-		if (this->m_data.pHull)
-			component->m_pDriver->get().pCtx->HSSetShader(this->m_data.pHull.Get(), nullptr, 0);
-
-	}
-
-	HRESULT ShaderSystemD3D11::ShaderTraits::create_input_layout(ID3D11Device* device)
-	{
-		HRESULT hr = S_OK;
-
-		if (!device)
-			return hr;
-
-		hr = device->CreateInputLayout(vInputLayouts.data(), vInputLayouts.size(), pBlob->GetBufferPointer(),
-			pBlob->GetBufferSize(), pInputLayout.GetAddressOf());
-
-		XPLICIT_ASSERT(SUCCEEDED(hr));
-		
-		pBlob->Release();
-
-		return hr;
 	}
 }
 

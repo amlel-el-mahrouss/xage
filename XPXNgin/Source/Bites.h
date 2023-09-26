@@ -14,8 +14,8 @@
 
 #include "NginCore.h"
 
-#define XPLICIT_DEFAULT_WIDTH (1920)
-#define XPLICIT_DEFAULT_HEIGHT (1080)
+#define XPLICIT_DEFAULT_WIDTH (1280)
+#define XPLICIT_DEFAULT_HEIGHT (720)
 
 #define XPLICIT_MIN_WIDTH  (XPLICIT_DEFAULT_WIDTH)
 #define XPLICIT_MIN_HEIGHT (XPLICIT_DEFAULT_HEIGHT)
@@ -30,6 +30,7 @@
 #define XPLICIT_MAIN()\
 INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
 
+#include "DriverD3D11.h"
 
 #endif // ifdef XPLICIT_WINDOWS
 
@@ -50,17 +51,18 @@ namespace XPX::Bites
 		
 		XPLICIT_COPY_DELETE(Win32Window);
 		
-		struct Win32Traits
+		struct XPLICIT_API Win32Traits
 		{
 			HWND WindowHandle;
 			WNDCLASSEXA WndClass;
+			Renderer::DX11::DriverSystemD3D11* DriverSystem;
 		};
 
 		using Traits = Win32Traits;
 
 	public:
 		int update() noexcept;
-		const Traits& get() const noexcept;
+		Traits& get() noexcept;
 
 	private:
 		Win32Traits mTraits;
