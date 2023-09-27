@@ -93,7 +93,7 @@ namespace XPX::Renderer::DX11
 		unsigned int cBufferCnt = 0U;
 
 		auto transPoseWorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
-		auto transPoseViewMatrix = XMMatrixTranspose(component->m_viewMatrix);
+		auto transPoseViewMatrix = XMMatrixTranspose(component->m_pDriver->get().pCamera->m_viewMatrix);
 		auto transPoseProjectionMatrix = XMMatrixTranspose(component->m_pDriver->get().ProjectionMatrix);
 
 		HRESULT hr = component->m_pDriver->get().pCtx->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);

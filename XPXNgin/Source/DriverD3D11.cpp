@@ -404,7 +404,7 @@ namespace XPX::Renderer::DX11
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
 		 m_pDriver(nullptr), m_pVertex(nullptr),
 		m_indexData(), m_iVertexCnt(0), m_iTopology(XPLICIT_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
-		m_pMatrixBuffer(nullptr), m_viewMatrix(), m_iIndices(0),
+		m_pMatrixBuffer(nullptr), m_iIndices(0),
 		m_pVertexShader(nullptr), m_pColorShader(nullptr)
 	{}
 
@@ -494,9 +494,7 @@ namespace XPX::Renderer::DX11
 		std::size_t i = 0UL;
 
 		for (size_t vertex_index = 0; vertex_index < m_arrayIndices.size(); ++vertex_index)
-		{
 			indices[vertex_index] = m_arrayIndices[vertex_index];
-		}
 
 		m_iIndices = m_arrayIndices.size();
 
@@ -550,7 +548,6 @@ namespace XPX::Renderer::DX11
 		XPLICIT_ASSERT(self->m_pDriver);
 		
 		self->m_pDriver->get().pCamera->render();
-		self->m_viewMatrix = self->m_pDriver->get().pCamera->m_viewMatrix;
 
 		self->m_pDriver->get().pCtx->RSSetState(self->m_pDriver->get().pRasterState.Get());
 
@@ -581,7 +578,8 @@ namespace XPX::Renderer::DX11
 		}
 		catch (...)
 		{
-			XPLICIT_INFO("WARNING: No CBuf attached to shader.");
+			XPLICIT_INFO("WARNING: No ConstantBufferType attached to shader.");
+			throw EngineError("No CBuf!!!");
 		}
 
 		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iIndices, 0, 0);

@@ -280,7 +280,6 @@ namespace XPX::Renderer::DX11
 		XPLICIT_PRIMITIVE_TOPOLOGY m_iTopology;
 		ShaderSystemD3D11* m_pVertexShader;
 		ShaderSystemD3D11* m_pColorShader;
-		XMMATRIX m_viewMatrix;
 		DriverSystemD3D11* m_pDriver;
 		Details::VERTEX* m_pVertex;
 		size_t m_iIndices;
