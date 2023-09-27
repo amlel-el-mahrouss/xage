@@ -76,7 +76,7 @@ int main(int argc, char** argv)
 		component_d3d11->push(XPX::Color<float>(0, 0.5, 0, 1));
 		component_d3d11->push(XPX::Color<float>(0.5, 0, 0, 1));
 
-		float num = 1.0f;
+		float num = 0.5f;
 
 		component_d3d11->push(XPX::Vector<float>(-num, -num, 0.0f));
 		component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
