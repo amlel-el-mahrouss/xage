@@ -18,11 +18,11 @@
 namespace XPX
 {
 	/* this classes gives an component a model. */
-	class MeshComponent : public Lua::CLuaClass
+	class MeshComponent final
 	{
 	public:
-		MeshComponent(const char* path, const char* name, const char* group);
-		~MeshComponent() noexcept override;
+		MeshComponent(const char* path, const std::size_t id);
+		~MeshComponent() noexcept;
 		MeshComponent() = delete;
 
 	public:
@@ -30,9 +30,6 @@ namespace XPX
 
 	public:
 		const char* name() noexcept { return "MeshComponent"; }
-
-		const auto instance_name() noexcept { return mName; }
-		const auto group_name() noexcept { return mGroup; }
 
 		irr::scene::ISceneNode* node() const { return mNode; }
 		irr::scene::IMesh* model() const { return mMdl; }
@@ -42,19 +39,13 @@ namespace XPX
 		bool has_physics() noexcept;
 
 	public:
-		static bool should_update() { return true; }
+		static bool should_update();
 		static void update(ClassPtr class_ptr);
 
 	protected:
 		irr::scene::IAnimatedMeshSceneNode* mNode; // Model Data pointer, generic
 		irr::scene::IAnimatedMesh* mMdl; // Model Data pointer, generic
-
-	private:
 		PHYSICS_TYPE mPhysics; // What kind of physics we have here?
-
-	private:
-		String mGroup;
-		String mName;
 		String mPath;
 
 	};

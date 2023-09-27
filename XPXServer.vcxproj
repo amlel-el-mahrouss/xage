@@ -96,7 +96,6 @@
     <ClInclude Include="XPXServer\Source\WeaponComponent.h" />
     <ClInclude Include="XPXServer\Source\CharacterHealthMonitorEvent.h" />
     <ClInclude Include="XPXServer\Source\CharacterComponent.h" />
-    <ClInclude Include="XPXServer\Source\CharacterDownloadComponent.h" />
     <ClInclude Include="XPXServer\Source\LoginEvent.h" />
     <ClInclude Include="XPXServer\Source\CharacterMovementEvent.h" />
     <ClInclude Include="XPXServer\Source\ServerConfig.h" />
@@ -108,10 +107,8 @@
     <ClCompile Include="XPXServer\Source\WeaponComponent.cpp" />
     <ClCompile Include="XPXServer\Source\CharacterHealthMonitorEvent.cpp" />
     <ClCompile Include="XPXServer\Source\CharacterComponent.cpp" />
-    <ClCompile Include="XPXServer\Source\CharacterDownloadComponent.cpp" />
     <ClCompile Include="XPXServer\Source\LoginEvent.cpp" />
     <ClCompile Include="XPXServer\Source\CharacterMovementEvent.cpp" />
-    <ClCompile Include="XPXServer\Source\ServerAPI.cpp" />
     <ClCompile Include="XPXServer\Source\ServerMain.cpp" />
     <ClCompile Include="XPXServer\Source\NetworkUtils.cpp" />
     <ClCompile Include="XPXServer\Source\SpawnComponent.cpp" />

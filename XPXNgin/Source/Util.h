@@ -78,8 +78,6 @@ inline bool DownloadURL(std::string _url, std::string out_path) noexcept
 
 namespace XPX
 {
-	class LuaScriptComponent;
-
 	/// <summary>
 	/// Xplicit Attribute Class.
 	/// Reserved for RXML and scripting API.
@@ -89,7 +87,6 @@ namespace XPX
 	public:
 		XPXAttribute()
 			: 
-			  mScript(nullptr),
 			  mColor(0.0f, 0.0f, 0.0f),
 			  mPos(0.0f, 0.0f, 0.0f), 
 			  mScale(0.0f, 0.0f, 0.0f),
@@ -98,7 +95,8 @@ namespace XPX
 			  mLocked(false),
 			  mAlpha(1.0f),
 			  mNoCollide(false),
-			  mAnchor(true)
+			  mAnchor(true),
+			  mLookPos(0.f, 0.f, 0.f)
 		{}
 
 		virtual ~XPXAttribute() = default;
@@ -110,10 +108,10 @@ namespace XPX
 		Color<NetworkFloat>& color() noexcept { return mColor; }
 		Vector<NetworkFloat>& rotation() noexcept { return mRot; }
 		Vector<NetworkFloat>& scale() noexcept { return mScale; }
+		Vector<NetworkFloat>& look_pos() noexcept { return mLookPos; }
 		Vector<NetworkFloat>& pos() noexcept { return mPos; }
 
 	public:
-		LuaScriptComponent* script() noexcept { return mScript; }
 		bool is_archivable() noexcept { return mArchivable; }
 		bool has_no_collide() noexcept { return !mNoCollide; }
 		bool is_locked() noexcept { return mLocked; }
@@ -121,15 +119,18 @@ namespace XPX
 		bool anchor() noexcept { return mAnchor; }
 
 	public:
-		void script(LuaScriptComponent* script) noexcept { mScript = script; }
 		void archivable(const bool enable) noexcept { mArchivable = enable; }
 		void collide(const bool enable) noexcept { mNoCollide = enable; }
 		void locked(const bool enable) noexcept { mLocked = enable; }
 		void alpha(const float alpha) noexcept { mAlpha = alpha;  }
 		void anchor(const bool enable) noexcept { mAnchor = enable; }
 
+	public:
+		std::size_t f_SceneId{ 0 };
+		void* f_PhysicsDelegate{ nullptr };
+
 	private:
-		LuaScriptComponent* mScript;
+		Vector<NetworkFloat> mLookPos;
 		Vector<NetworkFloat> mScale;
 		Color<NetworkFloat> mColor;
 		Vector<NetworkFloat> mRot;
@@ -146,4 +147,3 @@ namespace XPX
 }
 
 #include "Uri.h"
-#include "LuaAPI.h"

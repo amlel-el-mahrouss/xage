@@ -12,7 +12,6 @@
  */
 
 #include "CharacterComponent.h"
-
 #include <NpPhysicsEngine.h>
 
 #define XPX_DEFAULT_MAXHEALTH (100)
@@ -24,12 +23,10 @@ namespace XPX
 {
 	CharacterComponent::CharacterComponent() noexcept
 		:
-		Component(),
 		mPeer(nullptr),
 		mHealth(XPX_DEFAULT_HEALTH),
 		mCanSpawn(true),
 		mState(HUMANOID_STATE::ALIVE),
-		mClass(nullptr),
 		mJumpPower(XPX_DEFAULT_JUMPPOWER),
 		mMaxHealth(XPX_DEFAULT_MAXHEALTH),
 		mWalkSpeed(XPX_DEFAULT_WALKSPEED),
@@ -39,8 +36,10 @@ namespace XPX
 
 	CharacterComponent::~CharacterComponent()
 	{
-		if (mClass)
-			delete mClass;
+		for (auto& wep : mWeapons)
+		{
+			delete wep;
+		}
 	}
 
 	WeaponComponent* CharacterComponent::get_current_weapon() noexcept { return mActiveWeapon; }
@@ -66,56 +65,7 @@ namespace XPX
 			self->set_health(XPLICIT_DEFAULT_HEALTH);
 			self->set_state(HUMANOID_STATE::ALIVE);
 			self->can_spawn(true);
-
-			self->get_class()->assign("Health", std::to_string(XPLICIT_DEFAULT_HEALTH));
-
-			XPLICIT_INFO("world:Spawn [EVENT]");
-
-			String xpx_player_path("world.Players.");
-			xpx_player_path += self->get_peer()->xplicit_id.as_string();
-
-			xpx_player_path = std::format("world:Spawn({})", xpx_player_path);
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(xpx_player_path);
 		}
-
-		String str = "{ X = " + std::to_string(self->mClass->pos().X) + ", Y = " +
-						 std::to_string(self->mClass->pos().Y) + ", Z = " +
-						 std::to_string(self->mClass->pos().Z) + "}";
-
-		self->mClass->assign("Position", str);
-
-		if (self->mClass->index_as_bool("Kick"))
-		{
-			self->mPeer->packet.hash = self->mPeer->hash;
-			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
-
-			String reason = "You have been kicked.";
-
-			if (!self->mClass->index_as_string("KickReason").empty() &&
-				self->mClass->index_as_string("KickReason").size() < XPLICIT_NETWORK_BUF_SZ)
-				reason = self->mClass->index_as_string("KickReason");
-
-			memcpy(self->mPeer->packet.additional_data, reason.c_str(), reason.size());
-
-			return;
-		}
-
-		if (self->mHealth != self->mClass->index_as_number<double>("Health"))
-		{
-			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] = NETWORK_CMD_DAMAGE;
-			self->mPeer->packet.health = self->mHealth;
-		}
-
-		self->mHealth = self->mClass->index_as_number<double>("Health");
-		self->mMaxHealth = self->mClass->index_as_number<double>("MaxHealth");
-		self->mJumpPower = self->mClass->index_as_number<double>("JumpPower");
-		self->mWalkSpeed = self->mClass->index_as_number<double>("WalkSpeed");
-
-		self->mClass->assign("IsLeftClickHold", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] == NETWORK_CMD_LCLICK ? "true" : "false");
-		self->mClass->assign("IsRightClickHold", self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] == NETWORK_CMD_RCLICK ? "true" : "false");
-
-		self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] = NETWORK_CMD_INVALID;
-		self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] = NETWORK_CMD_INVALID;
 
 		// select a specific item in our inventory.
 		if (self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_SLOT] == NETWORK_CMD_SLOT)
@@ -124,9 +74,9 @@ namespace XPX
 				self->mPeer->packet.id > -1)
 			{
 				if (self->mActiveWeapon &&
-					self->mActiveWeapon->index_as_number("Slot") != self->mPeer->packet.id)
+					self->mActiveWeapon->f_iSlot != self->mPeer->packet.id)
 				{
-					self->mActiveWeapon->call_method("Update('Unequipped')");
+					self->mActiveWeapon->unequip();
 					self->mActiveWeapon = nullptr;
 				}
 
@@ -137,10 +87,12 @@ namespace XPX
 						if (!wep)
 							continue;
 
-						if (wep->index_as_number("Slot") == self->mPeer->packet.id)
+						if (wep->f_iSlot == self->mPeer->packet.id)
 						{
 							self->mActiveWeapon = wep;
-							self->mActiveWeapon->call_method("Update('Equipped')");
+							self->mActiveWeapon->equip();
+							
+							break;
 						}
 					}
 				}
@@ -168,72 +120,8 @@ namespace XPX
 
 	void CharacterComponent::set_peer(NetworkPeer* peer) noexcept 
 	{	
-		mPeer = peer;
-
-		if (mPeer)
-		{
-			String player_lua_arr = XPLICIT_LUA_NAMESPACE;
-			player_lua_arr += ".Players.";
-			player_lua_arr += mPeer->xplicit_id.as_string();
-
-			mClass = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(Vector<NetworkFloat>(XPLICIT_ORIGIN.X, XPLICIT_ORIGIN.Y, XPLICIT_ORIGIN.Z),
-				XPLICIT_CHARACTER_SCALE,
-				Color<NetworkFloat>(0, 0, 0),
-				nullptr, "world.Players", mPeer->xplicit_id.as_string().c_str());
-
-			XPLICIT_ASSERT(mClass);
-
-			if (mClass)
-			{
-				mClass->assign("Anchor", "false");
-				mClass->insert("UserName", "'Unconnected'");
-
-				mClass->insert("LookAt", "{ X = 0, Y = 0, Z = 0 }");
-				
-				mClass->insert("Kick", "false");
-				mClass->insert("KickReason", "'No message supplied.'");
-				
-				mClass->insert("IsLeftClickHold", "false");
-				mClass->insert("IsRightClickHold", "false");
-
-				mClass->insert("ContentType", "-1");
-				mClass->insert("ContentBody", "nil");
-
-				mClass->insert("PlayerId", fmt::format("\"{}\"", mPeer->xplicit_id.as_string()));
-
-				mClass->insert("Health", std::to_string(mHealth));
-				mClass->insert("MaxHealth", std::to_string(mMaxHealth));
-				mClass->insert("JumpPower", std::to_string(mJumpPower));
-				mClass->insert("WalkSpeed", std::to_string(mWalkSpeed));
-
-				XPLICIT_INFO("world:Login [EVENT]");
-
-				String fmt = std::format("world:Login({})", player_lua_arr);
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
-
-				ClassComponent::update(mClass);
-
-				auto mov = EventSystem::get_singleton_ptr()->get<NpPhysicsEvent>("NpPhysicsEvent");
-
-				if (mov)
-					mov->insert_node(mClass);
-
-			}
-		}
-		else
-		{
-			if (mClass)
-			{
-				for (auto* gear : mWeapons)
-				{
-					ComponentSystem::get_singleton_ptr()->remove(gear);
-					gear = nullptr;
-				}
-
-				ComponentSystem::get_singleton_ptr()->remove(mClass);
-				mClass = nullptr;
-			}
-		}
+		if (peer)
+			mPeer = peer;
 	}
 
 	bool CharacterComponent::can_spawn() const noexcept { return mCanSpawn; }
@@ -246,10 +134,10 @@ namespace XPX
 
 	void CharacterComponent::set_state(const HUMANOID_STATE state) noexcept { mState = state; }
 
-	ClassComponent* CharacterComponent::get_class() const
+	void CharacterComponent::kick(const String& reason) noexcept
 	{
-		XPLICIT_ASSERT(mClass);
-		return mClass;
+		mPeer->packet.cmd[XPLICIT_NETWORK_CMD_KICK] = NETWORK_CMD_KICK;
+		memcpy(mPeer->packet.additional_data, reason.c_str(), reason.size());
 	}
 
 	std::array<WeaponComponent*, XPX_MAX_WEAPONS>& CharacterComponent::get_weapons() noexcept

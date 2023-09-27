@@ -98,7 +98,6 @@
     <ClInclude Include="XPXNgin\Source\Archive.h" />
     <ClInclude Include="XPXNgin\Source\Avx.h" />
     <ClInclude Include="XPXNgin\Source\Bites.h" />
-    <ClInclude Include="XPXNgin\Source\ClassComponent.h" />
     <ClInclude Include="XPXNgin\Source\Enums.h" />
     <ClInclude Include="XPXNgin\Source\Component.h" />
     <ClInclude Include="XPXNgin\Source\Component.inl" />
@@ -121,8 +120,6 @@
     <ClInclude Include="XPXNgin\Source\Http.h" />
     <ClInclude Include="XPXNgin\Source\ImGUI.h" />
     <ClInclude Include="XPXNgin\Source\ImGuiBase.h" />
-    <ClInclude Include="XPXNgin\Source\LuaAPI.h" />
-    <ClInclude Include="XPXNgin\Source\LuaScriptComponent.h" />
     <ClInclude Include="XPXNgin\Source\LuaUser.h" />
     <ClInclude Include="XPXNgin\Source\MonoComponent.h" />
     <ClInclude Include="XPXNgin\Source\MonoInterop.h" />
@@ -144,7 +141,6 @@
     <ClCompile Include="XPXNgin\Source\Archive.cpp" />
     <ClCompile Include="XPXNgin\Source\Avx.cpp" />
     <ClCompile Include="XPXNgin\Source\Bites.cpp" />
-    <ClCompile Include="XPXNgin\Source\ClassComponent.cpp" />
     <ClCompile Include="XPXNgin\Source\Enums.cpp" />
     <ClCompile Include="XPXNgin\Source\Component.cpp" />
     <ClCompile Include="XPXNgin\Source\Crc32.cpp" />
@@ -160,8 +156,6 @@
     <ClCompile Include="XPXNgin\Source\HelperMacros.cpp" />
     <ClCompile Include="XPXNgin\Source\Http.cpp" />
     <ClCompile Include="XPXNgin\Source\ImGUI.cpp" />
-    <ClCompile Include="XPXNgin\Source\LuaAPI.cpp" />
-    <ClCompile Include="XPXNgin\Source\LuaScriptComponent.cpp" />
     <ClCompile Include="XPXNgin\Source\LuaUser.cpp" />
     <ClCompile Include="XPXNgin\Source\MonoComponent.cpp" />
     <ClCompile Include="XPXNgin\Source\MonoInterop.cpp" />

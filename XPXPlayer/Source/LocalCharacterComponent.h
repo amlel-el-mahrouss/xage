@@ -48,8 +48,6 @@ namespace XPX
 		static void update(void* class_ptr);
 		static bool should_update() noexcept { return true; }
 
-	public:
-		Vector<float> get_pos() noexcept;
 		const int64_t& id() noexcept;
 
 	private:

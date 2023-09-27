@@ -120,7 +120,7 @@ namespace XPX
 
 	static NetworkServerComponent* gNetwork = nullptr;
 
-	static void xpxSendToClients(ClassComponent* node)
+	static void xpxSendToClients(XPXAttribute* node)
 	{
 		NetworkPacket repl_packet{};
 
@@ -148,14 +148,7 @@ namespace XPX
 		repl_packet.pos[3][XPLICIT_NETWORK_Z] = node->color().B;
 		repl_packet.pos[3][XPLICIT_NETWORK_DELTA] = node->color().A;
 
-		String fmt = node->index_as_string("Parent").c_str();
-
-		if (!fmt.empty())
-			fmt += ".";
-
-		fmt += node->index_as_string("ClassName").c_str();
-
-		memcpy(repl_packet.additional_data, fmt.c_str(), fmt.size());
+		repl_packet.id = node->f_SceneId;
 
 		NetworkServerContext::send_all(gNetwork,
 			&repl_packet);
@@ -274,14 +267,14 @@ namespace XPX
 			for (auto* node : mWorldNodes)
 			{
 				if (!node ||
-					!node->PhysicsDelegate)
+					!node->f_PhysicsDelegate)
 					continue;
 
-				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
+				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->f_PhysicsDelegate);
 
 				if (!IsValidHeapPtr(actor))
 				{
-					node->PhysicsDelegate = nullptr;
+					node->f_PhysicsDelegate = nullptr;
 					continue;
 				}
 
@@ -295,10 +288,10 @@ namespace XPX
 			for (auto* node : mWorldNodes)
 			{
 				if (!node ||
-					!node->PhysicsDelegate)
+					!node->f_PhysicsDelegate)
 					continue;
 
-				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
+				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->f_PhysicsDelegate);
 
 				PxShape* shape = nullptr;
 				actor->getShapes(&shape, 1);
@@ -329,7 +322,7 @@ namespace XPX
 			using namespace physx;
 
 			auto dynamic_rigid = gPhysics->NP_CREATE_RIGID(PxTransform(node->pos().X, node->pos().Y, node->pos().Z));
-			node->PhysicsDelegate = dynamic_rigid;
+			node->f_PhysicsDelegate = dynamic_rigid;
 
 			if (dynamic_rigid)
 			{
@@ -343,8 +336,6 @@ namespace XPX
 				XPLICIT_ASSERT(shape);
 				XPLICIT_ASSERT(dynamic_rigid->attachShape(*shape));
 
-				dynamic_rigid->setName(node->name());
-
 				mWorldNodes.push_back(node);
 				gScene->addActor(*dynamic_rigid);
 
@@ -354,7 +345,7 @@ namespace XPX
 				return true;
 			}
 
-			node->PhysicsDelegate = nullptr;
+			node->f_PhysicsDelegate = nullptr;
 
 			return false;
 		}
@@ -372,9 +363,8 @@ namespace XPX
 			{
 				using namespace physx;
 
-				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->PhysicsDelegate);
-
-				node->PhysicsDelegate = nullptr;
+				NP_RIGID_TYPE* actor = static_cast<NP_RIGID_TYPE*>(node->f_PhysicsDelegate);
+				node->f_PhysicsDelegate = nullptr;
 
 				if (actor)
 				{
@@ -402,8 +392,6 @@ namespace XPX
 
 		if (!node)
 			return false;
-
-		ClassComponent::update(node);
 
 		using namespace physx;
 		PxReal friction = node->scale().X * node->scale().Y * node->scale().Z;

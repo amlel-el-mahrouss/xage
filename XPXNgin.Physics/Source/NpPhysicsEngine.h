@@ -18,17 +18,17 @@
 #include "Config.h"
 
 #ifndef __XPLICIT_DLL__
-#include <ClassComponent.h>
-#include <NginCore.h>
-#include <Event.h>
-#include <Root.h>
+
+#   include <Util.h>
+#   include <NginCore.h>
+#   include <Event.h>
+#   include <Root.h>
+
 #endif // ifdef __XPLICIT_DLL__
 
 namespace XPX
 {
-    class ClassComponent;
-
-    typedef ClassComponent* NpSceneNode;
+    typedef XPXAttribute* NpSceneNode;
 
     class NPLICIT_API NpPhysicsEvent : public Event
     {

@@ -12,17 +12,15 @@
 #include <Util.h>
 #include <Enums.h>
 #include <Component.h>
-#include <ClassComponent.h>
 
 namespace XPX
 {
 	class CharacterComponent;
 
-	class WeaponComponent final : public ClassComponent
+	class WeaponComponent final : public XPXAttribute, public Component
 	{
 	public:
-		WeaponComponent(const char* name, 
-					    const char* parent) noexcept;
+		WeaponComponent(const char* name, std::size_t slot) noexcept;
 
 	public:
 		WeaponComponent() = delete;
@@ -44,10 +42,17 @@ namespace XPX
 		void set_owner(CharacterComponent* owner) noexcept;
 		CharacterComponent* get_owner() noexcept;
 
+	public:
+		virtual void equip() noexcept { }
+		virtual void unequip() noexcept {  }
+
 	private:
 		CharacterComponent* mOwner;
-		String mParent;
-		String mName;
+
+	public:
+		std::int64_t f_iSlot{ 0 };
+		bool f_bDrop{ false };
+		String f_strName;
 
 	};
 }

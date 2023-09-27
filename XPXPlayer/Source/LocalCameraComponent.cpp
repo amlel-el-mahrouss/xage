@@ -11,7 +11,7 @@
  @file
  */
 
-// fields: FOV, DefaultCameraStyle, Inherits from ClassComponent.
+// fields: FOV, DefaultCameraStyle, Inherits from XPXAttribute.
 
 #include "LocalCameraComponent.h"
 #include "ClientFX.h"
@@ -21,7 +21,7 @@
 namespace XPX
 {
 	LocalCameraComponent::LocalCameraComponent() noexcept
-		: ClassComponent(XPLICIT_ORIGIN, Vector<NetworkFloat>(1, 1, 1), Color<NetworkFloat>(0, 0, 0), nullptr, XPLICIT_LUA_NAMESPACE, "Camera"),
+		:
 		mCamera(nullptr),
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
@@ -46,8 +46,6 @@ namespace XPX
 		SColorf(1.0f, 1.0f, 0.1f, 1.0f), 1000.f);
 
 		mCamera->setName("Camera");
-
-		this->insert("FOV", std::to_string(mCamera->getFOV()));
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept
@@ -62,15 +60,10 @@ namespace XPX
 
 	void LocalCameraComponent::update(void* class_ptr) 
 	{
-		ClassComponent::update(class_ptr);
-
 		LocalCameraComponent* self = (LocalCameraComponent*)class_ptr;
 
         if (!self)
             return;
-
-		if (self->index_as_number("FOV") != self->get()->getFOV())
-			self->get()->setFOV(self->index_as_number("FOV"));
 
 		if (self->mLookAt != self->mCamera->getTarget())
 		{

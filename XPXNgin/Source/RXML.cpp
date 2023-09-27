@@ -60,45 +60,7 @@ namespace XPX::RXML
 							world_node.Name = node_name;
 							world_node.ID = node_id;
 
-							const char* script_id = "";
-							const char* parent_id = XPLICIT_CLASS_NAMESPACE;
-
-							if (first_attr->next_attribute()->next_attribute() &&
-								strcmp(first_attr->next_attribute()->next_attribute()->name(), "Script") == 0)
-							{
-								script_id = first_attr->next_attribute()->next_attribute()->value();
-							}
-							
-							if (first_attr->next_attribute()->next_attribute()->next_attribute() &&
-								strcmp(first_attr->next_attribute()->next_attribute()->next_attribute()->name(), "Parent") == 0)
-							{
-								parent_id = first_attr->next_attribute()->next_attribute()->next_attribute()->value();
-
-								if (strlen(parent_id) < 1)
-									parent_id = XPLICIT_LUA_NAMESPACE;
-							}
-
 							void* object = nullptr;
-
-							// assign a part component to the said id
-							// so you can use it.
-
-							if (klass_to_instantiate == "Part")
-							{
-								auto node_mesh = CAD->getSceneManager()->addCubeSceneNode();
-
-								if (node_mesh)
-								{
-									node_mesh->setMaterialFlag(EMF_LIGHTING, false);
-
-									if (auto parent = CAD->getSceneManager()->getSceneNodeFromName(parent_id);
-										parent)
-										node_mesh->setParent(parent);
-
-									node_mesh->setName(node_id);
-									object = node_mesh;
-								}
-							}
 
 							if (klass_to_instantiate == "Mesh")
 							{
@@ -117,72 +79,11 @@ namespace XPX::RXML
 										world_node.Value += val[i];
 									}
 								}
+								
+								auto node_mesh = CAD->getSceneManager()->addMeshSceneNode(CAD->getSceneManager()->getMesh(world_node.Value.c_str()));
 
-								String url = world_node.Value;
-
-								std::unique_ptr<XHTTPManager> HTTP = std::make_unique<XHTTPManager>();
-
-								if (HTTP &&
-									url.find("xasset://") != String::npos)
-								{
-									String substr = url.erase(url.find("xasset://"), strlen("xasset://"));
-
-									url.clear();
-									url = "/";
-									url += substr;
-
-									HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
-
-									XPLICIT_GET_DATA_DIR(full_path);
-
-									auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-DAE";
-									tmp += XPLICIT_OBJ_FORMAT;
-
-									if (HTTP->download(url, tmp))
-									{
-										XPLICIT_GET_DATA_DIR(full_path);
-
-										String full_download_path = full_path;
-										full_download_path += "Contents/";
-										full_download_path += tmp;
-
-										auto node_mesh = CAD->getSceneManager()->addMeshSceneNode(CAD->getSceneManager()->getMesh(full_download_path.c_str()));
-
-										if (node_mesh)
-										{
-											if (auto parent = CAD->getSceneManager()->getSceneNodeFromName(parent_id);
-												parent)
-												node_mesh->setParent(parent);
-
-											node_mesh->setName(node_id);
-											object = node_mesh;
-										}
-									}
-								}
-							}
-
-							//! here you can see that Has3D is strictly reserved for headless implementations of XPX tech.
-							//! however, the classcomponent asks for it the mesh/part specs.
-							//! that's fine just ask for it, cad still loads it with np.
-							if (object)
-							{
-								irr::scene::ISceneNode* node = nullptr;
-
-								if (node = CAD->getSceneManager()->getSceneNodeFromName(parent_id);
-									node)
-									node->addChild(node);
-
-								auto scene_node = (ISceneNode*)object;
-
-								// finally create an replicatable instance of the newly created node.
-								ClassComponent* component = ComponentSystem::get_singleton_ptr()->add<ClassComponent>(
-									XPLICIT_ORIGIN,
-									Vector<NetworkFloat>(scene_node->getScale().X,
-										scene_node->getScale().Y,
-										scene_node->getScale().Z),
-									Color<NetworkFloat>(255, 255, 255, 255), script_id, parent_id, node_id);
-
-								XPLICIT_ASSERT(component);
+								if (node_mesh)
+									object = node_mesh;
 							}
 						}
 					}
@@ -452,120 +353,6 @@ namespace XPX::RXML
 								if (scene_node)
 									scene_node->setScale(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));
 							}
-						}
-					}
-				}
-
-				if (node_name == "NplicitDynamic")
-				{
-					if (node->first_attribute() &&
-						strcmp(node->first_attribute()->name(), "Referent") == 0)
-					{
-						auto mov = EventSystem::get_singleton_ptr()->get<NpPhysicsEvent>("NpPhysicsEvent");
-
-						if (mov)
-							mov->insert_node(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()), NpPhysicsEvent::NP_DYNAMIC);
-					}
-				}
-
-				if (node_name == "NplicitGround")
-				{
-					if (node->first_attribute() &&
-						strcmp(node->first_attribute()->name(), "Referent") == 0)
-					{
-						XPX::NplicitAddGround(ComponentSystem::get_singleton_ptr()->get<ClassComponent>(node->first_attribute()->value()));
-					}
-				}
-
-				if (node_name == "Script") // and it is really what we think it is.
-				{
-					// go on and include that!
-					world_node.ID = node_name;
-
-					if (node->first_attribute() &&
-						strcmp(node->first_attribute()->name(), "Path") == 0)
-					{
-						auto val = node->first_attribute()->value();
-
-						for (size_t i = 0; i < strlen(val); i++)
-						{
-							if (isalnum(val[i]) ||
-								val[i] == '.' ||
-								val[i] == '/' ||
-								val[i] == '\\' ||
-								val[i] == '-' ||
-								val[i] == ':' ||
-								val[i] == '_')
-							{
-								world_node.Value += val[i];
-							}
-						}
-
-						String url = world_node.Value;
-
-						std::unique_ptr<XHTTPManager> HTTP = std::make_unique<XHTTPManager>();
-
-						if (HTTP &&
-							url.find("xasset://") != String::npos)
-						{
-							String substr = url.erase(url.find("xasset://"), strlen("xasset://"));
-
-							url.clear();
-							url = "/";
-							url += substr;
-
-							HTTP->set_endpoint(XPLICIT_XASSET_ENDPOINT);
-
-							XPLICIT_GET_DATA_DIR(full_path);
-
-							auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-LUA";
-
-							if (HTTP->download(url, tmp))
-							{
-								XPLICIT_GET_DATA_DIR(full_path);
-
-								String full_download_path = full_path;
-								full_download_path += "Contents/";
-								full_download_path += tmp;
-
-								auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_download_path.c_str());
-								
-								if (script)
-								{
-									script->run_script(true);
-
-									while (script->status() != LuaScriptComponent::LUA_STOP);
-
-									std::remove(full_download_path.c_str());
-									ComponentSystem::get_singleton_ptr()->remove(script);
-								}
-							}
-						}
-					}
-					else
-					{
-						auto tmp = uuids::to_string(XPX::UUIDFactory::version<4>()) + "-LUA";
-
-						XPLICIT_GET_DATA_DIR(full_path);
-
-						String full_write_path = full_path;
-						full_write_path += "Contents/";
-						full_write_path += tmp;
-
-						std::ofstream file(full_write_path);
-
-						file << node->value();
-
-						auto script = ComponentSystem::get_singleton_ptr()->add<LuaScriptComponent>(full_write_path.c_str());
-
-						if (script)
-						{
-							script->run_script(true);
-
-							while (script->status() != LuaScriptComponent::LUA_STOP);
-
-							std::remove(full_write_path.c_str());
-							ComponentSystem::get_singleton_ptr()->remove(script);
 						}
 					}
 				}

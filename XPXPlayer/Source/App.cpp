@@ -12,12 +12,7 @@
  */
 
 #include "App.h"
-
 #include "LoadingScreenComponent.h"
-
-#include <LuaAPI.h>
-
-extern void XplicitLoadClientLua() noexcept;
 
 namespace XPX
 {
@@ -35,9 +30,6 @@ namespace XPX::Bites
 		this->setup_engine();
 
 		ComponentSystem::get_singleton_ptr()->add<NetworkComponent>();
-
-		XplicitLoadBaseLua();
-		XplicitLoadClientLua();
 
 		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<LoadingScreenComponent>();
 		XPLICIT_ASSERT(loading_screen);

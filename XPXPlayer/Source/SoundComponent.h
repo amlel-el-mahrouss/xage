@@ -15,11 +15,10 @@
 
 #include <NginCore.h>
 #include <SoundNgin.h>
-#include <ClassComponent.h>
 
 namespace XPX
 {
-	class SoundComponent final : public ClassComponent
+	class SoundComponent final : public Component, public XPXAttribute
 	{
 	public:
 		SoundComponent(const char* name, const char* parent);

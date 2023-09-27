@@ -30,8 +30,6 @@
 
 static void XplicitThrowException(XPX::EngineError& err);
 
-extern void XplicitLoadClientLua() noexcept;
-
 #ifdef _WIN32
 static void XplicitThrowException(XPX::Win32Error& err);
 #endif
@@ -69,9 +67,6 @@ int main(int argc, char** argv)
 
 				XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XAGE (D3D11)", "XPXPlayerDirectXInDev", hInst);
 
-				XplicitLoadBaseLua();
-				XplicitLoadClientLua();
-
 				DriverSystemD3D11* drv11 = new DriverSystemD3D11(win->get().WindowHandle);
 				win->get().DriverSystem = drv11;
 
@@ -106,65 +101,18 @@ int main(int argc, char** argv)
 
 				while (ret != WM_QUIT)
 				{
+					ret = win->update();
+
 					drv11->begin_scene(1, 0.2, 0.2, 0.2, true, true);
 
 					XPX::ComponentSystem::get_singleton_ptr()->update();
 					XPX::EventSystem::get_singleton_ptr()->update();
 
 					drv11->end_scene();
-
-					ret = win->update();
 				}
 
 				delete win; // still though, wanna do that. even though windows still does free the pool.
 			}
-		}
-		else
-		{
-			if (cmd_line.empty() ||
-				cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == XPX::String::npos)
-				return 1;
-
-			cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
-
-			uri /= cmd_line;
-
-			XPX::Utils::InternetProtocolChecker checker;
-
-			if (!checker(uri.get().c_str()))
-				return 1;
-
-			std::unique_ptr<XPX::Bites::Application> app_ptr = std::make_unique<XPX::Bites::Application>(uri);
-
-			XPLICIT_ASSERT(app_ptr);
-
-			CAD->getSceneManager()->getParameters()->setAttribute(XPX::COLLADA_CREATE_SCENE_INSTANCES, true);
-			CAD->getVideoDriver()->setTextureCreationFlag(XPX::ETCF_ALWAYS_32_BIT, true);
-			CAD->getVideoDriver()->setTextureCreationFlag(XPX::ETCF_CREATE_MIP_MAPS, true);
-
-			while (CAD->run() && 
-				XPX::ComponentSystem::get_singleton_ptr() &&
-				XPX::EventSystem::get_singleton_ptr())
-			{
-				CAD->getVideoDriver()->beginScene(true, true, XPX::ImGUI::ImColor(255, 40, 40, 40));
-
-				CAD->getSceneManager()->drawAll();
-				
-#ifdef _WIN32
-				XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
-#endif
-
-				XPX::ComponentSystem::get_singleton_ptr()->update();
-				XPX::EventSystem::get_singleton_ptr()->update();
-
-				CAD->getVideoDriver()->endScene();
-
-				XPX::Lua::CLuaStateManager::get_singleton_ptr()->run_string("world:RenderOneFrame()");
-
-				KEYBOARD->reset();
-			}
-
-			CAD->drop();
 		}
 	}
 	catch (XPX::EngineError& err)
@@ -199,8 +147,8 @@ static void XplicitThrowException(XPX::EngineError& err)
 	exit += L"\n";
 
 #ifdef _WIN32
-	XPX::DialogHelper::message_box(L"XPXPlayer",
-		L"XPLICIT Couldn't continue!",
+	XPX::DialogHelper::message_box(XPX::Bites::XPLICIT_APP_NAME,
+		L"XAGE Couldn't continue!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);
@@ -223,8 +171,8 @@ static void XplicitThrowException(XPX::Win32Error& err)
 	exit += std::to_wstring(err.hr());
 	exit += L"\n";
 
-	XPX::DialogHelper::message_box(L"XPLICIT",
-		L"Program crash!",
+	XPX::DialogHelper::message_box(L"XAGE",
+		L"ENGINE Crash!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);

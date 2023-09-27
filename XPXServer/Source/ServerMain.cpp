@@ -24,7 +24,6 @@
 #include "CharacterMovementEvent.h"
 #include "SpawnComponent.h"
 #include "CharacterHealthMonitorEvent.h"
-#include "CharacterDownloadComponent.h"
 
 static void XplicitPrintHelp()
 {
@@ -87,8 +86,6 @@ static void XplicitLoadShell()
 	}
 }
 
-extern void XplicitLoadServerLua() noexcept;
-
 /* Application main entrypoint */
 int main(int argc, char** argv)
 {
@@ -119,7 +116,7 @@ int main(int argc, char** argv)
 
 		if (!ip4)
 		{
-			std::cout << "XPXServer, Self-Hostable XPXNgin instance.\n";
+			std::cout << "XPXServer, Self-Hostable XAGE instance.\n";
 			std::cout << "Please define XPLICIT_SERVER_ADDR, it is needed to bound to a specific address.\n";
 			std::cin.get();
 
@@ -133,7 +130,6 @@ int main(int argc, char** argv)
 
 		const auto network = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::NetworkServerComponent>(ip4, port4);
 
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::CharacterDownloadComponent>();
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
 
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::CharacterMovementEvent>();
@@ -156,9 +152,6 @@ int main(int argc, char** argv)
 
 #endif // XPLICIT_WINDOWS
 
-		XplicitLoadBaseLua();
-		XplicitLoadServerLua();
-
 		XPX::Root::get_singleton_ptr()->set(XPX::createDevice(XPX::EDT_NULL));
 
 		XPLICIT_PLACE_ID = argv[2];
@@ -169,7 +162,7 @@ int main(int argc, char** argv)
 		if (XPLICIT_PLACE_ID.find(XPLICIT_XPATH_PROTOCOL) == XPX::String::npos)
 		{
 			XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
-			generated_path += "-ROXML";
+			generated_path += "-RXML";
 			
 			path += generated_path;
 

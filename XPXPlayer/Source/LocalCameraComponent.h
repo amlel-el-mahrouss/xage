@@ -10,7 +10,6 @@
 #pragma once
 
 #include <Component.h>
-#include <ClassComponent.h>
 #include <NetworkComponent.h>
 
 #include <Root.h>
@@ -18,12 +17,13 @@
 namespace XPX
 {
 	// The player view in-person.
-	class LocalCameraComponent final : public ClassComponent
+	class LocalCameraComponent final : public Component
 	{
 	public:
 		LocalCameraComponent() noexcept;
 		~LocalCameraComponent() noexcept override;
 		
+	public:
 		LocalCameraComponent& operator=(const LocalCameraComponent&) = default;
 		LocalCameraComponent(const LocalCameraComponent&) = default;
 

@@ -5,8 +5,7 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: LoadingComponent.cpp
- *			Purpose: XPXPlayer Loading Screen, show something while the player waits
- *          and manages the connection process.
+ *			Purpose: Game Loading screen, while the network sends up the needed files.
  *
  * =====================================================================
  */
@@ -20,7 +19,9 @@
 #include "LocalCharacterComponent.h"
 #include "LocalCameraComponent.h"
 #include "ChatBoxComponent.h"
+
 #include "LoadingScreenComponent.h"
+
 #include "LocalMenuEvent.h"
 #include "ClientFX.h"
 #include "MenuUI.h"
@@ -31,6 +32,8 @@
 #include <CLua.hpp>
 #include <RXML.h>
 #include <codecvt>
+
+#define XPLICIT_WAIT_FOR std::chrono::seconds(5)
 
 namespace XPX
 {
@@ -83,26 +86,19 @@ namespace XPX
         if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
         {
             packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+            packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_INVALID;
 
             auto hash = packet.hash;
             auto public_hash = packet.public_hash;
 
             const auto monitor = EventSystem::get_singleton_ptr()->add<LocalNetworkMonitorEvent>(hash, public_hash);
 
-            self->mNetwork->read(packet);
-
-            ComponentSystem::get_singleton_ptr()->add<ChatBoxComponent>(packet.additional_data);
             monitor->ID = packet.additional_data;
 
             XPLICIT_INFO("XPX_ID:" + monitor->ID);
 
-            EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(hash);
-            EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
-
+            ComponentSystem::get_singleton_ptr()->add<ChatBoxComponent>(packet.additional_data);
             ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash, monitor->ID);
-            ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
-
-            ComponentSystem::get_singleton_ptr()->add<LocalCharacterComponent>(public_hash, true);
 
             self->mNetwork->set_hash(hash);
 
@@ -110,12 +106,26 @@ namespace XPX
 
             monitor->HTTP = std::make_unique<XHTTPManager>();
             monitor->HTTP->set_endpoint(monitor->Endpoint);
-
-            StartLoad = false;
         }
         else
         {
-            // peek after the ++timeout, or retry
+            if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
+            {
+                packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
+
+                auto hash = packet.hash;
+                auto public_hash = packet.public_hash;
+
+                EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(hash);
+                EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
+
+                ComponentSystem::get_singleton_ptr()->add<LocalCharacterComponent>(public_hash, true);
+                ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
+                
+                StartLoad = false;
+            }
+
+            //! peek after the ++timeout, or retry
             if (self->mTimeout >= XPLICIT_TIMEOUT)
             {
                 ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
@@ -163,7 +173,7 @@ namespace XPX
 
                     mNetwork->send(spawn);
 
-                    std::this_thread::sleep_for(std::chrono::seconds(1));
+                    std::this_thread::sleep_for(XPLICIT_WAIT_FOR);
                     ++this->mTimeout;
                 }
                 });
@@ -181,3 +191,5 @@ namespace XPX
             }, POPUP_TYPE::NETWORK);
     }
 }
+
+#undef XPLICIT_WAIT_FOR

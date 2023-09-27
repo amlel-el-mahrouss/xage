@@ -104,53 +104,11 @@ namespace XPX
 
 	};
 
-	class RectComponent final : public Lua::CLuaClass
-	{
-	public:
-		RectComponent(const char* parent, const char* name);
-		~RectComponent() = default;
-
-	public:
-		XPLICIT_COPY_DEFAULT(RectComponent);
-
-	public:
-		const char* name();
-
-	public:
-		static void update(ClassPtr klass) noexcept;
-		static bool should_update();
-
-	private:
-		ImGUI::UIFrame mFrame;
-
-	};
-
 	class ChatBoxStyleDark final
 	{
 	public:
 		static ImGUI::ImColor get_frame_color() noexcept { return { 150, 0x41, 0x41, 0x41 }; }
 		static ImGUI::ImColor get_text_rgn_color() noexcept { return { 150, 0x1A, 0x1A, 0x1A }; }
-
-	};
-
-	class ImageComponent final : public Lua::CLuaClass
-	{
-	public:
-		ImageComponent(const char* path, const char* parent, const char* name);
-		~ImageComponent() override;
-
-	public:
-		XPLICIT_COPY_DEFAULT(ImageComponent);
-
-	public:
-		const char* name();
-
-	public:
-		static void update(ClassPtr klass) noexcept;
-		static bool should_update();
-
-	private:
-		ImGUI::ImTexture* mImage;
 
 	};
 }

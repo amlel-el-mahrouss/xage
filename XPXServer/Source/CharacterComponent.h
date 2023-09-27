@@ -23,7 +23,7 @@ namespace XPX
 		INVALID,
 	};
 
-	class CharacterComponent final : public Component
+	class CharacterComponent final : public XPXAttribute, public Component
 	{
 	public:
 		CharacterComponent() noexcept;
@@ -70,14 +70,15 @@ namespace XPX
 		bool can_spawn() const noexcept;
 
 	public:
+		void kick(const String& reason) noexcept;
+
+	public:
 		std::array<WeaponComponent*, XPX_MAX_WEAPONS>& get_weapons() noexcept;
 		WeaponComponent* get_current_weapon() noexcept;
-		ClassComponent* get_class() const;
 
 	private:
 		std::array<WeaponComponent*, XPX_MAX_WEAPONS> mWeapons;
 		WeaponComponent* mActiveWeapon;
-		ClassComponent* mClass;
 		HUMANOID_STATE mState;
 		NetworkPeer* mPeer;
 

@@ -15,7 +15,6 @@
  */
 
 #include "CharacterHealthMonitorEvent.h"
-#include <CLua.hpp>
 
 namespace XPX
 {
@@ -29,19 +28,18 @@ namespace XPX
 	
 	static void XPXHandleSpawn(SpawnComponent* spawner, CharacterComponent* humanoid) noexcept
 	{
-		if (humanoid && spawner)
+		if (humanoid && 
+			spawner)
 		{
 			const auto& pos = spawner->get();
 
-			humanoid->get_class()->pos().X = pos.X;
-			humanoid->get_class()->pos().Y = pos.Y;
-			humanoid->get_class()->pos().Z = pos.Z;
+			humanoid->pos().X = pos.X;
+			humanoid->pos().Y = pos.Y;
+			humanoid->pos().Z = pos.Z;
 		}
-		else if (humanoid)
+		else
 		{
-			humanoid->get_class()->pos().X = 0;
-			humanoid->get_class()->pos().Y = 100;
-			humanoid->get_class()->pos().Z = 0;
+			humanoid->kick("No Spawnpoint.");
 		}
 	}
 
@@ -75,16 +73,6 @@ namespace XPX
 			{
 				humanoid->can_spawn(false);
 				humanoid->set_state(HUMANOID_STATE::DEAD);
-
-#ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("world:Death [EVENT]");
-#endif // ifdef XPLICIT_DEBUG
-
-				String path("world.Players.");
-				path += peer_ptr->xplicit_id.as_string();
-
-				String fmt = fmt::format("world:Death({})", path);
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 
 				for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)
 				{

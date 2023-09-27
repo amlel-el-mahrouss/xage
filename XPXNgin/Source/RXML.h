@@ -17,8 +17,6 @@
 #include <rapidxml/rapidxml.hpp>
 
 // Common includes
-#include "LuaScriptComponent.h"
-#include "ClassComponent.h"
 #include "XHTTPManager.h"
 #include "DataValue.h"
 #include "Root.h"
@@ -26,10 +24,6 @@
 
 // CLua
 #include <CLua.hpp>
-
-#ifndef XPLICIT_XASSET_ENDPOINT
-#	define XPLICIT_XASSET_ENDPOINT "play-xplicit.com"
-#endif // ifndef XPLICIT_XASSET_ENDPOINT
 
 namespace XPX::RXML
 {

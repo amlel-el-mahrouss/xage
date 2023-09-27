@@ -47,29 +47,19 @@ namespace XPX
 				NetworkFloat speed = humanoid->get_walk_speed();
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_JUMP] == NETWORK_CMD_JUMP)
-					humanoid->get_class()->pos().Y += humanoid->get_jump_power();
+					humanoid->pos().Y += humanoid->get_jump_power();
 		
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_FORWARD] == NETWORK_CMD_FORWARD)
-					humanoid->get_class()->pos().Z += speed;
+					humanoid->pos().Z += speed;
 				
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_BACKWARD] == NETWORK_CMD_BACKWARD)
-					humanoid->get_class()->pos().Z -= speed;
+					humanoid->pos().Z -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_LEFT] == NETWORK_CMD_LEFT)
-					humanoid->get_class()->pos().X -= speed;
+					humanoid->pos().X -= speed;
 
 				if (peer->packet.cmd[XPLICIT_NETWORK_CMD_RIGHT] == NETWORK_CMD_RIGHT)
-					humanoid->get_class()->pos().X += speed;
-
-#ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("world:Move [EVENT]");
-#endif // ifdef XPLICIT_DEBUG
-
-				String path = "world.Players.";
-				path += peer->xplicit_id.as_string();
-
-				String fmt = fmt::format("world:Move({})", path);
-				Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
+					humanoid->pos().X += speed;
 			}
 		}
 	}

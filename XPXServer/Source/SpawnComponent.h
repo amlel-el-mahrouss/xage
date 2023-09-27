@@ -13,7 +13,6 @@
 #pragma once
 
 #include "ServerConfig.h"
-#include <ClassComponent.h>
 
 namespace XPX
 {

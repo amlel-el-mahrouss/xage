@@ -82,8 +82,6 @@ namespace XPX
 		}
 	}
 
-	Vector<float> LocalCharacterComponent::get_pos() noexcept { return mPos; }
-
 	LocalHumanoidMoveEvent::LocalHumanoidMoveEvent(const std::int64_t& public_hash)
 		: 
 		mPacket(), 

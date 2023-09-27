@@ -96,7 +96,6 @@
     <ClInclude Include="XPXPlayer\Source\App.h" />
     <ClInclude Include="XPXPlayer\Source\ChatBoxComponent.h" />
     <ClInclude Include="XPXPlayer\Source\ClientFX.h" />
-    <ClInclude Include="XPXPlayer\Source\WeaponComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LoadingScreenComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalCameraComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalCharacterComponent.h" />
@@ -105,17 +104,13 @@
     <ClInclude Include="XPXPlayer\Source\LocalReplicationComponent.h" />
     <ClInclude Include="XPXPlayer\Source\MenuUI.h" />
     <ClInclude Include="XPXPlayer\Source\MeshComponent.h" />
-    <ClInclude Include="XPXPlayer\Source\PartComponent.h" />
     <ClInclude Include="XPXPlayer\Source\PlayerConfig.h" />
     <ClInclude Include="XPXPlayer\Source\SoundComponent.h" />
-    <ClInclude Include="XPXPlayer\Source\BundleMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="XPXPlayer\Source\App.cpp" />
     <ClCompile Include="XPXPlayer\Source\ChatBoxComponent.cpp" />
-    <ClCompile Include="XPXPlayer\Source\ClientAPI.cpp" />
     <ClCompile Include="XPXPlayer\Source\ClientFX.cpp" />
-    <ClCompile Include="XPXPlayer\Source\WeaponComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LoadingScreenComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalCameraComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalCharacterComponent.cpp" />
@@ -124,9 +119,7 @@
     <ClCompile Include="XPXPlayer\Source\LocalReplicationComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\MenuUI.cpp" />
     <ClCompile Include="XPXPlayer\Source\MeshComponent.cpp" />
-    <ClCompile Include="XPXPlayer\Source\PartComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\SoundComponent.cpp" />
-    <ClCompile Include="XPXPlayer\Source\BundleMesh.cpp" />
     <ClCompile Include="XPXPlayer\Source\AppMain.cpp" />
   </ItemGroup>
   <ItemGroup>

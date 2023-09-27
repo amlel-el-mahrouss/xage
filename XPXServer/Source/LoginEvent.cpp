@@ -49,15 +49,14 @@ namespace XPX
 			player->get_peer() != nullptr)
 			return false;
 		
+		player->set_health(0.0);
+
 		peer->public_hash = XplicitHash();
 		peer->hash = XplicitHash();
 
 		peer->status = NETWORK_STAT_CONNECTED;
 		
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
-		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
-
-		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
 		peer->packet.hash = peer->hash;
 		peer->packet.size = sizeof(NetworkPacket);
@@ -104,8 +103,6 @@ namespace XPX
 		if (this->size() >= XPLICIT_MAX_CONNECTIONS)
 			return;
 
-		NetworkPacket incoming_conn{};
-
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_CONNECTED ||
@@ -113,8 +110,23 @@ namespace XPX
 				mNetwork->get(peer_idx)->status == NETWORK_STAT_STASIS)
 				continue;
 
-			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
+			{
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
+
+				mNetwork->get(peer_idx)->packet.hash = mNetwork->get(peer_idx)->hash;
+				mNetwork->get(peer_idx)->packet.size = sizeof(NetworkPacket);
+
+				memset(mNetwork->get(peer_idx)->packet.additional_data, 0, XPLICIT_NETWORK_BUF_SZ);
+
+				memcpy(mNetwork->get(peer_idx)->packet.additional_data,
+					mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
+					mNetwork->get(peer_idx)->xplicit_id.as_string().size());
+
+				NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+			}
+
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
 			{
 				if (CharacterComponent* player = mPlayers[mPlayerCount]; 
 					XplicitHandleJoin(mNetwork->get(peer_idx), player, mNetwork))
@@ -125,33 +137,12 @@ namespace XPX
 
 					++mPlayerCount;
 
-					memset(mNetwork->get(peer_idx)->packet.additional_data, 0, XPLICIT_NETWORK_BUF_SZ);
-
-					memcpy(mNetwork->get(peer_idx)->packet.additional_data, 
-						mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
-						mNetwork->get(peer_idx)->xplicit_id.as_string().size());
-
-					mNetwork->get(peer_idx)->packet.channel = XPLICIT_CHANNEL_DATA;
-
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
-					incoming_conn = mNetwork->get(peer_idx)->packet;
-
-					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+					NetworkServerContext::send_all(mNetwork);
 				}
-			}
-
-			if (incoming_conn.hash != mNetwork->get(peer_idx)->hash &&
-				incoming_conn.magic[0] == XPLICIT_NETWORK_MAG_0 &&
-				incoming_conn.magic[1] == XPLICIT_NETWORK_MAG_1 &&
-				incoming_conn.magic[2] == XPLICIT_NETWORK_MAG_2)
-			{
-				NetworkPacket copy_incoming_conn = incoming_conn;
-				copy_incoming_conn.hash = XPLICIT_INVALID_HASH;
-
-				NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx), &copy_incoming_conn);
 			}
 		}
 
