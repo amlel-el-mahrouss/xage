@@ -156,41 +156,6 @@ int main(int argc, char** argv)
 
 		XPLICIT_PLACE_ID = argv[2];
 
-		XPLICIT_GET_DATA_DIR(path);
-		path += "Contents/";
-
-		if (XPLICIT_PLACE_ID.find(XPLICIT_XPATH_PROTOCOL) == XPX::String::npos)
-		{
-			XPX::String generated_path = uuids::to_string(XPX::UUIDFactory::version<4>());
-			generated_path += "-RXML";
-			
-			path += generated_path;
-
-			if (!DownloadURL(XPLICIT_PLACE_ID, generated_path))
-				return 1;
-		}
-		else
-		{
-			XPX::String _url = "";
-
-			_url += XPLICIT_PLACE_ID.erase(XPLICIT_PLACE_ID.find(XPLICIT_XPATH_PROTOCOL), strlen(XPLICIT_XPATH_PROTOCOL));
-			path += _url;
-		}
-
-		XPX::RXML::RXMLDocumentParams params;
-
-		params.Has3D = true;
-		params.NoLua = false;
-		params.WaitFor = true;
-		params.Path = path;
-
-		XPX::RXML::RXMLDocument parser;
-		parser.parse(params);
-
-		// We want to parse any data values needed by the game.
-		// Such as SoundId. or Textures.
-		DVFromRoXML(params);
-
 		NPLICIT_SPLASH_SCREEN;
 
 		XPX::Thread job(XplicitLoadShell);
@@ -225,12 +190,12 @@ int main(int argc, char** argv)
 
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
-		exit += L"What: ";
+		exit += L"WHAT: ";
 		exit += converter.from_bytes(err.what());
 		exit += L"\n";
 
-		XPX::DialogHelper::message_box(L"XPX Server", 
-			L"Program crash!",
+		XPX::DialogHelper::message_box(L"XAGE lobby server", 
+			L"XAGGE crashed!",
 			exit.c_str(), 
 			TD_INFORMATION_ICON, 
 			TDCBF_OK_BUTTON);

@@ -58,7 +58,6 @@ namespace XPX
 		std::int64_t mHash;
 		HUMANOID_STATE mState;
 		NetworkPacket mPacket;
-		Vector<float> mPos;
 
 	};
 

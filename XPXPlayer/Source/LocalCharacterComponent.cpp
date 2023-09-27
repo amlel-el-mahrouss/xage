@@ -30,7 +30,6 @@ namespace XPX
 		mHash(hash),
 		mCam(nullptr), 
 		mPacket(),
-		mPos(0.f, 0.f, 0.f),
 		mState(HUMANOID_STATE::ALIVE)
 	{
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");

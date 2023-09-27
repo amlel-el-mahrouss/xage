@@ -392,7 +392,7 @@ namespace XPX::RXML
 	}
 }
 
-void DVFromRoXML(XPX::RXML::RXMLDocumentParams& params) noexcept
+void DVFromRXML(XPX::RXML::RXMLDocumentParams& params) noexcept
 {
 	XPX::Thread data_values_job([](XPX::RXML::RXMLDocumentParams params) {
 		XPX::String fmt;

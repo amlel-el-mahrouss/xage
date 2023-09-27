@@ -85,4 +85,4 @@ namespace XPX::RXML
 
 // Utilities related to data values.
 
-XPLICIT_API void DVFromRoXML(XPX::RXML::RXMLDocumentParams& params) noexcept;
+XPLICIT_API void DVFromRXML(XPX::RXML::RXMLDocumentParams& params) noexcept;
