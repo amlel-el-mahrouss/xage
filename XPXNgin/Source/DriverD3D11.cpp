@@ -280,7 +280,7 @@ namespace XPX::Renderer::DX11
 		RtlZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
 		rasterDesc.FillMode = D3D11_FILL_SOLID;
-		rasterDesc.CullMode = D3D11_CULL_BACK;
+		rasterDesc.CullMode = D3D11_CULL_NONE;
 		rasterDesc.FrontCounterClockwise = true;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
@@ -399,7 +399,7 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 
-	RenderComponentD3D11::RenderComponentD3D11()
+	MeshComponentD3D11::MeshComponentD3D11()
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
 		 m_pDriver(nullptr), m_pVertex(nullptr),
@@ -408,25 +408,25 @@ namespace XPX::Renderer::DX11
 		m_pVertexShader(nullptr), m_pColorShader(nullptr)
 	{}
 
-	RenderComponentD3D11::~RenderComponentD3D11()
+	MeshComponentD3D11::~MeshComponentD3D11()
 	{
 		if (m_pVertex)
 			delete[] m_pVertex;
 	}
 
-	void RenderComponentD3D11::push(const Color<float>& vert)
+	void MeshComponentD3D11::push(const Color<float>& vert)
 	{
 		this->m_colorVectors.push_back(vert);
 	}
 
-	void RenderComponentD3D11::push(const Vector<float>& vert)
+	void MeshComponentD3D11::push(const Vector<float>& vert)
 	{
 		this->m_arrayVerts.push_back(vert);
 	}
 
-	void RenderComponentD3D11::push(const UINT& indice) { this->m_arrayIndices.push_back(indice); }
+	void MeshComponentD3D11::push(const UINT& indice) { this->m_arrayIndices.push_back(indice); }
 
-	void RenderComponentD3D11::create()
+	void MeshComponentD3D11::create()
 	{
 		if (m_arrayVerts.empty())
 			return;
@@ -528,19 +528,19 @@ namespace XPX::Renderer::DX11
 		Details::ThrowIfFailed(m_hResult);
 	}
 
-	const char* RenderComponentD3D11::name() noexcept { return ("D3D11RenderComponent"); }
+	const char* MeshComponentD3D11::name() noexcept { return ("D3D11RenderComponent"); }
 
-	COMPONENT_TYPE RenderComponentD3D11::type() noexcept { return COMPONENT_RENDER; }
+	COMPONENT_TYPE MeshComponentD3D11::type() noexcept { return COMPONENT_RENDER; }
 
-	void RenderComponentD3D11::set_driver(DriverSystemD3D11* driver) noexcept
+	void MeshComponentD3D11::set_driver(DriverSystemD3D11* driver) noexcept
 	{
 		if (driver)
 			m_pDriver = driver;
 	}
 
-	void RenderComponentD3D11::update(ClassPtr this_ptr) 
+	void MeshComponentD3D11::update(ClassPtr this_ptr) 
 	{
-		RenderComponentD3D11* self = (RenderComponentD3D11*)this_ptr;
+		MeshComponentD3D11* self = (MeshComponentD3D11*)this_ptr;
 
 		if (!self)
 			return;
@@ -585,7 +585,7 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
-	size_t RenderComponentD3D11::size() noexcept
+	size_t MeshComponentD3D11::size() noexcept
 	{
 		return m_iVertexCnt;
 	}

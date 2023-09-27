@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 		DriverSystemD3D11* drv11 = new DriverSystemD3D11(win->get().WindowHandle);
 		win->get().DriverSystem = drv11;
 
-		RenderComponentD3D11* component_d3d11 = XPX::ComponentSystem::get_singleton_ptr()->add<RenderComponentD3D11>();
+		MeshComponentD3D11* component_d3d11 = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponentD3D11>();
 
 		component_d3d11->set_driver(drv11);
 
@@ -79,10 +79,10 @@ int main(int argc, char** argv)
 		float num = 0.5f;
 
 		component_d3d11->push(XPX::Vector<float>(-num, -num, 0.0f));
-		component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
-		component_d3d11->push(XPX::Vector<float>(0.0f, -num, 0.0f));
+		component_d3d11->push(XPX::Vector<float>(num, -num, 0.0f));
+		component_d3d11->push(XPX::Vector<float>(0.0f, num, 0.0f));
 
-		std::vector<UINT> indices{ 0, 1, 2 };
+		std::vector<UINT> indices{ 0, 3, 1, 3, 2, 1 };
 
 		for (auto& indice : indices)
 		{

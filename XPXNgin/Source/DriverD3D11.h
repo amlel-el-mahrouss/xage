@@ -78,7 +78,7 @@ namespace XPX::Renderer::DX11
 
 	class DriverSystemD3D11;
 	class ShaderSystemD3D11;
-	class RenderComponentD3D11;
+	class MeshComponentD3D11;
 
 	class XPLICIT_API DriverSystemD3D11 : public DriverSystem
 	{
@@ -204,18 +204,18 @@ namespace XPX::Renderer::DX11
 		/// <summary>
 		/// Updates the shader.
 		/// </summary>
-		void update(RenderComponentD3D11* component);
+		void update(MeshComponentD3D11* component);
 
 		/// <summary>
 		/// Updates the Constant buffer.
 		/// </summary>
-		void update_cbuf(RenderComponentD3D11* component);
+		void update_cbuf(MeshComponentD3D11* component);
 
 	private:
 		ShaderTraits m_data;
 		DriverSystemD3D11* m_pDriver;
 		
-		friend RenderComponentD3D11;
+		friend MeshComponentD3D11;
 
 	};
 
@@ -223,21 +223,21 @@ namespace XPX::Renderer::DX11
 
 	/*
      *
-	 * RenderComponentD3D11
+	 * MeshComponentD3D11
 	 * 
 	 * @brief Rendering Component, takes care of rendering a specific component in the scene.
 	 * NOTE: don't add this to the main ComponentSystem, use the SceneTree class instead.
 	 * 
 	 */
 
-	class XPLICIT_API RenderComponentD3D11 final : public Component
+	class XPLICIT_API MeshComponentD3D11 final : public Component
 	{
 	public:
-		RenderComponentD3D11();
-		~RenderComponentD3D11() override;
+		MeshComponentD3D11();
+		~MeshComponentD3D11() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(RenderComponentD3D11);
+		XPLICIT_COPY_DEFAULT(MeshComponentD3D11);
 
 	public:
 		void push(const Color<float>& clr);
