@@ -60,8 +60,8 @@ namespace XPX::Renderer::DX11
 	{
 		struct __declspec(align(XPLICIT_DX_ALIGN)) VERTEX
 		{
-			XMFLOAT3 POSITION;
-			XMFLOAT3 COLOR;
+			XMFLOAT4 POSITION;
+			XMFLOAT4 COLOR;
 		};
 
 		struct CBUFFER

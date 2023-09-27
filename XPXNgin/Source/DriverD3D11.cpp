@@ -444,9 +444,11 @@ namespace XPX::Renderer::DX11
 
 		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{
-			m_pVertex[vertex_index].POSITION = XMFLOAT3(m_arrayVerts[vertex_index].X, m_arrayVerts[vertex_index].Y, m_arrayVerts[vertex_index].Z);
+			m_pVertex[vertex_index].POSITION = XMFLOAT4(m_arrayVerts[vertex_index].X, m_arrayVerts[vertex_index].Y, m_arrayVerts[vertex_index].Z, 1.0f);
 
-			m_pVertex[vertex_index].COLOR = XMFLOAT3(m_colorVectors[vertex_index].R,
+			m_pVertex[vertex_index].COLOR = XMFLOAT4(
+				m_colorVectors[vertex_index].A,
+				m_colorVectors[vertex_index].R,
 				m_colorVectors[vertex_index].G,
 				m_colorVectors[vertex_index].B);
 		}
