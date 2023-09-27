@@ -1,3 +1,10 @@
+cbuffer CBUFFER
+{
+    matrix worldMatrix;
+    matrix viewMatrix;
+    matrix projectionMatrix;
+};
+
 struct VS_OUTPUT
 {
     float4 position : SV_POSITION;
@@ -14,7 +21,12 @@ VS_OUTPUT VS(VS_INPUT input)
 {
     VS_OUTPUT outVert;
     
-    outVert.position = input.position;
+    input.position.w = 1.0f;
+    
+    outVert.position = mul(input.position, worldMatrix);
+    outVert.position = mul(input.position, viewMatrix);
+    outVert.position = mul(input.position, projectionMatrix);
+    
     outVert.color = input.color;
 
     return outVert;

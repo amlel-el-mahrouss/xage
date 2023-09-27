@@ -50,13 +50,15 @@
 
 using namespace DirectX;
 
+#define XPLICIT_DX_ALIGN (16)
+
 namespace XPX::Renderer::DX11
 {
 	class CameraSystemD3D11;
 
 	namespace Details
 	{
-		struct VERTEX
+		struct __declspec(align(XPLICIT_DX_ALIGN)) VERTEX
 		{
 			XMFLOAT3 POSITION;
 			XMFLOAT3 COLOR;

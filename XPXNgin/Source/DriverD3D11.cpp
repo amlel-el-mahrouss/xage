@@ -84,15 +84,10 @@ namespace XPX::Renderer::DX11
 
 		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		
-		swapDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		swapDesc.Flags = 0;
 
 		swapDesc.Windowed = true;
 		swapDesc.OutputWindow = privateData.pWindowHandle;
-
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("[xplicit_d3d11_make_swapchain] was a success!");
-#endif
-
 	}
 
 	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd)
@@ -116,7 +111,7 @@ namespace XPX::Renderer::DX11
 		Details::ThrowIfFailed(hr);
 
 		UINT numModes = 0U;
-		hr = pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
+		hr = pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, nullptr);
 
 		Details::ThrowIfFailed(hr);
 
@@ -136,14 +131,15 @@ namespace XPX::Renderer::DX11
 		}
 
 		UINT i = 0U;
-		auto numerator = 0U;
-		auto denominator = 0U;
+
+		UINT numerator = 0U;
+		UINT denominator = 0U;
 
 		for (i = 0; i < numModes; i++)
 		{
-			if (displayModeList[i].Width == (unsigned int)XPLICIT_MIN_WIDTH)
+			if (displayModeList[i].Width == XPLICIT_MIN_WIDTH)
 			{
-				if (displayModeList[i].Height == (unsigned int)XPLICIT_MIN_HEIGHT)
+				if (displayModeList[i].Height == XPLICIT_MIN_HEIGHT)
 				{
 					numerator = displayModeList[i].RefreshRate.Numerator;
 					denominator = displayModeList[i].RefreshRate.Denominator;
@@ -523,7 +519,7 @@ namespace XPX::Renderer::DX11
 		D3D11_BUFFER_DESC matrixBufferDesc;
 
 		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		matrixBufferDesc.ByteWidth = (sizeof(float) * 4) + (sizeof(float) * 4);
+		matrixBufferDesc.ByteWidth = sizeof(Details::CBUFFER);
 		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		matrixBufferDesc.MiscFlags = 0;
@@ -553,16 +549,21 @@ namespace XPX::Renderer::DX11
 
 		XPLICIT_ASSERT(self->m_pDriver);
 		
+		self->m_pDriver->get().pCamera->render();
 		self->m_viewMatrix = self->m_pDriver->get().pCamera->m_viewMatrix;
 
 		self->m_pDriver->get().pCtx->RSSetState(self->m_pDriver->get().pRasterState.Get());
 
-		const uint32_t stride = { (sizeof(float) * 4) + (sizeof(float) * 4) };
+		const uint32_t stride = { sizeof(Details::VERTEX) };
 		const uint32_t offset = { 0u };
 
 		try
 		{
-			self->m_pDriver->get().pCtx->IASetVertexBuffers(0, 1, self->m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+			self->m_pDriver->get().pCtx->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt, 
+				self->m_pVertexBuffer.GetAddressOf(), 
+				&stride, 
+				&offset);
+			
 			self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 			self->m_pDriver->get().pCtx->IASetInputLayout(self->m_pDriver->get().pInputLayout.Get());
@@ -570,7 +571,7 @@ namespace XPX::Renderer::DX11
 			self->m_pVertexShader->update(self);
 			self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
 		
-			self->m_pDriver->get().pCtx->OMSetRenderTargets(1, 
+			self->m_pDriver->get().pCtx->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
 				self->m_pDriver->get().pRenderTarget.GetAddressOf(),
 				self->m_pDriver->get().pDepthStencil.Get());
 
@@ -582,11 +583,6 @@ namespace XPX::Renderer::DX11
 		{
 			XPLICIT_INFO("WARNING: No CBuf attached to shader.");
 		}
-
-		RECT winRect{};
-
-		GetClientRect(self->m_pDriver->get().pWindowHandle, &winRect);
-		self->m_pDriver->get().Viewport = { 0.0f, 0.0f, (FLOAT)(winRect.right - winRect.left), (FLOAT)(winRect.bottom - winRect.top), 0.0f, 1.0f };
 
 		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iIndices, 0, 0);
 	}
