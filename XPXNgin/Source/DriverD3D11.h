@@ -311,9 +311,8 @@ namespace XPX::Renderer::DX11
 	public:
 		void render() noexcept
 		{
-			float zero_vec[3]  = {0.0, 0.0, 0.0};
-			XMVECTOR lookAtVec(_mm_load_ps(zero_vec));
-			XMVECTOR up(_mm_load_ps(zero_vec));
+			XMVECTOR lookAtVec(XMVectorZero());
+			XMVECTOR up(XMVectorZero());
 
 			float pos_vec[3] = { position().X, position().Y, position().Z };
 			XMVECTOR position(_mm_load_ps(pos_vec));
