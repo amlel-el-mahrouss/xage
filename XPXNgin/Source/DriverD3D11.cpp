@@ -399,7 +399,7 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd); 
 	}
 
-	MeshComponentD3D11::MeshComponentD3D11()
+	MeshComponentD3D11::MeshComponentD3D11() noexcept
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
 		 m_pDriver(nullptr), m_pVertex(nullptr),

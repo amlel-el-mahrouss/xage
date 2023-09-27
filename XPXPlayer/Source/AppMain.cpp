@@ -49,41 +49,6 @@ int main(int argc, char** argv)
         XPX::open_terminal();
 #endif // XPLICIT_DEBUG
 #endif
-		using namespace XPX::Renderer::DX11;
-
-		XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XAGE", "XAGERenderingWindow", hInst);
-
-		DriverSystemD3D11* drv11 = new DriverSystemD3D11(win->get().WindowHandle);
-		win->get().DriverSystem = drv11;
-
-		MeshComponentD3D11* component_d3d11 = XPX::ComponentSystem::get_singleton_ptr()->add<MeshComponentD3D11>();
-
-		component_d3d11->set_driver(drv11);
-
-		XPLICIT_ASSERT(component_d3d11);
-
-		component_d3d11->push(XPX::Color<float>(0, 0, 0, 1.0));
-		component_d3d11->push(XPX::Color<float>(0, 0, 1.0, 0));
-		component_d3d11->push(XPX::Color<float>(0, 1.0, 0, 0));
-
-		float num = 0.5f;
-
-		component_d3d11->push(XPX::Vector<float>(-num, -num, 0.0f));
-		component_d3d11->push(XPX::Vector<float>(0.0f, num, 0.0f));
-		component_d3d11->push(XPX::Vector<float>(num, -num, 0.0f));
-
-		std::vector<UINT> indices{ 0, 1, 2 };
-
-		for (auto& indice : indices)
-		{
-			component_d3d11->push(indice);
-		}
-
-		component_d3d11->topology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		drv11->get().pCamera->set_position(XPX::Vector<float>(0, 0, -5));
-
-		component_d3d11->create();
-
 		auto ret = 0;
 
 		while (ret != WM_QUIT)

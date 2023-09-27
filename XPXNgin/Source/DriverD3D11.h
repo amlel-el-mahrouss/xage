@@ -233,7 +233,7 @@ namespace XPX::Renderer::DX11
 	class XPLICIT_API MeshComponentD3D11 final : public Component
 	{
 	public:
-		MeshComponentD3D11();
+		MeshComponentD3D11() noexcept;
 		~MeshComponentD3D11() override;
 
 	public:
@@ -258,8 +258,8 @@ namespace XPX::Renderer::DX11
 		const char* name() noexcept override;
 
 	public:
-		auto topology() noexcept { return m_iTopology; }
-		void topology(const XPLICIT_PRIMITIVE_TOPOLOGY& topology) { m_iTopology = topology; }
+		auto get_topology() noexcept { return m_iTopology; }
+		void set_topology(const XPLICIT_PRIMITIVE_TOPOLOGY& topology) { m_iTopology = topology; }
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;

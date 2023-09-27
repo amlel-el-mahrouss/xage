@@ -29,9 +29,43 @@ namespace XPX
 
 		class XPLICIT_API UIFrame final
 		{
+		private:
+
+			struct ImGUIUIView : Renderer::D2D::UIView
+			{
+				UIFrame* self = nullptr;
+
+				void operator()(Renderer::D2D::DriverSystemD2D* pD2dDriver) override
+				{
+					XPX::Rect rect;
+					
+					rect.left = self->X;
+					rect.top = self->Y;
+
+					rect.bottom = self->H - rect.top;
+					rect.right = self->W - rect.left;
+					
+					pD2dDriver->draw_rectangle(rect, 0.0f, 0.0f, 1.0f, self->BackgroundColor);
+				}
+
+				friend UIFrame;
+
+			};
+
+			ImGUIUIView* pView;
+
 		public:
-			UIFrame() = default;
-			~UIFrame() = default;
+			explicit UIFrame() noexcept
+				: pView(nullptr)
+			{
+
+			}
+
+			~UIFrame()
+			{
+				if (pView)
+					delete pView;
+			}
 
 		public:
 			XPLICIT_COPY_DEFAULT(UIFrame);
@@ -47,16 +81,6 @@ namespace XPX
 			std::uint32_t W{ 0 };
 			std::uint32_t H{ 0 };
 
-		private:
-			struct ImGUIUIView : Renderer::D2D::UIView
-			{
-				void operator()(Renderer::D2D::DriverSystemD2D* pD2dDriver) override
-				{
-					pD2dDriver->draw_rectangle()
-				}
-
-			};
-
 		public:
 			virtual void update(ImColor clr) noexcept
 			{
@@ -64,9 +88,13 @@ namespace XPX
 					H < 1)
 					return;
 
-				RENDERER->getVideoDriver()->draw2DRectangle(clr,
-					irr::core::recti(position2di(X, Y), dimension2d(W, H)),
-					nullptr);
+				if (!pView)
+				{
+					pView = new ImGUIUIView();
+					pView->self = this;
+				}
+
+				RENDERER_2D->queue(pView);
 			}
 
 			virtual bool in_region() noexcept

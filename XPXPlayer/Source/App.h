@@ -18,11 +18,6 @@
 #include <Uri.h>
 #include <ini.h>
 
-namespace XPX
-{
-	extern Vector<float> XPLICIT_DIM;
-} // namespace Xplicit
-
 namespace XPX::Bites
 {
 	constexpr const PChar* XPLICIT_APP_NAME = L"XPX Advanced Game Engine";
@@ -63,14 +58,14 @@ namespace XPX::Bites
 
 	};
 
-	class Application final
+	class ApplicationManager final
 	{
 	public:
-		Application() = delete;
+		ApplicationManager() = delete;
 
 	public:
-		Application(Utils::UriParser xconnectTo);
-		~Application();
+		ApplicationManager(Utils::UriParser xconnectTo);
+		~ApplicationManager();
 
 	public:
 		class SettingsManager final

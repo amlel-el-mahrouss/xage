@@ -18,11 +18,6 @@
 
 namespace XPX
 {
-	extern Vector<float> XPLICIT_DIM;
-}
-
-namespace XPX
-{
 	enum class POPUP_TYPE
 	{
 		NETWORK,

@@ -95,7 +95,6 @@
   <ItemGroup>
     <ClInclude Include="XPXPlayer\Source\App.h" />
     <ClInclude Include="XPXPlayer\Source\ChatBoxComponent.h" />
-    <ClInclude Include="XPXPlayer\Source\ClientFX.h" />
     <ClInclude Include="XPXPlayer\Source\LoadingScreenComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalCameraComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalCharacterComponent.h" />
@@ -110,7 +109,6 @@
   <ItemGroup>
     <ClCompile Include="XPXPlayer\Source\App.cpp" />
     <ClCompile Include="XPXPlayer\Source\ChatBoxComponent.cpp" />
-    <ClCompile Include="XPXPlayer\Source\ClientFX.cpp" />
     <ClCompile Include="XPXPlayer\Source\LoadingScreenComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalCameraComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalCharacterComponent.cpp" />

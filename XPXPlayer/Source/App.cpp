@@ -14,14 +14,9 @@
 #include "App.h"
 #include "LoadingScreenComponent.h"
 
-namespace XPX
-{
-	Vector<float> XPLICIT_DIM = Vector<float>(XPLICIT_DEFAULT_WIDTH, XPLICIT_DEFAULT_HEIGHT);
-}
-
 namespace XPX::Bites
 {
-	Application::Application(Utils::UriParser xconnect_to)
+	ApplicationManager::ApplicationManager(Utils::UriParser xconnect_to)
 		: mPath("")
 #ifdef XPLICIT_WINDOWS
 		, mWsa()
@@ -37,9 +32,9 @@ namespace XPX::Bites
 		loading_screen->connect(xconnect_to);
 	}
 
-	Application::~Application() {}
+	ApplicationManager::~ApplicationManager() {}
 
-	void Application::setup_engine()
+	void ApplicationManager::setup_engine()
 	{
 		//! Setup program contents path.
 		XPLICIT_GET_DATA_DIR(path);
@@ -55,26 +50,7 @@ namespace XPX::Bites
 
 		if (traits.window_height < 600 ||
 			traits.window_width < 800)
-			throw EngineError("The Engine doesn't support high DPI displays.");
-
-		SIrrlichtCreationParameters params;
-
-		params.DriverMultithreaded = false;
-		params.DriverType = EDT_DIRECT3D9;
-		params.Fullscreen = false;
-		params.WindowSize = dimension2d<irr::u32>(traits.window_width, traits.window_height);
-
-		XPLICIT_DIM.X = traits.window_width;
-		XPLICIT_DIM.Y = traits.window_height;
-
-		Root::get_singleton_ptr()->set(
-                createDeviceEx(params)
-		);
-
-		RENDERER->setWindowCaption(XPLICIT_APP_NAME);
-
-		Root::get_singleton_ptr()->set(new InputReceiver());
-		RENDERER->setEventReceiver(Root::get_singleton_ptr()->Keyboard);
+			throw EngineError("The Engine doesn't support DPI displays.");
 
 #ifdef XPLICIT_WINDOWS
 		XPX::init_winsock(&mWsa);
@@ -87,21 +63,16 @@ namespace XPX::Bites
 		//! Check for the existence of this ini file.
 		if (!std::filesystem::exists(path_ini))
 		{
-			traits.window_width = XPLICIT_DIM.X;
-			traits.window_height = XPLICIT_DIM.Y;
+			traits.window_width = XPLICIT_MIN_WIDTH;
+			traits.window_height = XPLICIT_MIN_HEIGHT;
 			traits.mouse_sensitivity = 1.0f;
 
 			(*mSettings) << traits;
 		}
 
-		String prebuilt = mPath;
-		prebuilt += "Textures/Default.zip";
-
-		if (!RENDERER->getFileSystem()->addZipFileArchive(prebuilt.c_str(), true, true))
-			throw EngineError("Missing Textures! This pack is needed for the XPXPlayer to work.");
 	}
 
-	Application::SettingsManager::SettingsManager()
+	ApplicationManager::SettingsManager::SettingsManager()
 		: mSettingsPath()
 	{
 		XPLICIT_GET_DATA_DIR(dat);
@@ -112,9 +83,9 @@ namespace XPX::Bites
 		mIni = std::make_unique<mINI::INIFile>(mSettingsPath);
 	}
 
-	Application::SettingsManager::~SettingsManager() = default;
+	ApplicationManager::SettingsManager::~SettingsManager() = default;
 
-	Application::SettingsManager& Application::SettingsManager::operator <<(Traits& traits)
+	ApplicationManager::SettingsManager& ApplicationManager::SettingsManager::operator <<(Traits& traits)
 	{
 		mINI::INIStructure ini;
 
@@ -127,7 +98,7 @@ namespace XPX::Bites
 	}
 
 	/* reads the ClientSettings.dat INI file */
-	Application::SettingsManager& Application::SettingsManager::operator >>(Traits& traits)
+	ApplicationManager::SettingsManager& ApplicationManager::SettingsManager::operator >>(Traits& traits)
 	{
 		try
 		{

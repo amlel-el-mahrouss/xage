@@ -67,14 +67,14 @@ namespace XPX
 		mHudFrame->W = 504;
 		mHudFrame->H = 288;
 		
-		mHudFrame->BackgroundColor.setAlpha(255);
+		mHudFrame->BackgroundColor.A = 1;
 		
-		mHudFrame->BackgroundColor.setRed(0x0F);
-		mHudFrame->BackgroundColor.setGreen(0x0F);
-		mHudFrame->BackgroundColor.setBlue(0x0F);
+		mHudFrame->BackgroundColor.R = ( 0x0F / 255 );
+		mHudFrame->BackgroundColor.G = (0x0F / 255);
+		mHudFrame->BackgroundColor.B = (0x0F / 255);
 
-		mHudFrame->X = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_DIM.X));
-		mHudFrame->Y = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_DIM.Y));
+		mHudFrame->X = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_MIN_WIDTH));
+		mHudFrame->Y = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_MIN_HEIGHT));
 
 		mOk->W = 504;
 		mOk->H = 41;
@@ -82,7 +82,7 @@ namespace XPX
 		mOk->X = mHudFrame->X;
 		mOk->Y = mHudFrame->Y + mHudFrame->H - mOk->H;
 
-		mOk->BackgroundColor.setAlpha(255);
+		mOk->BackgroundColor.A = 1;
 	}
 	
 	PopupComponent::~PopupComponent()
@@ -96,17 +96,17 @@ namespace XPX
 
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
-		ImGUI::UIFontHelper::get_label_font()->draw(self->mTitle.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 30),
-			dimension2d(0, 0)), 
-			self->mHudFrame->TextColor, 
-			true, 
-			true);
+		//ImGUI::UIFontHelper::get_label_font()->draw(self->mTitle.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 30),
+		//	Vec(0, 0)), 
+		//	self->mHudFrame->TextColor, 
+		//	true, 
+		//	true);
 
-		ImGUI::UIFontHelper::get_label_font()->draw(self->mText.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 100),
-			dimension2d(0, 0)),
-			self->mHudFrame->TextColor,
-			true,
-			true);
+		//ImGUI::UIFontHelper::get_label_font()->draw(self->mText.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 100),
+		//	dimension2d(0, 0)),
+		//	self->mHudFrame->TextColor,
+		//	true,
+		//	true);
 
 		self->mOk.update();
 
@@ -139,15 +139,15 @@ namespace XPX
 		XPLICIT_ASSERT(mNetwork);
 		XPLICIT_ASSERT(mHudFrame);
 
-		mHudFrame->BackgroundColor.setRed(75);
-		mHudFrame->BackgroundColor.setGreen(165);
-		mHudFrame->BackgroundColor.setBlue(84);
-		mHudFrame->BackgroundColor.setAlpha(225);
+		mHudFrame->BackgroundColor.R = (75 / 255);
+		mHudFrame->BackgroundColor.G = (165 / 255);
+		mHudFrame->BackgroundColor.B = (84 / 255);
+		mHudFrame->BackgroundColor.A = 1;
 		
-		mHudFrame->BackgroundHoverColor.setRed(75);
-		mHudFrame->BackgroundHoverColor.setGreen(165);
-		mHudFrame->BackgroundHoverColor.setBlue(84);
-		mHudFrame->BackgroundHoverColor.setAlpha(225);
+		mHudFrame->BackgroundHoverColor.R = (75 / 255);
+		mHudFrame->BackgroundHoverColor.G = (165 / 255);
+		mHudFrame->BackgroundHoverColor.B = (84 / 255);
+		mHudFrame->BackgroundHoverColor.A = 1;
 
 		mHudFrame->H = 10;
 		mHudFrame->W = 0;
@@ -156,24 +156,24 @@ namespace XPX
 		mHudFrame->Y = 10;
 
 		mFrameParent->H = 30;
-		mFrameParent->W = RENDERER->getVideoDriver()->getScreenSize().Width;
+		//mFrameParent->W = RENDERER->getVideoDriver()->getScreenSize().Width;
 
-		mFrameParent->BackgroundHoverColor.setAlpha(50);
+		mFrameParent->BackgroundHoverColor.A = (50);
 
 		mFrameParent->X = 0;
 		mFrameParent->Y = 0;
 
 		std::size_t x_off = 10UL;
-		std::size_t y_off = RENDERER->getVideoDriver()->getScreenSize().Height - 74UL;
+		//std::size_t y_off = RENDERER->getVideoDriver()->getScreenSize().Height - 74UL;
 
 		for (auto & mInventorySlot : mInventorySlots)
 		{
-			mInventorySlot.BackgroundHoverColor.setAlpha(50);
-			mInventorySlot.BackgroundColor.setAlpha(70);
+			mInventorySlot.BackgroundHoverColor.A = 50 /255;
+			mInventorySlot.BackgroundColor.A = 70 / 255;
 
 			mInventorySlot.W = mInventorySlot.H = 64;
 			mInventorySlot.X = x_off;
-			mInventorySlot.Y = y_off;
+			//mInventorySlot.Y = y_off;
 
 			x_off += 68UL;
 		}
@@ -233,8 +233,8 @@ namespace XPX
 
 				self->mNetwork->get().cmd[XPLICIT_NETWORK_CMD_SLOT] = NETWORK_CMD_INVALID;
 
-				RENDERER->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X , self->mInventorySlots[i].Y),
-					dimension2di(self->mInventorySlots[i].W, self->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));
+				//RENDERER->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X , self->mInventorySlots[i].Y),
+				//	dimension2di(self->mInventorySlots[i].W, self->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));
 			}
 		}
 

@@ -13,8 +13,10 @@
 #include "HelperMacros.h"
 
 #include "DriverD3D11.h"
+#include "DriverD2D.h"
 
 //! Helpers
+#define RENDERER_2D XPX::Root::get_singleton_ptr()->Renderer2D
 #define RENDERER XPX::Root::get_singleton_ptr()->Renderer
 #define KEYBOARD XPX::Root::get_singleton_ptr()->Keyboard
 
@@ -311,12 +313,7 @@ namespace XPX
 			Renderer(nullptr)
 		{}
 
-		~Root() noexcept
-		{
-			if (Renderer)
-				Renderer->drop();
-
-		}
+		~Root() noexcept {}
 
 	public:
 		Root& operator=(const Root&) = default;
@@ -334,10 +331,16 @@ namespace XPX
 		}
 
 	public:
-		void set(Renderer::DriverSystem* dev) noexcept
+		void set(Renderer::DX11::DriverSystemD3D11* dev) noexcept
 		{
 			if (dev)
 				Renderer = dev;
+		}
+
+		void set(Renderer::D2D::DriverSystemD2D* dev) noexcept
+		{
+			if (dev)
+				Renderer2D = dev;
 		}
 
 		void set(InputReceiver* kb) noexcept
@@ -348,6 +351,7 @@ namespace XPX
 
 	public:
 		Renderer::DX11::DriverSystemD3D11* Renderer;
+		Renderer::D2D::DriverSystemD2D* Renderer2D;
 		InputReceiver* Keyboard;
 
 	};
