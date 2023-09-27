@@ -72,34 +72,35 @@ int main(int argc, char** argv)
 
 		XPLICIT_ASSERT(component_d3d11);
 
-		component_d3d11->push(XPX::Color<float>(0, 0, 0.5, 1));
-		component_d3d11->push(XPX::Color<float>(0, 0.5, 0, 1));
-		component_d3d11->push(XPX::Color<float>(0.5, 0, 0, 1));
+		component_d3d11->push(XPX::Color<float>(0, 0, 0, 1.0));
+		component_d3d11->push(XPX::Color<float>(0, 0, 1.0, 0));
+		component_d3d11->push(XPX::Color<float>(0, 1.0, 0, 0));
 
-		float num = 0.5f;
+		float num = 1.0f;
 
 		component_d3d11->push(XPX::Vector<float>(-num, -num, 0.0f));
-		component_d3d11->push(XPX::Vector<float>(num, -num, 0.0f));
 		component_d3d11->push(XPX::Vector<float>(0.0f, num, 0.0f));
+		component_d3d11->push(XPX::Vector<float>(num, -num, 0.0f));
 
-		std::vector<UINT> indices{ 0, 3, 1, 3, 2, 1 };
+		std::vector<UINT> indices{ 0, 1, 2 };
 
 		for (auto& indice : indices)
 		{
 			component_d3d11->push(indice);
 		}
 
+		component_d3d11->topology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		drv11->get().pCamera->set_position(XPX::Vector<float>(0, 0, -5));
+
 		component_d3d11->create();
 
 		auto ret = 0;
-
-		drv11->get().pCamera->set_position(XPX::Vector<float>(0, 0, -0.5));
 
 		while (ret != WM_QUIT)
 		{
 			ret = win->update();
 
-			drv11->begin_scene(1, 0.2, 0.2, 0.2, true, true);
+			drv11->begin_scene(1, 0.0, 0.0, 0.0, true, true);
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();

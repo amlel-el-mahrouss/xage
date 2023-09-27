@@ -311,34 +311,54 @@ namespace XPX::Renderer::DX11
 	public:
 		void render() noexcept
 		{
-			XMVECTOR lookAtVec(XMVectorZero());
-			XMVECTOR up(_mm_set_ps(0, 1, 0, 0));
+			XMFLOAT3 lookAt;
+			XMFLOAT3 up;
 
-			XMVECTOR position_vec(_mm_set_ps(position().X, position().Y, position().Z, 0.f));
+			float yaw, pitch, roll;
+			XMMATRIX rotationMatrix;
 
-			float pitch = rotation().X * 0.0174532925f;
-			float yaw = rotation().Y * 0.0174532925f;
-			float roll = rotation().Z * 0.0174532925f;
+			up.x = 0.0f;
+			up.y = 1.0f;
+			up.z = 1.0f;
 
-			auto rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+			XMVECTOR upVector = XMLoadFloat3(&up);
 
-			lookAtVec = XMVector3TransformCoord(lookAtVec, m_viewMatrix);
-			up = XMVector3TransformCoord(up, rotationMatrix);
+			XMFLOAT3 position;
+	
+			position.x = m_vPos.X;
+			position.y = m_vPos.Y;
+			position.z = m_vPos.Z;
+		
+			XMVECTOR positionVector = XMLoadFloat3(&position);
 
-			lookAtVec = lookAtVec + position_vec;
+			lookAt.x = 0.0f;
+			lookAt.y = 0.0f;
+			lookAt.z = 1.0f;
+		
+			XMVECTOR lookAtVector = XMLoadFloat3(&lookAt);
 
-			// Finally create the view matrix from the three updated vectors.
-			m_viewMatrix = XMMatrixLookAtLH(position_vec, lookAtVec, up);
+			pitch = m_vRot.X * 0.0174532925f;
+			yaw = m_vRot.Y * 0.0174532925f;
+			roll = m_vRot.Z * 0.0174532925f;
 
+			m_rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+			lookAtVector = XMVector3TransformCoord(lookAtVector, m_rotationMatrix);
+			upVector = XMVector3TransformCoord(upVector, m_rotationMatrix);
+
+			lookAtVector = XMVectorAdd(positionVector, lookAtVector);
+		
+			m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 		}
-
-		XMMATRIX view_matrix() { return m_viewMatrix; }
 
 	public:
 		XPLICIT_COPY_DEFAULT(CameraSystemD3D11);
 
-	public:
+	private:
+		XMMATRIX m_rotationMatrix;
 		XMMATRIX m_viewMatrix;
+
+		friend ShaderSystemD3D11;
 
 	};
 }

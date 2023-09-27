@@ -67,7 +67,7 @@ namespace XPX::Renderer::DX11
 	{
 		RtlZeroMemory(&swapDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-		swapDesc.BufferCount = 2; // minimal buffer count for 'DXGI_SWAP_EFFECT_FLIP_DISCARD'
+		swapDesc.BufferCount = 1;
 		swapDesc.BufferDesc.Format = format;
 		swapDesc.BufferDesc.Width = width;
 		swapDesc.BufferDesc.Height = height;
@@ -82,7 +82,7 @@ namespace XPX::Renderer::DX11
 		swapDesc.SampleDesc.Count = 1;
 		swapDesc.SampleDesc.Quality = 0;
 
-		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		
 		swapDesc.Flags = 0;
 

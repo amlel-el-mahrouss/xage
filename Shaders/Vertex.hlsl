@@ -13,7 +13,7 @@ struct VS_OUTPUT
 
 struct VS_INPUT
 {
-    float4 position : SV_POSITION;
+    float4 position : POSITION;
     float4 color : COLOR;
 };
 
@@ -24,8 +24,8 @@ VS_OUTPUT VS(VS_INPUT input)
     input.position.w = 1.0f;
     
     outVert.position = mul(input.position, worldMatrix);
-    outVert.position = mul(input.position, viewMatrix);
-    outVert.position = mul(input.position, projectionMatrix);
+    outVert.position = mul(outVert.position, viewMatrix);
+    outVert.position = mul(outVert.position, projectionMatrix);
     
     outVert.color = input.color;
 
