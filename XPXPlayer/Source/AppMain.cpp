@@ -102,11 +102,11 @@ int main(int argc, char** argv)
 
 				auto ret = 0;
 
+				drv11->get().pCamera->set_position(XPX::Vector<float>(0, 0, -0.5));
+
 				while (ret != WM_QUIT)
 				{
 					drv11->begin_scene(1, 0.5, 0.2, 0.5, true, true);
-
-					drv11->get().pCamera->set_position(XPX::Vector<float>(0, 0, -5.0f));
 
 					XPX::ComponentSystem::get_singleton_ptr()->update();
 					XPX::EventSystem::get_singleton_ptr()->update();

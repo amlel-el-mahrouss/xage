@@ -67,7 +67,7 @@ namespace XPX::Renderer::DX11
 	{
 		RtlZeroMemory(&swapDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-		swapDesc.BufferCount = 1;
+		swapDesc.BufferCount = 2; // minimal buffer count for 'DXGI_SWAP_EFFECT_FLIP_DISCARD'
 		swapDesc.BufferDesc.Format = format;
 		swapDesc.BufferDesc.Width = width;
 		swapDesc.BufferDesc.Height = height;
@@ -82,7 +82,7 @@ namespace XPX::Renderer::DX11
 		swapDesc.SampleDesc.Count = 1;
 		swapDesc.SampleDesc.Quality = 0;
 
-		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		swapDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		
 		swapDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
@@ -293,7 +293,7 @@ namespace XPX::Renderer::DX11
 		rasterDesc.ScissorEnable = false;
 		rasterDesc.MultisampleEnable = false;
 		rasterDesc.AntialiasedLineEnable = false;
-
+	
 		hr = m_private.pDevice->CreateRasterizerState(&rasterDesc, m_private.pRasterState.GetAddressOf());
 
 		Details::ThrowIfFailed(hr);
@@ -554,6 +554,8 @@ namespace XPX::Renderer::DX11
 		
 		self->m_viewMatrix = self->m_pDriver->get().pCamera->m_viewMatrix;
 
+		self->m_pDriver->get().pCtx->RSSetState(self->m_pDriver->get().pRasterState.Get());
+
 		const uint32_t stride = { (sizeof(float) * 4) + (sizeof(float) * 4) };
 		const uint32_t offset = { 0u };
 
@@ -562,11 +564,18 @@ namespace XPX::Renderer::DX11
 			self->m_pDriver->get().pCtx->IASetVertexBuffers(0, 1, self->m_pVertexBuffer.GetAddressOf(), &stride, &offset);
 			self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
+			self->m_pDriver->get().pCtx->IASetInputLayout(self->m_pDriver->get().pInputLayout.Get());
+
 			self->m_pVertexShader->update(self);
+			self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
+		
+			self->m_pDriver->get().pCtx->OMSetRenderTargets(1, 
+				self->m_pDriver->get().pRenderTarget.GetAddressOf(),
+				self->m_pDriver->get().pDepthStencil.Get());
+
 			self->m_pColorShader->update_cbuf(self);
 			self->m_pColorShader->update(self);
 
-			self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
 		}
 		catch (...)
 		{

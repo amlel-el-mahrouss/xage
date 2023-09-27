@@ -17,6 +17,10 @@ namespace XPX
 {
 	typedef irr::scene::ISceneNode* CorePartPtr;
 
+	/// <summary>
+	/// PartComponent is simply a block in a XAGE level.
+	/// XAGE understands: Parts, Capsule and Meshes.
+	/// </summary>
 	class PartComponent final : public ClassComponent
 	{
 	public:
