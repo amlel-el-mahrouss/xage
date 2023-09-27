@@ -13,11 +13,9 @@
 #include "HelperMacros.h"
 
 #include <CLua.hpp>
+#include <CAD/irrlicht.h>
 
-//! CAD rendering engine.
-#include <irrlicht.h>
-
-//! Helper macros
+//! Helpers
 #define CAD XPX::Root::get_singleton_ptr()->Renderer
 #define KEYBOARD XPX::Root::get_singleton_ptr()->Keyboard
 

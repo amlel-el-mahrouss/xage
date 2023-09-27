@@ -12,7 +12,8 @@
 #include <Component.h>
 #include <ClassComponent.h>
 #include <NetworkComponent.h>
-#include <irrlicht.h>
+
+#include <Root.h>
 
 namespace XPX
 {
