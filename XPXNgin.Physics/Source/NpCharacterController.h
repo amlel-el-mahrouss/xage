@@ -13,7 +13,7 @@
 
 #include "NplicitNgine.h"
 
-#include <AINgine.h>
+#include <NpCharacterRecipe.h>
 #include <Root.h>
 
 namespace XPX

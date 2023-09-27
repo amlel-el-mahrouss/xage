@@ -11,7 +11,7 @@
  @file
  */
 
-#include "HumanoidComponent.h"
+#include "CharacterComponent.h"
 
 #include <NpPhysicsEngine.h>
 
@@ -22,7 +22,7 @@
 
 namespace XPX
 {
-	HumanoidComponent::HumanoidComponent() noexcept
+	CharacterComponent::CharacterComponent() noexcept
 		:
 		Component(),
 		mPeer(nullptr),
@@ -33,25 +33,25 @@ namespace XPX
 		mJumpPower(XPX_DEFAULT_JUMPPOWER),
 		mMaxHealth(XPX_DEFAULT_MAXHEALTH),
 		mWalkSpeed(XPX_DEFAULT_WALKSPEED),
-		mActiveGear(nullptr),
+		mActiveWeapon(nullptr),
 		mGears()
 	{}
 
-	HumanoidComponent::~HumanoidComponent()
+	CharacterComponent::~CharacterComponent()
 	{
 		if (mClass)
 			delete mClass;
 	}
 
-	WeaponComponent* HumanoidComponent::get_active_gear() noexcept { return mActiveGear; }
+	WeaponComponent* CharacterComponent::get_current_weapon() noexcept { return mActiveWeapon; }
 
-	PHYSICS_TYPE HumanoidComponent::physics() noexcept { return PHYSICS_SIMPLE; }
+	PHYSICS_TYPE CharacterComponent::physics() noexcept { return PHYSICS_SIMPLE; }
 
-	bool HumanoidComponent::has_physics() noexcept { return false; }
+	bool CharacterComponent::has_physics() noexcept { return false; }
 
-	void HumanoidComponent::update(ClassPtr class_ptr)
+	void CharacterComponent::update(ClassPtr class_ptr)
 	{
-		HumanoidComponent* self = (HumanoidComponent*)class_ptr;
+		CharacterComponent* self = (CharacterComponent*)class_ptr;
 
 		if (self->get_peer() == nullptr)
 		{
@@ -102,16 +102,8 @@ namespace XPX
 
 		if (self->mHealth != self->mClass->index_as_number<double>("Health"))
 		{
-			String path("world.Players.");
-			path += self->mPeer->xplicit_id.as_string();
-
-			XPLICIT_INFO("world:Damage [EVENT]");
-
 			self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_DAMAGE] = NETWORK_CMD_DAMAGE;
 			self->mPeer->packet.health = self->mHealth;
-
-			String fmt = fmt::format("world:Damage({})", path);
-			Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt);
 		}
 
 		self->mHealth = self->mClass->index_as_number<double>("Health");
@@ -128,27 +120,27 @@ namespace XPX
 		// select a specific item in our inventory.
 		if (self->mPeer->packet.cmd[XPLICIT_NETWORK_CMD_SLOT] == NETWORK_CMD_SLOT)
 		{
-			if (self->mPeer->packet.id < self->mGears.size() &&
+			if (self->mPeer->packet.id < self->mWeapons.size() &&
 				self->mPeer->packet.id > -1)
 			{
-				if (self->mActiveGear &&
-					self->mActiveGear->index_as_number("Slot") != self->mPeer->packet.id)
+				if (self->mActiveWeapon &&
+					self->mActiveWeapon->index_as_number("Slot") != self->mPeer->packet.id)
 				{
-					self->mActiveGear->call_method("Update('Unequipped')");
-					self->mActiveGear = nullptr;
+					self->mActiveWeapon->call_method("Update('Unequipped')");
+					self->mActiveWeapon = nullptr;
 				}
 
-				if (!self->mActiveGear)
+				if (!self->mActiveWeapon)
 				{
-					for (auto& gear : self->mGears)
+					for (auto& wep : self->mWeapons)
 					{
-						if (!gear)
+						if (!wep)
 							continue;
 
-						if (gear->index_as_number("Slot") == self->mPeer->packet.id)
+						if (wep->index_as_number("Slot") == self->mPeer->packet.id)
 						{
-							self->mActiveGear = gear;
-							self->mActiveGear->call_method("Update('Equipped')");
+							self->mActiveWeapon = wep;
+							self->mActiveWeapon->call_method("Update('Equipped')");
 						}
 					}
 				}
@@ -160,21 +152,21 @@ namespace XPX
 		}
 	}
 
-	void HumanoidComponent::set_health(const double& health) noexcept { this->mHealth = health; }
+	void CharacterComponent::set_health(const double& health) noexcept { this->mHealth = health; }
 
-	const double& HumanoidComponent::get_health() noexcept { return this->mHealth; }
+	const double& CharacterComponent::get_health() noexcept { return this->mHealth; }
 
-	bool HumanoidComponent::can_collide() noexcept { return true; }
+	bool CharacterComponent::can_collide() noexcept { return true; }
 
-	COMPONENT_TYPE HumanoidComponent::type() noexcept { return COMPONENT_HUMANOID; }
+	COMPONENT_TYPE CharacterComponent::type() noexcept { return COMPONENT_HUMANOID; }
 
-	const char* HumanoidComponent::name() noexcept { return "HumanoidComponent"; }
+	const char* CharacterComponent::name() noexcept { return "CharacterComponent"; }
 
-	bool HumanoidComponent::should_update() noexcept { return true; }
+	bool CharacterComponent::should_update() noexcept { return true; }
 
-	NetworkPeer* HumanoidComponent::get_peer() const noexcept { return mPeer; }
+	NetworkPeer* CharacterComponent::get_peer() const noexcept { return mPeer; }
 
-	void HumanoidComponent::set_peer(NetworkPeer* peer) noexcept 
+	void CharacterComponent::set_peer(NetworkPeer* peer) noexcept 
 	{	
 		mPeer = peer;
 
@@ -232,7 +224,7 @@ namespace XPX
 		{
 			if (mClass)
 			{
-				for (auto* gear : mGears)
+				for (auto* gear : mWeapons)
 				{
 					ComponentSystem::get_singleton_ptr()->remove(gear);
 					gear = nullptr;
@@ -244,24 +236,24 @@ namespace XPX
 		}
 	}
 
-	bool HumanoidComponent::can_spawn() const noexcept { return mCanSpawn; }
+	bool CharacterComponent::can_spawn() const noexcept { return mCanSpawn; }
 
-	void HumanoidComponent::can_spawn(const bool enable) noexcept { mCanSpawn = enable; }
+	void CharacterComponent::can_spawn(const bool enable) noexcept { mCanSpawn = enable; }
 
-	bool HumanoidComponent::is_alive() const noexcept { return mHealth > 0; }
+	bool CharacterComponent::is_alive() const noexcept { return mHealth > 0; }
 
-	const HUMANOID_STATE& HumanoidComponent::get_state() noexcept { return mState; }
+	const HUMANOID_STATE& CharacterComponent::get_state() noexcept { return mState; }
 
-	void HumanoidComponent::set_state(const HUMANOID_STATE state) noexcept { mState = state; }
+	void CharacterComponent::set_state(const HUMANOID_STATE state) noexcept { mState = state; }
 
-	ClassComponent* HumanoidComponent::get_class() const
+	ClassComponent* CharacterComponent::get_class() const
 	{
 		XPLICIT_ASSERT(mClass);
 		return mClass;
 	}
 
-	std::array<WeaponComponent*, XPLICIT_MAX_ELEMENTS_INVENTORY>& HumanoidComponent::get_gears() noexcept
+	std::array<WeaponComponent*, XPX_MAX_WEAPONS>& CharacterComponent::get_weapons() noexcept
 	{
-		return mGears;
+		return mWeapons;
 	}
 }

@@ -10,20 +10,20 @@
 #pragma once
 
 #include "ServerConfig.h"
-#include "HumanoidComponent.h"
+#include "CharacterComponent.h"
 #include "NetworkUtils.h"
 
 namespace XPX
 {
-	class HumanoidReplicationComponent final : public Component
+	class CharacterDownloadComponent final : public Component
 	{
 	public:
-		explicit HumanoidReplicationComponent();
-		~HumanoidReplicationComponent() override;
+		explicit CharacterDownloadComponent();
+		~CharacterDownloadComponent() override;
 
 	public:
-		HumanoidReplicationComponent& operator=(const HumanoidReplicationComponent&) = default;
-		HumanoidReplicationComponent(const HumanoidReplicationComponent&) = default;
+		CharacterDownloadComponent& operator=(const CharacterDownloadComponent&) = default;
+		CharacterDownloadComponent(const CharacterDownloadComponent&) = default;
 
 	public:
 		const char* name() noexcept override;
@@ -35,7 +35,7 @@ namespace XPX
 		const size_t& size() const noexcept;
 
 	private:
-		std::vector<HumanoidComponent*> mPlayers;
+		std::vector<CharacterComponent*> mPlayers;
 		NetworkFileTransferFactory mFactory;
 		NetworkServerComponent* mNetwork;
 		std::size_t mPlayerCount;

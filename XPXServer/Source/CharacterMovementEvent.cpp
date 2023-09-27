@@ -13,22 +13,22 @@
  * @file
  */
 
-#include "HumanoidMovementEvent.h"
+#include "CharacterMovementEvent.h"
 
 namespace XPX
 {
-	HumanoidMovementEvent::HumanoidMovementEvent() = default;
-	HumanoidMovementEvent::~HumanoidMovementEvent() = default;
+	CharacterMovementEvent::CharacterMovementEvent() = default;
+	CharacterMovementEvent::~CharacterMovementEvent() = default;
 
-	const char* HumanoidMovementEvent::name() noexcept { return ("HumanoidMovementEvent"); }
+	const char* CharacterMovementEvent::name() noexcept { return ("CharacterMovementEvent"); }
 
-	void HumanoidMovementEvent::operator()()
+	void CharacterMovementEvent::operator()()
 	{
-		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>();
+		const auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<CharacterComponent>();
 		
 		for (std::size_t i = 0; i < humanoids.size(); ++i)
 		{
-			HumanoidComponent* humanoid = humanoids[i];
+			CharacterComponent* humanoid = humanoids[i];
 
 			if (humanoid == nullptr ||
 				!humanoid->can_spawn() ||

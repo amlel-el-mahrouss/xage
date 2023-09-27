@@ -12,7 +12,7 @@
  */
 
 #include "LocalNetworkMonitorEvent.h"
-#include "LocalHumanoidComponent.h"
+#include "LocalCharacterComponent.h"
 #include "App.h"
 #include "MenuUI.h"
 

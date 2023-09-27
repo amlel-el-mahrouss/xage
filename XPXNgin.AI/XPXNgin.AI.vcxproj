@@ -134,7 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="NpHumanoidRecipe.h" />
+    <ClInclude Include="NpCharacterRecipe.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XPXNgin.Physics.vcxproj">

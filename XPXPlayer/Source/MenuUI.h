@@ -91,7 +91,7 @@ namespace XPX
 		static bool should_update() { return true; }
 
 	private:
-		std::array<ImGUI::UIFrame, XPLICIT_MAX_ELEMENTS_INVENTORY> mInventorySlots;
+		std::array<ImGUI::UIFrame, XPX_MAX_WEAPONS> mInventorySlots;
 		std::size_t mSelectedSlot;
 
 		NetworkComponent* mNetwork;

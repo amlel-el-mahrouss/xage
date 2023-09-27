@@ -16,7 +16,7 @@
 
 namespace XPX
 {
-	class HumanoidComponent;
+	class CharacterComponent;
 
 	class WeaponComponent final : public ClassComponent
 	{
@@ -41,11 +41,11 @@ namespace XPX
 		static void update(ClassPtr _self);
 
 	public:
-		void set_owner(HumanoidComponent* owner) noexcept;
-		HumanoidComponent* get_owner() noexcept;
+		void set_owner(CharacterComponent* owner) noexcept;
+		CharacterComponent* get_owner() noexcept;
 
 	private:
-		HumanoidComponent* mOwner;
+		CharacterComponent* mOwner;
 		String mParent;
 		String mName;
 

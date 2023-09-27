@@ -12,7 +12,7 @@
  */
 
 #include "SpawnComponent.h"
-#include "HumanoidComponent.h"
+#include "CharacterComponent.h"
 
 #include <CLua.hpp>
 

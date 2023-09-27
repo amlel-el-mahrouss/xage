@@ -10,7 +10,7 @@
 #pragma once
 
 #include "ServerConfig.h"
-#include "HumanoidComponent.h"
+#include "CharacterComponent.h"
 
 namespace XPX
 {
@@ -36,7 +36,7 @@ namespace XPX
 		void HandleJoin() noexcept;
 
 	private:
-		std::vector<HumanoidComponent*> mPlayers;
+		std::vector<CharacterComponent*> mPlayers;
 		NetworkServerComponent* mNetwork;
 		std::size_t mPlayerCount;
 

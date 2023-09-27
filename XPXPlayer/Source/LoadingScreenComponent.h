@@ -16,14 +16,14 @@
 
 namespace XPX
 {
-	class LoadingComponent final : public Component
+	class LoadingScreenComponent final : public Component
 	{
 	public:
-		explicit LoadingComponent() noexcept;
-		~LoadingComponent() override;
+		explicit LoadingScreenComponent() noexcept;
+		~LoadingScreenComponent() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(LoadingComponent);
+		XPLICIT_COPY_DEFAULT(LoadingScreenComponent);
 
 	public:
 		static bool should_update() noexcept { return StartLoad; }

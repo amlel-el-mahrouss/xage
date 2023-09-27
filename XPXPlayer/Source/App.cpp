@@ -13,7 +13,7 @@
 
 #include "App.h"
 
-#include "LoadingComponent.h"
+#include "LoadingScreenComponent.h"
 
 #include <LuaAPI.h>
 
@@ -39,7 +39,7 @@ namespace XPX::Bites
 		XplicitLoadBaseLua();
 		XplicitLoadClientLua();
 
-		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<LoadingComponent>();
+		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<LoadingScreenComponent>();
 		XPLICIT_ASSERT(loading_screen);
 
 		loading_screen->connect(xconnect_to);

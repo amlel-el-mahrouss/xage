@@ -4,7 +4,7 @@
  *			XPXServer
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			File: HumanoidHealthMonitorEvent.cpp
+ *			File: CharacterHealthMonitorEvent.cpp
  *			Purpose: Spawn and Death handler
  *
  * =====================================================================
@@ -14,7 +14,7 @@
  @file
  */
 
-#include "HumanoidHealthMonitorEvent.h"
+#include "CharacterHealthMonitorEvent.h"
 #include <CLua.hpp>
 
 namespace XPX
@@ -25,9 +25,9 @@ namespace XPX
 	/// Handle spawn location.
 	/// </summary>
 	/// <param name="spawner">Spawn component</param>
-	/// <param name="humanoid">Target Humanoid</param>
+	/// <param name="humanoid">Target Character</param>
 	
-	static void XPXHandleSpawn(SpawnComponent* spawner, HumanoidComponent* humanoid) noexcept
+	static void XPXHandleSpawn(SpawnComponent* spawner, CharacterComponent* humanoid) noexcept
 	{
 		if (humanoid && spawner)
 		{
@@ -45,7 +45,7 @@ namespace XPX
 		}
 	}
 
-	void HumanoidHealthMonitorEvent::operator()()
+	void CharacterHealthMonitorEvent::operator()()
 	{
 		if (!mNetwork)
 			return;
@@ -55,9 +55,9 @@ namespace XPX
 		if (!mSpawner)
 			return;
 
-		auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>();
+		auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<CharacterComponent>();
 
-		for (HumanoidComponent* humanoid : humanoids)
+		for (CharacterComponent* humanoid : humanoids)
 		{
 			if (humanoid == nullptr ||
 				humanoid->get_peer() == nullptr)
@@ -92,7 +92,7 @@ namespace XPX
 					peer_ptr->packet.public_hash = humanoid->get_peer()->public_hash;
 				}
 
-				Thread respawn_job([](HumanoidComponent* humanoid, SpawnComponent* spawner) {
+				Thread respawn_job([](CharacterComponent* humanoid, SpawnComponent* spawner) {
 					std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_DEATH_DELAY));
 
 					if (humanoid &&
@@ -101,7 +101,7 @@ namespace XPX
 					{
 						humanoid->can_spawn(true);
 
-						auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>();
+						auto humanoids = ComponentSystem::get_singleton_ptr()->all_of<CharacterComponent>();
 
 						for (std::size_t peer = 0UL; peer < humanoids.size(); ++peer)
 						{

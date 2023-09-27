@@ -18,11 +18,6 @@ static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
 
 namespace XPX
 {
-	/*
-	 * This is a popup class
-	 * used to create pop-up according to a state.
-	 */
-	
 	PopupComponent::PopupComponent(
 		const std::function<void()>& on_click, 
 		const POPUP_TYPE popup_type, 
@@ -202,7 +197,7 @@ namespace XPX
 		packet.cmd[XPLICIT_NETWORK_CMD_LCLICK] = KEYBOARD->left_down() ? NETWORK_CMD_LCLICK : NETWORK_CMD_INVALID;
 		packet.cmd[XPLICIT_NETWORK_CMD_RCLICK] = KEYBOARD->right_down() ? NETWORK_CMD_RCLICK : NETWORK_CMD_INVALID;
 
-		for (size_t i = 0; i < XPLICIT_MAX_ELEMENTS_INVENTORY; ++i)
+		for (size_t i = 0; i < XPX_MAX_WEAPONS; ++i)
 		{
 			if (self->mSelectedSlot != i)
 			{

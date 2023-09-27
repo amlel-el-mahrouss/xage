@@ -21,10 +21,10 @@
 #include "LoginEvent.h"
 #include "ServerConfig.h"
 #include "TimeoutEvent.h"
-#include "HumanoidMovementEvent.h"
+#include "CharacterMovementEvent.h"
 #include "SpawnComponent.h"
-#include "HumanoidHealthMonitorEvent.h"
-#include "HumanoidReplicationComponent.h"
+#include "CharacterHealthMonitorEvent.h"
+#include "CharacterDownloadComponent.h"
 
 static void XplicitPrintHelp()
 {
@@ -133,12 +133,12 @@ int main(int argc, char** argv)
 
 		const auto network = XPX::ComponentSystem::get_singleton_ptr()->add<XPX::NetworkServerComponent>(ip4, port4);
 
-		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::HumanoidReplicationComponent>();
+		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::CharacterDownloadComponent>();
 		XPX::ComponentSystem::get_singleton_ptr()->add<XPX::SpawnComponent>(XPLICIT_ORIGIN);
 
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidMovementEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::CharacterMovementEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::NpPhysicsEvent>();
-		XPX::EventSystem::get_singleton_ptr()->add<XPX::HumanoidHealthMonitorEvent>();
+		XPX::EventSystem::get_singleton_ptr()->add<XPX::CharacterHealthMonitorEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::TimeoutEvent>();
 		XPX::EventSystem::get_singleton_ptr()->add<XPX::LoginEvent>();
 

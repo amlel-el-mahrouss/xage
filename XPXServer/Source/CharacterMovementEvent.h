@@ -10,7 +10,7 @@
 #pragma once
 
 #include "ServerConfig.h"
-#include "HumanoidComponent.h"
+#include "CharacterComponent.h"
 
 namespace XPX
 {
@@ -18,14 +18,14 @@ namespace XPX
 	/// This class takes care of player movements.
 	/// Only works if the player is alive.
 	/// </summary>
-	class HumanoidMovementEvent : public Event
+	class CharacterMovementEvent : public Event
 	{
 	public:
-		HumanoidMovementEvent();
-		~HumanoidMovementEvent() override;
+		CharacterMovementEvent();
+		~CharacterMovementEvent() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(HumanoidMovementEvent);
+		XPLICIT_COPY_DEFAULT(CharacterMovementEvent);
 
 	public:
 		const char* name() noexcept override;

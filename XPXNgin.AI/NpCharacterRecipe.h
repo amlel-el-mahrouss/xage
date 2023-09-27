@@ -22,11 +22,11 @@ namespace XPX
 	typedef int XPX_HEALTH;
 	typedef bool XPX_BOOL;
 
-	class NpHumanoidRecipe
+	class NpCharacterRecipe
 	{
 	public:
-		explicit NpHumanoidRecipe() {}
-		virtual ~NpHumanoidRecipe() {}
+		explicit NpCharacterRecipe() {}
+		virtual ~NpCharacterRecipe() {}
 
 		XPX_BOOL m_bHuman;
 

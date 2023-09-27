@@ -40,7 +40,7 @@ namespace XPX
 	 */
 
 	static bool XplicitHandleJoin(NetworkPeer* peer, 
-		HumanoidComponent* player, 
+		CharacterComponent* player, 
 		const NetworkServerComponent* server) noexcept
 	{
 		if (!server ||
@@ -87,7 +87,7 @@ namespace XPX
 	{
 		for (std::size_t index = 0UL; index < XPLICIT_MAX_CONNECTIONS; ++index)
 		{
-			HumanoidComponent* component = ComponentSystem::get_singleton_ptr()->add<HumanoidComponent>();
+			CharacterComponent* component = ComponentSystem::get_singleton_ptr()->add<CharacterComponent>();
 			XPLICIT_ASSERT(component);
 
 			mPlayers.push_back(component);
@@ -116,7 +116,7 @@ namespace XPX
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
-				if (HumanoidComponent* player = mPlayers[mPlayerCount]; 
+				if (CharacterComponent* player = mPlayers[mPlayerCount]; 
 					XplicitHandleJoin(mNetwork->get(peer_idx), player, mNetwork))
 				{
 					mNetwork->get(peer_idx)->ip_address = address_to_string(mNetwork->get(peer_idx));

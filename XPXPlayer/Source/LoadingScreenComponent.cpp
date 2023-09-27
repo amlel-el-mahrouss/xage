@@ -17,10 +17,10 @@
 
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
-#include "LocalHumanoidComponent.h"
+#include "LocalCharacterComponent.h"
 #include "LocalCameraComponent.h"
 #include "ChatBoxComponent.h"
-#include "LoadingComponent.h"
+#include "LoadingScreenComponent.h"
 #include "LocalMenuEvent.h"
 #include "ClientFX.h"
 #include "MenuUI.h"
@@ -40,7 +40,7 @@ namespace XPX
     /// <summary>
     /// Loading Component constructor.
     /// </summary>
-    LoadingComponent::LoadingComponent() noexcept
+    LoadingScreenComponent::LoadingScreenComponent() noexcept
         :
         mNetwork(nullptr),
         mTimeout(0)
@@ -49,16 +49,16 @@ namespace XPX
         LoadSkybox("noonclouds");
     }
 
-    LoadingComponent::~LoadingComponent() = default;
+    LoadingScreenComponent::~LoadingScreenComponent() = default;
 
-    bool LoadingComponent::StartLoad = true;
+    bool LoadingScreenComponent::StartLoad = true;
 
-    void LoadingComponent::update(void* class_ptr)
+    void LoadingScreenComponent::update(void* class_ptr)
     {
-        if (!LoadingComponent::StartLoad)
+        if (!LoadingScreenComponent::StartLoad)
             return;
 
-        auto* self = (LoadingComponent*)class_ptr;
+        auto* self = (LoadingScreenComponent*)class_ptr;
 
         if (!self ||
             !self->mNetwork) return;
@@ -102,7 +102,7 @@ namespace XPX
             ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash, monitor->ID);
             ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 
-            ComponentSystem::get_singleton_ptr()->add<LocalHumanoidComponent>(public_hash, true);
+            ComponentSystem::get_singleton_ptr()->add<LocalCharacterComponent>(public_hash, true);
 
             self->mNetwork->set_hash(hash);
 
@@ -130,7 +130,7 @@ namespace XPX
         }
     }
 
-    void LoadingComponent::connect(Utils::UriParser& ip)
+    void LoadingScreenComponent::connect(Utils::UriParser& ip)
     {
         mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -172,7 +172,7 @@ namespace XPX
         }
     }
 
-    void LoadingComponent::reset() noexcept
+    void LoadingScreenComponent::reset() noexcept
     {
         ComponentSystem::get_singleton_ptr()->remove(this->mNetwork);
 

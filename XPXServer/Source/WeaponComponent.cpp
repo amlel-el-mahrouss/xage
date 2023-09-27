@@ -10,7 +10,7 @@
 // Include the component class.
 
 #include "WeaponComponent.h"
-#include "HumanoidComponent.h"
+#include "CharacterComponent.h"
 
 //! This file handles Gears (Sword, Pistol, Build Tools...)
 
@@ -85,6 +85,6 @@ namespace XPX
 		}
 	}
 
-	HumanoidComponent* WeaponComponent::get_owner() noexcept { return mOwner; }
-	void WeaponComponent::set_owner(HumanoidComponent* owner) noexcept { mOwner = owner; }
+	CharacterComponent* WeaponComponent::get_owner() noexcept { return mOwner; }
+	void WeaponComponent::set_owner(CharacterComponent* owner) noexcept { mOwner = owner; }
 }

@@ -31,14 +31,14 @@ namespace XPX
 
 	//! Replicated player component
 	/** LocalHumanoidComponent is the player's logic */
-	class LocalHumanoidComponent final : public Component
+	class LocalCharacterComponent final : public Component
 	{
 	public:
-		LocalHumanoidComponent(const int64_t& hash, const bool is_local_player = false, const char* optional_xplicit_id = XPLICIT_ID_DUMMY);
-		~LocalHumanoidComponent() override;
+		LocalCharacterComponent(const int64_t& hash, const bool is_local_player = false, const char* optional_xplicit_id = XPLICIT_ID_DUMMY);
+		~LocalCharacterComponent() override;
 
-		LocalHumanoidComponent& operator=(const LocalHumanoidComponent&) = default;
-		LocalHumanoidComponent(const LocalHumanoidComponent&) = default;
+		LocalCharacterComponent& operator=(const LocalCharacterComponent&) = default;
+		LocalCharacterComponent(const LocalCharacterComponent&) = default;
 
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;

@@ -9,7 +9,7 @@
 
 #include "NetworkUtils.h"
 
-#include "HumanoidComponent.h"
+#include "CharacterComponent.h"
 #include "WeaponComponent.h"
 
 #include <CLua.hpp>
@@ -49,7 +49,7 @@ static int lua_LoadRoXML(lua_State* L)
 		auto xid = lua_tostring(L, -3);
 
 		XPX::NetworkFileTransferFactory factory;
-		std::vector<XPX::HumanoidComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>();
+		std::vector<XPX::CharacterComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::CharacterComponent>();
 
 		for (auto i = 0UL; i < players.size(); ++i)
 		{
@@ -87,15 +87,15 @@ static int lua_CreateGear(lua_State* L)
 
 	if (gear)
 	{
-		std::vector<XPX::HumanoidComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>();
+		std::vector<XPX::CharacterComponent*> players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::CharacterComponent>();
 
 		for (auto i = 0UL; i < players.size(); ++i)
 		{
 			auto player = players[i];
 
-			for (auto y = 0UL; player->get_gears().max_size(); ++y)
+			for (auto y = 0UL; player->get_weapons().max_size(); ++y)
 			{
-				if (player->get_gears()[y] == nullptr)
+				if (player->get_weapons()[y] == nullptr)
 				{
 					if (player->get_peer() &&
 						player->get_peer()->xplicit_id.as_string() == xplicit_id)
@@ -107,8 +107,8 @@ static int lua_CreateGear(lua_State* L)
 
 						memcpy(packet.replicas[XPLICIT_REPLICA_4], mesh, strlen(mesh));
 
-						player->get_gears()[y] = gear;
-						player->get_gears()[y]->set_owner(player);
+						player->get_weapons()[y] = gear;
+						player->get_weapons()[y]->set_owner(player);
 
 						path_player += ".";
 						path_player += name;
@@ -132,7 +132,7 @@ static int lua_CreateGear(lua_State* L)
 
 static int lua_Shutdown(lua_State* L)
 {
-	auto players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::HumanoidComponent>();
+	auto players = XPX::ComponentSystem::get_singleton_ptr()->all_of<XPX::CharacterComponent>();
 
 	for (auto& ply : players)
 	{

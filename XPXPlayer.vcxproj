@@ -97,9 +97,9 @@
     <ClInclude Include="XPXPlayer\Source\ChatBoxComponent.h" />
     <ClInclude Include="XPXPlayer\Source\ClientFX.h" />
     <ClInclude Include="XPXPlayer\Source\WeaponComponent.h" />
-    <ClInclude Include="XPXPlayer\Source\LoadingComponent.h" />
+    <ClInclude Include="XPXPlayer\Source\LoadingScreenComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalCameraComponent.h" />
-    <ClInclude Include="XPXPlayer\Source\LocalHumanoidComponent.h" />
+    <ClInclude Include="XPXPlayer\Source\LocalCharacterComponent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalMenuEvent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalNetworkMonitorEvent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalReplicationComponent.h" />
@@ -116,9 +116,9 @@
     <ClCompile Include="XPXPlayer\Source\ClientAPI.cpp" />
     <ClCompile Include="XPXPlayer\Source\ClientFX.cpp" />
     <ClCompile Include="XPXPlayer\Source\WeaponComponent.cpp" />
-    <ClCompile Include="XPXPlayer\Source\LoadingComponent.cpp" />
+    <ClCompile Include="XPXPlayer\Source\LoadingScreenComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalCameraComponent.cpp" />
-    <ClCompile Include="XPXPlayer\Source\LocalHumanoidComponent.cpp" />
+    <ClCompile Include="XPXPlayer\Source\LocalCharacterComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalMenuEvent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalNetworkMonitorEvent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalReplicationComponent.cpp" />

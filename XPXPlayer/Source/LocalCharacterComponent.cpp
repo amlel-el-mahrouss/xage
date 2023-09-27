@@ -11,7 +11,7 @@
  @file
  */
 
-#include "LocalHumanoidComponent.h"
+#include "LocalCharacterComponent.h"
 #include "ChatBoxComponent.h"
 #include "LocalMenuEvent.h"
 #include "App.h"
@@ -25,7 +25,7 @@ namespace XPX
 	constexpr const short XPLICIT_NETWORK_DELAY = 100;
 	constexpr const short XPLICIT_PLAYER_COOLDOWN = 2;
 
-	LocalHumanoidComponent::LocalHumanoidComponent(const int64_t& hash, const bool is_local_player, const char* optional_xid)
+	LocalCharacterComponent::LocalCharacterComponent(const int64_t& hash, const bool is_local_player, const char* optional_xid)
 		:
 		mHash(hash),
 		mCam(nullptr), 
@@ -42,22 +42,22 @@ namespace XPX
 #endif
 	}
 
-	LocalHumanoidComponent::~LocalHumanoidComponent()
+	LocalCharacterComponent::~LocalCharacterComponent()
 	{
 #ifdef XPLICIT_DEBUG
 		XPLICIT_INFO("LocalHumanoidComponent::~LocalHumanoidComponent");
 #endif
 	}
 
-	PHYSICS_TYPE LocalHumanoidComponent::physics() noexcept { return PHYSICS_COMPLEX; }
+	PHYSICS_TYPE LocalCharacterComponent::physics() noexcept { return PHYSICS_COMPLEX; }
 
-	COMPONENT_TYPE LocalHumanoidComponent::type() noexcept { return COMPONENT_HUMANOID; }
+	COMPONENT_TYPE LocalCharacterComponent::type() noexcept { return COMPONENT_HUMANOID; }
 
-	const char* LocalHumanoidComponent::name() noexcept { return ("LocalHumanoidComponent"); }
+	const char* LocalCharacterComponent::name() noexcept { return ("LocalHumanoidComponent"); }
 
-	void LocalHumanoidComponent::update(void* class_ptr)
+	void LocalCharacterComponent::update(void* class_ptr)
 	{
-		LocalHumanoidComponent* self = (LocalHumanoidComponent*)class_ptr;
+		LocalCharacterComponent* self = (LocalCharacterComponent*)class_ptr;
 
 		if (self == nullptr) return;
 		if (!IsValidHeapPtr(self)) return;
@@ -82,7 +82,7 @@ namespace XPX
 		}
 	}
 
-	Vector<float> LocalHumanoidComponent::get_pos() noexcept { return mPos; }
+	Vector<float> LocalCharacterComponent::get_pos() noexcept { return mPos; }
 
 	LocalHumanoidMoveEvent::LocalHumanoidMoveEvent(const std::int64_t& public_hash)
 		: 
@@ -97,7 +97,7 @@ namespace XPX
 
 	const char* LocalHumanoidMoveEvent::name() noexcept { return ("LocalHumanoidMoveEvent"); }
 
-	const int64_t& LocalHumanoidComponent::id() noexcept { return mHash; }
+	const int64_t& LocalCharacterComponent::id() noexcept { return mHash; }
 
 	/* LocalPlayer movement logic */
 	void LocalHumanoidMoveEvent::operator()()

@@ -7,32 +7,32 @@
  * =====================================================================
  */
 
-#include "HumanoidReplicationComponent.h"
+#include "CharacterDownloadComponent.h"
 
 namespace XPX
 {
-	HumanoidReplicationComponent::HumanoidReplicationComponent()
+	CharacterDownloadComponent::CharacterDownloadComponent()
 		: 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mPlayerCount(0UL)
 	{}
 
-	HumanoidReplicationComponent::~HumanoidReplicationComponent() = default;
+	CharacterDownloadComponent::~CharacterDownloadComponent() = default;
 
-	const size_t& HumanoidReplicationComponent::size() const noexcept { return mPlayerCount; }
+	const size_t& CharacterDownloadComponent::size() const noexcept { return mPlayerCount; }
 
-	const char* HumanoidReplicationComponent::name() noexcept { return "HumanoidReplicationComponent"; }
+	const char* CharacterDownloadComponent::name() noexcept { return "CharacterReplicationComponent"; }
 
-	bool HumanoidReplicationComponent::should_update() noexcept { return true; }
+	bool CharacterDownloadComponent::should_update() noexcept { return true; }
 
-	void HumanoidReplicationComponent::update(ClassPtr ptr)
+	void CharacterDownloadComponent::update(ClassPtr ptr)
 	{
-		HumanoidReplicationComponent* self = (HumanoidReplicationComponent*)ptr;
+		CharacterDownloadComponent* self = (CharacterDownloadComponent*)ptr;
 
 		if (!IsValidHeapPtr(self))
 			return;
 
-		self->mPlayers = ComponentSystem::get_singleton_ptr()->all_of<HumanoidComponent>();
+		self->mPlayers = ComponentSystem::get_singleton_ptr()->all_of<CharacterComponent>();
 
 		for (auto& player : self->mPlayers)
 		{

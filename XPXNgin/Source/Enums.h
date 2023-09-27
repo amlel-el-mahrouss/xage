@@ -14,7 +14,7 @@
 #include <CLua.hpp>
 
 #define XPLICIT_DEFAULT_HEALTH	(100)
-#define XPLICIT_MAX_ELEMENTS_INVENTORY (9)
+#define XPX_MAX_WEAPONS (9)
 
 namespace XPX
 {

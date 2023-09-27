@@ -4,7 +4,7 @@
  *			XPXServer
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			File: HumanoidHealthMonitorEvent.h
+ *			File: CharacterHealthMonitorEvent.h
  *			Purpose: Spawn and Death handling
  *
  * =====================================================================
@@ -13,26 +13,26 @@
 #pragma once
 
 #include "SpawnComponent.h"
-#include "HumanoidComponent.h"
+#include "CharacterComponent.h"
 
 namespace XPX
 {
-	class HumanoidHealthMonitorEvent : public Event
+	class CharacterHealthMonitorEvent : public Event
 	{
 	public:
-		HumanoidHealthMonitorEvent() 
+		CharacterHealthMonitorEvent() 
 			: mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 			  mSpawner(ComponentSystem::get_singleton_ptr()->get<SpawnComponent>("SpawnComponent"))
 		{
 			XPLICIT_ASSERT(mNetwork);
 		}
 
-		virtual ~HumanoidHealthMonitorEvent() = default;
+		virtual ~CharacterHealthMonitorEvent() = default;
 
-		HumanoidHealthMonitorEvent& operator=(const HumanoidHealthMonitorEvent&) = default;
-		HumanoidHealthMonitorEvent(const HumanoidHealthMonitorEvent&) = default;
+		CharacterHealthMonitorEvent& operator=(const CharacterHealthMonitorEvent&) = default;
+		CharacterHealthMonitorEvent(const CharacterHealthMonitorEvent&) = default;
 
-		virtual const char* name() noexcept override { return ("HumanoidHealthMonitorEvent"); }
+		virtual const char* name() noexcept override { return ("CharacterHealthMonitorEvent"); }
 
 		virtual void operator()() override;
 
