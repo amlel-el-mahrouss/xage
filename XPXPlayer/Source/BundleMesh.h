@@ -33,7 +33,7 @@ namespace XPX
 		BundleMesh() = delete;
 
 	public:
-		BundleMesh(const char* character_path, const char* xpx_id);
+		BundleMesh(const char* rxml_path, const std::vector<String>& filter);
 		~BundleMesh() noexcept;
 
 	public:
@@ -59,14 +59,12 @@ namespace XPX
 		BundleNode* part_at(const std::size_t& index) const { return mParts[index]; }
 
 		std::size_t count_parts() const { return mParts.size(); }
-		const String& xplicit_id() noexcept { return mXplicitId; }
 
 		static bool should_update() { return false; }
 		static void update(ClassPtr ptr) {  }
 
 	protected:
 		std::vector<BundleNode*> mParts;
-		String mXplicitId;
 		
 	};
 }

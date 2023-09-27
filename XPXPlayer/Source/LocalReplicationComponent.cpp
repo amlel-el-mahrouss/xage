@@ -12,7 +12,6 @@
 #include "LuaScriptComponent.h"
 #include "PartComponent.h"
 #include "WeaponComponent.h"
-#include "BundleMesh.h"
 #include "MenuUI.h"
 #include "App.h"
 

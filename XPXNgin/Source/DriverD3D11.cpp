@@ -185,7 +185,7 @@ namespace XPX::Renderer::DX11
 	{
 		UINT creationFlags = 0;
 
-#if defined(XPLICIT_DEBUG) && defined(XPLICIT_USE_DIRECTX_DEBUG)
+#if defined(XPLICIT_DEBUG)
 		// If the project is in a debug build, enable the debug layer.
 		creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif

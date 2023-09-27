@@ -5,7 +5,7 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: Bites.h
- *			Purpose: The C++ Windowing library for DirectX
+ *			Purpose: The C++ window library for DirectX/OpenGL/Vk
  *
  * =====================================================================
  */

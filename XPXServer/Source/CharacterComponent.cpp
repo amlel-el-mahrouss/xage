@@ -34,7 +34,7 @@ namespace XPX
 		mMaxHealth(XPX_DEFAULT_MAXHEALTH),
 		mWalkSpeed(XPX_DEFAULT_WALKSPEED),
 		mActiveWeapon(nullptr),
-		mGears()
+		mWeapons()
 	{}
 
 	CharacterComponent::~CharacterComponent()

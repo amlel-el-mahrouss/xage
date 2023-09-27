@@ -5,7 +5,7 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: Bites.cpp
- *			Purpose: C++ window classes for Direct3D 11 and OpenGL/Vk.
+ *			Purpose: C++ window library for Direct3D 11 and OpenGL/Vk.
  *
  * =====================================================================
  */
