@@ -344,7 +344,7 @@ namespace XPX::Renderer::DX11
 		rgba[3] = a;
 
 		m_private.pCtx->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
-		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? D3D11_CLEAR_DEPTH : 0, 1.0f, 0);
+		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL) : 0, 1.0f, 0);
 	}
 
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)

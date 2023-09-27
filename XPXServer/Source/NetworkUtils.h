@@ -17,13 +17,15 @@ namespace XPX
 	{
 	public:
 		explicit NetworkFileTransferFactory();
-		~NetworkFileTransferFactory() = default;
+		~NetworkFileTransferFactory();
 
 	public:
 		XPLICIT_COPY_DEFAULT(NetworkFileTransferFactory);
 
 	public:
-		void send(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept;
+		void send(const std::int32_t& id, 
+			const char* path, 
+			const std::int64_t& public_hash) const noexcept;
 
 	private:
 		NetworkServerComponent* mNetwork;

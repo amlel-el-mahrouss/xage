@@ -18,6 +18,8 @@ namespace XPX
 		XPLICIT_ASSERT(mNetwork);
 	}
 
+	NetworkFileTransferFactory::~NetworkFileTransferFactory() = default;
+
 	void NetworkFileTransferFactory::send(const std::int32_t& id, const char* path, const std::int64_t& public_hash) const noexcept
 	{
 		if (!mNetwork)

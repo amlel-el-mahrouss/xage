@@ -193,11 +193,11 @@ static int lua_DestroyGear(lua_State* L)
 				{
 					auto* owner = part->get_owner();
 
-					for (size_t i = 0; i < owner->get_gears().size(); i++)
+					for (size_t i = 0; i < owner->get_weapons().size(); i++)
 					{
-						if (owner->get_gears()[i] == part)
+						if (owner->get_weapons()[i] == part)
 						{
-							owner->get_gears()[i] = nullptr;
+							owner->get_weapons()[i] = nullptr;
 							break;
 						}
 					}

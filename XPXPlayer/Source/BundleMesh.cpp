@@ -40,6 +40,8 @@ namespace XPX
 		RXML::RXMLDocument parser;
 		parser.parse(params);
 
+		auto filter_cnt = filter.size();
+
 		for (size_t i = 0; i < filter_cnt; ++i)
 		{
 			auto it = std::find_if(params.WorldNodes.cbegin(), params.WorldNodes.cend(),
@@ -49,13 +51,10 @@ namespace XPX
 
 			if (it != params.WorldNodes.cend())
 			{
-				BundleNode* mesh = static_cast<BundleNode*>(CAD->getSceneManager()->getSceneNodeFromName(XPX_PARTS[i]));
+				BundleNode* mesh = static_cast<BundleNode*>(CAD->getSceneManager()->getSceneNodeFromName(filter[i].c_str()));
 
 				if (mesh)
-				{
-					mesh->setName(XPX_PARTS[i]);
 					mParts.push_back(mesh);
-				}
 			}
 		}
 	}
