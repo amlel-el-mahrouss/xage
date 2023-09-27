@@ -349,7 +349,8 @@ namespace XPX::Renderer::DX11
 
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
 	{
-		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+		if (hr == DXGI_ERROR_DEVICE_REMOVED || 
+			hr == DXGI_ERROR_DEVICE_RESET)
 		{
 			HRESULT hr = get().pDevice->GetDeviceRemovedReason();
 
