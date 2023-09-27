@@ -16,8 +16,6 @@
 #include "App.h"
 #include "MenuUI.h"
 
-#include <CLua.hpp>
-
 #define XPX_MAX_TIMEOUT_MACRO (250)
 
 namespace XPX
@@ -52,7 +50,7 @@ namespace XPX
 			if (XPX_MAX_TIMEOUT < 1)
 			{
 				if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					CAD->closeDevice();
+					std::terminate();
 					}, POPUP_TYPE::NETWORK, "ResetPopup"))
 				{
 					ComponentSystem::get_singleton_ptr()->remove(mNetwork);
@@ -79,7 +77,7 @@ namespace XPX
 				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
 				{
 					if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-						CAD->closeDevice();
+						std::terminate();
 						}, POPUP_TYPE::KICK, "KickPopup", packet.additional_data[0] != 0 ? packet.additional_data : "You have been kicked."))
 					{
 						ComponentSystem::get_singleton_ptr()->remove(mNetwork);
@@ -96,7 +94,7 @@ namespace XPX
 			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					CAD->closeDevice();
+					std::terminate();
 					}, POPUP_TYPE::BANNED, "BanPopup");
 			}
 		}
@@ -110,7 +108,7 @@ namespace XPX
 				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
 				{
 					ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-						CAD->closeDevice();
+						std::terminate();
 					}, POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
 

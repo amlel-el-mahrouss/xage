@@ -14,8 +14,9 @@
 
 #include "Root.h"
 #include "NginCore.h"
+#include "DriverD2D.h"
 
-#define __RENDERER_IRR__ 1
+#include <SpriteFont.h>
 
 #define imgui_slots public
 
@@ -23,10 +24,8 @@ namespace XPX
 {
 	namespace ImGUI
 	{
-		typedef ITexture ImTexture;
-
-		typedef SColor ImColor;
-		typedef recti ImRect;
+		typedef Color<float> ImColor;
+		typedef RECT ImRect;
 
 		class XPLICIT_API UIFrame final
 		{
@@ -48,30 +47,41 @@ namespace XPX
 			std::uint32_t W{ 0 };
 			std::uint32_t H{ 0 };
 
+		private:
+			struct ImGUIUIView : Renderer::D2D::UIView
+			{
+				void operator()(Renderer::D2D::DriverSystemD2D* pD2dDriver) override
+				{
+					pD2dDriver->draw_rectangle()
+				}
+
+			};
+
 		public:
-			virtual void update(SColor clr) noexcept
+			virtual void update(ImColor clr) noexcept
 			{
 				if (W < 1 ||
 					H < 1)
 					return;
 
-#ifdef __RENDERER_IRR__
-				CAD->getVideoDriver()->draw2DRectangle(clr,
+				RENDERER->getVideoDriver()->draw2DRectangle(clr,
 					irr::core::recti(position2di(X, Y), dimension2d(W, H)),
 					nullptr);
-#endif // __RENDERER_IRR__
 			}
 
 			virtual bool in_region() noexcept
 			{
-#ifdef __RENDERER_IRR__
-				auto pos = CAD->getCursorControl()->getPosition();
+				POINT p;
 
-				return ((pos.X > X) &&
-					(pos.X < X + W)) &&
-					(pos.Y > Y) &&
-					(pos.Y < Y + H);
-#endif
+				if (ScreenToClient(RENDERER->get().pWindowHandle, &p))
+				{
+					return ((p.x > X) &&
+						(p.x < X + W)) &&
+						(p.y > Y) &&
+						(p.y < Y + H);
+				}
+
+				return false;
 			}
 
 		};
@@ -79,10 +89,12 @@ namespace XPX
 		class XPLICIT_API UIFontHelper final
 		{
 		public:
-#ifdef __RENDERER_IRR__
-			typedef irr::gui::IGUIFont* FontPtr;
+			typedef std::shared_ptr<DirectX::SpriteFont> FontPtr;
 
-			static FontPtr get_font(const char* path) { return CAD->getGUIEnvironment()->getFont(path); }
+			static FontPtr get_font(const PChar* path) 
+			{
+				return std::make_unique<DirectX::SpriteFont>(RENDERER->get().pDevice, path, true);
+			}
 
 		public:
 			static FontPtr get_title_font() noexcept
@@ -101,8 +113,8 @@ namespace XPX
 
 				if (!fnt)
 				{
-					XPLICIT_GET_DATA_DIR(dir);
-					dir += "UIFont14.png";
+					XPLICIT_GET_DATA_DIR_W(dir);
+					dir += L"UIFont14.spritefont";
 
 					fnt = get_font(dir.c_str());
 				}
@@ -120,23 +132,21 @@ namespace XPX
 				return fnt;
 			}
 
-			static String get_title_path() noexcept
+			static PString get_title_path() noexcept
 			{
-				XPLICIT_GET_DATA_DIR(dir);
-				dir += "UIFont22.png";
+				XPLICIT_GET_DATA_DIR_W(dir);
+				dir += L"UIFont22.spritefont";
 
 				return dir;
 			}
 
-			static String get_label_path() noexcept
+			static PString get_label_path() noexcept
 			{
-				XPLICIT_GET_DATA_DIR(dir);
-				dir += "UIFont18.png";
+				XPLICIT_GET_DATA_DIR_W(dir);
+				dir += L"UIFont18.spritefont";
 
 				return dir;
 			}
-
-#endif // __RENDERER_IRR__
 
 		};
 	}

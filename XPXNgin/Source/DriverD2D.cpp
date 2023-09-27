@@ -115,10 +115,22 @@ namespace XPX::Renderer::D2D
 		);
 	}
 
-	void DriverSystemD2D::draw_rectangle(const Rect rct, const float radiusX, const float radiusY, const float stroke) noexcept
+	void DriverSystemD2D::draw_rectangle(
+		const Rect rct,
+		const float radiusX, 
+		const float radiusY, 
+		const float stroke,
+		const Color<float> clr) noexcept
 	{
 		if (!m_pRenderTarget)
 			return;
+
+		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> pBrush;
+
+		HRESULT hr = m_pRenderTarget->CreateSolidColorBrush(
+			D2D1::ColorF(clr.R, clr.G, clr.B, clr.A),
+			pBrush.GetAddressOf()
+		);
 
 		D2D1_ROUNDED_RECT rect;
 		RtlZeroMemory(&rect, sizeof(D2D1_ROUNDED_RECT));
@@ -133,8 +145,10 @@ namespace XPX::Renderer::D2D
 
 		m_pRenderTarget->DrawRoundedRectangle(
 			&rect,
-			m_pGhostWhiteBrush.Get(),
+			pBrush.Get(),
 			stroke);
+
+		pBrush->Release();
 	}
 
 	void DriverSystemD2D::transform(const float x, const float y) noexcept

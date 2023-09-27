@@ -252,10 +252,8 @@ namespace XPX::Renderer::DX11
 		void create();
 
 	public:
-		static void update(void* self);
-
-	public:
-		static bool should_update() noexcept { return true; }
+		static void update(ClassPtr self);
+		static bool should_update() noexcept;
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 

@@ -23,13 +23,13 @@ namespace XPX
 		String _path = XPLICIT_DIR;
 		_path += path;
 
-		mMdl = CAD->getSceneManager()->getMesh(_path.c_str());
+		mMdl = RENDERER->getSceneManager()->getMesh(_path.c_str());
 
 		mPhysics = PHYSICS_NONE;
 
 		if (mMdl)
 		{
-			mNode = CAD->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
+			mNode = RENDERER->getSceneManager()->addAnimatedMeshSceneNode(mMdl);
 			
 			// for the physics engine.
 			mPhysics = PHYSICS_COMPLEX;

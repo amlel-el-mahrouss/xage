@@ -123,6 +123,8 @@
     <ClCompile Include="XPXPlayer\Source\AppMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NginData\Contents\Intercept.fbx" />
+    <None Include="NginData\Contents\Sedan.fbx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

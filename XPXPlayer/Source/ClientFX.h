@@ -42,12 +42,12 @@ inline auto LoadSkybox(XPX::String skybox_prefix)
 	XPX::String ft = DIR + "_ft.png";
 	XPX::String bk = DIR + "_bk.png";
 
-	auto skybox = CAD->getSceneManager()->addSkyBoxSceneNode(CAD->getVideoDriver()->getTexture(up.c_str()),
-		CAD->getVideoDriver()->getTexture(dn.c_str()),
-		CAD->getVideoDriver()->getTexture(lf.c_str()),
-		CAD->getVideoDriver()->getTexture(rt.c_str()),
-		CAD->getVideoDriver()->getTexture(ft.c_str()),
-		CAD->getVideoDriver()->getTexture(bk.c_str()));
+	auto skybox = RENDERER->getSceneManager()->addSkyBoxSceneNode(RENDERER->getVideoDriver()->getTexture(up.c_str()),
+		RENDERER->getVideoDriver()->getTexture(dn.c_str()),
+		RENDERER->getVideoDriver()->getTexture(lf.c_str()),
+		RENDERER->getVideoDriver()->getTexture(rt.c_str()),
+		RENDERER->getVideoDriver()->getTexture(ft.c_str()),
+		RENDERER->getVideoDriver()->getTexture(bk.c_str()));
 
 	return skybox;
 }

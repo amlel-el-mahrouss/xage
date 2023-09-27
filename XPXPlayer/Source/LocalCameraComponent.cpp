@@ -26,33 +26,15 @@ namespace XPX
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		mCamera = CAD->getSceneManager()->addCameraSceneNodeFPS();
+		Renderer::DX11::CameraSystemD3D11* camD3d11 = ((Renderer::DX11::DriverSystemD3D11*)RENDERER)->get().pCamera.get();
+		XPLICIT_ASSERT(camD3d11);
 
-		mCamera->setPosition(vector3df(XPLICIT_ORIGIN.X,
-			XPLICIT_ORIGIN.Y,
-			XPLICIT_ORIGIN.Z));
+		camD3d11->set_position(XPLICIT_ORIGIN);
 
-		mCamera->setTarget(vector3df(0,
-			5,
-			0));
-
-		XPLICIT_ASSERT(mCamera);
-
-		CAD->getSceneManager()->setActiveCamera(mCamera);
-		
-		CAD->getSceneManager()->addLightSceneNode(mCamera, vector3df(XPLICIT_ORIGIN.X,
-			XPLICIT_ORIGIN.Y, 
-			XPLICIT_ORIGIN.Z),
-		SColorf(1.0f, 1.0f, 0.1f, 1.0f), 1000.f);
-
-		mCamera->setName("Camera");
+		mCamera = camD3d11;
 	}
 
-	LocalCameraComponent::~LocalCameraComponent() noexcept
-	{
-		if (mCamera)
-			mCamera->drop();
-	}
+	LocalCameraComponent::~LocalCameraComponent() noexcept = default;
 
 	COMPONENT_TYPE LocalCameraComponent::type() noexcept { return COMPONENT_CAMERA; }
 
@@ -65,9 +47,9 @@ namespace XPX
         if (!self)
             return;
 
-		if (self->mLookAt != self->mCamera->getTarget())
+		if (self->mLookAt != self->mCamera->rotation())
 		{
-			self->mLookAt = self->mCamera->getTarget();
+			self->mLookAt = self->mCamera->rotation();
 
 			NetworkPacket packet;
 
@@ -80,6 +62,6 @@ namespace XPX
 			self->mNetwork->send(packet);
 		}
 	}
-
-	irr::scene::ICameraSceneNode* LocalCameraComponent::get() noexcept { return mCamera; }
+	
+	Renderer::DriverCameraSystem* LocalCameraComponent::get() noexcept { return mCamera; }
 }

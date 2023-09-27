@@ -540,6 +540,8 @@ namespace XPX::Renderer::DX11
 			m_pDriver = driver;
 	}
 
+	bool MeshComponentD3D11::should_update() noexcept { return true; }
+
 	void MeshComponentD3D11::update(ClassPtr this_ptr) 
 	{
 		MeshComponentD3D11* self = (MeshComponentD3D11*)this_ptr;

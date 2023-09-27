@@ -73,7 +73,7 @@ namespace XPX
         {
             ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
                 []() {
-                    CAD->closeDevice();
+                    std::terminate();
             }, POPUP_TYPE::BANNED, "StopPopup");
 
             StartLoad = false;
@@ -130,8 +130,8 @@ namespace XPX
             {
                 ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
                     []() {
-                        CAD->closeDevice();
-                    }, POPUP_TYPE::NETWORK, "TimeoutPopup");
+                        std::terminate();
+                 }, POPUP_TYPE::NETWORK, "TimeoutPopup");
 
                 ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
 
@@ -187,8 +187,8 @@ namespace XPX
         ComponentSystem::get_singleton_ptr()->remove(this->mNetwork);
 
         ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-            CAD->closeDevice();
-            }, POPUP_TYPE::NETWORK);
+            std::terminate();
+        }, POPUP_TYPE::NETWORK);
     }
 }
 

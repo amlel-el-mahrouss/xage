@@ -49,19 +49,9 @@ int main(int argc, char** argv)
         XPX::open_terminal();
 #endif // XPLICIT_DEBUG
 #endif
-
-		// parse the connection uri.
-		XPX::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
-
-#ifdef _WIN32
-        XPX::String cmd_line = pCmdLine;
-#else
-        XPX::String cmd_line = argv[1];
-#endif
-
 		using namespace XPX::Renderer::DX11;
 
-		XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XAGE (D3D11)", "XPXPlayerDirectXInDev", hInst);
+		XPX::Bites::Win32Window* win = new XPX::Bites::Win32Window("XAGE", "XAGERenderingWindow", hInst);
 
 		DriverSystemD3D11* drv11 = new DriverSystemD3D11(win->get().WindowHandle);
 		win->get().DriverSystem = drv11;

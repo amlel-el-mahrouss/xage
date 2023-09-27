@@ -80,7 +80,7 @@ namespace XPX::RXML
 									}
 								}
 								
-								auto node_mesh = CAD->getSceneManager()->addMeshSceneNode(CAD->getSceneManager()->getMesh(world_node.Value.c_str()));
+								auto node_mesh = RENDERER->getSceneManager()->addMeshSceneNode(RENDERER->getSceneManager()->getMesh(world_node.Value.c_str()));
 
 								if (node_mesh)
 									object = node_mesh;
@@ -108,7 +108,7 @@ namespace XPX::RXML
 								{
 									try
 									{
-										const auto scene_node = CAD->getSceneManager()->getSceneNodeFromName(node->first_attribute()->value());
+										const auto scene_node = RENDERER->getSceneManager()->getSceneNodeFromName(node->first_attribute()->value());
 
 										if (scene_node)
 										{
@@ -158,7 +158,7 @@ namespace XPX::RXML
 
 						if (params.Has3D)
 						{
-							irr::scene::ICameraSceneNode* scene_node = (irr::scene::ICameraSceneNode*)CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
+							irr::scene::ICameraSceneNode* scene_node = (irr::scene::ICameraSceneNode*)RENDERER->getSceneManager()->getSceneNodeFromName(id.c_str());
 
 							const auto pos = irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()));
 
@@ -201,7 +201,7 @@ namespace XPX::RXML
 
 						if (params.Has3D)
 						{
-							auto scene_node = (irr::scene::ICameraSceneNode*)CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
+							auto scene_node = (irr::scene::ICameraSceneNode*)RENDERER->getSceneManager()->getSceneNodeFromName(id.c_str());
 
 							const auto pos = irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str()));
 
@@ -307,7 +307,7 @@ namespace XPX::RXML
 
 							if (params.Has3D)
 							{
-								const auto scene_node = CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
+								const auto scene_node = RENDERER->getSceneManager()->getSceneNodeFromName(id.c_str());
 
 								if (scene_node)
 								{
@@ -348,7 +348,7 @@ namespace XPX::RXML
 
 							if (params.Has3D)
 							{
-								const auto scene_node = CAD->getSceneManager()->getSceneNodeFromName(id.c_str());
+								const auto scene_node = RENDERER->getSceneManager()->getSceneNodeFromName(id.c_str());
 								
 								if (scene_node)
 									scene_node->setScale(irr::core::vector3df(std::atof(x.c_str()), std::atof(y.c_str()), std::atof(z.c_str())));

@@ -35,11 +35,11 @@ namespace XPX
 		static void update(void* class_ptr);
 
 	public:
-		ICameraSceneNode* get() noexcept;
+		Renderer::DriverCameraSystem* get() noexcept;
 
 	private:
-		ICameraSceneNode* mCamera;
-		vector3df mLookAt;
+		Renderer::DriverCameraSystem* mCamera;
+		Vector<float> mLookAt;
 		NetworkComponent* mNetwork;
 
 	};

@@ -12,10 +12,11 @@
 
 #pragma once
 
-#ifdef XPLICIT_WINDOWS
-
 #include "NginCore.h"
 #include "Component.h"
+
+#ifdef XPLICIT_WINDOWS
+
 #include "DriverD3D11.h"
 
 #include <wrl.h>
@@ -76,7 +77,8 @@ namespace XPX::Renderer::D2D
 		void queue(UIView* view);
 		void transform(const float x = 0, const float y = 0) noexcept;
 		void draw_line(const float x1, const float y1, const float x2, const float y2, const float stroke = 1.f) noexcept;
-		void draw_rectangle(const Rect rct, const float radiusX = 0, const float radiusY = 0, const float stroke = 1.f) noexcept;
+		void draw_rectangle(const Rect rct, const float radiusX = 0, const float radiusY = 0, const float stroke = 1.f,
+			const Color<float> clr = Color<float>(0, 0, 0, 1)) noexcept;
 
 	private:
 		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_pGhostWhiteBrush;

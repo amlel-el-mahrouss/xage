@@ -106,11 +106,12 @@ namespace XPX
 			__m256d x1{ X, Y, Z };
 			__m256d x2{ x, y, z };
 
-			x1 = _mm256_load_pd(x2);
+			x1 = _mm256_set_pd(x2);
 #else
-			X = x;
-			Y = y;
-			Z = z;
+			__m128d x1{ X, Y, Z };
+			__m128d x2{ quat.X, quat.Y, quat.Z };
+
+			_mm_set_pd(x1, x2);
 #endif
 		}
 
@@ -125,9 +126,10 @@ namespace XPX
 
 			__m256d sum = _mm256_add_pd(x1, x2);
 #else
-			this->X += x;
-			this->Y += y;
-			this->Z += z;
+			__m128d x1{ X, Y, Z };
+			__m128d x2{ quat.X, quat.Y, quat.Z };
+
+			_mm_add_pd(x1, x2);
 #endif
 
 			return *this;
@@ -141,9 +143,10 @@ namespace XPX
 
 			__m256d sum = _mm256_sub_pd(x1, x2);
 #else
-			this->X -= x;
-			this->Y -= y;
-			this->Z -= z;
+			__m128d x1{ X, Y, Z };
+			__m128d x2{ quat.X, quat.Y, quat.Z };
+
+			_mm_sub_pd(x1, x2);
 #endif
 
 			return *this;
@@ -157,9 +160,10 @@ namespace XPX
 
 			__m256d sum = _mm256_mul_pd(x1, x2);
 #else
-			this->X *= x;
-			this->Y *= y;
-			this->Z *= z;
+			__m128d x1{ X, Y, Z };
+			__m128d x2{ quat.X, quat.Y, quat.Z };
+
+			_mm_mul_pd(x1, x2);
 #endif
 
 			return *this;
@@ -173,9 +177,10 @@ namespace XPX
 
 			__m256d sum = _mm256_div_pd(x1, x2);
 #else
-			this->X /= x;
-			this->Y /= y;
-			this->Z /= z;
+			__m128d x1{ X, Y, Z };
+			__m128d x2{ quat.X, quat.Y, quat.Z };
+
+			_mm_div_pd(x1, x2);
 #endif
 
 			return *this;
@@ -241,9 +246,9 @@ namespace XPX
 
 		Quaternion(TypeFloat x = 0, TypeFloat y = 0, TypeFloat z = 0, TypeFloat w = 0) noexcept
 			: X(x), Y(y), Z(z), W(w)
-		{
-		}
+		{}
 
+	public:
 		Quaternion& operator=(const Quaternion&) = default;
 		Quaternion(const Quaternion&) = default;
 
@@ -256,10 +261,10 @@ namespace XPX
 
 			__m256d sum = _mm256_mul_pd(x1, x2);
 #else
-			X *= quat.X;
-			Y *= quat.Y;
-			Z *= quat.Z;
-			W *= quat.W;
+			__m128d x1{ X, Y, Z, W };
+			__m128d x2{ quat.X, quat.Y, quat.Z, quat.W };
+
+			_mm_mul_pd(x1, x2);
 #endif
 
 			return *this;
@@ -273,10 +278,10 @@ namespace XPX
 
 			__m256d sum = _mm256_add_pd(x1, x2);
 #else
-			X += quat.X;
-			Y += quat.Y;
-			Z += quat.Z;
-			W += quat.W;
+			__m128d x1{ X, Y, Z, W };
+			__m128d x2{ quat.X, quat.Y, quat.Z, quat.W };
+
+			_mm_add_pd(x1, x2);
 #endif
 
 			return *this;
@@ -290,10 +295,10 @@ namespace XPX
 
 			__m256d sum = _mm256_sub_pd(x1, x2);
 #else
-			X -= quat.X;
-			Y -= quat.Y;
-			Z -= quat.Z;
-			W -= quat.W;
+			__m128d x1{ X, Y, Z, W };
+			__m128d x2{ quat.X, quat.Y, quat.Z, quat.W };
+
+			_mm_sub_pd(x1, x2);
 #endif
 
 			return *this;
@@ -327,11 +332,14 @@ namespace XPX
 		Color() = default;
 		~Color() = default;
 
-		Color(TypeFloat r = 0, TypeFloat g = 0, TypeFloat b = 0, TypeFloat a = 255) noexcept
+		Color(TypeFloat r = 0, 
+			  TypeFloat g = 0, 
+			  TypeFloat b = 0, 
+			  TypeFloat a = 1) noexcept
 			: R(r), G(b), B(b), A(a)
-		{
-		}
+		{}
 
+	public:
 		Color& operator=(const Color&) = default;
 		Color(const Color&) = default;
 
@@ -344,10 +352,10 @@ namespace XPX
 
 			__m256d sum = _mm256_mul_pd(x1, x2);
 #else
-			R *= clr.R;
-			G *= clr.G;
-			B *= clr.B;
-			A *= clr.A;
+			__m128d x1{ R, G, B, A };
+			__m128d x2{ clr.R, clr.G, clr.B, clr.A };
+
+			_mm_mul_pd(x1, x2);
 #endif
 
 			return *this;
@@ -361,10 +369,10 @@ namespace XPX
 
 			__m256d sum = _mm256_add_pd(x1, x2);
 #else
-			R += clr.R;
-			G += clr.G;
-			B += clr.B;
-			A += clr.A;
+			__m128d x1{ R, G, B, A };
+			__m128d x2{ clr.R, clr.G, clr.B, clr.A };
+
+			_mm_add_pd(x1, x2);
 #endif
 
 			return *this;
@@ -376,12 +384,12 @@ namespace XPX
 			__m256d x1{ R, G, B, A };
 			__m256d x2{ clr.R, clr.G, clr.B, clr.A };
 
-			__m256d sum = _mm256_sub_pd(x1, x2);
+			_mm256_sub_pd(x1, x2);
 #else
-			R -= clr.R;
-			G -= clr.G;
-			B -= clr.B;
-			A -= clr.A;
+			__m128d x1{ R, G, B, A };
+			__m128d x2{ clr.R, clr.G, clr.B, clr.A };
+
+			_mm_sub_pd(x1, x2);
 #endif
 
 			return *this;

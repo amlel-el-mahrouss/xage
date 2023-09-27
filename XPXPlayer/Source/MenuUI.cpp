@@ -156,7 +156,7 @@ namespace XPX
 		mHudFrame->Y = 10;
 
 		mFrameParent->H = 30;
-		mFrameParent->W = CAD->getVideoDriver()->getScreenSize().Width;
+		mFrameParent->W = RENDERER->getVideoDriver()->getScreenSize().Width;
 
 		mFrameParent->BackgroundHoverColor.setAlpha(50);
 
@@ -164,7 +164,7 @@ namespace XPX
 		mFrameParent->Y = 0;
 
 		std::size_t x_off = 10UL;
-		std::size_t y_off = CAD->getVideoDriver()->getScreenSize().Height - 74UL;
+		std::size_t y_off = RENDERER->getVideoDriver()->getScreenSize().Height - 74UL;
 
 		for (auto & mInventorySlot : mInventorySlots)
 		{
@@ -233,7 +233,7 @@ namespace XPX
 
 				self->mNetwork->get().cmd[XPLICIT_NETWORK_CMD_SLOT] = NETWORK_CMD_INVALID;
 
-				CAD->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X , self->mInventorySlots[i].Y),
+				RENDERER->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X , self->mInventorySlots[i].Y),
 					dimension2di(self->mInventorySlots[i].W, self->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));
 			}
 		}

@@ -32,17 +32,20 @@ namespace XPX::Renderer
 	};
 
 	/// <summary>
-	/// A generic DriverSystem
+	/// Generic driver class for any rendering cases.
 	/// </summary>
+	
 	class XPLICIT_API DriverSystem
 	{
 	public:
 		DriverSystem() {}
 		virtual ~DriverSystem() {}
 
+	public:
 		DriverSystem& operator=(const DriverSystem&) = default;
 		DriverSystem(const DriverSystem&) = default;
 
+	public:
 		virtual const char* name() noexcept;
 		virtual RENDER_SYSTEM api() noexcept;
 

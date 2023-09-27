@@ -239,11 +239,11 @@ namespace XPX::ImGUI
 
 		if (this->Checked)
 		{
-			CAD->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 12, mCheckBox->Y + 30),
+			RENDERER->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 12, mCheckBox->Y + 30),
 				vector2di(mCheckBox->X + 32, mCheckBox->Y + 11),
 				SColor(0xFF, 0x43, 0xA0, 0x47));
 
-			CAD->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 3, mCheckBox->Y + 21),
+			RENDERER->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 3, mCheckBox->Y + 21),
 				vector2di(mCheckBox->X + 12, mCheckBox->Y + 30),
 				SColor(0xFF, 0x43, 0xA0, 0x47));
 		}
@@ -282,8 +282,8 @@ namespace XPX::ImGUI
 		mFrame->set_pos(0, 0);
 
 		mFrame->set_size(XPLICIT_DEFAULT_PROPGRID_DIM, 
-			CAD->getVideoDriver()->getScreenSize().Height,
-			CAD->getVideoDriver()->getScreenSize().Height);
+			RENDERER->getVideoDriver()->getScreenSize().Height,
+			RENDERER->getVideoDriver()->getScreenSize().Height);
 	}
 
 	UIPropGrid::~UIPropGrid()

@@ -40,7 +40,7 @@ namespace XPX
 
 		if (packet.channel == XPLICIT_CHANNEL_3D)
 		{
-			auto part = CAD->getSceneManager()->getSceneNodeFromId(packet.id);
+			auto part = RENDERER->getSceneManager()->getSceneNodeFromId(packet.id);
 
 			if (part)
 			{
