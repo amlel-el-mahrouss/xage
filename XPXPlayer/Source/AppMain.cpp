@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 
 				while (ret != WM_QUIT)
 				{
-					drv11->begin_scene(1, 0.5, 0.2, 0.5, true, true);
+					drv11->begin_scene(1, 0.2, 0.2, 0.2, true, true);
 
 					XPX::ComponentSystem::get_singleton_ptr()->update();
 					XPX::EventSystem::get_singleton_ptr()->update();

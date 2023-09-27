@@ -29,9 +29,9 @@ namespace XPX::Bites
 		mTraits.WndClass.hIcon = LoadIcon(hInstance, IDI_WINLOGO);
 		mTraits.WndClass.hIconSm = mTraits.WndClass.hIcon;
 		mTraits.WndClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
-		mTraits.WndClass.hbrBackground = nullptr;
+		mTraits.WndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		mTraits.WndClass.lpszMenuName = nullptr;
-		mTraits.WndClass.style = CS_OWNDC;
+		mTraits.WndClass.style = CS_HREDRAW | CS_VREDRAW|  CS_OWNDC;
 		mTraits.WndClass.lpszClassName = wndClass;
 
 		RegisterClassExA(&mTraits.WndClass);
@@ -55,8 +55,10 @@ namespace XPX::Bites
 			this);
 
 		XPLICIT_ASSERT(mTraits.WindowHandle);
-		ShowWindow(mTraits.WindowHandle, SW_SHOW);
 
+		ShowWindow(mTraits.WindowHandle, SW_SHOW);
+		SetForegroundWindow(mTraits.WindowHandle);
+		SetFocus(mTraits.WindowHandle);
 	}
 
 	LRESULT Win32Window::window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
