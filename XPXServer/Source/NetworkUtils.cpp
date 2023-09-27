@@ -25,7 +25,7 @@ namespace XPX
 		if (!mNetwork)
 			return;
 
-		for (size_t i = 0; i < mNetwork->size(); i++)
+		for (size_t i = 0; i < mNetwork->size(); ++i)
 		{
 			if (!mNetwork->get(i) ||
 				mNetwork->get(i)->public_hash != public_hash)
