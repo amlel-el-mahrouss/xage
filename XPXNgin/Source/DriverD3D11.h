@@ -305,17 +305,16 @@ namespace XPX::Renderer::DX11
 	class XPLICIT_API CameraSystemD3D11 : public DriverCameraSystem
 	{
 	public:
-		explicit CameraSystemD3D11() noexcept : DriverCameraSystem() {}
+		CameraSystemD3D11() noexcept : DriverCameraSystem(), m_viewMatrix() {}
 		~CameraSystemD3D11() override {}
 
 	public:
 		void render() noexcept
 		{
 			XMVECTOR lookAtVec(XMVectorZero());
-			XMVECTOR up(XMVectorZero());
+			XMVECTOR up(_mm_set_ps(0, 1, 0, 0));
 
-			float pos_vec[3] = { position().X, position().Y, position().Z };
-			XMVECTOR position(_mm_load_ps(pos_vec));
+			XMVECTOR position_vec(_mm_set_ps(position().X, position().Y, position().Z, 0.f));
 
 			float pitch = rotation().X * 0.0174532925f;
 			float yaw = rotation().Y * 0.0174532925f;
@@ -326,10 +325,10 @@ namespace XPX::Renderer::DX11
 			lookAtVec = XMVector3TransformCoord(lookAtVec, m_viewMatrix);
 			up = XMVector3TransformCoord(up, rotationMatrix);
 
-			lookAtVec = lookAtVec + position;
+			lookAtVec = lookAtVec + position_vec;
 
 			// Finally create the view matrix from the three updated vectors.
-			m_viewMatrix = XMMatrixLookAtLH(position, lookAtVec, up);
+			m_viewMatrix = XMMatrixLookAtLH(position_vec, lookAtVec, up);
 
 		}
 
