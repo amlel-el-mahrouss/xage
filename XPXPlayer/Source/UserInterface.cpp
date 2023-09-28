@@ -68,9 +68,9 @@ namespace XPX
 		
 		mHudFrame->BackgroundColor.A = 1;
 		
-		mHudFrame->BackgroundColor.R = ( 0x0F / 255 );
-		mHudFrame->BackgroundColor.G = (0x0F / 255);
-		mHudFrame->BackgroundColor.B = (0x0F / 255);
+		mHudFrame->BackgroundColor.R = ( 0x0F);
+		mHudFrame->BackgroundColor.G = (0x0F);
+		mHudFrame->BackgroundColor.B = (0x0F);
 
 		mHudFrame->X = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_MIN_WIDTH));
 		mHudFrame->Y = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_MIN_HEIGHT));
@@ -158,14 +158,14 @@ namespace XPX
 		XPLICIT_ASSERT(mNetwork);
 		XPLICIT_ASSERT(mHudFrame);
 
-		mHudFrame->BackgroundColor.R = (75 / 255);
-		mHudFrame->BackgroundColor.G = (165 / 255);
-		mHudFrame->BackgroundColor.B = (84 / 255);
+		mHudFrame->BackgroundColor.R = (75);
+		mHudFrame->BackgroundColor.G = (165);
+		mHudFrame->BackgroundColor.B = (84);
 		mHudFrame->BackgroundColor.A = 1;
 		
-		mHudFrame->BackgroundHoverColor.R = (75 / 255);
-		mHudFrame->BackgroundHoverColor.G = (165 / 255);
-		mHudFrame->BackgroundHoverColor.B = (84 / 255);
+		mHudFrame->BackgroundHoverColor.R = (75);
+		mHudFrame->BackgroundHoverColor.G = (165);
+		mHudFrame->BackgroundHoverColor.B = (84);
 		mHudFrame->BackgroundHoverColor.A = 1;
 
 		mHudFrame->H = 10;
@@ -191,7 +191,7 @@ namespace XPX
 		for (auto & mInventorySlot : mInventorySlots)
 		{
 			mInventorySlot.BackgroundHoverColor.A = 50 /255;
-			mInventorySlot.BackgroundColor.A = 70 / 255;
+			mInventorySlot.BackgroundColor.A = 70;
 
 			mInventorySlot.W = mInventorySlot.H = 64;
 			mInventorySlot.X = x_off;

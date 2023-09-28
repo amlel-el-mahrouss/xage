@@ -72,14 +72,15 @@ namespace XPX::Bites
 		}
 
 		mRenderingWindow = new Win32Window("XPX Advanced Game Engine", "XAGEWindowClass", GetModuleHandle(nullptr));
-		
-		mRenderer = new Renderer::DX11::DriverSystemD3D11(mRenderingWindow->get().WindowHandle);
-		mRenderer2D = new Renderer::D2D::DriverSystemD2D(mRenderer);
-
-		Root::get_singleton_ptr()->Renderer = mRenderer;
-		Root::get_singleton_ptr()->Renderer2D = mRenderer2D;
-		Root::get_singleton_ptr()->Keyboard = new InputReceiver();
 		Root::get_singleton_ptr()->Window = mRenderingWindow;
+
+		mRenderer = new Renderer::DX11::DriverSystemD3D11(mRenderingWindow->get().WindowHandle);
+		Root::get_singleton_ptr()->Renderer = mRenderer;
+
+		mRenderer2D = new Renderer::D2D::DriverSystemD2D(mRenderer);
+		Root::get_singleton_ptr()->Renderer2D = mRenderer2D;
+
+		Root::get_singleton_ptr()->Keyboard = new InputReceiver();
 	}
 
 	ApplicationManager::SettingsManager::SettingsManager()

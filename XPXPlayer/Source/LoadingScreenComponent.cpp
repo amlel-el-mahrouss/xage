@@ -30,7 +30,7 @@
 #include <Enums.h>
 #include <codecvt>
 
-#define XPLICIT_WAIT_FOR std::chrono::seconds(1)
+#define XPLICIT_WAIT_FOR std::chrono::milliseconds(500)
 
 namespace XPX
 {
@@ -81,7 +81,8 @@ namespace XPX
             return;
         }
 
-        if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
+        if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT &&
+            packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
         {
             auto hash = packet.hash;
             auto public_hash = packet.public_hash;

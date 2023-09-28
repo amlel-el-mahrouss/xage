@@ -97,8 +97,7 @@ namespace XPX::Renderer::D2D
 		if (!f_pRenderTarget)
 			return;
 
-		f_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-		f_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
+		f_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Scale(f_pRenderTarget->GetSize()));
 
 		HRESULT hr = f_pRenderTarget->EndDraw();
 		XPLICIT_ASSERT(SUCCEEDED(hr));
@@ -117,7 +116,7 @@ namespace XPX::Renderer::D2D
 		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> pBrush;
 
 		HRESULT hr = f_pRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(clr.R, clr.G, clr.B, clr.A),
+			D2D1::ColorF(clr.R / 255, clr.G / 255, clr.B / 255, clr.A / 255),
 			pBrush.GetAddressOf()
 		);
 
@@ -144,7 +143,7 @@ namespace XPX::Renderer::D2D
 		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> pBrush;
 
 		HRESULT hr = f_pRenderTarget->CreateSolidColorBrush(
-			D2D1::ColorF(clr.R, clr.G, clr.B, clr.A),
+			D2D1::ColorF(clr.R / 255, clr.G / 255, clr.B / 255, clr.A / 255),
 			pBrush.GetAddressOf()
 		);
 
@@ -154,15 +153,19 @@ namespace XPX::Renderer::D2D
 		rect.radiusX = radiusX;
 		rect.radiusY = radiusY;
 
-		rect.rect.bottom = rct.bottom;
 		rect.rect.left = rct.left;
 		rect.rect.top = rct.top;
 		rect.rect.right = rct.right;
+		rect.rect.bottom = rct.bottom;
 
-		f_pRenderTarget->DrawRoundedRectangle(
+		D2D_SIZE_F sz{};
+		
+		sz.width = rct.right;
+		sz.height = rct.bottom;
+
+		f_pRenderTarget->FillRoundedRectangle(
 			&rect,
-			pBrush.Get(),
-			stroke);
+			pBrush.Get());
 	}
 
 	void DriverSystemD2D::transform(const float x, const float y) noexcept

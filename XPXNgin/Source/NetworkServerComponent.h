@@ -17,7 +17,7 @@
 namespace XPX
 {
 	// @brief Maximum players in single party.
-	constexpr std::int16_t XPLICIT_MAX_CONNECTIONS = 10;
+	constexpr std::int16_t XPLICIT_MAX_CONNECTIONS = 24;
 
 	typedef std::vector<NetworkPeer*> NetworkVector;
 

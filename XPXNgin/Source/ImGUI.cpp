@@ -42,9 +42,9 @@ namespace XPX::ImGUI
 		if (!m_pFrame)
 			return;
 
-		m_pFrame->TextColor.A = m_iFadeIn / 255;
-		m_pFrame->BackgroundColor.A = m_iFadeIn / 255;
-		m_pFrame->BackgroundHoverColor.A = m_iFadeIn / 255;
+		m_pFrame->TextColor.A = m_iFadeIn;
+		m_pFrame->BackgroundColor.A = m_iFadeIn;
+		m_pFrame->BackgroundHoverColor.A = m_iFadeIn;
 
 		this->Hover = m_pFrame->in_region();
 
@@ -78,10 +78,10 @@ namespace XPX::ImGUI
 		mBox->W = 279;
 		mBox->H = 38;
 
-		mBox->BackgroundColor.R = (0x0D / 255);
-		mBox->BackgroundColor.G = (0x0D / 255);
-		mBox->BackgroundColor.B = (0x0D / 255);
-		mBox->BackgroundColor.A = (0x50 / 255);
+		mBox->BackgroundColor.R = (0x0D);
+		mBox->BackgroundColor.G = (0x0D);
+		mBox->BackgroundColor.B = (0x0D);
+		mBox->BackgroundColor.A = (0x50);
 
 		mBox->BackgroundHoverColor = mBox->BackgroundHoverColor;
 
@@ -91,9 +91,9 @@ namespace XPX::ImGUI
 		mSelection->W = 0;
 
 		mSelection->BackgroundColor.R = (0x00);
-		mSelection->BackgroundColor.G = (0x89 / 255);
-		mSelection->BackgroundColor.B = (0xED / 255);
-		mSelection->BackgroundColor.A = (0x50 / 255);
+		mSelection->BackgroundColor.G = (0x89);
+		mSelection->BackgroundColor.B = (0xED);
+		mSelection->BackgroundColor.A = (0x50);
 
 		mSelection->BackgroundHoverColor = mSelection->BackgroundHoverColor;
 
@@ -245,12 +245,12 @@ namespace XPX::ImGUI
 
 		XPLICIT_ASSERT(mBody.mBody && mHead.mBody);
 
-		auto bk_head = (0x31 / 255);
+		auto bk_head = (0x31);
 		mHead.mBody->BackgroundColor = Color<float>(bk_head, bk_head, bk_head);
 		mHead.mBody->BackgroundHoverColor = Color<float>(bk_head, bk_head, bk_head);
 
-		auto bk = (0x1C / 255);
-		auto bk_hover = (0x26 / 255);
+		auto bk = (0x1C);
+		auto bk_hover = (0x26);
 		mBody.mBody->BackgroundColor = Color<float>(bk, bk, bk);
 		mBody.mBody->BackgroundHoverColor = Color<float>(bk_hover, bk_hover, bk_hover);
 	}

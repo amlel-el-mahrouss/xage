@@ -57,6 +57,7 @@ namespace XPX
 		peer->status = NETWORK_STAT_CONNECTED;
 		
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+		peer->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
 
 		peer->packet.hash = peer->hash;
 		peer->packet.hash = peer->public_hash;
@@ -100,7 +101,7 @@ namespace XPX
 	//! @brief Handle player log-in event
 	//! @brief setup humanoid and more...
 	
-	void LoginEvent::HandleJoin() noexcept
+	void LoginEvent::on_join() noexcept
 	{
 		if (this->size() >= XPLICIT_MAX_CONNECTIONS)
 			return;
@@ -119,13 +120,7 @@ namespace XPX
 					XplicitHandleJoin(mNetwork->get(peer_idx), player, mNetwork))
 				{
 					mNetwork->get(peer_idx)->ip_address = address_to_string(mNetwork->get(peer_idx));
-					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
-
-					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 					
-					mNetwork->get(peer_idx)->packet.hash = mNetwork->get(peer_idx)->hash;
-					mNetwork->get(peer_idx)->packet.size = sizeof(NetworkPacket);
-
 					memset(mNetwork->get(peer_idx)->packet.additional_data, 0, XPLICIT_NETWORK_BUF_SZ);
 
 					memcpy(mNetwork->get(peer_idx)->packet.additional_data,
@@ -145,7 +140,7 @@ namespace XPX
 
 	}
 
-	void LoginEvent::HandleLeave() noexcept
+	void LoginEvent::on_leave() noexcept
 	{
 		if (this->size() < 1)
 			return;
@@ -153,13 +148,13 @@ namespace XPX
 		for (size_t peer_idx = 0; peer_idx < mNetwork->size(); ++peer_idx)
 		{
 			if (mNetwork->get(peer_idx)->status == NETWORK_STAT_DISCONNECTED ||
-				mNetwork->get(peer_idx)->status == NETWORK_STAT_INVALID ||
 				mNetwork->get(peer_idx)->packet.channel == XPLICIT_CHANNEL_CHAT)
 				continue;
 
 			//! If it is a kick or a stop or either a ban
 			//! Do this action.
 			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_STOP] == NETWORK_CMD_STOP ||
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_KICK] == NETWORK_CMD_KICK ||
 				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 			{
 				const auto hash_lhs = mNetwork->get(peer_idx)->packet.hash;
@@ -167,6 +162,8 @@ namespace XPX
 
 				if (hash_lhs == hash_rhs)
 				{
+					mNetwork->get(peer_idx)->status = NETWORK_STAT_DISCONNECTED;
+
 					--mPlayerCount;
 
 					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
@@ -175,10 +172,8 @@ namespace XPX
 
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
 
-					mNetwork->get(peer_idx)->status = NETWORK_STAT_DISCONNECTED;
-
 					mNetwork->get(peer_idx)->reset(); // reset peer.
-					mNetwork->get(peer_idx)->xplicit_id.generate(~0); // invalidate player id.
+					mNetwork->get(peer_idx)->xplicit_id.generate(UINT32_MAX); // invalidate player id.
 
 					for (std::size_t player = 0; player < mPlayers.size(); ++player)
 					{
@@ -208,8 +203,8 @@ namespace XPX
 
 	void LoginEvent::operator()()
 	{
-		this->HandleLeave();
-		this->HandleJoin();
+		this->on_leave();
+		this->on_join();
 	}
 
 	const size_t& LoginEvent::size() const noexcept { return mPlayerCount; }

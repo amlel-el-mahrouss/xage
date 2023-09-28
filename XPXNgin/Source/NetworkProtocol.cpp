@@ -49,7 +49,7 @@ namespace XPX
         this->public_hash = XPLICIT_INVALID_HASH;
     }
 
-    constexpr std::int32_t XPLICIT_MAX_TIMEOUT = 5;
+    constexpr auto XPLICIT_MAX_TIMEOUT = std::chrono::seconds(5);
 
     void NetworkPeer::timeout() noexcept
     {
@@ -57,10 +57,7 @@ namespace XPX
             this->status == NETWORK_STAT_DISCONNECTED)
             return;
 
-		Thread timeout([&]() {
-            if (this->status == NETWORK_STAT_STASIS)
-                return;
-
+        Thread timeout([&]() {
             this->status = NETWORK_STAT_STASIS;
 
             if (this->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
@@ -70,8 +67,8 @@ namespace XPX
                 return;
             }
 
-			// Sleep for five seconds, let the client be aware of our packet.
-            std::this_thread::sleep_for(std::chrono::seconds(XPLICIT_MAX_TIMEOUT));
+            // Sleep for five seconds, let the client be aware of our packet.
+            std::this_thread::sleep_for(XPLICIT_MAX_TIMEOUT);
 
             // check for either no acknowledge
             if (this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] != NETWORK_CMD_ACK)
@@ -97,12 +94,12 @@ namespace XPX
                 }
 
                 XPLICIT_INFO("[CHECK] IP: " + this->ip_address);
-                this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
 
+                this->packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
                 this->status = NETWORK_STAT_CONNECTED;
             }
 
-        });
+            });
 
         timeout.detach();
     }

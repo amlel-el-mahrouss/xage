@@ -31,9 +31,9 @@ namespace XPX
 	public:
 		const size_t& size() const noexcept;
 
-	private:
-		void HandleLeave() noexcept;
-		void HandleJoin() noexcept;
+	public:
+		void on_leave() noexcept;
+		void on_join() noexcept;
 
 	private:
 		std::vector<CharacterComponent*> mPlayers;

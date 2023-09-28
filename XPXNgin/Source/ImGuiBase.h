@@ -56,10 +56,10 @@ namespace XPX
 
 				Rect rectangleRect{};
 
-				rectangleRect.bottom = X;
-				rectangleRect.left = Y;
+				rectangleRect.left = X;
+				rectangleRect.top = Y;
 				rectangleRect.right = W;
-				rectangleRect.top = H;
+				rectangleRect.bottom = H;
 
 				RENDERER_2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 1.0f, BackgroundColor);
 

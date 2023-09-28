@@ -127,7 +127,7 @@ namespace XPX::Renderer::DX11
 			pAdapter->Release();
 			pFactory->Release();
 
-			throw EngineError("Out of memory!");
+			throw EngineError("Driver (D3D11): out of memory!");
 		}
 
 		UINT i = 0U;
@@ -482,20 +482,20 @@ namespace XPX::Renderer::DX11
 
 		delete[] m_pVertex;
 
-		XPLICIT_GET_DATA_DIR_W(DIR);
-
-		PString path_pixel = DIR;
-		path_pixel += L"Shaders/Pixel.hlsl";
-
-		m_pColorShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", this->m_pDriver);
-
-		PString path_vertex = DIR;
-		path_vertex += L"Shaders/Vertex.hlsl";
-
-		m_pVertexShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", this->m_pDriver);
-		
 		if (render_type == RENDER_COLOR_ONLY)
 		{
+			XPLICIT_GET_DATA_DIR_W(DIR);
+
+			PString path_pixel = DIR;
+			path_pixel += L"Shaders/Pixel.hlsl";
+
+			m_pColorShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", this->m_pDriver);
+
+			PString path_vertex = DIR;
+			path_vertex += L"Shaders/Vertex.hlsl";
+
+			m_pVertexShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", this->m_pDriver);
+
 			D3D11_INPUT_ELEMENT_DESC input_layout[] = {
 						{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 						{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
