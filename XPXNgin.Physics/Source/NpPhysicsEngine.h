@@ -29,6 +29,7 @@
 namespace XPX
 {
     typedef XPXAttribute* NpSceneNode;
+    typedef XPXAttribute NpSceneNodeType;
 
     class NPLICIT_API NpPhysicsEvent : public Event
     {

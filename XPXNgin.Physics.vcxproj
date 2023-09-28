@@ -98,7 +98,6 @@
   <ItemGroup>
     <ClInclude Include="XPXNgin.Physics\Source\Config.h" />
     <ClInclude Include="XPXNgin.Physics\Source\NMath.h" />
-    <ClInclude Include="XPXNgin.Physics\Source\NpCharacterController.h" />
     <ClInclude Include="XPXNgin.Physics\Source\NplicitNgine.h" />
     <ClInclude Include="XPXNgin.Physics\Source\NpPhysicsEngine.h" />
   </ItemGroup>

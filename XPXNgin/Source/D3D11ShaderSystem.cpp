@@ -58,23 +58,14 @@ namespace XPX::Renderer::DX11
 			hr = m_pDriver->get().pDevice->CreateVertexShader(m_data.pBlob->GetBufferPointer(),
 				m_data.pBlob->GetBufferSize(), nullptr, m_data.pVertex.GetAddressOf());
 
-			if (SUCCEEDED(hr))
-			{
-				D3D11_INPUT_ELEMENT_DESC inputLayout[] = {
-					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				};
-
-				auto lSize = sizeof(inputLayout) / sizeof(inputLayout[0]);
-
-				Details::ThrowIfFailed(m_pDriver->get().pDevice->CreateInputLayout(inputLayout, lSize,
-					m_data.pBlob->GetBufferPointer(), m_data.pBlob->GetBufferSize(), &m_data.pInputLayout));
-			}
+			Details::ThrowIfFailed(hr);
 		}
 		else if (m_data.shader_type == XPLICIT_PIXEL_SHADER)
 		{
 			hr = m_pDriver->get().pDevice->CreatePixelShader(m_data.pBlob->GetBufferPointer(),
 				m_data.pBlob->GetBufferSize(), nullptr, m_data.pPixel.GetAddressOf());
+
+			Details::ThrowIfFailed(hr);
 		}
 
 		return SUCCEEDED(hr) ? 0 : 1;

@@ -143,7 +143,7 @@ int main(int argc, char** argv)
 
 		title += ":";
 		title += std::to_string(network->port());
-		title += " (xconnect v";
+		title += " (XAGE LOBBY PROTOCOL v";
 		title += std::to_string(XPLICIT_NETWORK_VERSION);
 		title += ")";
 
@@ -156,7 +156,7 @@ int main(int argc, char** argv)
 		XPX::Thread job(XplicitLoadShell);
 
 		while (XPX::ComponentSystem::get_singleton_ptr() &&
-			XPX::EventSystem::get_singleton_ptr())
+			   XPX::EventSystem::get_singleton_ptr())
 		{
 			XPX::NetworkServerContext::recv_all(network);
 

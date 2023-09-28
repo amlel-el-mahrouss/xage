@@ -17,6 +17,8 @@
 #include "NginCore.h"
 #include "Avx.h"
 
+#include "File.h"
+
 #ifdef XPLICIT_WINDOWS
 
 #	include <wrl.h> /* Microsoft::WRL::ComPtr */
@@ -59,6 +61,13 @@ namespace XPX::Renderer::DX11
 		{
 			XMFLOAT4 POSITION;
 			XMFLOAT4 COLOR;
+		};
+
+		struct __declspec(align(XPLICIT_DX_ALIGN)) VERTEX_TEX
+		{
+			XMFLOAT4 POSITION;
+			XMFLOAT4 COLOR;
+			XMFLOAT2 TEXCOORD;
 		};
 
 		struct CBUFFER
@@ -175,11 +184,13 @@ namespace XPX::Renderer::DX11
 		class XPLICIT_API ShaderTraits
 		{
 		public:
-			std::string entrypoint{};
-			std::string shader_type{};
+			std::string entrypoint{ "VS" };
+			std::string shader_type{ XPLICIT_VERTEX_SHADER };
 
-			uint32_t iFlags1{ 0 };
-			uint32_t iFlags2{ 0 };
+			uint32_t iFlags1{ 0U };
+			uint32_t iFlags2{ 0U };
+
+		public:
 			ID3D10Blob* pBlob{ nullptr };
 			ID3D10Blob* pErrorBlob{ nullptr };
 			D3D11_BUFFER_DESC matrixBufferDesc{};
@@ -240,16 +251,53 @@ namespace XPX::Renderer::DX11
 		XPLICIT_COPY_DEFAULT(RenderComponentD3D11);
 
 	public:
-		void push(const Color<float>& clr);
-		void push(const Vector<float>& vert);
-		void push(const UINT& indice);
+		void push(const Vector<float>& vert) noexcept;
+		void push(const Color<float>& clr) noexcept;
+		void push(const UINT& indice) noexcept;
 
 	public:
 		void set_driver(DriverSystemD3D11* dx11) noexcept;
 
 	public:
-		size_t size() noexcept;
-		void create();
+		struct ImageData final
+		{
+			void* pImage;
+
+			UINT iWidth, iHeight;
+			UINT iStride{ 4 };
+
+			static ImageData invald_image_data()
+			{
+				return ImageData();
+			}
+
+		};
+
+	public:
+		enum
+		{
+			RENDER_TEXTURE_ONLY,
+			RENDER_COLOR_ONLY,
+		};
+
+	public:
+		/// <summary>
+		/// Vertices getter
+		/// </summary>
+		/// <returns>the amount of vertices</returns>
+		const size_t& get_vertices_count() noexcept;
+
+		/// <summary>
+		/// Indices setter
+		/// </summary>
+		/// <returns>the indices count.</returns>
+		const size_t& get_indices_count() noexcept;
+
+		/// <summary>
+		/// Creates a new render of this node.
+		/// </summary>
+		void create_new_render(const std::int32_t render_type = RENDER_TEXTURE_ONLY,
+							   const ImageData texture_data = ImageData::invald_image_data());
 
 	public:
 		static void update(ClassPtr self);
@@ -265,6 +313,9 @@ namespace XPX::Renderer::DX11
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pMatrixBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pTextureView;
+
+	private:
 		std::vector<Color<float>> m_colorVectors;
 		std::vector<Vector<float>> m_arrayVerts;
 		std::vector<UINT> m_arrayIndices;
@@ -280,6 +331,7 @@ namespace XPX::Renderer::DX11
 		ShaderSystemD3D11* m_pColorShader;
 		DriverSystemD3D11* m_pDriver;
 		Details::VERTEX* m_pVertex;
+
 		size_t m_iIndices;
 		size_t m_iVertexCnt;
 		HRESULT m_hResult;
@@ -303,7 +355,7 @@ namespace XPX::Renderer::DX11
 	class XPLICIT_API CameraSystemD3D11 : public DriverCameraSystem
 	{
 	public:
-		CameraSystemD3D11() noexcept : DriverCameraSystem(), m_viewMatrix() {}
+		explicit CameraSystemD3D11() noexcept : DriverCameraSystem(), m_viewMatrix(), m_rotationMatrix() {}
 		~CameraSystemD3D11() override {}
 
 	public:

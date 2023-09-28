@@ -178,8 +178,6 @@ namespace XPX::Renderer::D2D
 			&rect,
 			pBrush.Get(),
 			stroke);
-
-		pBrush->Release();
 	}
 
 	void DriverSystemD2D::transform(const float x, const float y) noexcept

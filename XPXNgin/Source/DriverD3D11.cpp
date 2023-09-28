@@ -414,19 +414,23 @@ namespace XPX::Renderer::DX11
 			delete[] m_pVertex;
 	}
 
-	void RenderComponentD3D11::push(const Color<float>& vert)
+	void RenderComponentD3D11::push(const Color<float>& vert) noexcept
 	{
 		this->m_colorVectors.push_back(vert);
 	}
 
-	void RenderComponentD3D11::push(const Vector<float>& vert)
+	void RenderComponentD3D11::push(const Vector<float>& vert) noexcept
 	{
 		this->m_arrayVerts.push_back(vert);
 	}
 
-	void RenderComponentD3D11::push(const UINT& indice) { this->m_arrayIndices.push_back(indice); }
+	void RenderComponentD3D11::push(const UINT& indice) noexcept
+	{ 
+		this->m_arrayIndices.push_back(indice); 
+	}
 
-	void RenderComponentD3D11::create()
+	void RenderComponentD3D11::create_new_render(const std::int32_t render_type,
+		const ImageData texture_data)
 	{
 		if (m_arrayVerts.empty())
 			return;
@@ -489,6 +493,76 @@ namespace XPX::Renderer::DX11
 		path_vertex += L"Shaders/Vertex.hlsl";
 
 		m_pVertexShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", this->m_pDriver);
+		
+		if (render_type == RENDER_COLOR_ONLY)
+		{
+			D3D11_INPUT_ELEMENT_DESC input_layout[] = {
+						{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+						{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			};
+
+			const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
+
+			Details::ThrowIfFailed(m_pDriver->get().pDevice->CreateInputLayout(input_layout, layout_size,
+				m_pVertexShader->m_data.pBlob->GetBufferPointer(), m_pVertexShader->m_data.pBlob->GetBufferSize(),
+				&m_pVertexShader->m_data.pInputLayout));
+		}
+		else if (render_type == RENDER_TEXTURE_ONLY)
+		{
+			D3D11_INPUT_ELEMENT_DESC input_layout[] = {
+								{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+								{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			};
+
+			const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
+
+			Details::ThrowIfFailed(m_pDriver->get().pDevice->CreateInputLayout(input_layout, layout_size,
+				m_pVertexShader->m_data.pBlob->GetBufferPointer(), m_pVertexShader->m_data.pBlob->GetBufferSize(),
+				&m_pVertexShader->m_data.pInputLayout));
+
+			D3D11_TEXTURE2D_DESC textureDesc{};
+			textureDesc.Height = texture_data.iHeight;
+			textureDesc.Width = texture_data.iWidth;
+			textureDesc.MipLevels = 0;
+			textureDesc.ArraySize = 1;
+			textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			textureDesc.SampleDesc.Count = 1;
+			textureDesc.SampleDesc.Quality = 0;
+			textureDesc.Usage = D3D11_USAGE_DEFAULT;
+			textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+			textureDesc.CPUAccessFlags = 0;
+			textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+			ID3D11Texture2D* pImage = nullptr;
+
+			m_hResult = m_pDriver->get().pDevice->CreateTexture2D(&textureDesc, nullptr, &pImage);
+		
+			Details::ThrowIfFailed(m_hResult);
+
+			// applies to 32 bit images.
+			UINT row_pitch = (texture_data.iWidth * texture_data.iStride) * sizeof(BYTE);
+		
+			m_pDriver->get().pCtx->UpdateSubresource(pImage, 0, nullptr, texture_data.pImage, row_pitch, 0);
+
+			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+			
+			srvDesc.Format = textureDesc.Format;
+			srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			srvDesc.Texture2D.MostDetailedMip = 0;
+			srvDesc.Texture2D.MipLevels = -1;
+
+			m_hResult = m_pDriver->get().pDevice->CreateShaderResourceView(pImage, &srvDesc, m_pTextureView.GetAddressOf());
+
+			Details::ThrowIfFailed(m_hResult);
+
+			m_pDriver->get().pCtx->GenerateMips(m_pTextureView.Get());
+
+			XPLICIT_INFO("Texture has been loaded, don't forget to free the texture_data contents.");
+		}
+		else
+		{
+			throw EngineError("Invalid RenderComponent! Giving up");
+		}
 
 		UINT* indices = new UINT[m_arrayIndices.size()];
 		memset(indices, 0, m_arrayIndices.size());
@@ -589,9 +663,14 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
-	size_t RenderComponentD3D11::size() noexcept
+	const size_t& RenderComponentD3D11::get_vertices_count() noexcept
 	{
 		return m_iVertexCnt;
+	}
+
+	const size_t& RenderComponentD3D11::get_indices_count() noexcept
+	{
+		return m_iIndices;
 	}
 }
 

@@ -54,8 +54,6 @@ namespace XPX
 					H < 1)
 					return;
 
-				RENDERER_2D->begin_scene();
-
 				Rect rectangleRect{};
 
 				rectangleRect.bottom = X;
@@ -63,9 +61,8 @@ namespace XPX
 				rectangleRect.right = W;
 				rectangleRect.top = H;
 
-				RENDERER_2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 0.0f, BackgroundColor);
+				RENDERER_2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 1.0f, BackgroundColor);
 
-				RENDERER_2D->end_scene();
 			}
 
 			virtual bool in_region() noexcept

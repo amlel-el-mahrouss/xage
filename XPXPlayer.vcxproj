@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="NginData\Contents\Intercept.fbx" />
+    <None Include="NginData\Contents\Intercept.sdkmesh" />
     <None Include="NginData\Contents\Sedan.fbx" />
     <None Include="packages.config" />
   </ItemGroup>
