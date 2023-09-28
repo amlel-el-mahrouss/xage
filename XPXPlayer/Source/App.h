@@ -96,16 +96,16 @@ namespace XPX::Bites
 		};
 
 	public:
-		SettingsManager* leak_settings() const noexcept { return mSettings.get(); }
+		SettingsManager* leak_settings() const noexcept { return mSettings; }
 
 	private:
 		void setup_engine();
 		
 	private:
-		std::shared_ptr<Renderer::DX11::DriverSystemD3D11> mRenderer;
-		std::shared_ptr<Renderer::D2D::DriverSystemD2D> mRenderer2D;
-		std::shared_ptr<Bites::Win32Window> mRenderingWindow;
-		std::shared_ptr<SettingsManager> mSettings;
+		Renderer::DX11::DriverSystemD3D11* mRenderer;
+		Renderer::D2D::DriverSystemD2D* mRenderer2D;
+		Bites::Win32Window* mRenderingWindow;
+		SettingsManager* mSettings;
 
 	private:
 		String mPath;

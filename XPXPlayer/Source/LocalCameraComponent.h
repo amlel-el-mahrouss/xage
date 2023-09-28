@@ -13,6 +13,7 @@
 #include <NetworkComponent.h>
 
 #include <Root.h>
+#include <DriverD3D11.h>
 
 namespace XPX
 {

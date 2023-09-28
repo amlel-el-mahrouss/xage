@@ -42,7 +42,7 @@ namespace XPX::Bites
 		mPath = path;
 
 		//! Setup SettingsManager
-		mSettings = std::make_unique<SettingsManager>();
+		mSettings = new SettingsManager();
 		XPLICIT_ASSERT(mSettings);
 
 		SettingsManager::Traits traits;
@@ -71,14 +71,14 @@ namespace XPX::Bites
 			(*mSettings) << traits;
 		}
 
-		mRenderingWindow = std::make_unique<Win32Window>("XPX Advanced Game Engine", "XAGE", GetModuleHandle(nullptr));
+		mRenderingWindow = new Win32Window("XPX Advanced Game Engine", "XAGEWindowClass", GetModuleHandle(nullptr));
 		
-		mRenderer = std::make_unique<Renderer::DX11::DriverSystemD3D11>(mRenderingWindow->get().WindowHandle);
-		mRenderer2D = std::make_unique<Renderer::D2D::DriverSystemD2D>(mRenderer.get());
+		mRenderer = new Renderer::DX11::DriverSystemD3D11(mRenderingWindow->get().WindowHandle);
+		mRenderer2D = new Renderer::D2D::DriverSystemD2D(mRenderer);
 
 		Root::get_singleton_ptr()->Renderer = mRenderer;
 		Root::get_singleton_ptr()->Renderer2D = mRenderer2D;
-		Root::get_singleton_ptr()->Keyboard = std::make_unique<InputReceiver>();
+		Root::get_singleton_ptr()->Keyboard = new InputReceiver();
 		Root::get_singleton_ptr()->Window = mRenderingWindow;
 	}
 

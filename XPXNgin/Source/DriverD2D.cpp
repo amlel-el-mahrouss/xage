@@ -19,7 +19,7 @@
 namespace XPX::Renderer::D2D
 {
 	DriverSystemD2D::DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv)
-		: f_pDriver(drv), f_pRenderTarget(nullptr), f_pSurface(nullptr), f_pD3DTexture(nullptr)
+		: f_pRenderTarget(nullptr), f_pSurface(nullptr), f_pD3DTexture(nullptr)
 	{
 		HRESULT hr = S_OK;
 
@@ -32,8 +32,8 @@ namespace XPX::Renderer::D2D
 			texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 			texDesc.CPUAccessFlags = 0;
 			texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-			texDesc.Height = f_pDriver->get().SwapDesc.BufferDesc.Height;
-			texDesc.Width = f_pDriver->get().SwapDesc.BufferDesc.Width;
+			texDesc.Height = RENDERER->get().SwapDesc.BufferDesc.Height;
+			texDesc.Width = RENDERER->get().SwapDesc.BufferDesc.Width;
 			texDesc.MipLevels = 1;
 			texDesc.MiscFlags = 0;
 			texDesc.SampleDesc.Count = 1;
@@ -83,21 +83,6 @@ namespace XPX::Renderer::D2D
 	}
 
 	DriverSystemD2D::~DriverSystemD2D() = default;
-
-	void DriverSystemD2D::update()
-	{
-		this->begin_scene();
-
-		for (size_t i = 0; i < m_pViews.size(); ++i)
-		{
-			if (m_pViews[i])
-				(*m_pViews[i])(this);
-		}
-
-		this->end_scene();
-
-		m_pViews.clear();
-	}
 
 	void DriverSystemD2D::begin_scene()
 	{
@@ -187,8 +172,6 @@ namespace XPX::Renderer::D2D
 
 		f_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(x, y));
 	}
-
-	void DriverSystemD2D::queue(UIView* view) { m_pViews.push_back(view); }
 }
 
 #endif

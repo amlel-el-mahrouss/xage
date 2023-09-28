@@ -28,8 +28,7 @@
 
 namespace XPX
 {
-    typedef XPXAttribute* NpSceneNode;
-    typedef XPXAttribute NpSceneNodeType;
+    typedef XPXAttribute* NpNodePtr;
 
     class NPLICIT_API NpPhysicsEvent : public Event
     {
@@ -53,14 +52,14 @@ namespace XPX
         void operator()() override;
 
     public:
-        bool remove_node(NpSceneNode node);
-        bool insert_node(NpSceneNode node, int node_kind = NP_DYNAMIC);
+        bool remove_node(NpNodePtr node);
+        bool insert_node(NpNodePtr node, int node_kind = NP_DYNAMIC);
 
     private:
-        std::vector<NpSceneNode> mWorldNodes;
+        std::vector<NpNodePtr> mWorldNodes;
 
     };
 
-    NPLICIT_API bool NplicitAddGround(NpSceneNode node);
+    NPLICIT_API bool NplicitAddGround(NpNodePtr node);
 }
 

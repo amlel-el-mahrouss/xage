@@ -43,23 +43,8 @@ namespace XPX
 namespace XPX::Renderer::D2D
 {
 	class DriverSystemD2D;
-	class UIView;
-
 	struct BrushDescriptor;
 	struct OutlineDescriptor;
-
-	class UIView
-	{
-	public:
-		UIView() = default;
-		virtual ~UIView() = default;
-
-		UIView& operator=(const UIView&) = default;
-		UIView(const UIView&) = default;
-
-		virtual void operator()(DriverSystemD2D*) = 0;
-
-	};
 
 	class XPLICIT_API DriverSystemD2D final
 	{
@@ -71,11 +56,10 @@ namespace XPX::Renderer::D2D
 		DriverSystemD2D(const DriverSystemD2D&) = default;
 
 	public:
-		void update();
-		void end_scene();
 		void begin_scene();
-		void queue(UIView* view);
+		void end_scene();
 
+	public:
 		void transform(const float x = 0, 
 			const float y = 0) noexcept;
 
@@ -97,8 +81,6 @@ namespace XPX::Renderer::D2D
 		Microsoft::WRL::ComPtr<ID2D1Factory> f_pDirect2dFactory;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> f_pD3DTexture;
 		Microsoft::WRL::ComPtr<IDXGISurface> f_pSurface;
-		DX11::DriverSystemD3D11* f_pDriver;
-		std::vector<UIView*> m_pViews;
 
 	};
 }

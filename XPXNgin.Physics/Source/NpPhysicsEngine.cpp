@@ -313,7 +313,7 @@ namespace XPX
 		}
 	}
 
-	bool NpPhysicsEvent::insert_node(NpSceneNode node, int node_kind)
+	bool NpPhysicsEvent::insert_node(NpNodePtr node, int node_kind)
 	{
 		(void)node_kind;
 
@@ -353,7 +353,7 @@ namespace XPX
 		return false;
 	}
 
-	bool NpPhysicsEvent::remove_node(NpSceneNode node)
+	bool NpPhysicsEvent::remove_node(NpNodePtr node)
 	{
 		if (node)
 		{
@@ -386,7 +386,7 @@ namespace XPX
 		return false;
 	}
 
-	bool NplicitAddGround(NpSceneNode node)
+	bool NplicitAddGround(NpNodePtr node)
 	{
 		XPLICIT_ASSERT(node);
 

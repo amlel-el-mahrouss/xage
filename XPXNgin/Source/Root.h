@@ -12,10 +12,6 @@
 #include "NginCore.h"
 #include "HelperMacros.h"
 
-#include "DriverD3D11.h"
-#include "DriverD2D.h"
-#include "Bites.h"
-
 //! Helpers
 #define RENDERER_2D XPX::Root::get_singleton_ptr()->Renderer2D
 #define RENDERER XPX::Root::get_singleton_ptr()->Renderer
@@ -23,6 +19,24 @@
 
 namespace XPX
 {
+	namespace Renderer
+	{
+		namespace DX11
+		{
+			class DriverSystemD3D11;
+		}
+
+		namespace D2D
+		{
+			class DriverSystemD2D;
+		}
+	}
+
+	namespace Bites
+	{
+		class Win32Window;
+	}
+
 	enum
 	{
 		KEY_UNKNOWN = 0x0,
@@ -332,10 +346,10 @@ namespace XPX
 		}
 
 	public:
-		std::shared_ptr<Renderer::DX11::DriverSystemD3D11> Renderer;
-		std::shared_ptr<Renderer::D2D::DriverSystemD2D> Renderer2D;
-		std::shared_ptr<Bites::Win32Window> Window;
-		std::unique_ptr<InputReceiver> Keyboard;
+		Renderer::DX11::DriverSystemD3D11* Renderer;
+		Renderer::D2D::DriverSystemD2D* Renderer2D;
+		Bites::Win32Window* Window;
+		InputReceiver* Keyboard;
 
 	};
 }
