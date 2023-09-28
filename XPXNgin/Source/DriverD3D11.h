@@ -29,12 +29,12 @@
 
 #ifdef XPLICIT_DEBUG
 
-#include <nuklear/nuklear.h>
-#include <nuklear/nuklear_d3d11.h>
-#include <nuklear/nuklear_d3d11_pixel_shader.h>
-#include <nuklear/nuklear_d3d11_vertex_shader.h>
+#	include <nuklear/nuklear.h>
+#	include <nuklear/nuklear_d3d11.h>
+#	include <nuklear/nuklear_d3d11_pixel_shader.h>
+#	include <nuklear/nuklear_d3d11_vertex_shader.h>
 
-#include <nuklear/nuklear.h>
+#	include <nuklear/nuklear.h>
 
 #endif // XPLICIT_DEBUG
 
@@ -68,7 +68,7 @@ namespace XPX::Renderer::DX11
 			XMMATRIX PROJECTION;
 		};
 
-		void ThrowIfFailed(HRESULT hr);
+		XPLICIT_API void ThrowIfFailed(HRESULT hr);
 	}
 
 	namespace WRL = Microsoft::WRL;

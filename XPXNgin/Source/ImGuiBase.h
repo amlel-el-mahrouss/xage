@@ -135,21 +135,6 @@ namespace XPX
 				return fnt;
 			}
 
-			static FontPtr get_properties_font() noexcept
-			{
-				static FontPtr fnt = nullptr;
-
-				if (!fnt)
-				{
-					XPLICIT_GET_DATA_DIR_W(dir);
-					dir += L"UIFont14.spritefont";
-
-					fnt = get_font(dir.c_str());
-				}
-
-				return fnt;
-			}
-
 			static FontPtr get_label_font() noexcept
 			{
 				static FontPtr fnt = nullptr;
@@ -163,7 +148,19 @@ namespace XPX
 			static PString get_title_path() noexcept
 			{
 				XPLICIT_GET_DATA_DIR_W(dir);
-				dir += L"UIFont22.spritefont";
+				dir += L"Fonts/";
+				
+				dir += L"Urbanist22.spritefont";
+
+				return dir;
+			}
+
+			static PString get_font_path(const PChar* path) noexcept
+			{
+				XPLICIT_GET_DATA_DIR_W(dir);
+				dir += L"Fonts/";
+
+				dir += path;
 
 				return dir;
 			}
@@ -171,7 +168,9 @@ namespace XPX
 			static PString get_label_path() noexcept
 			{
 				XPLICIT_GET_DATA_DIR_W(dir);
-				dir += L"UIFont18.spritefont";
+				dir += L"Fonts/";
+
+				dir += L"Urbanist18.spritefont";
 
 				return dir;
 			}

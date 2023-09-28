@@ -151,6 +151,7 @@ namespace XPX::Bites
 		try
 		{
 			mINI::INIStructure ini;
+
 			if (!mIni->read(ini))
 				throw EngineError("File not found!");
 
