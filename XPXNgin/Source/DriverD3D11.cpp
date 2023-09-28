@@ -137,9 +137,9 @@ namespace XPX::Renderer::DX11
 
 		for (i = 0; i < numModes; i++)
 		{
-			if (displayModeList[i].Width == XPLICIT_MIN_WIDTH)
+			if (displayModeList[i].Width >= XPLICIT_MIN_WIDTH)
 			{
-				if (displayModeList[i].Height == XPLICIT_MIN_HEIGHT)
+				if (displayModeList[i].Height >= XPLICIT_MIN_HEIGHT)
 				{
 					numerator = displayModeList[i].RefreshRate.Numerator;
 					denominator = displayModeList[i].RefreshRate.Denominator;
@@ -179,7 +179,7 @@ namespace XPX::Renderer::DX11
 
 	void DriverSystemD3D11::setup_rendering_system()
 	{
-		UINT creationFlags = 0;
+		UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
 #if defined(XPLICIT_DEBUG)
 		// If the project is in a debug build, enable the debug layer.

@@ -76,9 +76,10 @@ namespace XPX::Bites
 		mRenderer = std::make_unique<Renderer::DX11::DriverSystemD3D11>(mRenderingWindow->get().WindowHandle);
 		mRenderer2D = std::make_unique<Renderer::D2D::DriverSystemD2D>(mRenderer.get());
 
-		Root::get_singleton_ptr()->set(mRenderer.get());
-		Root::get_singleton_ptr()->set(mRenderer2D.get());
-		Root::get_singleton_ptr()->set(new InputReceiver());
+		Root::get_singleton_ptr()->Renderer = mRenderer.get();
+		Root::get_singleton_ptr()->Renderer2D = mRenderer2D.get();
+		Root::get_singleton_ptr()->Keyboard = new InputReceiver();
+		Root::get_singleton_ptr()->Window = mRenderingWindow.get();
 	}
 
 	ApplicationManager::SettingsManager::SettingsManager()

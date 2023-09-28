@@ -95,6 +95,8 @@ namespace XPX::Renderer::D2D
 	public:
 		Microsoft::WRL::ComPtr<ID2D1RenderTarget> f_pRenderTarget;
 		Microsoft::WRL::ComPtr<ID2D1Factory> f_pDirect2dFactory;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> f_pD3DTexture;
+		Microsoft::WRL::ComPtr<IDXGISurface> f_pSurface;
 		DX11::DriverSystemD3D11* f_pDriver;
 		std::vector<UIView*> m_pViews;
 

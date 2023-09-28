@@ -14,37 +14,69 @@
 
 #ifdef XPLICIT_WINDOWS
 
+#include <comdef.h>
+
 namespace XPX::Renderer::D2D
 {
 	DriverSystemD2D::DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv)
-		: f_pDriver(drv)
+		: f_pDriver(drv), f_pRenderTarget(nullptr), f_pSurface(nullptr), f_pD3DTexture(nullptr)
 	{
 		HRESULT hr = S_OK;
 
-		D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, f_pDirect2dFactory.GetAddressOf());
-		XPLICIT_ASSERT(hr == S_OK);
-
+		hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, f_pDirect2dFactory.GetAddressOf());
+		
 		if (hr == S_OK)
 		{
-			Microsoft::WRL::ComPtr<IDXGISurface> surface;
-			hr = drv->get().pSwapChain->GetBuffer(0, __uuidof(IDXGISurface), (void**)surface.GetAddressOf());
+			D3D11_TEXTURE2D_DESC texDesc{};
+			texDesc.ArraySize = 1;
+			texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+			texDesc.CPUAccessFlags = 0;
+			texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+			texDesc.Height = f_pDriver->get().SwapDesc.BufferDesc.Height;
+			texDesc.Width = f_pDriver->get().SwapDesc.BufferDesc.Width;
+			texDesc.MipLevels = 1;
+			texDesc.MiscFlags = 0;
+			texDesc.SampleDesc.Count = 1;
+			texDesc.SampleDesc.Quality = 0;
+			texDesc.Usage = D3D11_USAGE_DEFAULT;
 
-			if (FAILED(hr))
-				throw EngineError();
-
-			D2D1_RENDER_TARGET_PROPERTIES renderProp =
-				D2D1::RenderTargetProperties(
-					D2D1_RENDER_TARGET_TYPE_DEFAULT,
-					D2D1::PixelFormat(DXGI_FORMAT_R32G32B32A32_UINT, D2D1_ALPHA_MODE_PREMULTIPLIED),
-					0,
-					0);
-
-			hr = f_pDirect2dFactory->CreateDxgiSurfaceRenderTarget(
-				surface.Get(),
-				renderProp,
-				f_pRenderTarget.GetAddressOf());
+			hr = drv->get().pDevice->CreateTexture2D(&texDesc, nullptr, f_pD3DTexture.GetAddressOf());
 
 			DX11::Details::ThrowIfFailed(hr);
+
+			f_pD3DTexture->QueryInterface(f_pSurface.GetAddressOf());
+
+			DX11::Details::ThrowIfFailed(hr);
+
+			D2D1_RENDER_TARGET_PROPERTIES renderProp{ D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT) };
+			renderProp.pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED);
+			float dpi = GetDpiForWindow(f_pDriver->get().pWindowHandle);
+
+			try
+			{
+				hr = f_pDirect2dFactory->CreateDxgiSurfaceRenderTarget(
+					f_pSurface.Get(),
+					renderProp,
+					f_pRenderTarget.GetAddressOf());
+
+				DX11::Details::ThrowIfFailed(hr);
+			}
+			catch (Win32Error& _)
+			{
+#ifdef XPLICIT_DEBUG
+
+				_com_error err(hr);
+
+				DialogHelper::message_box(L"XAGE",
+					L"Fatal error!",
+					err.ErrorMessage(),
+					TD_INFORMATION_ICON,
+					TDCBF_OK_BUTTON);
+
+#endif // ifdef XPLICIT_DEBUG
+
+				std::terminate();
+			}
 		}
 	}
 

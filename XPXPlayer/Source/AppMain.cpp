@@ -53,6 +53,8 @@ XPLICIT_MAIN()
 
 		while (ret != WM_QUIT)
 		{
+			ret = XPX::Root::get_singleton_ptr()->Window->update();
+
 			RENDERER->begin_scene(1, 0.0, 0.0, 0.0, true, true);
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();

@@ -14,6 +14,7 @@
 
 #include "DriverD3D11.h"
 #include "DriverD2D.h"
+#include "Bites.h"
 
 //! Helpers
 #define RENDERER_2D XPX::Root::get_singleton_ptr()->Renderer2D
@@ -331,27 +332,9 @@ namespace XPX
 		}
 
 	public:
-		void set(Renderer::DX11::DriverSystemD3D11* dev) noexcept
-		{
-			if (dev)
-				Renderer = dev;
-		}
-
-		void set(Renderer::D2D::DriverSystemD2D* dev) noexcept
-		{
-			if (dev)
-				Renderer2D = dev;
-		}
-
-		void set(InputReceiver* kb) noexcept
-		{
-			if (kb)
-				Keyboard = kb;
-		}
-
-	public:
 		Renderer::DX11::DriverSystemD3D11* Renderer;
 		Renderer::D2D::DriverSystemD2D* Renderer2D;
+		Bites::Win32Window* Window;
 		InputReceiver* Keyboard;
 
 	};
