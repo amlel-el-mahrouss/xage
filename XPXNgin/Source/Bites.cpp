@@ -107,7 +107,7 @@ namespace XPX::Bites
 		{
 			static MSG msg{ 0 };
 
-			if (GetMessage(&msg, mTraits.WindowHandle, 0, 0))
+			if (PeekMessage(&msg, mTraits.WindowHandle, 0, 0, PM_REMOVE))
 			{
 				TranslateMessage(&msg);
 				DispatchMessageA(&msg);

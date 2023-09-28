@@ -50,7 +50,9 @@ namespace XPX::Renderer::D2D
 
 			D2D1_RENDER_TARGET_PROPERTIES renderProp{ D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT) };
 			renderProp.pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED);
-			float dpi = GetDpiForWindow(f_pDriver->get().pWindowHandle);
+			
+			renderProp.dpiX = 96;
+			renderProp.dpiY = 96;
 
 			try
 			{

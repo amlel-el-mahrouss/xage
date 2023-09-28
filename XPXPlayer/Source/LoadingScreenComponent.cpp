@@ -30,7 +30,7 @@
 #include <Enums.h>
 #include <codecvt>
 
-#define XPLICIT_WAIT_FOR std::chrono::seconds(10)
+#define XPLICIT_WAIT_FOR std::chrono::seconds(1)
 
 namespace XPX
 {
