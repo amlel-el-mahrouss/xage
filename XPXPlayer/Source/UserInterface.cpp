@@ -146,7 +146,7 @@ namespace XPX
 		:
 		  mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		  mPublicHash(publicHash),
-		  mHealth(XPLICIT_DEFAULT_HEALTH),
+		  mHealth(XPX_DEFAULT_HEALTH),
 		  mHudFrame(new ImGUI::UIFrame()),
 		  mFrameParent(new ImGUI::UIFrame()),
 		  mSelectedSlot(-1)

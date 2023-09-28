@@ -13,24 +13,5 @@
 
 #include <CLua.hpp>
 
-#define XPLICIT_DEFAULT_HEALTH	(100)
-#define XPX_MAX_WEAPONS (9)
-
-namespace XPX
-{
-	enum COMPONENT_ID_ENUM : std::int32_t
-	{
-		COMPONENT_ID_INVALID = 0,
-		COMPONENT_ID_SCRIPT = 1,
-		COMPONENT_ID_ROXML = 2,
-		COMPONENT_ID_COUNT,
-		// NOTE: add more here, don't forget you can easily mod the engine with CLua.
-	};
-
-	enum
-	{
-		XPX_PART_ID,
-		XPX_MESH_ID,
-		XPX_SPHERE_ID,
-	};
-}
+#define XPX_DEFAULT_HEALTH	(100)
+#define XPX_MAX_WEAPONS		(9)

@@ -97,7 +97,7 @@ namespace XPX
 								!humanoids[peer]->get_peer())
 								continue;
 
-							humanoids[peer]->get_peer()->packet.health = XPLICIT_DEFAULT_HEALTH;
+							humanoids[peer]->get_peer()->packet.health = XPX_DEFAULT_HEALTH;
 							humanoids[peer]->get_peer()->packet.public_hash = humanoid->get_peer()->public_hash;
 						}
 

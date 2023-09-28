@@ -104,7 +104,6 @@
     <ClInclude Include="XPXNgin\Source\Config.h" />
     <ClInclude Include="XPXNgin\Source\Crc32.h" />
     <ClInclude Include="XPXNgin\Source\D3D11ShaderSystem.inl" />
-    <ClInclude Include="XPXNgin\Source\DataValue.h" />
     <ClInclude Include="XPXNgin\Source\DriverD2D.h" />
     <ClInclude Include="XPXNgin\Source\DriverD3D11.h" />
     <ClInclude Include="XPXNgin\Source\DriverD3D11.inl" />

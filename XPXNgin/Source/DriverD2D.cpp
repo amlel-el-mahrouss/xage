@@ -17,7 +17,7 @@
 namespace XPX::Renderer::D2D
 {
 	DriverSystemD2D::DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv)
-		: f_pDriver(drv), f_pTexture(nullptr), f_pDxgiSurface(nullptr)
+		: f_pDriver(drv)
 	{
 		HRESULT hr = S_OK;
 
@@ -48,14 +48,7 @@ namespace XPX::Renderer::D2D
 		}
 	}
 
-	DriverSystemD2D::~DriverSystemD2D() 
-	{
-		if (f_pTexture)
-			f_pTexture->Release();
-
-		if (f_pDxgiSurface)
-			f_pDxgiSurface->Release();
-	}
+	DriverSystemD2D::~DriverSystemD2D() = default;
 
 	void DriverSystemD2D::update()
 	{

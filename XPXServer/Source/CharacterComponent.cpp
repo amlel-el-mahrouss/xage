@@ -62,7 +62,7 @@ namespace XPX
 
 		if (self->get_health() < 1)
 		{
-			self->set_health(XPLICIT_DEFAULT_HEALTH);
+			self->set_health(XPX_DEFAULT_HEALTH);
 			self->set_state(HUMANOID_STATE::ALIVE);
 			self->can_spawn(true);
 		}
