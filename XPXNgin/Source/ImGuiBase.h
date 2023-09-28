@@ -18,6 +18,10 @@
 
 #include <SpriteFont.h>
 
+#include <CommonStates.h>
+#include <VertexTypes.h>
+#include <PrimitiveBatch.h>
+
 #define imgui_slots public
 
 namespace XPX
@@ -30,12 +34,18 @@ namespace XPX
 		class XPLICIT_API UIFrame final
 		{
 		public:
-			explicit UIFrame() : SpriteBatch(std::make_unique<DirectX::SpriteBatch>(RENDERER->get().pCtx.Get())) {}
+			explicit UIFrame() 
+				:
+				SpriteBatch(std::make_unique<DirectX::SpriteBatch>(RENDERER->get().pCtx.Get()))
+			{}
+
 			~UIFrame() = default;
 
 		public:
 			XPLICIT_COPY_DEFAULT(UIFrame);
 
+		//! reserved for usage inside ImGUI.
+		//! do not user externally.
 		imgui_slots:
 			std::unique_ptr<DirectX::SpriteBatch> SpriteBatch;
 
@@ -57,8 +67,6 @@ namespace XPX
 					H < 1)
 					return;
 
-				this->SpriteBatch->Begin();
-
 				Rect rectangleRect{};
 
 				rectangleRect.left = X;
@@ -67,8 +75,6 @@ namespace XPX
 				rectangleRect.bottom = H;
 
 				RENDERER_2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 1.0f, BackgroundColor);
-
-				this->SpriteBatch->End();
 			}
 
 			virtual bool in_region() noexcept
