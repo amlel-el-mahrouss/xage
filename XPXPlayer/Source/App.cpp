@@ -33,7 +33,7 @@ namespace XPX::Bites
 		loading_screen->connect(xconnect_to);
 	}
 
-	ApplicationManager::~ApplicationManager() {}
+	ApplicationManager::~ApplicationManager() = default;
 
 	void ApplicationManager::setup_engine()
 	{
@@ -76,10 +76,10 @@ namespace XPX::Bites
 		mRenderer = std::make_unique<Renderer::DX11::DriverSystemD3D11>(mRenderingWindow->get().WindowHandle);
 		mRenderer2D = std::make_unique<Renderer::D2D::DriverSystemD2D>(mRenderer.get());
 
-		Root::get_singleton_ptr()->Renderer = mRenderer.get();
-		Root::get_singleton_ptr()->Renderer2D = mRenderer2D.get();
-		Root::get_singleton_ptr()->Keyboard = new InputReceiver();
-		Root::get_singleton_ptr()->Window = mRenderingWindow.get();
+		Root::get_singleton_ptr()->Renderer = mRenderer;
+		Root::get_singleton_ptr()->Renderer2D = mRenderer2D;
+		Root::get_singleton_ptr()->Keyboard = std::make_unique<InputReceiver>();
+		Root::get_singleton_ptr()->Window = mRenderingWindow;
 	}
 
 	ApplicationManager::SettingsManager::SettingsManager()

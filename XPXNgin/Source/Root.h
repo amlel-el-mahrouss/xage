@@ -311,10 +311,14 @@ namespace XPX
 		Root() noexcept
 			: 
 			Keyboard(nullptr), 
-			Renderer(nullptr)
-		{}
+			Renderer(nullptr),
+			Renderer2D(nullptr),
+			Window(nullptr)
+		{
 
-		~Root() noexcept {}
+		}
+
+		~Root() noexcept = default;
 
 	public:
 		Root& operator=(const Root&) = default;
@@ -332,10 +336,10 @@ namespace XPX
 		}
 
 	public:
-		Renderer::DX11::DriverSystemD3D11* Renderer;
-		Renderer::D2D::DriverSystemD2D* Renderer2D;
-		Bites::Win32Window* Window;
-		InputReceiver* Keyboard;
+		std::shared_ptr<Renderer::DX11::DriverSystemD3D11> Renderer;
+		std::shared_ptr<Renderer::D2D::DriverSystemD2D> Renderer2D;
+		std::shared_ptr<Bites::Win32Window> Window;
+		std::unique_ptr<InputReceiver> Keyboard;
 
 	};
 }
