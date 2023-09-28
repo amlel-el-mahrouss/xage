@@ -110,30 +110,25 @@ namespace XPX
 				mNetwork->get(peer_idx)->status == NETWORK_STAT_STASIS)
 				continue;
 
-			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
-			{
-				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] = NETWORK_CMD_SPAWN;
-
-				mNetwork->get(peer_idx)->packet.hash = mNetwork->get(peer_idx)->hash;
-				mNetwork->get(peer_idx)->packet.size = sizeof(NetworkPacket);
-
-				memset(mNetwork->get(peer_idx)->packet.additional_data, 0, XPLICIT_NETWORK_BUF_SZ);
-
-				memcpy(mNetwork->get(peer_idx)->packet.additional_data,
-					mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
-					mNetwork->get(peer_idx)->xplicit_id.as_string().size());
-
-				NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
-			}
-
-			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN)
+			if (mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] == NETWORK_CMD_BEGIN &&
+				mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACK] == NETWORK_CMD_ACK)
 			{
 				if (CharacterComponent* player = mPlayers[mPlayerCount]; 
 					XplicitHandleJoin(mNetwork->get(peer_idx), player, mNetwork))
 				{
 					mNetwork->get(peer_idx)->ip_address = address_to_string(mNetwork->get(peer_idx));
 					mNetwork->get(peer_idx)->status = NETWORK_STAT_CONNECTED;
+
 					mNetwork->get(peer_idx)->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
+					
+					mNetwork->get(peer_idx)->packet.hash = mNetwork->get(peer_idx)->hash;
+					mNetwork->get(peer_idx)->packet.size = sizeof(NetworkPacket);
+
+					memset(mNetwork->get(peer_idx)->packet.additional_data, 0, XPLICIT_NETWORK_BUF_SZ);
+
+					memcpy(mNetwork->get(peer_idx)->packet.additional_data,
+						mNetwork->get(peer_idx)->xplicit_id.as_string().c_str(),
+						mNetwork->get(peer_idx)->xplicit_id.as_string().size());
 
 					++mPlayerCount;
 
@@ -141,7 +136,7 @@ namespace XPX
 					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
-					NetworkServerContext::send_all(mNetwork);
+					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
 				}
 			}
 		}

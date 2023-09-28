@@ -49,20 +49,35 @@ XPLICIT_MAIN()
 
 		XPX::String cmd_line = pCmdLine;
 
+		if (cmd_line.empty() ||
+			cmd_line.find(XPLICIT_XCONNECT_PROTOCOL) == XPX::String::npos)
+			return 1;
+
+		cmd_line = cmd_line.erase(cmd_line.find(XPLICIT_XCONNECT_PROTOCOL), strlen(XPLICIT_XCONNECT_PROTOCOL));
+
+		uri /= cmd_line;
+
+		XPX::Utils::InternetProtocolChecker checker;
+
+		if (!checker(uri.get().c_str()))
+			return 1;
+
 		XPX::Bites::ApplicationManager manager(uri);
 
 		while (ret != WM_QUIT)
 		{
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
-			RENDERER->begin_scene(1, 0.0, 0.0, 0.0, true, true);
+			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.0, 0.0, 0.0, true, true);
+			XPX::Root::get_singleton_ptr()->Renderer2D->begin_scene();
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
 
-			RENDERER->end_scene();
+			XPX::Root::get_singleton_ptr()->Renderer2D->end_scene();
+			XPX::Root::get_singleton_ptr()->Renderer->end_scene();
 
-			KEYBOARD->reset();
+			XPX::Root::get_singleton_ptr()->Keyboard->reset();
 		}
 	}
 	catch (XPX::EngineError& err)

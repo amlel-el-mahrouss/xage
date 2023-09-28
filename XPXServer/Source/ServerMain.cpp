@@ -151,8 +151,6 @@ int main(int argc, char** argv)
 
 #endif // XPLICIT_WINDOWS
 
-		XPLICIT_PLACE_ID = argv[2];
-
 		NPLICIT_SPLASH_SCREEN;
 
 		XPX::Thread job(XplicitLoadShell);

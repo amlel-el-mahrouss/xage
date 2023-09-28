@@ -30,7 +30,7 @@
 #include <Enums.h>
 #include <codecvt>
 
-#define XPLICIT_WAIT_FOR std::chrono::seconds(5)
+#define XPLICIT_WAIT_FOR std::chrono::seconds(10)
 
 namespace XPX
 {
@@ -57,13 +57,15 @@ namespace XPX
         if (!LoadingScreenComponent::StartLoad)
             return;
 
-        auto* self = (LoadingScreenComponent*)class_ptr;
+        auto self = (LoadingScreenComponent*)class_ptr;
 
         if (!self ||
             !self->mNetwork) return;
 
         NetworkPacket packet{};
-        self->mNetwork->read(packet);
+
+        if (!self->mNetwork->read(packet))
+            return;
 
         if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
         {
@@ -81,9 +83,6 @@ namespace XPX
 
         if (packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] == NETWORK_CMD_ACCEPT)
         {
-            packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
-            packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_INVALID;
-
             auto hash = packet.hash;
             auto public_hash = packet.public_hash;
 
@@ -102,25 +101,17 @@ namespace XPX
 
             monitor->HTTP = std::make_unique<XHTTPManager>();
             monitor->HTTP->set_endpoint(monitor->Endpoint);
+
+            EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(hash);
+            EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
+
+            ComponentSystem::get_singleton_ptr()->add<LocalCharacterComponent>(public_hash, true);
+            ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
+
+            StartLoad = false;
         }
         else
         {
-            if (packet.cmd[XPLICIT_NETWORK_CMD_SPAWN] == NETWORK_CMD_SPAWN)
-            {
-                packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_INVALID;
-
-                auto hash = packet.hash;
-                auto public_hash = packet.public_hash;
-
-                EventSystem::get_singleton_ptr()->add<LocalHumanoidMoveEvent>(hash);
-                EventSystem::get_singleton_ptr()->add<LocalMenuEvent>();
-
-                ComponentSystem::get_singleton_ptr()->add<LocalCharacterComponent>(public_hash, true);
-                ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
-                
-                StartLoad = false;
-            }
-
             //! peek after the ++timeout, or retry
             if (self->mTimeout >= XPLICIT_TIMEOUT)
             {
@@ -154,6 +145,8 @@ namespace XPX
         if (mNetwork->connect(ip.get().c_str(), ip.port().c_str()))
         {
             Thread thrd([&]() {
+                NetworkPacket login_packet{};
+
                 while (StartLoad)
                 {
                     if (!mNetwork)
@@ -162,12 +155,11 @@ namespace XPX
                         return;
                     }
 
-                    NetworkPacket spawn{};
+                    login_packet.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
+                    login_packet.cmd[XPLICIT_NETWORK_CMD_ACK] = NETWORK_CMD_ACK;
+                    login_packet.size = sizeof(NetworkPacket);
 
-                    spawn.cmd[XPLICIT_NETWORK_CMD_BEGIN] = NETWORK_CMD_BEGIN;
-                    spawn.size = sizeof(NetworkPacket);
-
-                    mNetwork->send(spawn);
+                    mNetwork->send(login_packet);
 
                     std::this_thread::sleep_for(XPLICIT_WAIT_FOR);
                     ++this->mTimeout;

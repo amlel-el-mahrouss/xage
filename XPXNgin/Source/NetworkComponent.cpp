@@ -158,7 +158,7 @@ namespace XPX
 	{
 		mReset = false;
 
-		NetworkPacket pckt;
+		NetworkPacket pckt{};
 
 		socklen_t len = sizeof(PrivateAddressData);
 
