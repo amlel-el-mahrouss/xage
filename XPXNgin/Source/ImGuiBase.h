@@ -30,11 +30,14 @@ namespace XPX
 		class XPLICIT_API UIFrame final
 		{
 		public:
-			explicit UIFrame() = default;
+			explicit UIFrame() : SpriteBatch(std::make_unique<DirectX::SpriteBatch>(RENDERER->get().pCtx.Get())) {}
 			~UIFrame() = default;
 
 		public:
 			XPLICIT_COPY_DEFAULT(UIFrame);
+
+		imgui_slots:
+			std::unique_ptr<DirectX::SpriteBatch> SpriteBatch;
 
 		imgui_slots:
 			ImColor BackgroundHoverColor{ 0xA7, 0x0C, 0x0C, 0x0C };
@@ -54,6 +57,8 @@ namespace XPX
 					H < 1)
 					return;
 
+				this->SpriteBatch->Begin();
+
 				Rect rectangleRect{};
 
 				rectangleRect.left = X;
@@ -63,6 +68,7 @@ namespace XPX
 
 				RENDERER_2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 1.0f, BackgroundColor);
 
+				this->SpriteBatch->End();
 			}
 
 			virtual bool in_region() noexcept

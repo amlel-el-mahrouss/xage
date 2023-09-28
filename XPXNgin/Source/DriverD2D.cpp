@@ -51,8 +51,8 @@ namespace XPX::Renderer::D2D
 			D2D1_RENDER_TARGET_PROPERTIES renderProp{ D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT) };
 			renderProp.pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED);
 			
-			renderProp.dpiX = 96;
-			renderProp.dpiY = 96;
+			renderProp.dpiX = 0;
+			renderProp.dpiY = 0;
 
 			try
 			{

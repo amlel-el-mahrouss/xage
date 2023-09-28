@@ -118,11 +118,7 @@ namespace XPX
 
 	NetworkPeer* CharacterComponent::get_peer() const noexcept { return mPeer; }
 
-	void CharacterComponent::set_peer(NetworkPeer* peer) noexcept 
-	{	
-		if (peer)
-			mPeer = peer;
-	}
+	void CharacterComponent::set_peer(NetworkPeer* peer) noexcept { mPeer = peer; }
 
 	bool CharacterComponent::can_spawn() const noexcept { return mCanSpawn; }
 

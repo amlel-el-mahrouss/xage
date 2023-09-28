@@ -60,6 +60,23 @@ namespace XPX::ImGUI
 			m_pFrame->update(m_pFrame->BackgroundColor);
 		}
 
+		m_pFrame->SpriteBatch->Begin();
+
+		auto origin = m_pFont->MeasureString(mText.c_str()) / m_pFrame->H;
+
+		auto pos = XMFLOAT2(m_pFrame->X, m_pFrame->Y);
+
+		XMFLOAT4 clr(m_pFrame->TextColor.R, m_pFrame->TextColor.G, m_pFrame->TextColor.B, m_pFrame->TextColor.A);
+
+		m_pFont->DrawString(m_pFrame->SpriteBatch.get(),
+			mText.c_str(),
+			XMLoadFloat2(&pos),
+			XMLoadFloat4(&clr),
+			0.f, origin);
+
+		
+		m_pFrame->SpriteBatch->End();
+
 		if (m_iFadeIn < 255)
 			++m_iFadeIn;
 	}
