@@ -73,7 +73,7 @@ namespace XPX::Renderer::DX11
 
 	ShaderSystemD3D11::ShaderTraits& ShaderSystemD3D11::get() { return m_data; }
 
-	void ShaderSystemD3D11::update_cbuf(RenderComponentD3D11* component)
+	void ShaderSystemD3D11::update_cbuf(ColorRenderComponentD3D11* component)
 	{
 		if (!component)
 			return;
@@ -108,7 +108,7 @@ namespace XPX::Renderer::DX11
 		component->m_pDriver->get().pCtx->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
 	}
 
-	void ShaderSystemD3D11::update(RenderComponentD3D11* component)
+	void ShaderSystemD3D11::update(ColorRenderComponentD3D11* component)
 	{
 		if (!component)
 			return;

@@ -97,8 +97,6 @@ namespace XPX::Renderer::D2D
 		if (!f_pRenderTarget)
 			return;
 
-		f_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Scale(f_pRenderTarget->GetSize()));
-
 		HRESULT hr = f_pRenderTarget->EndDraw();
 		XPLICIT_ASSERT(SUCCEEDED(hr));
 	}
@@ -126,8 +124,6 @@ namespace XPX::Renderer::D2D
 			pBrush.Get(),
 			stroke
 		);
-
-		pBrush->Release();
 	}
 
 	void DriverSystemD2D::draw_rectangle(

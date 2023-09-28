@@ -18,10 +18,6 @@
 
 #include <SpriteFont.h>
 
-#include <CommonStates.h>
-#include <VertexTypes.h>
-#include <PrimitiveBatch.h>
-
 #define imgui_slots public
 
 namespace XPX

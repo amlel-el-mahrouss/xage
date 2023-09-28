@@ -30,6 +30,15 @@ namespace XPX
 				fclose(mIf);
 		}
 
+		const String operator>>(const std::size_t& sz) noexcept
+		{
+			String buf;
+			buf.reserve(sz);
+			fread(buf.data(), sz, 2, mIf);
+		
+			return buf;
+		}
+
 	public:
 		XPLICIT_COPY_DEFAULT(IFileReader);
 
@@ -41,10 +50,34 @@ namespace XPX
 
 	};
 
-	enum
+	class IFileWriter final
 	{
-		FILE_FORMAT_RIFF,
-		FILE_FORMAT_PBM, // XAR CONTAINER FOR PBR MODELS /w TEXTURES.
-		FILE_FORMAT_ROXML, // Mesh RXML.
+	public:
+		explicit IFileWriter(const char* path)
+			: mIf(fopen(path, "rb"))
+		{
+			XPLICIT_ASSERT(mIf);
+		}
+
+		virtual ~IFileWriter() noexcept
+		{
+			if (mIf)
+				fclose(mIf);
+		}
+
+		bool operator<<(const String& str) noexcept
+		{
+			return fwrite(str.data(), str.size() - 1, 2, mIf) == str.size() - 1;
+		}
+
+	public:
+		XPLICIT_COPY_DEFAULT(IFileWriter);
+
+	public:
+		const char* xmime() { return "format:*/none"; }
+
+	protected:
+		FILE* mIf;
+
 	};
 }

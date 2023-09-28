@@ -112,7 +112,7 @@
     <ClInclude Include="XPXNgin\Source\DriverVulkan.h" />
     <ClInclude Include="XPXNgin\Source\Event.h" />
     <ClInclude Include="XPXNgin\Source\Event.inl" />
-    <ClInclude Include="XPXNgin\Source\File.h" />
+    <ClInclude Include="XPXNgin\Source\FileIO.h" />
     <ClInclude Include="XPXNgin\Source\GLad.h" />
     <ClInclude Include="XPXNgin\Source\GameVar.h" />
     <ClInclude Include="XPXNgin\Source\HelperMacros.h" />
