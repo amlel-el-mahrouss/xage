@@ -17,18 +17,15 @@
 #include "NginCore.h"
 #include "Avx.h"
 
-#include <NplicitNgine.h>
-
 #ifdef XPLICIT_WINDOWS
 
-#include <wrl.h> /* Microsoft::WRL::ComPtr */
-#include <dxgi.h>
-#include <d3d11.h>
-#include <d3dcommon.h>
-#include <DirectXMath.h>
+#	include <wrl.h> /* Microsoft::WRL::ComPtr */
+#	include <dxgi.h>
+#	include <d3d11.h>
+#	include <d3dcommon.h>
+#	include <DirectXMath.h>
 
-#include <Effects.h>
-#include <DirectXHelpers.h>
+#	include <Effects.h>
 
 #ifdef XPLICIT_DEBUG
 
@@ -123,8 +120,6 @@ namespace XPX::Renderer::DX11
 			std::unique_ptr<CameraSystemD3D11> pCamera;
 			WRL::ComPtr<ID3D11InputLayout> pInputLayout;
 			WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
-			std::unique_ptr<PBREffect> pPBREffect;
-			std::unique_ptr<SkinnedPBREffect> pSkinnedPBR;
 
 		};
 

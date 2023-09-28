@@ -14,8 +14,7 @@
 // fields: FOV, DefaultCameraStyle, Inherits from XPXAttribute.
 
 #include "LocalCameraComponent.h"
-#include "ClientFX.h"
-#include "MenuUI.h"
+#include "UserInterface.h"
 #include "App.h"
 
 namespace XPX
@@ -28,8 +27,6 @@ namespace XPX
 	{
 		Renderer::DX11::CameraSystemD3D11* camD3d11 = ((Renderer::DX11::DriverSystemD3D11*)RENDERER)->get().pCamera.get();
 		XPLICIT_ASSERT(camD3d11);
-
-		camD3d11->set_position(XPLICIT_ORIGIN);
 
 		mCamera = camD3d11;
 	}

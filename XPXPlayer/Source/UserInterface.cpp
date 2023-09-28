@@ -11,7 +11,7 @@
  @file
  */
 
-#include "MenuUI.h"
+#include "UserInterface.h"
 #include "App.h"
 
 static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
@@ -28,7 +28,8 @@ namespace XPX
 			mPopupId(id),
 			mHudFrame(new ImGUI::UIFrame()),
 			mOk(L"Leave"),
-			mTitle(L"Disconnected")
+			mTitle(L"Disconnected"),
+			m_pSpriteBatch(nullptr)
 	{
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
@@ -87,26 +88,42 @@ namespace XPX
 	
 	PopupComponent::~PopupComponent()
 	{
+		if (m_pSpriteBatch)
+			m_pSpriteBatch.reset();
+
 		delete mHudFrame;
 	}
 	
+	bool PopupComponent::should_update() noexcept { return true; }
+
 	void PopupComponent::update(ClassPtr class_ptr)
 	{
 		auto* self = static_cast<PopupComponent*>(class_ptr);
 
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
-		//ImGUI::UIFontHelper::get_label_font()->draw(self->mTitle.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 30),
-		//	Vec(0, 0)), 
-		//	self->mHudFrame->TextColor, 
-		//	true, 
-		//	true);
+		self->m_pSpriteBatch->Begin();
 
-		//ImGUI::UIFontHelper::get_label_font()->draw(self->mText.c_str(), recti(vector2di(((self->mHudFrame->X + self->mHudFrame->W / 2)), self->mHudFrame->Y + 100),
-		//	dimension2d(0, 0)),
-		//	self->mHudFrame->TextColor,
-		//	true,
-		//	true);
+		XMFLOAT2 pos(self->mHudFrame->X, self->mHudFrame->Y);
+		XMFLOAT4 clr(self->mHudFrame->TextColor.R, self->mHudFrame->TextColor.G, self->mHudFrame->TextColor.B, self->mHudFrame->TextColor.A);
+
+		auto origin = ImGUI::UIFontHelper::get_label_font()->MeasureString(self->mTitle.c_str()) / 2.f;
+
+		ImGUI::UIFontHelper::get_label_font()->DrawString(self->m_pSpriteBatch.get(),
+			self->mTitle.c_str(),
+			XMLoadFloat2(&pos),
+			XMLoadFloat4(&clr),
+			0.f, origin);
+
+		origin = ImGUI::UIFontHelper::get_label_font()->MeasureString(self->mText.c_str()) / 2.f;
+
+		ImGUI::UIFontHelper::get_label_font()->DrawString(self->m_pSpriteBatch.get(),
+			self->mText.c_str(),
+			XMLoadFloat2(&pos),
+			XMLoadFloat4(&clr),
+			0.f, origin);
+
+		self->m_pSpriteBatch->End();
 
 		self->mOk.update();
 
@@ -155,8 +172,11 @@ namespace XPX
 		mHudFrame->X = 10;
 		mHudFrame->Y = 10;
 
+		RECT rect{};
+		GetClientRect(RENDERER->get().pWindowHandle, &rect);
+
 		mFrameParent->H = 30;
-		//mFrameParent->W = RENDERER->getVideoDriver()->getScreenSize().Width;
+		mFrameParent->W = rect.right - rect.left;
 
 		mFrameParent->BackgroundHoverColor.A = (50);
 
@@ -164,7 +184,7 @@ namespace XPX
 		mFrameParent->Y = 0;
 
 		std::size_t x_off = 10UL;
-		//std::size_t y_off = RENDERER->getVideoDriver()->getScreenSize().Height - 74UL;
+		std::size_t y_off = rect.bottom - rect.top;
 
 		for (auto & mInventorySlot : mInventorySlots)
 		{
@@ -173,7 +193,7 @@ namespace XPX
 
 			mInventorySlot.W = mInventorySlot.H = 64;
 			mInventorySlot.X = x_off;
-			//mInventorySlot.Y = y_off;
+			mInventorySlot.Y = y_off;
 
 			x_off += 68UL;
 		}
@@ -219,10 +239,6 @@ namespace XPX
 
 				self->mInventorySlots[i].update(self->mInventorySlots[i].BackgroundHoverColor);
 			}
-			else
-			{
-				self->mInventorySlots[i].update(self->mInventorySlots[i].BackgroundColor);
-			}
 
 			if (self->mSelectedSlot == i)
 			{
@@ -233,9 +249,13 @@ namespace XPX
 
 				self->mNetwork->get().cmd[XPLICIT_NETWORK_CMD_SLOT] = NETWORK_CMD_INVALID;
 
-				//RENDERER->getVideoDriver()->draw2DRectangleOutline(recti(vector2di(self->mInventorySlots[i].X , self->mInventorySlots[i].Y),
-				//	dimension2di(self->mInventorySlots[i].W, self->mInventorySlots[i].H)), irr::video::SColor(255, 0x00, 0x94, 0xFF));
+				self->mInventorySlots[i].update(self->mInventorySlots[i].BackgroundHoverColor);
 			}
+			else
+			{
+				self->mInventorySlots[i].update(self->mInventorySlots[i].BackgroundColor);
+			}
+
 		}
 
 		self->mFrameParent->update(self->mFrameParent->BackgroundHoverColor);

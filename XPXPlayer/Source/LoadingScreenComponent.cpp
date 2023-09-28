@@ -23,14 +23,11 @@
 #include "LoadingScreenComponent.h"
 
 #include "LocalMenuEvent.h"
-#include "ClientFX.h"
-#include "MenuUI.h"
+#include "UserInterface.h"
 #include "App.h"
 
 #include <XHTTPManager.h>
 #include <Enums.h>
-#include <CLua.hpp>
-#include <RXML.h>
 #include <codecvt>
 
 #define XPLICIT_WAIT_FOR std::chrono::seconds(5)
@@ -49,7 +46,6 @@ namespace XPX
         mTimeout(0)
     {
         LocalCameraComponent* cam = ComponentSystem::get_singleton_ptr()->add<LocalCameraComponent>();
-        LoadSkybox("noonclouds");
     }
 
     LoadingScreenComponent::~LoadingScreenComponent() = default;

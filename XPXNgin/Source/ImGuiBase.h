@@ -121,7 +121,7 @@ namespace XPX
 
 			static FontPtr get_font(const PChar* path) 
 			{
-				return std::make_unique<DirectX::SpriteFont>(RENDERER->get().pDevice, path, true);
+				return std::make_unique<DirectX::SpriteFont>(RENDERER->get().pDevice.Get(), path, true);
 			}
 
 		public:

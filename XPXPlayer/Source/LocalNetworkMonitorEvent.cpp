@@ -14,7 +14,7 @@
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalCharacterComponent.h"
 #include "App.h"
-#include "MenuUI.h"
+#include "UserInterface.h"
 
 #define XPX_MAX_TIMEOUT_MACRO (250)
 

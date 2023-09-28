@@ -49,8 +49,8 @@ namespace XPX
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 
-		static bool should_update() { return true;  }
-		static void update(void* class_ptr);
+		static bool should_update() noexcept;
+		static void update(ClassPtr class_ptr);
 		
 	private:
 		using FunctionPopup = std::function<void()>;
@@ -59,6 +59,10 @@ namespace XPX
 		BasicString<PChar> mTitle;
 		BasicString<PChar> mText;
 
+	private:
+		std::unique_ptr<DirectX::SpriteBatch> m_pSpriteBatch;
+
+	private:
 		ImGUI::UIFrame* mHudFrame;
 		ImGUI::UIButton mOk;
 

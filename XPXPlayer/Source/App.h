@@ -102,6 +102,9 @@ namespace XPX::Bites
 		void setup_engine();
 		
 	private:
+		std::unique_ptr<Renderer::DX11::DriverSystemD3D11> mRenderer;
+		std::unique_ptr<Renderer::D2D::DriverSystemD2D> mRenderer2D;
+		std::unique_ptr<Bites::Win32Window> mRenderingWindow;
 		std::unique_ptr<SettingsManager> mSettings;
 
 	private:

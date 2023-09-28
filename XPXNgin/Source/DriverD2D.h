@@ -75,21 +75,30 @@ namespace XPX::Renderer::D2D
 		void end_scene();
 		void begin_scene();
 		void queue(UIView* view);
-		void transform(const float x = 0, const float y = 0) noexcept;
-		void draw_line(const float x1, const float y1, const float x2, const float y2, const float stroke = 1.f) noexcept;
-		void draw_rectangle(const Rect rct, const float radiusX = 0, const float radiusY = 0, const float stroke = 1.f,
+
+		void transform(const float x = 0, 
+			const float y = 0) noexcept;
+
+		void draw_line(const float x1,
+			const float y1, 
+			const float x2, 
+			const float y2, 
+			const float stroke = 1.f,
 			const Color<float> clr = Color<float>(0, 0, 0, 1)) noexcept;
 
-	private:
-		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_pGhostWhiteBrush;
-		Microsoft::WRL::ComPtr<ID2D1RenderTarget> m_pRenderTarget;
-		Microsoft::WRL::ComPtr<ID2D1Factory> m_pDirect2dFactory;
-		DX11::DriverSystemD3D11* m_pDriver;
+		void draw_rectangle(const Rect rct,
+			const float radiusX = 0, 
+			const float radiusY = 0, 
+			const float stroke = 1.f,
+			const Color<float> clr = Color<float>(0, 0, 0, 1)) noexcept;
 
-		//! bad!!!!!!!!!
-		//! cpu cache will cry!!!!!
-
+	public:
+		Microsoft::WRL::ComPtr<ID2D1RenderTarget> f_pRenderTarget;
+		Microsoft::WRL::ComPtr<ID2D1Factory> f_pDirect2dFactory;
+		DX11::DriverSystemD3D11* f_pDriver;
+		IDXGISurface* f_pDxgiSurface;
 		std::vector<UIView*> m_pViews;
+		ID3D11Texture2D* f_pTexture;
 
 	};
 }

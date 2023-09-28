@@ -17,11 +17,11 @@
 namespace XPX::Renderer::D2D
 {
 	DriverSystemD2D::DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv)
-		: m_pDriver(drv)
+		: f_pDriver(drv), f_pTexture(nullptr), f_pDxgiSurface(nullptr)
 	{
 		HRESULT hr = S_OK;
 
-		D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, m_pDirect2dFactory.GetAddressOf());
+		D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, f_pDirect2dFactory.GetAddressOf());
 		XPLICIT_ASSERT(hr == S_OK);
 
 		if (hr == S_OK)
@@ -39,33 +39,23 @@ namespace XPX::Renderer::D2D
 					0,
 					0);
 
-			hr = m_pDirect2dFactory->CreateDxgiSurfaceRenderTarget(
+			hr = f_pDirect2dFactory->CreateDxgiSurfaceRenderTarget(
 				surface.Get(),
 				renderProp,
-				m_pRenderTarget.GetAddressOf());
+				f_pRenderTarget.GetAddressOf());
 
-			if (SUCCEEDED(hr))
-			{
-				hr = m_pRenderTarget->CreateSolidColorBrush(
-					D2D1::ColorF(D2D1::ColorF::GhostWhite),
-					m_pGhostWhiteBrush.GetAddressOf()
-				);
-
-				if (FAILED(hr))
-					throw EngineError();
-			}
-			else
-			{
-#ifdef XPLICIT_DEBUG
-				XPLICIT_INFO("EngineError: Could not create RenderTarget from DXGISurface!");
-#endif // XPLICIT_DEBUG
-
-				throw EngineError();
-			}
+			DX11::Details::ThrowIfFailed(hr);
 		}
 	}
 
-	DriverSystemD2D::~DriverSystemD2D() {}
+	DriverSystemD2D::~DriverSystemD2D() 
+	{
+		if (f_pTexture)
+			f_pTexture->Release();
+
+		if (f_pDxgiSurface)
+			f_pDxgiSurface->Release();
+	}
 
 	void DriverSystemD2D::update()
 	{
@@ -84,35 +74,49 @@ namespace XPX::Renderer::D2D
 
 	void DriverSystemD2D::begin_scene()
 	{
-		if (!m_pRenderTarget)
+		if (!f_pRenderTarget)
 			return;
 
-		m_pRenderTarget->BeginDraw();
+		f_pRenderTarget->BeginDraw();
 	}
 
 	void DriverSystemD2D::end_scene()
 	{
-		if (!m_pRenderTarget)
+		if (!f_pRenderTarget)
 			return;
 
-		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-		m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
+		f_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+		f_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 
-		HRESULT hr = m_pRenderTarget->EndDraw();
+		HRESULT hr = f_pRenderTarget->EndDraw();
 		XPLICIT_ASSERT(SUCCEEDED(hr));
 	}
 
-	void DriverSystemD2D::draw_line(const float x1, const float y1, const float x2, const float y2, const float stroke) noexcept
+	void DriverSystemD2D::draw_line(const float x1,
+		const float y1,
+		const float x2,
+		const float y2, 
+		const float stroke,
+		const Color<float> clr) noexcept
 	{
-		if (!m_pRenderTarget)
+		if (!f_pRenderTarget)
 			return;
 
-		m_pRenderTarget->DrawLine(
+		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> pBrush;
+
+		HRESULT hr = f_pRenderTarget->CreateSolidColorBrush(
+			D2D1::ColorF(clr.R, clr.G, clr.B, clr.A),
+			pBrush.GetAddressOf()
+		);
+
+		f_pRenderTarget->DrawLine(
 			D2D1::Point2F(static_cast<FLOAT>(x1), y1),
 			D2D1::Point2F(static_cast<FLOAT>(x2), y2),
-			m_pGhostWhiteBrush.Get(),
+			pBrush.Get(),
 			stroke
 		);
+
+		pBrush->Release();
 	}
 
 	void DriverSystemD2D::draw_rectangle(
@@ -122,12 +126,12 @@ namespace XPX::Renderer::D2D
 		const float stroke,
 		const Color<float> clr) noexcept
 	{
-		if (!m_pRenderTarget)
+		if (!f_pRenderTarget)
 			return;
 
 		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> pBrush;
 
-		HRESULT hr = m_pRenderTarget->CreateSolidColorBrush(
+		HRESULT hr = f_pRenderTarget->CreateSolidColorBrush(
 			D2D1::ColorF(clr.R, clr.G, clr.B, clr.A),
 			pBrush.GetAddressOf()
 		);
@@ -143,7 +147,7 @@ namespace XPX::Renderer::D2D
 		rect.rect.top = rct.top;
 		rect.rect.right = rct.right;
 
-		m_pRenderTarget->DrawRoundedRectangle(
+		f_pRenderTarget->DrawRoundedRectangle(
 			&rect,
 			pBrush.Get(),
 			stroke);
@@ -153,10 +157,10 @@ namespace XPX::Renderer::D2D
 
 	void DriverSystemD2D::transform(const float x, const float y) noexcept
 	{
-		if (!m_pRenderTarget)
+		if (!f_pRenderTarget)
 			return;
 
-		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(x, y));
+		f_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(x, y));
 	}
 
 	void DriverSystemD2D::queue(UIView* view) { m_pViews.push_back(view); }

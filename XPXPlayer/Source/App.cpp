@@ -17,10 +17,11 @@
 namespace XPX::Bites
 {
 	ApplicationManager::ApplicationManager(Utils::UriParser xconnect_to)
-		: mPath("")
-#ifdef XPLICIT_WINDOWS
-		, mWsa()
-#endif
+		: mPath(""),
+		mWsa(),
+		mRenderer(nullptr),
+		mRenderer2D(nullptr),
+		mRenderingWindow(nullptr)
 	{
 		this->setup_engine();
 
@@ -50,7 +51,7 @@ namespace XPX::Bites
 
 		if (traits.window_height < 600 ||
 			traits.window_width < 800)
-			throw EngineError("The Engine doesn't support DPI displays.");
+			throw EngineError("XAGE doesn't support DPI displays.");
 
 #ifdef XPLICIT_WINDOWS
 		XPX::init_winsock(&mWsa);
@@ -58,7 +59,7 @@ namespace XPX::Bites
 
 		//! Fetch our file first.
 		String path_ini(path);
-		path_ini += "ClientSettings.ini";
+		path_ini += "XAGE.cfg";
 
 		//! Check for the existence of this ini file.
 		if (!std::filesystem::exists(path_ini))
@@ -70,6 +71,53 @@ namespace XPX::Bites
 			(*mSettings) << traits;
 		}
 
+		mRenderingWindow = std::make_unique<Win32Window>("XPX Advanced Game Engine", "XAGE", GetModuleHandle(nullptr));
+		
+		mRenderer = std::make_unique<Renderer::DX11::DriverSystemD3D11>(mRenderingWindow->get().WindowHandle);
+		mRenderer2D = std::make_unique<Renderer::D2D::DriverSystemD2D>(mRenderer.get());
+
+		D3D11_TEXTURE2D_DESC texDesc{};
+		texDesc.ArraySize = 1;
+		texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		texDesc.CPUAccessFlags = 0;
+		texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		texDesc.Height = traits.window_height;
+		texDesc.Width = traits.window_height;
+		texDesc.MipLevels = 1;
+		texDesc.MiscFlags = 0;
+		texDesc.SampleDesc.Count = 1;
+		texDesc.SampleDesc.Quality = 0;
+		texDesc.Usage = D3D11_USAGE_DEFAULT;
+
+		HRESULT hr = mRenderer->get().pDevice->CreateTexture2D(&texDesc, nullptr, &mRenderer2D->f_pTexture);
+
+		Renderer::DX11::Details::ThrowIfFailed(hr);
+
+		IDXGISurface* pDxgiSurface = nullptr;
+
+		hr = mRenderer2D->f_pTexture->QueryInterface(&pDxgiSurface);
+
+		Renderer::DX11::Details::ThrowIfFailed(hr);
+		
+		D2D1_RENDER_TARGET_PROPERTIES props =
+			D2D1::RenderTargetProperties(
+				D2D1_RENDER_TARGET_TYPE_DEFAULT,
+				D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+				96,
+				96);
+
+		hr = mRenderer2D->f_pDirect2dFactory->CreateDxgiSurfaceRenderTarget(
+			pDxgiSurface,
+			&props,
+			mRenderer2D->f_pRenderTarget.GetAddressOf());
+
+		Renderer::DX11::Details::ThrowIfFailed(hr);
+
+		mRenderer2D->f_pDxgiSurface = pDxgiSurface;
+
+		Root::get_singleton_ptr()->set(mRenderer.get());
+		Root::get_singleton_ptr()->set(mRenderer2D.get());
+		Root::get_singleton_ptr()->set(new InputReceiver());
 	}
 
 	ApplicationManager::SettingsManager::SettingsManager()

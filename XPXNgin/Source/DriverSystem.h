@@ -13,7 +13,12 @@
 #pragma once
 
 #include "NginCore.h"
-#include <NplicitNgine.h>
+
+#ifndef __NPLICIT_DLL__
+
+#	include <NplicitNgine.h>
+
+#endif // ifndef __NPLICIT_DLL__
 
 #include <map>
 #include <CLua.hpp>
@@ -54,7 +59,7 @@ namespace XPX::Renderer
 	enum XPLICIT_SHADER_FORMAT : uint8_t 
 	{
 		FORMAT_SPIRV,
-		FORMAT_GLSL, // Vulkan legacy shader.
+		FORMAT_GLSL, // Vulkan/OGL
 		FORMAT_HLSL, // Direct3D 11 shader type.
 		FORMAT_COUNT,
 	};
@@ -97,7 +102,7 @@ namespace XPX::Renderer
 	/// </summary>
 	enum class RENDER_TYPE
 	{
-		RENDER_MESH, // .dae meshes (.fbx support is planned)
+		RENDER_MESH, // .pbr meshes
 		RENDER_TEXTURE, // ID3D11Texture
 		RENDER_POLYGON, // applies for 2d and 3d contexts.
 		RENDER_PARTICLE_SYSTEM, // Emitter
@@ -115,16 +120,16 @@ namespace XPX::Renderer
 		XPLICIT_COPY_DEFAULT(DriverCameraSystem);
 
 	public:
-		void set_position(const Vector<NplicitFloat>& pos) { m_vPos = pos; }
-		void set_rotation(const Vector<NplicitFloat>& rot) { m_vRot = rot; }
+		void set_position(const Vector<float>& pos) { m_vPos = pos; }
+		void set_rotation(const Vector<float>& rot) { m_vRot = rot; }
 
 	public:
-		Vector<NplicitFloat>& position() noexcept { return m_vPos; }
-		Vector<NplicitFloat>& rotation() noexcept { return m_vRot; }
+		Vector<float>& position() noexcept { return m_vPos; }
+		Vector<float>& rotation() noexcept { return m_vRot; }
 
 	protected:
-		Vector<NplicitFloat> m_vPos;
-		Vector<NplicitFloat> m_vRot;
+		Vector<float> m_vPos;
+		Vector<float> m_vRot;
 
 	};
 }

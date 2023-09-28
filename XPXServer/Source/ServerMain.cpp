@@ -13,7 +13,6 @@
 
 #include <Http.h>
 #include <Root.h>
-#include <RXML.h>
 #include <codecvt>
 #include <XplicitID.h>
 #include <NpPhysicsEngine.h>
@@ -148,11 +147,9 @@ int main(int argc, char** argv)
 		title += std::to_string(XPLICIT_NETWORK_VERSION);
 		title += ")";
 
-		::SetConsoleTitleA(title.c_str());
+		SetConsoleTitleA(title.c_str());
 
 #endif // XPLICIT_WINDOWS
-
-		XPX::Root::get_singleton_ptr()->set(XPX::createDevice(XPX::EDT_NULL));
 
 		XPLICIT_PLACE_ID = argv[2];
 

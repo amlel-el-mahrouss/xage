@@ -108,10 +108,9 @@ namespace XPX
 
 			x1 = _mm256_set_pd(x2);
 #else
-			__m128d x1{ X, Y, Z };
-			__m128d x2{ quat.X, quat.Y, quat.Z };
-
-			_mm_set_pd(x1, x2);
+			X = x;
+			Y = y;
+			Z = z;
 #endif
 		}
 
@@ -127,7 +126,7 @@ namespace XPX
 			__m256d sum = _mm256_add_pd(x1, x2);
 #else
 			__m128d x1{ X, Y, Z };
-			__m128d x2{ quat.X, quat.Y, quat.Z };
+			__m128d x2{ x, y, z };
 
 			_mm_add_pd(x1, x2);
 #endif
@@ -144,7 +143,7 @@ namespace XPX
 			__m256d sum = _mm256_sub_pd(x1, x2);
 #else
 			__m128d x1{ X, Y, Z };
-			__m128d x2{ quat.X, quat.Y, quat.Z };
+			__m128d x2{ x, y, z };
 
 			_mm_sub_pd(x1, x2);
 #endif
@@ -161,7 +160,7 @@ namespace XPX
 			__m256d sum = _mm256_mul_pd(x1, x2);
 #else
 			__m128d x1{ X, Y, Z };
-			__m128d x2{ quat.X, quat.Y, quat.Z };
+			__m128d x2{ x, y, z };
 
 			_mm_mul_pd(x1, x2);
 #endif
@@ -178,7 +177,7 @@ namespace XPX
 			__m256d sum = _mm256_div_pd(x1, x2);
 #else
 			__m128d x1{ X, Y, Z };
-			__m128d x2{ quat.X, quat.Y, quat.Z };
+			__m128d x2{ x, y, z };
 
 			_mm_div_pd(x1, x2);
 #endif

@@ -42,9 +42,9 @@ namespace XPX::ImGUI
 		if (!m_pFrame)
 			return;
 
-		m_pFrame->TextColor.setAlpha(m_iFadeIn);
-		m_pFrame->BackgroundColor.setAlpha(m_iFadeIn);
-		m_pFrame->BackgroundHoverColor.setAlpha(m_iFadeIn);
+		m_pFrame->TextColor.A = m_iFadeIn / 255;
+		m_pFrame->BackgroundColor.A = m_iFadeIn / 255;
+		m_pFrame->BackgroundHoverColor.A = m_iFadeIn / 255;
 
 		this->Hover = m_pFrame->in_region();
 
@@ -59,10 +59,6 @@ namespace XPX::ImGUI
 		{
 			m_pFrame->update(m_pFrame->BackgroundColor);
 		}
-
-		//! TODO: SIMD String class
-		m_pFont->draw(mText.c_str(), recti(position2di(m_pFrame->X, m_pFrame->Y),
-			dimension2d(m_pFrame->W, m_pFrame->H)), m_pFrame->TextColor, true, true);
 
 		if (m_iFadeIn < 255)
 			++m_iFadeIn;
@@ -82,10 +78,10 @@ namespace XPX::ImGUI
 		mBox->W = 279;
 		mBox->H = 38;
 
-		mBox->BackgroundColor.setRed(0x0D);
-		mBox->BackgroundColor.setGreen(0x0D);
-		mBox->BackgroundColor.setBlue(0x0D);
-		mBox->BackgroundColor.setAlpha(0x50);
+		mBox->BackgroundColor.R = (0x0D / 255);
+		mBox->BackgroundColor.G = (0x0D / 255);
+		mBox->BackgroundColor.B = (0x0D / 255);
+		mBox->BackgroundColor.A = (0x50 / 255);
 
 		mBox->BackgroundHoverColor = mBox->BackgroundHoverColor;
 
@@ -94,10 +90,10 @@ namespace XPX::ImGUI
 		mSelection->H = 38;
 		mSelection->W = 0;
 
-		mSelection->BackgroundColor.setRed(0x00);
-		mSelection->BackgroundColor.setGreen(0x89);
-		mSelection->BackgroundColor.setBlue(0xED);
-		mSelection->BackgroundColor.setAlpha(0x50);
+		mSelection->BackgroundColor.R = (0x00);
+		mSelection->BackgroundColor.G = (0x89 / 255);
+		mSelection->BackgroundColor.B = (0xED / 255);
+		mSelection->BackgroundColor.A = (0x50 / 255);
 
 		mSelection->BackgroundHoverColor = mSelection->BackgroundHoverColor;
 
@@ -196,8 +192,6 @@ namespace XPX::ImGUI
 				mShallEdit = true;
 			}
 		}
-
-		UIFontHelper::get_properties_font()->draw(mText.c_str(), recti(vector2di(mBox->X + 5, mBox->Y), dimension2di(0, 0)), mSelection->TextColor, false, false);
 	}
 
 	UICheckBox::UICheckBox()
@@ -205,10 +199,10 @@ namespace XPX::ImGUI
 		this->mCheckBox = new UIFrame();
 		XPLICIT_ASSERT(mCheckBox);
 	
-		mCheckBox->BackgroundColor.setRed(0x0D);
-		mCheckBox->BackgroundColor.setGreen(0x0D);
-		mCheckBox->BackgroundColor.setBlue(0x0D);
-		mCheckBox->BackgroundColor.setAlpha(0x50);
+		mCheckBox->BackgroundColor.R = (0x0D/255);
+		mCheckBox->BackgroundColor.G = (0x0D/255);
+		mCheckBox->BackgroundColor.B = (0x0D/255);
+		mCheckBox->BackgroundColor.A = (0x50/255);
 
 		mCheckBox->W = this->W;
 		mCheckBox->H = this->H;
@@ -239,13 +233,7 @@ namespace XPX::ImGUI
 
 		if (this->Checked)
 		{
-			RENDERER->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 12, mCheckBox->Y + 30),
-				vector2di(mCheckBox->X + 32, mCheckBox->Y + 11),
-				SColor(0xFF, 0x43, 0xA0, 0x47));
-
-			RENDERER->getVideoDriver()->draw2DLine(vector2di(mCheckBox->X + 3, mCheckBox->Y + 21),
-				vector2di(mCheckBox->X + 12, mCheckBox->Y + 30),
-				SColor(0xFF, 0x43, 0xA0, 0x47));
+			// TODO, remake check mark.
 		}
 	}
 
@@ -256,12 +244,15 @@ namespace XPX::ImGUI
 		mBody.mBody = new UIFrame();
 
 		XPLICIT_ASSERT(mBody.mBody && mHead.mBody);
-	
-		mHead.mBody->BackgroundColor.set(0xFF, 0x31, 0x31, 0x31);
-		mHead.mBody->BackgroundHoverColor.set(0xFF, 0x31, 0x31, 0x31);
 
-		mBody.mBody->BackgroundColor.set(0xFF, 0x1C, 0x1C, 0x1C);
-		mBody.mBody->BackgroundHoverColor.set(0xFF, 0x26, 0x26, 0x26);
+		auto bk_head = (0x31 / 255);
+		mHead.mBody->BackgroundColor = Color<float>(bk_head, bk_head, bk_head);
+		mHead.mBody->BackgroundHoverColor = Color<float>(bk_head, bk_head, bk_head);
+
+		auto bk = (0x1C / 255);
+		auto bk_hover = (0x26 / 255);
+		mBody.mBody->BackgroundColor = Color<float>(bk, bk, bk);
+		mBody.mBody->BackgroundHoverColor = Color<float>(bk_hover, bk_hover, bk_hover);
 	}
 
 	UIWindow::~UIWindow()
@@ -281,9 +272,7 @@ namespace XPX::ImGUI
 		mFrame->set_title(title);
 		mFrame->set_pos(0, 0);
 
-		mFrame->set_size(XPLICIT_DEFAULT_PROPGRID_DIM, 
-			RENDERER->getVideoDriver()->getScreenSize().Height,
-			RENDERER->getVideoDriver()->getScreenSize().Height);
+		// TODO: set frame size.
 	}
 
 	UIPropGrid::~UIPropGrid()
@@ -300,8 +289,6 @@ namespace XPX::ImGUI
 		this->mFrame->update();
 
 		for (auto& elem : this->mElements)
-		{
 			elem->update();
-		}
 	}
 }

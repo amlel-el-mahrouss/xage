@@ -15,9 +15,6 @@
  */
 
 #include "App.h"
-#include "ClientFX.h"
-
-#include "LocalCameraComponent.h"
 
 #include <NetworkProtocol.h>
 #include <DriverD3D11.h>
@@ -34,11 +31,7 @@ static void XplicitThrowException(XPX::EngineError& err);
 static void XplicitThrowException(XPX::Win32Error& err);
 #endif
 
-#ifdef _WIN32
 XPLICIT_MAIN()
-#else
-int main(int argc, char** argv)
-#endif
 {
 	try
 	{
@@ -51,19 +44,24 @@ int main(int argc, char** argv)
 #endif
 		auto ret = 0;
 
+		// parse the connection uri.
+		XPX::Utils::UriParser uri{ XPLICIT_XCONNECT_PROTOCOL };
+
+		XPX::String cmd_line = pCmdLine;
+
+		XPX::Bites::ApplicationManager manager(uri);
+
 		while (ret != WM_QUIT)
 		{
-			ret = win->update();
-
-			drv11->begin_scene(1, 0.0, 0.0, 0.0, true, true);
+			RENDERER->begin_scene(1, 0.0, 0.0, 0.0, true, true);
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
 
-			drv11->end_scene();
-		}
+			RENDERER->end_scene();
 
-		delete win; // still though, wanna do that. even though windows still does free the pool.
+			KEYBOARD->reset();
+		}
 	}
 	catch (XPX::EngineError& err)
 	{

@@ -236,10 +236,7 @@ namespace XPX::ImGUI
 
 			mHead.mBody->update(mHead.mBody->BackgroundColor);
 
-			UIFontHelper::get_properties_font()->draw(mTitle.c_str(),
-				recti(vector2di(mHead.mBody->X + 5, mHead.mBody->Y - 2), dimension2du(0, 0)),
-				SColor(255, 255, 255, 255),
-				false, false);
+			// TODO: draw props font title.
 		}
 
 		bool in_region() noexcept
