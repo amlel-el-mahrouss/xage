@@ -11,8 +11,10 @@
  */
 
 #include "GLad.h"
+
 #include "Bites.h"
 #include "Event.h"
+#include "Root.h"
 
 namespace XPX::Bites
 {
@@ -65,6 +67,16 @@ namespace XPX::Bites
 	{
 		switch (msg)
 		{
+		case WM_KEYUP:
+		{
+			Root::get_singleton_ptr()->Keyboard->mKeys[wparam] = false;
+			break;
+		}
+		case WM_KEYDOWN:
+		{
+			Root::get_singleton_ptr()->Keyboard->mKeys[wparam] = true;
+			break;
+		}
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);

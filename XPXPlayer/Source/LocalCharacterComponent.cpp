@@ -35,18 +35,9 @@ namespace XPX
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
 		XPLICIT_ASSERT(mNetwork);
-
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("LocalHumanoidComponent::LocalHumanoidComponent");
-#endif
 	}
 
-	LocalCharacterComponent::~LocalCharacterComponent()
-	{
-#ifdef XPLICIT_DEBUG
-		XPLICIT_INFO("LocalHumanoidComponent::~LocalHumanoidComponent");
-#endif
-	}
+	LocalCharacterComponent::~LocalCharacterComponent() = default;
 
 	PHYSICS_TYPE LocalCharacterComponent::physics() noexcept { return PHYSICS_COMPLEX; }
 

@@ -29,43 +29,9 @@ namespace XPX
 
 		class XPLICIT_API UIFrame final
 		{
-		private:
-
-			struct ImGUIUIView : Renderer::D2D::UIView
-			{
-				UIFrame* self = nullptr;
-
-				void operator()(Renderer::D2D::DriverSystemD2D* pD2dDriver) override
-				{
-					XPX::Rect rect;
-					
-					rect.left = self->X;
-					rect.top = self->Y;
-
-					rect.bottom = self->H - rect.top;
-					rect.right = self->W - rect.left;
-					
-					pD2dDriver->draw_rectangle(rect, 0.0f, 0.0f, 1.0f, self->BackgroundColor);
-				}
-
-				friend UIFrame;
-
-			};
-
-			ImGUIUIView* pView;
-
 		public:
-			explicit UIFrame() noexcept
-				: pView(nullptr)
-			{
-
-			}
-
-			~UIFrame()
-			{
-				if (pView)
-					delete pView;
-			}
+			explicit UIFrame() = default;
+			~UIFrame() = default;
 
 		public:
 			XPLICIT_COPY_DEFAULT(UIFrame);
@@ -88,13 +54,18 @@ namespace XPX
 					H < 1)
 					return;
 
-				if (!pView)
-				{
-					pView = new ImGUIUIView();
-					pView->self = this;
-				}
+				RENDERER_2D->begin_scene();
 
-				RENDERER_2D->queue(pView);
+				Rect rectangleRect{};
+
+				rectangleRect.bottom = X;
+				rectangleRect.left = Y;
+				rectangleRect.right = W;
+				rectangleRect.top = H;
+
+				RENDERER_2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 0.0f, BackgroundColor);
+
+				RENDERER_2D->end_scene();
 			}
 
 			virtual bool in_region() noexcept

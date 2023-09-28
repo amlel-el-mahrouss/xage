@@ -287,15 +287,11 @@ namespace XPX
 
 		};
 
-	private:
+	public:
 		bool mKeys[KEY_KEY_CODES_COUNT];
-
-	private:
 		MouseEventTraits mMouseRight;
 		MouseEventTraits mMouseLeft;
 		MouseEventTraits mMousePos;
-
-	private:
 		bool mWheelEnable;
 		float mWheel;
 

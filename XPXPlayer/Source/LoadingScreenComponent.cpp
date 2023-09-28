@@ -34,11 +34,11 @@
 
 namespace XPX
 {
-    // connection timeout until client stops trying to ACK.
+    //! connection timeout until client stops trying to ACK.
     constexpr int XPLICIT_TIMEOUT = 100;
 
     /// <summary>
-    /// Loading Component constructor.
+    /// Component constructor.
     /// </summary>
     LoadingScreenComponent::LoadingScreenComponent() noexcept
         :
@@ -90,7 +90,7 @@ namespace XPX
 
             monitor->ID = packet.additional_data;
 
-            XPLICIT_INFO("XPX_ID:" + monitor->ID);
+            XPLICIT_INFO("XPX_ID: " + monitor->ID);
 
             ComponentSystem::get_singleton_ptr()->add<ChatBoxComponent>(packet.additional_data);
             ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash, monitor->ID);

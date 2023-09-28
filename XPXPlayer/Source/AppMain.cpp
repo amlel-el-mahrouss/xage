@@ -64,13 +64,11 @@ XPLICIT_MAIN()
 
 		XPX::Bites::ApplicationManager manager(uri);
 
-		XPX::Root::get_singleton_ptr()->Renderer->get().pCamera->set_position(XPX::Vector<float>(0, 0, -1));
-
 		while (ret != WM_QUIT)
 		{
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
-			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 1, 1, 1, true, true);
+			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();

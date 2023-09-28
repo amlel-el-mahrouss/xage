@@ -27,8 +27,8 @@ namespace XPX
 			mClicked(on_click),
 			mPopupId(id),
 			mHudFrame(new ImGUI::UIFrame()),
-			mOk(L"Leave"),
-			mTitle(L"Disconnected"),
+			mOk(L"Yes"),
+			mTitle(Bites::XPLICIT_APP_NAME),
 			m_pSpriteBatch(nullptr)
 	{
 		XPLICIT_ASSERT(mClicked);
@@ -53,10 +53,8 @@ namespace XPX
 			break;
 		case POPUP_TYPE::LEAVE:
 		{
-			mText = platform_string("Leave the game?");
-			mTitle = platform_string("Warning");
-
-			mOk.label(L"Yes");
+			mText = platform_string("Leave?");
+			mTitle = platform_string("Lobby");
 
 			break;
 		}
@@ -84,6 +82,8 @@ namespace XPX
 		mOk->Y = mHudFrame->Y + mHudFrame->H - mOk->H;
 
 		mOk->BackgroundColor.A = 1;
+
+		m_pSpriteBatch = std::make_unique<SpriteBatch>(Root::get_singleton_ptr()->Renderer->get().pCtx.Get());
 	}
 	
 	PopupComponent::~PopupComponent()
@@ -104,7 +104,7 @@ namespace XPX
 
 		self->m_pSpriteBatch->Begin();
 
-		XMFLOAT2 pos(self->mHudFrame->X, self->mHudFrame->Y);
+		XMFLOAT2 pos(self->mHudFrame->X + self->mHudFrame->W / 2, self->mHudFrame->Y + 30);
 		XMFLOAT4 clr(self->mHudFrame->TextColor.R, self->mHudFrame->TextColor.G, self->mHudFrame->TextColor.B, self->mHudFrame->TextColor.A);
 
 		auto origin = ImGUI::UIFontHelper::get_label_font()->MeasureString(self->mTitle.c_str()) / 2.f;
@@ -117,6 +117,8 @@ namespace XPX
 
 		origin = ImGUI::UIFontHelper::get_label_font()->MeasureString(self->mText.c_str()) / 2.f;
 
+		pos = XMFLOAT2(self->mHudFrame->X + self->mHudFrame->W / 2, self->mHudFrame->Y + 100);
+		
 		ImGUI::UIFontHelper::get_label_font()->DrawString(self->m_pSpriteBatch.get(),
 			self->mText.c_str(),
 			XMLoadFloat2(&pos),

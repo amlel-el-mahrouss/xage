@@ -59,6 +59,8 @@ namespace XPX
 		peer->packet.cmd[XPLICIT_NETWORK_CMD_ACCEPT] = NETWORK_CMD_ACCEPT;
 
 		peer->packet.hash = peer->hash;
+		peer->packet.hash = peer->public_hash;
+
 		peer->packet.size = sizeof(NetworkPacket);
 
 		for (std::size_t index = 0; index < server->size(); ++index)
@@ -133,10 +135,10 @@ namespace XPX
 					++mPlayerCount;
 
 					XPLICIT_INFO("[LOGIN] IP: " + mNetwork->get(peer_idx)->ip_address);
-					XPLICIT_INFO("[LOGIN] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
+					XPLICIT_INFO("[LOGIN] XPX_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGIN] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
-					NetworkServerContext::send(mNetwork, mNetwork->get(peer_idx));
+					NetworkServerContext::send_all(mNetwork);
 				}
 			}
 		}
@@ -168,16 +170,12 @@ namespace XPX
 					--mPlayerCount;
 
 					XPLICIT_INFO("[LOGOFF] IP: " + mNetwork->get(peer_idx)->ip_address);
-					XPLICIT_INFO("[LOGOFF] XPLICIT_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
+					XPLICIT_INFO("[LOGOFF] XPX_ID: " + mNetwork->get(peer_idx)->xplicit_id.as_string());
 					XPLICIT_INFO("[LOGOFF] PLAYER COUNT: " + std::to_string(mPlayerCount));
 
-					String path("_G.world.Players.");
-					path += mNetwork->get(peer_idx)->xplicit_id.as_string();
-
-					String fmt = fmt::format("world:Logoff({})", path);
-					Lua::CLuaStateManager::get_singleton_ptr()->run_string(fmt.c_str());
-
 					const auto public_hash = mNetwork->get(peer_idx)->public_hash;
+
+					mNetwork->get(peer_idx)->status = NETWORK_STAT_DISCONNECTED;
 
 					mNetwork->get(peer_idx)->reset(); // reset peer.
 					mNetwork->get(peer_idx)->xplicit_id.generate(~0); // invalidate player id.
