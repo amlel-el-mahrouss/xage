@@ -32,8 +32,15 @@ inline XPX::Color<XPX::NetworkFloat> DarkRed(0x8B, 0, 0, 0xFF);
 inline XPX::Color<XPX::NetworkFloat> Black(0, 0, 0, 0xFF);
 inline XPX::Color<XPX::NetworkFloat> Red(0xFF, 0, 0, 0xFF);
 
+//! XPLICIT lobby ticket.
 inline XPX::Auth::XplicitID XPLICIT_INVALID_ID(0xFF, UINT32_MAX);
-inline XPX::Vector<XPX::NetworkFloat> XPLICIT_ORIGIN(0, 30, -40);
+
+//! World origin.
+inline XPX::Vector<XPX::NetworkFloat> XPLICIT_ORIGIN(0, 0, -10);
+
+//! a perfect octree, where all of the details are rendered, when getting out of it, 
+//! they fadeout and only low poly versions or polygons are shown.
+inline XPX::Vector<XPX::NetworkFloat> XPLICIT_PERFECT_OCTREE_SIZE(64, 64, 64);
 
 /// <summary>
 /// Gets the XPLICIT_ID of a specific peer.

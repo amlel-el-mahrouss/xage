@@ -24,6 +24,7 @@
 #include <Event.h>
 #include <Bites.h>
 #include <codecvt>
+#include <Util.h>
 
 static void XplicitThrowException(XPX::EngineError& err);
 
@@ -63,6 +64,8 @@ XPLICIT_MAIN()
 			return 1;
 
 		XPX::Bites::ApplicationManager manager(uri);
+
+		RENDERER->get().pCamera->set_position(XPLICIT_ORIGIN);
 
 		while (ret != WM_QUIT)
 		{
