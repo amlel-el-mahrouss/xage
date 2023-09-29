@@ -1,13 +1,7 @@
 NOTICE:
 =======
 
-There is a WiP effort to port XPXNgin to the Macintosh.
-Feel free to help.
-
-NOTICE:
-=======
-
-Use premake to regenerate if we happen to broke the project files.
+This contains no game, only rendering, network, audio, and basic things.
 
 REQUIREMENTS:
 =============

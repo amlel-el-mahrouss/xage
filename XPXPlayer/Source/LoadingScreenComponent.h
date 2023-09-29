@@ -10,12 +10,14 @@
 #pragma once
 
 #include <NetworkComponent.h>
+
 #include <ImGUI.h>
 #include <Root.h>
 #include <Uri.h>
 
 namespace XPX
 {
+	//! @brief Loading screen class; initialize your game components here, refer to 'on_join' or 'on_timeout' method.
 	class LoadingScreenComponent final : public Component
 	{
 	public:
@@ -41,12 +43,17 @@ namespace XPX
 		/// </summary>
 		void reset() noexcept;
 
-	private:
-		NetworkComponent* mNetwork;
-		std::int64_t mTimeout; /* Network Timeout, incremented on each dial failure. */
+	public:
+		//! define any game data here...
+		void on_timeout() noexcept {}
+		void on_join() noexcept {}
 
 	private:
-		static bool StartLoad; /* Should we seek for a connection? */
+		NetworkComponent* mNetwork; //! network connection.
+		std::int64_t mTimeout; //! timeout since we sent our first begin packet.
+
+	private:
+		static bool StartLoad;
 
 	};
 }

@@ -91,8 +91,6 @@ namespace XPX
 
             monitor->ID = packet.additional_data;
 
-            XPLICIT_INFO("XPX_ID: " + monitor->ID);
-
             ComponentSystem::get_singleton_ptr()->add<ChatBoxComponent>(packet.additional_data);
             ComponentSystem::get_singleton_ptr()->add<LocalReplicationComponent>(hash, monitor->ID);
 
@@ -109,6 +107,8 @@ namespace XPX
             ComponentSystem::get_singleton_ptr()->add<LocalCharacterComponent>(public_hash, true);
             ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 
+            self->on_join();
+
             StartLoad = false;
         }
         else
@@ -122,6 +122,8 @@ namespace XPX
                  }, POPUP_TYPE::NETWORK, "TimeoutPopup");
 
                 ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
+
+                self->on_timeout();
 
                 StartLoad = false;
             }

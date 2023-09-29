@@ -118,6 +118,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="RenderingWindow.cpp" />
     <ClCompile Include="RRRecentProjects.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -134,11 +135,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RenderingWindow.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="RRRecentProjects.h">
       <FileType>CppForm</FileType>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="RenderingWindow.resx">
+      <DependentUpon>RenderingWindow.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RRRecentProjects.resx">
       <DependentUpon>RRRecentProjects.h</DependentUpon>
     </EmbeddedResource>

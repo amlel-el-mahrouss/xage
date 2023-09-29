@@ -86,7 +86,7 @@ namespace XPX::Renderer::DX11
 		
 		swapDesc.Flags = 0;
 
-		swapDesc.Windowed = true;
+		swapDesc.Windowed = false; //! never set to fullscreen.
 		swapDesc.OutputWindow = privateData.pWindowHandle;
 	}
 

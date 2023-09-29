@@ -83,9 +83,9 @@ namespace XPXUpdate {
 			// pictureBox1
 			// 
 			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
-			this->pictureBox1->Location = System::Drawing::Point(71, 12);
+			this->pictureBox1->Location = System::Drawing::Point(65, 12);
 			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(147, 113);
+			this->pictureBox1->Size = System::Drawing::Size(163, 113);
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			// 
@@ -95,11 +95,11 @@ namespace XPXUpdate {
 			this->label1->Font = (gcnew System::Drawing::Font(L"Urbanist ExtraBold", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->label1->ForeColor = System::Drawing::SystemColors::MenuHighlight;
-			this->label1->Location = System::Drawing::Point(46, 128);
+			this->label1->Location = System::Drawing::Point(60, 137);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(213, 25);
+			this->label1->Size = System::Drawing::Size(168, 25);
 			this->label1->TabIndex = 1;
-			this->label1->Text = L"Getting tardis vector...";
+			this->label1->Text = L"Updating game...";
 			// 
 			// MainForm
 			// 

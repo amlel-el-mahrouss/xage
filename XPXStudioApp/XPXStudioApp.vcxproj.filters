@@ -21,12 +21,18 @@
     <ClCompile Include="RRRecentProjects.cpp">
       <Filter>Headers</Filter>
     </ClCompile>
+    <ClCompile Include="RenderingWindow.cpp">
+      <Filter>Headers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RRRecentProjects.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingWindow.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
