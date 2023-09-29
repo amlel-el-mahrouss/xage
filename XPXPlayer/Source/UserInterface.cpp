@@ -66,11 +66,10 @@ namespace XPX
 		mHudFrame->W = 504;
 		mHudFrame->H = 288;
 		
-		mHudFrame->BackgroundColor.A = 1;
-		
-		mHudFrame->BackgroundColor.R = ( 0x0F);
-		mHudFrame->BackgroundColor.G = (0x0F);
-		mHudFrame->BackgroundColor.B = (0x0F);
+		mHudFrame->BackgroundColor.A = (255 / 255); //! 1
+		mHudFrame->BackgroundColor.R = (0x0F / 255);
+		mHudFrame->BackgroundColor.G = (0x0F / 255);
+		mHudFrame->BackgroundColor.B = (0x0F / 255);
 
 		mHudFrame->X = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_MIN_WIDTH));
 		mHudFrame->Y = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_MIN_HEIGHT));

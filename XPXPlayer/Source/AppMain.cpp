@@ -71,7 +71,7 @@ XPLICIT_MAIN()
 		{
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
-			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
+			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.5, 0.5, 0.5, true, true);
 			
 			XPX::Root::get_singleton_ptr()->Renderer2D->begin_scene();
 

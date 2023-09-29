@@ -13,6 +13,7 @@
 #pragma once
 
 #include "NginCore.h"
+#include "Component.h"
 
 #ifndef __NPLICIT_DLL__
 
@@ -21,10 +22,46 @@
 #endif // ifndef __NPLICIT_DLL__
 
 #include <map>
-#include <CLua.hpp>
 
 namespace XPX::Renderer
 {
+	/// <summary>
+	/// Image descrptor for Targa, Png, DDS...
+	/// </summary>
+	struct XPLICIT_API ImageDataParams final
+	{
+		void* pImage{ nullptr };
+
+		UINT iWidth{ 800 };
+		UINT iHeight{ 600 };
+		UINT iStride{ 4 };
+
+		static ImageDataParams invald_image_data()
+		{
+			return ImageDataParams();
+		}
+
+	};
+
+	/// <summary>
+	/// Basic renderable component, it's up to you to tell how to render it.
+	/// </summary>
+	class XPLICIT_API BaseRenderableComponent : public Component
+	{
+	public:
+		BaseRenderableComponent() noexcept {}
+		virtual ~BaseRenderableComponent() {}
+
+	public:
+		XPLICIT_COPY_DEFAULT(BaseRenderableComponent);
+
+	protected:
+		std::vector<Color<float>> m_colorVectors;
+		std::vector<Vector<float>> m_arrayVerts;
+		std::vector<UINT> m_arrayIndices;
+
+	};
+
 	/// <summary>
 	/// Tells what rendering api we're using.
 	/// </summary>

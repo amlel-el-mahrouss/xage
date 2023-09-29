@@ -28,10 +28,10 @@ namespace XPX
 {
 	struct XPLICIT_API Rect
 	{
-		float32 X;
-		float32 Y;
-		float32 W;
-		float32 H;
+		float32 L;
+		float32 T;
+		float32 R;
+		float32 B;
 	};
 }
 

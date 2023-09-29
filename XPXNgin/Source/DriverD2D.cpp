@@ -139,11 +139,13 @@ namespace XPX::Renderer::D2D
 			pBrush.GetAddressOf()
 		);
 
+	
+
 		D2D1_ROUNDED_RECT _rect = D2D1::RoundedRect(
-			{ rect.X,
-			rect.Y,
-			rect.W,
-			rect.H },
+			{ rect.L,
+			rect.T,
+			rect.R,
+			rect.B },
 			radiusX, radiusY
 		);
 	

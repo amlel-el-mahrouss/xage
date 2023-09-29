@@ -65,10 +65,10 @@ namespace XPX
 
 				Rect rectangleRect{};
 
-				rectangleRect.X = X;
-				rectangleRect.Y = Y;
-				rectangleRect.W = W;
-				rectangleRect.H = H;
+				rectangleRect.L = X;
+				rectangleRect.T = Y;
+				rectangleRect.R = W;
+				rectangleRect.B = H;
 
 				RENDERER_2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 1.0f, BackgroundColor);
 			}

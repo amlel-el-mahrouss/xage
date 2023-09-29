@@ -16,6 +16,8 @@
 #include "Event.h"
 #include "Root.h"
 
+#include <windowsx.h>
+
 namespace XPX::Bites
 {
 #ifdef XPLICIT_WINDOWS
@@ -67,6 +69,21 @@ namespace XPX::Bites
 	{
 		switch (msg)
 		{
+		case WM_MOUSEMOVE:
+		{
+			Root::get_singleton_ptr()->Keyboard->mMousePos.X = GET_X_LPARAM(lparam);
+			Root::get_singleton_ptr()->Keyboard->mMousePos.Y = GET_Y_LPARAM(lparam);
+
+			break;
+		}
+
+		case WM_MBUTTONDOWN:
+		{
+			Root::get_singleton_ptr()->Keyboard->mMouseRight.Down = (wparam == MK_RBUTTON);
+			Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down = (wparam == MK_RBUTTON);
+
+			break;
+		}
 		case WM_KEYUP:
 		{
 			Root::get_singleton_ptr()->Keyboard->mKeys[wparam] = false;

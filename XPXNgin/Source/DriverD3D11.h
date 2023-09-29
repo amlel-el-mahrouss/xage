@@ -84,7 +84,7 @@ namespace XPX::Renderer::DX11
 
 	class DriverSystemD3D11;
 	class ShaderSystemD3D11;
-	class ColorRenderComponentD3D11;
+	class ColorRenderableComponentD3D11;
 
 	class XPLICIT_API DriverSystemD3D11 : public DriverSystem
 	{
@@ -141,7 +141,13 @@ namespace XPX::Renderer::DX11
 		void setup_rendering_system();
 
 	public:
-		void begin_scene(const float& a, const float& r, const float& g, const float& b, const bool zBuffer, const bool depth);
+		void begin_scene(const float& A, 
+			const float& R, 
+			const float& G, 
+			const float& B, 
+			const bool zBuffer, 
+			const bool depth);
+
 		bool end_scene();
 
 	public:
@@ -215,62 +221,31 @@ namespace XPX::Renderer::DX11
 		/// <summary>
 		/// Updates the shader.
 		/// </summary>
-		void update(ColorRenderComponentD3D11* component);
+		void update(ColorRenderableComponentD3D11* component);
 
 		/// <summary>
 		/// Updates the Constant buffer.
 		/// </summary>
-		void update_cbuf(ColorRenderComponentD3D11* component);
+		void update_cbuf(ColorRenderableComponentD3D11* component);
 
 	private:
 		ShaderTraits m_data;
 		DriverSystemD3D11* m_pDriver;
 		
-		friend ColorRenderComponentD3D11;
+		friend ColorRenderableComponentD3D11;
 
 	};
 
 	typedef enum D3D_PRIMITIVE_TOPOLOGY XPLICIT_PRIMITIVE_TOPOLOGY;
 
-	struct XPLICIT_API ImageDataParams final
-	{
-		void* pImage{ nullptr };
-		
-		UINT iWidth{ 800 };
-		UINT iHeight{ 600 };
-		UINT iStride{ 4 };
-
-		static ImageDataParams invald_image_data()
-		{
-			return ImageDataParams();
-		}
-
-	};
-
-	class XPLICIT_API BaseRenderableComponent : public Component
+	class XPLICIT_API ColorRenderableComponentD3D11 final : public BaseRenderableComponent
 	{
 	public:
-		BaseRenderableComponent() noexcept {}
-		virtual ~BaseRenderableComponent() {}
+		ColorRenderableComponentD3D11() noexcept;
+		~ColorRenderableComponentD3D11() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(BaseRenderableComponent);
-
-	protected:
-		std::vector<Color<float>> m_colorVectors;
-		std::vector<Vector<float>> m_arrayVerts;
-		std::vector<UINT> m_arrayIndices;
-
-	};
-
-	class XPLICIT_API ColorRenderComponentD3D11 final : public BaseRenderableComponent
-	{
-	public:
-		ColorRenderComponentD3D11() noexcept;
-		~ColorRenderComponentD3D11() override;
-
-	public:
-		XPLICIT_COPY_DEFAULT(ColorRenderComponentD3D11);
+		XPLICIT_COPY_DEFAULT(ColorRenderableComponentD3D11);
 
 	public:
 		void push(const Vector<float>& vert) noexcept;
