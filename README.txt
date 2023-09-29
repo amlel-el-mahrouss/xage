@@ -19,7 +19,6 @@ REQUIREMENTS:
 - LuaNgine
 - FreeType
 - OpenAL
-- CADEngine
 - Direct3D11 debug layers.
 - Windows 11, an XBOX
 - Visual Studio 2022 (C++ Workload)
