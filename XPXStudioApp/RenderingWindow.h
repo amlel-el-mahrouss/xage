@@ -131,7 +131,7 @@ namespace XPXStudioApp {
 			this->MaximumSize = System::Drawing::Size(970, 724);
 			this->MinimumSize = System::Drawing::Size(970, 724);
 			this->Name = L"RenderingWindow";
-			this->Text = L"XAGE Poject Manager";
+			this->Text = L"XAGE RRMan";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->panel1->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
