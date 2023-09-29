@@ -123,7 +123,7 @@ namespace XPX::Renderer::D2D
 	}
 
 	void DriverSystemD2D::draw_rectangle(
-		const Rect rect,
+		const Rect copyFrom,
 		const float radiusX, 
 		const float radiusY, 
 		const float stroke,
@@ -139,11 +139,9 @@ namespace XPX::Renderer::D2D
 			pBrush.GetAddressOf()
 		);
 
-		D2D1_ROUNDED_RECT _rect = D2D1::RoundedRect(
-			{ .left = rect.L, .top = rect.T, .right = rect.R, .bottom = rect.B },
-			radiusX, radiusY
-		);
-	
+		D2D1_ROUNDED_RECT _rect{ .rect = {.left = copyFrom.L, .top = copyFrom.T, .right = copyFrom.R, .bottom = copyFrom.B },
+			.radiusX = radiusX, .radiusY = radiusY};
+
 		f_pRenderTarget->FillRoundedRectangle(
 			_rect,
 			pBrush.Get());
