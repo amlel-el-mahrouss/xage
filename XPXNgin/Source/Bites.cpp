@@ -69,18 +69,68 @@ namespace XPX::Bites
 	{
 		switch (msg)
 		{
+
 		case WM_MOUSEMOVE:
 		{
-			Root::get_singleton_ptr()->Keyboard->mMousePos.X = GET_X_LPARAM(lparam);
-			Root::get_singleton_ptr()->Keyboard->mMousePos.Y = GET_Y_LPARAM(lparam);
+			auto p = MAKEPOINTS(lparam);
+
+			Root::get_singleton_ptr()->Keyboard->mMousePos.X = p.x;
+			Root::get_singleton_ptr()->Keyboard->mMousePos.Y = p.y;
+
+#ifdef XPLICIT_DEBUG
+			//! debug trace
+			
+			fmt::print("X: {}\n", Root::get_singleton_ptr()->Keyboard->mMousePos.X);
+			fmt::print("Y: {}\n", Root::get_singleton_ptr()->Keyboard->mMousePos.Y);
+#endif // ifdef XPLICIT_DEBUG
 
 			break;
 		}
-
-		case WM_MBUTTONDBLCLK:
+		case WM_RBUTTONDOWN:
 		{
-			Root::get_singleton_ptr()->Keyboard->mMouseRight.Down = (wparam == MK_RBUTTON);
-			Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down = (wparam == MK_RBUTTON);
+			Root::get_singleton_ptr()->Keyboard->mMouseRight.Down = true;
+
+#ifdef XPLICIT_DEBUG
+			//! debug trace for mouse stat.
+
+			fmt::print("RightDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseRight.Down ? "Yes" : "No");
+#endif // ifdef XPLICIT_DEBUG
+
+			break;
+		}
+		case WM_RBUTTONUP:
+		{
+			Root::get_singleton_ptr()->Keyboard->mMouseRight.Down = false;
+
+#ifdef XPLICIT_DEBUG
+			//! debug trace for mouse stat.
+
+			fmt::print("RightDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseRight.Down ? "Yes" : "No");
+#endif // ifdef XPLICIT_DEBUG
+
+			break;
+		}
+		case WM_LBUTTONDOWN:
+		{
+			Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down = true;
+
+#ifdef XPLICIT_DEBUG
+			//! debug trace for mouse stat.
+
+			fmt::print("LeftDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down ? "Yes" : "No");
+#endif // ifdef XPLICIT_DEBUG
+
+			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down = false;
+
+#ifdef XPLICIT_DEBUG
+			//! debug trace for mouse stat.
+
+			fmt::print("LeftDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down ? "Yes" : "No");
+#endif // ifdef XPLICIT_DEBUG
 
 			break;
 		}
