@@ -46,9 +46,9 @@ namespace XPX
 			std::unique_ptr<DirectX::SpriteBatch> SpriteBatch;
 
 		imgui_slots:
-			ImColor BackgroundHoverColor{ 0xA7, 0x0C, 0x0C, 0x0C };
-			ImColor BackgroundColor{ 0xA5, 0x26, 0x26, 0x26 };
-			ImColor TextColor{ 0xFF, 0xFF, 0xFF, 0xFF };
+			ImColor BackgroundHoverColor{ 0xA7 / 255, 0x0C / 255, 0x0C / 255, 0x0C / 255 };
+			ImColor BackgroundColor{ 0xA5 / 255, 0x26 / 255, 0x26 / 255, 0x26 / 255 };
+			ImColor TextColor{ 0xFF / 255, 0xFF / 255, 0xFF / 255, 0xFF / 255 };
 
 		imgui_slots:
 			std::uint32_t X{ 0 };
@@ -65,10 +65,10 @@ namespace XPX
 
 				Rect rectangleRect{};
 
-				rectangleRect.left = X;
-				rectangleRect.top = Y;
-				rectangleRect.right = W;
-				rectangleRect.bottom = H;
+				rectangleRect.X = X;
+				rectangleRect.Y = Y;
+				rectangleRect.W = W;
+				rectangleRect.H = H;
 
 				RENDERER_2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 1.0f, BackgroundColor);
 			}

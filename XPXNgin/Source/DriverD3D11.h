@@ -412,10 +412,4 @@ namespace XPX::Renderer::DX11
 #include "DriverD3D11.inl"
 #include "D3D11ShaderSystem.inl"
 
-
-namespace XPX
-{
-	typedef Renderer::DX11::ColorRenderComponentD3D11 ColorRenderComponent;
-} // namespace XPX
-
 #endif

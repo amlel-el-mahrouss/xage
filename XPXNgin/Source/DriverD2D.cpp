@@ -19,7 +19,7 @@
 namespace XPX::Renderer::D2D
 {
 	DriverSystemD2D::DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv)
-		: f_pRenderTarget(nullptr), f_pSurface(nullptr), f_pD3DTexture(nullptr)
+		: f_pRenderTarget(nullptr), f_pSurface(nullptr)
 	{
 		HRESULT hr = S_OK;
 
@@ -28,6 +28,7 @@ namespace XPX::Renderer::D2D
 		if (hr == S_OK)
 		{
 			D3D11_TEXTURE2D_DESC texDesc{};
+
 			texDesc.ArraySize = 1;
 			texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 			texDesc.CPUAccessFlags = 0;
@@ -40,19 +41,14 @@ namespace XPX::Renderer::D2D
 			texDesc.SampleDesc.Quality = 0;
 			texDesc.Usage = D3D11_USAGE_DEFAULT;
 
-			hr = drv->get().pDevice->CreateTexture2D(&texDesc, nullptr, f_pD3DTexture.GetAddressOf());
-
-			DX11::Details::ThrowIfFailed(hr);
-
-			f_pD3DTexture->QueryInterface(f_pSurface.GetAddressOf());
-
+			hr = drv->get().pSwapChain->GetBuffer(0, IID_PPV_ARGS(f_pSurface.GetAddressOf()));
 			DX11::Details::ThrowIfFailed(hr);
 
 			D2D1_RENDER_TARGET_PROPERTIES renderProp{ D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT) };
 			renderProp.pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED);
 			
-			renderProp.dpiX = 0;
-			renderProp.dpiY = 0;
+			renderProp.dpiX = 96;
+			renderProp.dpiY = 96;
 
 			try
 			{
@@ -127,7 +123,7 @@ namespace XPX::Renderer::D2D
 	}
 
 	void DriverSystemD2D::draw_rectangle(
-		const Rect rct,
+		const Rect rect,
 		const float radiusX, 
 		const float radiusY, 
 		const float stroke,
@@ -143,24 +139,16 @@ namespace XPX::Renderer::D2D
 			pBrush.GetAddressOf()
 		);
 
-		D2D1_ROUNDED_RECT rect;
-		RtlZeroMemory(&rect, sizeof(D2D1_ROUNDED_RECT));
-
-		rect.radiusX = radiusX;
-		rect.radiusY = radiusY;
-
-		rect.rect.left = rct.left;
-		rect.rect.top = rct.top;
-		rect.rect.right = rct.right;
-		rect.rect.bottom = rct.bottom;
-
-		D2D_SIZE_F sz{};
-		
-		sz.width = rct.right;
-		sz.height = rct.bottom;
-
+		D2D1_ROUNDED_RECT _rect = D2D1::RoundedRect(
+			{ rect.X,
+			rect.Y,
+			rect.W,
+			rect.H },
+			radiusX, radiusY
+		);
+	
 		f_pRenderTarget->FillRoundedRectangle(
-			&rect,
+			_rect,
 			pBrush.Get());
 	}
 

@@ -26,15 +26,12 @@
 
 namespace XPX
 {
-	using float32 = float;
-	using float64 = double;
-
 	struct XPLICIT_API Rect
 	{
-		float32 left;
-		float32 top;
-		float32 right;
-		float32 bottom;
+		float32 X;
+		float32 Y;
+		float32 W;
+		float32 H;
 	};
 }
 
@@ -79,7 +76,6 @@ namespace XPX::Renderer::D2D
 	public:
 		Microsoft::WRL::ComPtr<ID2D1RenderTarget> f_pRenderTarget;
 		Microsoft::WRL::ComPtr<ID2D1Factory> f_pDirect2dFactory;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> f_pD3DTexture;
 		Microsoft::WRL::ComPtr<IDXGISurface> f_pSurface;
 
 	};

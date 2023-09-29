@@ -72,12 +72,14 @@ XPLICIT_MAIN()
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
+			
 			XPX::Root::get_singleton_ptr()->Renderer2D->begin_scene();
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
 
 			XPX::Root::get_singleton_ptr()->Renderer2D->end_scene();
+
 			XPX::Root::get_singleton_ptr()->Renderer->end_scene();
 
 			XPX::Root::get_singleton_ptr()->Keyboard->reset();

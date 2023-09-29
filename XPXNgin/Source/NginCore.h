@@ -46,6 +46,9 @@ XPLICIT_API bool xplicit_open_logger();
 
 namespace XPX 
 {
+	using float32 = float;
+	using float64 = double;
+
 	namespace FS = std::filesystem;
 
     using Thread = std::thread;
