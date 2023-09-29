@@ -19,11 +19,9 @@
 namespace XPX
 {
 	GameVar::GameVar(const char* name, const char* value, int flags)
-		: mName(name), mValue(value), mFlags(flags), Lua::CLuaClass((String("world.Settings.") + name).c_str())
+		: mName(name), mValue(value), mFlags(flags)
 	{
-		this->insert("VarName", name);
-		this->insert("Value", value);
-		this->insert("Flags", std::to_string(flags).c_str());
+		
 	}
 
 	GameVar::~GameVar()

@@ -77,7 +77,7 @@ namespace XPX::Bites
 			break;
 		}
 
-		case WM_MBUTTONDOWN:
+		case WM_MBUTTONDBLCLK:
 		{
 			Root::get_singleton_ptr()->Keyboard->mMouseRight.Down = (wparam == MK_RBUTTON);
 			Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down = (wparam == MK_RBUTTON);

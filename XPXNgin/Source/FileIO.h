@@ -11,6 +11,7 @@
 
 #include "NginCore.h"
 #include "Root.h"
+
 #include <fstream>
 
 namespace XPX
@@ -34,6 +35,7 @@ namespace XPX
 		{
 			String buf;
 			buf.reserve(sz);
+
 			fread(buf.data(), sz, 2, mIf);
 		
 			return buf;

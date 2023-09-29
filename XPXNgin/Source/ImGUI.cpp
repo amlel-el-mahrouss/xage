@@ -211,6 +211,24 @@ namespace XPX::ImGUI
 				mShallEdit = true;
 			}
 		}
+
+		this->mBox->SpriteBatch->Begin();
+
+		XMFLOAT4 clr(this->mBox->TextColor.R, 
+			this->mBox->TextColor.G, this->mBox->TextColor.B,
+			this->mBox->TextColor.A);
+
+		auto origin = ImGUI::UIFontHelper::get_label_font()->MeasureString(this->mText.c_str()) / 2.f;
+
+		auto pos = XMFLOAT2(this->mBox->X + 5, this->mBox->Y);
+
+		ImGUI::UIFontHelper::get_label_font()->DrawString(this->mBox->SpriteBatch.get(),
+			this->mText.c_str(),
+			XMLoadFloat2(&pos),
+			XMLoadFloat4(&clr),
+			0.f, origin);
+
+		this->mBox->SpriteBatch->End();
 	}
 
 	UICheckBox::UICheckBox()

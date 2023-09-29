@@ -60,9 +60,6 @@ namespace XPX
 		BasicString<PChar> mText;
 
 	private:
-		std::unique_ptr<DirectX::SpriteBatch> m_pSpriteBatch;
-
-	private:
 		ImGUI::UIFrame* mHudFrame;
 		ImGUI::UIButton mOk;
 

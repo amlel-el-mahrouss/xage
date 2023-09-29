@@ -13,11 +13,10 @@
 #pragma once
 
 #include "NginCore.h"
-#include <CLua.hpp>
 
 namespace XPX
 {
-	class XPLICIT_API GameVar final : public Lua::CLuaClass
+	class XPLICIT_API GameVar final
 	{
 	private:
 		GameVar(const char* name, const char* value, int flags);

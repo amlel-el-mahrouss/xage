@@ -28,8 +28,7 @@ namespace XPX
 			mPopupId(id),
 			mHudFrame(new ImGUI::UIFrame()),
 			mOk(L"Yes"),
-			mTitle(Bites::XPLICIT_APP_NAME),
-			m_pSpriteBatch(nullptr)
+			mTitle(Bites::XPLICIT_APP_NAME)
 	{
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
@@ -81,15 +80,10 @@ namespace XPX
 		mOk->Y = mHudFrame->Y + mHudFrame->H - mOk->H;
 
 		mOk->BackgroundColor.A = 1;
-
-		m_pSpriteBatch = std::make_unique<SpriteBatch>(Root::get_singleton_ptr()->Renderer->get().pCtx.Get());
 	}
 	
 	PopupComponent::~PopupComponent()
 	{
-		if (m_pSpriteBatch)
-			m_pSpriteBatch.reset();
-
 		delete mHudFrame;
 	}
 	
@@ -101,14 +95,14 @@ namespace XPX
 
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
-		self->m_pSpriteBatch->Begin();
+		self->mHudFrame->SpriteBatch->Begin();
 
 		XMFLOAT2 pos(self->mHudFrame->X + self->mHudFrame->W / 2, self->mHudFrame->Y + 30);
 		XMFLOAT4 clr(self->mHudFrame->TextColor.R, self->mHudFrame->TextColor.G, self->mHudFrame->TextColor.B, self->mHudFrame->TextColor.A);
 
 		auto origin = ImGUI::UIFontHelper::get_label_font()->MeasureString(self->mTitle.c_str()) / 2.f;
 
-		ImGUI::UIFontHelper::get_label_font()->DrawString(self->m_pSpriteBatch.get(),
+		ImGUI::UIFontHelper::get_label_font()->DrawString(self->mHudFrame->SpriteBatch.get(),
 			self->mTitle.c_str(),
 			XMLoadFloat2(&pos),
 			XMLoadFloat4(&clr),
@@ -118,13 +112,13 @@ namespace XPX
 
 		pos = XMFLOAT2(self->mHudFrame->X + self->mHudFrame->W / 2, self->mHudFrame->Y + 100);
 		
-		ImGUI::UIFontHelper::get_label_font()->DrawString(self->m_pSpriteBatch.get(),
+		ImGUI::UIFontHelper::get_label_font()->DrawString(self->mHudFrame->SpriteBatch.get(),
 			self->mText.c_str(),
 			XMLoadFloat2(&pos),
 			XMLoadFloat4(&clr),
 			0.f, origin);
 
-		self->m_pSpriteBatch->End();
+		self->mHudFrame->SpriteBatch->End();
 
 		self->mOk.update();
 

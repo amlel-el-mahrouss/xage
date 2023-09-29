@@ -75,17 +75,10 @@ namespace XPX
 
 			virtual bool in_region() noexcept
 			{
-				POINT p;
-
-				if (ScreenToClient(RENDERER->get().pWindowHandle, &p))
-				{
-					return ((p.x > X) &&
-						(p.x < X + W)) &&
-						(p.y > Y) &&
-						(p.y < Y + H);
-				}
-
-				return false;
+				return ((Root::get_singleton_ptr()->Keyboard->mMousePos.X > X) &&
+					(Root::get_singleton_ptr()->Keyboard->mMousePos.X < X + W)) &&
+					(Root::get_singleton_ptr()->Keyboard->mMousePos.Y > Y) &&
+					(Root::get_singleton_ptr()->Keyboard->mMousePos.Y < Y + H);
 			}
 
 		};
