@@ -12,7 +12,7 @@
 namespace XPX::ImGUI
 {
 	UIButton::UIButton(const PChar* text)
-		: mText(text), Hover(false), LeftClicked(false), RightClicked(false)
+		: mText(text), Hover(false), LeftClicked(false), RightClicked(false), m_iFadeIn(0UL)
 	{
 		m_pFrame = new UIFrame();
 		XPLICIT_ASSERT(m_pFrame);
@@ -62,8 +62,6 @@ namespace XPX::ImGUI
 
 		m_pFrame->SpriteBatch->Begin();
 
-		XMUINT2 origin = { m_pFrame->W, m_pFrame->H };
-
 		auto pos = XMFLOAT2(m_pFrame->X, m_pFrame->Y);
 
 		XMFLOAT4 clr(m_pFrame->TextColor.R, m_pFrame->TextColor.G
@@ -74,9 +72,8 @@ namespace XPX::ImGUI
 			mText.c_str(),
 			XMLoadFloat2(&pos),
 			XMLoadFloat4(&clr),
-			0.f, XMLoadUInt2(&origin));
+			0.f);
 
-		
 		m_pFrame->SpriteBatch->End();
 
 		if (m_iFadeIn < 255)
@@ -218,15 +215,13 @@ namespace XPX::ImGUI
 			this->mBox->TextColor.G, this->mBox->TextColor.B,
 			this->mBox->TextColor.A);
 
-		auto origin = ImGUI::UIFontHelper::get_label_font()->MeasureString(this->mText.c_str()) / 2.f;
-
 		auto pos = XMFLOAT2(this->mBox->X + 5, this->mBox->Y);
 
 		ImGUI::UIFontHelper::get_label_font()->DrawString(this->mBox->SpriteBatch.get(),
 			this->mText.c_str(),
 			XMLoadFloat2(&pos),
 			XMLoadFloat4(&clr),
-			0.f, origin);
+			0.f);
 
 		this->mBox->SpriteBatch->End();
 	}

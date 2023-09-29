@@ -12,6 +12,11 @@
 #include <Root.h>
 #include <NetworkComponent.h>
 
+//!
+//! Sample code for a replication manager.
+//! Use it for any XAGE based project.
+//! 
+
 namespace XPX
 {
 	class LocalReplicationComponent final : public Component
@@ -19,7 +24,7 @@ namespace XPX
 	public:
 		LocalReplicationComponent() = delete;
 		
-		explicit LocalReplicationComponent(const std::int64_t& hash, const String& myId)
+		explicit LocalReplicationComponent(const std::int64_t& hash /* PRIVATE NETWORK HASH */, const String& myId /* XPX LOBBY ID */)
 			: 
 			mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 			mHash(hash),

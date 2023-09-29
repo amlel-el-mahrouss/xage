@@ -16,7 +16,7 @@
 
 constexpr auto AR_MAGIC = 0xBADF00D;
 
-#define AR_EXTENSION ".xar"
+#define AR_EXTENSION ".dir"
 #define AR_MAKE_EXTENSION(NAME) NAME AR_EXTENSION
 
 struct ar_extension_table;
@@ -50,8 +50,9 @@ XPX_PACKED_STRUCT(struct ar_header {
 #define AR_HDR_SZ (sizeof(struct ar_header))
 
 typedef enum {
-    AR_COMPRESSION_TYPE_ZLIB, // Network compressed.
-    AR_COMPRESSION_TYPE_COUNT,
+    AR_COMPRESSION_TYPE_NONE = 0x00, //! Uncompressed scene.
+    AR_COMPRESSION_TYPE_ZLIB = 0x10, //! Zlib compression.
+    AR_COMPRESSION_TYPE_COUNT = 2,
 } AR_COMPRESSION_TYPE;
 
 typedef FILE ar_file_t;
