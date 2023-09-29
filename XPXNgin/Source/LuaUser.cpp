@@ -12,40 +12,42 @@
  */
 
 #include "NginCore.h"
+
 #include <windows.h>
 #include <CLua.hpp>
 
 #include "LuaUser.h"
 
-static struct {
+static struct
+{
     CRITICAL_SECTION LockSct;
     BOOL Init;
-} Gl;
+} gLuaLock;
 
 void LuaLockInitial(lua_State* L)
 {
-    if (!Gl.Init)
+    if (!gLuaLock.Init)
     {
-        InitializeCriticalSection(&Gl.LockSct);
-        Gl.Init = TRUE;
+        InitializeCriticalSection(&gLuaLock.LockSct);
+        gLuaLock.Init = TRUE;
     }
 }
 
 void LuaLockFinal(lua_State* L)
 {
-    if (Gl.Init)
+    if (gLuaLock.Init)
     {
-        DeleteCriticalSection(&Gl.LockSct);
-        Gl.Init = FALSE;
+        DeleteCriticalSection(&gLuaLock.LockSct);
+        gLuaLock.Init = FALSE;
     }
 }
 
 void LuaLock(lua_State* L)
 {
-    EnterCriticalSection(&Gl.LockSct);
+    EnterCriticalSection(&gLuaLock.LockSct);
 }
 
 void LuaUnlock(lua_State* L)
 {
-    LeaveCriticalSection(&Gl.LockSct);
+    LeaveCriticalSection(&gLuaLock.LockSct);
 }

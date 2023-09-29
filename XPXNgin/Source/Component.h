@@ -83,6 +83,8 @@ namespace XPX
 				  _Eval(nullptr)
 			{}
 
+			~ComponentAccessor() = default;
+
 		public:
 			ComponentUpdateEvalAccessor _Eval;
 			ComponentUpdateAccessor _Update;
@@ -91,8 +93,12 @@ namespace XPX
 			String _Name;
 
 		public:
+			const String abi_name() const noexcept { return _AbiName; }
+			const String name() const noexcept { return _Name; }
+
+		public:
 			template <typename Y>
-			Y as_type() noexcept
+			Y as_type() const noexcept
 			{
 				return reinterpret_cast<Y>(_Pointee);
 			}

@@ -13,21 +13,22 @@
 
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalCharacterComponent.h"
-#include "App.h"
 #include "UserInterface.h"
+#include "App.h"
 
-#define XPX_MAX_TIMEOUT_MACRO (250)
+constexpr short XPX_MAX_TIMEOUT_MACRO = 250;
 
 namespace XPX
 {
-	static int XPX_MAX_TIMEOUT = XPX_MAX_TIMEOUT_MACRO;
+	static short XPX_MAX_TIMEOUT = XPX_MAX_TIMEOUT_MACRO;
 
-	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(const std::int64_t& priv, const std::int64_t& publ)
+	LocalNetworkMonitorEvent::LocalNetworkMonitorEvent(const std::int64_t& priv, 
+														const std::int64_t& publ)
 		:
-			mNetwork(nullptr),
-			mResetCount(0),
-			mPublicHash(publ),
-			mHash(priv)
+		mNetwork(nullptr),
+		mResetCount(0),
+		mPublicHash(publ),
+		mHash(priv)
 	{
 		mNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent");
 
@@ -78,7 +79,9 @@ namespace XPX
 				{
 					if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
 						std::terminate();
-						}, POPUP_TYPE::KICK, "KickPopup", packet.additional_data[0] != 0 ? packet.additional_data : "You have been kicked."))
+						}, POPUP_TYPE::KICK, 
+						"KickPopup", 
+						packet.additional_data[0] != 0 ? packet.additional_data : "You have been kicked from the lobby."))
 					{
 						ComponentSystem::get_singleton_ptr()->remove(mNetwork);
 						mNetwork = nullptr;
@@ -115,6 +118,8 @@ namespace XPX
 				}
 
 				mNetwork = nullptr;
+
+				return;
 			}
 		}
 	}

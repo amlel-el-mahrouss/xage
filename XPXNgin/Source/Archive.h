@@ -24,8 +24,8 @@ struct ar_header;
 
 typedef enum 
 {
-    AR_FLAG_ZLIB, // The archive is compressed using DEFLATE.
-    AR_FLAG_PASSWORD, // this archive has a password (AR Extension)
+    AR_FLAG_NONE = 0x0, //! no flags
+    AR_FLAG_PASSWORD = 0x7c, //! this archive has a password (AR Extension)
 } AR_FLAGS;
 
 XPX_PACKED_STRUCT(struct ar_extension_table {
@@ -35,9 +35,9 @@ XPX_PACKED_STRUCT(struct ar_extension_table {
     uint32_t flags;
 })
 
-/*
-    Stripped down tar header
-*/
+/*!
+  !  Stripped down tar header
+  !*/
 
 XPX_PACKED_STRUCT(struct ar_header {
     uint64_t magic;

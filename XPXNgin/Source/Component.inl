@@ -43,27 +43,31 @@ T* XPX::ComponentSystem::add(Args&&... args)
 template <typename T>
 T* XPX::ComponentSystem::get(const char* name)
 {
-	if (!name || *name == 0)
+	if (!name || 
+		*name == 0)
 		return nullptr;
 
-	for (std::size_t i = 0; i < mComponents.size(); ++i)
+	std::vector<Details::ComponentAccessor>::const_iterator it = std::find_if(mComponents.cbegin(), 
+		mComponents.cend(), 
+		[&](const Details::ComponentAccessor comp) -> bool {
+		return name == comp.name();
+	});
+
+	if (it != mComponents.cend())
 	{
-		auto& comp = mComponents[i];
-
-		if (!comp.as_type<T*>())
-			continue;
-
-		if (name == comp._Name)
-			return comp.as_type<T*>(); //! __thiscall wants the class at ECX.
+		return it->as_type<T*>();
 	}
 
 	return nullptr;
 }
 
+inline constexpr int XPX_MAX_RESERVATIONS = 30;
+
 template <typename T>
 std::vector<T*> XPX::ComponentSystem::all_of()
 {
 	std::vector<T*> list;
+	list.reserve(XPX_MAX_RESERVATIONS);
 
 	for (std::size_t i = 0; i < mComponents.size(); ++i)
 	{
