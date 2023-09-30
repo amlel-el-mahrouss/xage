@@ -91,7 +91,9 @@ namespace XPX::Renderer::DX11
 		swapDesc.OutputWindow = privateData.pWindowHandle;
 	}
 
-	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd)
+	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd,
+		const UINT width,
+		const UINT height)
 		: m_private()
 	{
 		IDXGIFactory* pFactory = nullptr;
@@ -151,13 +153,16 @@ namespace XPX::Renderer::DX11
 						m_private,
 						numerator,
 						denominator,
-						XPLICIT_MIN_WIDTH,
-						XPLICIT_MIN_HEIGHT,
+						width,
+						height,
 						displayModeList[i].Format,
 						displayModeList[i].Scaling,
 						displayModeList[i].ScanlineOrdering);
 
 					get().pCamera = std::make_unique<CameraSystemD3D11>();
+
+					m_private.iWidth = width;
+					m_private.iHeight = height;
 
 					this->setup_rendering_system();
 
@@ -226,8 +231,8 @@ namespace XPX::Renderer::DX11
 		D3D11_TEXTURE2D_DESC depthBufferDesc;
 		RtlZeroMemory(&depthBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-		depthBufferDesc.Width = XPLICIT_MIN_WIDTH;
-		depthBufferDesc.Height = XPLICIT_MIN_HEIGHT;
+		depthBufferDesc.Width = get().iWidth;
+		depthBufferDesc.Height = get().iHeight;
 		depthBufferDesc.MipLevels = 1;
 		depthBufferDesc.ArraySize = 1;
 		depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -272,7 +277,9 @@ namespace XPX::Renderer::DX11
 		m_private.pContext->OMSetDepthStencilState(m_private.pDepthStencilState.Get(), 1);
 
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+
 		ZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+		
 		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
@@ -305,8 +312,8 @@ namespace XPX::Renderer::DX11
 
 		RtlZeroMemory(&m_private.Viewport, sizeof(D3D11_VIEWPORT));
 
-		m_private.Viewport.Width = static_cast<float>(XPLICIT_MIN_WIDTH);
-		m_private.Viewport.Height = static_cast<float>(XPLICIT_MIN_HEIGHT);
+		m_private.Viewport.Width = static_cast<float>(get().iWidth);
+		m_private.Viewport.Height = static_cast<float>(get().iHeight);
 
 		m_private.Viewport.MinDepth = 0.0f;
 		m_private.Viewport.MaxDepth = 1.0f;
@@ -390,11 +397,11 @@ namespace XPX::Renderer::DX11
 
 	DriverSystemD3D11::operator bool() { return is_closed(); }
 
-	std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd) 
+	std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd, UINT width, UINT height) 
 	{ 
 		XPLICIT_ASSERT(hwnd);
 
-		return std::make_unique<DriverSystemD3D11>(hwnd); 
+		return std::make_unique<DriverSystemD3D11>(hwnd, width, height); 
 	}
 
 	ColorRenderableComponentD3D11::ColorRenderableComponentD3D11() noexcept
@@ -420,7 +427,7 @@ namespace XPX::Renderer::DX11
 
 	void ColorRenderableComponentD3D11::push(const UINT& indice) noexcept { this->m_arrayIndices.push_back(indice);  }
 
-	void ColorRenderableComponentD3D11::render()
+	void ColorRenderableComponentD3D11::make_mesh()
 	{
 		if (m_arrayVerts.empty())
 			return;
@@ -467,7 +474,7 @@ namespace XPX::Renderer::DX11
 		if (FAILED(m_hResult))
 		{
 			delete[] m_pVertex;
-			throw Win32Error("Driver error (ColorRenderableComponentD3D11::render(CreateBuffer(m_vertex_buffer))");
+			throw Win32Error("Driver error (ColorRenderableComponentD3D11::make_mesh(CreateBuffer(m_vertex_buffer))");
 		}
 
 		delete[] m_pVertex;

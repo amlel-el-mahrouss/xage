@@ -11,6 +11,8 @@
  */
 
 #include "DriverOpenGL.h"
+#include "FileIO.h"
+
 #include <glfw3.h>
 
  /**

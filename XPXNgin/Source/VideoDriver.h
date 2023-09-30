@@ -37,7 +37,7 @@ namespace XPX
 			friend class VideoDriver;
 
 		private:
-			VideoBuffer();
+			explicit VideoBuffer();
 
 		public:
 			~VideoBuffer();
@@ -62,7 +62,7 @@ namespace XPX
 		class XPLICIT_API VideoDriver final
 		{
 		public:
-			explicit VideoDriver(HWND hwnd);
+			explicit VideoDriver(HWND hwnd, UINT width, UINT height);
 			~VideoDriver();
 
 			VideoDriver& operator=(const VideoDriver&) = default;

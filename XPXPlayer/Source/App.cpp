@@ -74,7 +74,7 @@ namespace XPX::Bites
 		mRenderingWindow = new Win32Window("XPX Advanced Game Engine", "XAGEWindowClass", GetModuleHandle(nullptr));
 		Root::get_singleton_ptr()->Window = mRenderingWindow;
 
-		mRenderer = new Renderer::DX11::DriverSystemD3D11(mRenderingWindow->get().WindowHandle);
+		mRenderer = new Renderer::DX11::DriverSystemD3D11(mRenderingWindow->get().WindowHandle, traits.window_width, traits.window_height);
 		Root::get_singleton_ptr()->Renderer = mRenderer;
 
 		mRenderer2D = new Renderer::D2D::DriverSystemD2D(mRenderer);

@@ -17,6 +17,8 @@
 #include "NginCore.h"
 #include "Avx.h"
 
+#include "Bites.h"
+
 #include "FileIO.h"
 
 #ifdef XPLICIT_WINDOWS
@@ -91,12 +93,13 @@ namespace XPX::Renderer::DX11
 	public:
 		DriverSystemD3D11() = delete;
 		
-		explicit DriverSystemD3D11(HWND hwnd);
+		DriverSystemD3D11(HWND hwnd, 
+			const UINT width,
+			const UINT height);
+
 		~DriverSystemD3D11() override;
 
-		DriverSystemD3D11& operator=(const DriverSystemD3D11&) = default;
-		DriverSystemD3D11(const DriverSystemD3D11&) = default;
-
+	public:
 		const char* name() noexcept override;
 		RENDER_SYSTEM api() noexcept override;
 
@@ -109,6 +112,9 @@ namespace XPX::Renderer::DX11
 			HRESULT hResult{ S_OK };
 			bool bEndRendering{ false };
 			HWND pWindowHandle{ nullptr };
+
+			UINT iWidth{ XPLICIT_DEFAULT_WIDTH };
+			UINT iHeight{ XPLICIT_DEFAULT_HEIGHT };
 
 		public:
 			DXGI_SWAP_CHAIN_DESC SwapDesc;
@@ -132,9 +138,6 @@ namespace XPX::Renderer::DX11
 
 		public:
 			std::unique_ptr<CameraSystemD3D11> pCamera;
-
-		public:
-
 
 		};
 
@@ -172,7 +175,7 @@ namespace XPX::Renderer::DX11
 		Hull,
 	};
 
-	XPLICIT_API std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd);
+	XPLICIT_API std::unique_ptr<DriverSystemD3D11> make_driver_system_d3d11(HWND hwnd, UINT width, UINT height);
 
 	class XPLICIT_API ShaderSystemD3D11 final : public ShaderSystem
 	{
@@ -254,7 +257,16 @@ namespace XPX::Renderer::DX11
 		void push(const UINT& indice) noexcept;
 
 	public:
-		void driver(DriverSystemD3D11* dx11) noexcept;
+		/// <summary>
+		/// Driver setter.
+		/// </summary>
+		/// <param name="the">The driver.</param>
+		void driver(DriverSystemD3D11* the) noexcept;
+
+		/// <summary>
+		/// Driver getter
+		/// </summary>
+		/// <returns>Direct3D 11 driver.</returns>
 		DriverSystemD3D11* driver() noexcept;
 
 	public:
@@ -271,9 +283,9 @@ namespace XPX::Renderer::DX11
 		const size_t& get_indices_count() noexcept;
 
 		/// <summary>
-		/// Actually registers this component as renderable.
+		/// Makes a mesh out of input and shader.
 		/// </summary>
-		void render();
+		void make_mesh();
 
 	public:
 		static void update(ClassPtr self);

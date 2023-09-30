@@ -24,15 +24,17 @@
 
 #ifdef XPLICIT_WINDOWS
 
-#define XPLICIT_GET_X_POS(LPARAM) GET_X_LPARAM(LPARAM)
-#define XPLICIT_GET_Y_POS(LPARAM) GET_Y_LPARAM(LPARAM)
-
 #define XPLICIT_MAIN()\
 INT32 WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR pCmdLine, int nCmdShow)
 
-#include "DriverD3D11.h"
+
 
 #endif // ifdef XPLICIT_WINDOWS
+
+namespace XPX::Renderer::DX11
+{
+	class DriverSystemD3D11;
+}
 
 namespace XPX::Bites
 {
