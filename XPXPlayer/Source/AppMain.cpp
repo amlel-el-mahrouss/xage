@@ -139,7 +139,7 @@ static void XplicitThrowException(XPX::Win32Error& err)
 	exit += L"\n";
 
 	XPX::DialogHelper::message_box(L"XAGE",
-		L"ENGINE Crash!",
+		L"XAGE got some issues!!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);

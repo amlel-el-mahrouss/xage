@@ -23,14 +23,32 @@ namespace XPX::Bites
 		mRenderer2D(nullptr),
 		mRenderingWindow(nullptr)
 	{
-		this->setup_engine();
+		try
+		{
+			this->setup_engine();
 
-		ComponentSystem::get_singleton_ptr()->add<NetworkComponent>();
+			ComponentSystem::get_singleton_ptr()->add<NetworkComponent>();
 
-		const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<LoadingScreenComponent>();
-		XPLICIT_ASSERT(loading_screen);
+			const auto loading_screen = ComponentSystem::get_singleton_ptr()->add<LoadingScreenComponent>();
+			XPLICIT_ASSERT(loading_screen);
 
-		loading_screen->connect(xconnect_to);
+			loading_screen->connect(xconnect_to);
+		}
+		catch (EngineError& err)
+		{
+			std::wstring exit;
+			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+			exit += L"WHAT: ";
+			exit += converter.from_bytes(err.what());
+			exit += L"\n";
+
+			XPX::DialogHelper::message_box(L"XAGE",
+				L"Fatal error!",
+				exit.c_str(),
+				TD_INFORMATION_ICON,
+				TDCBF_OK_BUTTON);
+		}
 	}
 
 	ApplicationManager::~ApplicationManager() = default;

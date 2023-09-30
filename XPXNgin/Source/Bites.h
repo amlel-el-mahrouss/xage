@@ -58,6 +58,13 @@ namespace XPX::Bites
 			HWND WindowHandle;
 			WNDCLASSEXA WndClass;
 			Renderer::DX11::DriverSystemD3D11* DriverSystem;
+
+			void set_window_title(const PChar* title) noexcept 
+			{
+				XPLICIT_ASSERT(WindowHandle);
+				SetWindowTextW(WindowHandle, title);
+			}
+
 		};
 
 		using Traits = Win32Traits;
