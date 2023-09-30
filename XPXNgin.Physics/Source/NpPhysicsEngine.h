@@ -29,18 +29,12 @@
 namespace XPX
 {
     typedef XPXAttribute* NpNodePtr;
+    typedef XPXAttribute NpNodeType;
 
     class NPLICIT_API NpPhysicsEvent : public Event
     {
     public:
-        enum
-        {
-            NP_DYNAMIC,
-            NP_STATIC,
-        };
-
-    public:
-        NpPhysicsEvent() noexcept;
+        explicit NpPhysicsEvent() noexcept;
         ~NpPhysicsEvent() noexcept override;
 
     public:
@@ -52,8 +46,8 @@ namespace XPX
         void operator()() override;
 
     public:
+        bool insert_node(NpNodePtr node);
         bool remove_node(NpNodePtr node);
-        bool insert_node(NpNodePtr node, int node_kind = NP_DYNAMIC);
 
     private:
         std::vector<NpNodePtr> mWorldNodes;

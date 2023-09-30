@@ -118,7 +118,7 @@
     <ClInclude Include="XPXNgin\Source\HelperMacros.h" />
     <ClInclude Include="XPXNgin\Source\Http.h" />
     <ClInclude Include="XPXNgin\Source\ImGUI.h" />
-    <ClInclude Include="XPXNgin\Source\ImGuiBase.h" />
+    <ClInclude Include="XPXNgin\Source\ImGUICommon.h" />
     <ClInclude Include="XPXNgin\Source\LuaUser.h" />
     <ClInclude Include="XPXNgin\Source\MonoComponent.h" />
     <ClInclude Include="XPXNgin\Source\MonoInterop.h" />

@@ -101,7 +101,7 @@
     <ClInclude Include="XPXPlayer\Source\LocalMenuEvent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalNetworkMonitorEvent.h" />
     <ClInclude Include="XPXPlayer\Source\LocalReplicationComponent.h" />
-    <ClInclude Include="XPXPlayer\Source\UserInterface.h" />
+    <ClInclude Include="XPXPlayer\Source\ComUI.h" />
     <ClInclude Include="XPXPlayer\Source\PlayerConfig.h" />
     <ClInclude Include="XPXPlayer\Source\SoundComponent.h" />
   </ItemGroup>
@@ -114,7 +114,7 @@
     <ClCompile Include="XPXPlayer\Source\LocalMenuEvent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalNetworkMonitorEvent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalReplicationComponent.cpp" />
-    <ClCompile Include="XPXPlayer\Source\UserInterface.cpp" />
+    <ClCompile Include="XPXPlayer\Source\ComUI.cpp" />
     <ClCompile Include="XPXPlayer\Source\SoundComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\AppMain.cpp" />
   </ItemGroup>

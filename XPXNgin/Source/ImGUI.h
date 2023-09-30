@@ -10,9 +10,9 @@
 #pragma once
 
 //! ImGUI Base Classes
-#include "ImGuiBase.h"
+#include "ImGUICommon.h"
 
-//! NPlicit Math library;
+//! XPX Math library.
 #include <NMath.h>
 
 namespace XPX::ImGUI

@@ -14,7 +14,7 @@
 // fields: FOV, DefaultCameraStyle, Inherits from XPXAttribute.
 
 #include "LocalCameraComponent.h"
-#include "UserInterface.h"
+#include "ComUI.h"
 #include "App.h"
 
 namespace XPX

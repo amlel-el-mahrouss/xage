@@ -11,7 +11,7 @@
  @file
  */
 
-#include "UserInterface.h"
+#include "ComUI.h"
 #include "App.h"
 
 static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;

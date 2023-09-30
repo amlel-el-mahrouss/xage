@@ -1,7 +1,5 @@
 #pragma once
 
-#include <DriverD3D11.h>
-
 namespace XPXStudioApp {
 
 	using namespace System;
@@ -16,9 +14,6 @@ namespace XPXStudioApp {
 	/// </summary>
 	public ref class RenderingWindow : public System::Windows::Forms::Form
 	{
-	private:
-		std::unique_ptr<XPX::Renderer::DX11::DriverSystemD3D11> pRenderer{ nullptr };
-
 	public:
 		RenderingWindow(void)
 		{
@@ -118,10 +113,6 @@ namespace XPXStudioApp {
 			this->panel2->Size = System::Drawing::Size(866, 661);
 			this->panel2->TabIndex = 3;
 
-			pRenderer = XPX::Renderer::DX11::make_driver_system_d3d11((HWND)this->panel2->Handle.ToPointer(), 
-				this->panel2->Width,
-				this->panel2->Height);
-
 			this->panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &RenderingWindow::panel2_Paint);
 			// 
 			// pictureBox4
@@ -180,12 +171,7 @@ namespace XPXStudioApp {
 		}
 #pragma endregion
 	private: System::Void panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
-		if (pRenderer)
-		{
-			pRenderer->begin_scene(1, 0, 0, 0, true, true);
-		
-			pRenderer->end_scene();
-		}
+
 	}
 };
 }

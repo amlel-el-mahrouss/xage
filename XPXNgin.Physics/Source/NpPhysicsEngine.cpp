@@ -22,7 +22,8 @@
 
 #define NpDefaultGravity() PxVec3(0.0f, -9.81f, 0.0f)
 
-#define NP_DELTATIME (1.0/60.f)
+#define NP_FPS (60.f)
+#define NP_DELTATIME (1.0 / NP_FPS)
 
 #define NpGetHowManyWorkers() (8)
 
@@ -150,8 +151,7 @@ namespace XPX
 
 		repl_packet.id = node->f_SceneId;
 
-		NetworkServerContext::send_all(gNetwork,
-			&repl_packet);
+		NetworkServerContext::send_all(gNetwork, &repl_packet);
 	}
 
 	static Details::NpUserErrorCallback gDefaultErrorCallback;
@@ -178,7 +178,6 @@ namespace XPX
 		using namespace physx;
 
 		gNetwork = ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent");
-
 		XPLICIT_ASSERT(gNetwork);
 
 		gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocatorCallback,
@@ -313,10 +312,8 @@ namespace XPX
 		}
 	}
 
-	bool NpPhysicsEvent::insert_node(NpNodePtr node, int node_kind)
+	bool NpPhysicsEvent::insert_node(NpNodePtr node)
 	{
-		(void)node_kind;
-
 		if (node)
 		{
 			using namespace physx;
@@ -328,7 +325,7 @@ namespace XPX
 			{
 				PxReal friction = node->scale().X * node->scale().Y * node->scale().Z;
 				auto mat = gPhysics->createMaterial(friction, friction, 1);
-				
+
 				PxBoxGeometry geom(node->scale().X, node->scale().Y, node->scale().Z);
 
 				auto shape = gPhysics->createShape(geom, *mat, true);

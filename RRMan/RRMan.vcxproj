@@ -81,8 +81,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Vendor;$(SolutionDir)XPXNgin.PhysicsSource;$(SolutionDir)XPXNgin/Source</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Vendor/glfw/include/GLFW;$(SolutionDir)Vendor/spdlog;$(SolutionDir)Vendor;$(SolutionDir)XPXNgin.Physics/Source;$(SolutionDir)XPXNgin/Source</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -112,8 +112,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Vendor;$(SolutionDir)XPXNgin.PhysicsSource;$(SolutionDir)XPXNgin/Source</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Vendor/glfw/include/GLFW;$(SolutionDir)Vendor/spdlog;$(SolutionDir)Vendor;$(SolutionDir)XPXNgin.Physics/Source;$(SolutionDir)XPXNgin/Source</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies />

@@ -23,7 +23,7 @@
 #include "LoadingScreenComponent.h"
 
 #include "LocalMenuEvent.h"
-#include "UserInterface.h"
+#include "ComUI.h"
 #include "App.h"
 
 #include <XHTTPManager.h>
