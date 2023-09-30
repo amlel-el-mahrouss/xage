@@ -42,6 +42,23 @@ namespace XPX::ImGUI
 		if (!m_pFrame)
 			return;
 
+
+		m_pFrame->SpriteBatch->Begin();
+
+		auto pos = XMFLOAT2(m_pFrame->X, m_pFrame->Y);
+
+		XMFLOAT4 clr(m_pFrame->TextColor.R, m_pFrame->TextColor.G
+			, m_pFrame->TextColor.B,
+			m_pFrame->TextColor.A);
+
+		m_pFont->DrawString(m_pFrame->SpriteBatch.get(),
+			mText.c_str(),
+			XMLoadFloat2(&pos),
+			XMLoadFloat4(&clr),
+			0.f);
+
+		m_pFrame->SpriteBatch->End();
+
 		m_pFrame->TextColor.A = m_iFadeIn;
 		m_pFrame->BackgroundColor.A = m_iFadeIn;
 		m_pFrame->BackgroundHoverColor.A = m_iFadeIn;
@@ -59,22 +76,6 @@ namespace XPX::ImGUI
 		{
 			m_pFrame->update(m_pFrame->BackgroundColor);
 		}
-
-		m_pFrame->SpriteBatch->Begin();
-
-		auto pos = XMFLOAT2(m_pFrame->X, m_pFrame->Y);
-
-		XMFLOAT4 clr(m_pFrame->TextColor.R, m_pFrame->TextColor.G
-			, m_pFrame->TextColor.B,
-			m_pFrame->TextColor.A);
-
-		m_pFont->DrawString(m_pFrame->SpriteBatch.get(),
-			mText.c_str(),
-			XMLoadFloat2(&pos),
-			XMLoadFloat4(&clr),
-			0.f);
-
-		m_pFrame->SpriteBatch->End();
 
 		if (m_iFadeIn < 255)
 			++m_iFadeIn;
@@ -149,8 +150,6 @@ namespace XPX::ImGUI
 
 	void UIEditBox::update()
 	{
-		this->mBox->update(this->mBox->BackgroundColor);
-
 		if (this->mBox->in_region() &&
 			KEYBOARD->left_down())
 		{
@@ -224,6 +223,8 @@ namespace XPX::ImGUI
 			0.f);
 
 		this->mBox->SpriteBatch->End();
+
+		this->mBox->update(this->mBox->BackgroundColor);
 	}
 
 	UICheckBox::UICheckBox()
@@ -277,12 +278,14 @@ namespace XPX::ImGUI
 
 		XPLICIT_ASSERT(mBody.mBody && mHead.mBody);
 
-		auto bk_head = (0x31);
+		auto bk_head = 0x31;
+
 		mHead.mBody->BackgroundColor = Color<float>(bk_head, bk_head, bk_head);
 		mHead.mBody->BackgroundHoverColor = Color<float>(bk_head, bk_head, bk_head);
 
-		auto bk = (0x1C);
-		auto bk_hover = (0x26);
+		auto bk = 0x1C;
+		auto bk_hover = 0x26;
+
 		mBody.mBody->BackgroundColor = Color<float>(bk, bk, bk);
 		mBody.mBody->BackgroundHoverColor = Color<float>(bk_hover, bk_hover, bk_hover);
 	}

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RenderingWindow.h"
+
 namespace XPXStudioApp {
 
 	using namespace System;
@@ -60,7 +62,8 @@ namespace XPXStudioApp {
 			// 
 			// button2
 			// 
-			this->button2->BackColor = System::Drawing::Color::DeepSkyBlue;
+			this->button2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(73)),
+				static_cast<System::Int32>(static_cast<System::Byte>(73)));
 			this->button2->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button2->Font = (gcnew System::Drawing::Font(L"Urbanist", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
@@ -69,12 +72,14 @@ namespace XPXStudioApp {
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(260, 42);
 			this->button2->TabIndex = 2;
-			this->button2->Text = L"Create USD scene...";
+			this->button2->Text = L"Create new XSD...";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &RRRecentProjects::button2_Click);
 			// 
 			// button1
 			// 
-			this->button1->BackColor = System::Drawing::Color::DeepSkyBlue;
+			this->button1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(73)),
+				static_cast<System::Int32>(static_cast<System::Byte>(73)));
 			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button1->Font = (gcnew System::Drawing::Font(L"Urbanist", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
@@ -89,9 +94,12 @@ namespace XPXStudioApp {
 			// checkBox1
 			// 
 			this->checkBox1->AutoSize = true;
+			this->checkBox1->Font = (gcnew System::Drawing::Font(L"Urbanist Black", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->checkBox1->ForeColor = System::Drawing::Color::White;
 			this->checkBox1->Location = System::Drawing::Point(12, 236);
 			this->checkBox1->Name = L"checkBox1";
-			this->checkBox1->Size = System::Drawing::Size(188, 17);
+			this->checkBox1->Size = System::Drawing::Size(211, 19);
 			this->checkBox1->TabIndex = 4;
 			this->checkBox1->Text = L"Always open this dialog by default.";
 			this->checkBox1->UseVisualStyleBackColor = true;
@@ -100,6 +108,8 @@ namespace XPXStudioApp {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(39)), static_cast<System::Int32>(static_cast<System::Byte>(39)),
+				static_cast<System::Int32>(static_cast<System::Byte>(39)));
 			this->ClientSize = System::Drawing::Size(284, 361);
 			this->Controls->Add(this->checkBox1);
 			this->Controls->Add(this->button1);
@@ -117,5 +127,10 @@ namespace XPXStudioApp {
 
 		}
 #pragma endregion
-	};
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		RenderingWindow win;
+		win.ShowInTaskbar = true;
+		win.ShowDialog();
+	}
+};
 }

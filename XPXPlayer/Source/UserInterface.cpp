@@ -91,8 +91,6 @@ namespace XPX
 	{
 		auto* self = static_cast<PopupComponent*>(class_ptr);
 
-		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
-
 		self->mHudFrame->SpriteBatch->Begin();
 
 		XMFLOAT2 pos(self->mHudFrame->X + self->mHudFrame->W / 2, self->mHudFrame->Y + 30);
@@ -119,6 +117,7 @@ namespace XPX
 		self->mHudFrame->SpriteBatch->End();
 
 		self->mOk.update();
+		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 
 		if (self->mOk.LeftClicked)
 			self->mClicked();
