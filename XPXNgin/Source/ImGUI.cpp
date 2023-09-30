@@ -42,23 +42,6 @@ namespace XPX::ImGUI
 		if (!m_pFrame)
 			return;
 
-
-		m_pFrame->SpriteBatch->Begin();
-
-		auto pos = XMFLOAT2(m_pFrame->X, m_pFrame->Y);
-
-		XMFLOAT4 clr(m_pFrame->TextColor.R, m_pFrame->TextColor.G
-			, m_pFrame->TextColor.B,
-			m_pFrame->TextColor.A);
-
-		m_pFont->DrawString(m_pFrame->SpriteBatch.get(),
-			mText.c_str(),
-			XMLoadFloat2(&pos),
-			XMLoadFloat4(&clr),
-			0.f);
-
-		m_pFrame->SpriteBatch->End();
-
 		m_pFrame->TextColor.A = m_iFadeIn;
 		m_pFrame->BackgroundColor.A = m_iFadeIn;
 		m_pFrame->BackgroundHoverColor.A = m_iFadeIn;
@@ -79,6 +62,22 @@ namespace XPX::ImGUI
 
 		if (m_iFadeIn < 255)
 			++m_iFadeIn;
+
+		m_pFrame->SpriteBatch->Begin();
+
+		auto pos = XMFLOAT2((m_pFrame->X + m_pFrame->W) * 0.742f, m_pFrame->Y + 3);
+
+		XMFLOAT4 clr(m_pFrame->TextColor.R, m_pFrame->TextColor.G
+			, m_pFrame->TextColor.B,
+			m_pFrame->TextColor.A);
+
+		m_pFont->DrawString(m_pFrame->SpriteBatch.get(),
+			mText.c_str(),
+			XMLoadFloat2(&pos),
+			XMLoadFloat4(&clr),
+			0.f);
+
+		m_pFrame->SpriteBatch->End();
 	}
 
 	void UIButton::label(const PChar* text)

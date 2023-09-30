@@ -74,6 +74,7 @@ XPLICIT_MAIN()
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.2, 0.2, 0.2, true, true);
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
+
 			XPX::EventSystem::get_singleton_ptr()->update();
 
 			XPX::Root::get_singleton_ptr()->Renderer->end_scene();

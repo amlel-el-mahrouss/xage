@@ -15,7 +15,6 @@
  */
 
 #include "DriverD3D11.h"
-#include "DriverD2D.h"
 #include "Bites.h"
 
 #include "HelperMacros.h"
@@ -348,8 +347,6 @@ namespace XPX::Renderer::DX11
 
 		m_private.pContext->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
 		m_private.pContext->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL) : 0, 1.0f, 0);
-
-		RENDERER_2D->begin_scene();
 	}
 
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
@@ -380,8 +377,6 @@ namespace XPX::Renderer::DX11
 	{
 		XPLICIT_ASSERT(m_private.pSwapChain);
 		XPLICIT_ASSERT(m_private.pContext);
-
-		RENDERER_2D->end_scene();
 
 		m_private.hResult = m_private.pSwapChain->Present(m_private.bVSync, 0);
 

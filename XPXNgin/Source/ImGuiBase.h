@@ -70,7 +70,9 @@ namespace XPX
 				rectangleRect.R = X + W;
 				rectangleRect.B = Y + H;
 
-				RENDERER_2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 1.0f, BackgroundColor);
+				XPX::Root::get_singleton_ptr()->Renderer2D->begin_scene();
+				XPX::Root::get_singleton_ptr()->Renderer2D->draw_rectangle(rectangleRect, 0.0f, 0.0f, 1.0f, BackgroundColor);
+				XPX::Root::get_singleton_ptr()->Renderer2D->end_scene();
 			}
 
 			virtual bool in_region() noexcept

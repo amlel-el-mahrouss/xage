@@ -70,8 +70,8 @@ namespace XPX
 		mHudFrame->BackgroundColor.G = (0x0F);
 		mHudFrame->BackgroundColor.B = (0x0F);
 
-		mHudFrame->X = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_MIN_WIDTH));
-		mHudFrame->Y = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_MIN_HEIGHT));
+		mHudFrame->X = ImGUI::JustifyBy(2, ImGUI::CenterOf(XPLICIT_MIN_WIDTH));
+		mHudFrame->Y = ImGUI::JustifyBy(2, ImGUI::CenterOf(XPLICIT_MIN_HEIGHT));
 
 		mOk->W = 504;
 		mOk->H = 41;
@@ -90,6 +90,12 @@ namespace XPX
 	void PopupComponent::update(ClassPtr class_ptr)
 	{
 		auto* self = static_cast<PopupComponent*>(class_ptr);
+
+		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
+		self->mOk.update();
+
+		if (self->mOk.LeftClicked)
+			self->mClicked();
 
 		self->mHudFrame->SpriteBatch->Begin();
 
@@ -115,12 +121,6 @@ namespace XPX
 			0.f, origin);
 
 		self->mHudFrame->SpriteBatch->End();
-
-		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
-		self->mOk.update();
-
-		if (self->mOk.LeftClicked)
-			self->mClicked();
 	}
 
 	const char* PopupComponent::name() noexcept
