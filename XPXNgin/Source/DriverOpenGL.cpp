@@ -23,32 +23,27 @@ namespace XPX::Renderer::OpenGL
 	{
 		OpenGLShaderFactory::Traits OpenGLShaderFactory::operator()(const char* path)
 		{
-			FILE* file = fopen(path, "rb");
+			IFileReader file(path);
 
 			if (!file)
 				throw ShaderError(path);
 
 			Traits traits;
 
-			fseek(file, 0, SEEK_END);
+			file.seek(file.seek_end);
 
-			traits.shader_size = ftell(file);
+			traits.shader_size = file.tell();
 			traits.shader_text.reserve(traits.shader_size);
 
-			fseek(file, 0, SEEK_SET);
-			fread(traits.shader_text.data(), traits.shader_size, SEEK_CUR, file);
-			fclose(file);
+			file.seek(file.seek_beg);
 
+			traits.shader_text += (file >> traits.shader_size);
+			
 			return traits;
 		}
 	}
 
-	DriverSystemOpenGL::DriverSystemOpenGL()
-		: m_bClose(false)
-	{
-		
-	}
-
+	DriverSystemOpenGL::DriverSystemOpenGL() : m_bClose(false) {}
 	DriverSystemOpenGL::~DriverSystemOpenGL() = default;
 
 	const char* DriverSystemOpenGL::name() noexcept { return ("DriverSystemOpenGL"); }
@@ -64,6 +59,7 @@ namespace XPX::Renderer::OpenGL
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClear(GL_DEPTH_BUFFER_BIT);
+
 
 	}
 

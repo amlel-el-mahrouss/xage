@@ -60,8 +60,7 @@ bool xplicit_open_logger()
 
 		return false;
 	}
-
-#endif // !NDEBUG
+#endif // ifdef XPLICIT_DEBUG
 
 	return true;
 }

@@ -63,7 +63,7 @@ namespace XPX::Renderer
 	};
 
 	/// <summary>
-	/// Tells what rendering api we're using.
+	/// Tells what rendering API we're using.
 	/// </summary>
 	enum class RENDER_SYSTEM : uint8_t
 	{
