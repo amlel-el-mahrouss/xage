@@ -65,7 +65,7 @@ namespace XPX::ImGUI
 
 		m_pFrame->SpriteBatch->Begin();
 
-		auto pos = XMFLOAT2((m_pFrame->X + m_pFrame->W) * 0.742f, m_pFrame->Y + 3);
+		auto pos = XMFLOAT2((((m_pFrame->X + m_pFrame->W) / 3) + 3) + m_pFrame->W, m_pFrame->Y + 3);
 
 		XMFLOAT4 clr(m_pFrame->TextColor.R, m_pFrame->TextColor.G
 			, m_pFrame->TextColor.B,
