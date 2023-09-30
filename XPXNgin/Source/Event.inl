@@ -37,7 +37,7 @@ T* XPX::EventSystem::get(const char* name)
 		if (!mEvents[i])
 			continue;
 
-#ifdef XPLICIT_USE_VECTOR
+#ifdef XPLICIT_USE_AVX
 #	include "Avx.h"
 
 		if (avx_strequals(name, mEvents[i]->name()))

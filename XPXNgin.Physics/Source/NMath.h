@@ -102,7 +102,7 @@ namespace XPX
 	public:
 		Vector(TypeFloat x = 0, TypeFloat y = 0, TypeFloat z = 0) noexcept
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ X, Y, Z };
 			__m256d x2{ x, y, z };
 
@@ -119,7 +119,7 @@ namespace XPX
 
 		Vector& add(TypeFloat x = 0.f, TypeFloat y = 0.f, TypeFloat z = 0.f) noexcept
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ X, Y, Z };
 			__m256d x2{ x, y, z };
 
@@ -136,7 +136,7 @@ namespace XPX
 
 		Vector& sub(TypeFloat x = 0.f, TypeFloat y = 0.f, TypeFloat z = 0.f) noexcept
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ X, Y, Z };
 			__m256d x2{ x, y, z };
 
@@ -153,7 +153,7 @@ namespace XPX
 
 		Vector& mul(TypeFloat x = 1.f, TypeFloat y = 1.f, TypeFloat z = 1.f) noexcept
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ X, Y, Z };
 			__m256d x2{ x, y, z };
 
@@ -170,7 +170,7 @@ namespace XPX
 
 		Vector& div(TypeFloat x = 1.f, TypeFloat y = 1.f, TypeFloat z = 1.f) noexcept
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ X, Y, Z };
 			__m256d x2{ x, y, z };
 
@@ -254,7 +254,7 @@ namespace XPX
 	public:
 		Quaternion& operator*=(const Quaternion& quat)
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ X, Y, Z, W };
 			__m256d x2{ quat.X, quat.Y, quat.Z, quat.W };
 
@@ -271,7 +271,7 @@ namespace XPX
 
 		Quaternion& operator+=(const Quaternion& quat)
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ X, Y, Z, W };
 			__m256d x2{ quat.X, quat.Y, quat.Z, quat.W };
 
@@ -288,7 +288,7 @@ namespace XPX
 
 		Quaternion& operator-=(const Quaternion& quat)
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ X, Y, Z, W };
 			__m256d x2{ quat.X, quat.Y, quat.Z, quat.W };
 
@@ -345,7 +345,7 @@ namespace XPX
 	public:
 		Color& operator*=(const Color& clr)
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ R, G, B, A };
 			__m256d x2{ clr.R, clr.G, clr.B, clr.A };
 
@@ -362,7 +362,7 @@ namespace XPX
 
 		Color& operator+=(const Color& clr)
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ R, G, B, A };
 			__m256d x2{ clr.R, clr.G, clr.B, clr.A };
 
@@ -379,7 +379,7 @@ namespace XPX
 
 		Color& operator-=(const Color& clr)
 		{
-#ifdef NPLICIT_USE_VECTORS
+#ifdef NP_USE_AVX
 			__m256d x1{ R, G, B, A };
 			__m256d x2{ clr.R, clr.G, clr.B, clr.A };
 

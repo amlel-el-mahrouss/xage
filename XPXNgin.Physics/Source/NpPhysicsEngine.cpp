@@ -407,12 +407,12 @@ namespace XPX
 			gScene->addActor(*plane);
 			plane->release();
 
-			XPLICIT_INFO("NplicitAddGround: Create a new plane with success.");
+			XPLICIT_INFO("NplicitAddGround: Create a new ground with success.");
 
 			return true;
 		}
 
-		XPLICIT_CRITICAL("NplicitAddGround: Failed to create a new plane.");
+		XPLICIT_CRITICAL("NplicitAddGround: Failed to create a new ground.");
 		return false;
 	}
 }

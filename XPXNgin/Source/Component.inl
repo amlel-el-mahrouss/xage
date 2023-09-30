@@ -7,7 +7,7 @@
  * =====================================================================
  */
 
-#ifdef XPLICIT_USE_VECTOR
+#ifdef XPLICIT_USE_AVX
 #	include "Avx.h"
 #endif
 
