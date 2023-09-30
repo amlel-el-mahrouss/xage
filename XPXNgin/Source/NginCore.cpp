@@ -15,10 +15,7 @@
 
 static FILE* XPLICIT_LOGGER{ nullptr };
 
-XPLICIT_API FILE* xplicit_get_logger(void) 
-{
-	return XPLICIT_LOGGER;
-}
+XPLICIT_API FILE* xplicit_get_logger(void) { return XPLICIT_LOGGER; }
 
 size_t fstrlen(const char* buffer) 
 {

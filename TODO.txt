@@ -1,0 +1,9 @@
+What to do with this code?
+==========================
+
+- Add Autodesk FBX support.
+- Add Targa file support.
+
+- Work on the .dir.scene format.
+
+Copyright XPX Corp.
