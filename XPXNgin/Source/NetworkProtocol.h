@@ -12,7 +12,7 @@
 #include "NginCore.h"
 #include "XplicitID.h"
 
-#define XPLICIT_INVALID_HASH (0xDEEBEEF)
+#define XPLICIT_INVALID_HASH (~0)
 
 #ifndef XPLICIT_ADDRESS_ANY
 #   define XPLICIT_ADDRESS_ANY INADDR_ANY
@@ -42,10 +42,10 @@
 
 #define XPLICIT_NUM_CHANNELS    (3)
 
-#define XPLICIT_CHANNEL_DATA        (0)
-#define XPLICIT_CHANNEL_CHAT        (1)
-#define XPLICIT_CHANNEL_3D     (2)
-#define XPLICIT_CHANNEL_WEAPON        (3)
+#define XPLICIT_CHANNEL_DATA    (0)
+#define XPLICIT_CHANNEL_CHAT    (1)
+#define XPLICIT_CHANNEL_3D      (2)
+#define XPLICIT_CHANNEL_WEAPON  (3)
 
 ///!
 ///!

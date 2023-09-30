@@ -400,4 +400,10 @@ namespace XPX::Renderer::DX11
 #include "DriverD3D11.inl"
 #include "D3D11ShaderSystem.inl"
 
+namespace XPX::Renderer
+{
+	typedef DX11::CameraSystemD3D11 CameraSystem;
+	typedef DX11::ColorRenderableComponentD3D11 ColorRenderableComponent;
+}
+
 #endif

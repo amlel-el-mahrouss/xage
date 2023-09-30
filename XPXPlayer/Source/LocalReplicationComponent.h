@@ -24,21 +24,18 @@ namespace XPX
 	public:
 		LocalReplicationComponent() = delete;
 		
-		explicit LocalReplicationComponent(const std::int64_t& hash /* PRIVATE NETWORK HASH */, const String& myId /* XPX LOBBY ID */)
-			: 
-			mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
-			mHash(hash),
-			mXpxId(myId)
-		{}
-
+	public:
+		LocalReplicationComponent(const std::int64_t& hash /* PRIVATE NETWORK HASH */, const String& myId /* XPX LOBBY ID */);
 		~LocalReplicationComponent() override = default;
 		
+	public:
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
 
 		static bool should_update() noexcept;
-		static void update(void* class_ptr);
+		static void update(ClassPtr class_ptr);
 		
+	public:
 		XPLICIT_COPY_DEFAULT(LocalReplicationComponent);
 		
 	private:

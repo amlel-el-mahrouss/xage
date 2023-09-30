@@ -5,32 +5,15 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: VideoDriver.cpp
- *			Purpose: Generic Video driver.
+ *			Purpose: Abstraction behind the rendering driver.
  *
  * =====================================================================
  */
 
 #include "VideoDriver.h"
 
-#ifdef XPLICIT_WINDOWS
 namespace XPX::Renderer
 {
-	VideoBuffer::VideoBuffer() 
-		: m_resource_desc(), m_resource_data() {}
-
-	VideoBuffer::~VideoBuffer()
-	{
-		if (m_buffer)
-			m_buffer->Release();
-
-		delete this;
-	}
-
-	Microsoft::WRL::ComPtr<ID3D11Buffer>& VideoBuffer::get()
-	{
-		return m_buffer;
-	}
-
 	VideoDriver::VideoDriver(HWND hwnd, UINT width, UINT height)
 		: m_driver(DX11::make_driver_system_d3d11(hwnd, width, height)), m_hwnd(hwnd)
 	{
@@ -46,30 +29,13 @@ namespace XPX::Renderer
 #endif
 	}
 
-	VideoBuffer* VideoDriver::make_buffer(enum VIDEO_USAGE usage, void* data, size_t sz)
+	BaseRenderableComponent* VideoDriver::get_texture(const char* path)
 	{
-		VideoBuffer* buf = new VideoBuffer();
-		XPLICIT_ASSERT(buf);
+		return nullptr;
+	}
 
-		if (!buf)
-			return nullptr;
-
-		RtlZeroMemory(&buf->m_resource_desc, sizeof(D3D11_SUBRESOURCE_DATA));
-
-		buf->m_resource_desc.Usage = (D3D11_USAGE)usage;
-		buf->m_resource_desc.ByteWidth = sz;
-
-		RtlZeroMemory(&buf->m_resource_data, sizeof(D3D11_SUBRESOURCE_DATA));
-		buf->m_resource_data.pSysMem = data;
-
-		HRESULT hr = m_driver->get().pDevice->CreateBuffer(&buf->m_resource_desc, &buf->m_resource_data, &buf->m_buffer);
-
-		if (SUCCEEDED(hr))
-			return buf;
-	
-		delete buf;
+	BaseRenderableComponent* VideoDriver::get_mesh(const char* path)
+	{
 		return nullptr;
 	}
 }
-
-#endif

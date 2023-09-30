@@ -40,9 +40,9 @@ namespace XPX
 		const char* name() noexcept override;
 
 	public:
-		std::unique_ptr<XHTTPManager> HTTP; // HTTPService
-		String Endpoint; // Asset Delivery service
-		String ID; // XplicitID
+		std::unique_ptr<XHTTPManager> HTTP; // HTTP
+		String Endpoint; // Asset delivery url
+		String ID; // player's XplicitID
 
 	private:
 		NetworkComponent* mNetwork;

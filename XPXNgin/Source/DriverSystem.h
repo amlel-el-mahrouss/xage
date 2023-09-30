@@ -137,12 +137,13 @@ namespace XPX::Renderer
 	/// RENDER_TYPE describes the type of render we're doing
 	/// (Mesh, Texture, Polygon, Particles)
 	/// </summary>
+
 	enum class RENDER_TYPE
 	{
-		RENDER_MESH, // .pbr meshes
-		RENDER_TEXTURE, // ID3D11Texture
-		RENDER_POLYGON, // applies for 2d and 3d contexts.
-		RENDER_PARTICLE_SYSTEM, // Emitter
+		RENDER_MESH, // fbx
+		RENDER_TEXTURE, // targa
+		RENDER_POLYGON, // raw meshes
+		RENDER_PARTICLE_SYSTEM, // Fire, blood...
 		RENDER_LIGHT,
 		RENDER_TYPE_COUNT,
 	};

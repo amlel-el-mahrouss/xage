@@ -18,6 +18,13 @@
 
 namespace XPX
 {
+	LocalReplicationComponent::LocalReplicationComponent(const std::int64_t& hash /* PRIVATE NETWORK HASH */, const String& myId /* XPX LOBBY ID */)
+		:
+		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
+		mHash(hash),
+		mXpxId(myId)
+	{}
+
 	COMPONENT_TYPE LocalReplicationComponent::type() noexcept { return COMPONENT_REPLICATION; }
 
 	const char* LocalReplicationComponent::name() noexcept { return "LocalReplicationManager"; }

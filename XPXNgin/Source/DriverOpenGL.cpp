@@ -53,6 +53,7 @@ namespace XPX::Renderer::OpenGL
 	RENDER_SYSTEM DriverSystemOpenGL::api() noexcept { return RENDER_SYSTEM::OPENGL; }
 
 	const bool& DriverSystemOpenGL::is_closed() noexcept { return m_bClose;  }
+
 	void DriverSystemOpenGL::close() noexcept { m_bClose = true; }
 
 	void DriverSystemOpenGL::begin_scene(const Color<float>& clr) noexcept

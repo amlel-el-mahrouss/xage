@@ -40,6 +40,8 @@ namespace XPX::Renderer::OpenGL
 			{
 				std::string shader_text;
 				size_t shader_size;
+				GLuint shader_bytecode;
+
 			};
 
 		public:
