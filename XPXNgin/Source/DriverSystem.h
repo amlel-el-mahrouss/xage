@@ -56,7 +56,7 @@ namespace XPX::Renderer
 		XPLICIT_COPY_DEFAULT(BaseRenderableComponent);
 
 	protected:
-		std::vector<Color<float>> m_colorVectors;
+		std::vector<Color<float>> m_arrayColors;
 		std::vector<Vector<float>> m_arrayVerts;
 		std::vector<UINT> m_arrayIndices;
 

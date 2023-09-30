@@ -416,7 +416,7 @@ namespace XPX::Renderer::DX11
 
 	DriverSystemD3D11* ColorRenderableComponentD3D11::driver() noexcept { return m_pDriver; }
 
-	void ColorRenderableComponentD3D11::push(const Color<float>& vert) noexcept { this->m_colorVectors.push_back(vert); }
+	void ColorRenderableComponentD3D11::push(const Color<float>& vert) noexcept { this->m_arrayColors.push_back(vert); }
 
 	void ColorRenderableComponentD3D11::push(const Vector<float>& vert) noexcept { this->m_arrayVerts.push_back(vert); }
 
@@ -443,10 +443,10 @@ namespace XPX::Renderer::DX11
 			m_pVertex[vertex_index].POSITION = XMFLOAT4(m_arrayVerts[vertex_index].X, m_arrayVerts[vertex_index].Y, m_arrayVerts[vertex_index].Z, 1.0f);
 
 			m_pVertex[vertex_index].COLOR = XMFLOAT4(
-				m_colorVectors[vertex_index].A,
-				m_colorVectors[vertex_index].R,
-				m_colorVectors[vertex_index].G,
-				m_colorVectors[vertex_index].B);
+				m_arrayColors[vertex_index].A,
+				m_arrayColors[vertex_index].R,
+				m_arrayColors[vertex_index].G,
+				m_arrayColors[vertex_index].B);
 		}
 
 		m_iVertexCnt = m_arrayVerts.size();
