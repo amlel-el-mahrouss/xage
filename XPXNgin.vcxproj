@@ -133,6 +133,7 @@
     <ClInclude Include="XPXNgin\Source\Util.h" />
     <ClInclude Include="XPXNgin\Source\VideoDriver.h" />
     <ClInclude Include="XPXNgin\Source\XHTTPManager.h" />
+    <ClInclude Include="XPXNgin\Source\XOFF.h" />
     <ClInclude Include="XPXNgin\Source\XplicitID.h" />
   </ItemGroup>
   <ItemGroup>
