@@ -46,8 +46,8 @@ namespace XPX
 			std::unique_ptr<DirectX::SpriteBatch> SpriteBatch;
 
 		imgui_slots:
-			ImColor BackgroundHoverColor{ 0xA7, 0x0C, 0x0C, 0x0C };
-			ImColor BackgroundColor{ 0xA5, 0x26, 0x26, 0x26 };
+			ImColor BackgroundHoverColor{ 0xA7, 0xA7, 0xA7, 0xFF };
+			ImColor BackgroundColor{ 0x0C, 0x0C, 0x0C, 0xFF };
 			ImColor TextColor{ 0xFF, 0xFF, 0xFF, 0xFF };
 
 		imgui_slots:

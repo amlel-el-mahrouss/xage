@@ -55,7 +55,8 @@ namespace XPX::Renderer::DX11
 		return result;
 	}
 
-	static void xplicit_d3d11_make_swapchain(DXGI_SWAP_CHAIN_DESC& swapDesc, 
+	static void xplicit_d3d11_make_swapchain(
+		DXGI_SWAP_CHAIN_DESC& swapDesc, 
 		DriverSystemD3D11::DriverTraits& privateData,
 		DWORD numerator,
 		DWORD denominator,
@@ -534,7 +535,7 @@ namespace XPX::Renderer::DX11
 		Details::ThrowIfFailed(m_hResult);
 	}
 
-	const char* ColorRenderableComponentD3D11::name() noexcept { return ("D3D11RenderComponent"); }
+	const char* ColorRenderableComponentD3D11::name() noexcept { return ("ColorRenderableComponentD3D11"); }
 
 	COMPONENT_TYPE ColorRenderableComponentD3D11::type() noexcept { return COMPONENT_RENDER; }
 
@@ -587,21 +588,21 @@ namespace XPX::Renderer::DX11
 		catch (...)
 		{
 			XPLICIT_INFO("WARNING: No ConstantBufferType attached to shader.");
-			throw EngineError("No CBuf!!!");
+			XPLICIT_INFO("No Constant buffers bound!!!");
+
+			XPLICIT_INFO("XAGE Verificaiton layers: DONE, 1 warning");
+
+			return;
 		}
+
+		XPLICIT_INFO("XAGE Verificaiton layers: DONE, No warnings");
 
 		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
-	const size_t& ColorRenderableComponentD3D11::get_vertices_count() noexcept
-	{
-		return m_iVertexCnt;
-	}
+	const size_t& ColorRenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }
 
-	const size_t& ColorRenderableComponentD3D11::get_indices_count() noexcept
-	{
-		return m_iIndices;
-	}
+	const size_t& ColorRenderableComponentD3D11::get_indices_count() noexcept { return m_iIndices; }
 }
 
 #endif // XPLICIT_WINDOWS

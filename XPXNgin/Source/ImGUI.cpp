@@ -15,7 +15,10 @@ namespace XPX::ImGUI
 		: mText(text), Hover(false), LeftClicked(false), RightClicked(false), m_iFadeIn(0UL)
 	{
 		m_pFrame = new UIFrame();
+
 		XPLICIT_ASSERT(m_pFrame);
+
+		m_pFrame->BackgroundColor.A = 0;
 
 		m_pFont = UIFontHelper::get_font(UIFontHelper::get_label_path().c_str());
 

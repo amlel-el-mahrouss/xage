@@ -97,7 +97,8 @@ namespace XPX::Renderer::D2D
 		XPLICIT_ASSERT(SUCCEEDED(hr));
 	}
 
-	void DriverSystemD2D::draw_line(const float x1,
+	void DriverSystemD2D::draw_line(
+		const float x1,
 		const float y1,
 		const float x2,
 		const float y2, 
