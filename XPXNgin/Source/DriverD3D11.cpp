@@ -15,6 +15,7 @@
  */
 
 #include "DriverD3D11.h"
+#include "DriverD2D.h"
 #include "Bites.h"
 
 #include "HelperMacros.h"
@@ -204,7 +205,7 @@ namespace XPX::Renderer::DX11
 			m_private.pSwapChain.GetAddressOf(),
 			m_private.pDevice.GetAddressOf(),
 			nullptr,
-			m_private.pCtx.GetAddressOf()
+			m_private.pContext.GetAddressOf()
 		);
 
 		if (FAILED(hr))
@@ -268,7 +269,7 @@ namespace XPX::Renderer::DX11
 		if (FAILED(hr))
 			throw Win32Error("[CreateDepthStencilState] Failed to call function correctly!");
 
-		m_private.pCtx->OMSetDepthStencilState(m_private.pDepthStencilState.Get(), 1);
+		m_private.pContext->OMSetDepthStencilState(m_private.pDepthStencilState.Get(), 1);
 
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 		ZeroMemory(&depthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
@@ -280,7 +281,7 @@ namespace XPX::Renderer::DX11
 
 		Details::ThrowIfFailed(hr);
 
-		m_private.pCtx->OMSetRenderTargets(1, m_private.pRenderTarget.GetAddressOf(), m_private.pDepthStencil.Get());
+		m_private.pContext->OMSetRenderTargets(1, m_private.pRenderTarget.GetAddressOf(), m_private.pDepthStencil.Get());
 
 		D3D11_RASTERIZER_DESC rasterDesc;
 		RtlZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
@@ -300,7 +301,7 @@ namespace XPX::Renderer::DX11
 
 		Details::ThrowIfFailed(hr);
 
-		m_private.pCtx->RSSetState(m_private.pRasterState.Get());
+		m_private.pContext->RSSetState(m_private.pRasterState.Get());
 
 		RtlZeroMemory(&m_private.Viewport, sizeof(D3D11_VIEWPORT));
 
@@ -324,7 +325,7 @@ namespace XPX::Renderer::DX11
 
 		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] driver created.");
 
-		this->get().pCtx->RSSetViewports(this->get().ViewportCnt, &this->get().Viewport);
+		this->get().pContext->RSSetViewports(this->get().ViewportCnt, &this->get().Viewport);
 	}
 
 	const char* DriverSystemD3D11::name() noexcept { return ("DriverSystemD3D11"); }
@@ -335,7 +336,7 @@ namespace XPX::Renderer::DX11
 
 	void DriverSystemD3D11::begin_scene(const float& a, const float& r, const float& g, const float& b, const bool zBuffer, const bool depth)
 	{
-		XPLICIT_ASSERT(m_private.pCtx);
+		XPLICIT_ASSERT(m_private.pContext);
 		XPLICIT_ASSERT(m_private.pRenderTarget);
 
 		float rgba[4];
@@ -345,8 +346,10 @@ namespace XPX::Renderer::DX11
 		rgba[2] = b;
 		rgba[3] = a;
 
-		m_private.pCtx->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
-		m_private.pCtx->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL) : 0, 1.0f, 0);
+		m_private.pContext->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
+		m_private.pContext->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL) : 0, 1.0f, 0);
+
+		RENDERER_2D->begin_scene();
 	}
 
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
@@ -376,20 +379,13 @@ namespace XPX::Renderer::DX11
 	bool DriverSystemD3D11::end_scene() 
 	{
 		XPLICIT_ASSERT(m_private.pSwapChain);
-		XPLICIT_ASSERT(m_private.pCtx);
+		XPLICIT_ASSERT(m_private.pContext);
 
-		HRESULT hr = S_OK;
+		RENDERER_2D->end_scene();
 
-		if (m_private.bVSync)
-		{
-			m_private.pSwapChain->Present(1, 0);
-		}
-		else
-		{
-			m_private.pSwapChain->Present(0, 0);
-		}
+		m_private.hResult = m_private.pSwapChain->Present(m_private.bVSync, 0);
 
-		return this->check_device_removed(hr);
+		return this->check_device_removed(m_private.hResult);
 	}
 
 	void DriverSystemD3D11::close() noexcept { m_private.bEndRendering = true; }
@@ -566,26 +562,26 @@ namespace XPX::Renderer::DX11
 		
 		self->m_pDriver->get().pCamera->render();
 
-		self->m_pDriver->get().pCtx->RSSetState(self->m_pDriver->get().pRasterState.Get());
+		self->m_pDriver->get().pContext->RSSetState(self->m_pDriver->get().pRasterState.Get());
 
 		const uint32_t stride = { sizeof(Details::VERTEX) };
 		const uint32_t offset = { 0u };
 
 		try
 		{
-			self->m_pDriver->get().pCtx->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt, 
+			self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt, 
 				self->m_pVertexBuffer.GetAddressOf(), 
 				&stride, 
 				&offset);
 			
-			self->m_pDriver->get().pCtx->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+			self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-			self->m_pDriver->get().pCtx->IASetInputLayout(self->m_pDriver->get().pInputLayout.Get());
+			self->m_pDriver->get().pContext->IASetInputLayout(self->m_pDriver->get().pInputLayout.Get());
 
 			self->m_pVertexShader->update(self);
-			self->m_pDriver->get().pCtx->IASetPrimitiveTopology(self->m_iTopology);
+			self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
 		
-			self->m_pDriver->get().pCtx->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
+			self->m_pDriver->get().pContext->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
 				self->m_pDriver->get().pRenderTarget.GetAddressOf(),
 				self->m_pDriver->get().pDepthStencil.Get());
 
@@ -599,7 +595,7 @@ namespace XPX::Renderer::DX11
 			throw EngineError("No CBuf!!!");
 		}
 
-		self->m_pDriver->get().pCtx->DrawIndexed(self->m_iIndices, 0, 0);
+		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
 	const size_t& ColorRenderableComponentD3D11::get_vertices_count() noexcept

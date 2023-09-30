@@ -87,7 +87,7 @@ namespace XPX::Renderer::DX11
 		auto transPoseViewMatrix = XMMatrixTranspose(component->m_pDriver->get().pCamera->m_viewMatrix);
 		auto transPoseProjectionMatrix = XMMatrixTranspose(component->m_pDriver->get().ProjectionMatrix);
 
-		HRESULT hr = component->m_pDriver->get().pCtx->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		HRESULT hr = component->m_pDriver->get().pContext->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		Details::ThrowIfFailed(hr);
 
@@ -104,8 +104,8 @@ namespace XPX::Renderer::DX11
 
 		cBufferCnt = 0U;
 
-		component->m_pDriver->get().pCtx->Unmap(component->m_pMatrixBuffer.Get(), 0);
-		component->m_pDriver->get().pCtx->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
+		component->m_pDriver->get().pContext->Unmap(component->m_pMatrixBuffer.Get(), 0);
+		component->m_pDriver->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
 	}
 
 	void ShaderSystemD3D11::update(ColorRenderableComponentD3D11* component)
@@ -114,23 +114,23 @@ namespace XPX::Renderer::DX11
 			return;
 
 		if (m_data.pInputLayout)
-			m_pDriver->get().pCtx->IASetInputLayout(m_data.pInputLayout);
+			m_pDriver->get().pContext->IASetInputLayout(m_data.pInputLayout);
 
 		switch ((XPLICIT_SHADER_TYPE)m_type)
 		{
 		case XPLICIT_SHADER_TYPE::Vertex:
 		{
-			component->m_pDriver->get().pCtx->VSSetShader(this->m_data.pVertex.Get(), nullptr, 0u);
+			component->m_pDriver->get().pContext->VSSetShader(this->m_data.pVertex.Get(), nullptr, 0u);
 			break;
 		}
 		case XPLICIT_SHADER_TYPE::Pixel:
 		{
-			component->m_pDriver->get().pCtx->PSSetShader(this->m_data.pPixel.Get(), nullptr, 0u);
+			component->m_pDriver->get().pContext->PSSetShader(this->m_data.pPixel.Get(), nullptr, 0u);
 			break;
 		}
 		case XPLICIT_SHADER_TYPE::Hull:
 		{
-			component->m_pDriver->get().pCtx->HSSetShader(this->m_data.pHull.Get(), nullptr, 0u);
+			component->m_pDriver->get().pContext->HSSetShader(this->m_data.pHull.Get(), nullptr, 0u);
 			break;
 		}
 		}

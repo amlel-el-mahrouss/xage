@@ -32,7 +32,7 @@ namespace XPX
 		public:
 			explicit UIFrame() 
 				:
-				SpriteBatch(std::make_unique<DirectX::SpriteBatch>(RENDERER->get().pCtx.Get()))
+				SpriteBatch(std::make_unique<DirectX::SpriteBatch>(RENDERER->get().pContext.Get()))
 			{}
 
 			~UIFrame() = default;

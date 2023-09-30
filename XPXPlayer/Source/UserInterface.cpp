@@ -116,8 +116,8 @@ namespace XPX
 
 		self->mHudFrame->SpriteBatch->End();
 
-		self->mOk.update();
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
+		self->mOk.update();
 
 		if (self->mOk.LeftClicked)
 			self->mClicked();
@@ -166,6 +166,9 @@ namespace XPX
 		mFrameParent->H = 30;
 		mFrameParent->W = XPLICIT_MIN_WIDTH;
 
+		mFrameParent->BackgroundColor.R = 40;
+		mFrameParent->BackgroundColor.G = 40;
+		mFrameParent->BackgroundColor.B = 40;
 		mFrameParent->BackgroundHoverColor.A = 50;
 
 		mFrameParent->X = 0;

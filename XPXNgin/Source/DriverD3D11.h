@@ -106,12 +106,13 @@ namespace XPX::Renderer::DX11
 			bool bVSync{ false };
 			char szCardDesc[128];
 			UINT ViewportCnt{ 1 };
+			HRESULT hResult{ S_OK };
 			bool bEndRendering{ false };
 			HWND pWindowHandle{ nullptr };
 
 		public:
-			D3D11_VIEWPORT Viewport;
 			DXGI_SWAP_CHAIN_DESC SwapDesc;
+			D3D11_VIEWPORT Viewport;
 			XMMATRIX ProjectionMatrix;
 			XMMATRIX WorldMatrix;
 			XMMATRIX OrthoMatrix;
@@ -119,7 +120,7 @@ namespace XPX::Renderer::DX11
 		public:
 			WRL::ComPtr<ID3D11Device> pDevice;
 			WRL::ComPtr<IDXGIAdapter> pAdapter;
-			WRL::ComPtr<ID3D11DeviceContext> pCtx;
+			WRL::ComPtr<ID3D11DeviceContext> pContext;
 			WRL::ComPtr<IDXGISwapChain> pSwapChain;
 			WRL::ComPtr<ID3D11Texture2D> pDepthTexture;
 			WRL::ComPtr<ID3D11Texture2D> pRenderTexture;
