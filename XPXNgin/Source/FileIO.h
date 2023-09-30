@@ -12,7 +12,7 @@
 #include "NginCore.h"
 #include "Root.h"
 
-#include <fstream>
+#include <cstdio>
 
 namespace XPX
 {

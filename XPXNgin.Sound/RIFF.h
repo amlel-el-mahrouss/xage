@@ -1,10 +1,10 @@
 /*
  * =====================================================================
  *
- *			XPXNgin (XplicitAudio)
- *			Copyright Xplicit Corporation, all rights reserved.
+ *			XAGE Audio System
+ *			Copyright XPX Corporation, all rights reserved.
  *
- *			Purpose: Xplicit Sound backend.
+ *			Purpose: Wave format header.
  *
  * =====================================================================
  */

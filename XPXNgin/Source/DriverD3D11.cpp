@@ -160,6 +160,12 @@ namespace XPX::Renderer::DX11
 
 					this->setup_rendering_system();
 
+					delete[] displayModeList;
+
+					pFactory->Release();
+					pOutput->Release();
+					pAdapter->Release();
+
 					return;
 				}
 			}
