@@ -71,7 +71,7 @@ namespace XPX
         {
             ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
                 []() {
-                    std::terminate();
+                    std::exit(60);
             }, POPUP_TYPE::BANNED, "StopPopup");
 
             StartLoad = false;
@@ -118,7 +118,7 @@ namespace XPX
             {
                 ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
                     []() {
-                        std::terminate();
+                        std::exit(30);
                  }, POPUP_TYPE::NETWORK, "TimeoutPopup");
 
                 ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
@@ -178,7 +178,7 @@ namespace XPX
         ComponentSystem::get_singleton_ptr()->remove(this->mNetwork);
 
         ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-            std::terminate();
+            std::exit(25);
         }, POPUP_TYPE::NETWORK);
     }
 }

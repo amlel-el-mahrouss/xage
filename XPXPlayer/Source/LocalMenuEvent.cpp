@@ -61,7 +61,7 @@ namespace XPX
 
 					mEnabled = false;
 
-					std::terminate();
+					std::exit(0);
 			}, POPUP_TYPE::LEAVE, "LeavePopup");
 		}
 

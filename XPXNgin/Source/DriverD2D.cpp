@@ -73,7 +73,7 @@ namespace XPX::Renderer::D2D
 
 #endif // ifdef XPLICIT_DEBUG
 
-				std::terminate();
+				std::exit(30);
 			}
 		}
 	}

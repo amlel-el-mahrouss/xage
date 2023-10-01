@@ -51,7 +51,7 @@ namespace XPX
 			if (XPX_MAX_TIMEOUT < 1)
 			{
 				if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					std::terminate();
+					std::exit(255);
 					}, POPUP_TYPE::NETWORK, "ResetPopup"))
 				{
 					ComponentSystem::get_singleton_ptr()->remove(mNetwork);
@@ -78,7 +78,7 @@ namespace XPX
 				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
 				{
 					if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-						std::terminate();
+						std::exit(255);
 						}, POPUP_TYPE::KICK, 
 						"KickPopup", 
 						packet.additional_data[0] != 0 ? packet.additional_data : "You have been kicked from the lobby."))
@@ -97,7 +97,7 @@ namespace XPX
 			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
 			{
 				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-					std::terminate();
+					std::exit(60);
 					}, POPUP_TYPE::BANNED, "BanPopup");
 			}
 		}
@@ -111,7 +111,7 @@ namespace XPX
 				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
 				{
 					ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
-						std::terminate();
+						std::exit(128);
 					}, POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");
 

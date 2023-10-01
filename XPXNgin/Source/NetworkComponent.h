@@ -16,13 +16,13 @@
 
 #ifdef XPLICIT_WINDOWS
 #ifdef XPLICIT_DEBUG
-#define XPLICIT_NET_ASSERT(EXPR) if (!(EXPR)) { MessageBoxA(nullptr, #EXPR, "XplicitNetwork Error", 0); std::terminate(); }
+#define XPLICIT_NET_ASSERT(EXPR) if (!(EXPR)) { MessageBoxA(nullptr, #EXPR, "XplicitNetwork Error", 0); std::exit(64); }
 #else
 #define XPLICIT_NET_ASSERT(EXPR) 
 #endif
 #else
 #ifdef XPLICIT_DEBUG
-#define XPLICIT_NET_ASSERT(EXPR) if (!(EXPR)) { std::string err = #EXPR; err += "C++ Network Exception"; XPLICIT_CRITICAL(err); std::terminate(); }
+#define XPLICIT_NET_ASSERT(EXPR) if (!(EXPR)) { std::string err = #EXPR; err += "C++ Network Exception"; XPLICIT_CRITICAL(err); std::exit(64); }
 #else
 #define XPLICIT_NET_ASSERT(EXPR) 
 #endif
