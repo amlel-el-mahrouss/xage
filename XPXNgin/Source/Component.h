@@ -107,9 +107,8 @@ namespace XPX
 
 	class XPLICIT_API ComponentSystem final
 	{
-		explicit ComponentSystem() = default;
-
 	public:
+		explicit ComponentSystem() = default;
 		~ComponentSystem() = default;
 
 	public:

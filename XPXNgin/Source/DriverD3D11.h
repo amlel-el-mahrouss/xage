@@ -86,7 +86,7 @@ namespace XPX::Renderer::DX11
 
 	class DriverSystemD3D11;
 	class ShaderSystemD3D11;
-	class ColorRenderableComponentD3D11;
+	class RenderableComponentD3D11;
 
 	class XPLICIT_API DriverSystemD3D11 : public DriverSystem
 	{
@@ -219,27 +219,27 @@ namespace XPX::Renderer::DX11
 		ShaderTraits& get();
 
 		int compile() noexcept override;
-		void update(ColorRenderableComponentD3D11* component);
-		void update_cbuf(ColorRenderableComponentD3D11* component);
+		void update(RenderableComponentD3D11* component);
+		void update_cbuf(RenderableComponentD3D11* component);
 
 	private:
 		ShaderTraits m_data;
 		DriverSystemD3D11* m_pDriver;
 		
-		friend ColorRenderableComponentD3D11;
+		friend RenderableComponentD3D11;
 
 	};
 
 	typedef enum D3D_PRIMITIVE_TOPOLOGY XPLICIT_PRIMITIVE_TOPOLOGY;
 
-	class XPLICIT_API ColorRenderableComponentD3D11 final : public BaseRenderableComponent
+	class XPLICIT_API RenderableComponentD3D11 final : public BaseRenderableComponent
 	{
 	public:
-		explicit ColorRenderableComponentD3D11() noexcept;
-		~ColorRenderableComponentD3D11() override;
+		explicit RenderableComponentD3D11() noexcept;
+		~RenderableComponentD3D11() override;
 
 	public:
-		XPLICIT_COPY_DEFAULT(ColorRenderableComponentD3D11);
+		XPLICIT_COPY_DEFAULT(RenderableComponentD3D11);
 
 	public:
 		void push(const Vector<float>& vert) noexcept;
@@ -247,34 +247,16 @@ namespace XPX::Renderer::DX11
 		void push(const UINT& indice) noexcept;
 
 	public:
-		/// <summary>
-		/// Driver setter.
-		/// </summary>
-		/// <param name="the">The driver.</param>
 		void driver(DriverSystemD3D11* the) noexcept;
-
-		/// <summary>
-		/// Driver getter
-		/// </summary>
-		/// <returns>Direct3D 11 driver.</returns>
 		DriverSystemD3D11* driver() noexcept;
 
 	public:
-		/// <summary>
-		/// Vertices getter
-		/// </summary>
-		/// <returns>the amount of vertices</returns>
 		const size_t& get_vertices_count() noexcept;
-
-		/// <summary>
-		/// Indices setter
-		/// </summary>
-		/// <returns>the indices count.</returns>
 		const size_t& get_indices_count() noexcept;
 
 	public:
-		static void update(ClassPtr self);
 		static bool should_update() noexcept;
+		static void update(ClassPtr self);
 
 	public:
 		COMPONENT_TYPE type() noexcept override;
@@ -391,7 +373,7 @@ namespace XPX::Renderer::DX11
 namespace XPX::Renderer
 {
 	typedef DX11::CameraSystemD3D11 CameraSystem;
-	typedef DX11::ColorRenderableComponentD3D11 ColorRenderableComponent;
+	typedef DX11::RenderableComponentD3D11 RenderableComponent;
 }
 
 #endif

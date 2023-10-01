@@ -20,9 +20,8 @@ namespace XPX
 	
 	class XPLICIT_API EventSystem final 
 	{
-		explicit EventSystem() = default;
-
 	public:
+		explicit EventSystem() = default;
 		~EventSystem() = default;
 		
 	public:

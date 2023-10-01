@@ -131,7 +131,7 @@
     <ClInclude Include="XPXNgin\Source\SocketWrapper.inl" />
     <ClInclude Include="XPXNgin\Source\Uri.h" />
     <ClInclude Include="XPXNgin\Source\Util.h" />
-    <ClInclude Include="XPXNgin\Source\VideoDriver.h" />
+    <ClInclude Include="XPXNgin\Source\SceneDriver.h" />
     <ClInclude Include="XPXNgin\Source\XHTTPManager.h" />
     <ClInclude Include="XPXNgin\Source\XplicitID.h" />
   </ItemGroup>
@@ -163,7 +163,7 @@
     <ClCompile Include="XPXNgin\Source\NginCore.cpp" />
     <ClCompile Include="XPXNgin\Source\SocketWrapper.cpp" />
     <ClCompile Include="XPXNgin\Source\Uri.cpp" />
-    <ClCompile Include="XPXNgin\Source\VideoDriver.cpp" />
+    <ClCompile Include="XPXNgin\Source\SceneDriver.cpp" />
     <ClCompile Include="XPXNgin\Source\XHTTPManager.cpp" />
     <ClCompile Include="XPXNgin\Source\XplicitID.cpp" />
   </ItemGroup>

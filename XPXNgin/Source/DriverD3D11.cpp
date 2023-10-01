@@ -404,7 +404,7 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd, width, height); 
 	}
 
-	ColorRenderableComponentD3D11::ColorRenderableComponentD3D11() noexcept
+	RenderableComponentD3D11::RenderableComponentD3D11() noexcept
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
 		 m_pDriver(nullptr), m_pVertex(nullptr),
@@ -413,21 +413,21 @@ namespace XPX::Renderer::DX11
 		m_pVertexShader(nullptr), m_pColorShader(nullptr)
 	{}
 
-	ColorRenderableComponentD3D11::~ColorRenderableComponentD3D11()
+	RenderableComponentD3D11::~RenderableComponentD3D11()
 	{
 		if (m_pVertex)
 			delete[] m_pVertex;
 	}
 
-	DriverSystemD3D11* ColorRenderableComponentD3D11::driver() noexcept { return m_pDriver; }
+	DriverSystemD3D11* RenderableComponentD3D11::driver() noexcept { return m_pDriver; }
 
-	void ColorRenderableComponentD3D11::push(const Color<float>& vert) noexcept { this->m_arrayColors.push_back(vert); }
+	void RenderableComponentD3D11::push(const Color<float>& vert) noexcept { this->m_arrayColors.push_back(vert); }
 
-	void ColorRenderableComponentD3D11::push(const Vector<float>& vert) noexcept { this->m_arrayVerts.push_back(vert); }
+	void RenderableComponentD3D11::push(const Vector<float>& vert) noexcept { this->m_arrayVerts.push_back(vert); }
 
-	void ColorRenderableComponentD3D11::push(const UINT& indice) noexcept { this->m_arrayIndices.push_back(indice);  }
+	void RenderableComponentD3D11::push(const UINT& indice) noexcept { this->m_arrayIndices.push_back(indice);  }
 
-	void ColorRenderableComponentD3D11::make_mesh()
+	void RenderableComponentD3D11::make_mesh()
 	{
 		if (m_arrayVerts.empty())
 			return;
@@ -474,7 +474,7 @@ namespace XPX::Renderer::DX11
 		if (FAILED(m_hResult))
 		{
 			delete[] m_pVertex;
-			throw Win32Error("Driver error (ColorRenderableComponentD3D11::make_mesh(CreateBuffer(m_vertex_buffer))");
+			throw Win32Error("Driver error (RenderableComponentD3D11::make_mesh(CreateBuffer(m_vertex_buffer))");
 		}
 
 		delete[] m_pVertex;
@@ -542,21 +542,21 @@ namespace XPX::Renderer::DX11
 		Details::ThrowIfFailed(m_hResult);
 	}
 
-	const char* ColorRenderableComponentD3D11::name() noexcept { return ("ColorRenderableComponentD3D11"); }
+	const char* RenderableComponentD3D11::name() noexcept { return ("RenderableComponentD3D11"); }
 
-	COMPONENT_TYPE ColorRenderableComponentD3D11::type() noexcept { return COMPONENT_RENDER; }
+	COMPONENT_TYPE RenderableComponentD3D11::type() noexcept { return COMPONENT_RENDER; }
 
-	void ColorRenderableComponentD3D11::driver(DriverSystemD3D11* driver) noexcept
+	void RenderableComponentD3D11::driver(DriverSystemD3D11* driver) noexcept
 	{
 		if (driver)
 			m_pDriver = driver;
 	}
 
-	bool ColorRenderableComponentD3D11::should_update() noexcept { return true; }
+	bool RenderableComponentD3D11::should_update() noexcept { return true; }
 
-	void ColorRenderableComponentD3D11::update(ClassPtr this_ptr) 
+	void RenderableComponentD3D11::update(ClassPtr this_ptr) 
 	{
-		ColorRenderableComponentD3D11* self = (ColorRenderableComponentD3D11*)this_ptr;
+		RenderableComponentD3D11* self = (RenderableComponentD3D11*)this_ptr;
 
 		if (!self)
 			return;
@@ -607,9 +607,9 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
-	const size_t& ColorRenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }
+	const size_t& RenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }
 
-	const size_t& ColorRenderableComponentD3D11::get_indices_count() noexcept { return m_iIndices; }
+	const size_t& RenderableComponentD3D11::get_indices_count() noexcept { return m_iIndices; }
 }
 
 #endif // XPLICIT_WINDOWS
