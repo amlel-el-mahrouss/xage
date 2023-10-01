@@ -66,7 +66,7 @@ XPLICIT_MAIN()
 
 		XPX::Bites::ApplicationManager manager(uri);
 		XPX::Renderer::SceneSystem scene;
-		scene.add_scene_node("./test.xsd");
+		scene.add_scene_node("C:/Users/amlal/XGE/bin/Debug/test.xsd");
 
 		RENDERER->get().pCamera->set_position(XPLICIT_ORIGIN);
 
@@ -76,9 +76,13 @@ XPLICIT_MAIN()
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.2, 0.2, 0.2, true, true);
 
+			scene.start_frame();
+
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 
 			XPX::EventSystem::get_singleton_ptr()->update();
+
+			scene.end_frame();
 
 			XPX::Root::get_singleton_ptr()->Renderer->end_scene();
 

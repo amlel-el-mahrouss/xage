@@ -47,7 +47,7 @@ namespace XPX
 			SceneSystem(const SceneSystem&) = default;
 
 		public:
-			const SceneID add_scene_node(const char* path);
+			const std::vector<SceneID> add_scene_node(const char* path);
 			bool remove_scene_node(const SceneID& sceneId);
 
 		public:
@@ -60,6 +60,7 @@ namespace XPX
 		private:
 			std::unique_ptr<ComponentSystem> m_system;
 			VideoDriverSystem* m_driver;
+			std::size_t m_scene_counter;
 			String m_name;
 
 			friend class SceneLoaderXSD;

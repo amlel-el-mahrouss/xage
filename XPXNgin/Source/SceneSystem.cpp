@@ -20,7 +20,8 @@ namespace XPX::Renderer
 		: m_driver(RENDERER), 
 		  m_system(std::make_unique<ComponentSystem>()), 
 		  m_name(pName),
-		  f_meshLoader(nullptr)
+		  f_meshLoader(nullptr),
+		  m_scene_counter(0)
 	{
 		
 	}
@@ -41,12 +42,34 @@ namespace XPX::Renderer
 			return comp.as_type<RenderableComponent*>()->f_iSceneId == scene_id;
 		});
 
-		return m_system->erase<RenderableComponent>(it);
+		if (m_system->erase<RenderableComponent>(it))
+		{
+			--m_scene_counter;
+			return true;
+		}
+
+		return false;
 	}
 
-	const SceneID SceneSystem::add_scene_node(const char* path)
+	const std::vector<SceneID> SceneSystem::add_scene_node(const char* path)
 	{
-		return 0;
+		if (f_meshLoader)
+		{
+			auto id = f_meshLoader->from_disk(path, this);
+
+			std::vector<SceneID> ids;
+			for (auto node : id->f_Nodes)
+			{
+				node->f_iSceneId = m_scene_counter;
+				++m_scene_counter;
+
+				ids.push_back(node->f_iSceneId);
+			}
+
+			return ids;
+		}
+
+		return {};
 	}
 
 	RenderableComponent* SceneSystem::get_scene_node(const SceneID& sceneId)
