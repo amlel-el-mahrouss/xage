@@ -29,8 +29,6 @@
 #	include <d3dcommon.h>
 #	include <DirectXMath.h>
 
-#	include <Effects.h>
-
 #ifdef XPLICIT_DEBUG
 
 #	include <nuklear/nuklear.h>

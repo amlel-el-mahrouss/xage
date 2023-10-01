@@ -31,9 +31,6 @@ namespace RRMan
 * 
 * #SCENE_SYSTEM: Sedan
 * #UUID: AD56738F-A55B-43CF-9283-2157D8C03882
-* #TRIANGLE_NODE: RenderableComponent
-* #TEXTURE_0: C:/Users/User/AppData/NginData/Contents/Tile.png
-* #VERTEX_0: 0.5, -0.5, 0
-* #INDICES_0: 0, 1, 2
+* #WAVEFRONT: C:/Users/Something/Models/Sedan.obj
 * ...
 */

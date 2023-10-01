@@ -516,20 +516,20 @@ namespace XPX
 		XPLICIT_COPY_DEFAULT(FilesystemWrapper);
 
 	public:
-		std::ofstream write(const char* outPath) const noexcept
-		{
-			if (std::filesystem::exists(outPath))
-				return std::ofstream(outPath, std::ios::app);
-
-			return std::ofstream(outPath);
-		}
-
-		std::ofstream open(const char* outPath) const noexcept
+		std::ifstream open_reader(const char* outPath) noexcept
 		{
 			if (!std::filesystem::exists(outPath))
 				return {};
 
-			return std::ofstream(outPath);
+			return std::ifstream(outPath);
+		}
+
+		std::ofstream open_writer(const char* outPath) noexcept
+		{
+			if (!std::filesystem::exists(outPath))
+				return std::ofstream(outPath);
+
+			return std::ofstream(outPath, std::ios::app);
 		}
 
 		bool create_directory(const char* path) const noexcept
@@ -545,9 +545,14 @@ namespace XPX
 		std::filesystem::path get_engine_dir() const noexcept
 		{
 			String dir = XPLICIT_ENV("APPDATA");
-			dir += "/XPXNgin/";
+			dir += "/NginData/";
 
 			return dir;
+		}
+
+		bool exists(const char* path) const noexcept
+		{
+			return std::filesystem::exists(path);
 		}
 
 	};

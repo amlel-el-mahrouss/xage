@@ -63,4 +63,19 @@ namespace XPX::Renderer
 	{
 		return m_driver->end_scene();
 	}
+
+	std::shared_ptr<SceneLoaderXSD::SceneData> SceneLoaderXSD::from_disk(const char* path, SceneSystem* scene)
+	{
+		SceneLoaderXSD::SceneData* pSceneData = new SceneLoaderXSD::SceneData();
+		pSceneData->f_Parent = scene;
+
+		if (m_wrapper.exists(path))
+		{
+			auto scene = m_wrapper.open_reader(path);
+			
+			return std::shared_ptr<SceneLoaderXSD::SceneData>{ pSceneData };
+		}
+
+		return nullptr;
+	}
 }

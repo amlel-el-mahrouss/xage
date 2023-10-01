@@ -77,10 +77,31 @@ namespace XPX
 			XPLICIT_COPY_DEFAULT(SceneLoader);
 
 		public:
-			virtual void* load_from_filesystem(const char* path) = 0;
+			struct SceneData
+			{
+				SceneSystem* f_Parent;
+				std::vector<RenderableComponent*> f_Nodes;
+			};
+
+		public:
+			virtual std::shared_ptr<SceneData> from_disk(const char* path, SceneSystem* scene) = 0;
 
 		protected:
 			FilesystemWrapper m_wrapper;
+
+		};
+
+		class XPLICIT_API SceneLoaderXSD final : public SceneLoader
+		{
+		public:
+			explicit SceneLoaderXSD() = default;
+			~SceneLoaderXSD() override = default;
+
+		public:
+			XPLICIT_COPY_DEFAULT(SceneLoaderXSD);
+
+		public:
+			virtual std::shared_ptr<SceneData> from_disk(const char* path, SceneSystem* scene) override;
 
 		};
 	}
