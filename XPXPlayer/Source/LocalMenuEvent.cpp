@@ -55,14 +55,13 @@ namespace XPX
 			mPopup = ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
 				[&]() {
 					NetworkPacket packet{};
-
 					packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;
 					
 					mNetwork->send(packet);
 
 					mEnabled = false;
 
-					std::exit(0);
+					std::terminate();
 			}, POPUP_TYPE::LEAVE, "LeavePopup");
 		}
 

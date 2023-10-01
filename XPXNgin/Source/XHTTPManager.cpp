@@ -30,7 +30,7 @@ namespace XPX
         http_path += "Contents/";
         http_path += outputFileName;
 
-        std::ofstream file = mWriter.write(http_path.c_str());
+        std::ofstream file = mWriter.open_writer(http_path.c_str());
 
         constexpr int64_t MAX_BUF = 1000000;
 

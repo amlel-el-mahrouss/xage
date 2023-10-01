@@ -30,6 +30,7 @@ namespace XPX
 		COMPONENT_REPLICATION, // Replicated component
 		COMPONENT_SOUND, // Sound component
 		COMPONENT_GENERIC,
+		COMPONENT_SCRIPT,
 		COMPONENT_COUNT // the number of components type we have registered here!
 	};
 

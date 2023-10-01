@@ -516,7 +516,7 @@ namespace XPX
 		XPLICIT_COPY_DEFAULT(FilesystemWrapper);
 
 	public:
-		std::ifstream open_reader(const char* outPath) noexcept
+		std::ifstream open_reader(const char* outPath) const noexcept
 		{
 			if (!std::filesystem::exists(outPath))
 				return {};
@@ -524,7 +524,7 @@ namespace XPX
 			return std::ifstream(outPath);
 		}
 
-		std::ofstream open_writer(const char* outPath) noexcept
+		std::ofstream open_writer(const char* outPath) const noexcept
 		{
 			if (!std::filesystem::exists(outPath))
 				return std::ofstream(outPath);
