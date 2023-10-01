@@ -56,14 +56,12 @@ namespace XPX::Renderer
 
 	void SceneSystem::start_frame() noexcept
 	{
-		m_driver->begin_scene(1, 0, 0, 0, true, true);
-
 		m_system->update();
 	}
 
 	bool SceneSystem::end_frame() noexcept
 	{
-		return m_driver->end_scene();
+		return true;
 	}
 
 	std::shared_ptr<SceneLoaderXSD::SceneData> SceneLoaderXSD::from_disk(const char* path, SceneSystem* scene)
