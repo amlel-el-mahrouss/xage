@@ -39,6 +39,7 @@ namespace RRMan {
 	private: System::Windows::Forms::PictureBox^ pictureBox3;
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
 	private: System::Windows::Forms::PictureBox^ pictureBox4;
+	private: System::Windows::Forms::GroupBox^ XMC;
 
 
 
@@ -73,15 +74,16 @@ namespace RRMan {
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(RenderingWindow::typeid));
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->panel2 = (gcnew System::Windows::Forms::Panel());
-			this->pictureBox4 = (gcnew System::Windows::Forms::PictureBox());
-			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->pictureBox3 = (gcnew System::Windows::Forms::PictureBox());
+			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
+			this->pictureBox4 = (gcnew System::Windows::Forms::PictureBox());
+			this->panel2 = (gcnew System::Windows::Forms::Panel());
+			this->XMC = (gcnew System::Windows::Forms::GroupBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->panel1->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox4))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox3))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox4))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// pictureBox1
@@ -106,24 +108,15 @@ namespace RRMan {
 			this->panel1->Size = System::Drawing::Size(58, 605);
 			this->panel1->TabIndex = 2;
 			// 
-			// panel2
+			// pictureBox3
 			// 
-			this->panel2->Location = System::Drawing::Point(76, 12);
-			this->panel2->Name = L"panel2";
-			this->panel2->Size = System::Drawing::Size(866, 661);
-			this->panel2->TabIndex = 3;
-
-			this->panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &RenderingWindow::panel2_Paint);
-			// 
-			// pictureBox4
-			// 
-			this->pictureBox4->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox4.BackgroundImage")));
-			this->pictureBox4->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
-			this->pictureBox4->Location = System::Drawing::Point(3, 3);
-			this->pictureBox4->Name = L"pictureBox4";
-			this->pictureBox4->Size = System::Drawing::Size(53, 52);
-			this->pictureBox4->TabIndex = 6;
-			this->pictureBox4->TabStop = false;
+			this->pictureBox3->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox3.BackgroundImage")));
+			this->pictureBox3->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
+			this->pictureBox3->Location = System::Drawing::Point(2, 119);
+			this->pictureBox3->Name = L"pictureBox3";
+			this->pictureBox3->Size = System::Drawing::Size(53, 52);
+			this->pictureBox3->TabIndex = 8;
+			this->pictureBox3->TabStop = false;
 			// 
 			// pictureBox2
 			// 
@@ -135,15 +128,35 @@ namespace RRMan {
 			this->pictureBox2->TabIndex = 7;
 			this->pictureBox2->TabStop = false;
 			// 
-			// pictureBox3
+			// pictureBox4
 			// 
-			this->pictureBox3->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox3.BackgroundImage")));
-			this->pictureBox3->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
-			this->pictureBox3->Location = System::Drawing::Point(2, 119);
-			this->pictureBox3->Name = L"pictureBox3";
-			this->pictureBox3->Size = System::Drawing::Size(53, 52);
-			this->pictureBox3->TabIndex = 8;
-			this->pictureBox3->TabStop = false;
+			this->pictureBox4->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox4.BackgroundImage")));
+			this->pictureBox4->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
+			this->pictureBox4->Location = System::Drawing::Point(3, 3);
+			this->pictureBox4->Name = L"pictureBox4";
+			this->pictureBox4->Size = System::Drawing::Size(53, 52);
+			this->pictureBox4->TabIndex = 6;
+			this->pictureBox4->TabStop = false;
+			// 
+			// panel2
+			// 
+			this->panel2->Location = System::Drawing::Point(76, 12);
+			this->panel2->Name = L"panel2";
+			this->panel2->Size = System::Drawing::Size(920, 493);
+			this->panel2->TabIndex = 3;
+			this->panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &RenderingWindow::panel2_Paint);
+			// 
+			// XMC
+			// 
+			this->XMC->Font = (gcnew System::Drawing::Font(L"Urbanist ExtraBold", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->XMC->ForeColor = System::Drawing::SystemColors::ControlLight;
+			this->XMC->Location = System::Drawing::Point(76, 511);
+			this->XMC->Name = L"XMC";
+			this->XMC->Size = System::Drawing::Size(920, 162);
+			this->XMC->TabIndex = 4;
+			this->XMC->TabStop = false;
+			this->XMC->Text = L"XMC";
 			// 
 			// RenderingWindow
 			// 
@@ -151,21 +164,22 @@ namespace RRMan {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(39)), static_cast<System::Int32>(static_cast<System::Byte>(39)),
 				static_cast<System::Int32>(static_cast<System::Byte>(39)));
-			this->ClientSize = System::Drawing::Size(954, 685);
+			this->ClientSize = System::Drawing::Size(1008, 685);
+			this->Controls->Add(this->XMC);
 			this->Controls->Add(this->panel2);
 			this->Controls->Add(this->panel1);
 			this->Controls->Add(this->pictureBox1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
-			this->MaximumSize = System::Drawing::Size(970, 724);
-			this->MinimumSize = System::Drawing::Size(970, 724);
+			this->MaximumSize = System::Drawing::Size(1024, 724);
+			this->MinimumSize = System::Drawing::Size(1024, 724);
 			this->Name = L"RenderingWindow";
 			this->Text = L"XAGE RRMan";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->panel1->ResumeLayout(false);
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox4))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox3))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox4))->EndInit();
 			this->ResumeLayout(false);
 
 		}

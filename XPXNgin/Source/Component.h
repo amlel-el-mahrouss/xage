@@ -9,9 +9,6 @@
 
 #pragma once
 
-#ifndef __XPX_COMPONENT_H__
-#define __XPX_COMPONENT_H__
-
 #include "NginCore.h"
 
  //! This file handles the engine component system stuff.
@@ -23,11 +20,13 @@ namespace XPX
 		COMPONENT_HUMANOID, // Humanoid (Player and NPC)
 		COMPONENT_LOGIC, // Logic Component
 		COMPONENT_CAMERA, // Camera component
-		COMPONENT_SCRIPT, // Script component (C#, Lua)
-		COMPONENT_RENDER, // Graphics component (Shader, Particles...)
+		COMPONENT_RENDER, // Script component (C#, Lua)
+		COMPONENT_WATER, // Water component (perlin noise)
 		COMPONENT_NETWORK, // Network component
 		COMPONENT_PHYSICS, // Physics component
 		COMPONENT_GUI, // GUI component
+		COMPONENT_PEDESTRIAN, // Something that is alive.
+		COMPONENT_VEHICLE, // ranges from sedans to motors
 		COMPONENT_REPLICATION, // Replicated component
 		COMPONENT_SOUND, // Sound component
 		COMPONENT_GENERIC,
@@ -37,7 +36,7 @@ namespace XPX
 	enum PHYSICS_TYPE : uint8_t
 	{
 		PHYSICS_SIMPLE, /* Rigid-body */
-		PHYSICS_COMPLEX, /* Complex Physics, Soft-body */
+		PHYSICS_COMPLEX, /* Soft-body */
 		PHYSICS_NONE,
 		PHYSICS_COUNT,
 	};
@@ -161,5 +160,3 @@ namespace XPX
 
 
 #include "Component.inl"
-
-#endif // ifndef __XPX_COMPONENT_H__

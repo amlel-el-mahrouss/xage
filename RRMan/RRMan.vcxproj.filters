@@ -35,5 +35,8 @@
     <ClInclude Include="RenderingWindow.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="XSDProjectManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

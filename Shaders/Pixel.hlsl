@@ -1,3 +1,9 @@
+/*
+ * XPX implementation of blinn-phong shading
+ * (c) XPX Corp.
+ * Written by Amlal El Mahrouss.
+ */
+
 struct VS_INPUT
 {
     float4 position : SV_POSITION;

@@ -4,7 +4,6 @@
  * Written by Amlal El Mahrouss.
  */
 
-
 cbuffer CBUFFER
 {
     float4 normal;
@@ -37,6 +36,7 @@ float4 PS(VS_INPUT input_data) : SV_TARGET
     specularStrength = pow(specularStrength, 0.5);
     float3 specular = specularStrength * lightColor;
     
+    //! phong equation.
     lighting = ambient - .1 + ((diffuse / 6.0) * (diffuse / 4.0) + (diffuse / 2.0)) + specular * 0.5;
     
     float3 color = model_color * lighting;

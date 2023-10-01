@@ -144,6 +144,7 @@
     <ClInclude Include="RRRecentProjects.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="XSDProjectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="RenderingWindow.resx">
