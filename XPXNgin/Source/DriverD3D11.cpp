@@ -454,23 +454,36 @@ namespace XPX::Renderer::DX11
 				m_arrayVerts[vertex_index].Z, 
 				1.0f);
 
-			m_pVertex[vertex_index].AMBIENT = XMFLOAT4(
-				m_arrayColorsAmbient[vertex_index].A,
-				m_arrayColorsAmbient[vertex_index].R,
-				m_arrayColorsAmbient[vertex_index].G,
-				m_arrayColorsAmbient[vertex_index].B);
+		}
 
-			m_pVertex[vertex_index].SPECULAR = XMFLOAT4(
-				m_arrayColorsSpecular[vertex_index].A,
-				m_arrayColorsSpecular[vertex_index].R,
-				m_arrayColorsSpecular[vertex_index].G,
-				m_arrayColorsSpecular[vertex_index].B);
+		for (size_t specular_index = 0;
+			specular_index < m_arrayColorsSpecular.size(); ++specular_index)
+		{
+			m_pVertex[specular_index].SPECULAR = XMFLOAT4(
+				m_arrayColorsSpecular[specular_index].A,
+				m_arrayColorsSpecular[specular_index].R,
+				m_arrayColorsSpecular[specular_index].G,
+				m_arrayColorsSpecular[specular_index].B);
+		}
 
-			m_pVertex[vertex_index].DIFFUSE = XMFLOAT4(
-				m_arrayColorsDiffuse[vertex_index].A,
-				m_arrayColorsDiffuse[vertex_index].R,
-				m_arrayColorsDiffuse[vertex_index].G,
-				m_arrayColorsDiffuse[vertex_index].B);
+		for (size_t diffuse_index = 0; 
+			diffuse_index < m_arrayColorsDiffuse.size(); ++diffuse_index)
+		{
+			m_pVertex[diffuse_index].AMBIENT = XMFLOAT4(
+				m_arrayColorsDiffuse[diffuse_index].A,
+				m_arrayColorsDiffuse[diffuse_index].R,
+				m_arrayColorsDiffuse[diffuse_index].G,
+				m_arrayColorsDiffuse[diffuse_index].B);
+		}
+
+		for (size_t ambient_index = 0; 
+			ambient_index < m_arrayColorsAmbient.size(); ++ambient_index)
+		{
+			m_pVertex[ambient_index].AMBIENT = XMFLOAT4(
+				m_arrayColorsAmbient[ambient_index].A,
+				m_arrayColorsAmbient[ambient_index].R,
+				m_arrayColorsAmbient[ambient_index].G,
+				m_arrayColorsAmbient[ambient_index].B);
 		}
 
 		m_iVertexCnt = m_arrayVerts.size();

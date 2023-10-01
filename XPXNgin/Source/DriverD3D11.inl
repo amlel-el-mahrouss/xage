@@ -112,7 +112,7 @@ XPX::Renderer::DX11::ShaderSystemD3D11* XPX::Renderer::DX11::D3D11ShaderHelper1:
 		shader_system->get().iFlags1 = D3D10_SHADER_ENABLE_STRICTNESS;
 		shader_system->get().iFlags2 = 0;
 
-		shader_system->get().entrypoint += entrypoint;
+		shader_system->get().entrypoint = entrypoint;
 
 		switch (ShaderType)
 		{
