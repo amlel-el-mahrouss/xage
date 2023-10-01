@@ -66,6 +66,8 @@ XPLICIT_MAIN()
 
 		XPX::Bites::ApplicationManager manager(uri);
 		XPX::Renderer::SceneSystem scene;
+
+		scene.f_meshLoader = new XPX::Renderer::SceneLoaderXSD();
 		scene.add_scene_node("C:/Users/amlal/XGE/bin/Debug/test.xsd");
 
 		RENDERER->get().pCamera->set_position(XPLICIT_ORIGIN);

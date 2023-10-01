@@ -103,10 +103,10 @@ namespace XPX::Renderer
 			{
 				if (input.find(L"#pragma") != String::npos)
 				{
-					if (input.find(L"begin"))
+					if (input.find(L"begin") != String::npos)
 						xage_begin = true;
 
-					if (input.find(L"end"))
+					if (input.find(L"end") != String::npos)
 						xage_begin = false;
 
 					continue;
@@ -117,8 +117,10 @@ namespace XPX::Renderer
 					if (const auto pos = input.find(L"#wavefront");
 						pos != String::npos)
 					{
-						auto substr_wave = input.substr(pos + 1, input.find(L","));
-						
+						auto substr_wave = input.substr(pos, input.find(L","));
+						substr_wave.erase(substr_wave.find(L"#wavefront"), strlen("#wavefront"));
+						substr_wave.erase(substr_wave.find(L" "), strlen(" "));
+
 						WaveFrontReader<wchar_t> wfReader;
 
 						HRESULT hr = wfReader.Load(substr_wave.c_str());
@@ -130,7 +132,6 @@ namespace XPX::Renderer
 						{
 							render->push(Vector<float>(vert.position.x, vert.position.y, vert.position.z));
 						}
-
 
 						for (auto& indice : wfReader.indices)
 						{
