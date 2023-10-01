@@ -39,9 +39,9 @@ namespace XPX
 		Renderer::DriverCameraSystem* get() noexcept;
 
 	private:
-		Renderer::DriverCameraSystem* mCamera;
-		Vector<float> mLookAt;
+		Renderer::DX11::CameraSystemD3D11* mCamera;
 		NetworkComponent* mNetwork;
+		Vector<float> mLookAt;
 
 	};
 }

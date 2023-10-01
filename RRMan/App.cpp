@@ -1,12 +1,12 @@
 /*
  * =====================================================================
  *
- *			XPXStudioApp
+ *			RRMan
  *
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			File: MainForm.cpp
- *			Purpose: Update form.
+ *			File: App.cpp
+ *			Purpose: main form.
  *
  * =====================================================================
  */
@@ -22,7 +22,7 @@ void main(array<String^>^ args)
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
 
-	XPXStudioApp::RRRecentProjects form;
+	RRMan::RRRecentProjects form;
 	Application::Run(% form);
 
 }

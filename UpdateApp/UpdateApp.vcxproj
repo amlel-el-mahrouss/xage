@@ -129,13 +129,13 @@
     <ClCompile Include="App.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainForm.h">
+    <ClInclude Include="UpdateForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.h</DependentUpon>
+    <EmbeddedResource Include="UpdateForm.resx">
+      <DependentUpon>UpdateForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -56,8 +56,10 @@ namespace XPX::HTTP
                 return { .t_name = "Bitmap", .t_mime = "Content-Type: image/bmp" };
             else if (!strcmp(extension.c_str(), ".jpg"))
                 return { .t_name = "JPEG", .t_mime = "Content-Type: image/jpeg" };
-            else if (!strcmp(extension.c_str(), ".ar"))
-                return { .t_name = "XPX Package Format", .t_mime = "Content-Type: archive/ar" };
+            else if (!strcmp(extension.c_str(), ".dir"))
+                return { .t_name = "XPX Directory", .t_mime = "Content-Type: archive/dir" };
+            else if (!strcmp(extension.c_str(), ".dir.mesh"))
+                return { .t_name = "XPX Mesh Directory", .t_mime = "Content-Type: archive/dir" };
 
             return { .t_name = "Not allowed", .t_mime = "Content-Type: */not-allowed" };
         }

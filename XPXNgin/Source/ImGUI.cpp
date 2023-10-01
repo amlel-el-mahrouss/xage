@@ -149,6 +149,19 @@ namespace XPX::ImGUI
 		return Vector<int>(this->mBox->X, this->mBox->Y);
 	}
 
+	void UIEditBox::set_size(const int w, const int h)
+	{
+		if (!mBox)
+			return;
+
+		mBox->W = w;
+		mBox->H = h;
+
+		if (!mSelection)
+			return;
+
+		mSelection->H = h;
+	}
 
 	void UIEditBox::update()
 	{

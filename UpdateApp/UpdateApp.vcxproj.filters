@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainForm.h">
+    <ClInclude Include="UpdateForm.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

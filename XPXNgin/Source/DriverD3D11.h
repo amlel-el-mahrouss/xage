@@ -210,26 +210,16 @@ namespace XPX::Renderer::DX11
 			WRL::ComPtr<ID3D11PixelShader> pPixel;
 			WRL::ComPtr<ID3D11VertexShader> pVertex;
 			WRL::ComPtr<ID3D11Buffer> pMatrixBuffer;
+
 			ID3D11InputLayout* pInputLayout;
 
 		};
 
 	public:
 		ShaderTraits& get();
-		
-		/// <summary>
-		/// Compiles the HLSL shader
-		/// </summary>
+
 		int compile() noexcept override;
-
-		/// <summary>
-		/// Updates the shader.
-		/// </summary>
 		void update(ColorRenderableComponentD3D11* component);
-
-		/// <summary>
-		/// Updates the Constant buffer.
-		/// </summary>
 		void update_cbuf(ColorRenderableComponentD3D11* component);
 
 	private:
@@ -245,7 +235,7 @@ namespace XPX::Renderer::DX11
 	class XPLICIT_API ColorRenderableComponentD3D11 final : public BaseRenderableComponent
 	{
 	public:
-		ColorRenderableComponentD3D11() noexcept;
+		explicit ColorRenderableComponentD3D11() noexcept;
 		~ColorRenderableComponentD3D11() override;
 
 	public:
@@ -282,16 +272,14 @@ namespace XPX::Renderer::DX11
 		/// <returns>the indices count.</returns>
 		const size_t& get_indices_count() noexcept;
 
-		/// <summary>
-		/// Makes a mesh out of input and shader.
-		/// </summary>
-		void make_mesh();
-
 	public:
 		static void update(ClassPtr self);
 		static bool should_update() noexcept;
+
+	public:
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
+		void make_mesh();
 
 	public:
 		auto get_topology() noexcept { return m_iTopology; }

@@ -46,7 +46,7 @@ inline XPX::Vector<XPX::NetworkFloat> XPLICIT_PERFECT_OCTREE_SIZE(64, 64, 64);
 /// Gets the XPLICIT_ID of a specific peer.
 /// </summary>
 /// <param name="player_index">player at index.</param>
-/// <returns></returns>
+/// <returns>It's xplicit id.</returns>
 inline XPX::Auth::XplicitID& GetXplicitID(const std::size_t player_index)
 {
 	if (player_index > XPX::XPLICIT_MAX_CONNECTIONS)
@@ -82,10 +82,6 @@ inline bool DownloadURL(std::string _url, std::string out_path) noexcept
 
 namespace XPX
 {
-	/// <summary>
-	/// Xplicit Attribute Class.
-	/// Reserved for RXML and scripting API.
-	/// </summary>
 	class XPXAttribute
 	{
 	public:

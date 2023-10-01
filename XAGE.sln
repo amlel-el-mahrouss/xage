@@ -22,6 +22,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{C348CBEF-6FF0-44EB-967F-7A27F73347A0}"
+	ProjectSection(SolutionItems) = preProject
+		XPXNgin.Sound\RIFF.h = XPXNgin.Sound\RIFF.h
+		XPXNgin.Sound\SoundNgin.h = XPXNgin.Sound\SoundNgin.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

@@ -2,7 +2,7 @@
 
 #include "RenderingWindow.h"
 
-namespace XPXStudioApp {
+namespace RRMan {
 
 	using namespace System;
 	using namespace System::ComponentModel;

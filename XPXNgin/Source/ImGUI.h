@@ -74,21 +74,7 @@ namespace XPX::ImGUI
 		void set_text(const PChar*);
 
 		void set_pos(const int X, const int Y);
-
-		void set_size(const int w, const int h)
-		{
-			if (!mBox)
-				return;
-
-			mBox->W = w;
-			mBox->H = h;
-			
-			if (!mSelection)
-				return;
-
-			mSelection->H = h;
-		}
-
+		void set_size(const int w, const int h);
 		Vector<int> get_pos() noexcept;
 
 	public:

@@ -21,14 +21,11 @@ namespace XPX
 {
 	LocalCameraComponent::LocalCameraComponent() noexcept
 		:
-		mCamera(nullptr),
+		mCamera(RENDERER->get().pCamera.get()),
 		mLookAt(0, 0, 0), 
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent"))
 	{
-		Renderer::DX11::CameraSystemD3D11* camD3d11 = RENDERER->get().pCamera.get();
-		XPLICIT_ASSERT(camD3d11);
-
-		mCamera = camD3d11;
+		XPLICIT_ASSERT(mCamera);
 	}
 
 	LocalCameraComponent::~LocalCameraComponent() noexcept = default;

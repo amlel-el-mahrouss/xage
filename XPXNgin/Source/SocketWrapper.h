@@ -69,6 +69,7 @@ namespace XPX::Network
 		explicit Socket(const SOCKET_TYPE type);
 		~Socket();
 
+	public:
 		Socket& operator=(const Socket&) = default;
 		Socket(const Socket&) = default;
 
@@ -84,7 +85,6 @@ namespace XPX::Network
 
 	public:
 		CSocket PublicSocket;
-
 
 	};
 }
