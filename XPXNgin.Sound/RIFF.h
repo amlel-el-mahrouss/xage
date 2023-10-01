@@ -4,7 +4,7 @@
  *			XAGE Audio System
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			Purpose: Wave format header.
+ *			Purpose: RIFF container header.
  *
  * =====================================================================
  */
