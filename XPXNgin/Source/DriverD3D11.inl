@@ -39,7 +39,7 @@ namespace XPX
 	static inline bool create_vertex_shader(Renderer::DX11::DriverSystemD3D11* driver,
 		Renderer::DX11::ShaderSystemD3D11* shader_system)
 	{
-		shader_system->get().shader_type += XPLICIT_VERTEX_SHADER;
+		shader_system->get().shader_type = XPLICIT_VERTEX_SHADER;
 
 		if (shader_system->compile())
 		{
@@ -55,7 +55,7 @@ namespace XPX
 	static inline bool create_pixel_shader(Renderer::DX11::DriverSystemD3D11* driver,
 		Renderer::DX11::ShaderSystemD3D11* shader_system)
 	{
-		shader_system->get().shader_type += XPLICIT_PIXEL_SHADER;
+		shader_system->get().shader_type = XPLICIT_PIXEL_SHADER;
 
 		if (shader_system->compile())
 		{
@@ -71,7 +71,7 @@ namespace XPX
 	static inline bool create_hull_shader(Renderer::DX11::DriverSystemD3D11* driver,
 		Renderer::DX11::ShaderSystemD3D11* shader_system)
 	{
-		shader_system->get().shader_type += XPLICIT_HULL_SHADER;
+		shader_system->get().shader_type = XPLICIT_HULL_SHADER;
 
 		if (shader_system->compile())
 		{
