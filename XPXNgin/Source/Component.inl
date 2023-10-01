@@ -132,4 +132,4 @@ bool XPX::ComponentSystem::erase(std::vector<Details::ComponentAccessor>::const_
 	return false;
 }
 
-std::vector<XPX::Details::ComponentAccessor>& XPX::ComponentSystem::get_all() noexcept { return mComponents; }
+inline std::vector<XPX::Details::ComponentAccessor>& XPX::ComponentSystem::get_all() noexcept { return mComponents; }

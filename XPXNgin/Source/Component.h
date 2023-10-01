@@ -9,6 +9,9 @@
 
 #pragma once
 
+#ifndef __XPX_COMPONENT_H__
+#define __XPX_COMPONENT_H__
+
 #include "NginCore.h"
 
  //! This file handles the engine component system stuff.
@@ -158,3 +161,5 @@ namespace XPX
 
 
 #include "Component.inl"
+
+#endif // ifndef __XPX_COMPONENT_H__
