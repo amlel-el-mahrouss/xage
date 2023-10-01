@@ -87,7 +87,7 @@ namespace XPX::Renderer::DX11
 		
 		swapDesc.Flags = 0;
 
-		swapDesc.Windowed = false; //! never set to fullscreen.
+		swapDesc.Windowed = true; //! never set to fullscreen.
 		swapDesc.OutputWindow = privateData.pWindowHandle;
 	}
 
@@ -427,10 +427,6 @@ namespace XPX::Renderer::DX11
 
 	void RenderableComponentD3D11::push_diffuse(const Color<float>& vert) noexcept { this->m_arrayColorsDiffuse.push_back(vert); }
 
-	void RenderableComponentD3D11::push_specular(const Color<float>& vert) noexcept { this->m_arrayColorsSpecular.push_back(vert); }
-
-	void RenderableComponentD3D11::push_normal(const Color<float>& vert) noexcept { this->m_arrayColorsNormal.push_back(vert); }
-
 	void RenderableComponentD3D11::push(const Vector<float>& vert) noexcept { this->m_arrayVerts.push_back(vert); }
 
 	void RenderableComponentD3D11::push(const UINT& indice) noexcept { this->m_arrayIndices.push_back(indice);  }
@@ -516,6 +512,7 @@ namespace XPX::Renderer::DX11
 
 		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
 					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 

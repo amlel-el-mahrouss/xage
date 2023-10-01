@@ -236,10 +236,8 @@ namespace XPX::Renderer::DX11
 		XPLICIT_COPY_DEFAULT(RenderableComponentD3D11);
 
 	public:
-		void push_specular(const Color<float>& clr) noexcept;
 		void push_ambient(const Color<float>& clr) noexcept;
 		void push_diffuse(const Color<float>& clr) noexcept;
-		void push_normal(const Color<float>& clr) noexcept;
 
 	public:
 		void push(const Vector<float>& vert) noexcept;

@@ -18,6 +18,7 @@
 
 #include <NetworkProtocol.h>
 #include <DriverD3D11.h>
+#include <SceneSystem.h>
 #include <SoundNgin.h>
 #include <Component.h>
 #include <ImGUI.h>
@@ -64,6 +65,8 @@ XPLICIT_MAIN()
 			return 1;
 
 		XPX::Bites::ApplicationManager manager(uri);
+		XPX::Renderer::SceneSystem scene;
+		scene.add_scene_node("./test.xsd");
 
 		RENDERER->get().pCamera->set_position(XPLICIT_ORIGIN);
 
