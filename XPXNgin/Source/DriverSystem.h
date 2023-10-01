@@ -59,7 +59,10 @@ namespace XPX::Renderer
 		std::size_t f_iSceneId{ 0 };
 
 	protected:
-		std::vector<Color<float>> m_arrayColors;
+		std::vector<Color<float>> m_arrayColorsSpecular;
+		std::vector<Color<float>> m_arrayColorsDiffuse;
+		std::vector<Color<float>> m_arrayColorsNormal;
+		std::vector<Color<float>> m_arrayColorsAmbient;
 		std::vector<Vector<float>> m_arrayVerts;
 		std::vector<UINT> m_arrayIndices;
 

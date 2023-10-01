@@ -60,14 +60,10 @@ namespace XPX::Renderer::DX11
 		struct __declspec(align(XPLICIT_DX_ALIGN)) VERTEX
 		{
 			XMFLOAT4 POSITION;
-			XMFLOAT4 COLOR;
-		};
-
-		struct __declspec(align(XPLICIT_DX_ALIGN)) VERTEX_TEX
-		{
-			XMFLOAT4 POSITION;
-			XMFLOAT4 COLOR;
-			XMFLOAT2 TEXCOORD;
+			XMFLOAT4 AMBIENT; // Ambient color
+			XMFLOAT4 DIFFUSE; // Diffuse color
+			XMFLOAT4 SPECULAR; // Specular color
+			XMFLOAT4 NORMAL; // Normal color
 		};
 
 		struct CBUFFER
@@ -240,12 +236,17 @@ namespace XPX::Renderer::DX11
 		XPLICIT_COPY_DEFAULT(RenderableComponentD3D11);
 
 	public:
+		void push_specular(const Color<float>& clr) noexcept;
+		void push_ambient(const Color<float>& clr) noexcept;
+		void push_diffuse(const Color<float>& clr) noexcept;
+		void push_normal(const Color<float>& clr) noexcept;
+
+	public:
 		void push(const Vector<float>& vert) noexcept;
-		void push(const Color<float>& clr) noexcept;
 		void push(const UINT& indice) noexcept;
 
 	public:
-		void driver(DriverSystemD3D11* the) noexcept;
+		void set_driver(DriverSystemD3D11* the) noexcept;
 		DriverSystemD3D11* driver() noexcept;
 
 	public:

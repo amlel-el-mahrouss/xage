@@ -120,6 +120,8 @@ namespace XPX::Renderer::DX11
 
 		DXGI_MODE_DESC* displayModeList = new DXGI_MODE_DESC[numModes];
 
+		ZeroMemory(displayModeList, sizeof(DXGI_MODE_DESC) * numModes);
+
 		hr = pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
 
 		Details::ThrowIfFailed(hr);
@@ -421,7 +423,13 @@ namespace XPX::Renderer::DX11
 
 	DriverSystemD3D11* RenderableComponentD3D11::driver() noexcept { return m_pDriver; }
 
-	void RenderableComponentD3D11::push(const Color<float>& vert) noexcept { this->m_arrayColors.push_back(vert); }
+	void RenderableComponentD3D11::push_ambient(const Color<float>& vert) noexcept { this->m_arrayColorsAmbient.push_back(vert); }
+
+	void RenderableComponentD3D11::push_diffuse(const Color<float>& vert) noexcept { this->m_arrayColorsDiffuse.push_back(vert); }
+
+	void RenderableComponentD3D11::push_specular(const Color<float>& vert) noexcept { this->m_arrayColorsSpecular.push_back(vert); }
+
+	void RenderableComponentD3D11::push_normal(const Color<float>& vert) noexcept { this->m_arrayColorsNormal.push_back(vert); }
 
 	void RenderableComponentD3D11::push(const Vector<float>& vert) noexcept { this->m_arrayVerts.push_back(vert); }
 
@@ -445,13 +453,28 @@ namespace XPX::Renderer::DX11
 
 		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{
-			m_pVertex[vertex_index].POSITION = XMFLOAT4(m_arrayVerts[vertex_index].X, m_arrayVerts[vertex_index].Y, m_arrayVerts[vertex_index].Z, 1.0f);
+			m_pVertex[vertex_index].POSITION = XMFLOAT4(m_arrayVerts[vertex_index].X,
+				m_arrayVerts[vertex_index].Y, 
+				m_arrayVerts[vertex_index].Z, 
+				1.0f);
 
-			m_pVertex[vertex_index].COLOR = XMFLOAT4(
-				m_arrayColors[vertex_index].A,
-				m_arrayColors[vertex_index].R,
-				m_arrayColors[vertex_index].G,
-				m_arrayColors[vertex_index].B);
+			m_pVertex[vertex_index].AMBIENT = XMFLOAT4(
+				m_arrayColorsAmbient[vertex_index].A,
+				m_arrayColorsAmbient[vertex_index].R,
+				m_arrayColorsAmbient[vertex_index].G,
+				m_arrayColorsAmbient[vertex_index].B);
+
+			m_pVertex[vertex_index].SPECULAR = XMFLOAT4(
+				m_arrayColorsSpecular[vertex_index].A,
+				m_arrayColorsSpecular[vertex_index].R,
+				m_arrayColorsSpecular[vertex_index].G,
+				m_arrayColorsSpecular[vertex_index].B);
+
+			m_pVertex[vertex_index].DIFFUSE = XMFLOAT4(
+				m_arrayColorsDiffuse[vertex_index].A,
+				m_arrayColorsDiffuse[vertex_index].R,
+				m_arrayColorsDiffuse[vertex_index].G,
+				m_arrayColorsDiffuse[vertex_index].B);
 		}
 
 		m_iVertexCnt = m_arrayVerts.size();
@@ -546,7 +569,7 @@ namespace XPX::Renderer::DX11
 
 	COMPONENT_TYPE RenderableComponentD3D11::type() noexcept { return COMPONENT_RENDER; }
 
-	void RenderableComponentD3D11::driver(DriverSystemD3D11* driver) noexcept
+	void RenderableComponentD3D11::set_driver(DriverSystemD3D11* driver) noexcept
 	{
 		if (driver)
 			m_pDriver = driver;

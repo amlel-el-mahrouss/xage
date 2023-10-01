@@ -96,7 +96,7 @@ namespace XPX::Renderer
 					if (const auto pos = input.find(L"#wavefront");
 						pos != String::npos)
 					{
-						auto substr_wave = input.substr(pos + 1, input.find(L";"));
+						auto substr_wave = input.substr(pos + 1, input.find(L","));
 						XPLICIT_INFO(fmt::format("Loading OBJ {}", substr_wave));
 
 						WaveFrontReader<wchar_t> wfReader;
@@ -117,7 +117,24 @@ namespace XPX::Renderer
 							render->push(indice);
 						}
 
-						render->driver(scene->m_driver);
+						auto substr_wave_mtl = input.substr(input.find(L","));
+						XPLICIT_INFO(fmt::format("Loading MTL {}", substr_wave_mtl));
+
+
+						hr = wfReader.LoadMTL(substr_wave_mtl.c_str());
+
+						if (SUCCEEDED(hr))
+						{
+							for (auto& mat : wfReader.materials)
+							{
+								render->push_ambient(Color<float32>(mat.vAmbient.x, mat.vAmbient.y, mat.vAmbient.z));
+								render->push_diffuse(Color<float32>(mat.vDiffuse.x, mat.vDiffuse.y, mat.vDiffuse.z));
+								render->push_specular(Color<float32>(mat.vSpecular.x, mat.vSpecular.y, mat.vSpecular.z));
+								render->push_normal(Color<float32>(0.5, 0.5, 0.5));
+							}
+						}
+
+						render->set_driver(scene->m_driver);
 						render->make_mesh();
 					}
 				}
