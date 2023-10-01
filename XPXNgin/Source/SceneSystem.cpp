@@ -12,6 +12,8 @@
 
 #include "SceneSystem.h"
 
+#include <WaveFrontReader.h>
+
 namespace XPX::Renderer
 {
 	SceneSystem::SceneSystem(const char* pName) noexcept
@@ -71,7 +73,55 @@ namespace XPX::Renderer
 
 		if (m_wrapper.exists(path))
 		{
-			auto scene = m_wrapper.open_reader(path);
+			auto xsd = m_wrapper.open_reader<wchar_t>(path);
+
+			PString input;
+			bool xage_begin = true;
+
+			while (std::getline(xsd, input))
+			{
+				if (input.find(L"#pragma") != String::npos)
+				{
+					if (input.find(L"begin"))
+						xage_begin = true;
+
+					if (input.find(L"end"))
+						xage_begin = false;
+
+					continue;
+				}
+
+				if (xage_begin)
+				{
+					if (const auto pos = input.find(L"#wavefront");
+						pos != String::npos)
+					{
+						auto substr_wave = input.substr(pos + 1, input.find(L";"));
+						XPLICIT_INFO(fmt::format("Loading OBJ {}", substr_wave));
+
+						WaveFrontReader<wchar_t> wfReader;
+
+						HRESULT hr = wfReader.Load(substr_wave.c_str());
+						DX11::Details::ThrowIfFailed(hr);
+
+						auto render = scene->m_system->add<RenderableComponent>();
+						
+						for (auto& vert : wfReader.vertices)
+						{
+							render->push(Vector<float>(vert.position.x, vert.position.y, vert.position.z));
+						}
+
+
+						for (auto& indice : wfReader.indices)
+						{
+							render->push(indice);
+						}
+
+						render->driver(scene->m_driver);
+						render->make_mesh();
+					}
+				}
+			}
 			
 			return std::shared_ptr<SceneLoaderXSD::SceneData>{ pSceneData };
 		}

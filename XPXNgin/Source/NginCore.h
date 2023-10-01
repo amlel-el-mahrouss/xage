@@ -516,20 +516,22 @@ namespace XPX
 		XPLICIT_COPY_DEFAULT(FilesystemWrapper);
 
 	public:
-		std::ifstream open_reader(const char* outPath) const noexcept
+		template <typename CharWidth = char>
+		std::basic_ifstream<CharWidth> open_reader(const char* outPath) const noexcept
 		{
 			if (!std::filesystem::exists(outPath))
 				return {};
 
-			return std::ifstream(outPath);
+			return std::basic_ifstream<CharWidth>(outPath);
 		}
 
-		std::ofstream open_writer(const char* outPath) const noexcept
+		template <typename CharWidth = char>
+		std::basic_ofstream<CharWidth> open_writer(const char* outPath) const noexcept
 		{
 			if (!std::filesystem::exists(outPath))
-				return std::ofstream(outPath);
+				return std::basic_ofstream<CharWidth>(outPath);
 
-			return std::ofstream(outPath, std::ios::app);
+			return std::basic_ofstream<CharWidth>(outPath, std::ios::app);
 		}
 
 		bool create_directory(const char* path) const noexcept

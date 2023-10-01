@@ -62,6 +62,9 @@ namespace XPX
 			VideoDriverSystem* m_driver;
 			String m_name;
 
+			friend class SceneLoaderXSD;
+			friend SceneLoader;
+
 		public:
 			SceneLoader* f_meshLoader;
 
