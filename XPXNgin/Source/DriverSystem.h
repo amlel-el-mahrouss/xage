@@ -55,6 +55,9 @@ namespace XPX::Renderer
 	public:
 		XPLICIT_COPY_DEFAULT(BaseRenderableComponent);
 
+	public:
+		std::size_t f_iSceneId{ 0 };
+
 	protected:
 		std::vector<Color<float>> m_arrayColors;
 		std::vector<Vector<float>> m_arrayVerts;

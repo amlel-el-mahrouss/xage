@@ -115,18 +115,23 @@ namespace XPX
 		XPLICIT_COPY_DELETE(ComponentSystem);
 
 	public:
-		template <typename T>
-		std::vector<T*> all_of();
-
-	public:
 		template <typename T, typename... Args>
 		T* add(Args&&... args);
 
 	public:
 		template <typename T>
+		bool erase(std::vector<Details::ComponentAccessor>::const_iterator& filter);
+
+		template <typename T>
 		bool remove(T* ptr);
 
 	public:
+		std::vector<Details::ComponentAccessor>& get_all() noexcept;
+
+	public:
+		template <typename T>
+		std::vector<T*> all_of();
+
 		template <typename T>
 		T* get(const char* filter);
 

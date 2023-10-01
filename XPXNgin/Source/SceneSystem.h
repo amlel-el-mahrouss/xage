@@ -4,8 +4,8 @@
  *			XPXNgin
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			File: SceneDriver.h
- *			Purpose: Generic Video driver.
+ *			File: SceneSystem.h
+ *			Purpose: Rendering scene system.
  *
  * =====================================================================
  */
@@ -31,24 +31,24 @@ namespace XPX
 {
 	namespace Renderer
 	{
-		class SceneDriver;
+		class SceneSystem;
 		class SceneLoader;
 
 		typedef std::size_t SceneID;
 
-		class XPLICIT_API SceneDriver final
+		class XPLICIT_API SceneSystem final
 		{
 		public:
-			explicit SceneDriver() noexcept;
-			~SceneDriver();
+			explicit SceneSystem(const char* pName = "root") noexcept;
+			~SceneSystem();
 
 		public:
-			SceneDriver& operator=(const SceneDriver&) = default;
-			SceneDriver(const SceneDriver&) = default;
+			SceneSystem& operator=(const SceneSystem&) = default;
+			SceneSystem(const SceneSystem&) = default;
 
 		public:
-			const SceneID add_texture(const char* path);
-			const SceneID add_mesh(const char* path);
+			const SceneID add_scene_node(const char* path);
+			bool remove_scene_node(const SceneID& sceneId);
 
 		public:
 			RenderableComponent* get_scene_node(const SceneID& /* scene id */);
@@ -60,9 +60,9 @@ namespace XPX
 		private:
 			std::unique_ptr<ComponentSystem> m_system;
 			VideoDriverSystem* m_driver;
+			String m_name;
 
 		public:
-			SceneLoader* f_textureLoader;
 			SceneLoader* f_meshLoader;
 
 		};

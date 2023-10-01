@@ -109,3 +109,27 @@ bool XPX::ComponentSystem::remove(T* ptr)
 
 	return false;
 }
+
+
+template <typename T>
+bool XPX::ComponentSystem::erase(std::vector<Details::ComponentAccessor>::const_iterator& it)
+{
+	if (it != mComponents.cend())
+	{
+#ifdef XPLICIT_DEBUG
+		String fmt = "Destroyed component: ";
+		fmt += typeid(T).name();
+
+		XPLICIT_INFO(fmt);
+#endif
+
+		delete it->as_type<T*>();
+		mComponents.erase(it);
+
+		return true;
+	}
+
+	return false;
+}
+
+std::vector<XPX::Details::ComponentAccessor>& XPX::ComponentSystem::get_all() noexcept { return mComponents; }
