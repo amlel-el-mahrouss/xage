@@ -44,14 +44,17 @@ namespace XPX::Renderer::DX11
 
 	int ShaderSystemD3D11::compile() noexcept
 	{
-		HRESULT hr = D3DCompileFromFile(m_shader.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, m_data.entrypoint.c_str(), m_data.shader_type.c_str(),
+		HRESULT hr = D3DCompileFromFile(m_shader.c_str(), nullptr, nullptr, m_data.entrypoint.c_str(), m_data.shader_type.c_str(),
 			m_data.iFlags1,
 			m_data.iFlags2,
 			&m_data.pBlob,
 			&m_data.pErrorBlob);
 
 		if (FAILED(hr))
+		{
+			print_error(m_data.pErrorBlob);
 			throw Win32Error("Could not compile shader from file!");
+		}
 
 		if (m_data.shader_type == XPLICIT_VERTEX_SHADER)
 		{

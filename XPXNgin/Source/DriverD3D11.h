@@ -258,6 +258,8 @@ namespace XPX::Renderer::DX11
 	public:
 		COMPONENT_TYPE type() noexcept override;
 		const char* name() noexcept override;
+
+	public:
 		void make_mesh();
 
 	public:

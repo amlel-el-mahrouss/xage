@@ -526,14 +526,15 @@ namespace XPX::Renderer::DX11
 		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
 					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
 
-		Details::ThrowIfFailed(m_pDriver->get().pDevice->CreateInputLayout(input_layout, layout_size,
+		m_hResult = m_pDriver->get().pDevice->CreateInputLayout(input_layout, layout_size,
 			m_pVertexShader->m_data.pBlob->GetBufferPointer(), m_pVertexShader->m_data.pBlob->GetBufferSize(),
-			&m_pVertexShader->m_data.pInputLayout));
+			&m_pVertexShader->m_data.pInputLayout);
+		Details::ThrowIfFailed(m_hResult);
 
 		UINT* indices = new UINT[m_arrayIndices.size()];
 		memset(indices, 0, m_arrayIndices.size());
@@ -628,7 +629,7 @@ namespace XPX::Renderer::DX11
 		catch (...)
 		{
 			XPLICIT_INFO("WARNING: No ConstantBufferType attached to shader.");
-			XPLICIT_INFO("No Constant buffers bound!!!");
+			XPLICIT_INFO("No constant buffers bound!!!");
 
 			XPLICIT_INFO("XAGE Verificaiton layers: DONE, 1 warning");
 

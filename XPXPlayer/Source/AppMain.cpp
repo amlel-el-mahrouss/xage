@@ -70,11 +70,21 @@ XPLICIT_MAIN()
 		scene.f_meshLoader = new XPX::Renderer::SceneLoaderXSD();
 		scene.add_scene_node("C:/Users/amlal/XGE/bin/Debug/test.xsd");
 
-		RENDERER->get().pCamera->set_position(XPLICIT_ORIGIN);
+		auto origin = XPLICIT_ORIGIN;
+		origin.Z = -100;
+		origin.Y = 1;
+
+		RENDERER->get().pCamera->set_position(origin);
+
+		auto rot = RENDERER->get().pCamera->rotation();
 
 		while (ret != WM_QUIT)
 		{
+			rot.Y += 0.1;
+
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
+
+			RENDERER->get().pCamera->set_rotation(rot);
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.2, 0.2, 0.2, true, true);
 
