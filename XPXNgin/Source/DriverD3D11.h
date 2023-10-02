@@ -63,6 +63,7 @@ namespace XPX::Renderer::DX11
 			XMFLOAT4 AMBIENT; // Ambient color
 			XMFLOAT4 DIFFUSE; // Diffuse color
 			XMFLOAT4 SPECULAR; // Specular color
+			XMFLOAT4 NORMAL; // Normal of vertice.
 		};
 
 		struct CBUFFER
@@ -235,11 +236,12 @@ namespace XPX::Renderer::DX11
 		XPLICIT_COPY_DEFAULT(RenderableComponentD3D11);
 
 	public:
+		void push_specular(const Color<float>& clr) noexcept;
 		void push_ambient(const Color<float>& clr) noexcept;
 		void push_diffuse(const Color<float>& clr) noexcept;
-		void push_specular(const Color<float>& clr) noexcept;
 
 	public:
+		void push_normal(const Vector<float>& clr) noexcept;
 		void push(const Vector<float>& vert) noexcept;
 		void push(const UINT& indice) noexcept;
 
@@ -266,8 +268,8 @@ namespace XPX::Renderer::DX11
 		void set_position(const Vector<float>& pos) noexcept;
 		const Vector<float>& position() noexcept;
 
-		void set_rotation(const Vector<float>& rot) noexcept;
-		const Vector<float>& rotation() noexcept;
+		void set_rotation(const Quaternion<float>& rot) noexcept;
+		const Quaternion<float>& rotation() noexcept;
 
 		void set_scale(const Vector<float>& size) noexcept;
 		const Vector<float>& scale() noexcept;
@@ -297,7 +299,7 @@ namespace XPX::Renderer::DX11
 		Details::VERTEX* m_pVertex;
 
 	private:
-		Vector<float32> m_vRotation;
+		Quaternion<float32> m_vRotation;
 		Vector<float32> m_vPosition;
 		Vector<float32> m_vScale;
 		bool m_bDraw;

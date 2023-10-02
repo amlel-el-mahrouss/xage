@@ -13,6 +13,7 @@
 #include "SceneSystem.h"
 
 #include <WaveFrontReader.h>
+#include <DirectXTex.h>
 
 namespace XPX::Renderer
 {

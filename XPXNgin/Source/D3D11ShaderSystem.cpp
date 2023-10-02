@@ -95,9 +95,10 @@ namespace XPX::Renderer::DX11
 		XMMATRIX scaleMatrix = XMMatrixScaling(component->m_vScale.X, 
 			component->m_vScale.Y, component->m_vScale.Z);
 
-		XMMATRIX rotationMatrix = XMMatrixRotationY(component->m_vRotation.Y);
-		rotationMatrix += XMMatrixRotationX(component->m_vRotation.X);
-		rotationMatrix += XMMatrixRotationZ(component->m_vRotation.Z);
+		XMMATRIX rotationMatrix = XMMatrixRotationAxis(FXMVECTOR({ component->m_vRotation.X,
+			component->m_vRotation.Y,
+			component->m_vRotation.Z}), 
+			component->m_vRotation.W);
 
 		XMMATRIX scaleRotateMatrix = XMMatrixMultiply(scaleMatrix,
 			rotationMatrix);

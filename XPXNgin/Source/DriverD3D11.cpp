@@ -427,6 +427,8 @@ namespace XPX::Renderer::DX11
 
 	DriverSystemD3D11* RenderableComponentD3D11::driver() noexcept { return m_pDriver; }
 
+	void RenderableComponentD3D11::push_normal(const Vector<float>& n) noexcept { this->m_arrayNormal.push_back(n); }
+
 	void RenderableComponentD3D11::push_ambient(const Color<float>& vert) noexcept { this->m_arrayColorsAmbient.push_back(vert); }
 
 	void RenderableComponentD3D11::push_specular(const Color<float>& vert) noexcept { this->m_arrayColorsSpecular.push_back(vert); }
@@ -455,6 +457,16 @@ namespace XPX::Renderer::DX11
 		XPLICIT_ASSERT(m_pVertex);
 
 		m_iVertexCnt = 0;
+
+		for (size_t normal_index = 0; 
+			normal_index < m_arrayNormal.size(); ++normal_index)
+		{
+			m_pVertex[normal_index].POSITION = XMFLOAT4(m_arrayNormal[normal_index].X,
+				m_arrayNormal[normal_index].Y,
+				m_arrayNormal[normal_index].Z,
+				1.0f);
+
+		}
 
 		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{
@@ -590,9 +602,9 @@ namespace XPX::Renderer::DX11
 	
 	const Vector<float>& RenderableComponentD3D11::scale() noexcept { return m_vScale; }
 
-	void RenderableComponentD3D11::set_rotation(const Vector<float>& rot) noexcept { m_vRotation = rot; }
+	void RenderableComponentD3D11::set_rotation(const Quaternion<float>& rot) noexcept { m_vRotation = rot; }
 	
-	const Vector<float>& RenderableComponentD3D11::rotation() noexcept { return m_vRotation; }
+	const Quaternion<float>& RenderableComponentD3D11::rotation() noexcept { return m_vRotation; }
 
 	void RenderableComponentD3D11::set_position(const Vector<float>& pos) noexcept { m_vPosition = pos; }
 	
