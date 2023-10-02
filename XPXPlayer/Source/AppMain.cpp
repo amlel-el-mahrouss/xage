@@ -68,15 +68,11 @@ XPLICIT_MAIN()
 		XPX::Renderer::SceneSystem scene;
 
 		scene.f_meshLoader = new XPX::Renderer::SceneLoaderXSD();
-		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/bin/Debug/test.xsd");
 
+		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/bin/Debug/test.xsd");
 		auto node = scene.get_scene_node(nodes[0]);
-		auto node2 = scene.get_scene_node(nodes[1]);
-		auto node3 = scene.get_scene_node(nodes[2]);
 
 		node->set_position(XPX::Vector<XPX::float32>(1, 0, 0));
-		node2->set_position(XPX::Vector<XPX::float32>(2, 0, -10));
-		node3->set_position(XPX::Vector<XPX::float32>(3, 0, -20));
 
 		auto origin = XPLICIT_ORIGIN;
 		origin.Z = -1000;
