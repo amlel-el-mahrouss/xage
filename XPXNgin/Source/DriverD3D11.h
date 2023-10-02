@@ -266,8 +266,11 @@ namespace XPX::Renderer::DX11
 		void set_position(const Vector<float>& pos) noexcept;
 		const Vector<float>& position() noexcept;
 
-		void set_rotation(const Vector<float>& pos) noexcept;
+		void set_rotation(const Vector<float>& rot) noexcept;
 		const Vector<float>& rotation() noexcept;
+
+		void set_scale(const Vector<float>& size) noexcept;
+		const Vector<float>& scale() noexcept;
 
 		void make_mesh();
 

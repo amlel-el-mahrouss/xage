@@ -536,6 +536,7 @@ namespace XPX::Renderer::DX11
 					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "COLOR", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
@@ -585,7 +586,11 @@ namespace XPX::Renderer::DX11
 		Details::ThrowIfFailed(m_hResult);
 	}
 
-	void RenderableComponentD3D11::set_rotation(const Vector<float>& pos) noexcept { m_vRotation = pos; }
+	void RenderableComponentD3D11::set_scale(const Vector<float>& scale) noexcept { m_vScale = scale; }
+	
+	const Vector<float>& RenderableComponentD3D11::scale() noexcept { return m_vScale; }
+
+	void RenderableComponentD3D11::set_rotation(const Vector<float>& rot) noexcept { m_vRotation = rot; }
 	
 	const Vector<float>& RenderableComponentD3D11::rotation() noexcept { return m_vRotation; }
 

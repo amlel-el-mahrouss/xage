@@ -11,11 +11,15 @@ cbuffer CBUFFER
     matrix PROJECTION;
 };
 
+volatile float4 NORMAL;
+
 struct VS_OUTPUT
 {
-    float4 position : SV_POSITION;
+    float4 position : POSITION;
     float4 ambient : COLOR;
     float4 diffuse : COLOR1;
+    float4 specular : COLOR2;
+    float4 normal : POSITION1;
 };
 
 struct VS_INPUT
@@ -23,11 +27,14 @@ struct VS_INPUT
     float4 position : POSITION;
     float4 ambient : COLOR;
     float4 diffuse : COLOR1;
+    float4 specular : COLOR2;
 };
 
 
 VS_OUTPUT VS(VS_INPUT input)
 {
+    NORMAL = normalize(input.position);
+    
     VS_OUTPUT output;
     
     input.position.w = 1.0f;
@@ -38,6 +45,8 @@ VS_OUTPUT VS(VS_INPUT input)
     
     output.ambient = input.ambient;
     output.diffuse = input.diffuse;
+    output.specular = input.specular;
+    output.normal = NORMAL;
 
     return output;
 }

@@ -96,6 +96,8 @@ namespace XPX::Renderer::DX11
 			component->m_vScale.Y, component->m_vScale.Z);
 
 		XMMATRIX rotationMatrix = XMMatrixRotationY(component->m_vRotation.Y);
+		rotationMatrix += XMMatrixRotationX(component->m_vRotation.X);
+		rotationMatrix += XMMatrixRotationZ(component->m_vRotation.Z);
 
 		XMMATRIX scaleRotateMatrix = XMMatrixMultiply(scaleMatrix,
 			rotationMatrix);
@@ -117,9 +119,7 @@ namespace XPX::Renderer::DX11
 		for (size_t bufferIndex = 0; bufferIndex < cBufferCnt; ++bufferIndex)
 		{
 			cBuffer[bufferIndex].PROJECTION = transPoseProjectionMatrix;
-
 			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
-
 			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
 		}
 
