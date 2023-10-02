@@ -157,10 +157,16 @@ namespace XPX::Renderer
 						{
 							for (auto& mat : wfReader.materials)
 							{
-								render->push_ambient(Color<float32>(mat.vAmbient.x, mat.vAmbient.y, mat.vAmbient.z));
-								render->push_diffuse(Color<float32>(mat.vDiffuse.x, mat.vDiffuse.y, mat.vDiffuse.z));
-								render->push_specular(Color<float32>(mat.vSpecular.x, mat.vSpecular.y, mat.vSpecular.z));
+								render->push_ambient(Color<float32>(mat.vAmbient.x, mat.vAmbient.y, mat.vAmbient.z, 1));
+								render->push_diffuse(Color<float32>(mat.vDiffuse.x, mat.vDiffuse.y, mat.vDiffuse.z, 1));
+								render->push_specular(Color<float32>(mat.vSpecular.x, mat.vSpecular.y, mat.vSpecular.z, 1));
 							}
+						}
+						else
+						{
+							render->push_ambient(Color<float32>(0.6, 0.6, 0.6, 1));
+							render->push_specular(Color<float32>(1, 1, 1, 1));
+							render->push_diffuse(Color<float32>(1, 1, 1, 1));
 						}
 
 						render->set_driver(scene->m_driver);

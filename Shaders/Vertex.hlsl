@@ -33,7 +33,7 @@ struct VERTEX
 
 PIXEL VS(VERTEX input_data)
 {
-    float4 normal = normalize(NORMAL);
+    float4 normal = normalize(NORMAL - input_data.POSITION);
     float4 lightColor = COLOUR;
     float4 lightSource = SOURCE;
     float diffuseStrength = max(0.1, dot(lightSource, normal));
@@ -52,7 +52,7 @@ PIXEL VS(VERTEX input_data)
     float4 lighting = float4(0.6, 0.6, 0.6, 1.0);
     lighting = input_data.AMBIENT - .1 + ((diffuse / 6.0) * (diffuse / 4.0) + (diffuse / 2.0)) + specular * 0.5;
     
-    float4 color = input_data.DIFFUSE * lighting;
+    float4 color = COLOUR * lighting;
 
     PIXEL output;
     
