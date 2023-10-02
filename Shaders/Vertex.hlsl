@@ -11,7 +11,7 @@ cbuffer CBUFFER
     matrix PROJECTION;
 };
 
-volatile float4 NORMAL;
+float4 NORMAL;
 
 struct VS_OUTPUT
 {
