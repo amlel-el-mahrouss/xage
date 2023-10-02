@@ -17,6 +17,7 @@ struct VS_OUTPUT
     float4 ambient : COLOR;
     float4 diffuse : COLOR1;
     float4 specular : COLOR2;
+    float4 normal : NORMAL;
 };
 
 struct VS_INPUT
@@ -41,6 +42,7 @@ VS_OUTPUT VS(VS_INPUT input)
     output.ambient = input.ambient;
     output.diffuse = input.diffuse;
     output.specular = input.specular;
+    output.normal = normalize(input.position);
 
     return output;
 }
