@@ -94,7 +94,7 @@ XPLICIT_MAIN()
 
 		while (ret != WM_QUIT)
 		{
-			node->rotate(XPX::Quaternion<XPX::float32>(0, -rot, 0));
+			node->set_rotation(XPX::Quaternion<XPX::float32>(0, -rot, 0));
 
 			rot += 0.01;
 

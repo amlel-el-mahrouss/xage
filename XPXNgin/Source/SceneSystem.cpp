@@ -143,6 +143,7 @@ namespace XPX::Renderer
 						{
 							render->push_vertice(Vector<float>(vert.position.x, vert.position.y, vert.position.z));
 							render->push_normal(Vector<float>(vert.normal.x, vert.normal.y, vert.normal.z));
+							render->push_texcoord(Vector<float>(vert.textureCoordinate.x, vert.textureCoordinate.y, 0));
 						}
 
 						for (auto& indice : wfReader.indices)

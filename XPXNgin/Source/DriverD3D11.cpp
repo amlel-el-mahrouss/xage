@@ -423,6 +423,11 @@ namespace XPX::Renderer::DX11
 	{
 		if (m_pVertex)
 			delete[] m_pVertex;
+
+		for (auto* tex : f_vTextures)
+		{
+			delete tex;
+		}
 	}
 
 	DriverSystemD3D11* RenderableComponentD3D11::driver() noexcept { return m_pDriver; }
@@ -442,7 +447,7 @@ namespace XPX::Renderer::DX11
 	void RenderableComponentD3D11::should_draw(const bool enable) noexcept { m_bDraw = enable; }
 	const bool& RenderableComponentD3D11::should_draw() noexcept { return m_bDraw; }
 
-	void RenderableComponentD3D11::make_mesh() noexcept
+	void RenderableComponentD3D11::make_mesh(const std::vector<ImageDataParams>& params) noexcept
 	{
 		if (m_arrayVerts.empty())
 			return;
@@ -506,6 +511,14 @@ namespace XPX::Renderer::DX11
 				m_arrayColorsAmbient[ambient_index].B);
 		}
 
+		for (size_t tex_index = 0;
+			tex_index < m_arrayTextures.size(); ++tex_index)
+		{
+			m_pVertex[tex_index].TEXCOORD = XMFLOAT2(
+				m_arrayTextures[tex_index].X,
+				m_arrayTextures[tex_index].Y);
+		}
+
 		m_iVertexCnt = m_arrayVerts.size();
 
 		m_vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -531,6 +544,13 @@ namespace XPX::Renderer::DX11
 
 		delete[] m_pVertex;
 
+		for (auto tex : params)
+		{
+			auto tex_ptr = new TextureSystemGenericD3D11();
+			f_vTextures.push_back(tex_ptr);
+			tex_ptr->make_texture(tex);
+		}
+
 		XPLICIT_GET_DATA_DIR_W(DIR);
 
 		PString path_pixel = DIR;
@@ -549,6 +569,7 @@ namespace XPX::Renderer::DX11
 					{ "COLOR", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "COLOR", 2, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
@@ -556,6 +577,7 @@ namespace XPX::Renderer::DX11
 		m_hResult = m_pDriver->get().pDevice->CreateInputLayout(input_layout, layout_size,
 			m_pVertexShader->m_data.pBlob->GetBufferPointer(), m_pVertexShader->m_data.pBlob->GetBufferSize(),
 			&m_pVertexShader->m_data.pInputLayout);
+
 		Details::ThrowIfFailed(m_hResult);
 
 		UINT* indices = new UINT[m_arrayIndices.size()];
@@ -602,7 +624,7 @@ namespace XPX::Renderer::DX11
 	
 	const Vector<float>& RenderableComponentD3D11::scale() noexcept { return m_vScale; }
 
-	void RenderableComponentD3D11::rotate(const Quaternion<float>& rot) noexcept { m_vRotation = rot; }
+	void RenderableComponentD3D11::set_rotation(const Quaternion<float>& rot) noexcept { m_vRotation = rot; }
 	
 	const Quaternion<float>& RenderableComponentD3D11::rotation() noexcept { return m_vRotation; }
 

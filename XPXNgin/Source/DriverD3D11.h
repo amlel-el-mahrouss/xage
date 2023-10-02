@@ -6,6 +6,7 @@
  *
  *			File: DriverD3D11.h
  *			Purpose: C++ Rendering Driver for Direct3D 11
+ *			The goal of this driver system is to take most advantage of directx and windows/xbox.
  *
  * =====================================================================
  */
@@ -63,7 +64,8 @@ namespace XPX::Renderer::DX11
 			XMFLOAT4 AMBIENT; // Ambient color
 			XMFLOAT4 DIFFUSE; // Diffuse color
 			XMFLOAT4 SPECULAR; // Specular color
-			XMFLOAT4 NORMAL;
+			XMFLOAT4 NORMAL; // vertex normal
+			XMFLOAT2 TEXCOORD; // 2d texture coordinate.
 		};
 
 		struct CBUFFER
@@ -209,6 +211,7 @@ namespace XPX::Renderer::DX11
 			WRL::ComPtr<ID3D11VertexShader> pVertex;
 			WRL::ComPtr<ID3D11Buffer> pMatrixBuffer;
 
+		public:
 			ID3D11InputLayout* pInputLayout;
 
 		};
@@ -272,13 +275,13 @@ namespace XPX::Renderer::DX11
 		void set_position(const Vector<float>& pos) noexcept;
 		const Vector<float>& position() noexcept;
 
-		void rotate(const Quaternion<float>& rot) noexcept;
+		void set_rotation(const Quaternion<float>& rot) noexcept;
 		const Quaternion<float>& rotation() noexcept;
 
 		void set_scale(const Vector<float>& size) noexcept;
 		const Vector<float>& scale() noexcept;
 
-		void make_mesh() noexcept;
+		void make_mesh(const std::vector<ImageDataParams>& params);
 
 	public:
 		auto get_topology() noexcept { return m_iTopology; }
@@ -288,6 +291,56 @@ namespace XPX::Renderer::DX11
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pMatrixBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;
+		
+	public:
+		void push_texcoord(const Vector<float>& coord) noexcept { m_arrayTextures.push_back(coord); }
+
+	public:
+		struct XPLICIT_API TextureSystemGenericD3D11 final
+		{
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pTextureView;
+			Microsoft::WRL::ComPtr<ID3D11Texture2D> m_pTexture;
+			DriverSystemD3D11* m_pDriver;
+
+			void make_texture(ImageDataParams params) noexcept
+			{
+				D3D11_TEXTURE2D_DESC textureDesc{};
+				textureDesc.Height = params.iHeight;
+				textureDesc.Width = params.iWidth;
+				textureDesc.MipLevels = 0;
+				textureDesc.ArraySize = 1;
+				textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+				textureDesc.SampleDesc.Count = 1;
+				textureDesc.SampleDesc.Quality = 0;
+				textureDesc.Usage = D3D11_USAGE_DEFAULT;
+				textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+				textureDesc.CPUAccessFlags = 0;
+				textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+				Details::ThrowIfFailed(m_pDriver->get().pDevice->CreateTexture2D(&textureDesc, nullptr, m_pTexture.GetAddressOf()));
+
+				float rowPitch = (params.iStride * params.iWidth) * sizeof(BYTE);
+
+				m_pDriver->get().pContext->UpdateSubresource(m_pTexture.Get(), 0, nullptr, params.pImage, rowPitch, 0);
+
+				D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+				srvDesc.Format = textureDesc.Format;
+				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+				srvDesc.Texture2D.MostDetailedMip = 0;
+				srvDesc.Texture2D.MipLevels = -1;
+
+				// Create the shader resource view for the texture.
+				Details::ThrowIfFailed(m_pDriver->get().pDevice->CreateShaderResourceView(m_pTexture.Get(), &srvDesc, m_pTextureView.GetAddressOf()));
+
+				m_pDriver->get().pContext->GenerateMips(m_pTextureView.Get());
+
+			}
+		};
+
+		std::vector<TextureSystemGenericD3D11*> f_vTextures;
+
+	private:
+		std::vector<Vector<float>> m_arrayTextures;
 
 	private:
 		D3D11_SUBRESOURCE_DATA m_vertexData;

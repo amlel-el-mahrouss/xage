@@ -32,18 +32,18 @@ struct VERTEX
     float4 NORMAL : NORMAL;
 };
 
-PIXEL VS(VERTEX input_data)
-{
+PIXEL VS(VERTEX input)
+{    
     PIXEL output;
     
-    output.POSITION = mul(input_data.POSITION, WORLD);
+    output.POSITION = mul(input.POSITION, WORLD);
     output.POSITION = mul(output.POSITION, VIEW);
     output.POSITION = mul(output.POSITION, PROJECTION);
     
-    output.AMBIENT = input_data.AMBIENT;
-    output.DIFFUSE = input_data.DIFFUSE;
-    output.SPECULAR = input_data.SPECULAR;
-    output.NORMAL = input_data.NORMAL;
-   
+    output.AMBIENT = input.AMBIENT;
+    output.DIFFUSE = input.DIFFUSE;
+    output.NORMAL = input.NORMAL;
+    output.SPECULAR = input.SPECULAR;
+    
     return output;
 }
