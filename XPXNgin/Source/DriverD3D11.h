@@ -70,6 +70,7 @@ namespace XPX::Renderer::DX11
 			XMMATRIX VIEW;
 			XMMATRIX WORLD;
 			XMMATRIX PROJECTION;
+			XMFLOAT4 TRANSLATE;
 		};
 
 		XPLICIT_API void ThrowIfFailed(HRESULT hr);

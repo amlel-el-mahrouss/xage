@@ -9,6 +9,7 @@ cbuffer CBUFFER
     matrix WORLD;
     matrix VIEW;
     matrix PROJECTION;
+    float4 TRANSLATE;
 };
 
 struct VS_OUTPUT
@@ -35,6 +36,7 @@ VS_OUTPUT VS(VS_INPUT input)
     output.position = mul(input.position, WORLD);
     output.position = mul(output.position, VIEW);
     output.position = mul(output.position, PROJECTION);
+    output.position += TRANSLATE;
     
     output.ambient = input.ambient;
     output.diffuse = input.diffuse;

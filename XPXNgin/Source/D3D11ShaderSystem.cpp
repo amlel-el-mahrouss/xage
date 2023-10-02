@@ -111,8 +111,15 @@ namespace XPX::Renderer::DX11
 		for (size_t bufferIndex = 0; bufferIndex < cBufferCnt; ++bufferIndex)
 		{
 			cBuffer[bufferIndex].PROJECTION = transPoseProjectionMatrix;
+
 			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
+
 			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
+
+			cBuffer[bufferIndex].TRANSLATE = XMFLOAT4(component->m_vPosition.X, 
+				component->m_vPosition.Y, 
+				component->m_vPosition.Z,
+				1.0f);
 		}
 
 		cBufferCnt = 0U;

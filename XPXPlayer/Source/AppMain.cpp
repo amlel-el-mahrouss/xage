@@ -72,7 +72,7 @@ XPLICIT_MAIN()
 		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/bin/Debug/test.xsd");
 		auto node = scene.get_scene_node(nodes[0]);
 
-		node->set_position(XPX::Vector<XPX::float32>(1, 0, 0));
+		node->set_position(XPX::Vector<XPX::float32>(1, 5, 0));
 
 		auto origin = XPLICIT_ORIGIN;
 		origin.Z = -1000;
