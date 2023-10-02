@@ -17,7 +17,7 @@ cbuffer CBUFFER
 
 struct PIXEL
 {
-    float4 POSITION : POSITION;
+    float4 POSITION : SV_POSITION;
     float4 PHONG : COLOR; // Ambient color
     float4 PBR : COLOR1; // Diffuse color
     float4 RESERVED : COLOR2; // Specular color
@@ -31,7 +31,7 @@ struct VERTEX
     float4 SPECULAR : COLOR2; // Specular color
 };
 
-PIXEL VS(VERTEX input_data) : COLOR
+PIXEL VS(VERTEX input_data)
 {
     float4 normal = normalize(NORMAL);
     float4 lightColor = COLOUR;

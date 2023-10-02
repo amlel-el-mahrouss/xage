@@ -74,6 +74,14 @@ XPLICIT_MAIN()
 
 		node->f_pSourceLight = new XPX::Renderer::LightSystem();
 
+		node->f_pSourceLight->f_vSource.X = 0;
+		node->f_pSourceLight->f_vSource.Y = 100;
+		node->f_pSourceLight->f_vSource.Z = 0;
+
+		node->f_pSourceLight->f_cColour.R = 0.50;
+		node->f_pSourceLight->f_cColour.G = 0.10;
+		node->f_pSourceLight->f_cColour.B = 0.30;
+
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
 		auto origin = XPX::Vector<float>(0, 0, -1000);

@@ -6,7 +6,7 @@
 
 struct PIXEL
 {
-    float4 POSITION : POSITION;
+    float4 POSITION : SV_POSITION;
     float4 PHONG : COLOR; // Ambient color
     float4 PBR : COLOR1; // Diffuse color
     float4 RESERVED : COLOR2; // Specular color
