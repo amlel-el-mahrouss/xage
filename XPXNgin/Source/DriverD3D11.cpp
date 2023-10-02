@@ -415,8 +415,8 @@ namespace XPX::Renderer::DX11
 		m_indexData(), m_iVertexCnt(0), m_iTopology(XPLICIT_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
 		m_pMatrixBuffer(nullptr), m_iIndices(0),
 		m_pVertexShader(nullptr), m_pColorShader(nullptr),
-		m_vPosition(1, 1, 1), m_vRotation(0, 0, 0), m_bDraw(true),
-		m_vScale(0.5, 0.5, 0.5)
+		m_vPosition(0, 0, 0), m_vRotation(0, 0, 0), m_bDraw(true),
+		m_vScale(1, 1, 1), f_pSourceLight(nullptr)
 	{}
 
 	RenderableComponentD3D11::~RenderableComponentD3D11()
@@ -426,8 +426,6 @@ namespace XPX::Renderer::DX11
 	}
 
 	DriverSystemD3D11* RenderableComponentD3D11::driver() noexcept { return m_pDriver; }
-
-	void RenderableComponentD3D11::push_normal(const Vector<float>& n) noexcept { this->m_arrayNormal.push_back(n); }
 
 	void RenderableComponentD3D11::push_ambient(const Color<float>& vert) noexcept { this->m_arrayColorsAmbient.push_back(vert); }
 
@@ -457,16 +455,6 @@ namespace XPX::Renderer::DX11
 		XPLICIT_ASSERT(m_pVertex);
 
 		m_iVertexCnt = 0;
-
-		for (size_t normal_index = 0; 
-			normal_index < m_arrayNormal.size(); ++normal_index)
-		{
-			m_pVertex[normal_index].POSITION = XMFLOAT4(m_arrayNormal[normal_index].X,
-				m_arrayNormal[normal_index].Y,
-				m_arrayNormal[normal_index].Z,
-				1.0f);
-
-		}
 
 		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{

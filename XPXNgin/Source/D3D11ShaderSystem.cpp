@@ -98,7 +98,6 @@ namespace XPX::Renderer::DX11
 
 		rotationMatrix *= XMMatrixRotationZ(component->m_vRotation.Z);
 
-
 		component->m_pDriver->get().WorldMatrix = XMMatrixMultiply(rotationMatrix, transltateMatrix);
 
 		auto transPoseWorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
@@ -118,6 +117,15 @@ namespace XPX::Renderer::DX11
 			cBuffer[bufferIndex].PROJECTION = transPoseProjectionMatrix;
 			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
 			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
+
+			cBuffer[bufferIndex].COLOUR.x = component->f_pSourceLight->f_cColour.R;
+			cBuffer[bufferIndex].COLOUR.y = component->f_pSourceLight->f_cColour.G;
+			cBuffer[bufferIndex].COLOUR.z = component->f_pSourceLight->f_cColour.B;
+			cBuffer[bufferIndex].COLOUR.w = component->f_pSourceLight->f_cColour.A;
+
+			cBuffer[bufferIndex].SOURCE.x = component->f_pSourceLight->f_vSource.X;
+			cBuffer[bufferIndex].SOURCE.y = component->f_pSourceLight->f_vSource.Y;
+			cBuffer[bufferIndex].SOURCE.z = component->f_pSourceLight->f_vSource.Z;
 		}
 
 		cBufferCnt = 0U;

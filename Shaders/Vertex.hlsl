@@ -6,43 +6,45 @@
 
 cbuffer CBUFFER
 {
-    matrix WORLD;
     matrix VIEW;
+    matrix WORLD;
     matrix PROJECTION;
+    
+    float4 NORMAL;
+    float4 COLOUR; // Light Colour
+    float4 SOURCE; // Light source
 };
 
-struct VS_OUTPUT
+struct VERTEX
 {
-    float4 position : POSITION;
-    float4 ambient : COLOR;
-    float4 diffuse : COLOR1;
-    float4 specular : COLOR2;
-    float4 normal : NORMAL;
+    float4 POSITION : POSITION;
+    float4 AMBIENT : COLOR; // Ambient color
+    float4 DIFFUSE : COLOR1; // Diffuse color
+    float4 SPECULAR : COLOR2; // Specular color
 };
 
-struct VS_INPUT
+float4 PS(VERTEX input_data) : SV_TARGET
 {
-    float4 position : POSITION;
-    float4 ambient : COLOR;
-    float4 diffuse : COLOR1;
-    float4 specular : COLOR2;
-};
-
-
-VS_OUTPUT VS(VS_INPUT input)
-{
-    VS_OUTPUT output;
+    float3 normal = normalize(NORMAL.xyz);
+    float3 lightColor = COLOUR;
+    float3 lightSource = SOURCE.xyz;
+    float diffuseStrength = max(0.1, dot(lightSource, normal));
+    float3 diffuse = diffuseStrength * lightColor;
     
-    input.position.w = 1.0f;
+    float3 cameraSource = input_data.POSITION;
+    float3 viewSource = normalize(cameraSource);
     
-    output.position = mul(input.position, WORLD);
-    output.position = mul(output.position, VIEW);
-    output.position = mul(output.position, PROJECTION);
+    float3 reflectSource = normalize(reflect(-lightSource, normal));
+    float specularStrength = max(0.01, dot(viewSource, reflectSource));
     
-    output.ambient = input.ambient;
-    output.diffuse = input.diffuse;
-    output.specular = input.specular;
-    output.normal = normalize(input.position);
+    specularStrength = pow(specularStrength, 0.5);
+    float3 specular = specularStrength * lightColor;
+    
+    //! phong equation.
+    float3 lighting = float3(0.6, 0.6, 0.6);
+    lighting = input_data.AMBIENT.xyz - .1 + ((diffuse / 6.0) * (diffuse / 4.0) + (diffuse / 2.0)) + specular * 0.5;
+    
+    float3 color = input_data.DIFFUSE.xyz * lighting;
 
-    return output;
+    return float4(color, 1.0);
 }

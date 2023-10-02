@@ -62,9 +62,26 @@ namespace XPX::Renderer
 		std::vector<Color<float>> m_arrayColorsSpecular;
 		std::vector<Color<float>> m_arrayColorsDiffuse;
 		std::vector<Color<float>> m_arrayColorsAmbient;
-		std::vector<Vector<float>> m_arrayNormal;
 		std::vector<Vector<float>> m_arrayVerts;
 		std::vector<UINT> m_arrayIndices;
+
+	};
+
+	/// <summary>
+	/// Light system: can represent the sun, lamp or whatever
+	/// </summary>
+	class XPLICIT_API LightSystem final
+	{
+	public:
+		explicit LightSystem() = default;
+		~LightSystem() = default;
+
+	public:
+		XPLICIT_COPY_DEFAULT(LightSystem);
+
+	public:
+		Vector<float> f_vSource{ 1, 1, 1 };
+		Color<float> f_cColour{ 1, 1, 1, 1 };
 
 	};
 

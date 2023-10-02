@@ -63,7 +63,6 @@ namespace XPX::Renderer::DX11
 			XMFLOAT4 AMBIENT; // Ambient color
 			XMFLOAT4 DIFFUSE; // Diffuse color
 			XMFLOAT4 SPECULAR; // Specular color
-			XMFLOAT4 NORMAL; // Normal of vertice.
 		};
 
 		struct CBUFFER
@@ -71,6 +70,10 @@ namespace XPX::Renderer::DX11
 			XMMATRIX VIEW;
 			XMMATRIX WORLD;
 			XMMATRIX PROJECTION;
+
+			//! lighting stuff
+			XMFLOAT4 COLOUR; // Light Colour
+			XMFLOAT4 SOURCE; // Light source
 		};
 
 		XPLICIT_API void ThrowIfFailed(HRESULT hr);
@@ -241,7 +244,6 @@ namespace XPX::Renderer::DX11
 		void push_diffuse(const Color<float>& clr) noexcept;
 
 	public:
-		void push_normal(const Vector<float>& clr) noexcept;
 		void push_vertice(const Vector<float>& vert) noexcept;
 		void push_indice(const UINT& indice) noexcept;
 
@@ -310,6 +312,9 @@ namespace XPX::Renderer::DX11
 		HRESULT m_hResult;
 
 		friend ShaderSystemD3D11;
+
+	public:
+		LightSystem* f_pSourceLight;
 
 	};
 

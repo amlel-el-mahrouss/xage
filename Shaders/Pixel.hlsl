@@ -4,23 +4,7 @@
  * Written by Amlal El Mahrouss.
  */
 
-cbuffer CBUFFER
+float4 PS(float4 phong) : SV_TARGET
 {
-    matrix WORLD;
-    matrix VIEW;
-    matrix PROJECTION;
-};
-
-struct VS_OUTPUT
-{
-    float4 position : SV_POSITION;
-    float4 ambient : COLOR;
-    float4 diffuse : COLOR1;
-    float4 specular : COLOR2;
-    float4 normal : NORMAL;
-};
-
-float4 PS(VS_OUTPUT input) : SV_TARGET
-{
-    return input.ambient;
+    return phong;
 }
