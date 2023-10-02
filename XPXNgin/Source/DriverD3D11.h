@@ -260,6 +260,9 @@ namespace XPX::Renderer::DX11
 		const char* name() noexcept override;
 
 	public:
+		void should_draw(const bool) noexcept;
+		const bool& should_draw() noexcept;
+
 		void set_position(const Vector<float>& pos) noexcept;
 		const Vector<float>& position() noexcept;
 		void make_mesh();
@@ -289,6 +292,7 @@ namespace XPX::Renderer::DX11
 	private:
 		Vector<float32> m_vRotation;
 		Vector<float32> m_vPosition;
+		bool m_bDraw;
 
 	private:
 		size_t m_iIndices;

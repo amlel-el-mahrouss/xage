@@ -414,7 +414,8 @@ namespace XPX::Renderer::DX11
 		 m_pDriver(nullptr), m_pVertex(nullptr),
 		m_indexData(), m_iVertexCnt(0), m_iTopology(XPLICIT_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
 		m_pMatrixBuffer(nullptr), m_iIndices(0),
-		m_pVertexShader(nullptr), m_pColorShader(nullptr), m_vPosition(0, 0, 0), m_vRotation(0, 0, 0)
+		m_pVertexShader(nullptr), m_pColorShader(nullptr),
+		m_vPosition(0, 0, 0), m_vRotation(0, 0, 0), m_bDraw(true)
 	{}
 
 	RenderableComponentD3D11::~RenderableComponentD3D11()
@@ -434,6 +435,9 @@ namespace XPX::Renderer::DX11
 	void RenderableComponentD3D11::push(const Vector<float>& vert) noexcept { this->m_arrayVerts.push_back(vert); }
 
 	void RenderableComponentD3D11::push(const UINT& indice) noexcept { this->m_arrayIndices.push_back(indice);  }
+
+	void RenderableComponentD3D11::should_draw(const bool enable) noexcept { m_bDraw = enable; }
+	const bool& RenderableComponentD3D11::should_draw() noexcept { return m_bDraw; }
 
 	void RenderableComponentD3D11::make_mesh()
 	{
@@ -600,30 +604,11 @@ namespace XPX::Renderer::DX11
 		RenderableComponentD3D11* self = (RenderableComponentD3D11*)this_ptr;
 
 		if (!IsValidHeapPtr(self) ||
-			!self)
+			!self->m_bDraw)
 			return;
 
 		XPLICIT_ASSERT(self->m_pDriver);
 		
-		// do position translation
-
-		D3D11_MAPPED_SUBRESOURCE res{};
-
-		self->m_pDriver->get().pContext->Map(self->m_pVertexBuffer.Get(), 0, D3D11_MAP_READ_WRITE, 0, &res);
-
-		Details::VERTEX* vert = (Details::VERTEX*)res.pData;
-		std::size_t sz = (sizeof(vert) / sizeof(vert[0]));
-
-		for (std::size_t vert_idx = 0UL; vert_idx < sz; ++vert_idx)
-		{
-			vert->POSITION = XMFLOAT4(self->m_vPosition.X, self->m_vPosition.Y, self->m_vPosition.Z, 1.0f);
-
-		}
-
-		self->m_pDriver->get().pContext->Unmap(self->m_pVertexBuffer.Get(), 0);
-
-		// do rotation translation
-
 		self->m_pDriver->get().pContext->RSSetState(self->m_pDriver->get().pRasterState.Get());
 
 		const uint32_t stride = { sizeof(Details::VERTEX) };
