@@ -71,19 +71,17 @@ XPLICIT_MAIN()
 
 		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/bin/Debug/test.xsd");
 		auto node = scene.get_scene_node(nodes[0]);
-		auto node2 = scene.get_scene_node(nodes[1]);
 
-		node->should_draw(false);
-		node2->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
-		node2->set_rotation(XPX::Vector<XPX::float32>(0, 90 * 0.0174532925f, 0));
+		node->set_position(XPX::Vector<XPX::float32>(-2.0, 0, 0));
 
 		auto origin = XPLICIT_ORIGIN;
-		origin.Z = -300;
+		origin.Z = -500;
 		origin.Y = 0;
 		origin.X = 0;
 
 		RENDERER->get().pCamera->set_position(origin);
-
+		RENDERER->get().pCamera->set_rotation(XPX::Vector<XPX::float32>(0.2, 0.2, 0.2));
+		
 		while (ret != WM_QUIT)
 		{
 			ret = XPX::Root::get_singleton_ptr()->Window->update();

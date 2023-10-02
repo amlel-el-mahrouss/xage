@@ -416,7 +416,7 @@ namespace XPX::Renderer::DX11
 		m_pMatrixBuffer(nullptr), m_iIndices(0),
 		m_pVertexShader(nullptr), m_pColorShader(nullptr),
 		m_vPosition(0, 0, 0), m_vRotation(0, 0, 0), m_bDraw(true),
-		m_vScale(1, 1, 1)
+		m_vScale(0.5, 0.5, 0.5)
 	{}
 
 	RenderableComponentD3D11::~RenderableComponentD3D11()
