@@ -71,24 +71,29 @@ XPLICIT_MAIN()
 
 		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/bin/Debug/test.xsd");
 		auto node = scene.get_scene_node(nodes[0]);
-		auto node1 = scene.get_scene_node(nodes[1]);
-		auto node2 = scene.get_scene_node(nodes[2]);
-		auto node3 = scene.get_scene_node(nodes[3]);
 
-		node->set_position(XPX::Vector<XPX::float32>(-2.0, 0, 0));
-		node1->set_position(XPX::Vector<XPX::float32>(4.0, 0, 0));
-		node2->set_position(XPX::Vector<XPX::float32>(6.0, 0, 0));
-		node3->set_position(XPX::Vector<XPX::float32>(8.0, 0, 0));
+		node->set_position(XPX::Vector<XPX::float32>(-2.0, 0, 10));
 
 		auto origin = XPLICIT_ORIGIN;
-		origin.Z = -1000;
-		origin.Y = 10;
+
+		origin.Z = -500;
+		origin.Y = 0;
 		origin.X = 0;
 
 		RENDERER->get().pCamera->set_position(origin);
-		
+
+		float rotation = 360.f;
+
 		while (ret != WM_QUIT)
 		{
+			rotation -= 0.0174532925f * 0.25f;
+			if (rotation < 0.0f)
+			{
+				rotation += 360.0f;
+			}
+
+			node->rotate(XPX::Quaternion(0.f, 0.f, rotation));
+
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.2, 0.2, 0.2, true, true);
