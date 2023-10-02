@@ -69,7 +69,7 @@ XPLICIT_MAIN()
 
 		scene.f_meshLoader = new XPX::Renderer::SceneLoaderXSD();
 
-		auto nodes = scene.add_scene_node("../../XSD/Sample.xsd");
+		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/XSD/Sample.xsd");
 		auto node = scene.get_scene_node(nodes[0]);
 
 		node->f_pSourceLight = new XPX::Renderer::LightSystem();
@@ -78,14 +78,14 @@ XPLICIT_MAIN()
 		node->f_pSourceLight->f_vSource.Y = 1.0;
 		node->f_pSourceLight->f_vSource.Z = 1.0;
 
-		node->f_pSourceLight->f_cColour.R = 0.50;
-		node->f_pSourceLight->f_cColour.G = 0.10;
-		node->f_pSourceLight->f_cColour.B = 0.30;
-		node->f_pSourceLight->f_cColour.A = 1;
+		node->f_pSourceLight->f_cColour.R = 1.0;
+		node->f_pSourceLight->f_cColour.G = 1.0;
+		node->f_pSourceLight->f_cColour.B = 1.0;
+		node->f_pSourceLight->f_cColour.A = 1.0;
 
-		node->set_position(XPX::Vector<XPX::float32>(10, 0, 0));
+		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(0.1, 10, -100.0);
+		auto origin = XPX::Vector<float>(0.1, 0, -1000.0);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
