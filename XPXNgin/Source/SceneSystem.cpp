@@ -56,16 +56,19 @@ namespace XPX::Renderer
 		{
 			auto id = f_meshLoader->from_disk(path, this);
 
-			std::vector<SceneID> ids;
-			for (auto node : id->f_Nodes)
+			if (id)
 			{
-				node->f_iSceneId = m_scene_counter;
-				++m_scene_counter;
+				std::vector<SceneID> ids;
+				for (auto node : id->f_Nodes)
+				{
+					node->f_iSceneId = m_scene_counter;
+					++m_scene_counter;
 
-				ids.push_back(node->f_iSceneId);
+					ids.push_back(node->f_iSceneId);
+				}
+
+				return ids;
 			}
-
-			return ids;
 		}
 
 		return {};
@@ -138,12 +141,13 @@ namespace XPX::Renderer
 						
 						for (auto& vert : wfReader.vertices)
 						{
-							render->push(Vector<float>(vert.position.x, vert.position.y, vert.position.z));
+							render->push_vertice(Vector<float>(vert.position.x, vert.position.y, vert.position.z));
+							render->push_normal(Vector<float>(vert.normal.x, vert.normal.y, vert.normal.z));
 						}
 
 						for (auto& indice : wfReader.indices)
 						{
-							render->push(indice);
+							render->push_indice(indice);
 						}
 
 						auto substr_wave_mtl = input.substr(input.find(L","));

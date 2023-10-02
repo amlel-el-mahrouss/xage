@@ -435,9 +435,9 @@ namespace XPX::Renderer::DX11
 
 	void RenderableComponentD3D11::push_diffuse(const Color<float>& vert) noexcept { this->m_arrayColorsDiffuse.push_back(vert); }
 
-	void RenderableComponentD3D11::push(const Vector<float>& vert) noexcept { this->m_arrayVerts.push_back(vert); }
+	void RenderableComponentD3D11::push_vertice(const Vector<float>& vert) noexcept { this->m_arrayVerts.push_back(vert); }
 
-	void RenderableComponentD3D11::push(const UINT& indice) noexcept { this->m_arrayIndices.push_back(indice);  }
+	void RenderableComponentD3D11::push_indice(const UINT& indice) noexcept { this->m_arrayIndices.push_back(indice);  }
 
 	void RenderableComponentD3D11::should_draw(const bool enable) noexcept { m_bDraw = enable; }
 	const bool& RenderableComponentD3D11::should_draw() noexcept { return m_bDraw; }
@@ -602,7 +602,7 @@ namespace XPX::Renderer::DX11
 	
 	const Vector<float>& RenderableComponentD3D11::scale() noexcept { return m_vScale; }
 
-	void RenderableComponentD3D11::set_rotation(const Quaternion<float>& rot) noexcept { m_vRotation = rot; }
+	void RenderableComponentD3D11::rotate(const Quaternion<float>& rot) noexcept { m_vRotation = rot; }
 	
 	const Quaternion<float>& RenderableComponentD3D11::rotation() noexcept { return m_vRotation; }
 

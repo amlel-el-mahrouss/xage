@@ -87,25 +87,41 @@ namespace XPX::Renderer::DX11
 		Details::CBUFFER* cBuffer = nullptr;
 
 		unsigned int cBufferCnt = 0U;
+		
+		XMMATRIX rotationMatrix{};
 
 		XMMATRIX transltateMatrix = XMMatrixTranslation(component->m_vPosition.X,
 			component->m_vPosition.Y,
 			component->m_vPosition.Z);
 
-		XMMATRIX scaleMatrix = XMMatrixScaling(component->m_vScale.X, 
+		XMMATRIX scaleMatrix = XMMatrixScaling(component->m_vScale.X,
 			component->m_vScale.Y, component->m_vScale.Z);
 
-		XMMATRIX rotationMatrix = XMMatrixRotationAxis(FXMVECTOR({ component->m_vRotation.X,
-			component->m_vRotation.Y,
-			component->m_vRotation.Z}), 
-			component->m_vRotation.W);
+		if (component->m_vRotation.Z > 0)
+		{
+			rotationMatrix += XMMatrixRotationZ(component->m_vRotation.Z);
+			component->m_vRotation.Z = 0;
+		}
+
+		if (component->m_vRotation.X > 0)
+		{
+			rotationMatrix += XMMatrixRotationX(component->m_vRotation.X);
+			component->m_vRotation.X = 0;
+		}
+
+		if (component->m_vRotation.Y > 0)
+		{
+			rotationMatrix += XMMatrixRotationY(component->m_vRotation.Y);
+			component->m_vRotation.Y = 0;
+		}
 
 		XMMATRIX scaleRotateMatrix = XMMatrixMultiply(scaleMatrix,
 			rotationMatrix);
 
-		component->m_pDriver->get().WorldMatrix = XMMatrixMultiply(scaleRotateMatrix, transltateMatrix);
+		component->m_pDriver->get().WorldMatrix = XMMatrixMultiply(component->m_pDriver->get().WorldMatrix, scaleRotateMatrix);
 
 		auto transPoseWorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
+	
 		auto transPoseViewMatrix = XMMatrixTranspose(component->m_pDriver->get().pCamera->m_viewMatrix);
 		auto transPoseProjectionMatrix = XMMatrixTranspose(component->m_pDriver->get().ProjectionMatrix);
 

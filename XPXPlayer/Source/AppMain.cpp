@@ -75,33 +75,24 @@ XPLICIT_MAIN()
 		auto node2 = scene.get_scene_node(nodes[2]);
 		auto node3 = scene.get_scene_node(nodes[3]);
 
-		node->set_position(XPX::Vector<XPX::float32>(-2.0, 0, 0));
+		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 		node1->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
-		node2->set_position(XPX::Vector<XPX::float32>(2.0, 0, 0));
-		node3->set_position(XPX::Vector<XPX::float32>(4.0, 0, 0));
+		node2->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
+		node3->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
 		auto origin = XPLICIT_ORIGIN;
-		origin.Z = -1500;
+		origin.Z = -500;
 		origin.Y = 0;
 		origin.X = 0;
 
 		RENDERER->get().pCamera->set_position(origin);
 		
-		float rotation = 0.f;
-
 		while (ret != WM_QUIT)
 		{
-			rotation -= 0.0174532925f * 0.25f;
-
-			if (rotation < 0.0f)
-			{
-				rotation += 360.0f;
-			}
-
-			node->set_rotation(XPX::Quaternion<XPX::float32>(rotation, rotation, rotation, 90.0F));
-			node1->set_rotation(XPX::Quaternion<XPX::float32>(rotation, rotation, rotation, 90.0F));
-			node2->set_rotation(XPX::Quaternion<XPX::float32>(rotation, rotation, rotation, 90.0F));
-			node3->set_rotation(XPX::Quaternion<XPX::float32>(rotation, rotation, rotation, 90.0F));
+			node->rotate(XPX::Quaternion<XPX::float32>(0, 1, 0, 0.0F));
+			node1->rotate(XPX::Quaternion<XPX::float32>(0, 1, 0, 0.0F));
+			node2->rotate(XPX::Quaternion<XPX::float32>(0, 1, 0, 0.0F));
+			node3->rotate(XPX::Quaternion<XPX::float32>(0, 1, 0, 0.0F));
 
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 

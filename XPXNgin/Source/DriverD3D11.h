@@ -242,8 +242,8 @@ namespace XPX::Renderer::DX11
 
 	public:
 		void push_normal(const Vector<float>& clr) noexcept;
-		void push(const Vector<float>& vert) noexcept;
-		void push(const UINT& indice) noexcept;
+		void push_vertice(const Vector<float>& vert) noexcept;
+		void push_indice(const UINT& indice) noexcept;
 
 	public:
 		void set_driver(DriverSystemD3D11* the) noexcept;
@@ -268,7 +268,7 @@ namespace XPX::Renderer::DX11
 		void set_position(const Vector<float>& pos) noexcept;
 		const Vector<float>& position() noexcept;
 
-		void set_rotation(const Quaternion<float>& rot) noexcept;
+		void rotate(const Quaternion<float>& rot) noexcept;
 		const Quaternion<float>& rotation() noexcept;
 
 		void set_scale(const Vector<float>& size) noexcept;
