@@ -72,6 +72,7 @@ namespace XPX::Renderer::DX11
 			XMMATRIX PROJECTION;
 
 			//! lighting stuff
+			XMFLOAT4 NORMAL;
 			XMFLOAT4 COLOUR; // Light Colour
 			XMFLOAT4 SOURCE; // Light source
 		};

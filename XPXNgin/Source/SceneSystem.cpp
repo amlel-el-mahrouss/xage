@@ -142,7 +142,6 @@ namespace XPX::Renderer
 						for (auto& vert : wfReader.vertices)
 						{
 							render->push_vertice(Vector<float>(vert.position.x, vert.position.y, vert.position.z));
-							render->push_normal(Vector<float>(vert.normal.x, vert.normal.y, vert.normal.z));
 						}
 
 						for (auto& indice : wfReader.indices)

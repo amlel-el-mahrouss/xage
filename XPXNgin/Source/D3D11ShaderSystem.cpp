@@ -118,6 +118,11 @@ namespace XPX::Renderer::DX11
 			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
 			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
 
+			cBuffer[bufferIndex].NORMAL.x = component->m_vPosition.X - component->f_pSourceLight->f_vSource.X;
+			cBuffer[bufferIndex].NORMAL.y = component->m_vPosition.Y - component->f_pSourceLight->f_vSource.Y;
+			cBuffer[bufferIndex].NORMAL.z = component->m_vPosition.Z - component->f_pSourceLight->f_vSource.Z;
+			cBuffer[bufferIndex].NORMAL.w = 1.0f;
+
 			cBuffer[bufferIndex].COLOUR.x = component->f_pSourceLight->f_cColour.R;
 			cBuffer[bufferIndex].COLOUR.y = component->f_pSourceLight->f_cColour.G;
 			cBuffer[bufferIndex].COLOUR.z = component->f_pSourceLight->f_cColour.B;
