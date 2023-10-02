@@ -162,12 +162,6 @@ namespace XPX::Renderer
 								render->push_specular(Color<float32>(mat.vSpecular.x, mat.vSpecular.y, mat.vSpecular.z, 1));
 							}
 						}
-						else
-						{
-							render->push_ambient(Color<float32>(0.6, 0.6, 0.6, 1));
-							render->push_specular(Color<float32>(1, 1, 1, 1));
-							render->push_diffuse(Color<float32>(1, 1, 1, 1));
-						}
 
 						render->set_driver(scene->m_driver);
 						render->make_mesh();
