@@ -547,6 +547,8 @@ namespace XPX::Renderer::DX11
 		for (auto tex : params)
 		{
 			auto tex_ptr = new TextureSystemGenericD3D11();
+			tex_ptr->m_pDriver = m_pDriver;
+			
 			f_vTextures.push_back(tex_ptr);
 			tex_ptr->make_texture(tex);
 		}

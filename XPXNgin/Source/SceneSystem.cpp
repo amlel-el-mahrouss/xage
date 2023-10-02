@@ -98,6 +98,101 @@ namespace XPX::Renderer
 		return true;
 	}
 
+	namespace Details
+	{
+		struct TargaHeader
+		{
+			unsigned char data1[12];
+			unsigned short width;
+			unsigned short height;
+			unsigned char bpp;
+			unsigned char data2;
+		};
+
+		bool LoadTarga32Bit(const char* filename)
+		{
+			int error, bpp, imageSize, index, i, j, k;
+			FILE* filePtr;
+			unsigned int count;
+			TargaHeader targaFileHeader;
+			unsigned char* targaImage;
+
+			// Open the targa file for reading in binary.
+			error = fopen_s(&filePtr, filename, "rb");
+			if (error != 0)
+			{
+				return false;
+			}
+
+			// Read in the file header.
+			count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
+			if (count != 1)
+			{
+				return false;
+			}
+
+			// Check that it is 32 bit and not 24 bit.
+			if (bpp != 32)
+			{
+				return false;
+			}
+
+			// Calculate the size of the 32 bit image data.
+			imageSize = targaFileHeader.width * targaFileHeader.height * 4;
+
+			// Allocate memory for the targa image data.
+			targaImage = new unsigned char[imageSize];
+
+			// Read in the targa image data.
+			count = (unsigned int)fread(targaImage, 1, imageSize, filePtr);
+			if (count != imageSize)
+			{
+				return false;
+			}
+
+			// Close the file.
+			error = fclose(filePtr);
+			if (error != 0)
+			{
+				return false;
+			}
+
+			// Allocate memory for the targa destination data.
+			BYTE* targaData = new unsigned char[imageSize];
+
+			// Initialize the index into the targa destination data array.
+			index = 0;
+
+			// Initialize the index into the targa image data.
+			k = imageSize - (targaFileHeader.width * 4);
+
+			// Now copy the targa image data into the targa destination array in the correct order since the targa format is stored upside down and also is not in RGBA order.
+			for (j = 0; j < targaFileHeader.height; j++)
+			{
+				for (i = 0; i < targaFileHeader.width; i++)
+				{
+					targaData[index + 0] = targaImage[k + 2];  // Red.
+					targaData[index + 1] = targaImage[k + 1];  // Green.
+					targaData[index + 2] = targaImage[k + 0];  // Blue
+					targaData[index + 3] = targaImage[k + 3];  // Alpha
+
+					// Increment the indexes into the targa data.
+					k += 4;
+					index += 4;
+				}
+
+				// Set the targa image data index back to the preceding row at the beginning of the column since its reading it in upside down.
+				k -= (targaFileHeader.width * 8);
+			}
+
+			// Release the targa image data now that it was copied into the destination array.
+			delete[] targaImage;
+			targaImage = 0;
+
+			return true;
+		}
+	}
+
 	std::shared_ptr<SceneLoaderXSD::SceneData> SceneLoaderXSD::from_disk(const char* path, SceneSystem* scene)
 	{
 		SceneLoaderXSD::SceneData* pSceneData = new SceneLoaderXSD::SceneData();
@@ -168,7 +263,7 @@ namespace XPX::Renderer
 						}
 
 						render->set_driver(scene->m_driver);
-						render->make_mesh();
+						// render->make_mesh();
 
 						pSceneData->f_Nodes.push_back(render);
 					}
