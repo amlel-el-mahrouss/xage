@@ -144,9 +144,6 @@ namespace XPX::Renderer::DX11
 		if (!component)
 			return;
 
-		if (m_data.pInputLayout)
-			m_pDriver->get().pContext->IASetInputLayout(m_data.pInputLayout);
-
 		switch ((XPLICIT_SHADER_TYPE)m_type)
 		{
 		case XPLICIT_SHADER_TYPE::Vertex:

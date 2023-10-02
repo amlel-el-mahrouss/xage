@@ -106,7 +106,7 @@ namespace XPX::Renderer::DX11
 		public:
 			bool bVSync{ false };
 			char szCardDesc[128];
-			UINT ViewportCnt{ 3 };
+			UINT ViewportCnt{ 1 };
 			HRESULT hResult{ S_OK };
 			bool bEndRendering{ false };
 			HWND pWindowHandle{ nullptr };

@@ -290,7 +290,7 @@ namespace XPX::Renderer::DX11
 
 		Details::ThrowIfFailed(hr);
 
-		m_private.pContext->OMSetRenderTargets(1, m_private.pRenderTarget.GetAddressOf(), m_private.pDepthStencil.Get());
+		m_private.pContext->OMSetRenderTargets(get().ViewportCnt, m_private.pRenderTarget.GetAddressOf(), m_private.pDepthStencil.Get());
 
 		D3D11_RASTERIZER_DESC rasterDesc;
 		RtlZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
@@ -534,9 +534,9 @@ namespace XPX::Renderer::DX11
 
 		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
 					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "COLOR", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "COLOR", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "COLOR", 2, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
@@ -631,18 +631,18 @@ namespace XPX::Renderer::DX11
 				self->m_pVertexBuffer.GetAddressOf(), 
 				&stride, 
 				&offset);
-			
-			self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-			self->m_pDriver->get().pContext->IASetInputLayout(self->m_pDriver->get().pInputLayout.Get());
-
-			self->m_pVertexShader->update(self);
 
 			self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
-		
+
 			self->m_pDriver->get().pContext->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
 				self->m_pDriver->get().pRenderTarget.GetAddressOf(),
 				self->m_pDriver->get().pDepthStencil.Get());
+
+			self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+			self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
+
+			self->m_pVertexShader->update(self);
 
 			self->m_pColorShader->update_cbuf(self);
 			self->m_pColorShader->update(self);

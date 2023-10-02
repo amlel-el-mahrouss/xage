@@ -19,18 +19,18 @@ struct PIXEL
 {
     float4 POSITION : SV_POSITION;
     float4 AMBIENT : COLOR; // Ambient color
-    float4 DIFFUSE : COLOR1; // Diffuse color
-    float4 SPECULAR : COLOR2; // Specular color
+    float4 DIFFUSE : COLOR; // Diffuse color
+    float4 SPECULAR : COLOR; // Specular color
 };
 
-PIXEL PS(PIXEL input_data) : SV_TARGET
+float4 PS(PIXEL input_data) : SV_TARGET0
 {
-    float3 normal = normalize(NORMAL.xyz - input_data.POSITION.xyz);
+    float3 normal = normalize(NORMAL.xyz);
     float3 lightColor = COLOUR.xyz;
     float3 lightSource = SOURCE.xyz;
+    float lightDistance = length(lightSource);
     float diffuseStrength = max(0.1, dot(lightSource, normal));
-    float3 diffuse = diffuseStrength * lightColor;
-    
+
     float3 cameraSource = input_data.POSITION.xyz;
     float3 viewSource = normalize(cameraSource);
     
@@ -40,11 +40,9 @@ PIXEL PS(PIXEL input_data) : SV_TARGET
     specularStrength = pow(specularStrength, 0.5);
     float3 specular = specularStrength * lightColor;
     
-    //! phong equation.
-    float4 lighting = float4(0.6, 0.6, 0.6, 1.0);
-    lighting = float4(input_data.AMBIENT.xyz - 0.5 + (diffuse / 24.0) * (specular * 0.5), 1.0);
+    float3 diffuse = (diffuseStrength + lightColor / lightDistance);
     
-    input_data.AMBIENT = lighting;
+    diffuse += specular * input_data.SPECULAR.xyz;
     
-    return input_data;
+    return float4(diffuse, 1.0);
 }

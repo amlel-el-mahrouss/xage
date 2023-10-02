@@ -74,9 +74,9 @@ XPLICIT_MAIN()
 
 		node->f_pSourceLight = new XPX::Renderer::LightSystem();
 
-		node->f_pSourceLight->f_vSource.X = 1.0;
-		node->f_pSourceLight->f_vSource.Y = 1.0;
-		node->f_pSourceLight->f_vSource.Z = 1.0;
+		node->f_pSourceLight->f_vSource.X = 0.1;
+		node->f_pSourceLight->f_vSource.Y = 0.1;
+		node->f_pSourceLight->f_vSource.Z = -1.0;
 
 		node->f_pSourceLight->f_cColour.R = 1.0;
 		node->f_pSourceLight->f_cColour.G = 1.0;
