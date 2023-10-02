@@ -115,11 +115,6 @@ namespace XPX::Renderer::DX11
 			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
 
 			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
-
-			cBuffer[bufferIndex].TRANSLATE = XMFLOAT4(component->m_vPosition.X, 
-				component->m_vPosition.Y, 
-				component->m_vPosition.Z,
-				1.0f);
 		}
 
 		cBufferCnt = 0U;

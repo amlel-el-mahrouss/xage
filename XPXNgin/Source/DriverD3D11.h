@@ -70,7 +70,6 @@ namespace XPX::Renderer::DX11
 			XMMATRIX VIEW;
 			XMMATRIX WORLD;
 			XMMATRIX PROJECTION;
-			XMFLOAT4 TRANSLATE;
 		};
 
 		XPLICIT_API void ThrowIfFailed(HRESULT hr);
@@ -323,7 +322,7 @@ namespace XPX::Renderer::DX11
 		~CameraSystemD3D11() override {}
 
 	private:
-		void render() noexcept;
+		void render_camera() noexcept;
 
 	public:
 		XPLICIT_COPY_DEFAULT(CameraSystemD3D11);

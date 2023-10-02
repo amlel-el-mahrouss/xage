@@ -358,7 +358,7 @@ namespace XPX::Renderer::DX11
 		m_private.pContext->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
 		m_private.pContext->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL) : 0, 1.0f, 0);
 	
-		this->get().pCamera->render();
+		this->get().pCamera->render_camera();
 	}
 
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
@@ -655,7 +655,7 @@ namespace XPX::Renderer::DX11
 
 	const size_t& RenderableComponentD3D11::get_indices_count() noexcept { return m_iIndices; }
 
-	void CameraSystemD3D11::render() noexcept
+	void CameraSystemD3D11::render_camera() noexcept
 	{
 		XMFLOAT3 lookAt{};
 		XMFLOAT3 up{};
