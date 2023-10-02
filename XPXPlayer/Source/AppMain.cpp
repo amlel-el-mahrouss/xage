@@ -71,8 +71,10 @@ XPLICIT_MAIN()
 
 		auto nodes = scene.add_scene_node("../../XSD/Sample.xsd");
 		auto node = scene.get_scene_node(nodes[0]);
+		auto node_car = scene.get_scene_node(nodes[1]);
 
 		node->f_pSourceLight = new XPX::Renderer::LightSystem();
+		node_car->f_pSourceLight = node->f_pSourceLight;
 
 		node->f_pSourceLight->f_vSource.X = 1.0;
 		node->f_pSourceLight->f_vSource.Y = 1.0;
@@ -83,24 +85,18 @@ XPLICIT_MAIN()
 		node->f_pSourceLight->f_cColour.B = 0.30;
 		node->f_pSourceLight->f_cColour.A = 1;
 
-		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
+		node->set_position(XPX::Vector<XPX::float32>(10, 0, 0));
+
+		node_car->rotate(XPX::Quaternion<XPX::float32>(90, 0, 60));
+		node_car->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
 		auto origin = XPX::Vector<float>(0.1, 10, -500.0);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
 
-		float rot = 360.f;
-
 		while (ret != WM_QUIT)
 		{
-			rot -= (1.018478185 * 0.5);
-
-			if (rot < 0.0f)
-				rot = 360.f;
-
-			node->rotate(XPX::Quaternion<float>(0, rot, rot, 0));
-
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.2, 0.2, 0.2, true, true);

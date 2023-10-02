@@ -1,0 +1,96 @@
+# Blender 3.6.2 MTL File: 'None'
+# www.blender.org
+
+newmtl Material
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl _5___Default
+Ns 11.455134
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd 05_-_Default_baseColor.png
+map_d 05_-_Default_baseColor.png
+
+newmtl body
+Ns 946.275330
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd lights_baseColor.jpg
+map_Bump -bm 1.000000 lights_normal.jpg
+
+newmtl chrome
+Ns 865.423279
+Ka 1.000000 1.000000 1.000000
+Kd 0.493287 0.493287 0.493287
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump -bm 1.000000 chrome_normal.jpg
+
+newmtl glass
+Ns 922.806335
+Ka 1.000000 1.000000 1.000000
+Kd 0.230170 0.281657 0.257944
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 0.098779
+illum 6
+
+newmtl interior__0
+Ns 159.999985
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl lights
+Ns 946.275330
+Ka 0.742131 0.742131 0.742131
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd lights_baseColor.jpg
+map_Bump -bm 1.000000 lights_normal.jpg
+
+newmtl material
+Ns 21.707232
+Ka 0.274790 0.274790 0.274790
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd material_baseColor.jpg
+
+newmtl ucb_bottom3_bump
+Ns 934.503967
+Ka 0.305137 0.305137 0.305137
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd ucb_bottom3_bump_baseColor_scale0.jpg
+map_Bump -bm 1.000000 ucb_bottom3_bump_normal.jpg
