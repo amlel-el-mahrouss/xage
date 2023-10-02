@@ -82,23 +82,29 @@ namespace XPX::Renderer::DX11
 			return;
 
 		HRESULT result;
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		D3D11_MAPPED_SUBRESOURCE mappedResource{};
+
 		Details::CBUFFER* cBuffer = nullptr;
+
 		unsigned int cBufferCnt = 0U;
+
+		XMMATRIX transltateMatrix = XMMatrixTranslation(component->m_vPosition.X,
+			component->m_vPosition.Y,
+			component->m_vPosition.Z);
+
+		XMMATRIX scaleMatrix = XMMatrixScaling(component->m_vScale.X, 
+			component->m_vScale.Y, component->m_vScale.Z);
+
+		XMMATRIX rotationMatrix = XMMatrixRotationY(component->m_vRotation.Y);
+
+		XMMATRIX scaleRotateMatrix = XMMatrixMultiply(scaleMatrix,
+			rotationMatrix);
+
+		component->m_pDriver->get().WorldMatrix = XMMatrixMultiply(scaleRotateMatrix, transltateMatrix);
 
 		auto transPoseWorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
 		auto transPoseViewMatrix = XMMatrixTranspose(component->m_pDriver->get().pCamera->m_viewMatrix);
 		auto transPoseProjectionMatrix = XMMatrixTranspose(component->m_pDriver->get().ProjectionMatrix);
-
-		transPoseViewMatrix *= XMMatrixTranslationFromVector(FXMVECTOR({ component->m_vRotation.X,
-			component->m_vRotation.Y,
-			component->m_vRotation.Z }));
-
-		transPoseViewMatrix *= XMMatrixRotationZ(component->m_vRotation.Z);
-
-		transPoseViewMatrix *= XMMatrixTranslationFromVector(FXMVECTOR({ -component->m_vRotation.X,
-			-component->m_vRotation.Y,
-			-component->m_vRotation.Z }));
 
 		HRESULT hr = component->m_pDriver->get().pContext->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 

@@ -265,6 +265,10 @@ namespace XPX::Renderer::DX11
 
 		void set_position(const Vector<float>& pos) noexcept;
 		const Vector<float>& position() noexcept;
+
+		void set_rotation(const Vector<float>& pos) noexcept;
+		const Vector<float>& rotation() noexcept;
+
 		void make_mesh();
 
 	public:
@@ -292,6 +296,7 @@ namespace XPX::Renderer::DX11
 	private:
 		Vector<float32> m_vRotation;
 		Vector<float32> m_vPosition;
+		Vector<float32> m_vScale;
 		bool m_bDraw;
 
 	private:

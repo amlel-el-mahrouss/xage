@@ -415,7 +415,8 @@ namespace XPX::Renderer::DX11
 		m_indexData(), m_iVertexCnt(0), m_iTopology(XPLICIT_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
 		m_pMatrixBuffer(nullptr), m_iIndices(0),
 		m_pVertexShader(nullptr), m_pColorShader(nullptr),
-		m_vPosition(0, 0, 0), m_vRotation(0, 0, 0), m_bDraw(true)
+		m_vPosition(0, 0, 0), m_vRotation(0, 0, 0), m_bDraw(true),
+		m_vScale(1, 1, 1)
 	{}
 
 	RenderableComponentD3D11::~RenderableComponentD3D11()
@@ -584,7 +585,12 @@ namespace XPX::Renderer::DX11
 		Details::ThrowIfFailed(m_hResult);
 	}
 
+	void RenderableComponentD3D11::set_rotation(const Vector<float>& pos) noexcept { m_vRotation = pos; }
+	
+	const Vector<float>& RenderableComponentD3D11::rotation() noexcept { return m_vRotation; }
+
 	void RenderableComponentD3D11::set_position(const Vector<float>& pos) noexcept { m_vPosition = pos; }
+	
 	const Vector<float>& RenderableComponentD3D11::position() noexcept { return m_vPosition; }
 
 	const char* RenderableComponentD3D11::name() noexcept { return ("RenderableComponentD3D11"); }
