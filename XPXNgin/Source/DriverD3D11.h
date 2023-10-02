@@ -63,6 +63,7 @@ namespace XPX::Renderer::DX11
 			XMFLOAT4 AMBIENT; // Ambient color
 			XMFLOAT4 DIFFUSE; // Diffuse color
 			XMFLOAT4 SPECULAR; // Specular color
+			XMFLOAT4 NORMAL;
 		};
 
 		struct CBUFFER
@@ -72,7 +73,6 @@ namespace XPX::Renderer::DX11
 			XMMATRIX PROJECTION;
 
 			//! lighting stuff
-			XMFLOAT4 NORMAL;
 			XMFLOAT4 COLOUR; // Light Colour
 			XMFLOAT4 SOURCE; // Light source
 		};
@@ -245,6 +245,7 @@ namespace XPX::Renderer::DX11
 		void push_diffuse(const Color<float>& clr) noexcept;
 
 	public:
+		void push_normal(const Vector<float>& indice) noexcept;
 		void push_vertice(const Vector<float>& vert) noexcept;
 		void push_indice(const UINT& indice) noexcept;
 
@@ -277,7 +278,7 @@ namespace XPX::Renderer::DX11
 		void set_scale(const Vector<float>& size) noexcept;
 		const Vector<float>& scale() noexcept;
 
-		void make_mesh();
+		void make_mesh() noexcept;
 
 	public:
 		auto get_topology() noexcept { return m_iTopology; }

@@ -10,7 +10,6 @@ cbuffer CBUFFER
     matrix WORLD;
     matrix PROJECTION;
     
-    float4 NORMAL;
     float4 COLOUR; // Light Colour
     float4 SOURCE; // Light source
 };
@@ -21,8 +20,8 @@ struct PIXEL
     float4 AMBIENT : COLOR; // Ambient color
     float4 DIFFUSE : COLOR1; // Diffuse color
     float4 SPECULAR : COLOR2; // Specular color
+    float4 NORMAL : NORMAL;
 };
-
 
 struct VERTEX
 {
@@ -30,6 +29,7 @@ struct VERTEX
     float4 AMBIENT : COLOR; // Ambient color
     float4 DIFFUSE : COLOR1; // Diffuse color
     float4 SPECULAR : COLOR2; // Specular color
+    float4 NORMAL : NORMAL;
 };
 
 PIXEL VS(VERTEX input_data)
@@ -43,6 +43,7 @@ PIXEL VS(VERTEX input_data)
     output.AMBIENT = input_data.AMBIENT;
     output.DIFFUSE = input_data.DIFFUSE;
     output.SPECULAR = input_data.SPECULAR;
+    output.NORMAL = input_data.NORMAL;
    
     return output;
 }

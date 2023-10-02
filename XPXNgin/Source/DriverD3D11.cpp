@@ -87,7 +87,7 @@ namespace XPX::Renderer::DX11
 		
 		swapDesc.Flags = 0;
 
-		swapDesc.Windowed = true; //! never set to fullscreen.
+		swapDesc.Windowed = false; //! Always set to fullscreen.
 		swapDesc.OutputWindow = privateData.pWindowHandle;
 	}
 
@@ -433,6 +433,8 @@ namespace XPX::Renderer::DX11
 
 	void RenderableComponentD3D11::push_diffuse(const Color<float>& vert) noexcept { this->m_arrayColorsDiffuse.push_back(vert); }
 
+	void RenderableComponentD3D11::push_normal(const Vector<float>& vert) noexcept { this->m_arrayNormal.push_back(vert); }
+
 	void RenderableComponentD3D11::push_vertice(const Vector<float>& vert) noexcept { this->m_arrayVerts.push_back(vert); }
 
 	void RenderableComponentD3D11::push_indice(const UINT& indice) noexcept { this->m_arrayIndices.push_back(indice);  }
@@ -440,7 +442,7 @@ namespace XPX::Renderer::DX11
 	void RenderableComponentD3D11::should_draw(const bool enable) noexcept { m_bDraw = enable; }
 	const bool& RenderableComponentD3D11::should_draw() noexcept { return m_bDraw; }
 
-	void RenderableComponentD3D11::make_mesh()
+	void RenderableComponentD3D11::make_mesh() noexcept
 	{
 		if (m_arrayVerts.empty())
 			return;
@@ -458,11 +460,20 @@ namespace XPX::Renderer::DX11
 
 		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
 		{
-			m_pVertex[vertex_index].POSITION = XMFLOAT4(m_arrayVerts[vertex_index].X,
+			m_pVertex[vertex_index].POSITION = XMFLOAT4(
+				m_arrayVerts[vertex_index].X,
 				m_arrayVerts[vertex_index].Y, 
 				m_arrayVerts[vertex_index].Z, 
 				1.0f);
+		}
 
+		for (size_t normal_index = 0; normal_index < m_arrayNormal.size(); ++normal_index)
+		{
+			m_pVertex[normal_index].NORMAL = XMFLOAT4(
+				m_arrayNormal[normal_index].X,
+				m_arrayNormal[normal_index].Y,
+				m_arrayNormal[normal_index].Z,
+				1.0f);
 		}
 
 		for (size_t specular_index = 0;
@@ -537,6 +548,7 @@ namespace XPX::Renderer::DX11
 					{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "COLOR", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "COLOR", 2, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
