@@ -150,7 +150,7 @@ namespace XPX::Renderer
 							render->push_indice(indice);
 						}
 
-						auto substr_wave_mtl = input.substr(input.find(L","));
+						auto substr_wave_mtl = input.substr(input.find(L",") + 1);
 						
 						hr = wfReader.LoadMTL(substr_wave_mtl.c_str());
 

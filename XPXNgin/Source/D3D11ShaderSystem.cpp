@@ -118,7 +118,7 @@ namespace XPX::Renderer::DX11
 		XMMATRIX scaleRotateMatrix = XMMatrixMultiply(scaleMatrix,
 			rotationMatrix);
 
-		component->m_pDriver->get().WorldMatrix = XMMatrixMultiply(component->m_pDriver->get().WorldMatrix, scaleRotateMatrix);
+		component->m_pDriver->get().WorldMatrix = XMMatrixMultiply(scaleRotateMatrix, transltateMatrix);
 
 		auto transPoseWorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
 	
