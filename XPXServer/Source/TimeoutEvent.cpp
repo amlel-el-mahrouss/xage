@@ -19,7 +19,9 @@ namespace XPX
 		:
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkServerComponent>("NetworkServerComponent")),
 		mCounter(0UL)
-	{}
+	{
+
+	}
 
 	TimeoutEvent::~TimeoutEvent() = default;
 

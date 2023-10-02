@@ -63,7 +63,6 @@ namespace XPX::Renderer::DX11
 			XMFLOAT4 AMBIENT; // Ambient color
 			XMFLOAT4 DIFFUSE; // Diffuse color
 			XMFLOAT4 SPECULAR; // Specular color
-			XMFLOAT4 NORMAL; // Normal color
 		};
 
 		struct CBUFFER
@@ -238,6 +237,7 @@ namespace XPX::Renderer::DX11
 	public:
 		void push_ambient(const Color<float>& clr) noexcept;
 		void push_diffuse(const Color<float>& clr) noexcept;
+		void push_specular(const Color<float>& clr) noexcept;
 
 	public:
 		void push(const Vector<float>& vert) noexcept;
@@ -260,6 +260,8 @@ namespace XPX::Renderer::DX11
 		const char* name() noexcept override;
 
 	public:
+		void set_position(const Vector<float>& pos) noexcept;
+		const Vector<float>& position() noexcept;
 		void make_mesh();
 
 	public:
@@ -283,6 +285,10 @@ namespace XPX::Renderer::DX11
 		ShaderSystemD3D11* m_pColorShader;
 		DriverSystemD3D11* m_pDriver;
 		Details::VERTEX* m_pVertex;
+
+	private:
+		Vector<float32> m_vRotation;
+		Vector<float32> m_vPosition;
 
 	private:
 		size_t m_iIndices;
@@ -311,48 +317,8 @@ namespace XPX::Renderer::DX11
 		explicit CameraSystemD3D11() noexcept : DriverCameraSystem(), m_viewMatrix(), m_rotationMatrix() {}
 		~CameraSystemD3D11() override {}
 
-	public:
-		void render() noexcept
-		{
-			XMFLOAT3 lookAt;
-			XMFLOAT3 up;
-
-			float yaw, pitch, roll;
-			XMMATRIX rotationMatrix;
-
-			up.x = 0.0f;
-			up.y = 1.0f;
-			up.z = 1.0f;
-
-			XMVECTOR upVector = XMLoadFloat3(&up);
-
-			XMFLOAT3 position;
-	
-			position.x = m_vPos.X;
-			position.y = m_vPos.Y;
-			position.z = m_vPos.Z;
-		
-			XMVECTOR positionVector = XMLoadFloat3(&position);
-
-			lookAt.x = 0.0f;
-			lookAt.y = 0.0f;
-			lookAt.z = 1.0f;
-		
-			XMVECTOR lookAtVector = XMLoadFloat3(&lookAt);
-
-			pitch = m_vRot.X * 0.0174532925f;
-			yaw = m_vRot.Y * 0.0174532925f;
-			roll = m_vRot.Z * 0.0174532925f;
-
-			m_rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
-
-			lookAtVector = XMVector3TransformCoord(lookAtVector, m_rotationMatrix);
-			upVector = XMVector3TransformCoord(upVector, m_rotationMatrix);
-
-			lookAtVector = XMVectorAdd(positionVector, lookAtVector);
-		
-			m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
-		}
+	private:
+		void render() noexcept;
 
 	public:
 		XPLICIT_COPY_DEFAULT(CameraSystemD3D11);
@@ -362,6 +328,7 @@ namespace XPX::Renderer::DX11
 		XMMATRIX m_viewMatrix;
 
 		friend ShaderSystemD3D11;
+		friend DriverSystemD3D11;
 
 	};
 }

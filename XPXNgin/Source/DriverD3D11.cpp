@@ -357,6 +357,8 @@ namespace XPX::Renderer::DX11
 
 		m_private.pContext->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
 		m_private.pContext->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL) : 0, 1.0f, 0);
+	
+		this->get().pCamera->render();
 	}
 
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
@@ -412,7 +414,7 @@ namespace XPX::Renderer::DX11
 		 m_pDriver(nullptr), m_pVertex(nullptr),
 		m_indexData(), m_iVertexCnt(0), m_iTopology(XPLICIT_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
 		m_pMatrixBuffer(nullptr), m_iIndices(0),
-		m_pVertexShader(nullptr), m_pColorShader(nullptr)
+		m_pVertexShader(nullptr), m_pColorShader(nullptr), m_vPosition(0, 0, 0), m_vRotation(0, 0, 0)
 	{}
 
 	RenderableComponentD3D11::~RenderableComponentD3D11()
@@ -424,6 +426,8 @@ namespace XPX::Renderer::DX11
 	DriverSystemD3D11* RenderableComponentD3D11::driver() noexcept { return m_pDriver; }
 
 	void RenderableComponentD3D11::push_ambient(const Color<float>& vert) noexcept { this->m_arrayColorsAmbient.push_back(vert); }
+
+	void RenderableComponentD3D11::push_specular(const Color<float>& vert) noexcept { this->m_arrayColorsSpecular.push_back(vert); }
 
 	void RenderableComponentD3D11::push_diffuse(const Color<float>& vert) noexcept { this->m_arrayColorsDiffuse.push_back(vert); }
 
@@ -576,6 +580,9 @@ namespace XPX::Renderer::DX11
 		Details::ThrowIfFailed(m_hResult);
 	}
 
+	void RenderableComponentD3D11::set_position(const Vector<float>& pos) noexcept { m_vPosition = pos; }
+	const Vector<float>& RenderableComponentD3D11::position() noexcept { return m_vPosition; }
+
 	const char* RenderableComponentD3D11::name() noexcept { return ("RenderableComponentD3D11"); }
 
 	COMPONENT_TYPE RenderableComponentD3D11::type() noexcept { return COMPONENT_RENDER; }
@@ -592,12 +599,30 @@ namespace XPX::Renderer::DX11
 	{
 		RenderableComponentD3D11* self = (RenderableComponentD3D11*)this_ptr;
 
-		if (!self)
+		if (!IsValidHeapPtr(self) ||
+			!self)
 			return;
 
 		XPLICIT_ASSERT(self->m_pDriver);
 		
-		self->m_pDriver->get().pCamera->render();
+		// do position translation
+
+		D3D11_MAPPED_SUBRESOURCE res{};
+
+		self->m_pDriver->get().pContext->Map(self->m_pVertexBuffer.Get(), 0, D3D11_MAP_READ_WRITE, 0, &res);
+
+		Details::VERTEX* vert = (Details::VERTEX*)res.pData;
+		std::size_t sz = (sizeof(vert) / sizeof(vert[0]));
+
+		for (std::size_t vert_idx = 0UL; vert_idx < sz; ++vert_idx)
+		{
+			vert->POSITION = XMFLOAT4(self->m_vPosition.X, self->m_vPosition.Y, self->m_vPosition.Z, 1.0f);
+
+		}
+
+		self->m_pDriver->get().pContext->Unmap(self->m_pVertexBuffer.Get(), 0);
+
+		// do rotation translation
 
 		self->m_pDriver->get().pContext->RSSetState(self->m_pDriver->get().pRasterState.Get());
 
@@ -644,6 +669,48 @@ namespace XPX::Renderer::DX11
 	const size_t& RenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }
 
 	const size_t& RenderableComponentD3D11::get_indices_count() noexcept { return m_iIndices; }
+
+	void CameraSystemD3D11::render() noexcept
+	{
+		XMFLOAT3 lookAt{};
+		XMFLOAT3 up{};
+
+		float yaw, pitch, roll;
+		XMMATRIX rotationMatrix{};
+
+		up.x = 0.0f;
+		up.y = 1.0f;
+		up.z = 1.0f;
+
+		XMVECTOR upVector = XMLoadFloat3(&up);
+
+		XMFLOAT3 position{};
+
+		position.x = m_vPos.X;
+		position.y = m_vPos.Y;
+		position.z = m_vPos.Z;
+
+		XMVECTOR positionVector = XMLoadFloat3(&position);
+
+		lookAt.x = 0.0f;
+		lookAt.y = 0.0f;
+		lookAt.z = 1.0f;
+
+		XMVECTOR lookAtVector = XMLoadFloat3(&lookAt);
+
+		pitch = m_vRot.X * 0.0174532925f;
+		yaw = m_vRot.Y * 0.0174532925f;
+		roll = m_vRot.Z * 0.0174532925f;
+
+		m_rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+		lookAtVector = XMVector3TransformCoord(lookAtVector, m_rotationMatrix);
+		upVector = XMVector3TransformCoord(upVector, m_rotationMatrix);
+
+		lookAtVector = XMVectorAdd(positionVector, lookAtVector);
+
+		m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
+	}
 }
 
 #endif // XPLICIT_WINDOWS
