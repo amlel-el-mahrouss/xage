@@ -15,6 +15,14 @@ cbuffer CBUFFER
     float4 SOURCE; // Light source
 };
 
+struct PIXEL
+{
+    float4 POSITION : POSITION;
+    float4 PHONG : COLOR; // Ambient color
+    float4 PBR : COLOR1; // Diffuse color
+    float4 RESERVED : COLOR2; // Specular color
+};
+
 struct VERTEX
 {
     float4 POSITION : POSITION;
@@ -23,28 +31,36 @@ struct VERTEX
     float4 SPECULAR : COLOR2; // Specular color
 };
 
-float4 PS(VERTEX input_data) : SV_TARGET
+PIXEL VS(VERTEX input_data) : COLOR
 {
-    float3 normal = normalize(NORMAL.xyz);
-    float3 lightColor = COLOUR;
-    float3 lightSource = SOURCE.xyz;
+    float4 normal = normalize(NORMAL);
+    float4 lightColor = COLOUR;
+    float4 lightSource = SOURCE;
     float diffuseStrength = max(0.1, dot(lightSource, normal));
-    float3 diffuse = diffuseStrength * lightColor;
+    float4 diffuse = diffuseStrength * lightColor;
     
-    float3 cameraSource = input_data.POSITION;
-    float3 viewSource = normalize(cameraSource);
+    float4 cameraSource = input_data.POSITION;
+    float4 viewSource = normalize(cameraSource);
     
-    float3 reflectSource = normalize(reflect(-lightSource, normal));
+    float4 reflectSource = normalize(reflect(-lightSource, normal));
     float specularStrength = max(0.01, dot(viewSource, reflectSource));
     
     specularStrength = pow(specularStrength, 0.5);
-    float3 specular = specularStrength * lightColor;
+    float4 specular = specularStrength * lightColor;
     
     //! phong equation.
-    float3 lighting = float3(0.6, 0.6, 0.6);
-    lighting = input_data.AMBIENT.xyz - .1 + ((diffuse / 6.0) * (diffuse / 4.0) + (diffuse / 2.0)) + specular * 0.5;
+    float4 lighting = float4(0.6, 0.6, 0.6, 1.0);
+    lighting = input_data.AMBIENT - .1 + ((diffuse / 6.0) * (diffuse / 4.0) + (diffuse / 2.0)) + specular * 0.5;
     
-    float3 color = input_data.DIFFUSE.xyz * lighting;
+    float4 color = input_data.DIFFUSE * lighting;
 
-    return float4(color, 1.0);
+    PIXEL output;
+    
+    output.POSITION = mul(input_data.POSITION, WORLD);
+    output.POSITION = mul(output.POSITION, VIEW);
+    output.POSITION = mul(output.POSITION, PROJECTION);
+    
+    output.PHONG = color;
+    
+    return output;
 }

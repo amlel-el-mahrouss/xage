@@ -4,7 +4,15 @@
  * Written by Amlal El Mahrouss.
  */
 
-float4 PS(float4 phong) : SV_TARGET
+struct PIXEL
 {
-    return phong;
+    float4 POSITION : POSITION;
+    float4 PHONG : COLOR; // Ambient color
+    float4 PBR : COLOR1; // Diffuse color
+    float4 RESERVED : COLOR2; // Specular color
+};
+
+float4 PS(PIXEL input_data) : SV_TARGET
+{
+    return input_data.PHONG;
 }

@@ -637,6 +637,7 @@ namespace XPX::Renderer::DX11
 			self->m_pDriver->get().pContext->IASetInputLayout(self->m_pDriver->get().pInputLayout.Get());
 
 			self->m_pVertexShader->update(self);
+
 			self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
 		
 			self->m_pDriver->get().pContext->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,

@@ -72,6 +72,8 @@ XPLICIT_MAIN()
 		auto nodes = scene.add_scene_node("../../XSD/Sample.xsd");
 		auto node = scene.get_scene_node(nodes[0]);
 
+		node->f_pSourceLight = new XPX::Renderer::LightSystem();
+
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
 		auto origin = XPX::Vector<float>(0, 0, -1000);
