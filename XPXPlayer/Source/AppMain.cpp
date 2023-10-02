@@ -85,13 +85,22 @@ XPLICIT_MAIN()
 
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(0.1, 0.1, 1.0);
+		auto origin = XPX::Vector<float>(0.1, 10, -500.0);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
 
+		float rot = 360.f;
+
 		while (ret != WM_QUIT)
 		{
+			rot -= (1.018478185 * 0.5);
+
+			if (rot < 0.0f)
+				rot = 360.f;
+
+			node->rotate(XPX::Quaternion<float>(0, rot, rot, 0));
+
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.2, 0.2, 0.2, true, true);
