@@ -36,8 +36,10 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
     specularStrength = pow(specularStrength, 0.5);
     float4 specular = specularStrength * lightColor;
     
-    float4 lighting = lightColor * .5 + ((diffuse / 6.0) * (diffuse / 4.0) + (diffuse / 2.0)) + input.specular * 0.5;
+    float3 lighting = lightColor * .5 + ((diffuse / 6.0) * (diffuse / 4.0) + (diffuse / 2.0)) + input.specular * 0.5;
     
-    float4 color = input.ambient * lighting;
-    return color;
+    float3 modelColor = float3(0.94, 0.82, 0.38);
+    float3 color = modelColor * lighting;
+    
+    return float4(color, 1.0);
 }
