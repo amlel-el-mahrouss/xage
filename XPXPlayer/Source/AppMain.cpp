@@ -73,6 +73,8 @@ XPLICIT_MAIN()
 		auto node = scene.get_scene_node(nodes[0]);
 		auto node_car = scene.get_scene_node(nodes[1]);
 
+		node->should_draw(false);
+
 		node->f_pSourceLight = new XPX::Renderer::LightSystem();
 		node_car->f_pSourceLight = node->f_pSourceLight;
 
@@ -87,10 +89,10 @@ XPLICIT_MAIN()
 
 		node->set_position(XPX::Vector<XPX::float32>(10, 0, 0));
 
-		node_car->rotate(XPX::Quaternion<XPX::float32>(90, 0, 60));
+		node_car->rotate(XPX::Quaternion<XPX::float32>(0, -90, 0));
 		node_car->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(0.1, 10, -500.0);
+		auto origin = XPX::Vector<float>(0.1, 10, -100.0);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
