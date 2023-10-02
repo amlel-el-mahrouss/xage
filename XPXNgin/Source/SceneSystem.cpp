@@ -34,8 +34,6 @@ namespace XPX::Renderer
 
 	bool SceneSystem::remove_scene_node(const SceneID& scene_id)
 	{
-		(void)scene_id;
-
 		auto& all_ids = m_system->get_all();
 
 		std::vector<Details::ComponentAccessor>::const_iterator it = std::find_if(all_ids.cbegin(), all_ids.cend(), [&](Details::ComponentAccessor comp) -> bool {
@@ -72,8 +70,17 @@ namespace XPX::Renderer
 		return {};
 	}
 
-	RenderableComponent* SceneSystem::get_scene_node(const SceneID& sceneId)
+	RenderableComponent* SceneSystem::get_scene_node(const SceneID& scene_id)
 	{
+		auto& all_ids = m_system->get_all();
+
+		std::vector<Details::ComponentAccessor>::const_iterator it = std::find_if(all_ids.cbegin(), all_ids.cend(), [&](Details::ComponentAccessor comp) -> bool {
+			return comp.as_type<RenderableComponent*>()->f_iSceneId == scene_id;
+			});
+
+		if (it != all_ids.cend())
+			return it->as_type<RenderableComponent*>();
+
 		return nullptr;
 	}
 
