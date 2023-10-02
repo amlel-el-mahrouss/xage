@@ -14,7 +14,7 @@ struct VS_OUTPUT
 float4 PS(VS_OUTPUT input) : SV_TARGET
 {
     float3 normal = normalize(float3(0.5, 0.5, 0.5));
-    float4 lightColor = input.ambient;
+    float4 lightColor = float4(0.5, 0.5, 0.5, 1);
     float4 lightSource = input.position;
     float diffuseStrength = max(0.1, dot(lightSource.xyz, normal));
     float4 diffuse = diffuseStrength * lightColor;
