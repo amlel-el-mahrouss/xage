@@ -74,9 +74,9 @@ XPLICIT_MAIN()
 
 		node->f_pSourceLight = new XPX::Renderer::LightSystem();
 
-		node->f_pSourceLight->f_vSource.X = 0;
-		node->f_pSourceLight->f_vSource.Y = 10;
-		node->f_pSourceLight->f_vSource.Z = 0;
+		node->f_pSourceLight->f_vSource.X = 1.0;
+		node->f_pSourceLight->f_vSource.Y = 1.0;
+		node->f_pSourceLight->f_vSource.Z = 1.0;
 
 		node->f_pSourceLight->f_cColour.R = 0.50;
 		node->f_pSourceLight->f_cColour.G = 0.10;
@@ -85,7 +85,7 @@ XPLICIT_MAIN()
 
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(0, 0, -1000);
+		auto origin = XPX::Vector<float>(0.1, 0.1, 1.0);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
