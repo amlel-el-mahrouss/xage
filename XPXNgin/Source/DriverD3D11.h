@@ -222,6 +222,8 @@ namespace XPX::Renderer::DX11
 		ShaderTraits& get();
 
 		int compile() noexcept override;
+
+		void update(LightSystemD3D11* component);
 		void update(RenderableComponentD3D11* component);
 
 	public:
@@ -247,7 +249,11 @@ namespace XPX::Renderer::DX11
 	public:
 		XPLICIT_COPY_DEFAULT(LightSystemD3D11);
 
+	public:
+		void update(const std::size_t indexCount) noexcept;
+
 	private:
+		WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
 		WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
 		WRL::ComPtr<ID3D11Buffer> m_pMatrixBuffer;
 		WRL::ComPtr<ID3D11Buffer> m_pLightBuffer;

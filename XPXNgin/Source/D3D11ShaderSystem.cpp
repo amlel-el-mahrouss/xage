@@ -201,6 +201,31 @@ namespace XPX::Renderer::DX11
 		}
 		}
 	}
+
+	void ShaderSystemD3D11::update(LightSystemD3D11* component)
+	{
+		if (!component)
+			return;
+
+		switch ((XPLICIT_SHADER_TYPE)m_type)
+		{
+		case XPLICIT_SHADER_TYPE::Vertex:
+		{
+			RENDERER->get().pContext->VSSetShader(this->m_data.pVertex.Get(), nullptr, 0u);
+			break;
+		}
+		case XPLICIT_SHADER_TYPE::Pixel:
+		{
+			RENDERER->get().pContext->PSSetShader(this->m_data.pPixel.Get(), nullptr, 0u);
+			break;
+		}
+		case XPLICIT_SHADER_TYPE::Hull:
+		{
+			RENDERER->get().pContext->HSSetShader(this->m_data.pHull.Get(), nullptr, 0u);
+			break;
+		}
+		}
+	}
 }
 
 #endif

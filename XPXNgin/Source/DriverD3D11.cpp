@@ -492,6 +492,20 @@ namespace XPX::Renderer::DX11
 			delete m_pLightVs;
 	}
 
+	void LightSystemD3D11::update(const std::size_t indexCount) noexcept
+	{
+		RENDERER->get().pContext->IASetInputLayout(m_pInputLayout.Get());
+
+		m_pLightPs->update_light_shader(this);
+
+		m_pLightPs->update(this);
+		m_pLightVs->update(this);
+
+		RENDERER->get().pContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
+
+		RENDERER->get().pContext->DrawIndexed(indexCount, 0, 0);
+	}
+
 	RenderableComponentD3D11::RenderableComponentD3D11() noexcept
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
@@ -725,41 +739,29 @@ namespace XPX::Renderer::DX11
 		const uint32_t stride = { sizeof(Details::VERTEX) };
 		const uint32_t offset = { 0u };
 
-		try
-		{
-			self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt, 
-				self->m_pVertexBuffer.GetAddressOf(), 
-				&stride, 
-				&offset);
+		self->f_pSourceLight->update(self->m_iIndices);
 
-			self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
+		self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt,
+			self->m_pVertexBuffer.GetAddressOf(),
+			&stride,
+			&offset);
 
-			self->m_pDriver->get().pContext->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
-				self->m_pDriver->get().pRenderTarget.GetAddressOf(),
-				self->m_pDriver->get().pDepthStencil.Get());
+		self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
 
-			self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		self->m_pDriver->get().pContext->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
+			self->m_pDriver->get().pRenderTarget.GetAddressOf(),
+			self->m_pDriver->get().pDepthStencil.Get());
 
-			self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
+		self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-			self->m_pVertexShader->update(self);
+		self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
 
-			self->m_pTextureShader->update_render_shader(self);
-			self->m_pTextureShader->update(self);
+		self->m_pVertexShader->update(self);
 
-			self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
-		}
-		catch (...)
-		{
-			XPLICIT_INFO("WARNING: No ConstantBufferType attached to shader.");
-			XPLICIT_INFO("No constant buffers bound!!!");
+		self->m_pTextureShader->update_render_shader(self);
+		self->m_pTextureShader->update(self);
 
-			XPLICIT_INFO("XAGE Verificaiton layers: DONE, 1 warning");
-
-			return;
-		}
-
-		XPLICIT_INFO("XAGE Verificaiton layers: DONE, No warnings");
+		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
 
 		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
 	}
@@ -796,6 +798,7 @@ namespace XPX::Renderer::DX11
 
 		XMVECTOR lookAtVector = XMLoadFloat3(&lookAt);
 
+		// radian shit
 		pitch = m_vRot.X * 0.0174532925f;
 		yaw = m_vRot.Y * 0.0174532925f;
 		roll = m_vRot.Z * 0.0174532925f;
