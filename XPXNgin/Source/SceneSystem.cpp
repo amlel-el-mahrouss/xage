@@ -107,7 +107,7 @@ namespace XPX::Renderer
 		{
 			auto xsd = m_wrapper.open_reader<wchar_t>(path);
 
-			PString input;
+			PString input = L"";
 			bool xage_begin = true;
 
 			PString working_dir = L"";
@@ -130,8 +130,7 @@ namespace XPX::Renderer
 					if (const auto pos = input.find(L"#workingdir");
 						pos != String::npos)
 					{
-						working_dir = input.substr(pos + 1);
-						continue;
+						working_dir = input.substr(pos + strlen("#workingdir "));
 					}
 
 					if (const auto pos = input.find(L"#wavefront");
@@ -245,6 +244,7 @@ namespace XPX::Renderer
 			return std::shared_ptr<SceneLoaderXSD::SceneData>{ pSceneData };
 		}
 
+		delete pSceneData;
 		return nullptr;
 	}
 }
