@@ -447,7 +447,7 @@ namespace XPX::Renderer::DX11
 	void RenderableComponentD3D11::should_draw(const bool enable) noexcept { m_bDraw = enable; }
 	const bool& RenderableComponentD3D11::should_draw() noexcept { return m_bDraw; }
 
-	void RenderableComponentD3D11::make_mesh(const std::vector<ImageDataParams>& params) noexcept
+	void RenderableComponentD3D11::make_mesh(const std::vector<ImageDataParams>& params)
 	{
 		if (m_arrayVerts.empty())
 			return;
@@ -544,13 +544,15 @@ namespace XPX::Renderer::DX11
 
 		delete[] m_pVertex;
 
-		for (auto tex : params)
+		for (auto& tex : params)
 		{
 			auto tex_ptr = new TextureSystemGenericD3D11();
 			tex_ptr->m_pDriver = m_pDriver;
 			
 			f_vTextures.push_back(tex_ptr);
 			tex_ptr->make_texture(tex);
+
+			delete[] tex.pImage;
 		}
 
 		XPLICIT_GET_DATA_DIR_W(DIR);

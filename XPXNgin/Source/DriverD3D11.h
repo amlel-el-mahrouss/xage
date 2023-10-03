@@ -300,10 +300,13 @@ namespace XPX::Renderer::DX11
 		{
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pTextureView;
 			Microsoft::WRL::ComPtr<ID3D11Texture2D> m_pTexture;
-			DriverSystemD3D11* m_pDriver;
+			DriverSystemD3D11* m_pDriver{ nullptr };
 
 			void make_texture(ImageDataParams params) noexcept
 			{
+				if (!m_pDriver)
+					return;
+
 				D3D11_TEXTURE2D_DESC textureDesc{};
 				textureDesc.Height = params.iHeight;
 				textureDesc.Width = params.iWidth;
@@ -333,10 +336,11 @@ namespace XPX::Renderer::DX11
 				Details::ThrowIfFailed(m_pDriver->get().pDevice->CreateShaderResourceView(m_pTexture.Get(), &srvDesc, m_pTextureView.GetAddressOf()));
 
 				m_pDriver->get().pContext->GenerateMips(m_pTextureView.Get());
-
 			}
+
 		};
 
+	public:
 		std::vector<TextureSystemGenericD3D11*> f_vTextures;
 
 	private:

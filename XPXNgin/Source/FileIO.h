@@ -40,7 +40,7 @@ namespace XPX
 		operator bool() noexcept { return mIf && ferror(mIf) == 0; }
 
 	public:
-		const String& xmime() noexcept { return fmt::format("format:{}/{}", fNamespace, fName); }
+		const String xmime() noexcept { return fmt::format("format:{}/{}", fNamespace, fName); }
 
 	public:
 		String fNamespace{ "*" };
