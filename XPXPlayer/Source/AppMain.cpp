@@ -85,10 +85,10 @@ XPLICIT_MAIN()
 
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(0.1, 0, -1000);
+		auto origin = XPX::Vector<float>(0.1, 0, -20);
 
 		RENDERER->get().pCamera->set_position(origin);
-		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, -10, 0));
+		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
 
 		XPX::float32 rot = 0;
 

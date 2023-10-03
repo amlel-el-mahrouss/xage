@@ -25,7 +25,6 @@ float4 PS(PIXEL input) : SV_TARGET
 {
     float4 textureColor;
     float3 lightDir;
-    float3 viewDir;
     float lightIntensity;
     float4 color;
     
@@ -33,9 +32,9 @@ float4 PS(PIXEL input) : SV_TARGET
     
     float3 halfwayDir = normalize(input.POSITION.xyz + DIR);
     
-    lightIntensity = pow(max(dot(input.NORMAL, halfwayDir), 0.0), 0.5);
+    lightIntensity = pow(max(dot(input.NORMAL, halfwayDir), 0.0), 1);
     
-    color = saturate(COLOR * lightIntensity);
+    color = lightIntensity;
     color = color * textureColor;
     
     return color;
