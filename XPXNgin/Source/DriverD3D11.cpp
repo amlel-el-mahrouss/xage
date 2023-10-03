@@ -408,13 +408,97 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd, width, height); 
 	}
 
+	LightSystemD3D11::LightSystemD3D11()
+		: m_pLightPs(nullptr), m_pLightVs(nullptr), 
+		m_pSamplerState(nullptr), m_hResult(S_OK),
+		m_pMatrixBuffer(nullptr), m_pLightBuffer(nullptr)
+	{
+		XPLICIT_GET_DATA_DIR_W(DIR);
+
+		PString path_pixel = DIR;
+		path_pixel += L"Shaders/Light.ps";
+
+		m_pLightPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
+
+		PString path_vertex = DIR;
+		path_vertex += L"Shaders/Light.vs";
+
+		m_pLightPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", RENDERER);
+
+		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
+					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+
+		D3D11_SAMPLER_DESC samplerDesc{};
+
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MaxAnisotropy = 1;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		samplerDesc.BorderColor[0] = 0;
+		samplerDesc.BorderColor[1] = 0;
+		samplerDesc.BorderColor[2] = 0;
+		samplerDesc.BorderColor[3] = 0;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		m_hResult = RENDERER->get().pDevice->CreateSamplerState(&samplerDesc, m_pSamplerState.GetAddressOf());
+
+		Details::ThrowIfFailed(m_hResult);
+
+		D3D11_BUFFER_DESC matrixBufferDesc{};
+
+		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		matrixBufferDesc.ByteWidth = sizeof(Details::VERTEX);
+		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		matrixBufferDesc.MiscFlags = 0;
+		matrixBufferDesc.StructureByteStride = 0;
+
+		m_hResult = RENDERER->get().pDevice->CreateBuffer(&matrixBufferDesc,
+			nullptr,
+			m_pMatrixBuffer.GetAddressOf());
+
+		Details::ThrowIfFailed(m_hResult);
+
+		D3D11_BUFFER_DESC lightBufferDesc{};
+	
+		lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		lightBufferDesc.ByteWidth = sizeof(Details::LIGHT);
+		lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		lightBufferDesc.MiscFlags = 0;
+		lightBufferDesc.StructureByteStride = 0;
+
+		m_hResult = RENDERER->get().pDevice->CreateBuffer(&lightBufferDesc,
+			nullptr,
+			m_pLightBuffer.GetAddressOf());
+
+		Details::ThrowIfFailed(m_hResult);
+
+	}
+
+	LightSystemD3D11::~LightSystemD3D11()
+	{
+		if (m_pLightPs)
+			delete m_pLightPs;
+
+		if (m_pLightVs)
+			delete m_pLightVs;
+	}
+
 	RenderableComponentD3D11::RenderableComponentD3D11() noexcept
 		: m_vertexData(), m_hResult(0), m_vertexBufferDesc(), 
 		m_indexBufDesc(), m_pVertexBuffer(nullptr),
 		 m_pDriver(nullptr), m_pVertex(nullptr),
 		m_indexData(), m_iVertexCnt(0), m_iTopology(XPLICIT_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST),
 		m_pMatrixBuffer(nullptr), m_iIndices(0),
-		m_pVertexShader(nullptr), m_pColorShader(nullptr),
+		m_pVertexShader(nullptr), m_pTextureShader(nullptr),
 		m_vPosition(0, 0, 0), m_vRotation(0, 0, 0), m_bDraw(true),
 		m_vScale(1, 1, 1), f_pSourceLight(nullptr), m_iSamplerCnt(1)
 	{}
@@ -445,6 +529,7 @@ namespace XPX::Renderer::DX11
 	void RenderableComponentD3D11::push_indice(const UINT& indice) noexcept { this->m_arrayIndices.push_back(indice);  }
 
 	void RenderableComponentD3D11::should_draw(const bool enable) noexcept { m_bDraw = enable; }
+	
 	const bool& RenderableComponentD3D11::should_draw() noexcept { return m_bDraw; }
 
 	void RenderableComponentD3D11::make_mesh(const std::vector<ImageDataParams>& params)
@@ -470,45 +555,6 @@ namespace XPX::Renderer::DX11
 				m_arrayVerts[vertex_index].Y, 
 				m_arrayVerts[vertex_index].Z, 
 				1.0f);
-		}
-
-		for (size_t normal_index = 0; normal_index < m_arrayNormal.size(); ++normal_index)
-		{
-			m_pVertex[normal_index].NORMAL = XMFLOAT4(
-				m_arrayNormal[normal_index].X,
-				m_arrayNormal[normal_index].Y,
-				m_arrayNormal[normal_index].Z,
-				1.0f);
-		}
-
-		for (size_t specular_index = 0;
-			specular_index < m_arrayColorsSpecular.size(); ++specular_index)
-		{
-			m_pVertex[specular_index].SPECULAR = XMFLOAT4(
-				m_arrayColorsSpecular[specular_index].A,
-				m_arrayColorsSpecular[specular_index].R,
-				m_arrayColorsSpecular[specular_index].G,
-				m_arrayColorsSpecular[specular_index].B);
-		}
-
-		for (size_t diffuse_index = 0; 
-			diffuse_index < m_arrayColorsDiffuse.size(); ++diffuse_index)
-		{
-			m_pVertex[diffuse_index].AMBIENT = XMFLOAT4(
-				m_arrayColorsDiffuse[diffuse_index].A,
-				m_arrayColorsDiffuse[diffuse_index].R,
-				m_arrayColorsDiffuse[diffuse_index].G,
-				m_arrayColorsDiffuse[diffuse_index].B);
-		}
-
-		for (size_t ambient_index = 0; 
-			ambient_index < m_arrayColorsAmbient.size(); ++ambient_index)
-		{
-			m_pVertex[ambient_index].AMBIENT = XMFLOAT4(
-				m_arrayColorsAmbient[ambient_index].A,
-				m_arrayColorsAmbient[ambient_index].R,
-				m_arrayColorsAmbient[ambient_index].G,
-				m_arrayColorsAmbient[ambient_index].B);
 		}
 
 		for (size_t tex_index = 0;
@@ -544,43 +590,12 @@ namespace XPX::Renderer::DX11
 
 		delete[] m_pVertex;
 
-		for (auto& tex : params)
-		{
-			auto tex_ptr = new TextureSystemGenericD3D11();
-			tex_ptr->m_pDriver = m_pDriver;
-			
-			f_vTextures.push_back(tex_ptr);
-			tex_ptr->make_texture(tex);
-
-			delete[] tex.pImage;
-		}
-
-		D3D11_SAMPLER_DESC samplerDesc{};
-
-		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.MipLODBias = 0.0f;
-		samplerDesc.MaxAnisotropy = 1;
-		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-		samplerDesc.BorderColor[0] = 0;
-		samplerDesc.BorderColor[1] = 0;
-		samplerDesc.BorderColor[2] = 0;
-		samplerDesc.BorderColor[3] = 0;
-		samplerDesc.MinLOD = 0;
-		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-		m_hResult = m_pDriver->get().pDevice->CreateSamplerState(&samplerDesc, m_pSamplerState.GetAddressOf());
-		
-		Details::ThrowIfFailed(m_hResult);
-
 		XPLICIT_GET_DATA_DIR_W(DIR);
 
 		PString path_pixel = DIR;
 		path_pixel += L"Shaders/Pixel.hlsl";
 
-		m_pColorShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", this->m_pDriver);
+		m_pTextureShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", this->m_pDriver);
 
 		PString path_vertex = DIR;
 		path_vertex += L"Shaders/Vertex.hlsl";
@@ -589,10 +604,6 @@ namespace XPX::Renderer::DX11
 
 		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
 					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "COLOR", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "COLOR", 2, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
@@ -640,6 +651,37 @@ namespace XPX::Renderer::DX11
 		matrixBufferDesc.StructureByteStride = 0;
 
 		m_hResult = m_pDriver->get().pDevice->CreateBuffer(&matrixBufferDesc, nullptr, m_pMatrixBuffer.GetAddressOf());
+
+		Details::ThrowIfFailed(m_hResult);
+
+		for (auto& tex : params)
+		{
+			auto tex_ptr = new TextureSystemGenericD3D11();
+			tex_ptr->m_pDriver = m_pDriver;
+
+			f_vTextures.push_back(tex_ptr);
+			tex_ptr->make_texture(tex);
+
+			delete[] tex.pImage;
+		}
+
+		D3D11_SAMPLER_DESC samplerDesc{};
+
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MaxAnisotropy = 1;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		samplerDesc.BorderColor[0] = 0;
+		samplerDesc.BorderColor[1] = 0;
+		samplerDesc.BorderColor[2] = 0;
+		samplerDesc.BorderColor[3] = 0;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		m_hResult = m_pDriver->get().pDevice->CreateSamplerState(&samplerDesc, m_pSamplerState.GetAddressOf());
 
 		Details::ThrowIfFailed(m_hResult);
 	}
@@ -702,8 +744,8 @@ namespace XPX::Renderer::DX11
 
 			self->m_pVertexShader->update(self);
 
-			self->m_pColorShader->update_cbuf(self);
-			self->m_pColorShader->update(self);
+			self->m_pTextureShader->update_render_shader(self);
+			self->m_pTextureShader->update(self);
 
 			self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
 		}

@@ -55,17 +55,22 @@ using namespace DirectX;
 namespace XPX::Renderer::DX11
 {
 	class CameraSystemD3D11;
+	class LightSystemD3D11;
 
 	namespace Details
 	{
 		struct __declspec(align(XPLICIT_DX_ALIGN)) VERTEX
 		{
 			XMFLOAT4 POSITION;
-			XMFLOAT4 AMBIENT; // Ambient color
-			XMFLOAT4 DIFFUSE; // Diffuse color
-			XMFLOAT4 SPECULAR; // Specular color
-			XMFLOAT4 NORMAL; // vertex normal
-			XMFLOAT2 TEXCOORD; // 2d texture coordinate.
+			XMFLOAT2 TEXCOORD;
+			XMFLOAT3 NORMAL;
+		};
+
+		struct __declspec(align(XPLICIT_DX_ALIGN)) LIGHT
+		{
+			XMFLOAT4 COLOR;
+			XMFLOAT3 DIRECTION;
+			float32 PADDING;
 		};
 
 		struct CBUFFER
@@ -73,10 +78,6 @@ namespace XPX::Renderer::DX11
 			XMMATRIX VIEW;
 			XMMATRIX WORLD;
 			XMMATRIX PROJECTION;
-
-			//! lighting stuff
-			XMFLOAT4 COLOUR; // Light Colour
-			XMFLOAT4 SOURCE; // Light source
 		};
 
 		XPLICIT_API void ThrowIfFailed(HRESULT hr);
@@ -188,6 +189,7 @@ namespace XPX::Renderer::DX11
 
 		~ShaderSystemD3D11() override;
 
+	public:
 		ShaderSystemD3D11& operator=(const ShaderSystemD3D11&) = default;
 		ShaderSystemD3D11(const ShaderSystemD3D11&) = default;
 		
@@ -221,7 +223,10 @@ namespace XPX::Renderer::DX11
 
 		int compile() noexcept override;
 		void update(RenderableComponentD3D11* component);
-		void update_cbuf(RenderableComponentD3D11* component);
+
+	public:
+		void update_light_shader(LightSystemD3D11* component);
+		void update_render_shader(RenderableComponentD3D11* component);
 
 	private:
 		ShaderTraits m_data;
@@ -232,6 +237,28 @@ namespace XPX::Renderer::DX11
 	};
 
 	typedef enum D3D_PRIMITIVE_TOPOLOGY XPLICIT_PRIMITIVE_TOPOLOGY;
+
+	class XPLICIT_API LightSystemD3D11 final : public LightSystem
+	{
+	public:
+		explicit LightSystemD3D11();
+		~LightSystemD3D11() override;
+
+	public:
+		XPLICIT_COPY_DEFAULT(LightSystemD3D11);
+
+	private:
+		WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
+		WRL::ComPtr<ID3D11Buffer> m_pMatrixBuffer;
+		WRL::ComPtr<ID3D11Buffer> m_pLightBuffer;
+		ShaderSystemD3D11* m_pLightVs;
+		ShaderSystemD3D11* m_pLightPs;
+		HRESULT m_hResult;
+
+	private:
+		friend ShaderSystemD3D11;
+
+	};
 
 	class XPLICIT_API RenderableComponentD3D11 final : public BaseRenderableComponent
 	{
@@ -293,7 +320,7 @@ namespace XPX::Renderer::DX11
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pIndexBuffer;
 		
 	public:
-		void push_texcoord(const Vector<float>& coord) noexcept { m_arrayTextures.push_back(coord); }
+		void push_texture_coord(const Vector<float>& coord) noexcept { m_arrayTextures.push_back(coord); }
 
 	public:
 		struct XPLICIT_API TextureSystemGenericD3D11 final
@@ -346,6 +373,8 @@ namespace XPX::Renderer::DX11
 	private:
 		WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
 		std::vector<Vector<float>> m_arrayTextures;
+
+	private:
 		UINT m_iSamplerCnt;
 
 	private:
@@ -357,7 +386,7 @@ namespace XPX::Renderer::DX11
 	private:
 		XPLICIT_PRIMITIVE_TOPOLOGY m_iTopology;
 		ShaderSystemD3D11* m_pVertexShader;
-		ShaderSystemD3D11* m_pColorShader;
+		ShaderSystemD3D11* m_pTextureShader;
 		DriverSystemD3D11* m_pDriver;
 		Details::VERTEX* m_pVertex;
 
@@ -375,7 +404,7 @@ namespace XPX::Renderer::DX11
 		friend ShaderSystemD3D11;
 
 	public:
-		LightSystem* f_pSourceLight;
+		LightSystemD3D11* f_pSourceLight;
 
 	};
 

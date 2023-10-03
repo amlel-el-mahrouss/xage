@@ -76,7 +76,7 @@ namespace XPX::Renderer::DX11
 
 	ShaderSystemD3D11::ShaderTraits& ShaderSystemD3D11::get() { return m_data; }
 
-	void ShaderSystemD3D11::update_cbuf(RenderableComponentD3D11* component)
+	void ShaderSystemD3D11::update_render_shader(RenderableComponentD3D11* component)
 	{
 		if (!component)
 			return;
@@ -117,15 +117,43 @@ namespace XPX::Renderer::DX11
 			cBuffer[bufferIndex].PROJECTION = transPoseProjectionMatrix;
 			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
 			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
+		}
 
-			cBuffer[bufferIndex].COLOUR.x = component->f_pSourceLight->f_cColour.R;
-			cBuffer[bufferIndex].COLOUR.y = component->f_pSourceLight->f_cColour.G;
-			cBuffer[bufferIndex].COLOUR.z = component->f_pSourceLight->f_cColour.B;
-			cBuffer[bufferIndex].COLOUR.w = component->f_pSourceLight->f_cColour.A;
+		cBufferCnt = 0U;
 
-			cBuffer[bufferIndex].SOURCE.x = component->f_pSourceLight->f_vSource.X;
-			cBuffer[bufferIndex].SOURCE.y = component->f_pSourceLight->f_vSource.Y;
-			cBuffer[bufferIndex].SOURCE.z = component->f_pSourceLight->f_vSource.Z;
+		component->m_pDriver->get().pContext->Unmap(component->m_pMatrixBuffer.Get(), 0);
+		component->m_pDriver->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
+	}
+
+	void ShaderSystemD3D11::update_light_shader(LightSystemD3D11* component)
+	{
+		if (!component)
+			return;
+
+		HRESULT result;
+		D3D11_MAPPED_SUBRESOURCE mappedResource{};
+
+		Details::CBUFFER* cBuffer = nullptr;
+
+		unsigned int cBufferCnt = 0U;
+
+		auto transPoseWorldMatrix = XMMatrixTranspose(RENDERER->get().WorldMatrix);
+		auto transPoseViewMatrix = XMMatrixTranspose(RENDERER->get().pCamera->m_viewMatrix);
+		auto transPoseProjectionMatrix = XMMatrixTranspose(RENDERER->get().ProjectionMatrix);
+
+		HRESULT hr = RENDERER->get().pContext->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+		Details::ThrowIfFailed(hr);
+
+		cBuffer = (Details::CBUFFER*)mappedResource.pData;
+
+		cBufferCnt = (sizeof(Details::CBUFFER) / sizeof(cBuffer[0]));
+
+		for (size_t bufferIndex = 0; bufferIndex < cBufferCnt; ++bufferIndex)
+		{
+			cBuffer[bufferIndex].PROJECTION = transPoseProjectionMatrix;
+			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
+			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
 		}
 
 		cBufferCnt = 0U;

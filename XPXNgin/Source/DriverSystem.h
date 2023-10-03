@@ -71,11 +71,11 @@ namespace XPX::Renderer
 	/// <summary>
 	/// Light system: can represent the sun, lamp or whatever
 	/// </summary>
-	class XPLICIT_API LightSystem final
+	class XPLICIT_API LightSystem
 	{
 	public:
 		explicit LightSystem() = default;
-		~LightSystem() = default;
+		virtual ~LightSystem() = default;
 
 	public:
 		XPLICIT_COPY_DEFAULT(LightSystem);
