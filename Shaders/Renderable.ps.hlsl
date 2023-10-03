@@ -18,5 +18,13 @@ float4 PS(PIXEL input) : SV_TARGET
 {
     // color = modelColor * lighting
     float4 color = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);    
+    
+    bool scalar_bool = color.xyzw == float4(0, 0, 0, 0).xyzw;
+    
+    if (scalar_bool)
+    {
+        color = float4(input.AMBIENT, 1.0);
+    }
+    
     return color;
 }

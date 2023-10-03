@@ -27,14 +27,14 @@ float4 PS(PIXEL input) : SV_TARGET
     float3 lightDir;
     float lightIntensity;
     float4 color;
-    
+
     textureColor = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    float3 halfwayDir = normalize(input.POSITION.xyz + DIR);
+    lightDir = -DIR;
     
-    lightIntensity = pow(max(dot(input.NORMAL, halfwayDir), 0.0), 1);
+    lightIntensity = saturate(dot(input.NORMAL, lightDir));
     
-    color = lightIntensity;
+    color = saturate(COLOR * lightIntensity);
     color = color * textureColor;
     
     return color;
