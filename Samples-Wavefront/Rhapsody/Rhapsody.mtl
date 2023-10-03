@@ -10,7 +10,7 @@ Ni 1.450000
 d 1.000000
 illum 3
 map_Kd frmnt_dff.tga
-map_Bump -bm 0.600000 frmnt_nrm.tga
+map_Kn -bm 0.600000 frmnt_nrm.tga
 
 newmtl chrome
 Ns 129.960358
@@ -21,7 +21,7 @@ Ni 1.450000
 d 1.000000
 illum 3
 map_Kd frmnt_chrome_nrm.tga
-map_Bump -bm 0.600000 frmnt_chrome_nrm.tga
+map_Kn -bm 0.600000 frmnt_chrome_nrm.tga
 
 newmtl glass
 Ns 211.121262
@@ -42,7 +42,7 @@ Ni 1.450000
 d 1.000000
 illum 3
 map_Kd frmnt_dff.tga
-map_Bump -bm 0.600000 frmnt_nrm.tga
+map_Kn -bm 0.600000 frmnt_nrm.tga
 
 newmtl rims
 Ns 20.000006
@@ -51,9 +51,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd lWheel_fox_hubcap_dff.tga
-map_Ks lWheel_fox_hubcap_dff.tga
-map_Bump -bm 1.000000 lWheel_fox_hubcap_nrm.tga
+map_Kd Wheel_fox_hubcap_dff.tga
+map_Ks Wheel_fox_hubcap_dff.tga
+map_Kn -bm 1.000000 Wheel_fox_hubcap_nrm.tga
 
 newmtl tires
 Ns 20.000006
@@ -64,7 +64,7 @@ d 1.000000
 illum 1
 map_Kd wp_tire_01_diff.tga
 map_Ks wp_tire_01_spec.tga
-map_Bump -bm 1.000000 wp_tire_01_nrm.tga
+map_Kn -bm 1.000000 wp_tire_01_nrm.tga
 
 newmtl ucb_bottom3_bump
 Ns 20.000006
