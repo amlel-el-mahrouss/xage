@@ -763,10 +763,13 @@ namespace XPX::Renderer::DX11
 
 		self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
 
-		self->m_pVertexShader->update(self);
-
 		self->m_pTextureShader->update_render_shader(self);
+
+		self->m_pDriver->get().pContext->PSSetShaderResources(0, 1, self->f_vTextures[1]->m_pTextureView.GetAddressOf());
+
 		self->m_pTextureShader->update(self);
+
+		self->m_pVertexShader->update(self);
 
 		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
 

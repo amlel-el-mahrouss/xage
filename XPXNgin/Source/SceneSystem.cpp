@@ -236,11 +236,6 @@ namespace XPX::Renderer
 											params_image.pImage = header.f_pImage;
 
 											params.push_back(params_image);
-
-											auto tex = new RenderableComponent::TextureSystemGenericD3D11();
-											tex->m_pDriver = scene->m_driver;
-
-											render->f_vTextures.push_back(tex);
 										}
 
 										delete[] tex;

@@ -341,6 +341,7 @@ namespace XPX::Renderer::DX11
 					return;
 
 				D3D11_TEXTURE2D_DESC textureDesc{};
+
 				textureDesc.Height = params.iHeight;
 				textureDesc.Width = params.iWidth;
 				textureDesc.MipLevels = 0;
