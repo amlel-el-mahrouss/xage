@@ -195,9 +195,9 @@ namespace XPX::Renderer
 
 								try
 								{
-									const PChar* paths[4] = { mat.strTexture, mat.strNormalTexture , mat.strEmissiveTexture, mat.strSpecularTexture };
+									const PChar* paths[2] = { mat.strTexture, mat.strNormalTexture };
 
-									for (std::size_t index = 0UL; index < 4; ++index)
+									for (std::size_t index = 0UL; index < 2; ++index)
 									{
 										if (*paths[index] == 0)
 											continue;

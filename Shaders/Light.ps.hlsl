@@ -3,8 +3,10 @@
  * (c) XPX Corp.
  * Written by Amlal El Mahrouss.
  */
- 
+
 Texture2D gShaderTexture : register(t0);
+Texture2D gShaderTexture2 : register(t1);
+
 SamplerState SAMPLE_TYPE : register(s0);
 
 struct PIXEL
@@ -26,16 +28,16 @@ float4 PS(PIXEL input) : SV_TARGET
     float4 textureColor;
     float3 lightDir;
     float lightIntensity;
-    float4 color;
 
     textureColor = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
+    textureColor *= gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    lightDir = -DIR;
+    lightDir = normalize(DIR - input.POSITION.xyz);
+    float3 viewDir = normalize(input.POSITION.xyz - DIR);
+    float3 halfwayDir = normalize(lightDir + viewDir);
     
-    lightIntensity = saturate(dot(input.NORMAL, lightDir));
+    float spec = pow(max(dot(normalize(input.NORMAL), halfwayDir), 0.0), 16.0);
+    float3 specular = textureColor * spec;
     
-    color = saturate(COLOR * lightIntensity);
-    color = color * textureColor;
-    
-    return color;
+    return float4(specular, 1.0);
 }
