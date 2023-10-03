@@ -174,7 +174,7 @@ namespace XPX::Renderer::DX11
 		cBufferCnt = 0U;
 
 		RENDERER->get().pContext->Unmap(component->m_pLightBuffer.Get(), 0);
-		RENDERER->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
+		RENDERER->get().pContext->PSSetConstantBuffers(cBufferCnt, 1, component->m_pLightBuffer.GetAddressOf());
 	}
 
 	void ShaderSystemD3D11::update(RenderableComponentD3D11* component)

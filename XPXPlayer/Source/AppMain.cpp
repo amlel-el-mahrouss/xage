@@ -81,7 +81,7 @@ XPLICIT_MAIN()
 		node->f_pSourceLight->f_vDirection.Z = 1.0;
 
 		node->f_pSourceLight->f_cColour.R = 1.0;
-		node->f_pSourceLight->f_cColour.G = 0.5;
+		node->f_pSourceLight->f_cColour.G = 1.0;
 		node->f_pSourceLight->f_cColour.B = 1.0;
 		node->f_pSourceLight->f_cColour.A = 1.0;
 

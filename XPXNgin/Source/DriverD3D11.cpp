@@ -748,8 +748,6 @@ namespace XPX::Renderer::DX11
 		const uint32_t stride = { sizeof(Details::VERTEX) };
 		const uint32_t offset = { 0u };
 
-		self->f_pSourceLight->update(self->m_iIndices);
-
 		self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt,
 			self->m_pVertexBuffer.GetAddressOf(),
 			&stride,
@@ -773,6 +771,10 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
 
 		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
+
+		self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
+
+		self->f_pSourceLight->update(self->m_iIndices);
 	}
 
 	const size_t& RenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }
