@@ -51,9 +51,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd low-poly-foxbody-sedan/PROPS/wheels_pack/ready/Wheel_fox_hubcap_dff.tga
-map_Ks low-poly-foxbody-sedan/PROPS/wheels_pack/ready/Wheel_fox_hubcap_dff.tga
-map_Bump -bm 1.000000 low-poly-foxbody-sedan/PROPS/wheels_pack/ready/Wheel_fox_hubcap_nrm.tga
+map_Kd lWheel_fox_hubcap_dff.tga
+map_Ks lWheel_fox_hubcap_dff.tga
+map_Bump -bm 1.000000 lWheel_fox_hubcap_nrm.tga
 
 newmtl tires
 Ns 20.000006
@@ -62,9 +62,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd low-poly-foxbody-sedan/PROPS/wheels_pack/tires and brakes/wp_tire_01_diff.tga
-map_Ks low-poly-foxbody-sedan/PROPS/wheels_pack/tires and brakes/wp_tire_01_spec.tga
-map_Bump -bm 1.000000 low-poly-foxbody-sedan/PROPS/wheels_pack/tires and brakes/wp_tire_01_nrm.tga
+map_Kd wp_tire_01_diff.tga
+map_Ks wp_tire_01_spec.tga
+map_Bump -bm 1.000000 wp_tire_01_nrm.tga
 
 newmtl ucb_bottom3_bump
 Ns 20.000006
@@ -74,4 +74,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd low-poly-foxbody-sedan/Materials/ucbshare/ucb_bottom3_bump.tga
+map_Kd ucb_bottom3_bump.tga

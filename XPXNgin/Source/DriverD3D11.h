@@ -64,6 +64,7 @@ namespace XPX::Renderer::DX11
 			XMFLOAT4 POSITION;
 			XMFLOAT2 TEXCOORD;
 			XMFLOAT3 NORMAL;
+			XMFLOAT3 AMBIENT;
 		};
 
 		struct __declspec(align(XPLICIT_DX_ALIGN)) LIGHT

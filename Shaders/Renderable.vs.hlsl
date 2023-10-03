@@ -15,12 +15,15 @@ struct PIXEL
 {
     float4 POSITION : SV_POSITION;
     float2 TEXTURE : TEXCOORD0;
+    float3 AMBIENT : COLOR0;
+    float3 SPECULAR : COLOR1;
 };
 
 struct VERTEX
 {
     float4 POSITION : POSITION;
     float2 TEXTURE : TEXCOORD0;
+    float3 AMBIENT : COLOR0;
 };
 
 PIXEL VS(VERTEX input)
@@ -34,6 +37,8 @@ PIXEL VS(VERTEX input)
     output.POSITION = mul(output.POSITION, PROJECTION);
     
     output.TEXTURE = input.TEXTURE;
+    
+    output.AMBIENT = input.AMBIENT;
     
     return output;
 }

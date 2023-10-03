@@ -433,12 +433,12 @@ namespace XPX::Renderer::DX11
 
 		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
 
-		RENDERER->get().pDevice->CreateInputLayout(
+		Details::ThrowIfFailed(RENDERER->get().pDevice->CreateInputLayout(
 			input_layout, 
 			layout_size,
 			m_pLightVs->get().pBlob->GetBufferPointer(), 
 			m_pLightVs->get().pBlob->GetBufferSize(),
-			m_pInputLayout.GetAddressOf());
+			m_pInputLayout.GetAddressOf()));
 
 		D3D11_SAMPLER_DESC samplerDesc{};
 
@@ -571,7 +571,9 @@ namespace XPX::Renderer::DX11
 
 		m_iVertexCnt = 0;
 
-		for (size_t vertex_index = 0; vertex_index < m_arrayVerts.size(); ++vertex_index)
+		for (size_t vertex_index = 0; 
+			vertex_index < m_arrayVerts.size(); 
+			++vertex_index)
 		{
 			m_pVertex[vertex_index].POSITION = XMFLOAT4(
 				m_arrayVerts[vertex_index].X,
@@ -581,11 +583,21 @@ namespace XPX::Renderer::DX11
 		}
 
 		for (size_t tex_index = 0;
-			tex_index < m_arrayTextures.size(); ++tex_index)
+			tex_index < m_arrayTextures.size(); 
+			++tex_index)
 		{
 			m_pVertex[tex_index].TEXCOORD = XMFLOAT2(
 				m_arrayTextures[tex_index].X,
 				m_arrayTextures[tex_index].Y);
+		}
+
+		for (size_t ambient_index = 0;
+			ambient_index < m_arrayColorsAmbient.size(); ++ambient_index)
+		{
+			m_pVertex[ambient_index].AMBIENT = XMFLOAT3(
+				m_arrayColorsAmbient[ambient_index].R,
+				m_arrayColorsAmbient[ambient_index].G,
+				m_arrayColorsAmbient[ambient_index].B);
 		}
 
 		m_iVertexCnt = m_arrayVerts.size();
@@ -628,6 +640,7 @@ namespace XPX::Renderer::DX11
 		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
 					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 					{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);

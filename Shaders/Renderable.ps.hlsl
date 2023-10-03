@@ -8,6 +8,7 @@ struct PIXEL
 {
     float4 POSITION : POSITION;
     float2 TEXTURE : TEXCOORD0;
+    float3 AMBIENT : COLOR0;
 };
 
 Texture2D gShaderTexture : register(t0);
