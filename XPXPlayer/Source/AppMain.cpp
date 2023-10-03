@@ -71,8 +71,10 @@ XPLICIT_MAIN()
 
 		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/XSD/Sample.xsd");
 		auto node = scene.get_scene_node(nodes[0]);
+		auto node_teapot = scene.get_scene_node(nodes[1]);
 
 		node->f_pSourceLight = new XPX::Renderer::LightSystem();
+		node_teapot->f_pSourceLight = node->f_pSourceLight;
 
 		node->f_pSourceLight->f_vSource.X = 0.1;
 		node->f_pSourceLight->f_vSource.Y = 0.1;

@@ -239,6 +239,11 @@ namespace XPX::Renderer
 										}
 
 										delete[] tex;
+
+										auto tex = new RenderableComponent::TextureSystemGenericD3D11();
+										tex->m_pDriver = scene->m_driver;
+
+										render->f_vTextures.push_back(tex);
 									}
 								}
 								catch (...)

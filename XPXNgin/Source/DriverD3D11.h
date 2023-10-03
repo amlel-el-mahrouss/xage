@@ -345,8 +345,8 @@ namespace XPX::Renderer::DX11
 
 	private:
 		WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
-		UINT m_iSamplerCnt{ 1 };
 		std::vector<Vector<float>> m_arrayTextures;
+		UINT m_iSamplerCnt;
 
 	private:
 		D3D11_SUBRESOURCE_DATA m_vertexData;
