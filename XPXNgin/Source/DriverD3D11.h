@@ -19,7 +19,6 @@
 #include "Avx.h"
 
 #include "Bites.h"
-
 #include "FileIO.h"
 
 #ifdef XPLICIT_WINDOWS
@@ -67,11 +66,19 @@ namespace XPX::Renderer::DX11
 			XMFLOAT3 AMBIENT;
 		};
 
+		struct __declspec(align(XPLICIT_DX_ALIGN)) CAMERA_POS
+		{
+			XMFLOAT3 POSITION;
+			float32 PADDING;
+		};
+
 		struct __declspec(align(XPLICIT_DX_ALIGN)) LIGHT
 		{
 			XMFLOAT4 COLOR;
 			XMFLOAT3 DIRECTION;
 			float32 PADDING;
+			float32 SPECULAR_POWER;
+			XMFLOAT3 SPECULAR_COLOR;
 		};
 
 		struct __declspec(align(XPLICIT_DX_ALIGN)) CBUFFER
@@ -256,6 +263,7 @@ namespace XPX::Renderer::DX11
 	private:
 		WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
 		WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
+		WRL::ComPtr<ID3D11Buffer> m_pCameraBuffer;
 		WRL::ComPtr<ID3D11Buffer> m_pMatrixBuffer;
 		WRL::ComPtr<ID3D11Buffer> m_pLightBuffer;
 		ShaderSystemD3D11* m_pLightVs;

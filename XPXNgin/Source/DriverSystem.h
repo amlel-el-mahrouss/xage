@@ -81,8 +81,11 @@ namespace XPX::Renderer
 		XPLICIT_COPY_DEFAULT(LightSystem);
 
 	public:
-		Vector<float> f_vDirection{ 1, 1, 1 };
-		Color<float> f_cColour{ 1, 1, 1, 1 };
+		Vector<float> f_vDirection{ 0, 0, 0 };
+		Vector<float> f_vPosition{ 1, 1, 1 };
+		Color<float> f_cAmbient{ 1, 1, 1, 1 };
+		Color<float> f_cSpecular{ 1, 1, 1, 1 };
+		float32 f_fPower{ 1 };
 
 	};
 

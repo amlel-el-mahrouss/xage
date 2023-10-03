@@ -155,15 +155,40 @@ namespace XPX::Renderer::DX11
 		RENDERER->get().pContext->Unmap(component->m_pMatrixBuffer.Get(), 0);
 		RENDERER->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
 
+		D3D11_MAPPED_SUBRESOURCE mr{};
+
+		hr = RENDERER->get().pContext->Map(component->m_pCameraBuffer.Get(),
+			0,
+			D3D11_MAP_WRITE_DISCARD, 0, &mr);
+
+		Details::ThrowIfFailed(hr);
+
+		Details::CAMERA_POS* pos = (Details::CAMERA_POS*)mr.pData;
+
+		pos->PADDING = 1.0f;
+		pos->POSITION.x = component->f_vPosition.X;
+		pos->POSITION.y = component->f_vPosition.Y;
+		pos->POSITION.z = component->f_vPosition.Z;
+
+		RENDERER->get().pContext->Unmap(
+			component->m_pCameraBuffer.Get(),
+			0);
+
 		hr = RENDERER->get().pContext->Map(component->m_pLightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		Details::ThrowIfFailed(hr);
 
 		Details::LIGHT* light = (Details::LIGHT*)mappedResource.pData;
 
-		light->COLOR.x = component->f_cColour.R;
-		light->COLOR.y = component->f_cColour.G;
-		light->COLOR.z = component->f_cColour.B;
+		light->SPECULAR_COLOR.x = component->f_cSpecular.R;
+		light->SPECULAR_COLOR.y = component->f_cSpecular.G;
+		light->SPECULAR_COLOR.z = component->f_cSpecular.B;
+
+		light->SPECULAR_POWER = component->f_fPower;
+
+		light->COLOR.x = component->f_cAmbient.R;
+		light->COLOR.y = component->f_cAmbient.G;
+		light->COLOR.z = component->f_cAmbient.B;
 
 		light->DIRECTION.x = component->f_vDirection.X;
 		light->DIRECTION.y = component->f_vDirection.Y;

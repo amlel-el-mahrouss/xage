@@ -74,18 +74,23 @@ XPLICIT_MAIN()
 
 		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
 
-		node->f_pSourceLight->f_vDirection.X = 0;
-		node->f_pSourceLight->f_vDirection.Y = 10;
-		node->f_pSourceLight->f_vDirection.Z = -1000;
+		node->f_pSourceLight->f_vDirection.X = 100;
+		node->f_pSourceLight->f_vDirection.Y = 0;
+		node->f_pSourceLight->f_vDirection.Z = 1;
 
-		node->f_pSourceLight->f_cColour.R = 1.0;
-		node->f_pSourceLight->f_cColour.G = 1.0;
-		node->f_pSourceLight->f_cColour.B = 1.0;
-		node->f_pSourceLight->f_cColour.A = 1.0;
+		node->f_pSourceLight->f_cSpecular.R = 1.0;
+		node->f_pSourceLight->f_cSpecular.G = 1.0;
+		node->f_pSourceLight->f_cSpecular.B = 1.0;
+		node->f_pSourceLight->f_cSpecular.A = 1.0;
+
+		node->f_pSourceLight->f_cAmbient.R = 1.0;
+		node->f_pSourceLight->f_cAmbient.G = 1.0;
+		node->f_pSourceLight->f_cAmbient.B = 1.0;
+		node->f_pSourceLight->f_cAmbient.A = 1.0;
 
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(0.1, 0, -1000);
+		auto origin = XPX::Vector<float>(0.1, 0, -10);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
@@ -94,9 +99,9 @@ XPLICIT_MAIN()
 
 		while (ret != WM_QUIT)
 		{
-			node->set_rotation(XPX::Quaternion<XPX::float32>(0, -rot, 0));
+			node->set_rotation(XPX::Quaternion<XPX::float32>(-rot, rot, -rot));
 
-			rot += 0.01;
+			rot += 0.001;
 
 			if (rot > 360)
 				rot = 0;

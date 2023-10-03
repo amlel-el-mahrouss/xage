@@ -14,6 +14,7 @@ struct PIXEL
     float4 POSITION : SV_POSITION;
     float2 TEXTURE : TEXCOORD0;
     float3 NORMAL : NORMAL;
+    float3 VIEW_DIR : TEXCOORD0;
 };
 
 cbuffer LIGHT
@@ -21,6 +22,8 @@ cbuffer LIGHT
     float4 COLOR;
     float3 DIR;
     float PADDING;
+    float SPECULAR_POWER;
+    float4 SPECULAR_COLOR;
 };
 
 float4 PS(PIXEL input) : SV_TARGET
@@ -32,12 +35,10 @@ float4 PS(PIXEL input) : SV_TARGET
     textureColor = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
     textureColor *= gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    lightDir = normalize(DIR - input.POSITION.xyz);
-    float3 viewDir = normalize(input.POSITION.xyz - DIR);
-    float3 halfwayDir = normalize(lightDir + viewDir);
+    float3 halfwayDir = normalize(input.VIEW_DIR);
     
-    float spec = pow(max(dot(normalize(input.NORMAL), halfwayDir), 0.0), 16.0);
-    float3 specular = textureColor * spec;
+    float4 spec = pow(max(dot(input.NORMAL, halfwayDir), 0.0), 28.0);
+    float4 specular = textureColor * spec;
     
-    return float4(specular, 1.0);
+    return specular;
 }

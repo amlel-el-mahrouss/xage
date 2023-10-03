@@ -411,7 +411,8 @@ namespace XPX::Renderer::DX11
 	LightSystemD3D11::LightSystemD3D11(const std::size_t& verticesCount)
 		: m_pLightPs(nullptr), m_pLightVs(nullptr), 
 		m_pSamplerState(nullptr), m_hResult(S_OK),
-		m_pMatrixBuffer(nullptr), m_pLightBuffer(nullptr)
+		m_pMatrixBuffer(nullptr), m_pLightBuffer(nullptr),
+		m_pCameraBuffer(nullptr)
 	{
 		XPLICIT_GET_DATA_DIR_W(DIR);
 
@@ -490,6 +491,20 @@ namespace XPX::Renderer::DX11
 
 		Details::ThrowIfFailed(m_hResult);
 
+		D3D11_BUFFER_DESC cameraBufferDesc{};
+
+		cameraBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		cameraBufferDesc.ByteWidth = sizeof(Details::CAMERA_POS);
+		cameraBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cameraBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cameraBufferDesc.MiscFlags = 0;
+		cameraBufferDesc.StructureByteStride = 0;
+
+		m_hResult = RENDERER->get().pDevice->CreateBuffer(&cameraBufferDesc,
+			nullptr,
+			m_pCameraBuffer.GetAddressOf());
+
+		Details::ThrowIfFailed(m_hResult);
 	}
 
 	LightSystemD3D11::~LightSystemD3D11()
@@ -503,6 +518,13 @@ namespace XPX::Renderer::DX11
 
 	void LightSystemD3D11::update(const std::size_t indexCount) noexcept
 	{
+		RENDERER->get().pContext->RSSetState(RENDERER->get().pRasterState.Get());
+
+		RENDERER->get().pContext->VSSetConstantBuffers(0, 1, this->m_pMatrixBuffer.GetAddressOf());
+		RENDERER->get().pContext->PSSetConstantBuffers(0, 1, this->m_pLightBuffer.GetAddressOf());
+
+		RENDERER->get().pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 		RENDERER->get().pContext->IASetInputLayout(m_pInputLayout.Get());
 
 		m_pLightPs->update_light_shader(this);
@@ -794,8 +816,6 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
 
 		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
-
-		self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
 
 		self->f_pSourceLight->update(self->m_iIndices);
 	}
