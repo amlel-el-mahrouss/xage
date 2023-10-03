@@ -15,11 +15,11 @@ namespace XPX::Renderer
 {
 	struct TargaHeader
 	{
-		unsigned char data1[12];
+		unsigned char spec[12];
 		unsigned short width;
 		unsigned short height;
 		unsigned char bpp;
-		unsigned char data2;
+		unsigned char id_length;
 	};
 
 	struct TargaResultHeader
