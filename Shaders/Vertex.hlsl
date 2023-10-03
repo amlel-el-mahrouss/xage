@@ -21,6 +21,7 @@ struct PIXEL
     float4 DIFFUSE : COLOR1; // Diffuse color
     float4 SPECULAR : COLOR2; // Specular color
     float4 NORMAL : NORMAL;
+    float2 TEXTURE : TEXCOORD0;
 };
 
 struct VERTEX
@@ -30,6 +31,7 @@ struct VERTEX
     float4 DIFFUSE : COLOR1; // Diffuse color
     float4 SPECULAR : COLOR2; // Specular color
     float4 NORMAL : NORMAL;
+    float2 TEXTURE : TEXCOORD0;
 };
 
 PIXEL VS(VERTEX input)
@@ -44,6 +46,7 @@ PIXEL VS(VERTEX input)
     output.DIFFUSE = input.DIFFUSE;
     output.NORMAL = input.NORMAL;
     output.SPECULAR = input.SPECULAR;
+    output.TEXTURE = input.TEXTURE;
     
     return output;
 }

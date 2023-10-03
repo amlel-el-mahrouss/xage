@@ -344,6 +344,8 @@ namespace XPX::Renderer::DX11
 		std::vector<TextureSystemGenericD3D11*> f_vTextures;
 
 	private:
+		WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
+		UINT m_iSamplerCnt{ 1 };
 		std::vector<Vector<float>> m_arrayTextures;
 
 	private:

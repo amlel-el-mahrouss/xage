@@ -181,11 +181,13 @@ namespace XPX::Renderer
 
 								if (header)
 								{
-									ImageDataParams params;
-									params.iHeight = header.f_sHeader.height;
-									params.iWidth = header.f_sHeader.width;
-									params.iStride = 4;
-									params.pImage = header.f_pImage;
+									ImageDataParams params_image{};
+									params_image.iHeight = header.f_sHeader.height;
+									params_image.iWidth = header.f_sHeader.width;
+									params_image.iStride = 4;
+									params_image.pImage = header.f_pImage;
+
+									params.push_back(params_image);
 								}
 							}
 						}

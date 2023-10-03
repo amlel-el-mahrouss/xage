@@ -1,4 +1,5 @@
 #pragma begin
 
-#wavefront C:\Users\amlal\XGE\Samples-Wavefront\Teapot/utah.xobj, C:\Users\amlal\XGE\Samples-Wavefront\Teapot/utah.mtl
+#wavefront C:\Users\amlal\XGE\Samples-Wavefront\Teapot/utah.xobj,C:\Users\amlal\XGE\Samples-Wavefront\Teapot/utah.mtl
+
 #pragma end

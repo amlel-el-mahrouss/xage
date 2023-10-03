@@ -11,7 +11,11 @@ struct PIXEL
     float4 DIFFUSE : COLOR1; // Diffuse color
     float4 SPECULAR : COLOR2; // Specular color
     float4 NORMAL : NORMAL;
+    float2 TEXTURE : TEXCOORD0;
 };
+
+Texture2D gShaderTexture : register(t0);
+SamplerState SAMPLE_TYPE : register(s0);
 
 float4 PS(PIXEL input) : SV_TARGET
 {
@@ -43,8 +47,9 @@ float4 PS(PIXEL input) : SV_TARGET
     lighting = ambient - .5 + ((diffuse / 6.0) * (diffuse / 4.0) + (diffuse / 2.0)) + specular * 0.5;
 
     // color = modelColor * lighting
-    float3 modelColor = float3(1.0, 1.0, 1.0);
-    float3 color = modelColor * lighting;
+    float4 modelColor = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
+    float4 color = modelColor;
+    color *= float4(lighting, 1.0);
 
-    return float4(color, 1.0);
+    return color;
 }

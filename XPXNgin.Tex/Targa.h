@@ -33,7 +33,14 @@ namespace XPX::Renderer
 
 	inline TargaResultHeader LoadTarga32(const char* filename)
 	{
-		int error, bpp, imageSize, index, i, j, k;
+		int error = 0;
+		int bpp = 0;
+		int imageSize = 0;
+		int index = 0;
+		int i = 0;
+		int j = 0;
+		int k = 0;
+
 		FILE* filePtr = nullptr;
 		unsigned int count = 0U;
 		TargaHeader targaFileHeader;
@@ -43,17 +50,28 @@ namespace XPX::Renderer
 		error = fopen_s(&filePtr, filename, "rb");
 
 		if (error != 0)
+		{
+			fclose(filePtr);
 			return {};
+		}
 
 		// Read in the file header.
 		count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
 		
 		if (count != 1)
+		{
+			fclose(filePtr);
 			return {};
+		}
+
+		bpp = targaFileHeader.bpp;
 
 		// Check that it is 32 bit and not 24 bit.
 		if (bpp != 32)
+		{
+			fclose(filePtr);
 			return {};
+		}
 
 		// Calculate the size of the 32 bit image data.
 		imageSize = targaFileHeader.width * targaFileHeader.height * 4;
@@ -65,13 +83,22 @@ namespace XPX::Renderer
 		count = (unsigned int)fread(targaImage, 1, imageSize, filePtr);
 		
 		if (count != imageSize)
+		{
+			delete[] targaImage;
+			fclose(filePtr);
+
 			return {};
+		}
 
 		// Close the file.
 		error = fclose(filePtr);
 
 		if (error != 0)
+		{
+			delete[] targaImage;
+
 			return {};
+		}
 
 		// Allocate memory for the targa destination data.
 		BYTE* targaData = new unsigned char[imageSize];
