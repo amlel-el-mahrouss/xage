@@ -754,46 +754,50 @@ namespace XPX::Renderer::DX11
 			!self->m_bDraw)
 			return;
 
-		for (std::size_t i = 0; i < self->f_vTextures.size(); ++i)
+		XPLICIT_ASSERT(self->m_pDriver);
+
+		self->m_pDriver->get().pContext->RSSetState(self->m_pDriver->get().pRasterState.Get());
+
+		const uint32_t stride = { sizeof(Details::VERTEX) };
+		const uint32_t offset = { 0u };
+
+		self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt,
+			self->m_pVertexBuffer.GetAddressOf(),
+			&stride,
+			&offset);
+
+		self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
+
+		self->m_pDriver->get().pContext->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
+			self->m_pDriver->get().pRenderTarget.GetAddressOf(),
+			self->m_pDriver->get().pDepthStencil.Get());
+
+		self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+		self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
+
+		self->m_pTextureShader->update_render_shader(self);
+
+		std::vector<ID3D11ShaderResourceView*> textures;
+
+		for (auto& tex : self->f_vTextures)
 		{
-			XPLICIT_ASSERT(self->m_pDriver);
-
-			self->m_pDriver->get().pContext->RSSetState(self->m_pDriver->get().pRasterState.Get());
-
-			const uint32_t stride = { sizeof(Details::VERTEX) };
-			const uint32_t offset = { 0u };
-
-			self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt,
-				self->m_pVertexBuffer.GetAddressOf(),
-				&stride,
-				&offset);
-
-			self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
-
-			self->m_pDriver->get().pContext->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
-				self->m_pDriver->get().pRenderTarget.GetAddressOf(),
-				self->m_pDriver->get().pDepthStencil.Get());
-
-			self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-			self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
-
-			self->m_pTextureShader->update_render_shader(self);
-
-			self->m_pDriver->get().pContext->PSSetShaderResources(0, 1, self->f_vTextures[i]->m_pTextureView.GetAddressOf());
-
-			self->m_pTextureShader->update(self);
-
-			self->m_pVertexShader->update(self);
-
-			self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
-
-			self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
-
-			self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
-
-			self->f_pSourceLight->update(self->m_iIndices);
+			textures.push_back(tex->m_pTextureView.Get());
 		}
+
+		self->m_pTextureShader->update(self);
+
+		self->m_pVertexShader->update(self);
+
+		self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
+
+		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
+
+		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
+
+		self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
+
+		self->f_pSourceLight->update(self->m_iIndices);
 	}
 
 	const size_t& RenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }

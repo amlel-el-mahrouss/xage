@@ -11,20 +11,17 @@ struct PIXEL
     float3 AMBIENT : COLOR0;
 };
 
-Texture2D gShaderTexture : register(t0);
 SamplerState SAMPLE_TYPE : register(s0);
+
+Texture2D gShaderTexture : register(t0);
+Texture2D gShaderTexture2 : register(t1);
+Texture2D gShaderTexture3 : register(t2);
 
 float4 PS(PIXEL input) : SV_TARGET
 {
-    // color = modelColor * lighting
-    float4 color = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);    
+    float4 color = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
+    float4 color2 = gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
+    float4 color3 = gShaderTexture3.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    bool scalar_bool = color.xyzw == float4(0, 0, 0, 0).xyzw;
-    
-    if (scalar_bool)
-    {
-        color = float4(input.AMBIENT, 1.0);
-    }
-    
-    return color;
+    return saturate(color * color2 * color3 * 2.0);
 }
