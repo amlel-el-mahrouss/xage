@@ -22,7 +22,6 @@ namespace XPX
 	{
 		NETWORK,
 		CHALLENGE,
-		TELEPORTING,
 		BANNED,
 		SHUTDOWN,
 		LEAVE,
@@ -103,8 +102,8 @@ namespace XPX
 	class ChatBoxStyleDark final
 	{
 	public:
-		static ImGUI::ImColor get_frame_color() noexcept { return { 150, 0x41, 0x41, 0x41 }; }
-		static ImGUI::ImColor get_text_rgn_color() noexcept { return { 150, 0x1A, 0x1A, 0x1A }; }
+		static ImGUI::ImColor get_frame_color() noexcept { return { 0x41, 0x41, 0x41, 150 }; }
+		static ImGUI::ImColor get_text_rgn_color() noexcept { return { 0x1A, 0x1A, 0x1A, 150 }; }
 
 	};
 }
