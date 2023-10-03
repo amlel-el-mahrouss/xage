@@ -6,6 +6,7 @@
 
 struct PIXEL
 {
+    float3 POSITION : POSITION;
     float2 TEXTURE : TEXCOORD0;
 };
 

@@ -416,12 +416,12 @@ namespace XPX::Renderer::DX11
 		XPLICIT_GET_DATA_DIR_W(DIR);
 
 		PString path_pixel = DIR;
-		path_pixel += L"Shaders/Light.ps";
+		path_pixel += L"Shaders/Light.ps.hlsl";
 
 		m_pLightPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
 
 		PString path_vertex = DIR;
-		path_vertex += L"Shaders/Light.vs";
+		path_vertex += L"Shaders/Light.vs.hlsl";
 
 		m_pLightPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", RENDERER);
 
@@ -593,12 +593,12 @@ namespace XPX::Renderer::DX11
 		XPLICIT_GET_DATA_DIR_W(DIR);
 
 		PString path_pixel = DIR;
-		path_pixel += L"Shaders/Pixel.hlsl";
+		path_pixel += L"Shaders/Renderable.ps.hlsl";
 
 		m_pTextureShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", this->m_pDriver);
 
 		PString path_vertex = DIR;
-		path_vertex += L"Shaders/Vertex.hlsl";
+		path_vertex += L"Shaders/Renderable.vs.hlsl";
 
 		m_pVertexShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", this->m_pDriver);
 

@@ -112,12 +112,9 @@ namespace XPX::Renderer::DX11
 
 		cBufferCnt = (sizeof(Details::CBUFFER) / sizeof(cBuffer[0]));
 
-		for (size_t bufferIndex = 0; bufferIndex < cBufferCnt; ++bufferIndex)
-		{
-			cBuffer[bufferIndex].PROJECTION = transPoseProjectionMatrix;
-			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
-			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
-		}
+		cBuffer->PROJECTION = transPoseProjectionMatrix;
+		cBuffer->WORLD = transPoseWorldMatrix;
+		cBuffer->VIEW = transPoseViewMatrix;
 
 		cBufferCnt = 0U;
 
@@ -149,17 +146,35 @@ namespace XPX::Renderer::DX11
 
 		cBufferCnt = (sizeof(Details::CBUFFER) / sizeof(cBuffer[0]));
 
-		for (size_t bufferIndex = 0; bufferIndex < cBufferCnt; ++bufferIndex)
-		{
-			cBuffer[bufferIndex].PROJECTION = transPoseProjectionMatrix;
-			cBuffer[bufferIndex].WORLD = transPoseWorldMatrix;
-			cBuffer[bufferIndex].VIEW = transPoseViewMatrix;
-		}
+		cBuffer->PROJECTION = transPoseProjectionMatrix;
+		cBuffer->WORLD = transPoseWorldMatrix;
+		cBuffer->VIEW = transPoseViewMatrix;
 
 		cBufferCnt = 0U;
 
-		component->m_pDriver->get().pContext->Unmap(component->m_pMatrixBuffer.Get(), 0);
-		component->m_pDriver->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
+		RENDERER->get().pContext->Unmap(component->m_pMatrixBuffer.Get(), 0);
+		RENDERER->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
+
+		hr = RENDERER->get().pContext->Map(component->m_pLightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+		Details::ThrowIfFailed(hr);
+
+		Details::LIGHT* light = (Details::LIGHT*)mappedResource.pData;
+
+		light->COLOR.x = component->f_cColour.R;
+		light->COLOR.y = component->f_cColour.G;
+		light->COLOR.z = component->f_cColour.B;
+
+		light->DIRECTION.x = component->f_vDirection.X;
+		light->DIRECTION.y = component->f_vDirection.Y;
+		light->DIRECTION.z = component->f_vDirection.Z;
+
+		light->PADDING = 0.0f;
+
+		cBufferCnt = 0U;
+
+		RENDERER->get().pContext->Unmap(component->m_pLightBuffer.Get(), 0);
+		RENDERER->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
 	}
 
 	void ShaderSystemD3D11::update(RenderableComponentD3D11* component)
