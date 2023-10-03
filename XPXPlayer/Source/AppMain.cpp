@@ -65,53 +65,16 @@ XPLICIT_MAIN()
 			return 1;
 
 		XPX::Bites::ApplicationManager manager(uri);
-		XPX::Renderer::SceneSystem scene;
-
-		scene.f_meshLoader = new XPX::Renderer::SceneLoaderXSD();
-
-		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/XSD/Sample.xsd");
-		auto node = scene.get_scene_node(nodes[0]);
-
-		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
-
-		node->f_pSourceLight->f_vDirection.X = 0;
-		node->f_pSourceLight->f_vDirection.Y = 0;
-		node->f_pSourceLight->f_vDirection.Z = 0;
-
-		node->f_pSourceLight->f_cColour.R = 1.0;
-		node->f_pSourceLight->f_cColour.G = 1.0;
-		node->f_pSourceLight->f_cColour.B = 1.0;
-		node->f_pSourceLight->f_cColour.A = 1.0;
-
-		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
-
-		auto origin = XPX::Vector<float>(0.1, 0, -500);
-
-		RENDERER->get().pCamera->set_position(origin);
-		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
-
-		XPX::float32 rot = 0;
-
+		
 		while (ret != WM_QUIT)
 		{
-			node->set_rotation(XPX::Quaternion<XPX::float32>(0, -rot, 0));
-
-			rot += 0.01;
-
-			if (rot > 360)
-				rot = 0;
-
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
-			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.1, 0.1, 0.1, true, true);
-
-			scene.start_frame();
+			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 
 			XPX::EventSystem::get_singleton_ptr()->update();
-
-			scene.end_frame();
 
 			XPX::Root::get_singleton_ptr()->Renderer->end_scene();
 

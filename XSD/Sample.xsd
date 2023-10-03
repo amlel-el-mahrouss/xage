@@ -1,6 +1,6 @@
 #pragma begin
 
 #workingdir C:\Users\amlal\XGE\Samples-Wavefront\HighwayPatrol\
-#wavefront highway_patrol.xobj.xobj,highway_patrol.xobj.mtl
+#wavefront highway_patrol.xobj,highway_patrol.mtl
 
 #pragma end
