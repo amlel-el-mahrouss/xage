@@ -191,7 +191,7 @@ namespace XPX::Renderer
 								render->push_ambient(Color<float32>(mat.vAmbient.x, mat.vAmbient.y, mat.vAmbient.z, mat.fAlpha));
 								render->push_diffuse(Color<float32>(mat.vDiffuse.x, mat.vDiffuse.y, mat.vDiffuse.z, mat.fAlpha));
 
-								char tex[260];
+								char* tex = nullptr;
 
 								try
 								{
@@ -199,16 +199,31 @@ namespace XPX::Renderer
 
 									for (std::size_t index = 0UL; index < 4; ++index)
 									{
+										if (*paths[index] == 0)
+											continue;
+
+										tex = new char[260];
+										memset(tex, 0, wcslen(paths[index]));
+
+										if (!tex)
+											throw EngineError("Out of memory. (TGA)");
+
 										wcstombs(tex, paths[index], 260);
 
 										char path_tga[255];
+										memset(path_tga, 0, 255);
+
 										auto sz = wcstombs(path_tga, working_dir.c_str(), working_dir.size());
 
 										if (sz != working_dir.size())
 											continue;
 
 										String full_path_tga = path_tga;
-										full_path_tga += tex;
+										
+										for (auto i = 0UL; i < strlen(tex); ++i)
+										{
+											full_path_tga += tex[i];
+										}
 
 										auto header = LoadTarga32(full_path_tga.c_str());
 
@@ -222,11 +237,21 @@ namespace XPX::Renderer
 
 											params.push_back(params_image);
 										}
+
+										delete[] tex;
 									}
 								}
 								catch (...)
 								{
-									fmt::print("Can't load non Targa file: {}", tex);
+									if (tex)
+									{
+										fmt::print("Can't load non Targa file: {}", tex);
+										delete[] tex;
+									}
+									else
+									{
+										fmt::print("Something else happened! We don't know though.");
+									}
 								}
 							}
 						}

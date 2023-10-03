@@ -50,10 +50,7 @@ namespace XPX::Renderer
 		error = fopen_s(&filePtr, filename, "rb");
 
 		if (error != 0)
-		{
-			fclose(filePtr);
 			return {};
-		}
 
 		// Read in the file header.
 		count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
