@@ -431,6 +431,15 @@ namespace XPX::Renderer::DX11
 					{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
+		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
+
+		RENDERER->get().pDevice->CreateInputLayout(
+			input_layout, 
+			layout_size,
+			m_pLightVs->get().pBlob->GetBufferPointer(), 
+			m_pLightVs->get().pBlob->GetBufferSize(),
+			m_pInputLayout.GetAddressOf());
+
 		D3D11_SAMPLER_DESC samplerDesc{};
 
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
