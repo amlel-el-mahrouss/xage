@@ -181,7 +181,7 @@ namespace XPX::Renderer
 							{
 								if (mat.bSpecular)
 								{
-									render->push_ambient(Color<float32>
+									render->push_specular(Color<float32>
 										(mat.vSpecular.x, 
 										mat.vSpecular.y, 
 										mat.vSpecular.z, 
