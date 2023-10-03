@@ -73,7 +73,7 @@ namespace XPX::Renderer::DX11
 			float32 PADDING;
 		};
 
-		struct CBUFFER
+		struct __declspec(align(XPLICIT_DX_ALIGN)) CBUFFER
 		{
 			XMMATRIX VIEW;
 			XMMATRIX WORLD;
@@ -243,7 +243,7 @@ namespace XPX::Renderer::DX11
 	class XPLICIT_API LightSystemD3D11 final : public LightSystem
 	{
 	public:
-		explicit LightSystemD3D11();
+		explicit LightSystemD3D11(const std::size_t& verticesCount);
 		~LightSystemD3D11() override;
 
 	public:

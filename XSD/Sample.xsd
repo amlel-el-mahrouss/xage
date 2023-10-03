@@ -1,8 +1,5 @@
 #pragma begin
 
-#workingdir C:\Users\amlal\XGE\Samples-Wavefront\Sedan\
-#wavefront Sedan.xobj,Sedan.mtl
-
 #workingdir C:\Users\amlal\XGE\Samples-Wavefront\Teapot\
 #wavefront utah.xobj,utah.mtl
 

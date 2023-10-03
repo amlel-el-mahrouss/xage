@@ -408,7 +408,7 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd, width, height); 
 	}
 
-	LightSystemD3D11::LightSystemD3D11()
+	LightSystemD3D11::LightSystemD3D11(const std::size_t& verticesCount)
 		: m_pLightPs(nullptr), m_pLightVs(nullptr), 
 		m_pSamplerState(nullptr), m_hResult(S_OK),
 		m_pMatrixBuffer(nullptr), m_pLightBuffer(nullptr)
@@ -463,7 +463,7 @@ namespace XPX::Renderer::DX11
 		D3D11_BUFFER_DESC matrixBufferDesc{};
 
 		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		matrixBufferDesc.ByteWidth = sizeof(Details::VERTEX);
+		matrixBufferDesc.ByteWidth = sizeof(Details::VERTEX) * verticesCount;
 		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		matrixBufferDesc.MiscFlags = 0;

@@ -71,10 +71,8 @@ XPLICIT_MAIN()
 
 		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/XSD/Sample.xsd");
 		auto node = scene.get_scene_node(nodes[0]);
-		auto node_teapot = scene.get_scene_node(nodes[1]);
 
-		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11();
-		node_teapot->f_pSourceLight = node->f_pSourceLight;
+		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
 
 		node->f_pSourceLight->f_vDirection.X = 0.1;
 		node->f_pSourceLight->f_vDirection.Y = 0.1;
@@ -87,7 +85,7 @@ XPLICIT_MAIN()
 
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(0.1, 0, -100);
+		auto origin = XPX::Vector<float>(0.1, 0, -1000);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
@@ -105,7 +103,7 @@ XPLICIT_MAIN()
 
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
-			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
+			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.1, 0.1, 0.1, true, true);
 
 			scene.start_frame();
 
