@@ -1,5 +1,6 @@
 #pragma begin
 
-#wavefront C:\Users\amlal\XGE\Samples-Wavefront\Teapot/utah.xobj,C:\Users\amlal\XGE\Samples-Wavefront\Teapot/utah.mtl
+#workingdir C:\Users\amlal\XGE\Samples-Wavefront\HighwayPatrol/ 
+#wavefront highway_patrol.xobj,highway_patrol.mtl
 
 #pragma end

@@ -41,6 +41,7 @@ float4 PS(PIXEL input) : SV_TARGET
 
     // lighting = ambient + diffuse + specular
     float3 lighting = float3(0.3686, 0.3608, 0.3608); // color - black
+    
     // lighting = ambient;
     // lighting = ambient * 0.0 + diffuse;
     // lighting = ambient * 0.0 + diffuse * 0.0 + specular;
@@ -48,8 +49,9 @@ float4 PS(PIXEL input) : SV_TARGET
 
     // color = modelColor * lighting
     float4 modelColor = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
+    
     float4 color = modelColor;
-    color *= float4(lighting, 1.0);
+    color += float4(lighting, 1.0);
 
     return color;
 }

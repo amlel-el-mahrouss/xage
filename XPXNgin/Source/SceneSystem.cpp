@@ -110,6 +110,8 @@ namespace XPX::Renderer
 			PString input;
 			bool xage_begin = true;
 
+			PString working_dir = L"";
+
 			while (std::getline(xsd, input))
 			{
 				if (input.find(L"#pragma") != String::npos)
@@ -125,6 +127,13 @@ namespace XPX::Renderer
 
 				if (xage_begin)
 				{
+					if (const auto pos = input.find(L"#workingdir");
+						pos != String::npos)
+					{
+						working_dir = input.substr(pos + 1);
+						continue;
+					}
+
 					if (const auto pos = input.find(L"#wavefront");
 						pos != String::npos)
 					{
@@ -134,7 +143,13 @@ namespace XPX::Renderer
 
 						WaveFrontReader<wchar_t> wfReader;
 
-						HRESULT hr = wfReader.Load(substr_wave.c_str());
+						PString full_path = working_dir;
+						full_path += substr_wave.c_str();
+
+						if (!std::filesystem::exists(std::filesystem::path(full_path)))
+							continue;
+
+						HRESULT hr = wfReader.Load(full_path.c_str());
 						DX11::Details::ThrowIfFailed(hr);
 
 						auto render = scene->m_system->add<RenderableComponent>();
@@ -153,7 +168,11 @@ namespace XPX::Renderer
 
 						auto substr_wave_mtl = input.substr(input.find(L",") + 1);
 						
-						hr = wfReader.LoadMTL(substr_wave_mtl.c_str());
+
+						PString full_mtl_path = working_dir;
+						full_mtl_path += substr_wave_mtl;
+
+						hr = wfReader.LoadMTL(full_mtl_path.c_str());
 
 						std::vector<ImageDataParams> params;
 
@@ -172,22 +191,43 @@ namespace XPX::Renderer
 
 								render->push_ambient(Color<float32>(mat.vAmbient.x, mat.vAmbient.y, mat.vAmbient.z, mat.fAlpha));
 								render->push_diffuse(Color<float32>(mat.vDiffuse.x, mat.vDiffuse.y, mat.vDiffuse.z, mat.fAlpha));
-							
+
 								char tex[260];
 
-								wcstombs(tex, mat.strTexture, 260);
-
-								auto header = LoadTarga32(tex);
-
-								if (header)
+								try
 								{
-									ImageDataParams params_image{};
-									params_image.iHeight = header.f_sHeader.height;
-									params_image.iWidth = header.f_sHeader.width;
-									params_image.iStride = 4;
-									params_image.pImage = header.f_pImage;
+									const PChar* paths[4] = { mat.strEmissiveTexture, mat.strNormalTexture , mat.strSpecularTexture, mat.strTexture };
 
-									params.push_back(params_image);
+									for (std::size_t index = 0UL; index < 4; ++index)
+									{
+										wcstombs(tex, paths[index], 260);
+
+										char path_tga[255];
+										auto sz = wcstombs(path_tga, working_dir.c_str(), working_dir.size());
+
+										if (sz != working_dir.size())
+											continue;
+
+										String full_path_tga = path_tga;
+										full_path_tga += tex;
+
+										auto header = LoadTarga32(full_path_tga.c_str());
+
+										if (header)
+										{
+											ImageDataParams params_image{};
+											params_image.iHeight = header.f_sHeader.height;
+											params_image.iWidth = header.f_sHeader.width;
+											params_image.iStride = 4;
+											params_image.pImage = header.f_pImage;
+
+											params.push_back(params_image);
+										}
+									}
+								}
+								catch (...)
+								{
+									fmt::print("Can't load non Targa file: {}", tex);
 								}
 							}
 						}
@@ -196,6 +236,8 @@ namespace XPX::Renderer
 						render->make_mesh(params);
 
 						pSceneData->f_Nodes.push_back(render);
+
+						continue;
 					}
 				}
 			}

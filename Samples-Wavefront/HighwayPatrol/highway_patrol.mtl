@@ -18,8 +18,8 @@ Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 illum 2
-map_Kd 05_-_Default_baseColor.png
-map_d 05_-_Default_baseColor.png
+map_Kd 05_-_Default_baseColor.tga
+map_d 05_-_Default_baseColor.tga
 
 newmtl body
 Ns 946.275330
@@ -29,8 +29,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd lights_baseColor.jpg
-map_Bump -bm 1.000000 lights_normal.jpg
+map_Kd lights_baseColor.tga
+map_Bump -bm 1.000000 lights_normal.tga
 
 newmtl chrome
 Ns 865.423279
@@ -41,7 +41,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Bump -bm 1.000000 chrome_normal.jpg
+map_Bump -bm 1.000000 chrome_normal.tga
 
 newmtl glass
 Ns 922.806335
@@ -71,8 +71,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd lights_baseColor.jpg
-map_Bump -bm 1.000000 lights_normal.jpg
+map_Kd lights_baseColor.tga
+map_Bump -bm 1.000000 lights_normal.tga
 
 newmtl material
 Ns 21.707232
@@ -82,7 +82,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd material_baseColor.jpg
+map_Kd material_baseColor.tga
 
 newmtl ucb_bottom3_bump
 Ns 934.503967
@@ -92,5 +92,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd ucb_bottom3_bump_baseColor_scale0.jpg
-map_Bump -bm 1.000000 ucb_bottom3_bump_normal.jpg
+map_Kd ucb_bottom3_bump_baseColor_scale0.tga
+map_Bump -bm 1.000000 ucb_bottom3_bump_normal.tga

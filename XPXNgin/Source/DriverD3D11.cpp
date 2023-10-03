@@ -132,7 +132,7 @@ namespace XPX::Renderer::DX11
 			pAdapter->Release();
 			pFactory->Release();
 
-			throw EngineError("Driver (D3D11): out of memory!");
+			throw EngineError("DriverD3D11: out of memory!");
 		}
 
 		UINT i = 0U;
