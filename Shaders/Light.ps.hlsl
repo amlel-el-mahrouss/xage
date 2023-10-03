@@ -19,8 +19,9 @@ struct PIXEL
 
 cbuffer LIGHT
 {
-    float4 COLOR;
-    float3 DIR;
+    float4 AMBIENT_COLOR;
+    float4 DIFFUSE_COLOR;
+    float3 DIRECTION;
     float PADDING;
     float SPECULAR_POWER;
     float4 SPECULAR_COLOR;
@@ -31,14 +32,29 @@ float4 PS(PIXEL input) : SV_TARGET
     float4 textureColor;
     float3 lightDir;
     float lightIntensity;
+    float4 color;
+    float3 reflection;
+    float4 specular;
 
     textureColor = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
     textureColor *= gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    float3 halfwayDir = normalize(input.VIEW_DIR);
+    color = AMBIENT_COLOR;
+    specular = SPECULAR_COLOR;
     
-    float4 spec = pow(max(dot(input.NORMAL, halfwayDir), 0.0), 28.0);
-    float4 specular = textureColor * spec;
-    
-    return specular;
+    lightDir = -DIRECTION;
+    lightIntensity = saturate(dot(input.NORMAL, lightDir));
+
+    if (lightIntensity > 0.0f)
+    {
+        color += (DIFFUSE_COLOR * lightIntensity);
+        color = saturate(color);
+        reflection = normalize(2.0f * lightIntensity * input.NORMAL - lightDir);
+        specular = pow(saturate(dot(reflection, input.VIEW_DIR)), SPECULAR_POWER);
+    }
+
+    color = color * textureColor;
+    color = saturate(color + specular);
+
+    return color;
 }

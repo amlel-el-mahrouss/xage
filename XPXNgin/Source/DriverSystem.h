@@ -84,7 +84,8 @@ namespace XPX::Renderer
 		Vector<float> f_vDirection{ 0, 0, 0 };
 		Vector<float> f_vPosition{ 1, 1, 1 };
 		Color<float> f_cAmbient{ 1, 1, 1, 1 };
-		Color<float> f_cSpecular{ 1, 1, 1, 1 };
+		Color<float> f_cDiffuse{ 1, 1, 1, 1 };
+		Color<float> f_cSpecular{ 0, 0, 0, 0 };
 		float32 f_fPower{ 1 };
 
 	};

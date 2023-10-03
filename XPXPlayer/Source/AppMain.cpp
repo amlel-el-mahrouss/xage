@@ -74,19 +74,14 @@ XPLICIT_MAIN()
 
 		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
 
-		node->f_pSourceLight->f_vDirection.X = 100;
-		node->f_pSourceLight->f_vDirection.Y = 0;
-		node->f_pSourceLight->f_vDirection.Z = 1;
+		node->f_pSourceLight->f_vPosition.X = 0;
+		node->f_pSourceLight->f_vPosition.Y = 0;
+		node->f_pSourceLight->f_vPosition.Z = 0;
 
-		node->f_pSourceLight->f_cSpecular.R = 1.0;
-		node->f_pSourceLight->f_cSpecular.G = 1.0;
-		node->f_pSourceLight->f_cSpecular.B = 1.0;
-		node->f_pSourceLight->f_cSpecular.A = 1.0;
-
-		node->f_pSourceLight->f_cAmbient.R = 1.0;
-		node->f_pSourceLight->f_cAmbient.G = 1.0;
-		node->f_pSourceLight->f_cAmbient.B = 1.0;
-		node->f_pSourceLight->f_cAmbient.A = 1.0;
+		node->f_pSourceLight->f_cDiffuse.R = 1.0;
+		node->f_pSourceLight->f_cDiffuse.G = 1.0;
+		node->f_pSourceLight->f_cDiffuse.B = 1.0;
+		node->f_pSourceLight->f_cDiffuse.A = 1.0;
 
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 

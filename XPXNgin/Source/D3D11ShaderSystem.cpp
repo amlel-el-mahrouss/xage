@@ -184,11 +184,15 @@ namespace XPX::Renderer::DX11
 		light->SPECULAR_COLOR.y = component->f_cSpecular.G;
 		light->SPECULAR_COLOR.z = component->f_cSpecular.B;
 
+		light->DIFFUSE_COLOR.x = component->f_cDiffuse.R;
+		light->DIFFUSE_COLOR.y = component->f_cDiffuse.G;
+		light->DIFFUSE_COLOR.z = component->f_cDiffuse.B;
+
 		light->SPECULAR_POWER = component->f_fPower;
 
-		light->COLOR.x = component->f_cAmbient.R;
-		light->COLOR.y = component->f_cAmbient.G;
-		light->COLOR.z = component->f_cAmbient.B;
+		light->AMBIENT_COLOR.x = component->f_cAmbient.R;
+		light->AMBIENT_COLOR.y = component->f_cAmbient.G;
+		light->AMBIENT_COLOR.z = component->f_cAmbient.B;
 
 		light->DIRECTION.x = component->f_vDirection.X;
 		light->DIRECTION.y = component->f_vDirection.Y;
