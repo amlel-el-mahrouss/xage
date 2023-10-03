@@ -423,7 +423,7 @@ namespace XPX::Renderer::DX11
 		PString path_vertex = DIR;
 		path_vertex += L"Shaders/Light.vs.hlsl";
 
-		m_pLightPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", RENDERER);
+		m_pLightVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", RENDERER);
 
 		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
 					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
