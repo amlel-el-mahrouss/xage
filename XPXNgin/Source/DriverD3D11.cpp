@@ -801,19 +801,24 @@ namespace XPX::Renderer::DX11
 			textures.push_back(tex->m_pTextureView.Get());
 		}
 
-		self->m_pTextureShader->update(self);
-
-		self->m_pVertexShader->update(self);
-
-		self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
-
-		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
-
-		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
-
 		if (self->f_pSourceLight)
 		{
+			self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
+
 			self->f_pSourceLight->update(self->m_iIndices);
+		}
+		else
+		{
+			self->m_pTextureShader->update(self);
+
+			self->m_pVertexShader->update(self);
+
+			self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
+
+			self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
+
+			self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
+
 		}
 	}
 

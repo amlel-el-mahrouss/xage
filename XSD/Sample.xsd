@@ -1,6 +1,6 @@
 #pragma begin
 
-#workingdir C:\Users\amlal\XGE\Samples-Wavefront\SanMiguel\
-#wavefront sibenik.xobj,sibenik.mtl
+#workingdir C:\Users\amlal\Desktop\cube-ahh\
+#wavefront cube.xobj,default.mtl
 
 #pragma end
