@@ -69,15 +69,15 @@ XPLICIT_MAIN()
 
 		scene.f_meshLoader = new XPX::Renderer::SceneLoaderXSD();
 
-		auto nodes = scene.add_scene_node("C:/Users/amlal/XGE/XSD/Sample.xsd");
+		auto nodes = scene.add_scene_node("C:/Users/amlal/XAGE/XSD/Sample.xsd");
 
 		auto node = scene.get_scene_node(nodes[0]);
 
 		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
 
-		node->f_pSourceLight->f_vDirection.X = 1.0;
+		node->f_pSourceLight->f_vDirection.X = 0;
 		node->f_pSourceLight->f_vDirection.Y = 0;
-		node->f_pSourceLight->f_vDirection.Z = 0;
+		node->f_pSourceLight->f_vDirection.Z = 1.0;
 
 		node->f_pSourceLight->f_vPosition.X = 0;
 		node->f_pSourceLight->f_vPosition.Y = 0;
@@ -86,18 +86,18 @@ XPLICIT_MAIN()
 		node->f_pSourceLight->f_cAmbient.R = 0.6;
 		node->f_pSourceLight->f_cAmbient.G = 0.6;
 		node->f_pSourceLight->f_cAmbient.B = 0.6;
-		node->f_pSourceLight->f_cAmbient.A = 0.6;
+		node->f_pSourceLight->f_cAmbient.A = 0.5;
 
 		node->f_pSourceLight->f_cDiffuse.R = 1;
-		node->f_pSourceLight->f_cDiffuse.G = 1;
-		node->f_pSourceLight->f_cDiffuse.B = 1;
+		node->f_pSourceLight->f_cDiffuse.G = 0;
+		node->f_pSourceLight->f_cDiffuse.B = 0;
 		node->f_pSourceLight->f_cDiffuse.A = 1;
 
-		node->f_pSourceLight->f_fPower = 32.0;
+		node->f_pSourceLight->f_fPower = 8.0;
 
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(0, 0, -100);
+		auto origin = XPX::Vector<float>(0, 0, -1000);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
@@ -122,11 +122,11 @@ XPLICIT_MAIN()
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.1, 0.1, 0.1, true, true);
 
-			scene.start_frame();
-
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 
 			XPX::EventSystem::get_singleton_ptr()->update();
+
+			scene.start_frame();
 
 			scene.end_frame();
 

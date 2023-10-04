@@ -774,7 +774,7 @@ namespace XPX::Renderer::DX11
 
 		self->m_pDriver->get().pContext->RSSetState(self->m_pDriver->get().pRasterState.Get());
 
-		const uint32_t stride = { sizeof(Details::VERTEX) };
+		const uint32_t stride = (uint32_t)(sizeof(Details::VERTEX));
 		const uint32_t offset = { 0u };
 
 		self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
@@ -782,13 +782,6 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pContext->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
 			self->m_pDriver->get().pRenderTarget.GetAddressOf(),
 			self->m_pDriver->get().pDepthStencil.Get());
-
-		self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-		self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt,
-			self->m_pVertexBuffer.GetAddressOf(),
-			&stride,
-			&offset);
 
 		self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
 
@@ -801,6 +794,13 @@ namespace XPX::Renderer::DX11
 			textures.push_back(tex->m_pTextureView.Get());
 		}
 
+		self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+		self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt,
+			self->m_pVertexBuffer.GetAddressOf(),
+			&stride,
+			&offset);
+
 		if (self->f_pSourceLight)
 		{
 			self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
@@ -810,16 +810,16 @@ namespace XPX::Renderer::DX11
 		else
 		{
 			self->m_pTextureShader->update(self);
-
-			self->m_pVertexShader->update(self);
-
-			self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
-
-			self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
-
-			self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
-
 		}
+
+		self->m_pVertexShader->update(self);
+
+		self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
+
+		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
+
+		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
+
 	}
 
 	const size_t& RenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }

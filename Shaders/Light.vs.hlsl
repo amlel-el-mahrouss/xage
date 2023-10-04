@@ -11,7 +11,7 @@ cbuffer CBUFFER
     matrix PROJECTION;
 };
 
-cbuffer CameraBuffer
+cbuffer CBUFFER_CAM
 {
     float3 POS;
     float PAD;
@@ -37,7 +37,7 @@ PIXEL VS(VERTEX input)
     PIXEL output;
     float4 worldPosition;
     
-    input.POSITION.w = 0.0;
+    input.POSITION.w = 1.0;
 
     output.POSITION = mul(input.POSITION, WORLD);
     output.POSITION = mul(output.POSITION, VIEW);
