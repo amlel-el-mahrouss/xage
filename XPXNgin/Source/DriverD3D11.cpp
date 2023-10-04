@@ -692,7 +692,7 @@ namespace XPX::Renderer::DX11
 		if (FAILED(m_hResult))
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create(CreateBuffer(m_pIndexBuffer))");
 
-		D3D11_BUFFER_DESC matrixBufferDesc;
+		D3D11_BUFFER_DESC matrixBufferDesc{};
 
 		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 		matrixBufferDesc.ByteWidth = sizeof(Details::CBUFFER);
@@ -787,6 +787,12 @@ namespace XPX::Renderer::DX11
 			self->m_pDriver->get().pRenderTarget.GetAddressOf(),
 			self->m_pDriver->get().pDepthStencil.Get());
 
+		self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+		self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
+
+		self->m_pVertexShader->update_render_shader(self);
+
 		std::vector<ID3D11ShaderResourceView*> textures;
 
 		for (auto& tex : self->f_vTextures)
@@ -794,7 +800,18 @@ namespace XPX::Renderer::DX11
 			textures.push_back(tex->m_pTextureView.Get());
 		}
 
-		self->f_pSourceLight->update(self->m_iIndices);
+		self->m_pTextureShader->update(self);
+
+		self->m_pVertexShader->update(self);
+
+		self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
+
+		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
+
+		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
+
+		if (self->f_pSourceLight)
+			self->f_pSourceLight->update(self->m_iIndices);
 	}
 
 	const size_t& RenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }
