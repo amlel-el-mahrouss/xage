@@ -16,7 +16,6 @@ struct PIXEL
     float4 POSITION : SV_POSITION;
     float2 TEXTURE : TEXCOORD0;
     float3 AMBIENT : COLOR0;
-    float3 SPECULAR : COLOR1;
 };
 
 struct VERTEX

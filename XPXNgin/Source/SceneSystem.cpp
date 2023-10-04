@@ -140,7 +140,7 @@ namespace XPX::Renderer
 						substr_wave.erase(substr_wave.find(L"#wavefront"), strlen("#wavefront"));
 						substr_wave.erase(substr_wave.find(L" "), strlen(" "));
 
-						WaveFrontReader<wchar_t> wfReader;
+						WaveFrontReader<uint32_t> wfReader;
 
 						PString full_path = working_dir;
 						full_path += substr_wave.c_str();
@@ -148,26 +148,11 @@ namespace XPX::Renderer
 						if (!std::filesystem::exists(std::filesystem::path(full_path)))
 							continue;
 
-						HRESULT hr = wfReader.Load(full_path.c_str());
+						HRESULT hr = wfReader.Load(full_path.c_str(), false);
 						DX11::Details::ThrowIfFailed(hr);
-
-						auto render = scene->m_system->add<RenderableComponent>();
-						
-						for (auto& vert : wfReader.vertices)
-						{
-							render->push_vertice(Vector<float>(vert.position.x, vert.position.y, vert.position.z));
-							render->push_normal(Vector<float>(vert.normal.x, vert.normal.y, vert.normal.z));
-							render->push_texture_coord(Vector<float>(vert.textureCoordinate.x, vert.textureCoordinate.y, 0));
-						}
-
-						for (auto& indice : wfReader.indices)
-						{
-							render->push_indice(indice);
-						}
 
 						auto substr_wave_mtl = input.substr(input.find(L",") + 1);
 						
-
 						PString full_mtl_path = working_dir;
 						full_mtl_path += substr_wave_mtl;
 
@@ -177,13 +162,24 @@ namespace XPX::Renderer
 
 						if (SUCCEEDED(hr))
 						{
-							for (auto& mat : wfReader.materials)
+							auto render = scene->m_system->add<RenderableComponent>();
+
+							for (auto& vert : wfReader.vertices)
 							{
+								render->push_vertice(Vector<float>(vert.position.x, vert.position.y, vert.position.z));
+								render->push_normal(Vector<float>(vert.normal.x, vert.normal.y, vert.normal.z));
+								render->push_texture_coord(Vector<float>(vert.textureCoordinate.x, vert.textureCoordinate.y, 0));
+							}
+
+							for (size_t index = 0; index < wfReader.materials.size(); ++index)
+							{
+								auto& mat = wfReader.materials[index];
+
 								if (mat.bSpecular)
 								{
-									render->push_specular(Color<float32>(mat.vSpecular.x, 
-										mat.vSpecular.y, 
-										mat.vSpecular.z, 
+									render->push_specular(Color<float32>(mat.vSpecular.x,
+										mat.vSpecular.y,
+										mat.vSpecular.z,
 										mat.fAlpha));
 								}
 
@@ -194,9 +190,9 @@ namespace XPX::Renderer
 
 								try
 								{
-									const PChar* paths[2] = { mat.strTexture, mat.strEmissiveTexture };
+									const PChar* paths[4] = { mat.strNormalTexture, mat.strTexture, mat.strSpecularTexture, mat.strEmissiveTexture };
 
-									for (std::size_t index = 0UL; index < 2; ++index)
+									for (std::size_t index = 0UL; index < 4; ++index)
 									{
 										if (*paths[index] == 0)
 											continue;
@@ -218,7 +214,7 @@ namespace XPX::Renderer
 											continue;
 
 										String full_path_tga = path_tga;
-										
+
 										for (auto i = 0UL; i < strlen(tex); ++i)
 										{
 											full_path_tga += tex[i];
@@ -228,7 +224,7 @@ namespace XPX::Renderer
 
 										if (header)
 										{
-											ImageDataParams params_image{};
+											static ImageDataParams params_image{};
 											params_image.iHeight = header.f_sHeader.height;
 											params_image.iWidth = header.f_sHeader.width;
 											params_image.iStride = 4;
@@ -253,12 +249,17 @@ namespace XPX::Renderer
 									}
 								}
 							}
+
+							for (auto& indice : wfReader.indices)
+							{
+								render->push_indice(indice);
+							}
+
+							render->set_driver(scene->m_driver);
+							render->make_mesh(params);
+
+							pSceneData->f_Nodes.push_back(render);
 						}
-
-						render->set_driver(scene->m_driver);
-						render->make_mesh(params);
-
-						pSceneData->f_Nodes.push_back(render);
 
 						continue;
 					}

@@ -166,6 +166,7 @@ namespace XPX::Renderer::DX11
 		Details::CAMERA_POS* pos = (Details::CAMERA_POS*)mr.pData;
 
 		pos->PADDING = 0.0f;
+
 		pos->POSITION.x = component->f_vPosition.X;
 		pos->POSITION.y = component->f_vPosition.Y;
 		pos->POSITION.z = component->f_vPosition.Z;
