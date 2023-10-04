@@ -524,12 +524,6 @@ namespace XPX::Renderer::DX11
 
 		m_pLightVs->update(this);
 		m_pLightPs->update(this);
-
-		RENDERER->get().pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		RENDERER->get().pContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
-
-		RENDERER->get().pContext->DrawIndexed(indexCount, 0, 0);
 	}
 
 	RenderableComponentD3D11::RenderableComponentD3D11() noexcept
@@ -810,9 +804,9 @@ namespace XPX::Renderer::DX11
 
 		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
 
-		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
-
 		self->f_pSourceLight->update(self->m_iIndices);
+
+		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
 	const size_t& RenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }

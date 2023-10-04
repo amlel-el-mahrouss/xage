@@ -58,7 +58,7 @@ namespace XPX::Renderer::DX11
 
 	namespace Details
 	{
-		struct __declspec(align(XPLICIT_DX_ALIGN)) VERTEX
+		struct VERTEX
 		{
 			XMFLOAT4 POSITION;
 			XMFLOAT2 TEXCOORD;
@@ -66,13 +66,13 @@ namespace XPX::Renderer::DX11
 			XMFLOAT3 AMBIENT;
 		};
 
-		struct __declspec(align(XPLICIT_DX_ALIGN)) CAMERA_POS
+		struct CAMERA_POS
 		{
 			XMFLOAT3 POSITION;
 			float32 PADDING;
 		};
 
-		struct __declspec(align(XPLICIT_DX_ALIGN)) LIGHT
+		struct LIGHT
 		{
 			XMFLOAT4 AMBIENT_COLOR;
 			XMFLOAT4 DIFFUSE_COLOR;
@@ -83,7 +83,7 @@ namespace XPX::Renderer::DX11
 			XMFLOAT3 SPECULAR_COLOR;
 		};
 
-		struct __declspec(align(XPLICIT_DX_ALIGN)) CBUFFER
+		struct CBUFFER
 		{
 			XMMATRIX VIEW;
 			XMMATRIX WORLD;

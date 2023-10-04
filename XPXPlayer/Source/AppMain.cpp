@@ -73,7 +73,7 @@ XPLICIT_MAIN()
 
 		auto node = scene.get_scene_node(nodes[0]);
 
-		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
+		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11();
 
 		node->f_pSourceLight->f_vDirection.X = 0;
 		node->f_pSourceLight->f_vDirection.Y = 0;
