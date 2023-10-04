@@ -32,12 +32,17 @@ float4 PS(PIXEL input) : SV_TARGET
     float4 tex = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
     tex *= gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
     
+    float4 ambient = 0.7 * AMBIENT_COLOR;
+    
     float3 lightDir = normalize(DIRECTION - input.POSITION.xyz);
     float3 viewDir = normalize(input.VIEW_DIR - input.POSITION.xyz);
     float3 halfwayDir = normalize(lightDir + input.VIEW_DIR);
     
-    float spec = pow(max(dot(input.NORMAL, halfwayDir), 0.0), SPECULAR_POWER);
-    float3 specular = DIFFUSE_COLOR * spec;
+    float4 spec = pow(max(dot(input.NORMAL, halfwayDir), 0.0), SPECULAR_POWER);
     
-    return tex * float4(specular, 1.0) * AMBIENT_COLOR * DIFFUSE_COLOR;
+    float diff = max(dot(input.VIEW_DIR, input.NORMAL), 0.0);
+
+    float4 diffuse = tex * diff;
+    
+    return tex * spec * ambient * diffuse;
 }
