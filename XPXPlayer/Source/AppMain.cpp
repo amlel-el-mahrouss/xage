@@ -74,14 +74,25 @@ XPLICIT_MAIN()
 
 		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
 
+		node->f_pSourceLight->f_vDirection.X = 0;
+		node->f_pSourceLight->f_vDirection.Y = 0;
+		node->f_pSourceLight->f_vDirection.Z = 0;
+
 		node->f_pSourceLight->f_vPosition.X = 0;
-		node->f_pSourceLight->f_vPosition.Y = 0;
+		node->f_pSourceLight->f_vPosition.Y = -1;
 		node->f_pSourceLight->f_vPosition.Z = 0;
 
+		node->f_pSourceLight->f_cAmbient.R = 1.0;
+		node->f_pSourceLight->f_cAmbient.G = 0;
+		node->f_pSourceLight->f_cAmbient.B = 0;
+		node->f_pSourceLight->f_cAmbient.A = 1.0;
+
 		node->f_pSourceLight->f_cDiffuse.R = 1.0;
-		node->f_pSourceLight->f_cDiffuse.G = 1.0;
-		node->f_pSourceLight->f_cDiffuse.B = 1.0;
+		node->f_pSourceLight->f_cDiffuse.G = 0;
+		node->f_pSourceLight->f_cDiffuse.B = 0;
 		node->f_pSourceLight->f_cDiffuse.A = 1.0;
+
+		node->f_pSourceLight->f_fPower = 32.0;
 
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
@@ -94,9 +105,9 @@ XPLICIT_MAIN()
 
 		while (ret != WM_QUIT)
 		{
-			node->set_rotation(XPX::Quaternion<XPX::float32>(-rot, rot, -rot));
+			node->set_rotation(XPX::Quaternion<XPX::float32>(0, rot, 0));
 
-			rot += 0.001;
+			rot -= 0.0174532925f * 0.25f;
 
 			if (rot > 360)
 				rot = 0;

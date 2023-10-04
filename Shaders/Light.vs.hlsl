@@ -48,7 +48,7 @@ PIXEL VS(VERTEX input)
     output.NORMAL = mul(input.NORMAL, (float3x3)WORLD);
     output.NORMAL = normalize(output.NORMAL);
     
-    WORLD = mul(input.POSITION, WORLD);
+    worldPosition = mul(input.POSITION, WORLD);
 
     output.VIEWDIR = POS.xyz - worldPosition.xyz;
 	

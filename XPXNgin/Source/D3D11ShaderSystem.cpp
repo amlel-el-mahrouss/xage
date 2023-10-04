@@ -165,7 +165,7 @@ namespace XPX::Renderer::DX11
 
 		Details::CAMERA_POS* pos = (Details::CAMERA_POS*)mr.pData;
 
-		pos->PADDING = 1.0f;
+		pos->PADDING = 0.0f;
 		pos->POSITION.x = component->f_vPosition.X;
 		pos->POSITION.y = component->f_vPosition.Y;
 		pos->POSITION.z = component->f_vPosition.Z;
@@ -173,6 +173,10 @@ namespace XPX::Renderer::DX11
 		RENDERER->get().pContext->Unmap(
 			component->m_pCameraBuffer.Get(),
 			0);
+
+		cBufferCnt = 1;
+
+		RENDERER->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pCameraBuffer.GetAddressOf());
 
 		hr = RENDERER->get().pContext->Map(component->m_pLightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
@@ -197,8 +201,6 @@ namespace XPX::Renderer::DX11
 		light->DIRECTION.x = component->f_vDirection.X;
 		light->DIRECTION.y = component->f_vDirection.Y;
 		light->DIRECTION.z = component->f_vDirection.Z;
-
-		light->PADDING = 0.0f;
 
 		cBufferCnt = 0U;
 

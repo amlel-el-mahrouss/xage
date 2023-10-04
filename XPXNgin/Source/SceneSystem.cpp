@@ -181,8 +181,7 @@ namespace XPX::Renderer
 							{
 								if (mat.bSpecular)
 								{
-									render->push_specular(Color<float32>
-										(mat.vSpecular.x, 
+									render->push_specular(Color<float32>(mat.vSpecular.x, 
 										mat.vSpecular.y, 
 										mat.vSpecular.z, 
 										mat.fAlpha));
@@ -195,7 +194,7 @@ namespace XPX::Renderer
 
 								try
 								{
-									const PChar* paths[2] = { mat.strTexture, mat.strNormalTexture };
+									const PChar* paths[2] = { mat.strTexture, mat.strEmissiveTexture };
 
 									for (std::size_t index = 0UL; index < 2; ++index)
 									{

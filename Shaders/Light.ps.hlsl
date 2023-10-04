@@ -14,7 +14,7 @@ struct PIXEL
     float4 POSITION : SV_POSITION;
     float2 TEXTURE : TEXCOORD0;
     float3 NORMAL : NORMAL;
-    float3 VIEW_DIR : TEXCOORD0;
+    float3 VIEW_DIR : TEXCOORD1;
 };
 
 cbuffer LIGHT
@@ -54,7 +54,7 @@ float4 PS(PIXEL input) : SV_TARGET
     }
 
     color = color * textureColor;
-    color = saturate(color + specular);
+    color = saturate(color * specular);
 
     return color;
 }

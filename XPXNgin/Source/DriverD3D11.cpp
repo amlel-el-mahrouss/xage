@@ -479,7 +479,7 @@ namespace XPX::Renderer::DX11
 		D3D11_BUFFER_DESC lightBufferDesc{};
 	
 		lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		lightBufferDesc.ByteWidth = sizeof(Details::LIGHT);
+		lightBufferDesc.ByteWidth = sizeof(Details::LIGHT) * verticesCount;
 		lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		lightBufferDesc.MiscFlags = 0;
@@ -494,7 +494,7 @@ namespace XPX::Renderer::DX11
 		D3D11_BUFFER_DESC cameraBufferDesc{};
 
 		cameraBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		cameraBufferDesc.ByteWidth = sizeof(Details::CAMERA_POS);
+		cameraBufferDesc.ByteWidth = sizeof(Details::CAMERA_POS) * verticesCount;
 		cameraBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		cameraBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		cameraBufferDesc.MiscFlags = 0;
@@ -518,19 +518,12 @@ namespace XPX::Renderer::DX11
 
 	void LightSystemD3D11::update(const std::size_t indexCount) noexcept
 	{
-		RENDERER->get().pContext->RSSetState(RENDERER->get().pRasterState.Get());
-
-		RENDERER->get().pContext->VSSetConstantBuffers(0, 1, this->m_pMatrixBuffer.GetAddressOf());
-		RENDERER->get().pContext->PSSetConstantBuffers(0, 1, this->m_pLightBuffer.GetAddressOf());
-
-		RENDERER->get().pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		RENDERER->get().pContext->IASetInputLayout(m_pInputLayout.Get());
-
 		m_pLightPs->update_light_shader(this);
 
-		m_pLightPs->update(this);
+
+		RENDERER->get().pContext->IASetInputLayout(m_pInputLayout.Get());
 		m_pLightVs->update(this);
+		m_pLightPs->update(this);
 
 		RENDERER->get().pContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
 
