@@ -1,6 +1,6 @@
 #pragma begin
 
-#workingdir C:\Users\amlal\XGE\Samples-Wavefront\Sedan\
-#wavefront Sedan.xobj,Sedan.mtl
+#workingdir C:\Users\amlal\XGE\Samples-Wavefront\GenericPolice\
+#wavefront GenericPolice.xobj,GenericPolice.mtl
 
 #pragma end
