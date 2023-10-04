@@ -408,7 +408,7 @@ namespace XPX::Renderer::DX11
 		return std::make_unique<DriverSystemD3D11>(hwnd, width, height); 
 	}
 
-	LightSystemD3D11::LightSystemD3D11()
+	LightSystemD3D11::LightSystemD3D11(const std::size_t& verts)
 		: m_pLightPs(nullptr), m_pLightVs(nullptr), 
 		m_pSamplerState(nullptr), m_hResult(S_OK),
 		m_pMatrixBuffer(nullptr), m_pLightBuffer(nullptr),
@@ -464,7 +464,7 @@ namespace XPX::Renderer::DX11
 		D3D11_BUFFER_DESC matrixBufferDesc{};
 
 		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		matrixBufferDesc.ByteWidth = sizeof(Details::VERTEX);
+		matrixBufferDesc.ByteWidth = sizeof(Details::VERTEX) * verts;
 		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		matrixBufferDesc.MiscFlags = 0;
@@ -479,7 +479,7 @@ namespace XPX::Renderer::DX11
 		D3D11_BUFFER_DESC lightBufferDesc{};
 	
 		lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		lightBufferDesc.ByteWidth = sizeof(Details::LIGHT);
+		lightBufferDesc.ByteWidth = sizeof(Details::LIGHT) * verts;
 		lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		lightBufferDesc.MiscFlags = 0;
@@ -494,7 +494,7 @@ namespace XPX::Renderer::DX11
 		D3D11_BUFFER_DESC cameraBufferDesc{};
 
 		cameraBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		cameraBufferDesc.ByteWidth = sizeof(Details::CAMERA_POS);
+		cameraBufferDesc.ByteWidth = sizeof(Details::CAMERA_POS) * verts;
 		cameraBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		cameraBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		cameraBufferDesc.MiscFlags = 0;
@@ -518,12 +518,16 @@ namespace XPX::Renderer::DX11
 
 	void LightSystemD3D11::update(const std::size_t indexCount) noexcept
 	{
-		m_pLightVs->update_light_shader(this);
+		m_pLightPs->update_light_shader(this);
 
 		RENDERER->get().pContext->IASetInputLayout(m_pInputLayout.Get());
 
 		m_pLightVs->update(this);
 		m_pLightPs->update(this);
+
+		RENDERER->get().pContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
+
+		RENDERER->get().pContext->DrawIndexed(indexCount, 0, 0);
 	}
 
 	RenderableComponentD3D11::RenderableComponentD3D11() noexcept
@@ -783,12 +787,6 @@ namespace XPX::Renderer::DX11
 			self->m_pDriver->get().pRenderTarget.GetAddressOf(),
 			self->m_pDriver->get().pDepthStencil.Get());
 
-		self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-		self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
-
-		self->m_pVertexShader->update_render_shader(self);
-
 		std::vector<ID3D11ShaderResourceView*> textures;
 
 		for (auto& tex : self->f_vTextures)
@@ -796,17 +794,7 @@ namespace XPX::Renderer::DX11
 			textures.push_back(tex->m_pTextureView.Get());
 		}
 
-		self->m_pTextureShader->update(self);
-
-		self->m_pVertexShader->update(self);
-
-		self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
-
-		self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
-
 		self->f_pSourceLight->update(self->m_iIndices);
-
-		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
 	}
 
 	const size_t& RenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }
