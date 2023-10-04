@@ -29,38 +29,15 @@ cbuffer LIGHT
 
 float4 PS(PIXEL input) : SV_TARGET
 {
- // ambient lighting (global illuminance)
-    float3 ambient = float3(0.6, 0.6, 0.6); // color - grey
-
-    // diffuse (lambertian) lighting
-    // lightColor, lightSource, normal, diffuseStrength
-    float3 normal = input.NORMAL;
-    float3 lightColor = DIFFUSE_COLOR; // color - white
-    float3 lightSource = input.POSITION.xyz - DIRECTION; // coord - (1, 0, 0)
-    float diffuseStrength = max(0.1, dot(lightSource, normal));
-    float3 diffuse = diffuseStrength * lightColor;
-
-    // specular light
-    // lightColor, lightSource, normal, specularStrength, viewSource
-    float3 cameraSource = input.POSITION.xyz;
-    float3 viewSource = normalize(cameraSource);
-    float3 reflectSource = normalize(reflect(-lightSource, normal));
-    float specularStrength = max(0.01, dot(viewSource, reflectSource));
-    specularStrength = pow(specularStrength, SPECULAR_POWER);
-    float3 specular = specularStrength * lightColor;
-
-    // lighting = ambient + diffuse + specular
-    float3 lighting = SPECULAR_COLOR.xyz; // color - black
-    // lighting = ambient;
-    // lighting = ambient * 0.0 + diffuse;
-    // lighting = ambient * 0.0 + diffuse * 0.0 + specular;
-    lighting = ambient * .5 + ((diffuse / 6.0) * (diffuse / 4.0) + (diffuse / 2.0)) + specular * 0.5;
-
-    // color = modelColor * lighting
-    float3 modelColor = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
-    modelColor *= gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
+    float4 tex = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
+    tex *= gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    float3 color = modelColor * lighting;
-
-    return float4(color, 1.0);
+    float3 lightDir = normalize(DIRECTION - input.POSITION.xyz);
+    float3 viewDir = normalize(input.VIEW_DIR - input.POSITION.xyz);
+    float3 halfwayDir = normalize(lightDir + input.VIEW_DIR);
+    
+    float spec = pow(max(dot(input.NORMAL, halfwayDir), 0.0), SPECULAR_POWER);
+    float3 specular = DIFFUSE_COLOR * spec;
+    
+    return tex * float4(specular, 1.0) * AMBIENT_COLOR * DIFFUSE_COLOR;
 }

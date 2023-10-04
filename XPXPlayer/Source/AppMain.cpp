@@ -75,29 +75,29 @@ XPLICIT_MAIN()
 
 		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
 
-		node->f_pSourceLight->f_vDirection.X = 1;
-		node->f_pSourceLight->f_vDirection.Y = 10;
-		node->f_pSourceLight->f_vDirection.Z = 1;
+		node->f_pSourceLight->f_vDirection.X = 0;
+		node->f_pSourceLight->f_vDirection.Y = 100;
+		node->f_pSourceLight->f_vDirection.Z = 0;
 
 		node->f_pSourceLight->f_vPosition.X = 0;
 		node->f_pSourceLight->f_vPosition.Y = 0;
 		node->f_pSourceLight->f_vPosition.Z = 0;
 
-		node->f_pSourceLight->f_cAmbient.R = 1;
-		node->f_pSourceLight->f_cAmbient.G = 1;
-		node->f_pSourceLight->f_cAmbient.B = 1;
-		node->f_pSourceLight->f_cAmbient.A = 1;
+		node->f_pSourceLight->f_cAmbient.R = 0.2;
+		node->f_pSourceLight->f_cAmbient.G = 0.2;
+		node->f_pSourceLight->f_cAmbient.B = 0.2;
+		node->f_pSourceLight->f_cAmbient.A = 0.6;
 
 		node->f_pSourceLight->f_cDiffuse.R = 1;
-		node->f_pSourceLight->f_cDiffuse.G = 0;
-		node->f_pSourceLight->f_cDiffuse.B = 0;
+		node->f_pSourceLight->f_cDiffuse.G = 1;
+		node->f_pSourceLight->f_cDiffuse.B = 1;
 		node->f_pSourceLight->f_cDiffuse.A = 1;
 
-		node->f_pSourceLight->f_fPower = 32.0;
+		node->f_pSourceLight->f_fPower = 8.0;
 
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(1, 1, -1000);
+		auto origin = XPX::Vector<float>(1, 1, -10);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
