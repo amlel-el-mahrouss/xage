@@ -134,79 +134,84 @@ namespace XPX::Renderer::DX11
 
 		unsigned int cBufferCnt = 0U;
 
-		auto transPoseWorldMatrix = XMMatrixTranspose(RENDERER->get().WorldMatrix);
-		auto transPoseViewMatrix = XMMatrixTranspose(RENDERER->get().pCamera->m_viewMatrix);
-		auto transPoseProjectionMatrix = XMMatrixTranspose(RENDERER->get().ProjectionMatrix);
+		if ((XPLICIT_SHADER_TYPE)m_type == XPLICIT_SHADER_TYPE::Vertex)
+		{
+			auto transPoseWorldMatrix = XMMatrixTranspose(RENDERER->get().WorldMatrix);
+			auto transPoseViewMatrix = XMMatrixTranspose(RENDERER->get().pCamera->m_viewMatrix);
+			auto transPoseProjectionMatrix = XMMatrixTranspose(RENDERER->get().ProjectionMatrix);
 
-		HRESULT hr = RENDERER->get().pContext->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+			HRESULT hr = RENDERER->get().pContext->Map(component->m_pMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
-		Details::ThrowIfFailed(hr);
+			Details::ThrowIfFailed(hr);
 
-		cBuffer = (Details::CBUFFER*)mappedResource.pData;
+			cBuffer = (Details::CBUFFER*)mappedResource.pData;
 
-		cBufferCnt = (sizeof(Details::CBUFFER) / sizeof(cBuffer[0]));
+			cBufferCnt = (sizeof(Details::CBUFFER) / sizeof(cBuffer[0]));
 
-		cBuffer->PROJECTION = transPoseProjectionMatrix;
-		cBuffer->WORLD = transPoseWorldMatrix;
-		cBuffer->VIEW = transPoseViewMatrix;
+			cBuffer->PROJECTION = transPoseProjectionMatrix;
+			cBuffer->WORLD = transPoseWorldMatrix;
+			cBuffer->VIEW = transPoseViewMatrix;
 
-		cBufferCnt = 0U;
+			cBufferCnt = 0U;
 
-		RENDERER->get().pContext->Unmap(component->m_pMatrixBuffer.Get(), 0);
-		RENDERER->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
+			RENDERER->get().pContext->Unmap(component->m_pMatrixBuffer.Get(), 0);
+			RENDERER->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pMatrixBuffer.GetAddressOf());
 
-		D3D11_MAPPED_SUBRESOURCE mr{};
+			D3D11_MAPPED_SUBRESOURCE mr{};
 
-		hr = RENDERER->get().pContext->Map(component->m_pCameraBuffer.Get(),
-			0,
-			D3D11_MAP_WRITE_DISCARD, 0, &mr);
+			hr = RENDERER->get().pContext->Map(component->m_pCameraBuffer.Get(),
+				0,
+				D3D11_MAP_WRITE_DISCARD, 0, &mr);
 
-		Details::ThrowIfFailed(hr);
+			Details::ThrowIfFailed(hr);
 
-		Details::CAMERA_POS* pos = (Details::CAMERA_POS*)mr.pData;
+			Details::CAMERA_POS* pos = (Details::CAMERA_POS*)mr.pData;
 
-		pos->PADDING = 0.0f;
+			pos->PADDING = 0.0f;
 
-		pos->POSITION.x = component->f_vPosition.X;
-		pos->POSITION.y = component->f_vPosition.Y;
-		pos->POSITION.z = component->f_vPosition.Z;
+			pos->POSITION.x = component->f_vPosition.X;
+			pos->POSITION.y = component->f_vPosition.Y;
+			pos->POSITION.z = component->f_vPosition.Z;
 
-		RENDERER->get().pContext->Unmap(
-			component->m_pCameraBuffer.Get(),
-			0);
+			RENDERER->get().pContext->Unmap(
+				component->m_pCameraBuffer.Get(),
+				0);
 
-		cBufferCnt = 1;
+			cBufferCnt = 1;
 
-		RENDERER->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pCameraBuffer.GetAddressOf());
+			RENDERER->get().pContext->VSSetConstantBuffers(cBufferCnt, 1, component->m_pCameraBuffer.GetAddressOf());
+		}
+		else
+		{
+			HRESULT	hr = RENDERER->get().pContext->Map(component->m_pLightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
-		hr = RENDERER->get().pContext->Map(component->m_pLightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+			Details::ThrowIfFailed(hr);
 
-		Details::ThrowIfFailed(hr);
+			Details::LIGHT* light = (Details::LIGHT*)mappedResource.pData;
 
-		Details::LIGHT* light = (Details::LIGHT*)mappedResource.pData;
+			light->SPECULAR_COLOR.x = component->f_cSpecular.R;
+			light->SPECULAR_COLOR.y = component->f_cSpecular.G;
+			light->SPECULAR_COLOR.z = component->f_cSpecular.B;
 
-		light->SPECULAR_COLOR.x = component->f_cSpecular.R;
-		light->SPECULAR_COLOR.y = component->f_cSpecular.G;
-		light->SPECULAR_COLOR.z = component->f_cSpecular.B;
+			light->DIFFUSE_COLOR.x = component->f_cDiffuse.R;
+			light->DIFFUSE_COLOR.y = component->f_cDiffuse.G;
+			light->DIFFUSE_COLOR.z = component->f_cDiffuse.B;
 
-		light->DIFFUSE_COLOR.x = component->f_cDiffuse.R;
-		light->DIFFUSE_COLOR.y = component->f_cDiffuse.G;
-		light->DIFFUSE_COLOR.z = component->f_cDiffuse.B;
+			light->SPECULAR_POWER = component->f_fPower;
 
-		light->SPECULAR_POWER = component->f_fPower;
+			light->AMBIENT_COLOR.x = component->f_cAmbient.R;
+			light->AMBIENT_COLOR.y = component->f_cAmbient.G;
+			light->AMBIENT_COLOR.z = component->f_cAmbient.B;
 
-		light->AMBIENT_COLOR.x = component->f_cAmbient.R;
-		light->AMBIENT_COLOR.y = component->f_cAmbient.G;
-		light->AMBIENT_COLOR.z = component->f_cAmbient.B;
+			light->DIRECTION.x = component->f_vDirection.X;
+			light->DIRECTION.y = component->f_vDirection.Y;
+			light->DIRECTION.z = component->f_vDirection.Z;
 
-		light->DIRECTION.x = component->f_vDirection.X;
-		light->DIRECTION.y = component->f_vDirection.Y;
-		light->DIRECTION.z = component->f_vDirection.Z;
+			cBufferCnt = 0U;
 
-		cBufferCnt = 0U;
-
-		RENDERER->get().pContext->Unmap(component->m_pLightBuffer.Get(), 0);
-		RENDERER->get().pContext->PSSetConstantBuffers(cBufferCnt, 1, component->m_pLightBuffer.GetAddressOf());
+			RENDERER->get().pContext->Unmap(component->m_pLightBuffer.Get(), 0);
+			RENDERER->get().pContext->PSSetConstantBuffers(cBufferCnt, 1, component->m_pLightBuffer.GetAddressOf());
+		}
 	}
 
 	void ShaderSystemD3D11::update(RenderableComponentD3D11* component)

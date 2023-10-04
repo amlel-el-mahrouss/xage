@@ -518,6 +518,7 @@ namespace XPX::Renderer::DX11
 
 	void LightSystemD3D11::update(const std::size_t indexCount) noexcept
 	{
+		m_pLightVs->update_light_shader(this);
 		m_pLightPs->update_light_shader(this);
 
 		RENDERER->get().pContext->IASetInputLayout(m_pInputLayout.Get());
@@ -776,11 +777,6 @@ namespace XPX::Renderer::DX11
 		const uint32_t stride = { sizeof(Details::VERTEX) };
 		const uint32_t offset = { 0u };
 
-		self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt,
-			self->m_pVertexBuffer.GetAddressOf(),
-			&stride,
-			&offset);
-
 		self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
 
 		self->m_pDriver->get().pContext->OMSetRenderTargets(self->m_pDriver->get().ViewportCnt,
@@ -788,6 +784,11 @@ namespace XPX::Renderer::DX11
 			self->m_pDriver->get().pDepthStencil.Get());
 
 		self->m_pDriver->get().pContext->IASetIndexBuffer(self->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+		self->m_pDriver->get().pContext->IASetVertexBuffers(0, self->m_pDriver->get().ViewportCnt,
+			self->m_pVertexBuffer.GetAddressOf(),
+			&stride,
+			&offset);
 
 		self->m_pDriver->get().pContext->IASetInputLayout(self->m_pVertexShader->m_data.pInputLayout);
 
@@ -811,7 +812,9 @@ namespace XPX::Renderer::DX11
 		self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
 
 		if (self->f_pSourceLight)
+		{
 			self->f_pSourceLight->update(self->m_iIndices);
+		}
 	}
 
 	const size_t& RenderableComponentD3D11::get_vertices_count() noexcept { return m_iVertexCnt; }

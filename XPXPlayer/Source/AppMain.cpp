@@ -73,18 +73,51 @@ XPLICIT_MAIN()
 
 		auto node = scene.get_scene_node(nodes[0]);
 
+		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
+
+		node->f_pSourceLight->f_vDirection.X = 1.0;
+		node->f_pSourceLight->f_vDirection.Y = 0;
+		node->f_pSourceLight->f_vDirection.Z = 0;
+
+		node->f_pSourceLight->f_vPosition.X = 0;
+		node->f_pSourceLight->f_vPosition.Y = 0;
+		node->f_pSourceLight->f_vPosition.Z = 0;
+
+		node->f_pSourceLight->f_cAmbient.R = 1.0;
+		node->f_pSourceLight->f_cAmbient.G = 1.0;
+		node->f_pSourceLight->f_cAmbient.B = 1.0;
+		node->f_pSourceLight->f_cAmbient.A = 1.0;
+
+		node->f_pSourceLight->f_cDiffuse.R = 1.0;
+		node->f_pSourceLight->f_cDiffuse.G = 1.0;
+		node->f_pSourceLight->f_cDiffuse.B = 1.0;
+		node->f_pSourceLight->f_cDiffuse.A = 1.0;
+
+		node->f_pSourceLight->f_fPower = 8.0;
+
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
 
-		auto origin = XPX::Vector<float>(0.1, 5, -100);
+		auto origin = XPX::Vector<float>(0.1, 5, -1000);
 
 		RENDERER->get().pCamera->set_position(origin);
 		RENDERER->get().pCamera->set_rotation(XPX::Vector<float>(0, 0, 0));
-
 
 		XPX::float32 rot = 0;
 
 		while (ret != WM_QUIT)
 		{
+			static float rotation = 0.0f;
+
+			// Update the rotation variable each frame.
+			rotation -= 0.0174532925f * 0.25f;
+
+			if (rotation < 0.0f)
+			{
+				rotation += 360.0f;
+			}
+
+			node->set_rotation(XPX::Quaternion<float>(0, rotation, 0));
+
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0.1, 0.1, 0.1, true, true);
