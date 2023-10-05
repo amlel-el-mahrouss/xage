@@ -20,7 +20,28 @@
 typedef struct XiffVideoHeader BinkHeader;
 
 #include <stdio.h>
+#include <stdlib.h>
+
+#include <Windows.h>
 
 //! to send to directx.
 typedef void* BinkData;
 
+inline BinkHeader* BinkReadContainer(FILE* file)
+{
+	BinkHeader* readHdr = malloc(sizeof(BinkHeader));
+
+	if (fread(readHdr, sizeof(BinkHeader), SEEK_SET, file) == sizeof(BinkHeader))
+		return readHdr;
+
+	free(readHdr);
+	return NULL;
+}
+
+inline BOOL BinkContainerCheck(BinkHeader* hdr)
+{
+	return strcmp(hdr->mag, XIFF_VIDEO_MAG);
+}
+
+#define XAGE_BINK_MALLOC malloc
+#define XAGE_BINK_FREE free
