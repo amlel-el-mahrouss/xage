@@ -32,7 +32,7 @@ float4 PS(PIXEL input) : SV_TARGET
     float4 tex = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
     tex *= gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    float4 ambient = 0.7 * AMBIENT_COLOR;
+    float4 ambient = 0.5 * tex;
     
     float3 lightDir = normalize(DIRECTION - input.POSITION.xyz);
     float3 viewDir = normalize(input.VIEW_DIR - input.POSITION.xyz);
@@ -44,5 +44,5 @@ float4 PS(PIXEL input) : SV_TARGET
 
     float4 diffuse = tex * diff;
     
-    return tex * spec * ambient * diffuse;
+    return spec * ambient * diffuse;
 }

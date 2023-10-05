@@ -49,8 +49,8 @@ namespace XPX::Renderer
 	class XPLICIT_API BaseRenderableComponent : public Component
 	{
 	public:
-		BaseRenderableComponent() noexcept {}
-		virtual ~BaseRenderableComponent() {}
+		BaseRenderableComponent() noexcept = default;
+		virtual ~BaseRenderableComponent() = default;
 
 	public:
 		XPLICIT_COPY_DEFAULT(BaseRenderableComponent);

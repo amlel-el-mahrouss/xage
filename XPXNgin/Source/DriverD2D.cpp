@@ -5,7 +5,7 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: DriverD2D.cpp
- *			Purpose: D2D renderer.
+ *			Purpose: D2D renderer for UI stuff.
  *
  * =====================================================================
  */

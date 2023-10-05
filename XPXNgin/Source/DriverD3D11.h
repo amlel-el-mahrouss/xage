@@ -319,8 +319,8 @@ namespace XPX::Renderer::DX11
 		void set_position(const Vector<float>& pos) noexcept;
 		const Vector<float>& position() noexcept;
 
-		void set_rotation(const Quaternion<float>& rot) noexcept;
-		const Quaternion<float>& rotation() noexcept;
+		void set_rotation(const Vector<float>& rot) noexcept;
+		const Vector<float>& rotation() noexcept;
 
 		void set_scale(const Vector<float>& size) noexcept;
 		const Vector<float>& scale() noexcept;
@@ -409,7 +409,7 @@ namespace XPX::Renderer::DX11
 		Details::VERTEX* m_pVertex;
 
 	private:
-		Quaternion<float32> m_vRotation;
+		Vector<float32> m_vRotation;
 		Vector<float32> m_vPosition;
 		Vector<float32> m_vScale;
 		bool m_bDraw;

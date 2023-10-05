@@ -742,9 +742,9 @@ namespace XPX::Renderer::DX11
 	
 	const Vector<float>& RenderableComponentD3D11::scale() noexcept { return m_vScale; }
 
-	void RenderableComponentD3D11::set_rotation(const Quaternion<float>& rot) noexcept { m_vRotation = rot; }
+	void RenderableComponentD3D11::set_rotation(const Vector<float>& rot) noexcept { m_vRotation = rot; }
 	
-	const Quaternion<float>& RenderableComponentD3D11::rotation() noexcept { return m_vRotation; }
+	const Vector<float>& RenderableComponentD3D11::rotation() noexcept { return m_vRotation; }
 
 	void RenderableComponentD3D11::set_position(const Vector<float>& pos) noexcept { m_vPosition = pos; }
 	
@@ -767,10 +767,9 @@ namespace XPX::Renderer::DX11
 		RenderableComponentD3D11* self = (RenderableComponentD3D11*)this_ptr;
 
 		if (!IsValidHeapPtr(self) ||
-			!self->m_bDraw)
+			!self->m_bDraw ||
+			!self->m_pDriver)
 			return;
-
-		XPLICIT_ASSERT(self->m_pDriver);
 
 		self->m_pDriver->get().pContext->RSSetState(self->m_pDriver->get().pRasterState.Get());
 
