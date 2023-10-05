@@ -14,7 +14,7 @@
 #include <Util.h>
 
 #include <NginCore.h>
-#include <SoundNgin.h>
+#include <SoundDriver.h>
 
 namespace XPX
 {

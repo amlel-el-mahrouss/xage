@@ -43,7 +43,38 @@ inline BinkHeader* BinkReadContainer(FILE* file)
 	return NULL;
 }
 
+#define XIFF_FORMAT_BINK (0x5775FF)
+
 inline BOOL BinkContainerCheck(BinkHeader* hdr)
 {
-	return strcmp(hdr->mag, XIFF_VIDEO_MAG);
+	return strcmp(hdr->mag, XIFF_VIDEO_MAG) &&
+		hdr->format_type = XIFF_FORMAT_BINK;
 }
+
+struct BinkPrivateData
+{
+	BinkData f_pData;
+	size_t f_szData;
+	WORD f_iFormat;
+};
+
+enum
+{
+	BINK_DATA_FORMAT_R32G32B32A32,
+	BINK_DATA_FORMAT_R16G16B16A16,
+};
+
+enum
+{
+	BINK_DATA_VIEWPORT_1280x720,
+	BINK_DATA_VIEWPORT_800x600,
+};
+
+struct BinkEMHTree
+{
+	INT_PTR f_szOffset;
+	SIZE_T f_szPrivateData;
+	BinkPrivateData* f_pPrivateData;
+};
+
+inline BinkEMHTree* gRootFrame;

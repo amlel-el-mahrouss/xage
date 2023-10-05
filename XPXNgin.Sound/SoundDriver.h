@@ -12,7 +12,7 @@
 #pragma once
 
 #ifndef __XPLICIT_H__
-#	error Please include NginCore.h before SoundNgin.h!
+#	error Please include NginCore.h before SoundDriver.h!
 #endif // __XPLICIT_H__
 
 #include <iostream>

@@ -26,8 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{C3
 	ProjectSection(SolutionItems) = preProject
 		XPXNgin.Tex\Bink.h = XPXNgin.Tex\Bink.h
 		XPXNgin.Sound\RIFF.h = XPXNgin.Sound\RIFF.h
-		XPXNgin.Sound\SoundNgin.h = XPXNgin.Sound\SoundNgin.h
 		XPXNgin.Tex\Targa.h = XPXNgin.Tex\Targa.h
+		XPXNgin.Sound\SoundDriver.h = XPXNgin.Sound\SoundDriver.h
 		XPXNgin.Tex\XIFF.h = XPXNgin.Tex\XIFF.h
 	EndProjectSection
 EndProject

@@ -54,8 +54,7 @@ namespace XPX
 			RenderableComponent* get_scene_node(const SceneID& /* scene id */);
 
 		public:
-			void start_frame() noexcept;
-			bool end_frame() noexcept;
+			void update() noexcept;
 
 		private:
 			std::unique_ptr<ComponentSystem> m_system;

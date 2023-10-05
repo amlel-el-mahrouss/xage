@@ -19,7 +19,7 @@
 #include <NetworkProtocol.h>
 #include <DriverD3D11.h>
 #include <SceneSystem.h>
-#include <SoundNgin.h>
+#include <SoundDriver.h>
 #include <Component.h>
 #include <ImGUI.h>
 #include <Event.h>
@@ -127,15 +127,14 @@ XPLICIT_MAIN()
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
 
-			scene.start_frame();
-
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 
 			XPX::EventSystem::get_singleton_ptr()->update();
 
-			scene.end_frame();
+			scene.update();
 
-			XPX::Root::get_singleton_ptr()->Renderer->end_scene();
+			if (!XPX::Root::get_singleton_ptr()->Renderer->end_scene())
+				std::exit(-30);
 
 			XPX::Root::get_singleton_ptr()->Keyboard->reset();
 		}
