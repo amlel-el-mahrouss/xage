@@ -571,7 +571,7 @@ namespace XPX::Renderer::DX11
 	
 	const bool& RenderableComponentD3D11::should_draw() noexcept { return m_bDraw; }
 
-	void RenderableComponentD3D11::make_mesh(const std::vector<ImageDataParams>& params)
+	void RenderableComponentD3D11::make_renderable(const std::vector<ImageDataParams>& params)
 	{
 		if (m_arrayVerts.empty())
 			return;
@@ -636,7 +636,7 @@ namespace XPX::Renderer::DX11
 		if (FAILED(m_hResult))
 		{
 			delete[] m_pVertex;
-			throw Win32Error("Driver error (RenderableComponentD3D11::make_mesh(CreateBuffer(m_vertex_buffer))");
+			throw Win32Error("Driver error (RenderableComponentD3D11::make_renderable(CreateBuffer(m_vertex_buffer))");
 		}
 
 		delete[] m_pVertex;
@@ -708,7 +708,7 @@ namespace XPX::Renderer::DX11
 
 		for (auto& tex : params)
 		{
-			auto tex_ptr = new TextureSystemGenericD3D11();
+			auto tex_ptr = new TextureSystemD3D11();
 			tex_ptr->m_pDriver = m_pDriver;
 
 			f_vTextures.push_back(tex_ptr);

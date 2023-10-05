@@ -256,7 +256,7 @@ namespace XPX::Renderer
 							}
 
 							render->set_driver(scene->m_driver);
-							render->make_mesh(params);
+							render->make_renderable(params);
 
 							pSceneData->f_Nodes.push_back(render);
 						}

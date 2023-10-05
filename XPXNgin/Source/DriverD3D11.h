@@ -325,7 +325,7 @@ namespace XPX::Renderer::DX11
 		void set_scale(const Vector<float>& size) noexcept;
 		const Vector<float>& scale() noexcept;
 
-		void make_mesh(const std::vector<ImageDataParams>& params);
+		void make_renderable(const std::vector<ImageDataParams>& params);
 
 	public:
 		auto get_topology() noexcept { return m_iTopology; }
@@ -340,8 +340,9 @@ namespace XPX::Renderer::DX11
 		void push_texture_coord(const Vector<float>& coord) noexcept { m_arrayTextures.push_back(coord); }
 
 	public:
-		struct XPLICIT_API TextureSystemGenericD3D11 final
+		struct XPLICIT_API TextureSystemD3D11 final
 		{
+		private:
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pTextureView;
 			Microsoft::WRL::ComPtr<ID3D11Texture2D> m_pTexture;
 			DriverSystemD3D11* m_pDriver{ nullptr };
@@ -383,14 +384,16 @@ namespace XPX::Renderer::DX11
 				m_pDriver->get().pContext->GenerateMips(m_pTextureView.Get());
 			}
 
+			friend RenderableComponentD3D11;
+
 		};
 
 	public:
-		std::vector<TextureSystemGenericD3D11*> f_vTextures;
+		std::vector<TextureSystemD3D11*> f_vTextures;
 
 	private:
 		WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
-		std::vector<Vector<float>> m_arrayTextures;
+		std::vector<Vector<float32>> m_arrayTextures;
 
 	private:
 		UINT m_iSamplerCnt;
@@ -403,15 +406,21 @@ namespace XPX::Renderer::DX11
 
 	private:
 		XPLICIT_PRIMITIVE_TOPOLOGY m_iTopology;
+
+	private:
 		ShaderSystemD3D11* m_pVertexShader;
 		ShaderSystemD3D11* m_pTextureShader;
 		DriverSystemD3D11* m_pDriver;
+
+	private:
 		Details::VERTEX* m_pVertex;
 
 	private:
 		Vector<float32> m_vRotation;
 		Vector<float32> m_vPosition;
 		Vector<float32> m_vScale;
+
+	private:
 		bool m_bDraw;
 
 	private:
