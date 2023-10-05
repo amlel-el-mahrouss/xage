@@ -14,14 +14,13 @@
  @file
  */
 
+#include "LoadingScreenComponent.h"
+
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalCharacterComponent.h"
 #include "LocalCameraComponent.h"
 #include "ChatBoxComponent.h"
-
-#include "LoadingScreenComponent.h"
-
 #include "LocalMenuEvent.h"
 #include "ComUI.h"
 #include "App.h"

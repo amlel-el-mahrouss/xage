@@ -419,7 +419,7 @@ namespace XPX
 #endif
 
 				info->set_level(spdlog::level::info);
-				info->set_pattern("[%^Ngine%$] %v");
+				info->set_pattern("[%^XAGE%$] %v");
 
 #ifdef _WIN32
                 auto critical = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
@@ -428,7 +428,7 @@ namespace XPX
 #endif
 
                 critical->set_level(spdlog::level::critical);
-                critical->set_pattern("[%^Ngine%$] %v");
+                critical->set_pattern("[%^XAGE%$] %v");
 
 #ifdef _WIN32
                 auto err = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
@@ -437,7 +437,7 @@ namespace XPX
 #endif
 
 				err->set_level(spdlog::level::err);
-				err->set_pattern("[%^Ngine%$] %v");
+				err->set_pattern("[%^XAGE%$] %v");
 
 				LOGGER = new spdlog::logger("EngineSink", { err, info, critical });
 

@@ -34,7 +34,13 @@ namespace UpdateApp {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::PictureBox^ pictureBox1;
+	private: System::Windows::Forms::Label^ label1;
+	protected:
+	private: System::Windows::Forms::Panel^ panel1;
+
+	protected:
+
+	private:
 
 	protected:
 
@@ -75,39 +81,54 @@ namespace UpdateApp {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(UpdateForm::typeid));
-			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->SuspendLayout();
 			// 
-			// pictureBox1
+			// label1
 			// 
-			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
-			this->pictureBox1->Location = System::Drawing::Point(119, 50);
-			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(163, 113);
-			this->pictureBox1->TabIndex = 0;
-			this->pictureBox1->TabStop = false;
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"Pricedown Bl", 26, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label1->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(192)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
+				static_cast<System::Int32>(static_cast<System::Byte>(0)));
+			this->label1->Location = System::Drawing::Point(12, 345);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(231, 62);
+			this->label1->TabIndex = 0;
+			this->label1->Text = L"Loading...";
+			// 
+			// panel1
+			// 
+			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(192)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
+				static_cast<System::Int32>(static_cast<System::Byte>(0)));
+			this->panel1->Location = System::Drawing::Point(-8, 421);
+			this->panel1->Name = L"panel1";
+			this->panel1->Size = System::Drawing::Size(629, 22);
+			this->panel1->TabIndex = 1;
 			// 
 			// UpdateForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::White;
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
-			this->ClientSize = System::Drawing::Size(413, 236);
-			this->Controls->Add(this->pictureBox1);
+			this->ClientSize = System::Drawing::Size(620, 438);
+			this->Controls->Add(this->panel1);
+			this->Controls->Add(this->label1);
 			this->Cursor = System::Windows::Forms::Cursors::AppStarting;
 			this->DoubleBuffered = true;
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->Margin = System::Windows::Forms::Padding(4, 5, 4, 5);
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"UpdateForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-			this->Text = L"XPX Update - Checking...";
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
+			this->Text = L"Checking for updates...";
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
