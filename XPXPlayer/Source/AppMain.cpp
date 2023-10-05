@@ -66,9 +66,6 @@ XPLICIT_MAIN()
 
 		XPX::Bites::ApplicationManager manager(uri);
 		
-		RENDERER->get().pCamera->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
-		RENDERER->get().pCamera->set_rotation(XPX::Vector<XPX::float32>(0, 0, 0));
-
 		while (ret != WM_QUIT)
 		{
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
