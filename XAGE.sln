@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAGE.Core", "XAGE.Core.vcxproj", "{1128C63A-7D07-45D6-861F-D0ACF27DAB37}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XPX Engine", "XPXNgin.vcxproj", "{1128C63A-7D07-45D6-861F-D0ACF27DAB37}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAGE.Physics", "XAGE.Physics.vcxproj", "{A2D71F4C-0E63-8D10-1774-1005837EE910}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nplicit Engine", "XPXNgin.Physics.vcxproj", "{A2D71F4C-0E63-8D10-1774-1005837EE910}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAGEClient", "XAGEClient.vcxproj", "{5215F109-BE7F-A580-07BE-5626736783D5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "XPXPlayer.vcxproj", "{5215F109-BE7F-A580-07BE-5626736783D5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAGEServer", "XAGEServer.vcxproj", "{5C297B10-C893-2F87-11D2-E02C7D7B0DDC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "XPXServer.vcxproj", "{5C297B10-C893-2F87-11D2-E02C7D7B0DDC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BUILD_ALL", "BUILD_ALL\BUILD_ALL.vcxproj", "{63FDB074-5C79-4E1B-ACB4-FB4293789FD9}"
 EndProject
@@ -28,8 +28,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Contents", "Extern
 		XPXNgin.Tex\Targa.h = XPXNgin.Tex\Targa.h
 		XPXNgin.Tex\XIFF.h = XPXNgin.Tex\XIFF.h
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RRMan", "RRMan\RRMan.vcxproj", "{3A801942-4F34-4F8C-BA4C-3706A74ACA94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,14 +77,6 @@ Global
 		{63FDB074-5C79-4E1B-ACB4-FB4293789FD9}.Release|x64.Build.0 = Release|x64
 		{63FDB074-5C79-4E1B-ACB4-FB4293789FD9}.Release|x86.ActiveCfg = Release|Win32
 		{63FDB074-5C79-4E1B-ACB4-FB4293789FD9}.Release|x86.Build.0 = Release|Win32
-		{3A801942-4F34-4F8C-BA4C-3706A74ACA94}.Debug|x64.ActiveCfg = Debug|x64
-		{3A801942-4F34-4F8C-BA4C-3706A74ACA94}.Debug|x64.Build.0 = Debug|x64
-		{3A801942-4F34-4F8C-BA4C-3706A74ACA94}.Debug|x86.ActiveCfg = Debug|Win32
-		{3A801942-4F34-4F8C-BA4C-3706A74ACA94}.Debug|x86.Build.0 = Debug|Win32
-		{3A801942-4F34-4F8C-BA4C-3706A74ACA94}.Release|x64.ActiveCfg = Release|x64
-		{3A801942-4F34-4F8C-BA4C-3706A74ACA94}.Release|x64.Build.0 = Release|x64
-		{3A801942-4F34-4F8C-BA4C-3706A74ACA94}.Release|x86.ActiveCfg = Release|Win32
-		{3A801942-4F34-4F8C-BA4C-3706A74ACA94}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

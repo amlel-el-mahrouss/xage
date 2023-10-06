@@ -1,5 +1,5 @@
-NOTICE 'XPLICIT ADVANCED GAME ENGINE' :
-=======
+NOTICE, 'XPX ADVANCED GAME ENGINE'
+==================================
 
 This contains no game, only rendering, network, audio, and basic things.
 
