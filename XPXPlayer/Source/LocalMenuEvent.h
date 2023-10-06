@@ -13,7 +13,7 @@
 #include <Event.h>
 #include <Root.h>
 
-#include "ComUI.h"
+#include "GameUI.h"
 
 namespace XPX
 {

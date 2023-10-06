@@ -62,8 +62,6 @@ namespace XPX::Renderer::OpenGL
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClear(GL_DEPTH_BUFFER_BIT);
-
-
 	}
 
 	void DriverSystemOpenGL::end_scene(const std::unique_ptr<Bites::GLFWWindow>& window) noexcept

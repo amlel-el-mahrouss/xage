@@ -212,10 +212,13 @@ namespace XPX
 		KEY_KEY_CODES_COUNT = 0x100 // this is not a key, but the amount of keycodes there are.
 	};
 
-	class InputReceiver final
+	/// <summary>
+	/// XAGE's input system for PC.
+	/// </summary>
+	class InputReceiverDesktop final
 	{
 	public:
-		InputReceiver() noexcept
+		explicit InputReceiverDesktop() noexcept
 			:
 			mMouseLeft(),
 			mMouseRight(),
@@ -236,11 +239,11 @@ namespace XPX
 		};
 
 	public:
-		virtual ~InputReceiver() = default;
+		virtual ~InputReceiverDesktop() = default;
 
 	public:
-		InputReceiver& operator=(const InputReceiver&) = default;
-		InputReceiver(const InputReceiver&) = default;
+		InputReceiverDesktop& operator=(const InputReceiverDesktop&) = default;
+		InputReceiverDesktop(const InputReceiverDesktop&) = default;
 
 	public:
 		bool right_down() noexcept { return mMouseRight.Down; }
@@ -310,6 +313,11 @@ namespace XPX
 		float mWheel;
 
 	};
+
+	/// <summary>
+	/// Standard typedef for desktop input.
+	/// </summary>
+	typedef InputReceiverDesktop InputReceiver;
 
 	/// <summary>
 	/// Class: Root

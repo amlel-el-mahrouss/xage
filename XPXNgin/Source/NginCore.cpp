@@ -39,7 +39,7 @@ void xplicit_log(const char* msg)
 #ifdef XPLICIT_DEBUG
 	char buf[sizeof(time_t)];
 	snprintf(buf, sizeof(time_t), "%llu", xplicit_get_epoch());
-	fprintf(XPLICIT_LOGGER, "[%s - LOG] %s", buf, msg);
+	fprintf(XPLICIT_LOGGER, "[%s - XAGE] %s", buf, msg);
 #endif // ifdef XPLICIT_DEBUG
 }
 
@@ -48,7 +48,7 @@ char dbg_filename[256];
 bool xplicit_open_logger() 
 {
 #ifdef XPLICIT_DEBUG
-	snprintf(dbg_filename, 256, "%llu_xplicit.log", xplicit_get_epoch());
+	snprintf(dbg_filename, 256, "%llu_xage.log", xplicit_get_epoch());
 
 	if (fopen_s(&XPLICIT_LOGGER, dbg_filename, "w+") != EXIT_SUCCESS) 
 	{

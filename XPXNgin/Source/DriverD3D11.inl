@@ -19,8 +19,9 @@ namespace XPX
 		if (!error)
 			return;
 
-		std::string err;
-		err += "[ShaderSystem] ";
+		String err;
+		err += "[D3D11ShaderSystem] ";
+		err.reserve(error->GetBufferSize());
 
 		for (size_t i = 0; i < error->GetBufferSize(); i++)
 		{

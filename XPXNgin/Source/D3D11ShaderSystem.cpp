@@ -53,7 +53,7 @@ namespace XPX::Renderer::DX11
 		if (FAILED(hr))
 		{
 			print_error(m_data.pErrorBlob);
-			throw Win32Error("Could not compile shader from file!");
+			throw Win32Error("DriverSystemD3D11: Shaders has errors, check output.");
 		}
 
 		if (m_data.shader_type == XPLICIT_VERTEX_SHADER)
@@ -189,19 +189,19 @@ namespace XPX::Renderer::DX11
 
 			Details::LIGHT* light = (Details::LIGHT*)mappedResource.pData;
 
-			light->SPECULAR_COLOR.x = component->f_cSpecular.R;
-			light->SPECULAR_COLOR.y = component->f_cSpecular.G;
-			light->SPECULAR_COLOR.z = component->f_cSpecular.B;
+			light->SPECULAR_COLOR.x = component->f_cSpecular.R / 255;
+			light->SPECULAR_COLOR.y = component->f_cSpecular.G / 255;
+			light->SPECULAR_COLOR.z = component->f_cSpecular.B / 255;
 
-			light->DIFFUSE_COLOR.x = component->f_cDiffuse.R;
-			light->DIFFUSE_COLOR.y = component->f_cDiffuse.G;
-			light->DIFFUSE_COLOR.z = component->f_cDiffuse.B;
+			light->DIFFUSE_COLOR.x = component->f_cDiffuse.R / 255;
+			light->DIFFUSE_COLOR.y = component->f_cDiffuse.G / 255;
+			light->DIFFUSE_COLOR.z = component->f_cDiffuse.B / 255;
 
 			light->SPECULAR_POWER = component->f_fPower;
 
-			light->AMBIENT_COLOR.x = component->f_cAmbient.R;
-			light->AMBIENT_COLOR.y = component->f_cAmbient.G;
-			light->AMBIENT_COLOR.z = component->f_cAmbient.B;
+			light->AMBIENT_COLOR.x = component->f_cAmbient.R / 255;
+			light->AMBIENT_COLOR.y = component->f_cAmbient.G / 255;
+			light->AMBIENT_COLOR.z = component->f_cAmbient.B / 255;
 
 			light->DIRECTION.x = component->f_vDirection.X;
 			light->DIRECTION.y = component->f_vDirection.Y;

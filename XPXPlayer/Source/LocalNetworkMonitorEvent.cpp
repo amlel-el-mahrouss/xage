@@ -13,7 +13,7 @@
 
 #include "LocalNetworkMonitorEvent.h"
 #include "LocalCharacterComponent.h"
-#include "ComUI.h"
+#include "GameUI.h"
 #include "App.h"
 
 constexpr short XPX_MAX_TIMEOUT_MACRO = 250;

@@ -15,7 +15,7 @@
 #include "ChatBoxComponent.h"
 #include "LocalMenuEvent.h"
 #include "App.h"
-#include "ComUI.h"
+#include "GameUI.h"
 
 #include <Enums.h>
 #include <CLua.hpp>

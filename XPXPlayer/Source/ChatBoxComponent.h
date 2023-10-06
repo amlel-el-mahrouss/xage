@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "ComUI.h"
+#include "GameUI.h"
 
 #include <NetworkComponent.h>
 #include <queue>

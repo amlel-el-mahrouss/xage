@@ -22,7 +22,7 @@
 #include "LocalCameraComponent.h"
 #include "ChatBoxComponent.h"
 #include "LocalMenuEvent.h"
-#include "ComUI.h"
+#include "GameUI.h"
 #include "App.h"
 
 #include <XHTTPManager.h>

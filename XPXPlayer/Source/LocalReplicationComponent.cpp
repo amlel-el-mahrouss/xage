@@ -9,7 +9,7 @@
 
 #include "LocalReplicationComponent.h"
 #include "LocalNetworkMonitorEvent.h"
-#include "ComUI.h"
+#include "GameUI.h"
 #include "App.h"
 
 #include <Enums.h>

@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XPXNgin
+ *			XAGEPlayer
  *			Copyright XPX Corporation, all rights reserved.
  *
  * =====================================================================
@@ -11,7 +11,7 @@
  @file
  */
 
-#include "ComUI.h"
+#include "GameUI.h"
 #include "App.h"
 
 static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
@@ -65,7 +65,7 @@ namespace XPX
 		mHudFrame->W = 504;
 		mHudFrame->H = 288;
 		
-		mHudFrame->BackgroundColor.A = (255); //! 1
+		mHudFrame->BackgroundColor.A = (255);
 		mHudFrame->BackgroundColor.R = (0x0F);
 		mHudFrame->BackgroundColor.G = (0x0F);
 		mHudFrame->BackgroundColor.B = (0x0F);
