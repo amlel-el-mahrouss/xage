@@ -18,7 +18,7 @@ static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> XPLICIT_TO_WCHAR;
 
 namespace XPX
 {
-	PopupComponent::PopupComponent(
+	MessageComponent::MessageComponent(
 		const std::function<void()>& on_click, 
 		const POPUP_TYPE popup_type, 
 		const char* id,
@@ -80,16 +80,16 @@ namespace XPX
 		mOk->Y = (mHudFrame->Y + mHudFrame->H) - mOk->H;
 	}
 	
-	PopupComponent::~PopupComponent()
+	MessageComponent::~MessageComponent()
 	{
 		delete mHudFrame;
 	}
 	
-	bool PopupComponent::should_update() noexcept { return true; }
+	bool MessageComponent::should_update() noexcept { return true; }
 
-	void PopupComponent::update(ClassPtr class_ptr)
+	void MessageComponent::update(ClassPtr class_ptr)
 	{
-		auto* self = static_cast<PopupComponent*>(class_ptr);
+		auto* self = static_cast<MessageComponent*>(class_ptr);
 
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
 		self->mOk.update();
@@ -123,12 +123,12 @@ namespace XPX
 		self->mHudFrame->SpriteBatch->End();
 	}
 
-	const char* PopupComponent::name() noexcept
+	const char* MessageComponent::name() noexcept
 	{
 		return mPopupId.c_str();
 	}
 
-	COMPONENT_TYPE PopupComponent::type() noexcept
+	COMPONENT_TYPE MessageComponent::type() noexcept
 	{
 		return COMPONENT_GUI;
 	}

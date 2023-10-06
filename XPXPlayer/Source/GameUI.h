@@ -28,21 +28,21 @@ namespace XPX
 		KICK,
 	};
 
-	class PopupComponent final : public Component
+	class MessageComponent final : public Component
 	{
 	public:
-		PopupComponent() = delete;
+		MessageComponent() = delete;
 		
 	public:
-		explicit PopupComponent(const std::function<void()>& on_click,
+		explicit MessageComponent(const std::function<void()>& on_click,
 			const POPUP_TYPE shutdown_type = POPUP_TYPE::NETWORK, 
 			const char* id = "POPUP", 
 			const char* msg = "") noexcept;
 
-		~PopupComponent() override;
+		~MessageComponent() override;
 		
 	public:
-		XPLICIT_COPY_DEFAULT(PopupComponent);
+		XPLICIT_COPY_DEFAULT(MessageComponent);
 		
 	public:
 		COMPONENT_TYPE type() noexcept override;

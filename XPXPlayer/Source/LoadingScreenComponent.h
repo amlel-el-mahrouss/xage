@@ -43,17 +43,15 @@ namespace XPX
 		/// </summary>
 		void reset() noexcept;
 
-	public:
-		//! define any game data here...
-		void on_timeout() noexcept {}
-		void on_join() noexcept {}
-
 	private:
 		NetworkComponent* mNetwork; //! network connection.
 		std::int64_t mTimeout; //! timeout since we sent our first begin packet.
 
 	private:
 		static bool StartLoad;
+
+		static void(*OnJoin)(void);
+		static void(*OnTimeout)(void);
 
 	};
 }

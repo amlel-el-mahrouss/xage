@@ -68,7 +68,7 @@ namespace XPX
 
         if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
         {
-            ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
+            ComponentSystem::get_singleton_ptr()->add<MessageComponent>(
                 []() {
                     std::exit(60);
             }, POPUP_TYPE::BANNED, "StopPopup");
@@ -106,7 +106,7 @@ namespace XPX
             ComponentSystem::get_singleton_ptr()->add<LocalCharacterComponent>(public_hash, true);
             ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 
-            self->on_join();
+            LoadingScreenComponent::OnJoin();
 
             StartLoad = false;
         }
@@ -115,14 +115,14 @@ namespace XPX
             //! peek after the ++timeout, or retry
             if (self->mTimeout >= XPLICIT_TIMEOUT)
             {
-                ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
+                ComponentSystem::get_singleton_ptr()->add<MessageComponent>(
                     []() {
                         std::exit(30);
                  }, POPUP_TYPE::NETWORK, "TimeoutPopup");
 
                 ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
 
-                self->on_timeout();
+                LoadingScreenComponent::OnTimeout();
 
                 StartLoad = false;
             }
@@ -176,7 +176,7 @@ namespace XPX
     {
         ComponentSystem::get_singleton_ptr()->remove(this->mNetwork);
 
-        ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+        ComponentSystem::get_singleton_ptr()->add<MessageComponent>([]()-> void {
             std::exit(25);
         }, POPUP_TYPE::NETWORK);
     }

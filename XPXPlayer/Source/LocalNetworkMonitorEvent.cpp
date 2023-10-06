@@ -50,7 +50,7 @@ namespace XPX
 
 			if (XPX_MAX_TIMEOUT < 1)
 			{
-				if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+				if (ComponentSystem::get_singleton_ptr()->add<MessageComponent>([]()-> void {
 					std::exit(255);
 					}, POPUP_TYPE::NETWORK, "ResetPopup"))
 				{
@@ -75,9 +75,9 @@ namespace XPX
 		{
 			if (packet.hash == mHash)
 			{
-				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("KickPopup"))
+				if (!ComponentSystem::get_singleton_ptr()->get<MessageComponent>("KickPopup"))
 				{
-					if (ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+					if (ComponentSystem::get_singleton_ptr()->add<MessageComponent>([]()-> void {
 						std::exit(255);
 						}, POPUP_TYPE::KICK, 
 						"KickPopup", 
@@ -94,9 +94,9 @@ namespace XPX
 
 		if (packet.cmd[XPLICIT_NETWORK_CMD_BAN] == NETWORK_CMD_BAN)
 		{
-			if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("BanPopup"))
+			if (!ComponentSystem::get_singleton_ptr()->get<MessageComponent>("BanPopup"))
 			{
-				ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+				ComponentSystem::get_singleton_ptr()->add<MessageComponent>([]()-> void {
 					std::exit(60);
 					}, POPUP_TYPE::BANNED, "BanPopup");
 			}
@@ -108,9 +108,9 @@ namespace XPX
 			if (packet.hash == mHash ||
 				packet.public_hash == mPublicHash)
 			{
-				if (!ComponentSystem::get_singleton_ptr()->get<PopupComponent>("ConnShutdown"))
+				if (!ComponentSystem::get_singleton_ptr()->get<MessageComponent>("ConnShutdown"))
 				{
-					ComponentSystem::get_singleton_ptr()->add<PopupComponent>([]()-> void {
+					ComponentSystem::get_singleton_ptr()->add<MessageComponent>([]()-> void {
 						std::exit(128);
 					}, POPUP_TYPE::SHUTDOWN,
 							"ConnShutdown");

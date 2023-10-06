@@ -52,7 +52,7 @@ namespace XPX
 			mEnabled = true;
 			mTimeout = XPLICIT_TIMEOUT_MENU;
 
-			mPopup = ComponentSystem::get_singleton_ptr()->add<PopupComponent>(
+			mPopup = ComponentSystem::get_singleton_ptr()->add<MessageComponent>(
 				[&]() {
 					NetworkPacket packet{};
 					packet.cmd[XPLICIT_NETWORK_CMD_STOP] = NETWORK_CMD_STOP;

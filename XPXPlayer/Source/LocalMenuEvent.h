@@ -36,7 +36,7 @@ namespace XPX
 
 	private:
 		NetworkComponent* mNetwork;
-		PopupComponent* mPopup;
+		MessageComponent* mPopup;
 
 	private:
 		std::int64_t mTimeout;

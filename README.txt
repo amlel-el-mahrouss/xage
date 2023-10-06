@@ -22,8 +22,8 @@ REQUIREMENTS:
 INSTALLING:
 ===========
 
-- Put the C# assemblies into %appdata%/XPXNgin
-- Download DirectXTK for the SoundNgin.h header. (XPXPlayer) via NuGet.
+- Put the C# assemblies into %appdata%/NginData
+- Download DirectXTK for the SoundDriver.h header. (XPXPlayer) via NuGet.
 
 ====================================================
 Copyright XPX Technology Group, all rights reserved.
