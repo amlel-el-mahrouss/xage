@@ -1,9 +1,0 @@
-namespace XPXPlayerXBOX
-{
-    [default_interface]
-    runtimeclass RenderingPage : Windows.UI.Xaml.Controls.Page
-    {
-        RenderingPage();
-        Int32 MyProperty;
-    }
-}

@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XPXServer", "XPXServer.vcxp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BUILD_ALL", "BUILD_ALL\BUILD_ALL.vcxproj", "{63FDB074-5C79-4E1B-ACB4-FB4293789FD9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{75DB0871-D24A-469F-A8F9-E4A306254813}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Miscellaneous", "Miscellaneous", "{75DB0871-D24A-469F-A8F9-E4A306254813}"
 	ProjectSection(SolutionItems) = preProject
 		TODO.txt = TODO.txt
 	EndProjectSection
@@ -21,15 +21,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Contents", "External Contents", "{C348CBEF-6FF0-44EB-967F-7A27F73347A0}"
 	ProjectSection(SolutionItems) = preProject
 		XPXNgin.Tex\Bink.h = XPXNgin.Tex\Bink.h
-		README.txt = README.txt
 		XPXNgin.Tex\ICodec.h = XPXNgin.Tex\ICodec.h
+		README.txt = README.txt
 		XPXNgin.Sound\RIFF.h = XPXNgin.Sound\RIFF.h
 		XPXNgin.Sound\SoundDriver.h = XPXNgin.Sound\SoundDriver.h
 		XPXNgin.Tex\Targa.h = XPXNgin.Tex\Targa.h
 		XPXNgin.Tex\XIFF.h = XPXNgin.Tex\XIFF.h
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XPXPlayer-XBOX", "XPXPlayer-XBOX\XPXPlayer-XBOX.vcxproj", "{AAFCDD73-9C0D-443A-8E74-0856467C327F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,18 +99,6 @@ Global
 		{63FDB074-5C79-4E1B-ACB4-FB4293789FD9}.Release|x64.Build.0 = Release|x64
 		{63FDB074-5C79-4E1B-ACB4-FB4293789FD9}.Release|x86.ActiveCfg = Release|Win32
 		{63FDB074-5C79-4E1B-ACB4-FB4293789FD9}.Release|x86.Build.0 = Release|Win32
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Debug|ARM64.Build.0 = Debug|ARM64
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Debug|x64.ActiveCfg = Debug|x64
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Debug|x64.Build.0 = Debug|x64
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Debug|x86.ActiveCfg = Debug|Win32
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Debug|x86.Build.0 = Debug|Win32
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Release|ARM64.ActiveCfg = Release|ARM64
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Release|ARM64.Build.0 = Release|ARM64
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Release|x64.ActiveCfg = Release|x64
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Release|x64.Build.0 = Release|x64
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Release|x86.ActiveCfg = Release|Win32
-		{AAFCDD73-9C0D-443A-8E74-0856467C327F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
