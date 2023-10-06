@@ -238,6 +238,7 @@ namespace XPX::Renderer
 										if (header)
 										{
 											static ImageDataParams params_image{};
+
 											params_image.iHeight = header.f_sHeader.height;
 											params_image.iWidth = header.f_sHeader.width;
 											params_image.iStride = 4;
@@ -253,12 +254,12 @@ namespace XPX::Renderer
 								{
 									if (tex)
 									{
-										fmt::print("Can't load non Targa file: {}", tex);
+										fmt::print("Can't load non Targa file: ({})", tex);
 										delete[] tex;
 									}
 									else
 									{
-										fmt::print("Can't load non Targa file: ??? (UNKNOWN)");
+										fmt::print("Can't load non Targa file: (null)");
 									}
 								}
 							}

@@ -119,8 +119,7 @@ namespace XPX::Renderer::DX11
 		Details::ThrowIfFailed(hr);
 
 		DXGI_MODE_DESC* displayModeList = new DXGI_MODE_DESC[numModes];
-
-		ZeroMemory(displayModeList, sizeof(DXGI_MODE_DESC) * numModes);
+		memset(displayModeList, 0, numModes);
 
 		hr = pOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
 
@@ -142,9 +141,9 @@ namespace XPX::Renderer::DX11
 
 		for (i = 0; i < numModes; i++)
 		{
-			if (displayModeList[i].Width >= XPLICIT_MIN_WIDTH)
+			if (displayModeList[i].Width >= width)
 			{
-				if (displayModeList[i].Height >= XPLICIT_MIN_HEIGHT)
+				if (displayModeList[i].Height >= height)
 				{
 					numerator = displayModeList[i].RefreshRate.Numerator;
 					denominator = displayModeList[i].RefreshRate.Denominator;
@@ -200,7 +199,7 @@ namespace XPX::Renderer::DX11
 		creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-		auto hr = D3D11CreateDeviceAndSwapChain(
+		HRESULT hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
 			nullptr,
@@ -216,17 +215,17 @@ namespace XPX::Renderer::DX11
 		);
 
 		if (FAILED(hr))
-			throw Win32Error("[D3D11CreateDeviceAndSwapChain] Failed to call function correctly!");
+			throw Win32Error("[D3D11CreateDeviceAndSwapChain] hr != S_OK, check debug output.");
 
 		hr = m_private.pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(m_private.pRenderTexture.GetAddressOf()));
 
 		if (FAILED(hr))
-			throw Win32Error("[GetBuffer] Failed to call function correctly!");
+			throw Win32Error("[GetBuffer] Buffer had incorrect arguments.");
 
 		hr = m_private.pDevice->CreateRenderTargetView(m_private.pRenderTexture.Get(), nullptr, m_private.pRenderTarget.GetAddressOf());
 
 		if (FAILED(hr))
-			throw Win32Error("[CreateRenderTargetView] Failed to call function correctly!");
+			throw Win32Error("[CreateRenderTargetView] One or more arguments are invalid.");
 
 		m_private.pRenderTexture->Release();
 
@@ -248,7 +247,7 @@ namespace XPX::Renderer::DX11
 		hr = m_private.pDevice->CreateTexture2D(&depthBufferDesc, nullptr, m_private.pDepthTexture.GetAddressOf());
 
 		if (FAILED(hr))
-			throw Win32Error("[CreateTexture2D] Failed to call function correctly!");
+			throw Win32Error("[CreateTexture2D] Can't create Texture2D!");
 
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 		ZeroMemory(&depthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
@@ -274,7 +273,7 @@ namespace XPX::Renderer::DX11
 		hr = m_private.pDevice->CreateDepthStencilState(&depthStencilDesc, m_private.pDepthStencilState.GetAddressOf());
 
 		if (FAILED(hr))
-			throw Win32Error("[CreateDepthStencilState] Failed to call function correctly!");
+			throw Win32Error("[CreateDepthStencilState] Can't create a depth stencil!");
 
 		m_private.pContext->OMSetDepthStencilState(m_private.pDepthStencilState.Get(), 1);
 
@@ -319,6 +318,7 @@ namespace XPX::Renderer::DX11
 
 		m_private.Viewport.MinDepth = 0.0f;
 		m_private.Viewport.MaxDepth = 1.0f;
+
 		m_private.Viewport.TopLeftX = 0.0f;
 		m_private.Viewport.TopLeftY = 0.0f;
 
@@ -332,7 +332,7 @@ namespace XPX::Renderer::DX11
 
 		this->get().ViewportCnt = 1U;
 
-		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] driver created.");
+		XPLICIT_INFO("[DriverSystemD3D11::DriverSystemD3D11] Driver is On-Line.");
 
 		this->get().pContext->RSSetViewports(this->get().ViewportCnt, &this->get().Viewport);
 	}
@@ -346,6 +346,7 @@ namespace XPX::Renderer::DX11
 	void DriverSystemD3D11::begin_scene(const float& a, const float& r, const float& g, const float& b, const bool zBuffer, const bool depth)
 	{
 		XPLICIT_ASSERT(m_private.pContext);
+		XPLICIT_ASSERT(m_private.pCamera);
 		XPLICIT_ASSERT(m_private.pRenderTarget);
 
 		float rgba[4];
@@ -358,7 +359,7 @@ namespace XPX::Renderer::DX11
 		m_private.pContext->ClearRenderTargetView(m_private.pRenderTarget.Get(), rgba);
 		m_private.pContext->ClearDepthStencilView(m_private.pDepthStencil.Get(), depth ? (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL) : 0, 1.0f, 0);
 	
-		this->get().pCamera->render_camera();
+		m_private.pCamera->render_camera();
 	}
 
 	bool DriverSystemD3D11::check_device_removed(HRESULT hr)
@@ -370,8 +371,8 @@ namespace XPX::Renderer::DX11
 
 			_com_error com(hr);
 
-			DialogHelper::message_box(L"XPX Rendering System",
-				L"Device has been removed!",
+			DialogHelper::message_box(L"DirectX Driver (XAGE)",
+				L"Device removed!",
 				com.ErrorMessage(), TD_ERROR_ICON,
 				TDCBF_OK_BUTTON);
 
@@ -655,9 +656,9 @@ namespace XPX::Renderer::DX11
 		m_pVertexShader = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", this->m_pDriver);
 
 		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
-					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-					{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // MESH POSITION
+					{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // TEXTURE COORD.
+					{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // AMBIENT COLOR
 		};
 
 		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);

@@ -22,22 +22,22 @@ namespace XPX::Bites
 {
 	constexpr const PChar* XPLICIT_APP_NAME = L"XPX Advanced Game Engine";
 
-	class ObjectInputSystem final
+	class InputSystem final
 	{
 	public:
-		explicit ObjectInputSystem() = default;
-		~ObjectInputSystem() = default;
+		explicit InputSystem() = default;
+		~InputSystem() = default;
 
 	public:
-		XPLICIT_COPY_DEFAULT(ObjectInputSystem);
+		XPLICIT_COPY_DEFAULT(InputSystem);
 
 	public:
-		static ObjectInputSystem* get_singleton_ptr() noexcept
+		static InputSystem* get_singleton_ptr() noexcept
 		{
-			ObjectInputSystem* singleton = nullptr;
+			InputSystem* singleton = nullptr;
 
 			if (!singleton)
-				singleton = new ObjectInputSystem();
+				singleton = new InputSystem();
 
 			return singleton;
 		}

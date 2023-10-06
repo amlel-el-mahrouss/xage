@@ -100,7 +100,7 @@ namespace XPX
 			chat_box->is_typing())
 			return;
 
-		auto& traits = Bites::ObjectInputSystem::get_singleton_ptr()->Layout;
+		auto& traits = Bites::InputSystem::get_singleton_ptr()->Layout;
 
 		if (KEYBOARD->key_down())
 		{
