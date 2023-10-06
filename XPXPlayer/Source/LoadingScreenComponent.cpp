@@ -49,6 +49,9 @@ namespace XPX
 
     LoadingScreenComponent::~LoadingScreenComponent() = default;
 
+    void(*LoadingScreenComponent::OnTimeout)(void) = nullptr;
+    void(*LoadingScreenComponent::OnJoin)(void) = nullptr;
+
     bool LoadingScreenComponent::StartLoad = true;
 
     void LoadingScreenComponent::update(void* class_ptr)
@@ -106,7 +109,8 @@ namespace XPX
             ComponentSystem::get_singleton_ptr()->add<LocalCharacterComponent>(public_hash, true);
             ComponentSystem::get_singleton_ptr()->add<HUDComponent>(public_hash);
 
-            LoadingScreenComponent::OnJoin();
+            if (LoadingScreenComponent::OnJoin)
+                LoadingScreenComponent::OnJoin();
 
             StartLoad = false;
         }
@@ -122,7 +126,8 @@ namespace XPX
 
                 ComponentSystem::get_singleton_ptr()->remove(self->mNetwork);
 
-                LoadingScreenComponent::OnTimeout();
+                if (LoadingScreenComponent::OnTimeout)
+                    LoadingScreenComponent::OnTimeout();
 
                 StartLoad = false;
             }
