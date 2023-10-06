@@ -17,7 +17,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>XPXNgin.Physics</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>XPX Physics Engine</ProjectName>
+    <ProjectName>XPXNgin.Physics</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
