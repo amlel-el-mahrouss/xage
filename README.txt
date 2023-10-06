@@ -1,7 +1,7 @@
 NOTICE, 'XPX ADVANCED GAME ENGINE'
 ==================================
 
-This contains no game, only rendering, network, audio, and basic things.
+This is a template repository, containing code to make a basic game powered by XAGE.
 
 REQUIREMENTS:
 =============
