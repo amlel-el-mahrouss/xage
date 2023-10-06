@@ -12,8 +12,8 @@
 
 #include "SceneSystem.h"
 
-#include <WaveFrontReader.h>
 #include <Targa.h>
+#include <WaveFrontReader.h>
 
 namespace XPX::Renderer
 {
@@ -22,10 +22,8 @@ namespace XPX::Renderer
 		  m_system(std::make_unique<ComponentSystem>()), 
 		  m_name(pName),
 		  f_meshLoader(nullptr),
-		  m_scene_counter(0)
-	{
-		
-	}
+		  m_scene_counter(0UL)
+	{}
 
 	SceneSystem::~SceneSystem()
 	{
@@ -103,9 +101,12 @@ namespace XPX::Renderer
 			auto xsd = m_wrapper.open_reader<wchar_t>(path);
 
 			PString input = L"";
-			bool xage_begin = true;
+
+			//! Enables parsing if set to true.
+			bool xage_begin = false;
 
 			PString working_dir = L"";
+			PString offset_dir = L"";
 
 			while (std::getline(xsd, input))
 			{
@@ -117,27 +118,35 @@ namespace XPX::Renderer
 					if (input.find(L"end") != String::npos)
 						xage_begin = false;
 
+					if (auto pos = input.find(L"working_dir");
+						pos!= String::npos)
+					{
+						working_dir = m_wrapper.get_engine_dir();
+					}
+
 					continue;
 				}
 
 				if (xage_begin)
 				{
-					if (const auto pos = input.find(L"#workingdir");
+					if (const auto pos = input.find(L"#cd");
 						pos != String::npos)
 					{
-						working_dir = input.substr(pos + strlen("#workingdir "));
+						offset_dir = input.substr(pos + strlen("#cd "));
 					}
 
-					if (const auto pos = input.find(L"#wavefront");
+					if (const auto pos = input.find(L"#include");
 						pos != String::npos)
 					{
 						auto substr_wave = input.substr(pos, input.find(L","));
-						substr_wave.erase(substr_wave.find(L"#wavefront"), strlen("#wavefront"));
+
+						substr_wave.erase(substr_wave.find(L"#include"), strlen("#include"));
 						substr_wave.erase(substr_wave.find(L" "), strlen(" "));
 
 						WaveFrontReader<uint32_t> wfReader;
 
 						PString full_path = working_dir;
+						full_path += offset_dir;
 						full_path += substr_wave.c_str();
 
 						if (!std::filesystem::exists(std::filesystem::path(full_path)))
@@ -149,6 +158,7 @@ namespace XPX::Renderer
 						auto substr_wave_mtl = input.substr(input.find(L",") + 1);
 						
 						PString full_mtl_path = working_dir;
+						full_mtl_path += offset_dir;
 						full_mtl_path += substr_wave_mtl;
 
 						hr = wfReader.LoadMTL(full_mtl_path.c_str());
@@ -193,6 +203,7 @@ namespace XPX::Renderer
 											continue;
 
 										tex = new char[260];
+
 										memset(tex, 0, wcslen(paths[index]));
 
 										if (!tex)
@@ -201,6 +212,7 @@ namespace XPX::Renderer
 										wcstombs(tex, paths[index], 260);
 
 										char path_tga[255];
+
 										memset(path_tga, 0, 255);
 
 										auto sz = wcstombs(path_tga, working_dir.c_str(), working_dir.size());
@@ -209,6 +221,12 @@ namespace XPX::Renderer
 											continue;
 
 										String full_path_tga = path_tga;
+
+										memset(path_tga, 0, 255);
+
+										sz = wcstombs(path_tga, offset_dir.c_str(), offset_dir.size());
+
+										full_path_tga += path_tga;
 
 										for (auto i = 0UL; i < strlen(tex); ++i)
 										{
@@ -240,7 +258,7 @@ namespace XPX::Renderer
 									}
 									else
 									{
-										fmt::print("Something else happened! We don't know though.");
+										fmt::print("Can't load non Targa file: ??? (UNKNOWN)");
 									}
 								}
 							}

@@ -51,6 +51,7 @@ namespace XPX
 
     private:
         std::vector<NpNodePtr> mWorldNodes;
+        bool mNetworkBased;
 
     };
 

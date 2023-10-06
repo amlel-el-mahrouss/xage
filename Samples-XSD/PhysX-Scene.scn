@@ -1,0 +1,6 @@
+#pragma begin
+
+#cd C:\Users\amlal\XAGE\Samples-Wavefront\Teapot\
+#include utah.xobj,utah.mtl
+
+#pragma end

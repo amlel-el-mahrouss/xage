@@ -539,7 +539,8 @@ namespace XPX::Renderer::DX11
 		m_pMatrixBuffer(nullptr), m_iIndices(0),
 		m_pVertexShader(nullptr), m_pTextureShader(nullptr),
 		m_vPosition(0, 0, 0), m_vRotation(0, 0, 0), m_bDraw(true),
-		m_vScale(1, 1, 1), f_pSourceLight(nullptr), m_iSamplerCnt(1)
+		m_vScale(1, 1, 1), f_pSourceLight(nullptr), m_iSamplerCnt(1),
+		m_vTextures()
 	{}
 
 	RenderableComponentD3D11::~RenderableComponentD3D11()
@@ -547,7 +548,7 @@ namespace XPX::Renderer::DX11
 		if (m_pVertex)
 			delete[] m_pVertex;
 
-		for (auto* tex : f_vTextures)
+		for (auto* tex : m_vTextures)
 		{
 			delete tex;
 		}
@@ -711,7 +712,7 @@ namespace XPX::Renderer::DX11
 			auto tex_ptr = new TextureSystemD3D11();
 			tex_ptr->m_pDriver = m_pDriver;
 
-			f_vTextures.push_back(tex_ptr);
+			m_vTextures.push_back(tex_ptr);
 			tex_ptr->make_texture(tex);
 
 			delete[] tex.pImage;
@@ -788,7 +789,7 @@ namespace XPX::Renderer::DX11
 
 		std::vector<ID3D11ShaderResourceView*> textures;
 
-		for (auto& tex : self->f_vTextures)
+		for (auto& tex : self->m_vTextures)
 		{
 			textures.push_back(tex->m_pTextureView.Get());
 		}

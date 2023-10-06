@@ -46,13 +46,14 @@ namespace XPX::Renderer
 		TargaHeader targaFileHeader;
 		unsigned char* targaImage = nullptr;
 
-		// Open the targa file for reading in binary.
+		//! Open the targa file for reading in binary.
+		//! We use fopen_s, so that MSVC doesn't yell at us.
 		error = fopen_s(&filePtr, filename, "rb");
 
 		if (error != 0)
 			return {};
 
-		// Read in the file header.
+		// Read in the targa header.
 		count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
 		
 		if (count != 1)

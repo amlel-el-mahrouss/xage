@@ -340,6 +340,9 @@ namespace XPX::Renderer::DX11
 		void push_texture_coord(const Vector<float>& coord) noexcept { m_arrayTextures.push_back(coord); }
 
 	public:
+		/// <summary>
+		/// Texture system for DirectX renderable.
+		/// </summary>
 		struct XPLICIT_API TextureSystemD3D11 final
 		{
 		private:
@@ -388,8 +391,8 @@ namespace XPX::Renderer::DX11
 
 		};
 
-	public:
-		std::vector<TextureSystemD3D11*> f_vTextures;
+	private:
+		std::vector<TextureSystemD3D11*> m_vTextures;
 
 	private:
 		WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;

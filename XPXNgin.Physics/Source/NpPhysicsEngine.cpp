@@ -307,7 +307,8 @@ namespace XPX
 				std::cout << node->pos().Z << std::endl;
 #endif
 
-				xpxSendToClients(node);
+				if (gNetwork)
+					xpxSendToClients(node);
 			}
 		}
 	}
@@ -391,6 +392,7 @@ namespace XPX
 			return false;
 
 		using namespace physx;
+
 		PxReal friction = node->scale().X * node->scale().Y * node->scale().Z;
 
 		auto mat = gPhysics->createMaterial(friction, friction, 1);

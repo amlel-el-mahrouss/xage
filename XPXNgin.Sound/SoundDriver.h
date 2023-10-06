@@ -18,9 +18,9 @@
 #include <iostream>
 #include <string>
 
-#ifndef XPLICIT_AUDIO_RATE
-#	define XPLICIT_AUDIO_RATE (44100)
-#endif // ifndef XPLICIT_AUDIO_RATE
+#ifndef XPX_SAMPLE_RATE
+#	define XPX_SAMPLE_RATE (44100)
+#endif // ifndef XPX_SAMPLE_RATE
 
 #ifdef _WIN32
 
@@ -67,20 +67,20 @@ namespace XPX
 				{
 					for (const auto& it : enumList)
 					{
-						std::cout << "Audio device detected\n";
-						std::wcout << it.deviceId.c_str() << std::endl;
+						std::cout << "Audio device detected: ";
+						std::wcout << it.deviceId.c_str() << ", ";
 						std::wcout << it.description.c_str() << std::endl;
 					}
 				}
 
-				mAudioNgin->SetDefaultSampleRate(XPLICIT_AUDIO_RATE);
+				mAudioNgin->SetDefaultSampleRate(XPX_SAMPLE_RATE);
 			}
 
 		public:
 			~XAudioEngine() = default;
 
 		public:
-			struct XAudioHandle final
+			class XAudioHandle final
 			{
 			public:
 				XAudioHandle(DirectX::AudioEngine* engine, const wchar_t* path) noexcept

@@ -1,7 +1,7 @@
 /*
  * =====================================================================
  *
- *			XPXPlayer
+ *			XAGE
  *			Copyright XPX Corporation, all rights reserved.
  *
  * =====================================================================
@@ -85,7 +85,7 @@ namespace XPX
 	{
 	public:
 		explicit IFileWriter(const char* path)
-			: IFileBase(fopen(path, "rb"))
+			: IFileBase(fopen(path, "wb"))
 		{
 			XPLICIT_ASSERT(mIf);
 		}

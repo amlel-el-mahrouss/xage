@@ -1,6 +1,0 @@
-#pragma begin
-
-#workingdir C:\Users\amlal\XAGE\Samples-Wavefront\Teapot\
-#wavefront utah.xobj,utah.mtl
-
-#pragma end

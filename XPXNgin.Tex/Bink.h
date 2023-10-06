@@ -4,7 +4,7 @@
  *			XAGE.Tex
  *			Copyright XPX Corporation, all rights reserved.
  *
- *			Purpose: XIFF container header.
+ *			Purpose: XVID Bink codec.
  *
  * =====================================================================
  */
@@ -15,11 +15,11 @@
 
 //! XAGE Bink is based on XIFF. A Format based on IFF.
 //! IFF was made by EA back for the amiga.
-//! We use this for cinematics and video stuff.
+//! We use this for video stuff.
 
 typedef struct XiffVideoHeader BinkHeader;
 
-#define BINK_VIDEO_FORMAT ".bink"
+#define BINK_VIDEO_FORMAT ".bnk"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,11 +70,10 @@ enum
 	BINK_DATA_VIEWPORT_800x600,
 };
 
-struct BinkEMHTree
+struct BinkVideoFrame
 {
+	UINT f_iTexture;
 	INT_PTR f_szOffset;
 	SIZE_T f_szPrivateData;
 	BinkPrivateData* f_pPrivateData;
 };
-
-inline BinkEMHTree* gRootFrame;

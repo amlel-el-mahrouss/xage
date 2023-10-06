@@ -44,7 +44,7 @@ namespace XPX
 
 	public:
 		virtual void equip() noexcept { }
-		virtual void unequip() noexcept {  }
+		virtual void unequip() noexcept { }
 
 	private:
 		CharacterComponent* mOwner;
