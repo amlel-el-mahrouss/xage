@@ -24,7 +24,7 @@
 #	include "NetworkServerComponent.h"
 
 #	define XPLICIT_XASSET_URI "xasset://"
-#	define XPLICIT_XASSET_URI_ENDPOINT "cdn-xpx.com"
+#	define XPLICIT_XASSET_URI_ENDPOINT "play-xplicit.com"
 
 inline XPX::Color<XPX::NetworkFloat> Magenta(0xFF, 0x00, 0xFF, 0xFF);
 inline XPX::Color<XPX::NetworkFloat> White(0xFF, 0xFF, 0xFF, 0xFF);

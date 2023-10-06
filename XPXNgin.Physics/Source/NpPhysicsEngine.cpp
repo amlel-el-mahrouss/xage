@@ -384,7 +384,7 @@ namespace XPX
 		return false;
 	}
 
-	bool NplicitAddGround(NpNodePtr node)
+	bool XPXPhysicsAddGround(NpNodePtr node)
 	{
 		XPLICIT_ASSERT(node);
 
@@ -406,12 +406,12 @@ namespace XPX
 			gScene->addActor(*plane);
 			plane->release();
 
-			XPLICIT_INFO("NplicitAddGround: Create a new ground with success.");
+			XPLICIT_INFO("XPXPhysicsAddGround: Create a new ground with success.");
 
 			return true;
 		}
 
-		XPLICIT_CRITICAL("NplicitAddGround: Failed to create a new ground.");
+		XPLICIT_CRITICAL("XPXPhysicsAddGround: Failed to create a new ground.");
 		return false;
 	}
 }

@@ -19,7 +19,7 @@
 
 typedef struct XiffVideoHeader BinkHeader;
 
-#define BINK_VIDEO_FORMAT ".bnk"
+#define BINK_VIDEO_FORMAT ".vid"
 
 #include <stdio.h>
 #include <stdlib.h>

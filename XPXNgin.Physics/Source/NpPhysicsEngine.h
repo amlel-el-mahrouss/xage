@@ -55,6 +55,6 @@ namespace XPX
 
     };
 
-    NPLICIT_API bool NplicitAddGround(NpNodePtr node);
+    NPLICIT_API bool XPXPhysicsAddGround(NpNodePtr node);
 }
 
