@@ -64,7 +64,7 @@ namespace XPX::Renderer::DX11
 		DWORD height,
 		DXGI_FORMAT format,
 		DXGI_MODE_SCALING scaling,
-		DXGI_MODE_SCANLINE_ORDER scalineOrdering)
+		DXGI_MODE_SCANLINE_ORDER scanlineOrdering)
 	{
 		RtlZeroMemory(&swapDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
@@ -73,7 +73,7 @@ namespace XPX::Renderer::DX11
 		swapDesc.BufferDesc.Width = width;
 		swapDesc.BufferDesc.Height = height;
 
-		swapDesc.BufferDesc.ScanlineOrdering = scalineOrdering;
+		swapDesc.BufferDesc.ScanlineOrdering = scanlineOrdering;
 		swapDesc.BufferDesc.Scaling = scaling;
 		swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
@@ -87,7 +87,7 @@ namespace XPX::Renderer::DX11
 		
 		swapDesc.Flags = 0;
 
-		swapDesc.Windowed = true; //! Always set to fullscreen.
+		swapDesc.Windowed = false; //! Always set to full-screen.
 		swapDesc.OutputWindow = privateData.pWindowHandle;
 	}
 
