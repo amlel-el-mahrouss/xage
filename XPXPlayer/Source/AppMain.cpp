@@ -21,11 +21,9 @@
 #include <SceneSystem.h>
 #include <SoundDriver.h>
 #include <Component.h>
-#include <ImGUI.h>
 #include <Event.h>
 #include <Bites.h>
 #include <codecvt>
-#include <Util.h>
 
 static void XplicitThrowException(XPX::EngineError& err);
 
@@ -64,35 +62,21 @@ XPLICIT_MAIN()
 		if (!checker(uri.get().c_str()))
 			return 1;
 
-		XPX::Bites::ApplicationManager manager(uri);
+		XPX::Bites::ApplicationManager application_manager(uri);
 
-		XPX::Renderer::SceneSystem system;
-		system.f_meshLoader = new XPX::Renderer::SceneLoaderXSD();
-		auto nodes = system.add_scene_node("C:/Users/amlal/AppData/Roaming/NginData/MarbleBust/marble_bust.xsd");
+		XPX::ModuleManager module_manager("XPXCoreLib.dll");
 
-		auto node = system.get_scene_node(nodes[0]);
+		typedef void(*XPXHookFn)(void);
 
-		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
-		node->f_pSourceLight->f_fPower = 8.0f;
-		node->f_pSourceLight->f_vPosition = XPX::Vector<XPX::float32>(0, 0, 0);
-		node->f_pSourceLight->f_vDirection = XPX::Vector<XPX::float32>(0, 0, -1.0);
-		
-		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
-		node->set_scale(XPX::Vector<XPX::float32>(0.5, 0.5, 0.5));
+		XPX::ModuleType<XPXHookFn> create_dll = module_manager.get<XPXHookFn>("OnCreate");
 
-		RENDERER->get().pCamera->set_position(XPX::Vector<XPX::float32>(0, 7.0, -20));
+		if (create_dll.get())
+			create_dll.get()();
 
-		float rot = 360.f;
+		auto frame_dll = module_manager.get<XPXHookFn>("OnFrame");
 
 		while (ret != WM_QUIT)
 		{
-			if (rot < 0.0)
-				rot = 360.f;
-
-			rot -= 0.0174532925f * 0.25f;
-
-			node->set_rotation(XPX::Vector<XPX::float32>(0, rot, 0));
-
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
@@ -101,13 +85,19 @@ XPLICIT_MAIN()
 			XPX::EventSystem::get_singleton_ptr()->update();
 			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
 
-			system.update();
-
 			if (!XPX::Root::get_singleton_ptr()->Renderer->end_scene())
 				std::exit(-30);
 
 			XPX::Root::get_singleton_ptr()->Keyboard->reset();
+
+			if (frame_dll.get())
+				frame_dll.get()();
 		}
+
+		auto cleanup_dll = module_manager.get<XPXHookFn>("OnCleanup");
+
+		if (cleanup_dll.get())
+			cleanup_dll.get()();
 	}
 	catch (XPX::EngineError& err)
 	{
@@ -116,6 +106,9 @@ XPLICIT_MAIN()
 #ifdef _WIN32
 	catch (XPX::Win32Error& err)
 	{
+		delete RENDERER_2D;
+		delete RENDERER; //! so that we trigger the fullscreen state to be off.
+
 		XplicitThrowException(err);
 	}
 #endif
@@ -136,13 +129,13 @@ static void XplicitThrowException(XPX::EngineError& err)
 	std::wstring exit;
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
-	exit += L"What: ";
+	exit += L"WHAT: ";
 	exit += converter.from_bytes(err.what());
 	exit += L"\n";
 
 #ifdef _WIN32
 	XPX::DialogHelper::message_box(XPX::Bites::XPLICIT_APP_NAME,
-		L"XAGE Couldn't continue!",
+		L"FATAL FAILURE!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);
@@ -161,12 +154,12 @@ static void XplicitThrowException(XPX::Win32Error& err)
 
 	exit += L"WHAT: ";
 	exit += converter.from_bytes(err.what());
-	exit += L"HRESULT: ";
+	exit += L", HRESULT: ";
 	exit += std::to_wstring(err.hr());
 	exit += L"\n";
 
 	XPX::DialogHelper::message_box(L"XAGE",
-		L"XAGE got some issues!!",
+		L"FATAL FAILURE!",
 		exit.c_str(),
 		TD_INFORMATION_ICON,
 		TDCBF_OK_BUTTON);
