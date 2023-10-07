@@ -1,8 +1,6 @@
-What to do with this code?
-==========================
+TODO
+====
 
-- Add Autodesk FBX support. (replaced with obj) [x]
-- Add Targa file support [x]
-- Work on the .xsd format [x]
+- Work on the 'REAL' engine.
 
 Copyright XPX Corp.
