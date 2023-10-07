@@ -88,7 +88,7 @@ namespace XPX::Renderer::DX11
 
 		unsigned int cBufferCnt = 0U;
 		
-		XMMATRIX transltateMatrix = XMMatrixTranslation(component->m_vPosition.X,
+		XMMATRIX translationMatrix = XMMatrixTranslation(component->m_vPosition.X,
 			component->m_vPosition.Y,
 			component->m_vPosition.Z);
 
@@ -98,7 +98,11 @@ namespace XPX::Renderer::DX11
 
 		rotationMatrix *= XMMatrixRotationZ(component->m_vRotation.Z);
 
-		component->m_pDriver->get().WorldMatrix = XMMatrixMultiply(rotationMatrix, transltateMatrix);
+		XMMATRIX scaleMatrix = XMMatrixScaling(component->m_vScale.X, component->m_vScale.Y, component->m_vScale.Z);
+
+		rotationMatrix = XMMatrixMultiply(scaleMatrix, rotationMatrix);
+
+		component->m_pDriver->get().WorldMatrix = XMMatrixMultiply(rotationMatrix, translationMatrix);
 
 		auto transPoseWorldMatrix = XMMatrixTranspose(component->m_pDriver->get().WorldMatrix);
 		auto transPoseViewMatrix = XMMatrixTranspose(component->m_pDriver->get().pCamera->m_viewMatrix);

@@ -78,6 +78,7 @@ XPLICIT_MAIN()
 		node->f_pSourceLight->f_vDirection = XPX::Vector<XPX::float32>(0, 0, -1.0);
 		
 		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
+		node->set_scale(XPX::Vector<XPX::float32>(0.5, 0.5, 0.5));
 
 		RENDERER->get().pCamera->set_position(XPX::Vector<XPX::float32>(0, 7.0, -20));
 
