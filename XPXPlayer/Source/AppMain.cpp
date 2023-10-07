@@ -66,8 +66,32 @@ XPLICIT_MAIN()
 
 		XPX::Bites::ApplicationManager manager(uri);
 
+		XPX::Renderer::SceneSystem system;
+		system.f_meshLoader = new XPX::Renderer::SceneLoaderXSD();
+		auto nodes = system.add_scene_node("C:/Users/amlal/AppData/Roaming/NginData/MarbleBust/marble_bust.xsd");
+
+		auto node = system.get_scene_node(nodes[0]);
+
+		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
+		node->f_pSourceLight->f_fPower = 8.0f;
+		node->f_pSourceLight->f_vPosition = XPX::Vector<XPX::float32>(0, 0, 0);
+		node->f_pSourceLight->f_vDirection = XPX::Vector<XPX::float32>(0, 0, -1.0);
+		
+		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
+
+		RENDERER->get().pCamera->set_position(XPX::Vector<XPX::float32>(0, 7.0, -20));
+
+		float rot = 360.f;
+
 		while (ret != WM_QUIT)
 		{
+			if (rot < 0.0)
+				rot = 360.f;
+
+			rot -= 0.0174532925f * 0.25f;
+
+			node->set_rotation(XPX::Vector<XPX::float32>(0, rot, 0));
+
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
@@ -75,6 +99,8 @@ XPLICIT_MAIN()
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
 			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
+
+			system.update();
 
 			if (!XPX::Root::get_singleton_ptr()->Renderer->end_scene())
 				std::exit(-30);

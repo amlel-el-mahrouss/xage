@@ -118,8 +118,8 @@ namespace XPX::Renderer
 					if (input.find(L"end") != String::npos)
 						xage_begin = false;
 
-					if (auto pos = input.find(L"working_dir");
-						pos!= String::npos)
+					if (auto pos = input.find(L"cwd");
+						pos != String::npos)
 					{
 						working_dir = m_wrapper.get_engine_dir();
 					}
@@ -129,10 +129,10 @@ namespace XPX::Renderer
 
 				if (xage_begin)
 				{
-					if (const auto pos = input.find(L"#cd");
+					if (const auto pos = input.find(L"#wd");
 						pos != String::npos)
 					{
-						offset_dir = input.substr(pos + strlen("#cd "));
+						offset_dir = input.substr(pos + strlen("#wd "));
 					}
 
 					if (const auto pos = input.find(L"#include");
@@ -195,60 +195,57 @@ namespace XPX::Renderer
 
 								try
 								{
-									const PChar* paths[4] = { mat.strNormalTexture, mat.strTexture, mat.strSpecularTexture, mat.strEmissiveTexture };
+									const PChar* paths = { mat.strTexture };
 
-									for (std::size_t index = 0UL; index < 4; ++index)
+									if (*paths == 0)
+										continue;
+
+									tex = new char[260];
+
+									memset(tex, 0, wcslen(paths));
+
+									if (!tex)
+										throw EngineError("Out of memory. (TGA)");
+
+									wcstombs(tex, paths, 260);
+
+									char path_tga[255];
+
+									memset(path_tga, 0, 255);
+
+									auto sz = wcstombs(path_tga, working_dir.c_str(), working_dir.size());
+
+									if (sz != working_dir.size())
+										continue;
+
+									String full_path_tga = path_tga;
+
+									memset(path_tga, 0, 255);
+
+									sz = wcstombs(path_tga, offset_dir.c_str(), offset_dir.size());
+
+									full_path_tga += path_tga;
+
+									for (auto i = 0UL; i < strlen(tex); ++i)
 									{
-										if (*paths[index] == 0)
-											continue;
-
-										tex = new char[260];
-
-										memset(tex, 0, wcslen(paths[index]));
-
-										if (!tex)
-											throw EngineError("Out of memory. (TGA)");
-
-										wcstombs(tex, paths[index], 260);
-
-										char path_tga[255];
-
-										memset(path_tga, 0, 255);
-
-										auto sz = wcstombs(path_tga, working_dir.c_str(), working_dir.size());
-
-										if (sz != working_dir.size())
-											continue;
-
-										String full_path_tga = path_tga;
-
-										memset(path_tga, 0, 255);
-
-										sz = wcstombs(path_tga, offset_dir.c_str(), offset_dir.size());
-
-										full_path_tga += path_tga;
-
-										for (auto i = 0UL; i < strlen(tex); ++i)
-										{
-											full_path_tga += tex[i];
-										}
-
-										auto header = LoadTarga32(full_path_tga.c_str());
-
-										if (header)
-										{
-											static ImageDataParams params_image{};
-
-											params_image.iHeight = header.f_sHeader.height;
-											params_image.iWidth = header.f_sHeader.width;
-											params_image.iStride = 4;
-											params_image.pImage = header.f_pImage;
-
-											params.push_back(params_image);
-										}
-
-										delete[] tex;
+										full_path_tga += tex[i];
 									}
+
+									auto header = LoadTarga32(full_path_tga.c_str());
+
+									if (header)
+									{
+										static ImageDataParams params_image{};
+
+										params_image.iHeight = header.f_sHeader.height;
+										params_image.iWidth = header.f_sHeader.width;
+										params_image.iStride = 4;
+										params_image.pImage = header.f_pImage;
+
+										params.push_back(params_image);
+									}
+
+									delete[] tex;
 								}
 								catch (...)
 								{

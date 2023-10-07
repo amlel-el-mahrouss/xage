@@ -19,6 +19,9 @@ Texture2D gShaderTexture2 : register(t1);
 float4 PS(PIXEL input) : SV_TARGET
 {
     float4 color1 = gShaderTexture1.Sample(SAMPLE_TYPE, input.TEXTURE);
+    float4 color2 = gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    return color1;
+    float result = saturate(color1 * color2 * 2.0).xyzw;
+    
+    return result > 0.0 ? saturate(color1 * color2 * 2.0) : float4(input.AMBIENT, 1.0);
 }
