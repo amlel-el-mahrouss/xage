@@ -229,7 +229,7 @@ namespace XPX
 		gScene = gPhysics->createScene(desc);
 
 		if (!gScene)
-			throw EngineError("createScene failed! Refer to XPX support for help.");
+			throw EngineError("gPhysics-|createScene failed! This is probably caused to a bad scene descriptor.");
 
 		physx::PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 

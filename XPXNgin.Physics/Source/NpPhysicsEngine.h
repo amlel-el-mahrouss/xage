@@ -28,8 +28,8 @@
 
 namespace XPX
 {
-    typedef XPXAttribute* NpNodePtr;
     typedef XPXAttribute NpNodeType;
+    typedef NpNodeType* NpNodePtr;
 
     class NPLICIT_API NpPhysicsEvent : public Event
     {
@@ -51,7 +51,6 @@ namespace XPX
 
     private:
         std::vector<NpNodePtr> mWorldNodes;
-        bool mNetworkBased;
 
     };
 

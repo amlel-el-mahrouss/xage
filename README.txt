@@ -15,7 +15,7 @@ REQUIREMENTS:
 - OpenAL
 - Direct3D11 debug layers.
 - Windows 11, an XBOX
-- Visual Studio 2022 (C++ Workload)
+- Visual Studio 2022 (C++ Workload/UWP for C++)
 - Vulkan SDK 1.3.250.1 (Vulkan Rendering System)
 - DirectXTK for VS2019/Windows 10 (Install for Xplicit and XPXPlayer)
 

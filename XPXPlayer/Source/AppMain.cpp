@@ -5,7 +5,7 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: AppMain.cpp
- *			Purpose: Main Application entrypoint.
+ *			Purpose: Application entrypoint.
  *
  * =====================================================================
  */
@@ -25,10 +25,10 @@
 #include <Bites.h>
 #include <codecvt>
 
-static void XplicitThrowException(XPX::EngineError& err);
+static void XPXThrowException(XPX::EngineError& err);
 
 #ifdef _WIN32
-static void XplicitThrowException(XPX::Win32Error& err);
+static void XPXThrowException(XPX::Win32Error& err);
 #endif
 
 XPLICIT_MAIN()
@@ -66,15 +66,6 @@ XPLICIT_MAIN()
 
 		XPX::ModuleManager module_manager("XPXCoreLib.dll");
 
-		typedef void(*XPXHookFn)(void);
-
-		XPX::ModuleType<XPXHookFn> create_dll = module_manager.get<XPXHookFn>("OnCreate");
-
-		if (create_dll.get())
-			create_dll.get()();
-
-		auto frame_dll = module_manager.get<XPXHookFn>("OnFrame");
-
 		while (ret != WM_QUIT)
 		{
 			ret = XPX::Root::get_singleton_ptr()->Window->update();
@@ -89,19 +80,11 @@ XPLICIT_MAIN()
 				std::exit(-30);
 
 			XPX::Root::get_singleton_ptr()->Keyboard->reset();
-
-			if (frame_dll.get())
-				frame_dll.get()();
 		}
-
-		auto cleanup_dll = module_manager.get<XPXHookFn>("OnCleanup");
-
-		if (cleanup_dll.get())
-			cleanup_dll.get()();
 	}
 	catch (XPX::EngineError& err)
 	{
-		XplicitThrowException(err);
+		XPXThrowException(err);
 	}
 #ifdef _WIN32
 	catch (XPX::Win32Error& err)
@@ -109,7 +92,7 @@ XPLICIT_MAIN()
 		delete RENDERER_2D;
 		delete RENDERER; //! so that we trigger the fullscreen state to be off.
 
-		XplicitThrowException(err);
+		XPXThrowException(err);
 	}
 #endif
 
@@ -120,7 +103,7 @@ XPLICIT_MAIN()
 	return 0;
 }
 
-static void XplicitThrowException(XPX::EngineError& err)
+static void XPXThrowException(XPX::EngineError& err)
 {
 #ifdef XPLICIT_DEBUG
 	XPLICIT_INFO(err.what());
@@ -143,7 +126,7 @@ static void XplicitThrowException(XPX::EngineError& err)
 }
 
 #ifdef _WIN32
-static void XplicitThrowException(XPX::Win32Error& err)
+static void XPXThrowException(XPX::Win32Error& err)
 {
 #ifdef XPLICIT_DEBUG
 	XPLICIT_INFO(err.what());

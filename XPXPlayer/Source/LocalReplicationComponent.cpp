@@ -18,7 +18,8 @@
 
 namespace XPX
 {
-	LocalReplicationComponent::LocalReplicationComponent(const std::int64_t& hash /* PRIVATE NETWORK HASH */, const String& myId /* XPX LOBBY ID */)
+	LocalReplicationComponent::LocalReplicationComponent(const std::int64_t& hash /* PRIVATE NETWORK HASH */,
+														 const String& myId /* XPX LOBBY ID */)
 		:
 		mNetwork(ComponentSystem::get_singleton_ptr()->get<NetworkComponent>("NetworkComponent")),
 		mHash(hash),
@@ -47,7 +48,5 @@ namespace XPX
 		default:
 			return;
 		}
-
-		// TODO: handle this
 	}
 }
