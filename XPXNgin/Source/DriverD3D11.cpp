@@ -344,7 +344,13 @@ namespace XPX::Renderer::DX11
 
 	DriverSystemD3D11::DriverTraits& DriverSystemD3D11::get() noexcept { return m_private; }
 
-	void DriverSystemD3D11::begin_scene(const float& a, const float& r, const float& g, const float& b, const bool zBuffer, const bool depth)
+	void DriverSystemD3D11::begin_scene(
+		const float& a, 
+		const float& r,
+		const float& g, 
+		const float& b, 
+		const bool zBuffer, 
+		const bool depth)
 	{
 		XPLICIT_ASSERT(m_private.pContext);
 		XPLICIT_ASSERT(m_private.pCamera);
