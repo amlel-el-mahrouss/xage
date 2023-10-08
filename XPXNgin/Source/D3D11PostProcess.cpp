@@ -79,12 +79,37 @@ namespace XPX::Renderer::DX11
 		HRESULT hr = RENDERER->get().pDevice->CreateRasterizerState(&m_rasterDesc, m_pPPState.GetAddressOf());
 		Details::ThrowIfFailed(hr);
 
+		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
+					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // MESH POSITION
+					{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // TEXTURE COORD.
+					{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // AMBIENT COLOR
+		};
 
+		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
+
+		hr = RENDERER->get().pDevice->CreateInputLayout(input_layout, 
+			layout_size, 
+			m_pVs->get().pBlob->GetBufferPointer(),
+			m_pVs->get().pBlob->GetBufferSize(), 
+			m_pInputLayout.GetAddressOf());
+
+		Details::ThrowIfFailed(hr);
 	}
 
 	PostProcessEffectD3D11::~PostProcessEffectD3D11()
 	{
 		delete m_pVs;
 		delete m_pPs;
+	}
+
+	void PostProcessEffectD3D11::update() noexcept
+	{
+		RENDERER->get().pContext->IASetInputLayout(m_pInputLayout.Get());
+		RENDERER->get().pContext->RSSetState(m_pPPState.Get());
+
+		m_pVs->update();
+		m_pPs->update();
+
+
 	}
 }

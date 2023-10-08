@@ -230,10 +230,9 @@ namespace XPX::Renderer::DX11
 	public:
 		ShaderTraits& get();
 
+	public:
 		int compile() noexcept override;
-
-		void update(LightSystemD3D11* component);
-		void update(RenderableComponentD3D11* component);
+		void update() noexcept;
 
 	public:
 		void update_light_shader(LightSystemD3D11* component);
@@ -487,10 +486,17 @@ namespace XPX::Renderer::DX11
 
 		XPLICIT_COPY_DEFAULT(PostProcessEffectD3D11);
 
+	public:
+		void update() noexcept;
+
 	private:
 		ShaderSystemD3D11* m_pVs{ nullptr };
 		ShaderSystemD3D11* m_pPs{ nullptr };
 
+	private:
+		WRL::ComPtr<ID3D11InputLayout> m_pInputLayout{ nullptr };
+
+	private:
 		WRL::ComPtr<ID3D11RasterizerState> m_pPPState{ nullptr };
 		D3D11_RASTERIZER_DESC m_rasterDesc;
 

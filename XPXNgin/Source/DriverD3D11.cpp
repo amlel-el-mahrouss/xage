@@ -524,8 +524,8 @@ namespace XPX::Renderer::DX11
 
 		RENDERER->get().pContext->IASetInputLayout(m_pInputLayout.Get());
 
-		m_pLightVs->update(this);
-		m_pLightPs->update(this);
+		m_pLightVs->update();
+		m_pLightPs->update();
 
 		RENDERER->get().pContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
 
@@ -695,6 +695,8 @@ namespace XPX::Renderer::DX11
 		if (FAILED(m_hResult))
 			throw Win32Error("DirectX Error (D3D11RenderComponent::create(CreateBuffer(m_pIndexBuffer))");
 
+		delete[] indices;
+
 		D3D11_BUFFER_DESC matrixBufferDesc{};
 
 		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -773,10 +775,10 @@ namespace XPX::Renderer::DX11
 			!self->m_pDriver)
 			return;
 
-		self->m_pDriver->get().pContext->RSSetState(self->m_pDriver->get().pRasterState.Get());
-
 		const uint32_t stride = (uint32_t)(sizeof(Details::VERTEX));
 		const uint32_t offset = { 0u };
+
+		self->m_pDriver->get().pContext->RSSetState(self->m_pDriver->get().pRasterState.Get());
 
 		self->m_pDriver->get().pContext->IASetPrimitiveTopology(self->m_iTopology);
 
@@ -810,9 +812,9 @@ namespace XPX::Renderer::DX11
 		}
 		else
 		{
-			self->m_pTextureShader->update(self);
+			self->m_pTextureShader->update();
 
-			self->m_pVertexShader->update(self);
+			self->m_pVertexShader->update();
 
 			self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
 

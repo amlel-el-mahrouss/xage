@@ -140,6 +140,7 @@
     <ClCompile Include="XPXNgin\Source\Archive.cpp" />
     <ClCompile Include="XPXNgin\Source\Avx.cpp" />
     <ClCompile Include="XPXNgin\Source\Bites.cpp" />
+    <ClCompile Include="XPXNgin\Source\D3D11PostProcess.cpp" />
     <ClCompile Include="XPXNgin\Source\Enums.cpp" />
     <ClCompile Include="XPXNgin\Source\Component.cpp" />
     <ClCompile Include="XPXNgin\Source\Crc32.cpp" />
