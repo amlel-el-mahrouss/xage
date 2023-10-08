@@ -65,40 +65,11 @@ XPLICIT_MAIN()
 
 		XPX::Bites::ApplicationManager application_manager(uri);
 
-		XPX::Renderer::SceneSystem scene("Statue");
-		
-		scene.f_meshLoader = new XPX::Renderer::SceneLoaderXSD();
-		scene.add_scene_node("C:/Users/amlal/XAGE/Samples-Wavefront/MarbleBust/marble_bust.xsd");
-
-		auto node = scene.get_scene_node(0);
-
-		node->f_pPostProcess = new XPX::Renderer::PostProcessEffect(XPX::Renderer::PostProcessEffect::BLOOM);
-
-		node->f_pSourceLight = new XPX::Renderer::LightSystemDefault(node->get_vertices_count());
-
-		node->f_pSourceLight->f_fPower = 32.0f;
-		node->f_pSourceLight->f_vPosition = XPX::Vector<XPX::float32>(0, 0, 0);
-		node->f_pSourceLight->f_vDirection = XPX::Vector<XPX::float32>(0, 0, -1.0);
-
-		node->set_scale(XPX::Vector<XPX::float32>(0.5, 0.5, 0.5));
-		node->set_position(XPX::Vector<XPX::float32>(0, 0, 0));
-
-		RENDERER->get().pCamera->set_position(XPX::Vector<XPX::float32>(0, 7.0, -20));
-
-		float rot = 360.f;
+		RENDERER->get().pCamera->set_position(XPX::Vector<XPX::float32>(0, 7.0, -500));
 
 		while (ret != WM_QUIT)
 		{
-			if (rot < 0.0)
-				rot = 360.f;
-
-			rot -= 0.0174532925f * 0.25f;
-
-			node->set_rotation(XPX::Vector<XPX::float32>(0, rot, 0));
-
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
-
-			scene.update();
 
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();

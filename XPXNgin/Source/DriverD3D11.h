@@ -433,7 +433,6 @@ namespace XPX::Renderer::DX11
 		friend ShaderSystemD3D11;
 
 	public:
-		PostProcessEffectD3D11* f_pPostProcess;
 		LightSystemD3D11* f_pSourceLight;
 
 	};
@@ -501,6 +500,7 @@ namespace XPX::Renderer::DX11
 
 	private:
 		WRL::ComPtr<ID3D11RasterizerState> m_pPPState{ nullptr };
+		WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
 		D3D11_RASTERIZER_DESC m_rasterDesc;
 
 	};

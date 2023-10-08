@@ -1,5 +1,5 @@
 /*
- * XPX implementation of blinn-phong shading
+ * XPX implementation of bloom shading
  * (c) XPX Corp.
  * Written by Amlal El Mahrouss.
  */
@@ -15,16 +15,24 @@ struct PIXEL
     float3 NORMAL : NORMAL;
 };
 
-#define XPX_FIXED_GAMMA    2.2
+cbuffer LIGHT
+{
+    float4 AMBIENT_COLOR;
+    float4 DIFFUSE_COLOR;
+    float3 DIRECTION;
+    float PADDING;
+    float SPECULAR_POWER;
+    float4 SPECULAR_COLOR;
+};
 
 float4 PS(PIXEL input) : SV_TARGET
 {
-    float4 texture = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
-
-    float4 result = pow(texture, float4(1.0, 1.0, 1.0, 1.0) / XPX_FIXED_GAMMA);
+    float4 hdr_tex = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    result += texture;
-    result *= texture;
+    float4 result = float4(1.0, 1.0, 1.0, 1.0) - exp(-hdr_tex * SPECULAR_COLOR);
+    result = pow(hdr_tex, 2.2);
+    
+    result.w = 1.0;
     
     return result;
 }

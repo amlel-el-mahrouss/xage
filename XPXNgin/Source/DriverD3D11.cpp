@@ -533,7 +533,7 @@ namespace XPX::Renderer::DX11
 		RENDERER->get().pContext->DrawIndexed(indexCount, 0, 0);
 	}
 
-	//! Renderable class
+	//! Render-able class
 	//! Used to render mesh, triangles and more.
 
 	RenderableComponentD3D11::RenderableComponentD3D11() noexcept
@@ -545,7 +545,7 @@ namespace XPX::Renderer::DX11
 		m_pVertexShader(nullptr), m_pTextureShader(nullptr),
 		m_vPosition(0, 0, 0), m_vRotation(0, 0, 0), m_bDraw(true),
 		m_vScale(1, 1, 1), f_pSourceLight(nullptr), m_iSamplerCnt(1),
-		m_vTextures(), f_pPostProcess(nullptr)
+		m_vTextures()
 	{}
 
 	RenderableComponentD3D11::~RenderableComponentD3D11()
@@ -807,14 +807,11 @@ namespace XPX::Renderer::DX11
 			self->m_pVertexBuffer.GetAddressOf(),
 			&stride,
 			&offset);
+		
 
 		if (self->f_pSourceLight)
 		{
 			self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
-
-			if (self->f_pPostProcess)
-				self->f_pPostProcess->update(self->m_iIndices);
-
 			self->f_pSourceLight->update(self->m_iIndices);
 		}
 		else
@@ -828,9 +825,6 @@ namespace XPX::Renderer::DX11
 			self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
 
 			self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
-
-			if (self->f_pPostProcess)
-				self->f_pPostProcess->update(self->m_iIndices);
 		}
 	}
 
