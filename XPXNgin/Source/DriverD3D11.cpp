@@ -87,11 +87,12 @@ namespace XPX::Renderer::DX11
 		
 		swapDesc.Flags = 0;
 
-		swapDesc.Windowed = false; //! Always set to full-screen.
+		swapDesc.Windowed = true;
 		swapDesc.OutputWindow = privateData.pWindowHandle;
 	}
 
-	DriverSystemD3D11::DriverSystemD3D11(HWND hwnd,
+	DriverSystemD3D11::DriverSystemD3D11(
+		HWND hwnd,
 		const UINT width,
 		const UINT height)
 		: m_private()

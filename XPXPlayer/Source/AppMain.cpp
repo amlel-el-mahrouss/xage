@@ -20,6 +20,7 @@
 #include <DriverD3D11.h>
 #include <SceneSystem.h>
 #include <SoundDriver.h>
+#include <DriverD2D.h>
 #include <Component.h>
 #include <Event.h>
 #include <Bites.h>
@@ -93,11 +94,12 @@ XPLICIT_MAIN()
 
 			XPX::Root::get_singleton_ptr()->Renderer->begin_scene(1, 0, 0, 0, true, true);
 
+			scene.update();
+
 			XPX::ComponentSystem::get_singleton_ptr()->update();
 			XPX::EventSystem::get_singleton_ptr()->update();
-			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
 
-			scene.update();
+			XPX::Audio::XAudioEngine::get_singleton_ptr()->update();
 
 			if (!XPX::Root::get_singleton_ptr()->Renderer->end_scene())
 				std::exit(-30);

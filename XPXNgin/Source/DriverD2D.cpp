@@ -19,7 +19,8 @@
 namespace XPX::Renderer::D2D
 {
 	DriverSystemD2D::DriverSystemD2D(Renderer::DX11::DriverSystemD3D11* drv)
-		: f_pRenderTarget(nullptr), f_pSurface(nullptr)
+		: f_pRenderTarget(nullptr), f_pSurface(nullptr),
+		f_pBuffer(nullptr)
 	{
 		HRESULT hr = S_OK;
 
@@ -41,8 +42,23 @@ namespace XPX::Renderer::D2D
 			texDesc.SampleDesc.Quality = 0;
 			texDesc.Usage = D3D11_USAGE_DEFAULT;
 
-			hr = drv->get().pSwapChain->GetBuffer(0, IID_PPV_ARGS(f_pSurface.GetAddressOf()));
+			D3D11_TEXTURE2D_DESC d2dBuffer{};
+			d2dBuffer.BindFlags = D3D11_BIND_RENDER_TARGET;
+			d2dBuffer.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+			d2dBuffer.Height = RENDERER->get().SwapDesc.BufferDesc.Height;
+			d2dBuffer.Width = RENDERER->get().SwapDesc.BufferDesc.Width;
+			d2dBuffer.MipLevels = 1;
+			d2dBuffer.MiscFlags = 0;
+			d2dBuffer.ArraySize = 1;
+			d2dBuffer.SampleDesc.Count = 1;
+			d2dBuffer.SampleDesc.Quality = 0;
+			d2dBuffer.Usage = D3D11_USAGE_DEFAULT;
+
+			hr = drv->get().pDevice->CreateTexture2D(&d2dBuffer, nullptr, f_pBuffer.GetAddressOf());
+
 			DX11::Details::ThrowIfFailed(hr);
+
+			hr = f_pBuffer->QueryInterface(IID_PPV_ARGS(f_pSurface.GetAddressOf()));
 
 			D2D1_RENDER_TARGET_PROPERTIES renderProp{ D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT) };
 			renderProp.pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED);
@@ -66,7 +82,7 @@ namespace XPX::Renderer::D2D
 				_com_error err(hr);
 
 				DialogHelper::message_box(L"XAGE",
-					L"Fatal error!",
+					L"Direct2D ERROR!",
 					err.ErrorMessage(),
 					TD_INFORMATION_ICON,
 					TDCBF_OK_BUTTON);
@@ -143,9 +159,13 @@ namespace XPX::Renderer::D2D
 		D2D1_ROUNDED_RECT _rect{ .rect = {.left = copyFrom.L, .top = copyFrom.T, .right = copyFrom.R, .bottom = copyFrom.B },
 			.radiusX = radiusX, .radiusY = radiusY};
 
+		this->begin_scene();
+
 		f_pRenderTarget->FillRoundedRectangle(
 			_rect,
 			pBrush.Get());
+
+		this->end_scene();
 	}
 
 	void DriverSystemD2D::transform(const float x, const float y) noexcept

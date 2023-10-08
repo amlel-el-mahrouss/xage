@@ -67,6 +67,9 @@ namespace XPX::Bites
 
 	LRESULT Win32Window::window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
+		if (!KEYBOARD)
+			return DefWindowProcA(hwnd, msg, wparam, lparam);
+
 		switch (msg)
 		{
 

@@ -116,6 +116,7 @@
     <ClCompile Include="XPXPlayer\Source\LocalNetworkMonitorEvent.cpp" />
     <ClCompile Include="XPXPlayer\Source\LocalReplicationComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\GameUI.cpp" />
+    <ClCompile Include="XPXPlayer\Source\NuklearImpl.cpp" />
     <ClCompile Include="XPXPlayer\Source\SoundComponent.cpp" />
     <ClCompile Include="XPXPlayer\Source\AppMain.cpp" />
   </ItemGroup>

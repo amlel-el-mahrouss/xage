@@ -77,6 +77,7 @@ namespace XPX::Renderer::D2D
 		Microsoft::WRL::ComPtr<ID2D1RenderTarget> f_pRenderTarget;
 		Microsoft::WRL::ComPtr<ID2D1Factory> f_pDirect2dFactory;
 		Microsoft::WRL::ComPtr<IDXGISurface> f_pSurface;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> f_pBuffer;
 
 	};
 }

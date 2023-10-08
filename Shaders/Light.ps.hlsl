@@ -44,5 +44,7 @@ float4 PS(PIXEL input) : SV_TARGET
 
     float4 diffuse = tex * diff;
     
-    return spec * ambient * diffuse;
+    float4 ret = spec * ambient * diffuse;
+  
+    return ret;
 }

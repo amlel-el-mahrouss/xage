@@ -23,5 +23,7 @@ float4 PS(PIXEL input) : SV_TARGET
     
     float result = saturate(color1 * color2 * 2.0).xyzw;
     
-    return result > 0.0 ? saturate(color1 * color2 * 2.0) : float4(input.AMBIENT, 1.0);
+    float4 ret = saturate(color1 * color2 * 2.0);
+
+    return result > 0.0 ? ret : float4(input.AMBIENT, 1.0);
 }
