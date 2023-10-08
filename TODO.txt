@@ -1,6 +1,9 @@
 TODO
 ====
 
+- Post Process component.
+- Particle component.
+- TrueType font component.
 - Work on the 'REAL' engine.
 
 Copyright XPX Corp.

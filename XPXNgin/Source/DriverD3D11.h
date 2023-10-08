@@ -6,7 +6,6 @@
  *
  *			File: DriverD3D11.h
  *			Purpose: C++ Rendering Driver for Direct3D 11
- *			The goal of this driver system is to take most advantage of directx and windows/xbox.
  *
  * =====================================================================
  */
