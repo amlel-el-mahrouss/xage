@@ -469,6 +469,32 @@ namespace XPX::Renderer::DX11
 		friend DriverSystemD3D11;
 
 	};
+
+	class XPLICIT_API PostProcessEffectD3D11 final
+	{
+		PostProcessEffectD3D11() = delete;
+
+	public:
+		enum
+		{
+			BLUR,
+			SHAKE,
+			FOCUS,
+		};
+
+		PostProcessEffectD3D11(int effect_type);
+		~PostProcessEffectD3D11();
+
+		XPLICIT_COPY_DEFAULT(PostProcessEffectD3D11);
+
+	private:
+		ShaderSystemD3D11* m_pVs{ nullptr };
+		ShaderSystemD3D11* m_pPs{ nullptr };
+
+		WRL::ComPtr<ID3D11RasterizerState> m_pPPState{ nullptr };
+		D3D11_RASTERIZER_DESC m_rasterDesc;
+
+	};
 }
 
 #include "DriverD3D11.inl"

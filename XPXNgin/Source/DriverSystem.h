@@ -5,8 +5,8 @@
  *			Copyright XPX Corporation, all rights reserved.
  *
  *			File: DriverSystem.h
- *			Purpose: C++ Rendering Driver API, replacement of the LegacyRenderer (irrlicht)
- *
+ *			Purpose: C++ Rendering Driver API
+ * 
  * =====================================================================
  */
 
@@ -16,12 +16,8 @@
 #include "Component.h"
 
 #ifndef __NPLICIT_DLL__
-
 #	include <NplicitNgine.h>
-
 #endif // ifndef __NPLICIT_DLL__
-
-#include <map>
 
 namespace XPX::Renderer
 {
@@ -206,10 +202,14 @@ namespace XPX::Renderer
 
 	class XPLICIT_API DriverParticleSystem
 	{
+	public:
 		explicit DriverParticleSystem() = default;
 		virtual ~DriverParticleSystem() = default;
 
 		const RENDER_TYPE render_type() noexcept { return RENDER_TYPE::RENDER_PARTICLE; }
+
+	public:
+		XPLICIT_COPY_DEFAULT(DriverParticleSystem);
 
 	public:
 		Vector<float32> m_vSource{ 0, 0, 0 };
@@ -222,3 +222,5 @@ namespace XPX::Renderer
 #define XPLICIT_DRIVER_SYSTEM_OVERRIDE()\
 		virtual const char* name() noexcept override;\
 		virtual RENDER_SYSTEM api() noexcept override;
+
+

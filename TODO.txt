@@ -1,9 +1,9 @@
 TODO
 ====
 
-- Post Process component.
-- Particle component.
-- TrueType font component.
-- Work on the 'REAL' engine.
+- Post Process component -> PostProcessComponent.
+- Particle component -> DriverParticleSystem.
+- TrueType font component -> FreeType
+- Work on the 'REAL' engine -> Endorphin like program.
 
 Copyright XPX Corp.
