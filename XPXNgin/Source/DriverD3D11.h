@@ -53,6 +53,7 @@ using namespace DirectX;
 namespace XPX::Renderer::DX11
 {
 	class CameraSystemD3D11;
+	class PostProcessEffectD3D11;
 	class LightSystemD3D11;
 
 	namespace Details
@@ -432,6 +433,7 @@ namespace XPX::Renderer::DX11
 		friend ShaderSystemD3D11;
 
 	public:
+		PostProcessEffectD3D11* f_pPostProcess;
 		LightSystemD3D11* f_pSourceLight;
 
 	};
@@ -510,6 +512,8 @@ namespace XPX::Renderer::DX11
 namespace XPX::Renderer
 {
 	typedef DX11::CameraSystemD3D11 CameraSystem;
+	typedef DX11::LightSystemD3D11 LightSystemDefault; //! Phong is always the default one.
+	typedef DX11::PostProcessEffectD3D11 PostProcessEffect;
 	typedef DX11::RenderableComponentD3D11 RenderableComponent;
 }
 

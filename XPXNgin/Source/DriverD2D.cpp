@@ -159,13 +159,12 @@ namespace XPX::Renderer::D2D
 		D2D1_ROUNDED_RECT _rect{ .rect = {.left = copyFrom.L, .top = copyFrom.T, .right = copyFrom.R, .bottom = copyFrom.B },
 			.radiusX = radiusX, .radiusY = radiusY};
 
-		this->begin_scene();
-
 		f_pRenderTarget->FillRoundedRectangle(
 			_rect,
 			pBrush.Get());
 
-		this->end_scene();
+		f_pRenderTarget->BeginDraw();
+		f_pRenderTarget->EndDraw();
 	}
 
 	void DriverSystemD2D::transform(const float x, const float y) noexcept

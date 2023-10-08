@@ -71,7 +71,11 @@ XPLICIT_MAIN()
 		scene.add_scene_node("C:/Users/amlal/XAGE/Samples-Wavefront/MarbleBust/marble_bust.xsd");
 
 		auto node = scene.get_scene_node(0);
-		node->f_pSourceLight = new XPX::Renderer::DX11::LightSystemD3D11(node->get_vertices_count());
+
+		node->f_pPostProcess = new XPX::Renderer::PostProcessEffect(XPX::Renderer::PostProcessEffect::BLOOM);
+
+		node->f_pSourceLight = new XPX::Renderer::LightSystemDefault(node->get_vertices_count());
+
 		node->f_pSourceLight->f_fPower = 32.0f;
 		node->f_pSourceLight->f_vPosition = XPX::Vector<XPX::float32>(0, 0, 0);
 		node->f_pSourceLight->f_vDirection = XPX::Vector<XPX::float32>(0, 0, -1.0);
@@ -114,9 +118,6 @@ XPLICIT_MAIN()
 #ifdef _WIN32
 	catch (XPX::Win32Error& err)
 	{
-		delete RENDERER_2D;
-		delete RENDERER; //! so that we trigger the fullscreen state to be off.
-
 		XPXThrowException(err);
 	}
 #endif

@@ -67,9 +67,6 @@ namespace XPX::Bites
 
 	LRESULT Win32Window::window_procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		if (!KEYBOARD)
-			return DefWindowProcA(hwnd, msg, wparam, lparam);
-
 		switch (msg)
 		{
 
@@ -77,74 +74,94 @@ namespace XPX::Bites
 		{
 			auto p = MAKEPOINTS(lparam);
 
-			Root::get_singleton_ptr()->Keyboard->mMousePos.X = p.x;
-			Root::get_singleton_ptr()->Keyboard->mMousePos.Y = p.y;
+			if (Root::get_singleton_ptr()->Keyboard)
+			{
+				Root::get_singleton_ptr()->Keyboard->mMousePos.X = p.x;
+				Root::get_singleton_ptr()->Keyboard->mMousePos.Y = p.y;
 
 #ifdef XPLICIT_DEBUG
-			//! debug trace
-			
-			fmt::print("X: {}\n", Root::get_singleton_ptr()->Keyboard->mMousePos.X);
-			fmt::print("Y: {}\n", Root::get_singleton_ptr()->Keyboard->mMousePos.Y);
+				//! debug trace
+
+				fmt::print("X: {}\n", Root::get_singleton_ptr()->Keyboard->mMousePos.X);
+				fmt::print("Y: {}\n", Root::get_singleton_ptr()->Keyboard->mMousePos.Y);
 #endif // ifdef XPLICIT_DEBUG
+
+			}
 
 			break;
 		}
 		case WM_RBUTTONDOWN:
 		{
-			Root::get_singleton_ptr()->Keyboard->mMouseRight.Down = true;
+			if (Root::get_singleton_ptr()->Keyboard)
+			{
+				Root::get_singleton_ptr()->Keyboard->mMouseRight.Down = true;
 
 #ifdef XPLICIT_DEBUG
-			//! debug trace for mouse stat.
+				//! debug trace for mouse stat.
 
-			fmt::print("RightDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseRight.Down ? "Yes" : "No");
+				fmt::print("RightDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseRight.Down ? "Yes" : "No");
 #endif // ifdef XPLICIT_DEBUG
+			}
 
 			break;
 		}
 		case WM_RBUTTONUP:
 		{
-			Root::get_singleton_ptr()->Keyboard->mMouseRight.Down = false;
+			if (Root::get_singleton_ptr()->Keyboard)
+			{
+				Root::get_singleton_ptr()->Keyboard->mMouseRight.Down = false;
 
 #ifdef XPLICIT_DEBUG
-			//! debug trace for mouse stat.
+				//! debug trace for mouse stat.
 
-			fmt::print("RightDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseRight.Down ? "Yes" : "No");
+				fmt::print("RightDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseRight.Down ? "Yes" : "No");
 #endif // ifdef XPLICIT_DEBUG
+			}
 
 			break;
 		}
 		case WM_LBUTTONDOWN:
 		{
-			Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down = true;
+			if (Root::get_singleton_ptr()->Keyboard)
+			{
+				Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down = true;
 
 #ifdef XPLICIT_DEBUG
-			//! debug trace for mouse stat.
+				//! debug trace for mouse stat.
 
-			fmt::print("LeftDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down ? "Yes" : "No");
+				fmt::print("LeftDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down ? "Yes" : "No");
 #endif // ifdef XPLICIT_DEBUG
+			}
 
 			break;
 		}
 		case WM_LBUTTONUP:
 		{
-			Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down = false;
+			if (Root::get_singleton_ptr()->Keyboard)
+			{
+				Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down = false;
 
 #ifdef XPLICIT_DEBUG
-			//! debug trace for mouse stat.
+				//! debug trace for mouse stat.
 
-			fmt::print("LeftDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down ? "Yes" : "No");
+				fmt::print("LeftDown: {}\n", Root::get_singleton_ptr()->Keyboard->mMouseLeft.Down ? "Yes" : "No");
 #endif // ifdef XPLICIT_DEBUG
+			}
 
 			break;
 		}
 		case WM_KEYUP:
 		{
-			Root::get_singleton_ptr()->Keyboard->mKeys[wparam] = false;
+			if (Root::get_singleton_ptr()->Keyboard)
+				Root::get_singleton_ptr()->Keyboard->mKeys[wparam] = false;
+
 			break;
 		}
 		case WM_KEYDOWN:
 		{
-			Root::get_singleton_ptr()->Keyboard->mKeys[wparam] = true;
+			if (Root::get_singleton_ptr()->Keyboard)
+				Root::get_singleton_ptr()->Keyboard->mKeys[wparam] = true;
+
 			break;
 		}
 		case WM_DESTROY:

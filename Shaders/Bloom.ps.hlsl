@@ -16,9 +16,16 @@ struct PIXEL
     float3 NORMAL : NORMAL;
 };
 
+#define XPX_FIXED_EXPOSURE 1.0
+#define XPX_FIXED_GAMMA    2.2
+
 float4 PS(PIXEL input) : SV_TARGET
 {
-    float4 tex = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
+    float4 hdr_tex = gShaderTexture.Sample(SAMPLE_TYPE, input.TEXTURE);
+    hdr_tex *= gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    return tex;
+    float4 result = float4(1.0, 1.0, 1.0, 1.0) - exp(hdr_tex * XPX_FIXED_EXPOSURE);
+    result = pow(result, float4(1.0, 1.0, 1.0, 1.0) / XPX_FIXED_GAMMA);
+    
+    return result;
 }

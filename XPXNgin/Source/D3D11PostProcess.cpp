@@ -32,8 +32,7 @@ namespace XPX::Renderer::DX11
 			PString path_vertex = DIR;
 			path_vertex += L"Shaders/Blur.vs.hlsl";
 
-			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), 
-				"VS", RENDERER);
+			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", RENDERER);
 
 			break;
 		}
@@ -48,8 +47,7 @@ namespace XPX::Renderer::DX11
 			PString path_vertex = DIR;
 			path_vertex += L"Shaders/Focus.vs.hlsl";
 
-			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), 
-				"VS", RENDERER);
+			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", RENDERER);
 
 			break;
 		}
@@ -64,8 +62,7 @@ namespace XPX::Renderer::DX11
 			PString path_vertex = DIR;
 			path_vertex += L"Shaders/Shake.vs.hlsl";
 
-			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(),
-				"VS", RENDERER);
+			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", RENDERER);
 
 			break;
 		}
@@ -79,7 +76,7 @@ namespace XPX::Renderer::DX11
 			PString path_vertex = DIR;
 			path_vertex += L"Shaders/Bloom.vs.hlsl";
 
-			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
+			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Vertex>(path_vertex.c_str(), "VS", RENDERER);
 
 			break;
 		}
@@ -89,6 +86,7 @@ namespace XPX::Renderer::DX11
 
 		m_rasterDesc.AntialiasedLineEnable = true;
 		m_rasterDesc.CullMode = D3D11_CULL_NONE;
+		m_rasterDesc.FillMode = D3D11_FILL_SOLID;
 		m_rasterDesc.ScissorEnable = true;
 		m_rasterDesc.MultisampleEnable = false;
 		m_rasterDesc.SlopeScaledDepthBias = 0.0f;
@@ -101,7 +99,7 @@ namespace XPX::Renderer::DX11
 		D3D11_INPUT_ELEMENT_DESC input_layout[] = {
 					{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // MESH POSITION
 					{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // TEXTURE COORD.
-					{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // AMBIENT COLOR
+					{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // AMBIENT COLOR
 		};
 
 		const auto layout_size = sizeof(input_layout) / sizeof(input_layout[0]);
