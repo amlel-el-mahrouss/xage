@@ -490,7 +490,7 @@ namespace XPX::Renderer::DX11
 		XPLICIT_COPY_DEFAULT(PostProcessEffectD3D11);
 
 	public:
-		void update() noexcept;
+		void update(std::size_t& const indices) noexcept;
 
 	private:
 		ShaderSystemD3D11* m_pVs{ nullptr };

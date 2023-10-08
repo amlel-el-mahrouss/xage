@@ -119,7 +119,7 @@ namespace XPX::Renderer::DX11
 		delete m_pPs;
 	}
 
-	void PostProcessEffectD3D11::update() noexcept
+	void PostProcessEffectD3D11::update(std::size_t& const indices) noexcept
 	{
 		RENDERER->get().pContext->IASetInputLayout(m_pInputLayout.Get());
 		RENDERER->get().pContext->RSSetState(m_pPPState.Get());
@@ -128,5 +128,6 @@ namespace XPX::Renderer::DX11
 		m_pPs->update();
 
 
+		RENDERER->get().pContext->DrawIndexed(indices, 0, 0);
 	}
 }

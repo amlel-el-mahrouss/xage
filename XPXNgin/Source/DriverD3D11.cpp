@@ -813,9 +813,7 @@ namespace XPX::Renderer::DX11
 			self->m_pDriver->get().pContext->PSSetShaderResources(0, textures.size(), textures.data());
 
 			if (self->f_pPostProcess)
-			{
-				self->f_pPostProcess->update();
-			}
+				self->f_pPostProcess->update(self->m_iIndices);
 
 			self->f_pSourceLight->update(self->m_iIndices);
 		}
@@ -829,10 +827,10 @@ namespace XPX::Renderer::DX11
 
 			self->m_pDriver->get().pContext->PSSetSamplers(0, self->m_iSamplerCnt, self->m_pSamplerState.GetAddressOf());
 
-			if (self->f_pPostProcess)
-				self->f_pPostProcess->update();
-
 			self->m_pDriver->get().pContext->DrawIndexed(self->m_iIndices, 0, 0);
+
+			if (self->f_pPostProcess)
+				self->f_pPostProcess->update(self->m_iIndices);
 		}
 	}
 

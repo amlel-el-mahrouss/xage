@@ -14,16 +14,14 @@ struct PIXEL
 SamplerState SAMPLE_TYPE : register(s0);
 
 Texture2D gShaderTexture1 : register(t0);
-Texture2D gShaderTexture2 : register(t1);
 
 float4 PS(PIXEL input) : SV_TARGET
 {
     float4 color1 = gShaderTexture1.Sample(SAMPLE_TYPE, input.TEXTURE);
-    float4 color2 = gShaderTexture2.Sample(SAMPLE_TYPE, input.TEXTURE);
     
-    float result = saturate(color1 * color2 * 2.0).xyzw;
+    float result = saturate(color1 * 2.0).xyzw;
     
-    float4 ret = saturate(color1 * color2 * 2.0);
+    float4 ret = saturate(color1 * 2.0);
 
     return result > 0.0 ? ret : float4(input.AMBIENT, 1.0);
 }
