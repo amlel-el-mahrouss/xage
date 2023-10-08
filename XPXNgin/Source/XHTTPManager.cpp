@@ -12,6 +12,10 @@
 #include "XHTTPManager.h"
 #include "HelperMacros.h"
 
+#ifndef XPX_MAX_DOWNLOAD_SIZE
+#   define XPX_MAX_DOWNLOAD_SIZE (1000000)
+#endif // ifndef XPX_MAX_DOWNLOAD_SIZE
+
 namespace XPX
 {
 	bool XHTTPManager::download(const String assetId, const String outputFileName) const noexcept
@@ -32,7 +36,7 @@ namespace XPX
 
         std::ofstream file = mWriter.open_writer(http_path.c_str());
 
-        constexpr int64_t MAX_BUF = 1000000;
+        constexpr int64_t MAX_BUF = XPX_MAX_DOWNLOAD_SIZE;
 
         auto bytes = new char[MAX_BUF];
         XPLICIT_ASSERT(bytes);

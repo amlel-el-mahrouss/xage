@@ -14,7 +14,10 @@
  */
 
 #include "LoginEvent.h"
-#include <RLua.hpp>
+
+#include <cstdlib>
+
+#define XPLICIT_MAX_SLEEP (9U)
 
 namespace XPX
 {
@@ -28,6 +31,8 @@ namespace XPX
 		const auto tim = xplicit_get_epoch();
 		const auto hash = std::hash<time_t>();
 		const auto res = hash(tim);
+
+		XPLICIT_SLEEP(rand() % XPLICIT_MAX_SLEEP);
 
 		return res;
 	}
@@ -96,7 +101,16 @@ namespace XPX
 		}
 	}
 
-	LoginEvent::~LoginEvent() = default;
+	//! @brief Event destructor, default due to RAII.
+
+	LoginEvent::~LoginEvent()
+	{
+		for (auto& player : mPlayers)
+		{
+			if (player)
+				ComponentSystem::get_singleton_ptr()->remove(player);
+		}
+	}
 
 	//! @brief Handle player log-in event
 	//! @brief setup humanoid and more...

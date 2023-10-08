@@ -71,6 +71,7 @@ namespace XPX::ImGUI
 		XPLICIT_COPY_DEFAULT(UIEditBox);
 
 	public:
+		const PString& get_text() noexcept;
 		void set_text(const PChar*);
 
 		void set_pos(const int X, const int Y);

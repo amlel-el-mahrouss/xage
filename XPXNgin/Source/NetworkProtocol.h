@@ -42,10 +42,17 @@
 
 #define XPLICIT_NUM_CHANNELS    (3)
 
+//! Anything else.
 #define XPLICIT_CHANNEL_DATA    (0)
+
+//! Chat replication
 #define XPLICIT_CHANNEL_CHAT    (1)
+
+//! 3D world replication
 #define XPLICIT_CHANNEL_3D      (2)
-#define XPLICIT_CHANNEL_WEAPON  (3)
+
+//! File transfer.
+#define XPLICIT_CHANNEL_FT      (3)
 
 ///!
 ///!
@@ -102,7 +109,7 @@ namespace XPX
         NETWORK_CMD_BAN,
         NETWORK_CMD_ACK, // Acknowledge
         NETWORK_CMD_KICK, // also aborts the connection, and exits the client.
-        NETWORK_CMD_REPL, // replication call
+        NETWORK_CMD_CHAT, // replication call
         NETWORK_CMD_LCLICK,
         NETWORK_CMD_RCLICK,
         NETWORK_CMD_TARGET,

@@ -94,6 +94,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="XPXServer\Source\ChatMonitorEvent.h" />
     <ClInclude Include="XPXServer\Source\WeaponComponent.h" />
     <ClInclude Include="XPXServer\Source\CharacterHealthMonitorEvent.h" />
     <ClInclude Include="XPXServer\Source\CharacterComponent.h" />

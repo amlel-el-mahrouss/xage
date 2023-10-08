@@ -19,6 +19,11 @@
 
 namespace XPX
 {
+	///!
+	///! @brief Replication component
+	///! Manages the way client and server talks.
+	///!
+
 	class LocalReplicationComponent final : public Component
 	{
 	public:

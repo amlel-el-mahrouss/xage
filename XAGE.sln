@@ -20,8 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Miscellaneous", "Miscellane
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Contents", "External Contents", "{C348CBEF-6FF0-44EB-967F-7A27F73347A0}"
 	ProjectSection(SolutionItems) = preProject
-		XPXNgin.Tex\ICodec.h = XPXNgin.Tex\ICodec.h
 		XPXNgin.Tex\Blink.h = XPXNgin.Tex\Blink.h
+		XPXNgin.Tex\ICodec.h = XPXNgin.Tex\ICodec.h
 		README.txt = README.txt
 		XPXNgin.Sound\RIFF.h = XPXNgin.Sound\RIFF.h
 		XPXNgin.Sound\SoundDriver.h = XPXNgin.Sound\SoundDriver.h

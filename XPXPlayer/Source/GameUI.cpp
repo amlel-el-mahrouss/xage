@@ -27,8 +27,7 @@ namespace XPX
 			mClicked(on_click),
 			mPopupId(id),
 			mHudFrame(new ImGUI::UIFrame()),
-			mOk(L"Yes"),
-			mTitle(Bites::XPLICIT_APP_NAME)
+			mTitle(L"NOTICE")
 	{
 		XPLICIT_ASSERT(mClicked);
 		XPLICIT_ASSERT(!mPopupId.empty());
@@ -62,22 +61,13 @@ namespace XPX
 			return;
 		}
 
-		mHudFrame->W = 504;
-		mHudFrame->H = 288;
+		mHudFrame->W = RENDERER->get().iWidth;
+		mHudFrame->H = RENDERER->get().iHeight;
 		
 		mHudFrame->BackgroundColor.A = (255);
 		mHudFrame->BackgroundColor.R = (0x0F);
 		mHudFrame->BackgroundColor.G = (0x0F);
 		mHudFrame->BackgroundColor.B = (0x0F);
-
-		mHudFrame->X = ImGUI::JustifyBy(1.4, ImGUI::CenterOf(XPLICIT_MIN_WIDTH));
-		mHudFrame->Y = ImGUI::JustifyBy(1.7, ImGUI::CenterOf(XPLICIT_MIN_HEIGHT));
-
-		mOk->W = 504;
-		mOk->H = 41;
-
-		mOk->X = mHudFrame->X;
-		mOk->Y = (mHudFrame->Y + mHudFrame->H) - mOk->H;
 	}
 	
 	MessageComponent::~MessageComponent()
@@ -92,10 +82,15 @@ namespace XPX
 		auto* self = static_cast<MessageComponent*>(class_ptr);
 
 		self->mHudFrame->update(self->mHudFrame->BackgroundColor);
-		self->mOk.update();
-
-		if (self->mOk.LeftClicked)
+		
+		if (KEYBOARD->key_down(KEY_RETURN))
 			self->mClicked();
+
+		if (KEYBOARD->key_down(KEY_ESCAPE))
+		{
+			ComponentSystem::get_singleton_ptr()->remove(self);
+			return;
+		}
 
 		self->mHudFrame->SpriteBatch->Begin();
 

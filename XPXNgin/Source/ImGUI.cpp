@@ -163,6 +163,8 @@ namespace XPX::ImGUI
 		mSelection->H = h;
 	}
 
+	const PString& UIEditBox::get_text() noexcept { return mText; }
+
 	void UIEditBox::update()
 	{
 		if (this->mBox->in_region() &&

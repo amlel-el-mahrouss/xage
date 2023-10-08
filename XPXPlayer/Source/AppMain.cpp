@@ -64,8 +64,6 @@ XPLICIT_MAIN()
 
 		XPX::Bites::ApplicationManager application_manager(uri);
 
-		XPX::ModuleManager module_manager("XPXCoreLib.dll");
-
 		while (ret != WM_QUIT)
 		{
 			ret = XPX::Root::get_singleton_ptr()->Window->update();

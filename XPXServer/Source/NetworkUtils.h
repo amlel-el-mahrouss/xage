@@ -13,6 +13,10 @@
 
 namespace XPX
 {
+	//!
+	//! @brief a FTP like wrapper for xconnect.
+	//! used by the on-line wrapper.
+	//! 
 	class NetworkFileTransferFactory final
 	{
 	public:

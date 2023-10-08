@@ -60,7 +60,6 @@ namespace XPX
 
 	private:
 		ImGUI::UIFrame* mHudFrame;
-		ImGUI::UIButton mOk;
 
 	private:
 		FunctionPopup mClicked;

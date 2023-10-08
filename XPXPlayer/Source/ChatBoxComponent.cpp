@@ -9,6 +9,8 @@
 
 #include "ChatBoxComponent.h"
 
+#define XPX_CHAT_MESSAGE_SIZE (192)
+
 namespace XPX
 {
 	ChatBoxComponent::ChatBoxComponent(const char* username)
@@ -41,21 +43,37 @@ namespace XPX
 		if (self && 
 			IsValidHeapPtr(self))
 		{
-			if (self->mNetwork->get().channel == XPLICIT_CHANNEL_CHAT)
+			if (self->mNetwork->get().channel == XPLICIT_CHANNEL_CHAT &&
+				self->mNetwork->get().cmd[XPLICIT_NETWORK_CMD_CHAT] == NETWORK_CMD_CHAT)
 			{
-				NetworkPacket chat_pckt = self->mNetwork->get();
+				self->mNetwork->get().cmd[XPLICIT_NETWORK_CMD_CHAT] = NETWORK_CMD_INVALID;
+
+				NetworkPacket packet_recv_message = self->mNetwork->get();
 
 				register String chat_buffer = "";
 
-				chat_buffer.reserve(192);
+				chat_buffer.reserve(XPX_CHAT_MESSAGE_SIZE);
 
-				chat_buffer += chat_pckt.additional_data;
+				for (size_t i = 0; i < XPX_CHAT_MESSAGE_SIZE; ++i)
+				{
+					chat_buffer[i] = packet_recv_message.additional_data[i];
+				}
 
 				self->mChatQueue.push(chat_buffer);
 			}
 
 			self->mChatFrame.update(self->mChatFrame.BackgroundColor);
 			self->mTextBox.update();
+
+			if (KEYBOARD->key_down(KEY_RETURN))
+			{
+				NetworkPacket packet_send_msg{};
+
+				packet_send_msg.channel = XPLICIT_CHANNEL_CHAT;
+				packet_send_msg.cmd[XPLICIT_NETWORK_CMD_CHAT] = NETWORK_CMD_CHAT;
+
+				memcpy(packet_send_msg.additional_data, self->mTextBox.get_text().data(), self->mTextBox.get_text().size());
+			}
 		}
 	}
 
