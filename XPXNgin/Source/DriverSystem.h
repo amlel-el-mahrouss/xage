@@ -101,7 +101,7 @@ namespace XPX::Renderer
 	public:
 		Color<float32> f_cAmbient{ 1, 1, 1, 1 };
 		Color<float32> f_cDiffuse{ 1, 1, 1, 1 };
-		Color<float32> f_cSpecular{ 0, 0, 0, 0 };
+		Color<float32> f_cSpecular{ 0, 0, 0, 1 };
 		float32 f_fPower{ 8.0f };
 
 	};

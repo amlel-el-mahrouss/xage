@@ -19,7 +19,6 @@ namespace XPX::Renderer::DX11
 	{
 		XPLICIT_GET_DATA_DIR_W(DIR);
 
-
 		switch (effect_type)
 		{
 		case BLUR:
@@ -27,12 +26,14 @@ namespace XPX::Renderer::DX11
 			PString path_pixel = DIR;
 			path_pixel += L"Shaders/Blur.ps.hlsl";
 
-			m_pPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
+			m_pPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), 
+				"PS", RENDERER);
 
 			PString path_vertex = DIR;
 			path_vertex += L"Shaders/Blur.vs.hlsl";
 
-			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
+			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), 
+				"VS", RENDERER);
 
 			break;
 		}
@@ -41,12 +42,14 @@ namespace XPX::Renderer::DX11
 			PString path_pixel = DIR;
 			path_pixel += L"Shaders/Focus.ps.hlsl";
 
-			m_pPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
+			m_pPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), 
+				"PS", RENDERER);
 
 			PString path_vertex = DIR;
 			path_vertex += L"Shaders/Focus.vs.hlsl";
 
-			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
+			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), 
+				"VS", RENDERER);
 
 			break;
 		}
@@ -55,17 +58,33 @@ namespace XPX::Renderer::DX11
 			PString path_pixel = DIR;
 			path_pixel += L"Shaders/Shake.ps.hlsl";
 
-			m_pPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
+			m_pPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), 
+				"PS", RENDERER);
 
 			PString path_vertex = DIR;
 			path_vertex += L"Shaders/Shake.vs.hlsl";
+
+			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(),
+				"VS", RENDERER);
+
+			break;
+		}
+		case BLOOM:
+		{
+			PString path_pixel = DIR;
+			path_pixel += L"Shaders/Bloom.ps.hlsl";
+
+			m_pPs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
+
+			PString path_vertex = DIR;
+			path_vertex += L"Shaders/Bloom.vs.hlsl";
 
 			m_pVs = D3D11ShaderHelper1::make_shader<XPLICIT_SHADER_TYPE::Pixel>(path_pixel.c_str(), "PS", RENDERER);
 
 			break;
 		}
 		default:
-			throw EngineError("This PostProcess effect does not exist.");
+			throw EngineError("This Post process effect does not exist.");
 		}
 
 		m_rasterDesc.AntialiasedLineEnable = true;

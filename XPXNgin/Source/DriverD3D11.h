@@ -477,6 +477,7 @@ namespace XPX::Renderer::DX11
 		enum
 		{
 			BLUR,
+			BLOOM,
 			SHAKE,
 			FOCUS,
 		};

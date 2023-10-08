@@ -1,0 +1,7 @@
+#pragma begin
+
+#wd C:\Users\amlal\XAGE\Samples-Wavefront\MarbleBust\
+
+#include marble_bust_01_1k.xobj,marble_bust_01_1k.mtl
+
+#pragma end
